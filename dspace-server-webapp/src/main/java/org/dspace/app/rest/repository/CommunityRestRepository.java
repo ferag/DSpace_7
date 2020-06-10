@@ -30,13 +30,21 @@ import org.dspace.app.rest.model.GroupRest;
 import org.dspace.app.rest.model.MetadataRest;
 import org.dspace.app.rest.model.MetadataValueRest;
 import org.dspace.app.rest.model.patch.Patch;
+import org.dspace.app.rest.repository.handler.service.UriListHandlerService;
 import org.dspace.app.rest.utils.CommunityRestEqualityUtils;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.Bitstream;
+import org.dspace.content.Collection;
 import org.dspace.content.Community;
+import org.dspace.content.DSpaceObject;
+import org.dspace.content.Item;
+import org.dspace.content.MetadataValue;
 import org.dspace.content.service.BitstreamService;
+import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
+import org.dspace.content.service.DSpaceObjectService;
+import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.discovery.DiscoverQuery;
 import org.dspace.discovery.DiscoverResult;
@@ -81,11 +89,20 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
     @Autowired
     AuthorizeService authorizeService;
 
-    private CommunityService cs;
+    @Autowired
+    private UriListHandlerService uriListHandlerService;
+
+    private CommunityService communityService;
+
+    @Autowired
+    private CollectionService collectionService;
+
+    @Autowired
+    private ItemService itemService;
 
     public CommunityRestRepository(CommunityService dsoService) {
         super(dsoService);
-        this.cs = dsoService;
+        this.communityService = dsoService;
     }
 
     @Override
@@ -104,8 +121,8 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
         Community community;
         try {
             // top-level community
-            community = cs.create(null, context);
-            cs.update(context, community);
+            community = communityService.create(null, context);
+            communityService.update(context, community);
             metadataConverter.setMetadata(context, community, communityRest.getMetadata());
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -135,14 +152,14 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
 
         Community community;
         try {
-            Community parent = cs.find(context, id);
+            Community parent = communityService.find(context, id);
             if (parent == null) {
                 throw new UnprocessableEntityException("Parent community for id: "
                     + id + " not found");
             }
             // sub-community
-            community = cs.create(parent, context);
-            cs.update(context, community);
+            community = communityService.create(parent, context);
+            communityService.update(context, community);
             metadataConverter.setMetadata(context, community, communityRest.getMetadata());
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -156,7 +173,7 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
     public CommunityRest findOne(Context context, UUID id) {
         Community community = null;
         try {
-            community = cs.find(context, id);
+            community = communityService.find(context, id);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -170,8 +187,8 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
     public Page<CommunityRest> findAll(Context context, Pageable pageable) {
         try {
             if (authorizeService.isAdmin(context)) {
-                long total = cs.countTotal(context);
-                List<Community> communities = cs.findAll(context, pageable.getPageSize(),
+                long total = communityService.countTotal(context);
+                List<Community> communities = communityService.findAll(context, pageable.getPageSize(),
                     Math.toIntExact(pageable.getOffset()));
                 return converter.toRestPage(communities, pageable, total, utils.obtainProjection());
             } else {
@@ -200,7 +217,7 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
     @SearchRestMethod(name = "top")
     public Page<CommunityRest> findAllTop(Pageable pageable) {
         try {
-            List<Community> communities = cs.findAllTop(obtainContext());
+            List<Community> communities = communityService.findAllTop(obtainContext());
             return converter.toRestPage(communities, pageable, utils.obtainProjection());
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -230,7 +247,7 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
         } catch (IOException e) {
             throw new UnprocessableEntityException("Error parsing community json: " + e.getMessage());
         }
-        Community community = cs.find(context, id);
+        Community community = communityService.find(context, id);
         if (community == null) {
             throw new ResourceNotFoundException(apiCategory + "." + model + " with id: " + id + " not found");
         }
@@ -248,7 +265,7 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
     protected void delete(Context context, UUID id) throws AuthorizeException {
         Community community = null;
         try {
-            community = cs.find(context, id);
+            community = communityService.find(context, id);
             if (community == null) {
                 throw new ResourceNotFoundException(
                     CommunityRest.CATEGORY + "." + CommunityRest.NAME + " with id: " + id + " not found");
@@ -257,7 +274,7 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
             throw new RuntimeException("Unable to find Community with id = " + id, e);
         }
         try {
-            cs.delete(context, community);
+            communityService.delete(context, community);
         } catch (SQLException e) {
             throw new RuntimeException("Unable to delete Community with id = " + id, e);
         } catch (IOException e) {
@@ -283,8 +300,8 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
             throw new UnprocessableEntityException(
                     "The community with the given uuid already has a logo: " + community.getID());
         }
-        Bitstream bitstream = cs.setLogo(context, community, uploadfile.getInputStream());
-        cs.update(context, community);
+        Bitstream bitstream = communityService.setLogo(context, community, uploadfile.getInputStream());
+        communityService.update(context, community);
         bitstreamService.update(context, bitstream);
         return converter.toRest(context.reloadEntity(bitstream), utils.obtainProjection());
     }
@@ -301,7 +318,7 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
     public GroupRest createAdminGroup(Context context, HttpServletRequest request, Community community)
         throws SQLException, AuthorizeException {
 
-        Group group = cs.createAdministrators(context, community);
+        Group group = communityService.createAdministrators(context, community);
         ObjectMapper mapper = new ObjectMapper();
         GroupRest groupRest = new GroupRest();
         try {
@@ -339,7 +356,68 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
     public void deleteAdminGroup(Context context, Community community)
         throws SQLException, AuthorizeException, IOException {
         Group adminGroup = community.getAdministrators();
-        cs.removeAdministrators(context, community);
+        communityService.removeAdministrators(context, community);
         groupService.delete(context, adminGroup);
+    }
+
+    @Override
+    public CommunityRest createAndReturn(Context context, List<String> stringList)
+        throws AuthorizeException, SQLException {
+
+        Community parent = null;
+        Community clone = null;
+        HttpServletRequest req = getRequestService().getCurrentRequest().getHttpServletRequest();
+        String parentUuid = req.getParameter("parent");
+        if (parentUuid != null) {
+            parent = communityService.find(context, UUID.fromString(parentUuid));
+            if (parent == null) {
+                throw new UnprocessableEntityException("The community uuid: " + parentUuid + " is wrong!");
+            }
+        }
+
+        Community community = uriListHandlerService.handle(context, req, stringList, Community.class);
+        if (community == null) {
+            throw new UnprocessableEntityException("The parent community doesn't exist");
+        } else {
+            clone = cloneCommunity(context, parent, community);
+        }
+        return converter.toRest(clone, utils.obtainProjection());
+    }
+
+    private Community cloneCommunity(Context context, Community parent, Community communityToClone)
+            throws SQLException, AuthorizeException {
+        Community clone = communityService.create(parent, context);
+        List<Community> subCommunities = communityToClone.getSubcommunities();
+        List<Collection> subCollections = communityToClone.getCollections();
+        copyMetadata(context, communityService, clone, communityToClone);
+        for (Community c : subCommunities) {
+            cloneCommunity(context, clone, c);
+        }
+        for (Collection collection : subCollections) {
+            Collection col = collectionService.create(context, clone);
+            copyMetadata(context, collectionService, col, collection);
+            copyTempalteItem(context, col, collection);
+        }
+        return clone;
+    }
+
+    private void copyTempalteItem(Context context, Collection col, Collection collection)
+            throws SQLException, AuthorizeException {
+        Item item = collection.getTemplateItem();
+        if (item != null) {
+            collectionService.createTemplateItem(context, col);
+            Item cloneTemplate = col.getTemplateItem();
+            copyMetadata(context, itemService, cloneTemplate, item);
+        }
+    }
+
+    private <T extends DSpaceObject> void copyMetadata(Context context, DSpaceObjectService<T> service,
+             T target , T dsoToClone) throws SQLException {
+
+        List<MetadataValue> metadataValue = dsoToClone.getMetadata();
+        for (MetadataValue metadata : metadataValue) {
+            service.addMetadata(context, target, metadata.getSchema(), metadata.getElement(),
+                                           metadata.getQualifier(), null, metadata.getValue());
+        }
     }
 }

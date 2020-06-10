@@ -12,6 +12,7 @@ import static org.dspace.app.rest.matcher.HalMatcher.matchEmbeds;
 import static org.dspace.app.rest.test.AbstractControllerIntegrationTest.REST_SERVER_URL;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 import java.util.List;
 import java.util.UUID;
@@ -126,5 +127,12 @@ public class CommunityMatcher {
                 hasJsonPath("$.name", is(community.getName())),
                 hasJsonPath("$.type", is("community")),
                 hasJsonPath("$.handle", is(community.getHandle())));
+    }
+
+    public static Matcher<? super Object> matchClone(Community com) {
+        return allOf(
+            hasJsonPath("$.uuid", not(com.getID().toString())),
+            hasJsonPath("$.name", is(com.getName()))
+        );
     }
 }

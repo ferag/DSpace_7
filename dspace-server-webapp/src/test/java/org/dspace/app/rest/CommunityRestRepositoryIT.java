@@ -14,6 +14,8 @@ import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadata;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.rest.converter.CommunityConverter;
 import org.dspace.app.rest.matcher.CollectionMatcher;
 import org.dspace.app.rest.matcher.CommunityMatcher;
@@ -1679,5 +1682,238 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                                          .content(mapper.writeValueAsBytes(comm))
                                          .contentType(contentType))
                             .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void cloneCommunityTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
+
+        Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity).withName("Sub Community 1")
+                                           .build();
+
+        Community child2 = CommunityBuilder.createSubCommunity(context, parentCommunity).withName("Sub Community 2")
+                                           .build();
+
+        Collection col = CollectionBuilder.createCollection(context, parentCommunity)
+                                                       .withName("Collection of parent Community")
+                                                       .build();
+        Collection child1Col1 = CollectionBuilder.createCollection(context, child1)
+                                                 .withName("Child 1 Collection 1")
+                                                 .build();
+        Collection child2Col1 = CollectionBuilder.createCollection(context, child2)
+                                                 .withName("Child 2 Collection 1")
+                                                 .build();
+
+        context.restoreAuthSystemState();
+
+        String tokenAdmin = getAuthToken(admin.getEmail(), password);
+        AtomicReference<UUID> idRef = new AtomicReference<>();
+
+        try {
+            getClient(tokenAdmin).perform(post("/api/core/communities")
+                     .param("projection", "full")
+                     .contentType(MediaType.parseMediaType(org.springframework.data.rest.webmvc.RestMediaTypes
+                     .TEXT_URI_LIST_VALUE))
+                     .content("https://localhost:8080/server//api/core/communities/" + parentCommunity.getID()))
+                     .andExpect(status()
+                     .isCreated())
+                     .andDo(result -> idRef
+                             .set(UUID.fromString(read(result.getResponse().getContentAsString(), "$.id"))))
+                     .andExpect(jsonPath("$", Matchers.allOf(
+                             hasJsonPath("$.name", is("Parent Community")),
+                             hasJsonPath("$.id", is(idRef.get().toString())),
+                             hasJsonPath("$.id", not(parentCommunity.getID().toString()))
+                             )))
+                     .andExpect(jsonPath("$._embedded.collections._embedded.collections", Matchers.contains(
+                             CollectionMatcher.matchClone(col)
+                             )))
+                    .andExpect(jsonPath("$._embedded.subcommunities._embedded.subcommunities",
+                               Matchers.containsInAnyOrder(
+                                        Matchers.allOf(CommunityMatcher.matchClone(child1),
+                                                 hasJsonPath("$._embedded.collections._embedded.collections",
+                                                 Matchers.contains(CollectionMatcher.matchClone(child1Col1)))),
+                                        Matchers.allOf(CommunityMatcher.matchClone(child2),
+                                                 hasJsonPath("$._embedded.collections._embedded.collections",
+                                                 Matchers.contains(CollectionMatcher.matchClone(child2Col1))))
+                            )));
+
+            Community parent = communityService.find(context, idRef.get());
+            assertEquals("Parent Community", parent.getName());
+            assertNotEquals(parentCommunity.getID(), parent.getID());
+            List<Community> communities = parent.getSubcommunities();
+            List<Collection> collections = parent.getCollections();
+
+            assertEquals(2, communities.size());
+            assertEquals(1, collections.size());
+            Community firstChild = communities.get(0);
+            Community secondChild = communities.get(1);
+            boolean child1Found = StringUtils.equals(firstChild.getName(), child1.getName())
+                                                     || StringUtils.equals(secondChild.getName(), child1.getName());
+            boolean child2Found = StringUtils.equals(firstChild.getName(), child2.getName())
+                                                     || StringUtils.equals(secondChild.getName(), child2.getName());
+            assertTrue(child1Found);
+            assertTrue(child2Found);
+            assertNotEquals(firstChild.getID(), child1.getID());
+            assertNotEquals(firstChild.getID(), child2.getID());
+            assertEquals(1, firstChild.getCollections().size());
+            assertEquals(1, secondChild.getCollections().size());
+
+        } finally {
+            CommunityBuilder.deleteCommunity(idRef.get());
+        }
+    }
+
+    @Test
+    public void cloneCommunityWithParentTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        Community cloneTarget = CommunityBuilder.createCommunity(context)
+                                                .withName("Community to hold cloned communities")
+                                                .build();
+        Community parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
+
+        Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity).withName("Sub Community 1")
+                                           .build();
+
+        Community child2 = CommunityBuilder.createSubCommunity(context, parentCommunity).withName("Sub Community 2")
+                                           .build();
+
+        Collection col = CollectionBuilder.createCollection(context, parentCommunity)
+                                                       .withName("Collection of parent Community")
+                                                       .build();
+        Collection child1Col1 = CollectionBuilder.createCollection(context, child1)
+                                                 .withName("Child 1 Collection 1")
+                                                 .build();
+        Collection child2Col1 = CollectionBuilder.createCollection(context, child2)
+                                                 .withName("Child 2 Collection 1")
+                                                 .build();
+
+        context.restoreAuthSystemState();
+
+        String tokenAdmin = getAuthToken(admin.getEmail(), password);
+        AtomicReference<UUID> idRef = new AtomicReference<>();
+
+        try {
+            getClient(tokenAdmin).perform(post("/api/core/communities")
+                     .param("projection", "full")
+                     .param("parent", cloneTarget.getID().toString())
+                     .contentType(MediaType.parseMediaType(org.springframework.data.rest.webmvc.RestMediaTypes
+                     .TEXT_URI_LIST_VALUE))
+                     .content("https://localhost:8080/server//api/core/communities/" + parentCommunity.getID()))
+                     .andExpect(status()
+                     .isCreated())
+                     .andDo(result -> idRef
+                             .set(UUID.fromString(read(result.getResponse().getContentAsString(), "$.id"))))
+                     .andExpect(jsonPath("$", Matchers.allOf(
+                             hasJsonPath("$.name", is("Parent Community")),
+                             hasJsonPath("$.id", is(idRef.get().toString())),
+                             hasJsonPath("$.id", not(parentCommunity.getID().toString()))
+                             )))
+                     .andExpect(jsonPath("$._embedded.collections._embedded.collections", Matchers.contains(
+                             CollectionMatcher.matchClone(col)
+                             )))
+                    .andExpect(jsonPath("$._embedded.subcommunities._embedded.subcommunities",
+                               Matchers.containsInAnyOrder(
+                                        Matchers.allOf(CommunityMatcher.matchClone(child1),
+                                                 hasJsonPath("$._embedded.collections._embedded.collections",
+                                                 Matchers.contains(CollectionMatcher.matchClone(child1Col1)))),
+                                        Matchers.allOf(CommunityMatcher.matchClone(child2),
+                                                 hasJsonPath("$._embedded.collections._embedded.collections",
+                                                 Matchers.contains(CollectionMatcher.matchClone(child2Col1))))
+                            )));
+            cloneTarget = context.reloadEntity(cloneTarget);
+            Community subCommunityOfCloneTarget = cloneTarget.getSubcommunities().get(0);
+            assertEquals(subCommunityOfCloneTarget.getID().toString(), idRef.toString());
+            assertEquals("Parent Community", subCommunityOfCloneTarget.getName());
+            assertNotEquals(parentCommunity.getID(), idRef.toString());
+            List<Community> communities = subCommunityOfCloneTarget.getSubcommunities();
+            List<Collection> collections = subCommunityOfCloneTarget.getCollections();
+
+            assertEquals(2, communities.size());
+            assertEquals(1, collections.size());
+            Community firstChild = communities.get(0);
+            Community secondChild = communities.get(1);
+            boolean child1Found = StringUtils.equals(firstChild.getName(), child1.getName())
+                                                     || StringUtils.equals(secondChild.getName(), child1.getName());
+            boolean child2Found = StringUtils.equals(firstChild.getName(), child2.getName())
+                                                     || StringUtils.equals(secondChild.getName(), child2.getName());
+            assertTrue(child1Found);
+            assertTrue(child2Found);
+            assertNotEquals(firstChild.getID(), child1.getID());
+            assertNotEquals(firstChild.getID(), child2.getID());
+            assertEquals(1, firstChild.getCollections().size());
+            assertEquals(1, secondChild.getCollections().size());
+
+
+        } finally {
+            CommunityBuilder.deleteCommunity(idRef.get());
+        }
+    }
+
+    @Test
+    public void cloneCommunityWrongUUIDTest() throws Exception {
+
+        String tokenAdmin = getAuthToken(admin.getEmail(), password);
+
+        getClient(tokenAdmin).perform(post("/api/core/communities").param("projection", "full")
+                             .contentType(MediaType.parseMediaType(
+                                org.springframework.data.rest.webmvc.RestMediaTypes.TEXT_URI_LIST_VALUE))
+                             .content("https://localhost:8080/server//api/core/communities/" + UUID.randomUUID()))
+                             .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    public void cloneCommunityUnauthorizedTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
+
+        context.restoreAuthSystemState();
+
+        getClient().perform(post("/api/core/communities")
+                     .param("projection", "full")
+                     .contentType(MediaType.parseMediaType(org.springframework.data.rest.webmvc.RestMediaTypes
+                     .TEXT_URI_LIST_VALUE))
+                     .content("https://localhost:8080/server//api/core/communities/" + parentCommunity.getID()))
+                     .andExpect(status()
+                     .isUnauthorized());
+
+        String tokenAdmin = getAuthToken(admin.getEmail(), password);
+        getClient(tokenAdmin).perform(get("/api/core/communities"))
+             .andExpect(status().isOk())
+             .andExpect(content().contentType(contentType))
+             .andExpect(jsonPath("$._embedded.communities", Matchers.contains(
+                 CommunityMatcher.matchProperties(parentCommunity.getName(),
+                                                  parentCommunity.getID(),
+                                                  parentCommunity.getHandle())
+             )))
+             .andExpect(jsonPath("$.page.totalElements", is(1)));
+    }
+
+    @Test
+    public void cloneCommunityisForbiddenTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
+
+        context.restoreAuthSystemState();
+
+        String tokenEperson = getAuthToken(eperson.getEmail(), password);
+        getClient(tokenEperson).perform(post("/api/core/communities")
+                     .param("projection", "full")
+                     .contentType(MediaType.parseMediaType(org.springframework.data.rest.webmvc.RestMediaTypes
+                     .TEXT_URI_LIST_VALUE))
+                     .content("https://localhost:8080/server//api/core/communities/" + parentCommunity.getID()))
+                     .andExpect(status()
+                     .isForbidden());
+
+        String tokenAdmin = getAuthToken(admin.getEmail(), password);
+        getClient(tokenAdmin).perform(get("/api/core/communities"))
+             .andExpect(status().isOk())
+             .andExpect(content().contentType(contentType))
+             .andExpect(jsonPath("$._embedded.communities", Matchers.contains(
+                 CommunityMatcher.matchProperties(parentCommunity.getName(),
+                                                  parentCommunity.getID(),
+                                                  parentCommunity.getHandle())
+             )))
+             .andExpect(jsonPath("$.page.totalElements", is(1)));
     }
 }

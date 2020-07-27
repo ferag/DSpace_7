@@ -8,20 +8,25 @@
 package org.dspace.app.rest.repository;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.dspace.eperson.Group.ROLE_TYPE;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.SortedMap;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.collections4.CollectionUtils;
 import org.dspace.app.rest.Parameter;
 import org.dspace.app.rest.SearchRestMethod;
 import org.dspace.app.rest.converter.MetadataConverter;
 import org.dspace.app.rest.exception.RepositoryMethodNotImplementedException;
 import org.dspace.app.rest.exception.UnprocessableEntityException;
 import org.dspace.app.rest.model.GroupRest;
+import org.dspace.app.rest.model.MetadataRest;
+import org.dspace.app.rest.model.MetadataValueRest;
 import org.dspace.app.rest.model.patch.Patch;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.DSpaceObject;
@@ -77,7 +82,7 @@ public class GroupRestRepository extends DSpaceObjectRestRepository<Group, Group
         Group group;
         try {
             group = gs.create(context);
-            gs.setName(group, groupRest.getName());
+            gs.setName(group, isRole ( groupRest ) ? ROLE_TYPE + ":" + groupRest.getName() : groupRest.getName());
             gs.update(context, group);
             metadataConverter.setMetadata(context, group, groupRest.getMetadata());
         } catch (SQLException excSQL) {
@@ -183,5 +188,27 @@ public class GroupRestRepository extends DSpaceObjectRestRepository<Group, Group
             throw new RuntimeException(e.getMessage(), e);
         }
     }
+
+    private boolean isRole(GroupRest groupRest) {
+    	
+    	String groupType = "perucris.group.type";
+    	MetadataRest metadata = groupRest.getMetadata();
+    	
+    	SortedMap<String, List<MetadataValueRest>> map = metadata.getMap();
+    	if (!map.containsKey(groupType)) {
+    		return false;
+    	}
+    	
+    	List<MetadataValueRest> values = map.get(groupType);
+    	if ( CollectionUtils.isEmpty(values)) {
+    		return false;
+    	}
+    	
+    	if ( values.size() > 1) {
+    		throw new UnprocessableEntityException("Multiple perucris.group.type found");
+    	}
+    	
+    	return Group.ROLE_TYPE.equals(values.get(0).getValue());
+	}
 
 }

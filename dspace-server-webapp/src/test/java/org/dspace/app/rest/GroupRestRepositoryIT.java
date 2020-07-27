@@ -8,6 +8,7 @@
 package org.dspace.app.rest;
 
 import static com.jayway.jsonpath.JsonPath.read;
+import static java.util.UUID.fromString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
@@ -150,6 +151,48 @@ public class GroupRestRepositoryIT extends AbstractControllerIntegrationTest {
             // remove the created group if any
             GroupBuilder.deleteGroup(idRef.get());
             GroupBuilder.deleteGroup(idRefNoEmbeds.get());
+        }
+    }
+    
+    @Test
+    public void createRoleTest() throws Exception {
+
+        // hold the id of the created groups
+        AtomicReference<UUID> idRef = new AtomicReference<>();
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            GroupRest groupRest = new GroupRest();
+            String groupName = "User Role";
+            String groupDescription = "A group that represent the User role";
+
+            groupRest.setName(groupName);
+            MetadataRest metadata = new MetadataRest();
+            metadata.put("dc.description", new MetadataValueRest(groupDescription));
+            metadata.put("perucris.group.type", new MetadataValueRest("ROLE"));
+            groupRest.setMetadata(metadata);
+
+            String authToken = getAuthToken(admin.getEmail(), password);
+            getClient(authToken).perform(post("/api/eperson/groups")
+                    .content(mapper.writeValueAsBytes(groupRest)).contentType(contentType)
+                    .param("projection", "full"))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$", GroupMatcher.matchFullEmbeds()))
+                    .andDo(result -> idRef.set(fromString(read(result.getResponse().getContentAsString(), "$.id"))));
+
+            getClient(authToken).perform(get("/api/eperson/groups/{id}", idRef.get()))
+                       .andExpect(status().isOk())
+                       .andExpect(content().contentType(contentType))
+                       .andExpect(jsonPath("$", GroupMatcher.matchGroupWithName(groupName)));
+
+            GroupService groupService = EPersonServiceFactory.getInstance().getGroupService();
+            Group group = groupService.find(context, idRef.get());
+
+            assertEquals(group.getName(),"ROLE:" + groupName);
+            assertEquals(groupService.getMetadata(group, "dc.description"),groupDescription);
+            assertEquals(groupService.getMetadata(group, "perucris.group.type"),"ROLE");
+
+        } finally {
+            GroupBuilder.deleteGroup(idRef.get());
         }
     }
 

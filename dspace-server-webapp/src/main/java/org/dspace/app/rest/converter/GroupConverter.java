@@ -7,6 +7,7 @@
  */
 package org.dspace.app.rest.converter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.rest.model.GroupRest;
 import org.dspace.app.rest.projection.Projection;
 import org.dspace.eperson.Group;
@@ -24,6 +25,10 @@ public class GroupConverter extends DSpaceObjectConverter<Group, GroupRest> {
     @Override
     public GroupRest convert(Group obj, Projection projection) {
         GroupRest epersongroup = super.convert(obj, projection);
+        String name = obj.getName();
+        if (StringUtils.isNotBlank(name) && name.startsWith(Group.ROLE_TYPE + ":")) {
+        	epersongroup.setName(name.substring(Group.ROLE_TYPE.length() + 1));
+        }
         epersongroup.setPermanent(obj.isPermanent());
         return epersongroup;
     }

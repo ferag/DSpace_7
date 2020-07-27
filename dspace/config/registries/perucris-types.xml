@@ -1,0 +1,26 @@
+<dspace-dc-types>
+
+    <dspace-header>
+        <title>Peru DSpace Cris Types</title>
+    </dspace-header>
+
+    <dc-schema>
+        <name>perucris</name>
+        <namespace>https://perucris.concytec.gob.pe/perucris/schemas</namespace>
+    </dc-schema>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>group</element>
+        <qualifier>type</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>eperson</element>
+        <qualifier>role</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+</dspace-dc-types>

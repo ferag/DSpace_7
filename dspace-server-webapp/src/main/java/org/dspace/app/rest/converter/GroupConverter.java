@@ -27,7 +27,7 @@ public class GroupConverter extends DSpaceObjectConverter<Group, GroupRest> {
         GroupRest epersongroup = super.convert(obj, projection);
         String name = obj.getName();
         if (StringUtils.isNotBlank(name) && name.startsWith(Group.ROLE_TYPE + ":")) {
-        	epersongroup.setName(name.substring(Group.ROLE_TYPE.length() + 1));
+            epersongroup.setName(name.substring(Group.ROLE_TYPE.length() + 1));
         }
         epersongroup.setPermanent(obj.isPermanent());
         return epersongroup;

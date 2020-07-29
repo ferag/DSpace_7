@@ -190,25 +190,25 @@ public class GroupRestRepository extends DSpaceObjectRestRepository<Group, Group
     }
 
     private boolean isRole(GroupRest groupRest) {
-    	
-    	String groupType = "perucris.group.type";
-    	MetadataRest metadata = groupRest.getMetadata();
-    	
-    	SortedMap<String, List<MetadataValueRest>> map = metadata.getMap();
-    	if (!map.containsKey(groupType)) {
-    		return false;
-    	}
-    	
-    	List<MetadataValueRest> values = map.get(groupType);
-    	if ( CollectionUtils.isEmpty(values)) {
-    		return false;
-    	}
-    	
-    	if ( values.size() > 1) {
-    		throw new UnprocessableEntityException("Multiple perucris.group.type found");
-    	}
-    	
-    	return Group.ROLE_TYPE.equals(values.get(0).getValue());
-	}
+
+        String groupType = "perucris.group.type";
+        MetadataRest metadata = groupRest.getMetadata();
+
+        SortedMap<String, List<MetadataValueRest>> map = metadata.getMap();
+        if (!map.containsKey(groupType)) {
+            return false;
+        }
+
+        List<MetadataValueRest> values = map.get(groupType);
+        if (CollectionUtils.isEmpty(values)) {
+            return false;
+        }
+
+        if (values.size() > 1) {
+            throw new UnprocessableEntityException("Multiple perucris.group.type found");
+        }
+
+        return Group.ROLE_TYPE.equals(values.get(0).getValue());
+    }
 
 }

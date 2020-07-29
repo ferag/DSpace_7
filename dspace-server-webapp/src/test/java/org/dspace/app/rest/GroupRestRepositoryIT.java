@@ -153,7 +153,7 @@ public class GroupRestRepositoryIT extends AbstractControllerIntegrationTest {
             GroupBuilder.deleteGroup(idRefNoEmbeds.get());
         }
     }
-    
+
     @Test
     public void createRoleTest() throws Exception {
 
@@ -475,6 +475,33 @@ public class GroupRestRepositoryIT extends AbstractControllerIntegrationTest {
                                     GroupMatcher.matchGroupEntry(group1.getID(), group1.getName())
                             )))
                             .andExpect(jsonPath("$.page.totalElements", is(1)));
+    }
+
+    @Test
+    public void findByMetadataWithPagination() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        for (int i = 0; i < 15; i++) {
+            GroupBuilder.createGroup(context)
+            .withName("My Test group " + i)
+            .build();
+        }
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        getClient(authToken).perform(get("/api/eperson/groups/search/byMetadata")
+                            .param("query", "My Test group")
+                            .param("page", "1")
+                            .param("size", "5"))
+                            .andExpect(status().isOk())
+                            .andExpect(content().contentType(contentType))
+                            .andExpect(jsonPath("$._embedded.groups", hasSize(5)))
+                            .andExpect(jsonPath("$.page.size", is(5)))
+                            .andExpect(jsonPath("$.page.totalElements", is(15)))
+                            .andExpect(jsonPath("$.page.totalPages", is(3)))
+                            .andExpect(jsonPath("$.page.number", is(1)));
     }
 
     @Test

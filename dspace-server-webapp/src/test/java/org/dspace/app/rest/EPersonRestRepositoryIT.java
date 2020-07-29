@@ -13,6 +13,7 @@ import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadata;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
@@ -694,6 +695,34 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
                                     EPersonMatcher.matchEPersonEntry(ePerson)
                             )))
                             .andExpect(jsonPath("$.page.totalElements", is(1)));
+    }
+
+    @Test
+    public void findByMetadataWithPagination() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        for (int i = 0; i < 15; i++) {
+        EPersonBuilder.createEPerson(context)
+                .withNameInMetadata("John_" + i, "Doe")
+                .withEmail("Johndoe" + i + "@example.com")
+                .build();
+        }
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        getClient(authToken).perform(get("/api/eperson/epersons/search/byMetadata")
+                            .param("query", "Johndoe")
+                            .param("page", "1")
+                            .param("size", "5"))
+                            .andExpect(status().isOk())
+                            .andExpect(content().contentType(contentType))
+                            .andExpect(jsonPath("$._embedded.epersons", hasSize(5)))
+                            .andExpect(jsonPath("$.page.size", is(5)))
+                            .andExpect(jsonPath("$.page.totalElements", is(15)))
+                            .andExpect(jsonPath("$.page.totalPages", is(3)))
+                            .andExpect(jsonPath("$.page.number", is(1)));
     }
 
 

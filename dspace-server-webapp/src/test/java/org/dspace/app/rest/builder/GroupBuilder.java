@@ -16,6 +16,7 @@ import org.dspace.content.service.DSpaceObjectService;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.GroupType;
 
 /**
  * Builder to construct Group objects
@@ -84,6 +85,15 @@ public class GroupBuilder extends AbstractDSpaceObjectBuilder<Group> {
         return this;
     }
 
+    public GroupBuilder withType(GroupType type) {
+        try {
+            groupService.addMetadata(context, group, "perucris", "group", "type", null, type.name(), null, -1);
+        } catch (Exception e) {
+            return handleException(e);
+        }
+        return this;
+    }
+
     public GroupBuilder withParent(Group parent) {
         try {
             groupService.addMember(context, parent, group);
@@ -96,6 +106,15 @@ public class GroupBuilder extends AbstractDSpaceObjectBuilder<Group> {
     public GroupBuilder addMember(EPerson eperson) {
         try {
             groupService.addMember(context, group, eperson);
+        } catch (Exception e) {
+            return handleException(e);
+        }
+        return this;
+    }
+
+    public GroupBuilder addMember(Group subGroup) {
+        try {
+            groupService.addMember(context, group, subGroup);
         } catch (Exception e) {
             return handleException(e);
         }

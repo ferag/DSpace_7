@@ -8,9 +8,14 @@
 package org.dspace.app.rest;
 
 import static com.jayway.jsonpath.JsonPath.read;
+import static java.util.Arrays.asList;
 import static java.util.UUID.fromString;
+import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadata;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -42,6 +47,7 @@ import org.dspace.app.rest.matcher.HalMatcher;
 import org.dspace.app.rest.model.GroupRest;
 import org.dspace.app.rest.model.MetadataRest;
 import org.dspace.app.rest.model.MetadataValueRest;
+import org.dspace.app.rest.model.patch.AddOperation;
 import org.dspace.app.rest.model.patch.Operation;
 import org.dspace.app.rest.model.patch.ReplaceOperation;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
@@ -56,6 +62,7 @@ import org.dspace.content.service.CommunityService;
 import org.dspace.core.Constants;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.GroupType;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
 import org.dspace.eperson.service.GroupService;
@@ -2968,6 +2975,101 @@ public class GroupRestRepositoryIT extends AbstractControllerIntegrationTest {
                         .andExpect(jsonPath("$._embedded.subgroups", Matchers.hasItem(
                             GroupMatcher.matchGroupWithName(group.getName())
                         )));
+    }
+
+    @Test
+    public void testPatchGroupStatus() throws Exception {
+
+        GroupService groupService = EPersonServiceFactory.getInstance().getGroupService();
+
+        context.turnOffAuthorisationSystem();
+
+        EPerson firstMember = EPersonBuilder.createEPerson(context).withEmail("test@user.it").build();
+        EPerson secondMember = EPersonBuilder.createEPerson(context).withEmail("member@user.it").build();
+        Group subGroup = GroupBuilder.createGroup(context).withName("SubGroup").build();
+
+        Group group = GroupBuilder.createGroup(context)
+            .withName("Group")
+            .addMember(firstMember)
+            .addMember(secondMember)
+            .addMember(subGroup)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        String token = getAuthToken(admin.getEmail(), password);
+        String disableBody = getPatchContent(asList(new AddOperation("/metadata/perucris.group.status", "DISABLED")));
+
+        getClient(token).perform(patch("/api/eperson/groups/" + group.getID())
+            .content(disableBody)
+            .contentType(MediaType.APPLICATION_JSON_PATCH_JSON))
+            .andExpect(status().isOk());
+
+        getClient(token).perform(get("/api/eperson/groups/" + group.getID()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.metadata", allOf(
+                matchMetadata("perucris.group.status", "DISABLED"),
+                matchMetadata("perucris.group.disabledusermember", firstMember.getID().toString()),
+                matchMetadata("perucris.group.disabledusermember", secondMember.getID().toString()),
+                matchMetadata("perucris.group.disabledgroupmember", subGroup.getID().toString()))));
+
+        getClient(token).perform(get("/api/eperson/groups/" + group.getID() + "/subgroups"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.subgroups", empty()));
+
+        getClient(token).perform(get("/api/eperson/groups/" + group.getID() + "/epersons"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.epersons", empty()));
+
+        assertFalse(groupService.isParentOf(context, group, subGroup));
+        assertFalse(groupService.isMember(context, firstMember, group));
+        assertFalse(groupService.isMember(context, secondMember, group));
+
+        String enabledBody = getPatchContent(
+            asList(new ReplaceOperation("/metadata/perucris.group.status", "ENABLED")));
+
+        getClient(token).perform(patch("/api/eperson/groups/" + group.getID())
+            .content(enabledBody)
+            .contentType(MediaType.APPLICATION_JSON_PATCH_JSON))
+            .andExpect(status().isOk());
+
+        getClient(token).perform(get("/api/eperson/groups/" + group.getID()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.metadata", allOf(
+                matchMetadata("perucris.group.status", "ENABLED"),
+                not(matchMetadata("perucris.group.disabledusermember", firstMember.getID().toString())),
+                not(matchMetadata("perucris.group.disabledusermember", secondMember.getID().toString())),
+                not(matchMetadata("perucris.group.disabledgroupmember", subGroup.getID().toString())))));
+
+        getClient(token).perform(get("/api/eperson/groups/" + group.getID() + "/subgroups"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.subgroups", hasSize(1)));
+
+        getClient(token).perform(get("/api/eperson/groups/" + group.getID() + "/epersons"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.epersons", hasSize(2)));
+
+        assertTrue(groupService.isParentOf(context, group, subGroup));
+        assertTrue(groupService.isMember(context, firstMember, group));
+        assertTrue(groupService.isMember(context, secondMember, group));
+
+    }
+
+    @Test
+    public void testAddMembersWithRole() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+        Group group = GroupBuilder.createGroup(context).withName("group").withType(GroupType.ROLE).build();
+        EPerson member = EPersonBuilder.createEPerson(context).withEmail("test@user.it").build();
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        getClient(authToken).perform(post("/api/eperson/groups/" + group.getID() + "/epersons")
+            .contentType(parseMediaType(TEXT_URI_LIST_VALUE))
+            .content(REST_SERVER_URL + "eperson/groups/" + member.getID()))
+            .andExpect(status().isUnprocessableEntity())
+            .andExpect(status().reason(is("Cannot add ePerson members to ROLE group")));
+
     }
 
 }

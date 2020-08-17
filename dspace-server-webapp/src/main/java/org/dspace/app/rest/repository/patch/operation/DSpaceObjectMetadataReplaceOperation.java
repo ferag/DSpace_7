@@ -22,10 +22,13 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.DSpaceObjectService;
 import org.dspace.core.Context;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
- Class for PATCH REPLACE operations on Dspace Objects' metadata
+ * Class for PATCH REPLACE operations on Dspace Objects' metadata. Operations on perucris.group.status
+ * metadata of groups are handled by {@link GroupStatusMetadataAddOrReplaceOperation}.
+ * 
  * Usage: (can be done on other dso than Item also):
  * - REPLACE metadata (with schema.identifier.qualifier) value of a dso (here: Item)
  *      from existing value to new given value
@@ -37,7 +40,10 @@ import org.springframework.stereotype.Component;
  * @author Maria Verdonck (Atmire) on 18/11/2019
  */
 @Component
+@Order(DSpaceObjectMetadataReplaceOperation.ORDER)
 public class DSpaceObjectMetadataReplaceOperation<R extends DSpaceObject> extends PatchOperation<R> {
+
+    public static final int ORDER = DSpaceObjectMetadataAddOperation.ORDER + 1;
 
     @Autowired
     DSpaceObjectMetadataPatchUtils metadataPatchUtils;

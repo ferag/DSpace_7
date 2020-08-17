@@ -29,6 +29,7 @@ import org.dspace.authorize.service.ResourcePolicyService;
 import org.dspace.content.Collection;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.DSpaceObjectServiceImpl;
+import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
@@ -747,5 +748,20 @@ public class GroupServiceImpl extends DSpaceObjectServiceImpl<Group> implements 
     public List<Group> findByMetadataField(final Context context, final String searchValue,
                                            final MetadataField metadataField) throws SQLException {
         return groupDAO.findByMetadataField(context, searchValue, metadataField);
+    }
+
+    @Override
+    public GroupType getGroupType(Group group) {
+        String value = getMetadataFirstValue(group, "perucris", "group", "type", Item.ANY);
+
+        if (value == null) {
+            return GroupType.NORMAL;
+        }
+
+        try {
+            return GroupType.valueOf(value);
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException("The given group has an unknown type: '" + value + "'", ex);
+        }
     }
 }

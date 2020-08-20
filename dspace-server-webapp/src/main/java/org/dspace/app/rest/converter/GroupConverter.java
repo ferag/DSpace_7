@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.rest.model.GroupRest;
 import org.dspace.app.rest.projection.Projection;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.GroupType;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,12 +26,25 @@ public class GroupConverter extends DSpaceObjectConverter<Group, GroupRest> {
     @Override
     public GroupRest convert(Group obj, Projection projection) {
         GroupRest epersongroup = super.convert(obj, projection);
-        String name = obj.getName();
-        if (StringUtils.isNotBlank(name) && name.startsWith(Group.ROLE_TYPE + ":")) {
-            epersongroup.setName(name.substring(Group.ROLE_TYPE.length() + 1));
-        }
+        epersongroup.setName(getNameWithoutTypePrefix(obj));
+
         epersongroup.setPermanent(obj.isPermanent());
         return epersongroup;
+    }
+
+    private String getNameWithoutTypePrefix(Group group) {
+        String name = group.getName();
+        if (StringUtils.isBlank(name)) {
+            return name;
+        }
+
+        for (GroupType type : GroupType.values()) {
+            if (name.startsWith(type.name() + ":")) {
+                return name.substring(type.name().length() + 1);
+            }
+        }
+
+        return name;
     }
 
     @Override

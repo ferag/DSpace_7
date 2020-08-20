@@ -15,5 +15,6 @@ package org.dspace.eperson;
 public enum GroupType {
 
     NORMAL,
-    ROLE;
+    ROLE,
+    INSTITUTIONAL;
 }

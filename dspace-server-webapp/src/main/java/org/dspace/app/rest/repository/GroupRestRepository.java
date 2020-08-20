@@ -8,7 +8,7 @@
 package org.dspace.app.rest.repository;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.dspace.eperson.Group.ROLE_TYPE;
+import static org.dspace.eperson.GroupType.NORMAL;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -32,6 +32,7 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.Context;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.GroupType;
 import org.dspace.eperson.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -82,7 +83,8 @@ public class GroupRestRepository extends DSpaceObjectRestRepository<Group, Group
         Group group;
         try {
             group = gs.create(context);
-            gs.setName(group, isRole ( groupRest ) ? ROLE_TYPE + ":" + groupRest.getName() : groupRest.getName());
+            GroupType groupType = getGroupType(groupRest);
+            gs.setName(group, groupType != NORMAL ? groupType.name() + ":" + groupRest.getName() : groupRest.getName());
             gs.update(context, group);
             metadataConverter.setMetadata(context, group, groupRest.getMetadata());
         } catch (SQLException excSQL) {
@@ -189,26 +191,34 @@ public class GroupRestRepository extends DSpaceObjectRestRepository<Group, Group
         }
     }
 
-    private boolean isRole(GroupRest groupRest) {
+    private GroupType getGroupType(GroupRest groupRest) {
+
+        GroupType normalType = GroupType.NORMAL;
 
         String groupType = "perucris.group.type";
         MetadataRest metadata = groupRest.getMetadata();
 
         SortedMap<String, List<MetadataValueRest>> map = metadata.getMap();
         if (!map.containsKey(groupType)) {
-            return false;
+            return normalType;
         }
 
         List<MetadataValueRest> values = map.get(groupType);
         if (CollectionUtils.isEmpty(values)) {
-            return false;
+            return normalType;
         }
 
         if (values.size() > 1) {
             throw new UnprocessableEntityException("Multiple perucris.group.type found");
         }
 
-        return Group.ROLE_TYPE.equals(values.get(0).getValue());
+        String value = values.get(0).getValue();
+        try {
+            return GroupType.valueOf(value);
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException("The given group has an unknown type: '" + value + "'", ex);
+        }
+
     }
 
 }

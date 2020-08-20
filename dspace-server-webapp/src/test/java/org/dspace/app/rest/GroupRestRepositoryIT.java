@@ -78,16 +78,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class GroupRestRepositoryIT extends AbstractControllerIntegrationTest {
 
     @Autowired
-    ResourcePolicyService resourcePolicyService;
+    private ResourcePolicyService resourcePolicyService;
+
     @Autowired
     private ConfigurationService configurationService;
+
     @Autowired
     private CollectionService collectionService;
 
     @Autowired
     private AuthorizeService authorizeService;
 
-    Collection collection;
+    private Collection collection;
 
     @Before
     public void setup() {
@@ -197,6 +199,48 @@ public class GroupRestRepositoryIT extends AbstractControllerIntegrationTest {
             assertEquals(group.getName(),"ROLE:" + groupName);
             assertEquals(groupService.getMetadata(group, "dc.description"),groupDescription);
             assertEquals(groupService.getMetadata(group, "perucris.group.type"),"ROLE");
+
+        } finally {
+            GroupBuilder.deleteGroup(idRef.get());
+        }
+    }
+
+    @Test
+    public void createInstitutionalRoleTest() throws Exception {
+
+        // hold the id of the created groups
+        AtomicReference<UUID> idRef = new AtomicReference<>();
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            GroupRest groupRest = new GroupRest();
+            String groupName = "User Institutional Role";
+            String groupDescription = "A group that represent an institutional role";
+
+            groupRest.setName(groupName);
+            MetadataRest metadata = new MetadataRest();
+            metadata.put("dc.description", new MetadataValueRest(groupDescription));
+            metadata.put("perucris.group.type", new MetadataValueRest("INSTITUTIONAL"));
+            groupRest.setMetadata(metadata);
+
+            String authToken = getAuthToken(admin.getEmail(), password);
+            getClient(authToken).perform(post("/api/eperson/groups")
+                .content(mapper.writeValueAsBytes(groupRest)).contentType(contentType)
+                .param("projection", "full"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$", GroupMatcher.matchFullEmbeds()))
+                .andDo(result -> idRef.set(fromString(read(result.getResponse().getContentAsString(), "$.id"))));
+
+            getClient(authToken).perform(get("/api/eperson/groups/{id}", idRef.get()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$", GroupMatcher.matchGroupWithName(groupName)));
+
+            GroupService groupService = EPersonServiceFactory.getInstance().getGroupService();
+            Group group = groupService.find(context, idRef.get());
+
+            assertEquals(group.getName(), "INSTITUTIONAL:" + groupName);
+            assertEquals(groupService.getMetadata(group, "dc.description"), groupDescription);
+            assertEquals(groupService.getMetadata(group, "perucris.group.type"), "INSTITUTIONAL");
 
         } finally {
             GroupBuilder.deleteGroup(idRef.get());
@@ -585,6 +629,32 @@ public class GroupRestRepositoryIT extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$", Matchers.is(
                         GroupMatcher.matchGroupEntry(group.getID(), "new name"))
                 ));
+    }
+
+    @Test
+    public void patchRoleGroupName() throws Exception {
+        context.turnOffAuthorisationSystem();
+        Group group = GroupBuilder.createGroup(context).withName("Group").withType(GroupType.INSTITUTIONAL).build();
+        context.restoreAuthSystemState();
+        String token = getAuthToken(admin.getEmail(), password);
+
+        List<Operation> ops = new ArrayList<>();
+        ReplaceOperation replaceOperation = new ReplaceOperation("/name", "new name");
+        ops.add(replaceOperation);
+
+        String requestBody = getPatchContent(ops);
+        getClient(token).perform(patch("/api/eperson/groups/" + group.getID())
+            .content(requestBody)
+            .contentType(MediaType.APPLICATION_JSON_PATCH_JSON))
+            .andExpect(status().isOk());
+
+        getClient(token).perform(get("/api/eperson/groups/" + group.getID()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", Matchers.is(GroupMatcher.matchGroupEntry(group.getID(), "new name"))));
+
+        GroupService groupService = EPersonServiceFactory.getInstance().getGroupService();
+        Group updatedGroup = groupService.find(context, group.getID());
+        assertEquals(updatedGroup.getName(), "INSTITUTIONAL:new name");
     }
 
     @Test

@@ -13,6 +13,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.rest.exception.DSpaceBadRequestException;
 import org.dspace.app.rest.exception.UnprocessableEntityException;
 import org.dspace.app.rest.model.patch.JsonValueEvaluator;
@@ -133,24 +134,49 @@ public class CrisLayoutBoxConfigurationAddOperation<D> extends PatchOperation<D>
     private CrisLayoutField getLayoutFieldFromJsonNode(
             Context context, CrisLayoutBox box, Integer row, Integer position, JsonNode node)
             throws JsonProcessingException, SQLException, UnprocessableEntityException, AuthorizeException {
-        CrisLayoutField field = new CrisLayoutFieldMetadata();
-        if (node.has("bundle") || node.has("metadata_value")) {
-            field = new CrisLayoutFieldBitstream();
+        JsonNode fieldType = node.get("fieldType");
+        if (fieldType == null || StringUtils.isEmpty(fieldType.asText())) {
+            throw new UnprocessableEntityException("The field must specify a fieldType");
         }
+
+        CrisLayoutField field = null;
+        String metadataType = null;
+        if (StringUtils.equalsIgnoreCase(fieldType.asText(), "bitstream")) {
+            field = new CrisLayoutFieldBitstream();
+            JsonNode bitstreamNode = node.get("bitstream");
+            if (bitstreamNode == null) {
+                throw new UnprocessableEntityException("Bitstream node cannot be null for a bitstream fieldType");
+            }
+            JsonNode bundleNode = bitstreamNode.get("bundle");
+            if (bundleNode != null && bundleNode.asText() != null ) {
+                ((CrisLayoutFieldBitstream)field).setBundle(bundleNode.asText());
+            } else {
+                throw new UnprocessableEntityException("Bundle cannot be null for a bitstream fieldType");
+            }
+            JsonNode metadataValueNode = bitstreamNode.get("metadataValue");
+            if (bundleNode != null && bundleNode.asText() != null ) {
+                ((CrisLayoutFieldBitstream)field).setMetadataValue(metadataValueNode.asText());
+            }
+            JsonNode metadataNode = bitstreamNode.get("metadataField");
+            if (metadataNode != null && metadataNode.asText() != null ) {
+                metadataType = metadataNode.asText();
+            }
+        } else {
+            field = new CrisLayoutFieldMetadata();
+            JsonNode metadataNode = node.get("metadata");
+            if (metadataNode != null && metadataNode.asText() != null ) {
+                metadataType = metadataNode.asText();
+            }
+        }
+
         field.setRow(row);
         field.setBox(box);
 
-        JsonNode metadataNode = node.get("metadata");
-        if (metadataNode != null && metadataNode.asText() != null ) {
-            String metadata = metadataNode.asText();
-            MetadataField metadataField = metadataService.findByString(context, metadata, '.');
-            if (metadataField == null) {
-                throw new UnprocessableEntityException("MetadataField <" + metadata + "> not exsists!");
-            }
-            field.setMetadataField(metadataField);
-        } else {
-            throw new UnprocessableEntityException("metadata field cannot be null!");
+        MetadataField metadataField = metadataService.findByString(context, metadataType, '.');
+        if (metadataField == null) {
+            throw new UnprocessableEntityException("MetadataField <" + metadataType + "> not exsists!");
         }
+        field.setMetadataField(metadataField);
 
         JsonNode labelNode = node.get("label");
         if (labelNode != null && labelNode.asText() != null ) {
@@ -167,14 +193,14 @@ public class CrisLayoutBoxConfigurationAddOperation<D> extends PatchOperation<D>
             field.setStyle(styleNode.asText());
         }
 
-        JsonNode bundleNode = node.get("bundle");
-        if (bundleNode != null && bundleNode.asText() != null ) {
-            ((CrisLayoutFieldBitstream)field).setBundle(bundleNode.asText());
+        JsonNode styleLabelNode = node.get("styleLabel");
+        if (styleLabelNode != null && styleLabelNode.asText() != null ) {
+            field.setStyleLabel(styleLabelNode.asText());
         }
 
-        JsonNode metadataValueNode = node.get("metadata_value");
-        if (bundleNode != null && bundleNode.asText() != null ) {
-            ((CrisLayoutFieldBitstream)field).setMetadataValue(metadataValueNode.asText());
+        JsonNode styleValueNode = node.get("styleValue");
+        if (styleValueNode != null && styleValueNode.asText() != null ) {
+            field.setStyleValue(styleValueNode.asText());
         }
 
         Integer priority = null;

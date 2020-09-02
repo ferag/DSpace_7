@@ -26,13 +26,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.dspace.app.rest.builder.CollectionBuilder;
-import org.dspace.app.rest.builder.CommunityBuilder;
-import org.dspace.app.rest.builder.CrisLayoutBoxBuilder;
-import org.dspace.app.rest.builder.CrisLayoutFieldBuilder;
-import org.dspace.app.rest.builder.CrisLayoutTabBuilder;
-import org.dspace.app.rest.builder.EntityTypeBuilder;
-import org.dspace.app.rest.builder.ItemBuilder;
 import org.dspace.app.rest.matcher.CrisLayoutBoxMatcher;
 import org.dspace.app.rest.matcher.CrisLayoutTabMatcher;
 import org.dspace.app.rest.model.CrisLayoutTabRest;
@@ -41,6 +34,13 @@ import org.dspace.app.rest.model.patch.Operation;
 import org.dspace.app.rest.model.patch.RemoveOperation;
 import org.dspace.app.rest.model.patch.ReplaceOperation;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
+import org.dspace.builder.CollectionBuilder;
+import org.dspace.builder.CommunityBuilder;
+import org.dspace.builder.CrisLayoutBoxBuilder;
+import org.dspace.builder.CrisLayoutFieldBuilder;
+import org.dspace.builder.CrisLayoutTabBuilder;
+import org.dspace.builder.EntityTypeBuilder;
+import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.EntityType;
@@ -414,6 +414,80 @@ public class TabsRestControllerIT extends AbstractControllerIntegrationTest {
                        (org.springframework.data.rest.webmvc.RestMediaTypes
                             .TEXT_URI_LIST_VALUE)))
             .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    public void removeSecurityMetadata() throws Exception {
+        context.turnOffAuthorisationSystem();
+        // get metadata field
+        MetadataSchema schema = mdss.find(context, "dc");
+        MetadataField isbn = mfss.findByElement(context, schema, "identifier", "isbn");
+        MetadataField uri = mfss.findByElement(context, schema, "identifier", "uri");
+        MetadataField abs = mfss.findByElement(context, schema, "description", "abstract");
+        MetadataField provenance = mfss.findByElement(context, schema, "description", "provenance");
+        MetadataField sponsorship = mfss.findByElement(context, schema, "description", "sponsorship");
+        MetadataField extent = mfss.findByElement(context, schema, "format", "extent");
+        // Create entity type Publication
+        EntityType eType = EntityTypeBuilder.createEntityTypeBuilder(context, "Publication").build();
+        // Create tabs
+        CrisLayoutTab tabOne = CrisLayoutTabBuilder.createTab(context, eType, 0)
+            .withShortName("New Tab 1")
+            .withSecurity(LayoutSecurity.PUBLIC)
+            .withHeader("New Tab header")
+            .addMetadatasecurity(uri)
+            .build();
+        CrisLayoutTab tabTwo = CrisLayoutTabBuilder.createTab(context, eType, 0)
+            .withShortName("New Tab 2")
+            .withSecurity(LayoutSecurity.PUBLIC)
+            .withHeader("New Tab header")
+            .addMetadatasecurity(abs)
+            .addMetadatasecurity(provenance)
+            .addMetadatasecurity(sponsorship)
+            .build();
+        context.restoreAuthSystemState();
+
+        String tokenAdmin = getAuthToken(admin.getEmail(), password);
+        // try to remove a not existing metadata
+        getClient(tokenAdmin)
+                .perform(delete("/api/layout/tabs/" + tabOne.getID() + "/securitymetadata/" + Integer.MAX_VALUE))
+                .andExpect(status().isNoContent());
+
+        getClient(tokenAdmin).perform(get("/api/layout/tabs/" + tabOne.getID() + "/securitymetadata"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$._embedded.securitymetadata", Matchers.not(Matchers.empty())))
+                .andExpect(jsonPath("$.page.totalElements", Matchers.is(1)));
+
+        // try to remove a not associated metadata
+        getClient(tokenAdmin)
+                .perform(delete("/api/layout/tabs/" + tabOne.getID() + "/securitymetadata/" + isbn.getID()))
+                .andExpect(status().isNoContent());
+        getClient(tokenAdmin).perform(get("/api/layout/tabs/" + tabOne.getID() + "/securitymetadata"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$._embedded.securitymetadata", Matchers.not(Matchers.empty())))
+                .andExpect(jsonPath("$.page.totalElements", Matchers.is(1)));
+
+        // remove the only associated metadata
+        getClient(tokenAdmin)
+                .perform(delete("/api/layout/tabs/" + tabOne.getID() + "/securitymetadata/" + uri.getID()))
+                .andExpect(status().isNoContent());
+
+        getClient(tokenAdmin).perform(get("/api/layout/tabs/" + tabOne.getID() + "/securitymetadata"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.page.totalElements", Matchers.is(0)));
+
+        // remove one of the many associated metadata
+        getClient(tokenAdmin)
+                .perform(delete("/api/layout/tabs/" + tabTwo.getID() + "/securitymetadata/" + abs.getID()))
+                .andExpect(status().isNoContent());
+
+        getClient(tokenAdmin).perform(get("/api/layout/tabs/" + tabTwo.getID() + "/securitymetadata"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$._embedded.securitymetadata", Matchers.not(Matchers.empty())))
+                .andExpect(jsonPath("$.page.totalElements", Matchers.is(2)));
     }
 
     /**

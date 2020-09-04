@@ -10,7 +10,6 @@ package org.dspace.app.rest;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Iterator;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -165,43 +164,30 @@ public class AuthenticationRestController implements InitializingBean {
         //This is handled by org.dspace.app.rest.security.CustomLogoutHandler
         return ResponseEntity.noContent().build();
     }
-    
-    
-    
-    // Implementation based on RFC 6749, step 4.1.1 Authorization Request
-    // Mandatory parameters:
-    // client_id = The client identifier
-    // response_type = MUST be code
-    // redirectUrl = url to redirect    
-    // The redirect URI MUST point to the frontend page which makes the call to /oauth/token as described below:
-    // Implementation of /oauth/token MUST be based on RFC 6749, step 4.1.3 Access Token Request
-    // Mandatory parameters:
-    // grant_type = MUST be set to "authorization_code"
-    // code = The authorization code received from the authorization server.
-    // redirect_uri = MUST be the same as the /authorize
-    // client_id = as the same as the Authorization Request
-    // See the test case CasAuthorizeTest.java for details
+
     @GetMapping( value = "/cas/authorize")
     public ResponseEntity<Void> orcidAuthorize(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
-    	ResponseEntity<Void> response = ResponseEntity.noContent().build();
-    	try {
-            AuthenticationService authenticationService = AuthenticateServiceFactory.getInstance().getAuthenticationService();
-            Iterator<AuthenticationMethod> authenticationMethodIterator = authenticationService.authenticationMethodIterator();
+        ResponseEntity<Void> response = ResponseEntity.noContent().build();
+        try {
+            AuthenticationService authenticationService = AuthenticateServiceFactory
+                .getInstance().getAuthenticationService();
+            Iterator<AuthenticationMethod> authenticationMethodIterator = authenticationService
+                .authenticationMethodIterator();
             while (authenticationMethodIterator.hasNext()) {
-            	AuthenticationMethod authenticationMethod = authenticationMethodIterator.next();
-            	if (authenticationMethod instanceof CasAuthentication) {
-            		String loginPageURL = authenticationMethod.loginPageURL(null, httpRequest, httpResponse);
-            		if (StringUtils.isNotBlank(loginPageURL)) {
-            			httpResponse.setHeader("X-POST-TO", loginPageURL);
-            			response = new ResponseEntity<>(HttpStatus.FOUND);
-            			break;
-            		}
-            	}
+                AuthenticationMethod authenticationMethod = authenticationMethodIterator.next();
+                if (authenticationMethod instanceof CasAuthentication) {
+                    String loginPageURL = authenticationMethod.loginPageURL(null, httpRequest, httpResponse);
+                    if (StringUtils.isNotBlank(loginPageURL)) {
+                        httpResponse.setHeader("X-POST-TO", loginPageURL);
+                        response = new ResponseEntity<>(HttpStatus.FOUND);
+                        break;
+                    }
+                }
             }
-    	}catch(Exception e) {
+        } catch (Exception e) {
             log.error("Exception resolving ORCID authorize endpoint:  ", e);
-    	}
-    	return response;
+        }
+        return response;
     }
 
 

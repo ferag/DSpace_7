@@ -7,21 +7,29 @@
  */
 package org.dspace.authenticate;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.Base64;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
-
-import javax.management.RuntimeErrorException;
-import javax.security.sasl.AuthenticationException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
+import org.dspace.authenticate.factory.AuthenticateServiceFactory;
+import org.dspace.authenticate.model.OIDCIntrospectResponse;
+import org.dspace.authenticate.model.OIDCTokenResponse;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.MetadataFieldService;
 import org.dspace.content.service.MetadataSchemaService;
@@ -33,103 +41,152 @@ import org.dspace.eperson.service.EPersonService;
 import org.dspace.eperson.service.GroupService;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class CasAuthentication implements AuthenticationMethod {
-	
+
     protected EPersonService ePersonService = EPersonServiceFactory.getInstance().getEPersonService();
-	protected GroupService groupService = EPersonServiceFactory.getInstance().getGroupService();
-	protected MetadataFieldService metadataFieldService = ContentServiceFactory.getInstance().getMetadataFieldService();
-	protected MetadataSchemaService metadataSchemaService = ContentServiceFactory.getInstance().getMetadataSchemaService();
-	protected ConfigurationService configurationService = DSpaceServicesFactory.getInstance().getConfigurationService();
-	
-	@Override
-	public boolean allowSetPassword(Context context, HttpServletRequest request, String username) throws SQLException {
-		return false;
-	}
-	
-	@Override
-	public boolean isImplicit() {
-		return false;
-	}
-	
-	@Override
-	public boolean canSelfRegister(Context context, HttpServletRequest request, String username) throws SQLException {
-		return false;
-	}
-	
-	@Override
-	public void initEPerson(Context context, HttpServletRequest request, EPerson eperson) throws SQLException {	}
+    protected GroupService groupService = EPersonServiceFactory
+        .getInstance().getGroupService();
+    protected MetadataFieldService metadataFieldService = ContentServiceFactory
+        .getInstance().getMetadataFieldService();
+    protected MetadataSchemaService metadataSchemaService = ContentServiceFactory
+        .getInstance().getMetadataSchemaService();
+    protected ConfigurationService configurationService = DSpaceServicesFactory
+        .getInstance().getConfigurationService();
 
-	
-	
+    private static final Logger log = LoggerFactory.getLogger(CasAuthentication.class);
 
+    @Override
+    public boolean allowSetPassword(Context context, HttpServletRequest request, String username) throws SQLException {
+        return false;
+    }
 
+    @Override
+    public boolean isImplicit() {
+        return false;
+    }
 
+    @Override
+    public boolean canSelfRegister(Context context, HttpServletRequest request, String username) throws SQLException {
+        return false;
+    }
 
-	@Override
-	public List<Group> getSpecialGroups(Context context, HttpServletRequest request) throws SQLException {
-		String role = (String) request.getAttribute("role");
-		Group group = groupService.find(context, UUID.fromString(role));
-		if(group == null) {
-			throw new RuntimeException("Role "+role+" not found");
-		} else {
-	        List<Group> result = new ArrayList<>();
-	        result.add(group);
-	        return result;
-		}
-	}
+    @Override
+    public void initEPerson(Context context, HttpServletRequest request, EPerson eperson) throws SQLException {
+    }
 
-	@Override
-	public int authenticate(Context context, String username, String password, String realm, HttpServletRequest request)
-			throws SQLException {
+    @Override
+    public List<Group> getSpecialGroups(Context context, HttpServletRequest request) throws SQLException {
+        String role = (String) request.getParameter("role");
+        if (role != null) {
+            Group group = groupService.find(context, UUID.fromString(role));
+            if (group == null) {
+                throw new RuntimeException("Role " + role + " not found");
+            } else {
+                List<Group> result = new ArrayList<>();
+                result.add(group);
+                return result;
+            }
+        }
+        return new ArrayList<Group>();
+    }
 
+    @Override
+    public int authenticate(Context context, String username, String password, String realm, HttpServletRequest request)
+        throws SQLException {
         if (request == null) {
-            log.warn("Unable to authenticate using Orcid because the request object is null.");
+            log.warn("Unable to authenticate using CAS OpenID Connect because the request object is null.");
             return BAD_ARGS;
         }
-        OrcidJWTUserData userData = checkOrcidCode(request.getParameter("code"), request);
-        if(userData==null || userData.getAccessToken()==null || userData.getOrcid() == null || !"/authenticate".equals(userData.getScope())) {
-        	log.debug("Invalid user data from ORCID JWT: {}", userData != null ? userData.toString() : null);
-            return AuthenticationMethod.NO_SUCH_USER;
-        }
-        
-        //find EPerson through netID
-        EPerson eperson;
-		try {
-			eperson = findEPerson(context, userData.getOrcid());
-	        if(eperson==null) {
-	            eperson = registerNewEPerson(context, request, userData);
-	        }
-	        if (eperson == null) {
-	            return AuthenticationMethod.NO_SUCH_USER;
-	        }
-            context.setCurrentUser(eperson);
-            AuthenticateServiceFactory.getInstance().getAuthenticationService().initEPerson(context, request, eperson);
-            log.info(eperson.getNetid() + " has been authenticated via ORCID");
-            return AuthenticationMethod.SUCCESS;
-		} catch (AuthorizeException e) {
-            log.error("Unable to successfully authenticate using ORCID for user because of an exception.", e);
+        String clientId = configurationService.getProperty("authentication-cas.clientid");
+        String clientSecret = configurationService.getProperty("authentication-cas.clientsecret");
+        String tokenEndpoint = configurationService.getProperty("authentication-cas.tokenendpoint");
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpPost post = new HttpPost(tokenEndpoint);
+        post.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        post.addHeader("Authorization","Basic " + Base64.getEncoder()
+            .encodeToString((clientId + ":" + clientSecret).getBytes()));
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("code", (String) request.getParameter("code")));
+        params.add(new BasicNameValuePair("grant_type", "authorization_code"));
+        params.add(new BasicNameValuePair("redirect_uri",
+            configurationService.getProperty("authentication-cas.redirecturi")));
+        try {
+            HttpEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
+            StringWriter writerEntity = new StringWriter();
+            IOUtils.copy(entity.getContent(), writerEntity, "UTF-8");
+            System.out.println("Request -> " + writerEntity.toString());
+            post.setEntity(entity);
+            HttpResponse response = client.execute(post);
+            StringWriter writer = new StringWriter();
+            IOUtils.copy(response.getEntity().getContent(), writer, "UTF-8");
+            String body = writer.toString();
+            ObjectMapper om = new ObjectMapper();
+            OIDCTokenResponse tokens = om.readValue(body, OIDCTokenResponse.class);
+            if (tokens.getIdToken() != null && !tokens.getIdToken().isEmpty()) {
+                String ePersonId = checkFieldAndExtractEperson(tokens);
+                if (ePersonId != null) {
+                    EPerson eperson = ePersonService.find(context, UUID.fromString(ePersonId));
+                    if (eperson == null) {
+                        return AuthenticationMethod.NO_SUCH_USER;
+                    } else {
+                        context.setCurrentUser(eperson);
+                        AuthenticateServiceFactory.getInstance().getAuthenticationService()
+                            .initEPerson(context, request, eperson);
+                        log.info(ePersonId + " has been authenticated via CAS");
+                        return AuthenticationMethod.SUCCESS;
+                    }
+                }
+            }
+        } catch (IOException e) {
             context.setCurrentUser(null);
-            return AuthenticationMethod.NO_SUCH_USER;
-		}
+        }
+        return AuthenticationMethod.NO_SUCH_USER;
+    }
 
-		
-		
-		return 0;
-	}
+    private String checkFieldAndExtractEperson(OIDCTokenResponse tokens) {
+        try {
+            String clientId = configurationService.getProperty("authentication-cas.clientid");
+            String clientSecret = configurationService.getProperty("authentication-cas.clientsecret");
+            String tokenEndpoint = configurationService.getProperty("authentication-cas.introspectendpoint");
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpPost post = new HttpPost(tokenEndpoint);
+            post.addHeader("Content-Type", "application/x-www-form-urlencoded");
+            post.addHeader("Authorization","Basic " + Base64.getEncoder()
+                .encodeToString((clientId + ":" + clientSecret).getBytes()));
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("token", tokens.getAccessToken()));
+            HttpEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
+            StringWriter writerEntity = new StringWriter();
+            IOUtils.copy(entity.getContent(), writerEntity, "UTF-8");
+            System.out.println("Request -> " + writerEntity.toString());
+            post.setEntity(entity);
+            HttpResponse response = client.execute(post);
+            StringWriter writer = new StringWriter();
+            IOUtils.copy(response.getEntity().getContent(), writer, "UTF-8");
+            String body = writer.toString();
+            ObjectMapper om = new ObjectMapper();
+            OIDCIntrospectResponse introspect = om.readValue(body, OIDCIntrospectResponse.class);
+            return introspect.getSubject();
+        } catch (IOException e) {
+            return null;
+        }
+    }
 
-	@Override
-	public String loginPageURL(Context context, HttpServletRequest request, HttpServletResponse response) {
-		//?response_type=code&scope=openid&client_id=client2&redirect_uri=http://localhost:8043/app2
+    @Override
+    public String loginPageURL(Context context, HttpServletRequest request, HttpServletResponse response) {
         return configurationService.getProperty("authentication-cas.authorizeurl", "http://localhost:8081/oidc/authorize")
-        	+ "?client_id=" + configurationService.getProperty("authentication-orcid.clientid")
-        	+ "&response_type=code&scope=openid&redirect_uri="
-        	+ configurationService.getProperty("authentication-cas.redirecturi");
-	}
+            + "?client_id=" + configurationService.getProperty("authentication-cas.clientid")
+            + "&response_type=code&scope=openid&redirect_uri="
+            + configurationService.getProperty("authentication-cas.redirecturi");
+    }
 
-	@Override
-	public String getName() {
-		return "cas";
-	}
+    @Override
+    public String getName() {
+        return "cas";
+    }
 
 }

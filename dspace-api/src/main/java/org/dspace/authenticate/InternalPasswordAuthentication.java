@@ -24,10 +24,10 @@ package org.dspace.authenticate;
  * implement HTTP Basic Authentication for servlets, by passing the
  * Basic Auth username and password to the <code>AuthenticationManager</code>.
  */
-public class CasPasswordAuthentication extends PasswordAuthentication {
+public class InternalPasswordAuthentication extends PasswordAuthentication {
 
     @Override
     public String getName() {
-        return "dspacepwd";
+        return "internal";
     }
 }

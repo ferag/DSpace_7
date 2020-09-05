@@ -30,7 +30,7 @@ import org.dspace.app.rest.security.RestAuthenticationService;
 import org.dspace.app.rest.utils.ContextUtil;
 import org.dspace.app.rest.utils.Utils;
 import org.dspace.authenticate.AuthenticationMethod;
-import org.dspace.authenticate.CasAuthentication;
+import org.dspace.authenticate.OIDCAuthentication;
 import org.dspace.authenticate.factory.AuthenticateServiceFactory;
 import org.dspace.authenticate.service.AuthenticationService;
 import org.dspace.core.Context;
@@ -165,7 +165,7 @@ public class AuthenticationRestController implements InitializingBean {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping( value = "/cas/authorize")
+    @GetMapping( value = "/oidc/authorize")
     public ResponseEntity<Void> orcidAuthorize(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         ResponseEntity<Void> response = ResponseEntity.noContent().build();
         try {
@@ -175,7 +175,7 @@ public class AuthenticationRestController implements InitializingBean {
                 .authenticationMethodIterator();
             while (authenticationMethodIterator.hasNext()) {
                 AuthenticationMethod authenticationMethod = authenticationMethodIterator.next();
-                if (authenticationMethod instanceof CasAuthentication) {
+                if (authenticationMethod instanceof OIDCAuthentication) {
                     String loginPageURL = authenticationMethod.loginPageURL(null, httpRequest, httpResponse);
                     if (StringUtils.isNotBlank(loginPageURL)) {
                         httpResponse.setHeader("X-POST-TO", loginPageURL);

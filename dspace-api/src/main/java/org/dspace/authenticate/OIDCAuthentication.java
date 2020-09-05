@@ -45,7 +45,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class CasAuthentication implements AuthenticationMethod {
+public class OIDCAuthentication implements AuthenticationMethod {
 
     protected EPersonService ePersonService = EPersonServiceFactory.getInstance().getEPersonService();
     protected GroupService groupService = EPersonServiceFactory
@@ -57,7 +57,7 @@ public class CasAuthentication implements AuthenticationMethod {
     protected ConfigurationService configurationService = DSpaceServicesFactory
         .getInstance().getConfigurationService();
 
-    private static final Logger log = LoggerFactory.getLogger(CasAuthentication.class);
+    private static final Logger log = LoggerFactory.getLogger(OIDCAuthentication.class);
 
     @Override
     public boolean allowSetPassword(Context context, HttpServletRequest request, String username) throws SQLException {
@@ -98,12 +98,12 @@ public class CasAuthentication implements AuthenticationMethod {
     public int authenticate(Context context, String username, String password, String realm, HttpServletRequest request)
         throws SQLException {
         if (request == null) {
-            log.warn("Unable to authenticate using CAS OpenID Connect because the request object is null.");
+            log.warn("Unable to authenticate using OpenID Connect because the request object is null.");
             return BAD_ARGS;
         }
-        String clientId = configurationService.getProperty("authentication-cas.clientid");
-        String clientSecret = configurationService.getProperty("authentication-cas.clientsecret");
-        String tokenEndpoint = configurationService.getProperty("authentication-cas.tokenendpoint");
+        String clientId = configurationService.getProperty("authentication-openid.clientid");
+        String clientSecret = configurationService.getProperty("authentication-openid.clientsecret");
+        String tokenEndpoint = configurationService.getProperty("authentication-openid.tokenendpoint");
         HttpClient client = HttpClientBuilder.create().build();
         HttpPost post = new HttpPost(tokenEndpoint);
         post.addHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -113,7 +113,7 @@ public class CasAuthentication implements AuthenticationMethod {
         params.add(new BasicNameValuePair("code", (String) request.getParameter("code")));
         params.add(new BasicNameValuePair("grant_type", "authorization_code"));
         params.add(new BasicNameValuePair("redirect_uri",
-            configurationService.getProperty("authentication-cas.redirecturi")));
+            configurationService.getProperty("authentication-oidc.redirecturi")));
         try {
             HttpEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
             StringWriter writerEntity = new StringWriter();
@@ -136,7 +136,7 @@ public class CasAuthentication implements AuthenticationMethod {
                         context.setCurrentUser(eperson);
                         AuthenticateServiceFactory.getInstance().getAuthenticationService()
                             .initEPerson(context, request, eperson);
-                        log.info(ePersonId + " has been authenticated via CAS");
+                        log.info(ePersonId + " has been authenticated via OpenID");
                         return AuthenticationMethod.SUCCESS;
                     }
                 }
@@ -149,9 +149,9 @@ public class CasAuthentication implements AuthenticationMethod {
 
     private String checkFieldAndExtractEperson(OIDCTokenResponse tokens) {
         try {
-            String clientId = configurationService.getProperty("authentication-cas.clientid");
-            String clientSecret = configurationService.getProperty("authentication-cas.clientsecret");
-            String tokenEndpoint = configurationService.getProperty("authentication-cas.introspectendpoint");
+            String clientId = configurationService.getProperty("authentication-openid.clientid");
+            String clientSecret = configurationService.getProperty("authentication-openid.clientsecret");
+            String tokenEndpoint = configurationService.getProperty("authentication-openid.introspectendpoint");
             HttpClient client = HttpClientBuilder.create().build();
             HttpPost post = new HttpPost(tokenEndpoint);
             post.addHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -178,15 +178,15 @@ public class CasAuthentication implements AuthenticationMethod {
 
     @Override
     public String loginPageURL(Context context, HttpServletRequest request, HttpServletResponse response) {
-        return configurationService.getProperty("authentication-cas.authorizeurl", "http://localhost:8081/oidc/authorize")
-            + "?client_id=" + configurationService.getProperty("authentication-cas.clientid")
+        return configurationService.getProperty("authentication-oidc.authorizeurl", "http://localhost:8081/oidc/authorize")
+            + "?client_id=" + configurationService.getProperty("authentication-openid.clientid")
             + "&response_type=code&scope=openid&redirect_uri="
-            + configurationService.getProperty("authentication-cas.redirecturi");
+            + configurationService.getProperty("authentication-openid.redirecturi");
     }
 
     @Override
     public String getName() {
-        return "cas";
+        return "openid";
     }
 
 }

@@ -21,22 +21,25 @@ import java.util.Map;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 
-import org.dspace.app.rest.builder.ClaimedTaskBuilder;
-import org.dspace.app.rest.builder.CollectionBuilder;
-import org.dspace.app.rest.builder.CommunityBuilder;
-import org.dspace.app.rest.builder.EPersonBuilder;
-import org.dspace.app.rest.builder.ItemBuilder;
-import org.dspace.app.rest.builder.WorkflowItemBuilder;
-import org.dspace.app.rest.builder.WorkspaceItemBuilder;
 import org.dspace.app.rest.matcher.WorkspaceItemMatcher;
 import org.dspace.app.rest.model.patch.AddOperation;
 import org.dspace.app.rest.model.patch.Operation;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
+import org.dspace.builder.ClaimedTaskBuilder;
+import org.dspace.builder.CollectionBuilder;
+import org.dspace.builder.CommunityBuilder;
+import org.dspace.builder.EPersonBuilder;
+import org.dspace.builder.ItemBuilder;
+import org.dspace.builder.WorkflowItemBuilder;
+import org.dspace.builder.WorkspaceItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.Item;
 import org.dspace.content.WorkspaceItem;
+import org.dspace.deduplication.MockSolrDedupCore;
 import org.dspace.eperson.EPerson;
+import org.dspace.kernel.ServiceManager;
+import org.dspace.services.factory.DSpaceServicesFactory;
 import org.dspace.xmlworkflow.storedcomponents.ClaimedTask;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.hamcrest.Matchers;
@@ -49,6 +52,16 @@ import org.junit.Test;
  *
  */
 public class SubmissionDeduplicationRestIT extends AbstractControllerIntegrationTest {
+    private MockSolrDedupCore dedupService;
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        ServiceManager serviceManager = DSpaceServicesFactory.getInstance().getServiceManager();
+        dedupService = serviceManager
+                .getServiceByName(null, MockSolrDedupCore.class);
+    }
+
     @Test
     /**
      * Test reject deduplication during workspace submission. Both verify and reject

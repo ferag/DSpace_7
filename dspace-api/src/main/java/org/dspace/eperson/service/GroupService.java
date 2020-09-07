@@ -18,6 +18,7 @@ import org.dspace.content.service.DSpaceObjectService;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.GroupType;
 
 /**
  * Service interface class for the Group object.
@@ -319,4 +320,12 @@ public interface GroupService extends DSpaceObjectService<Group>, DSpaceObjectLe
      */
     List<Group> findByMetadataField(Context context, String searchValue, MetadataField metadataField)
         throws SQLException;
+
+    /**
+     * Returns the type of the given group.
+     *
+     * @param group the group
+     * @return the group type as enum
+     */
+    public GroupType getGroupType(Group group);
 }

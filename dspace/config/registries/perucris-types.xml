@@ -18,8 +18,43 @@
 
     <dc-type>
         <schema>perucris</schema>
+        <element>group</element>
+        <qualifier>status</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>group</element>
+        <qualifier>disabledusermember</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>group</element>
+        <qualifier>disabledgroupmember</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
         <element>eperson</element>
         <qualifier>role</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>eperson</element>
+        <qualifier>institutional-role</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>eperson</element>
+        <qualifier>institutional-scoped-role</qualifier>
         <scope_note></scope_note>
     </dc-type>
 

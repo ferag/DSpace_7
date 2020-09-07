@@ -1031,13 +1031,11 @@ prevent the generation of resource policy entry values with null dspace_object a
      * @throws AuthorizeException if authorization error
      *                            Exception indicating the current user of the context does not have permission
      *                            to perform a particular action.
-     * @throws IOException        if IO error
-     *                            A general class of exceptions produced by failed or interrupted I/O operations.
      */
     @Override
     public Iterator<Item> findByMetadataField(Context context,
                                               String schema, String element, String qualifier, String value)
-        throws SQLException, AuthorizeException, IOException {
+        throws SQLException, AuthorizeException {
         MetadataSchema mds = metadataSchemaService.find(context, schema);
         if (mds == null) {
             throw new IllegalArgumentException("No such metadata schema: " + schema);
@@ -1059,7 +1057,7 @@ prevent the generation of resource policy entry values with null dspace_object a
     public Iterator<Item> findByMetadataQuery(Context context, List<List<MetadataField>> listFieldList,
                                               List<String> query_op, List<String> query_val, List<UUID> collectionUuids,
                                               String regexClause, int offset, int limit)
-        throws SQLException, AuthorizeException, IOException {
+        throws SQLException, AuthorizeException {
         return itemDAO
             .findByMetadataQuery(context, listFieldList, query_op, query_val, collectionUuids, regexClause, offset,
                                  limit);
@@ -1372,6 +1370,32 @@ prevent the generation of resource policy entry values with null dspace_object a
             return finalList;
         }
 
+    }
+
+    /**
+     * Supports moving metadata by adding the metadata value or updating the place of the relationship
+     */
+    @Override
+    protected void moveSingleMetadataValue(Context context, Item dso, int place, MetadataValue rr) {
+        if (rr instanceof RelationshipMetadataValue) {
+            try {
+                //Retrieve the applicable relationship
+                Relationship rs = relationshipService.find(context,
+                        ((RelationshipMetadataValue) rr).getRelationshipId());
+                if (rs.getLeftItem() == dso) {
+                    rs.setLeftPlace(place);
+                } else {
+                    rs.setRightPlace(place);
+                }
+                relationshipService.update(context, rs);
+            } catch (Exception e) {
+                //should not occur, otherwise metadata can't be updated either
+                log.error("An error occurred while moving " + rr.getAuthority() + " for item " + dso.getID(), e);
+            }
+        } else {
+            //just move the metadata
+            rr.setPlace(place);
+        }
     }
 
     /**

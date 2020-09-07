@@ -7,6 +7,8 @@
  */
 package org.dspace.app.rest.repository.patch.operation;
 
+import static org.dspace.eperson.GroupType.NORMAL;
+
 import java.sql.SQLException;
 
 import org.dspace.app.rest.exception.DSpaceBadRequestException;
@@ -15,6 +17,7 @@ import org.dspace.app.rest.model.patch.Operation;
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.Context;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.GroupType;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +36,7 @@ import org.springframework.stereotype.Component;
 public class GroupNameReplaceOperation<R> extends PatchOperation<R> {
 
     @Autowired
-    GroupService groupService;
+    private GroupService groupService;
 
     /**
      * Path in json body of patch that uses this operation
@@ -49,7 +52,9 @@ public class GroupNameReplaceOperation<R> extends PatchOperation<R> {
             checkModelForExistingValue(group);
             checkForProcessability(context, group);
             try {
-                groupService.setName(group, (String) operation.getValue());
+                String name = (String) operation.getValue();
+                GroupType groupType = groupService.getGroupType(group);
+                groupService.setName(group, groupType != NORMAL ? groupType.name() + ":" + name : name);
             } catch (SQLException e) {
                 throw new DSpaceBadRequestException(
                         "SQLException in GroupNameReplaceOperation.perform "

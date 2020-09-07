@@ -10,6 +10,8 @@ package org.dspace.app.rest.repository.patch.operation;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.logging.log4j.Logger;
+import org.dspace.app.rest.converter.ItemConverter;
 import org.dspace.app.rest.exception.DSpaceBadRequestException;
 import org.dspace.app.rest.exception.UnprocessableEntityException;
 import org.dspace.app.rest.model.MetadataValueRest;
@@ -22,10 +24,13 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.DSpaceObjectService;
 import org.dspace.core.Context;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
- Class for PATCH REPLACE operations on Dspace Objects' metadata
+ * Class for PATCH REPLACE operations on Dspace Objects' metadata. Operations on perucris.group.status
+ * metadata of groups are handled by {@link GroupStatusMetadataAddOrReplaceOperation}.
+ * 
  * Usage: (can be done on other dso than Item also):
  * - REPLACE metadata (with schema.identifier.qualifier) value of a dso (here: Item)
  *      from existing value to new given value
@@ -37,10 +42,18 @@ import org.springframework.stereotype.Component;
  * @author Maria Verdonck (Atmire) on 18/11/2019
  */
 @Component
+@Order(DSpaceObjectMetadataReplaceOperation.ORDER)
 public class DSpaceObjectMetadataReplaceOperation<R extends DSpaceObject> extends PatchOperation<R> {
+
+    public static final int ORDER = DSpaceObjectMetadataAddOperation.ORDER + 1;
+    private static final Logger log = org.apache.logging.log4j.LogManager
+                                         .getLogger(DSpaceObjectMetadataReplaceOperation.class);
 
     @Autowired
     DSpaceObjectMetadataPatchUtils metadataPatchUtils;
+
+    @Autowired
+    private ItemConverter itemConverter;
 
     @Override
     public R perform(Context context, R resource, Operation operation) throws SQLException {
@@ -78,6 +91,16 @@ public class DSpaceObjectMetadataReplaceOperation<R extends DSpaceObject> extend
      */
     private void replace(Context context, DSpaceObject dso, DSpaceObjectService dsoService, MetadataField metadataField,
                          MetadataValueRest metadataValue, String index, String propertyOfMd, String valueMdProperty) {
+        try {
+            if (dso instanceof Item) {
+                if (!itemConverter.checkMetadataFieldVisibility(context, (Item) dso, metadataField)) {
+                    throw new UnprocessableEntityException(
+                            "Current user has not permession to esecute patch peration on " + metadataField);
+                }
+            }
+        } catch (SQLException e) {
+            log.error("Error filtering item metadata based on permissions", e);
+        }
         // replace entire set of metadata
         if (metadataField == null) {
             this.replaceAllMetadata(context, dso, dsoService);

@@ -34,6 +34,7 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.GroupType;
 import org.dspace.eperson.service.EPersonService;
 import org.dspace.eperson.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,6 +138,11 @@ public class GroupRestController {
         Group parentGroup = groupService.find(context, uuid);
         if (parentGroup == null) {
             throw new ResourceNotFoundException("parent group is not found for uuid: " + uuid);
+        }
+
+        GroupType groupType = groupService.getGroupType(parentGroup);
+        if (groupType == GroupType.ROLE) {
+            throw new UnprocessableEntityException("Cannot add ePerson members to ROLE group");
         }
 
         AuthorizeUtil.authorizeManageGroup(context, parentGroup);

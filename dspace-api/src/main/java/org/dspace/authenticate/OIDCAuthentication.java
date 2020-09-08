@@ -80,18 +80,8 @@ public class OIDCAuthentication implements AuthenticationMethod {
 
     @Override
     public List<Group> getSpecialGroups(Context context, HttpServletRequest request) throws SQLException {
-        String role = (String) request.getParameter("role");
-        if (role != null) {
-            Group group = groupService.find(context, UUID.fromString(role));
-            if (group == null) {
-                throw new RuntimeException("Role " + role + " not found");
-            } else {
-                List<Group> result = new ArrayList<>();
-                result.add(group);
-                return result;
-            }
-        }
-        return new ArrayList<Group>();
+        //missing data before authenticate
+        return new ArrayList<>();
     }
 
     @Override
@@ -101,9 +91,9 @@ public class OIDCAuthentication implements AuthenticationMethod {
             log.warn("Unable to authenticate using OpenID Connect because the request object is null.");
             return BAD_ARGS;
         }
-        String clientId = configurationService.getProperty("authentication-openid.clientid");
-        String clientSecret = configurationService.getProperty("authentication-openid.clientsecret");
-        String tokenEndpoint = configurationService.getProperty("authentication-openid.tokenendpoint");
+        String clientId = configurationService.getProperty("authentication-oidc.clientid");
+        String clientSecret = configurationService.getProperty("authentication-oidc.clientsecret");
+        String tokenEndpoint = configurationService.getProperty("authentication-oidc.tokenendpoint");
         HttpClient client = HttpClientBuilder.create().build();
         HttpPost post = new HttpPost(tokenEndpoint);
         post.addHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -127,13 +117,23 @@ public class OIDCAuthentication implements AuthenticationMethod {
             ObjectMapper om = new ObjectMapper();
             OIDCTokenResponse tokens = om.readValue(body, OIDCTokenResponse.class);
             if (tokens.getIdToken() != null && !tokens.getIdToken().isEmpty()) {
-                String ePersonId = checkFieldAndExtractEperson(tokens);
+                OIDCIntrospectResponse userData = checkFieldAndExtractEperson(tokens);
+                String ePersonId = userData.getSubject();
                 if (ePersonId != null) {
                     EPerson eperson = ePersonService.find(context, UUID.fromString(ePersonId));
                     if (eperson == null) {
                         return AuthenticationMethod.NO_SUCH_USER;
                     } else {
                         context.setCurrentUser(eperson);
+                        String role = userData.getRole();
+                        if (role != null) {
+                            Group group = groupService.find(context, UUID.fromString(role));
+                            if (group == null) {
+                                throw new RuntimeException("Role " + role + " not found");
+                            } else {
+                                context.setSpecialGroup(UUID.fromString(role));
+                            }
+                        }
                         AuthenticateServiceFactory.getInstance().getAuthenticationService()
                             .initEPerson(context, request, eperson);
                         log.info(ePersonId + " has been authenticated via OpenID");
@@ -147,11 +147,11 @@ public class OIDCAuthentication implements AuthenticationMethod {
         return AuthenticationMethod.NO_SUCH_USER;
     }
 
-    private String checkFieldAndExtractEperson(OIDCTokenResponse tokens) {
+    private OIDCIntrospectResponse checkFieldAndExtractEperson(OIDCTokenResponse tokens) {
         try {
-            String clientId = configurationService.getProperty("authentication-openid.clientid");
-            String clientSecret = configurationService.getProperty("authentication-openid.clientsecret");
-            String tokenEndpoint = configurationService.getProperty("authentication-openid.introspectendpoint");
+            String clientId = configurationService.getProperty("authentication-oidc.clientid");
+            String clientSecret = configurationService.getProperty("authentication-oidc.clientsecret");
+            String tokenEndpoint = configurationService.getProperty("authentication-oidc.introspectendpoint");
             HttpClient client = HttpClientBuilder.create().build();
             HttpPost post = new HttpPost(tokenEndpoint);
             post.addHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -169,8 +169,7 @@ public class OIDCAuthentication implements AuthenticationMethod {
             IOUtils.copy(response.getEntity().getContent(), writer, "UTF-8");
             String body = writer.toString();
             ObjectMapper om = new ObjectMapper();
-            OIDCIntrospectResponse introspect = om.readValue(body, OIDCIntrospectResponse.class);
-            return introspect.getSubject();
+            return om.readValue(body, OIDCIntrospectResponse.class);
         } catch (IOException e) {
             return null;
         }
@@ -179,9 +178,9 @@ public class OIDCAuthentication implements AuthenticationMethod {
     @Override
     public String loginPageURL(Context context, HttpServletRequest request, HttpServletResponse response) {
         return configurationService.getProperty("authentication-oidc.authorizeurl", "http://localhost:8081/oidc/authorize")
-            + "?client_id=" + configurationService.getProperty("authentication-openid.clientid")
+            + "?client_id=" + configurationService.getProperty("authentication-oidc.clientid")
             + "&response_type=code&scope=openid&redirect_uri="
-            + configurationService.getProperty("authentication-openid.redirecturi");
+            + configurationService.getProperty("authentication-oidc.redirecturi");
     }
 
     @Override

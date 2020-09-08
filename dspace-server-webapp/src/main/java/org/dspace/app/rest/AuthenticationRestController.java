@@ -9,11 +9,9 @@ package org.dspace.app.rest;
 
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.rest.converter.ConverterService;
 import org.dspace.app.rest.converter.EPersonConverter;
 import org.dspace.app.rest.link.HalLinkService;
@@ -29,10 +27,6 @@ import org.dspace.app.rest.projection.Projection;
 import org.dspace.app.rest.security.RestAuthenticationService;
 import org.dspace.app.rest.utils.ContextUtil;
 import org.dspace.app.rest.utils.Utils;
-import org.dspace.authenticate.AuthenticationMethod;
-import org.dspace.authenticate.OIDCAuthentication;
-import org.dspace.authenticate.factory.AuthenticateServiceFactory;
-import org.dspace.authenticate.service.AuthenticationService;
 import org.dspace.core.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +36,6 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -164,32 +157,6 @@ public class AuthenticationRestController implements InitializingBean {
         //This is handled by org.dspace.app.rest.security.CustomLogoutHandler
         return ResponseEntity.noContent().build();
     }
-
-    @GetMapping( value = "/oidc/authorize")
-    public ResponseEntity<Void> orcidAuthorize(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
-        ResponseEntity<Void> response = ResponseEntity.noContent().build();
-        try {
-            AuthenticationService authenticationService = AuthenticateServiceFactory
-                .getInstance().getAuthenticationService();
-            Iterator<AuthenticationMethod> authenticationMethodIterator = authenticationService
-                .authenticationMethodIterator();
-            while (authenticationMethodIterator.hasNext()) {
-                AuthenticationMethod authenticationMethod = authenticationMethodIterator.next();
-                if (authenticationMethod instanceof OIDCAuthentication) {
-                    String loginPageURL = authenticationMethod.loginPageURL(null, httpRequest, httpResponse);
-                    if (StringUtils.isNotBlank(loginPageURL)) {
-                        httpResponse.setHeader("X-POST-TO", loginPageURL);
-                        response = new ResponseEntity<>(HttpStatus.FOUND);
-                        break;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            log.error("Exception resolving ORCID authorize endpoint:  ", e);
-        }
-        return response;
-    }
-
 
     protected ResponseEntity getLoginResponse(HttpServletRequest request, String failedMessage) {
         //Get the context and check if we have an authenticated eperson

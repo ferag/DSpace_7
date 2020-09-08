@@ -50,6 +50,9 @@ public class OIDCIntrospectResponse {
     @JsonProperty("grant_type")
     private String grantType;
 
+    @JsonProperty("pgc-roles")
+    private String role;
+
     public boolean isActive() {
         return active;
     }
@@ -144,5 +147,13 @@ public class OIDCIntrospectResponse {
 
     public void setGrantType(String grantType) {
         this.grantType = grantType;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

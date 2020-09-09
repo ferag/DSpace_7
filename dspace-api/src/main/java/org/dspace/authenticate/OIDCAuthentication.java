@@ -185,7 +185,7 @@ public class OIDCAuthentication implements AuthenticationMethod {
 
     @Override
     public String getName() {
-        return "openid";
+        return "oidc";
     }
 
 }

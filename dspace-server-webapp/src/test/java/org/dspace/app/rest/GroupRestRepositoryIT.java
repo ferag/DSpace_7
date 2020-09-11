@@ -3137,9 +3137,7 @@ public class GroupRestRepositoryIT extends AbstractControllerIntegrationTest {
         getClient(authToken).perform(post("/api/eperson/groups/" + group.getID() + "/epersons")
             .contentType(parseMediaType(TEXT_URI_LIST_VALUE))
             .content(REST_SERVER_URL + "eperson/groups/" + member.getID()))
-            .andExpect(status().isUnprocessableEntity())
-            .andExpect(status().reason(is("Cannot add ePerson members to ROLE group")));
-
+            .andExpect(status().isUnprocessableEntity());
     }
 
 }

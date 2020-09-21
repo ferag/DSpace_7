@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<import_structure>
+	<community>
+		<name>Directorios</name>
+		<description />
+		<intro />
+		<copyright />
+		<sidebar />
+	    <community>
+	        <name>Directorio de talento humano</name>
+	        <description />
+	        <intro />
+	        <copyright />
+	        <sidebar />
+	        <collection>
+	            <name>People</name>
+	            <entity-type>Person</entity-type>
+	            <submission-type>person</submission-type>
+	            <description />
+	            <intro />
+	            <copyright />
+	            <sidebar />
+	            <license />
+	            <provenance />
+	        </collection>
+	    </community>
+        <community>
+            <name>Directorio de instituciones</name>
+            <description />
+            <intro />
+            <copyright />
+            <sidebar />
+	        <collection>
+	            <name>OrgUnits</name>
+	            <entity-type>OrgUnit</entity-type>
+	            <submission-type>orgunit</submission-type>
+	            <description />
+	            <intro />
+	            <copyright />
+	            <sidebar />
+	            <license />
+	            <provenance />
+	        </collection>
+        </community>
+        <community>
+            <name>Directorio de Producción Científica</name>
+            <description />
+            <intro />
+            <copyright />
+            <sidebar />
+	        <collection>
+	            <name>Publications</name>
+	            <entity-type>Publication</entity-type>
+	            <submission-type>publication</submission-type>
+	            <description />
+	            <intro />
+	            <copyright />
+	            <sidebar />
+	            <license />
+	            <provenance />
+	        </collection>
+	        <collection>
+	            <name>Patents</name>
+	            <entity-type>Patent</entity-type>
+	            <submission-type>patent</submission-type>
+	            <description />
+	            <intro />
+	            <copyright />
+	            <sidebar />
+	            <license />
+	            <provenance />
+	        </collection>
+        </community>
+        <community>
+            <name>Directorio de Proyectos</name>
+            <description />
+            <intro />
+            <copyright />
+            <sidebar />
+	        <collection>
+	            <name>Projects</name>
+	            <entity-type>Project</entity-type>
+	            <submission-type>project</submission-type>
+	            <description />
+	            <intro />
+	            <copyright />
+	            <sidebar />
+	            <license />
+	            <provenance />
+	        </collection>
+	        <collection>
+	            <name>Fundings</name>
+	            <entity-type>Funding</entity-type>
+	            <submission-type>funding</submission-type>
+	            <description />
+	            <intro />
+	            <copyright />
+	            <sidebar />
+	            <license />
+	            <provenance />
+	        </collection>
+        </community>
+        <community>
+            <name>Directorio de Infraestructuras</name>
+            <description />
+            <intro />
+            <copyright />
+            <sidebar />
+	        <collection>
+	            <name>Equipments</name>
+	            <entity-type>Equipment</entity-type>
+	            <submission-type>equipment</submission-type>
+	            <description />
+	            <intro />
+	            <copyright />
+	            <sidebar />
+	            <license />
+	            <provenance />
+	        </collection>
+        </community>
+	</community>
+</import_structure>
+
+
+
+
+
+
+

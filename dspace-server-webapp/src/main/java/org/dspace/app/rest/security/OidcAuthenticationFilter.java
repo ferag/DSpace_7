@@ -18,6 +18,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
+
+/**
+ * This class will filter openID Connect requests and try and authenticate them.
+ *
+ * @author Pasquale Cavallo (pasquale.cavallo at 4science dot it)
+ */
+
 public class OidcAuthenticationFilter extends StatelessLoginFilter {
 
     public OidcAuthenticationFilter(String url, AuthenticationManager authenticationManager,

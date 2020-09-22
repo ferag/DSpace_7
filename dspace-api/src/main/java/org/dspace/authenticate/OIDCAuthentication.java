@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -45,6 +46,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * OpenID Connect Authentication for DSpace.
+ * 
+ * This implementation doesn't allow/needs to register user,
+ * which may be holder by the openID authentication server.
+ * 
+ * @link https://openid.net/developers/specs/
+ * 
+ * @author pasquale.cavallo at 4science dot it
+ */
 public class OIDCAuthentication implements AuthenticationMethod {
 
     protected EPersonService ePersonService = EPersonServiceFactory.getInstance().getEPersonService();
@@ -59,16 +70,47 @@ public class OIDCAuthentication implements AuthenticationMethod {
 
     private static final Logger log = LoggerFactory.getLogger(OIDCAuthentication.class);
 
+    /**
+     * User are not allow to set/change password to them users
+     * through this resource server.
+     * Passwords are hold and manage by the authorization server, so this method
+     * return false in any case
+     *
+     * @param context DSpace context
+     * @param request HTTP request, in case anything in that is used to decide
+     * @param email   e-mail address of user attempting to register
+     * 
+     */
     @Override
     public boolean allowSetPassword(Context context, HttpServletRequest request, String username) throws SQLException {
         return false;
     }
 
+    /**
+     * Predicate, is this an implicit authentication method. An implicit method
+     * gets credentials from the environment (such as an HTTP request or even
+     * Java system properties) rather than the explicit username and password.
+     * For example, a method that reads the X.509 certificates in an HTTPS
+     * request is implicit.
+     * For OpenID Connect authention, this method return always false.
+     *
+     * @return true if this method uses implicit authentication
+     */
     @Override
     public boolean isImplicit() {
         return false;
     }
 
+    /**
+     * User are not allow to register through this resource server.
+     * Since users are hold and manage by the authorization server,
+     * this method return false in any case.
+     * 
+     * @param context  DSpace context
+     * @param request  HTTP request, in case anything in that is used to decide
+     * @param username e-mail address of user attempting to register
+     * 
+     */
     @Override
     public boolean canSelfRegister(Context context, HttpServletRequest request, String username) throws SQLException {
         return false;
@@ -78,12 +120,49 @@ public class OIDCAuthentication implements AuthenticationMethod {
     public void initEPerson(Context context, HttpServletRequest request, EPerson eperson) throws SQLException {
     }
 
+    /**
+     * In the OpenID connect implicit (authorization code) flow scenario, the resource server (US) need to resolve
+     * convert the code into an access token. With the access token the resource server
+     * will be able to access to the user data.
+     * Groups will be available in the /introspect and /profile APIs, which needs the access token
+     * to be called.
+     * Then, the resource server MUST first resolve the code into and access token. This operation
+     * will be done into the authenticate method, which populate the group into the authentication
+     * object too.
+     * 
+     * @param context A valid DSpace context.
+     * @param request The request that started this operation, or null if not
+     *                applicable.
+     * @return an empty array of Group
+     */
     @Override
     public List<Group> getSpecialGroups(Context context, HttpServletRequest request) throws SQLException {
         //missing data before authenticate
         return new ArrayList<>();
     }
 
+    /**
+     * This method authenticate the user using OpenID code grant (implicit) flow.
+     * This operation require two step.
+     * First, we need to get an access token from the code received in the request,
+     * then, we need to call the introspect method to get
+     * the user-related data and authenticate him.
+     * 
+     * The code will be received in a query string parameter named `code`.
+     * 
+     * @param context  DSpace context, will be modified (ePerson set) upon success.
+     * @param username Not user
+     * @param password Not used
+     * @param realm    Not used
+     * @param request  The HTTP request that started this operation, or null if not
+     *                 applicable.
+     * @return One of: SUCCESS, NO_SUCH_USER, BAD_ARGS
+     *  -> SUCCESS - authenticated OK.
+     *  -> NO_SUCH_USER - user not found using this method. <br>
+     *  -> BAD_ARGS - user/pw not appropriate for this method
+     * @throws SQLException if database error
+
+     */
     @Override
     public int authenticate(Context context, String username, String password, String realm, HttpServletRequest request)
         throws SQLException {
@@ -102,13 +181,12 @@ public class OIDCAuthentication implements AuthenticationMethod {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("code", (String) request.getParameter("code")));
         params.add(new BasicNameValuePair("grant_type", "authorization_code"));
-        params.add(new BasicNameValuePair("redirect_uri",
-            configurationService.getProperty("authentication-oidc.redirecturi")));
+        params.add(new BasicNameValuePair("redirect_uri", configurationService.getProperty("dspace.server.url") +
+             "/api/authn/oidc"));
         try {
             HttpEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
             StringWriter writerEntity = new StringWriter();
             IOUtils.copy(entity.getContent(), writerEntity, "UTF-8");
-            System.out.println("Request -> " + writerEntity.toString());
             post.setEntity(entity);
             HttpResponse response = client.execute(post);
             StringWriter writer = new StringWriter();
@@ -122,6 +200,7 @@ public class OIDCAuthentication implements AuthenticationMethod {
                 if (ePersonId != null) {
                     EPerson eperson = ePersonService.find(context, UUID.fromString(ePersonId));
                     if (eperson == null) {
+                        log.warn("Cannot find eperson with epersonId: " + ePersonId);
                         return AuthenticationMethod.NO_SUCH_USER;
                     } else {
                         context.setCurrentUser(eperson);
@@ -129,6 +208,7 @@ public class OIDCAuthentication implements AuthenticationMethod {
                         if (role != null) {
                             Group group = groupService.find(context, UUID.fromString(role));
                             if (group == null) {
+                                log.warn("Role not found: " + role);
                                 throw new RuntimeException("Role " + role + " not found");
                             } else {
                                 context.setSpecialGroup(UUID.fromString(role));
@@ -147,6 +227,14 @@ public class OIDCAuthentication implements AuthenticationMethod {
         return AuthenticationMethod.NO_SUCH_USER;
     }
 
+    /**
+     * This method is responsible to call the /introspect endpoint of the OIDC
+     * authorization server in order to load the user data.
+     * 
+     * @param tokens The auth token
+     * @return data get from the instrospect endpoint
+     * 
+     */
     private OIDCIntrospectResponse checkFieldAndExtractEperson(OIDCTokenResponse tokens) {
         try {
             String clientId = configurationService.getProperty("authentication-oidc.clientid");
@@ -162,7 +250,6 @@ public class OIDCAuthentication implements AuthenticationMethod {
             HttpEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
             StringWriter writerEntity = new StringWriter();
             IOUtils.copy(entity.getContent(), writerEntity, "UTF-8");
-            System.out.println("Request -> " + writerEntity.toString());
             post.setEntity(entity);
             HttpResponse response = client.execute(post);
             StringWriter writer = new StringWriter();
@@ -171,16 +258,36 @@ public class OIDCAuthentication implements AuthenticationMethod {
             ObjectMapper om = new ObjectMapper();
             return om.readValue(body, OIDCIntrospectResponse.class);
         } catch (IOException e) {
+            log.error("Exception throwing trying to load data from introspection, URL: "
+                + configurationService.getProperty("authentication-oidc.introspectendpoint"));
+            //null managed in caller
             return null;
         }
     }
 
+    /**
+     * Get login page to which to redirect. This URL points to the authorization
+     * server authorize method, in order to get the authorization code.
+     *
+     * @param context  DSpace context, will be modified (ePerson set) upon success.
+     * @param request  The HTTP request that started this operation, or null if not
+     *                 applicable.
+     * @param response The HTTP response from the servlet method.
+     * @return fully-qualified URL
+     */
     @Override
     public String loginPageURL(Context context, HttpServletRequest request, HttpServletResponse response) {
-        return configurationService.getProperty("authentication-oidc.authorizeurl", "http://localhost:8081/oidc/authorize")
-            + "?client_id=" + configurationService.getProperty("authentication-oidc.clientid")
-            + "&response_type=code&scope=openid&redirect_uri="
-            + configurationService.getProperty("authentication-oidc.redirecturi");
+        String authorizeUrl = configurationService.getProperty("authentication-oidc.authorizeurl");
+        String clientId = configurationService.getProperty("authentication-oidc.clientid");
+        String redirectUri = configurationService.getProperty("dspace.server.url") + "/api/authn/oidc";
+        if (StringUtils.isEmpty(authorizeUrl) || StringUtils.isEmpty(clientId) || StringUtils.isEmpty(redirectUri)) {
+            log.error("Missing mandatory configuration properties for OIDCAuthentication");
+            // blank return force the caller to skip this entry
+            return "";
+        } else {
+            return authorizeUrl + "?client_id=" + clientId + "&response_type=code&scope=openid&"
+                + "redirect_uri=" + redirectUri;
+        }
     }
 
     @Override

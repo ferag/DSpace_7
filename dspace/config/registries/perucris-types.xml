@@ -57,5 +57,20 @@
         <qualifier>institutional-scoped-role</qualifier>
         <scope_note></scope_note>
     </dc-type>
+    
+    <dc-type>
+        <schema>perucris</schema>
+        <element>oidc</element>
+        <qualifier>granted</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>oidc</element>
+        <qualifier>reject</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+    
 
 </dspace-dc-types>

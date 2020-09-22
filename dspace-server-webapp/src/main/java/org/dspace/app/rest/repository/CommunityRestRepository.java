@@ -7,6 +7,8 @@
  */
 package org.dspace.app.rest.repository;
 
+import static org.dspace.eperson.GroupType.SCOPED;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.rest.SearchRestMethod;
@@ -53,6 +56,7 @@ import org.dspace.discovery.SearchService;
 import org.dspace.discovery.SearchServiceException;
 import org.dspace.discovery.indexobject.IndexableCommunity;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.GroupType;
 import org.dspace.eperson.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -75,19 +79,19 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
             .getLogger(CommunityRestRepository.class);
 
     @Autowired
-    BitstreamService bitstreamService;
+    private BitstreamService bitstreamService;
 
     @Autowired
-    CommunityRestEqualityUtils communityRestEqualityUtils;
+    private CommunityRestEqualityUtils communityRestEqualityUtils;
 
     @Autowired
     private GroupService groupService;
 
     @Autowired
-    SearchService searchService;
+    private SearchService searchService;
 
     @Autowired
-    AuthorizeService authorizeService;
+    private AuthorizeService authorizeService;
 
     @Autowired
     private UriListHandlerService uriListHandlerService;
@@ -365,9 +369,14 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
         throws AuthorizeException, SQLException {
 
         Community parent = null;
-        Community clone = null;
         HttpServletRequest req = getRequestService().getCurrentRequest().getHttpServletRequest();
         String parentUuid = req.getParameter("parent");
+        String name = req.getParameter("name");
+
+        if (StringUtils.isBlank(name)) {
+            throw new UnprocessableEntityException("The community name must be provided");
+        }
+
         if (parentUuid != null) {
             parent = communityService.find(context, UUID.fromString(parentUuid));
             if (parent == null) {
@@ -377,11 +386,32 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
 
         Community community = uriListHandlerService.handle(context, req, stringList, Community.class);
         if (community == null) {
-            throw new UnprocessableEntityException("The parent community doesn't exist");
-        } else {
-            clone = cloneCommunity(context, parent, community);
+            throw new UnprocessableEntityException("The community to clone doesn't exist");
         }
+
+        Community clone = cloneCommunity(context, parent, community);
+        clone = setCommunityName(context, clone, name);
+
+        createScopedRoles(context, name, clone);
+
         return converter.toRest(clone, utils.obtainProjection());
+    }
+
+    private void createScopedRoles(Context context, String institutionName, Community clone)
+        throws SQLException, AuthorizeException {
+
+        List<Group> institutionalRoles = groupService.findByGroupType(context, GroupType.INSTITUTIONAL);
+        for (Group institutionalRole : institutionalRoles) {
+            Group scopedRole = groupService.create(context);
+            String roleName = institutionalRole.getNameWithoutTypePrefix() + ": " + institutionName;
+            groupService.setName(scopedRole, SCOPED + ":" + roleName);
+            groupService.addMetadata(context, scopedRole, "perucris", "group", "type", null, SCOPED.name());
+            groupService.addMember(context, institutionalRole, scopedRole);
+
+            communityService.addMetadata(context, clone, "perucris", "community", "institutional-scoped-role", null,
+                roleName, scopedRole.getID().toString(), 600);
+        }
+
     }
 
     private Community cloneCommunity(Context context, Community parent, Community communityToClone)
@@ -394,14 +424,14 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
             cloneCommunity(context, clone, c);
         }
         for (Collection collection : subCollections) {
-            Collection col = collectionService.create(context, clone);
-            copyMetadata(context, collectionService, col, collection);
-            copyTempalteItem(context, col, collection);
+            Collection newCollection = collectionService.create(context, clone);
+            copyMetadata(context, collectionService, newCollection, collection);
+            copyTemplateItem(context, newCollection, collection);
         }
         return clone;
     }
 
-    private void copyTempalteItem(Context context, Collection col, Collection collection)
+    private void copyTemplateItem(Context context, Collection col, Collection collection)
             throws SQLException, AuthorizeException {
         Item item = collection.getTemplateItem();
         if (item != null) {
@@ -419,5 +449,18 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
             service.addMetadata(context, target, metadata.getSchema(), metadata.getElement(),
                                            metadata.getQualifier(), null, metadata.getValue());
         }
+    }
+
+    private Community setCommunityName(Context context, Community community, String name)
+        throws SQLException, AuthorizeException {
+        List<MetadataValue> metadata = communityService.getMetadata(community, "dc", "title", null, Item.ANY);
+        if (CollectionUtils.isEmpty(metadata)) {
+            communityService.addMetadata(context, community, "dc", "title", null, null, name);
+        } else {
+            MetadataValue dcTitle = metadata.get(0);
+            dcTitle.setValue(name);
+            communityService.update(context, community);
+        }
+        return community;
     }
 }

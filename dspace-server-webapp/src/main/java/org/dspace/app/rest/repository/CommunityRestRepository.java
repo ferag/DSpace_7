@@ -7,7 +7,6 @@
  */
 package org.dspace.app.rest.repository;
 
-import static org.dspace.eperson.GroupType.SCOPED;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -20,9 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.dspace.app.rest.SearchRestMethod;
 import org.dspace.app.rest.exception.DSpaceBadRequestException;
 import org.dspace.app.rest.exception.RepositoryMethodNotImplementedException;
@@ -38,16 +35,9 @@ import org.dspace.app.rest.utils.CommunityRestEqualityUtils;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.Bitstream;
-import org.dspace.content.Collection;
 import org.dspace.content.Community;
-import org.dspace.content.DSpaceObject;
-import org.dspace.content.Item;
-import org.dspace.content.MetadataValue;
 import org.dspace.content.service.BitstreamService;
-import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
-import org.dspace.content.service.DSpaceObjectService;
-import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.discovery.DiscoverQuery;
 import org.dspace.discovery.DiscoverResult;
@@ -56,7 +46,6 @@ import org.dspace.discovery.SearchService;
 import org.dspace.discovery.SearchServiceException;
 import org.dspace.discovery.indexobject.IndexableCommunity;
 import org.dspace.eperson.Group;
-import org.dspace.eperson.GroupType;
 import org.dspace.eperson.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -74,9 +63,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Component(CommunityRest.CATEGORY + "." + CommunityRest.NAME)
 public class CommunityRestRepository extends DSpaceObjectRestRepository<Community, CommunityRest> {
-
-    private static final Logger log = org.apache.logging.log4j.LogManager
-            .getLogger(CommunityRestRepository.class);
 
     @Autowired
     private BitstreamService bitstreamService;
@@ -97,12 +83,6 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
     private UriListHandlerService uriListHandlerService;
 
     private CommunityService communityService;
-
-    @Autowired
-    private CollectionService collectionService;
-
-    @Autowired
-    private ItemService itemService;
 
     public CommunityRestRepository(CommunityService dsoService) {
         super(dsoService);
@@ -389,78 +369,8 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
             throw new UnprocessableEntityException("The community to clone doesn't exist");
         }
 
-        Community clone = cloneCommunity(context, parent, community);
-        clone = setCommunityName(context, clone, name);
-
-        createScopedRoles(context, name, clone);
+        Community clone = communityService.cloneCommunity(context, community, parent, name);
 
         return converter.toRest(clone, utils.obtainProjection());
-    }
-
-    private void createScopedRoles(Context context, String institutionName, Community clone)
-        throws SQLException, AuthorizeException {
-
-        List<Group> institutionalRoles = groupService.findByGroupType(context, GroupType.INSTITUTIONAL);
-        for (Group institutionalRole : institutionalRoles) {
-            Group scopedRole = groupService.create(context);
-            String roleName = institutionalRole.getNameWithoutTypePrefix() + ": " + institutionName;
-            groupService.setName(scopedRole, SCOPED + ":" + roleName);
-            groupService.addMetadata(context, scopedRole, "perucris", "group", "type", null, SCOPED.name());
-            groupService.addMember(context, institutionalRole, scopedRole);
-
-            communityService.addMetadata(context, clone, "perucris", "community", "institutional-scoped-role", null,
-                roleName, scopedRole.getID().toString(), 600);
-        }
-
-    }
-
-    private Community cloneCommunity(Context context, Community parent, Community communityToClone)
-            throws SQLException, AuthorizeException {
-        Community clone = communityService.create(parent, context);
-        List<Community> subCommunities = communityToClone.getSubcommunities();
-        List<Collection> subCollections = communityToClone.getCollections();
-        copyMetadata(context, communityService, clone, communityToClone);
-        for (Community c : subCommunities) {
-            cloneCommunity(context, clone, c);
-        }
-        for (Collection collection : subCollections) {
-            Collection newCollection = collectionService.create(context, clone);
-            copyMetadata(context, collectionService, newCollection, collection);
-            copyTemplateItem(context, newCollection, collection);
-        }
-        return clone;
-    }
-
-    private void copyTemplateItem(Context context, Collection col, Collection collection)
-            throws SQLException, AuthorizeException {
-        Item item = collection.getTemplateItem();
-        if (item != null) {
-            collectionService.createTemplateItem(context, col);
-            Item cloneTemplate = col.getTemplateItem();
-            copyMetadata(context, itemService, cloneTemplate, item);
-        }
-    }
-
-    private <T extends DSpaceObject> void copyMetadata(Context context, DSpaceObjectService<T> service,
-             T target , T dsoToClone) throws SQLException {
-
-        List<MetadataValue> metadataValue = dsoToClone.getMetadata();
-        for (MetadataValue metadata : metadataValue) {
-            service.addMetadata(context, target, metadata.getSchema(), metadata.getElement(),
-                                           metadata.getQualifier(), null, metadata.getValue());
-        }
-    }
-
-    private Community setCommunityName(Context context, Community community, String name)
-        throws SQLException, AuthorizeException {
-        List<MetadataValue> metadata = communityService.getMetadata(community, "dc", "title", null, Item.ANY);
-        if (CollectionUtils.isEmpty(metadata)) {
-            communityService.addMetadata(context, community, "dc", "title", null, null, name);
-        } else {
-            MetadataValue dcTitle = metadata.get(0);
-            dcTitle.setValue(name);
-            communityService.update(context, community);
-        }
-        return community;
     }
 }

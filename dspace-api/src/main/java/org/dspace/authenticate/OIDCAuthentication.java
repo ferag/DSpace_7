@@ -182,7 +182,8 @@ public class OIDCAuthentication implements AuthenticationMethod {
         params.add(new BasicNameValuePair("code", (String) request.getParameter("code")));
         params.add(new BasicNameValuePair("grant_type", "authorization_code"));
         params.add(new BasicNameValuePair("redirect_uri", configurationService.getProperty("dspace.server.url") +
-             "/api/authn/oidc"));
+                "/server/api/authn/oidc"));
+        params.add(new BasicNameValuePair("client_id", clientId));
         try {
             HttpEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
             StringWriter writerEntity = new StringWriter();

@@ -278,7 +278,7 @@ public class OIDCAuthentication implements AuthenticationMethod {
      */
     @Override
     public String loginPageURL(Context context, HttpServletRequest request, HttpServletResponse response) {
-        String authorizeUrl = configurationService.getProperty("authentication-oidc.authorizeurl");
+        String authorizeUrl = configurationService.getProperty("authentication-oidc.authorizeendpoint");
         String clientId = configurationService.getProperty("authentication-oidc.clientid");
         String redirectUri = configurationService.getProperty("dspace.server.url") + "/api/authn/oidc";
         if (StringUtils.isEmpty(authorizeUrl) || StringUtils.isEmpty(clientId) || StringUtils.isEmpty(redirectUri)) {

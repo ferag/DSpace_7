@@ -14,19 +14,20 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.dspace.app.rest.builder.CollectionBuilder;
-import org.dspace.app.rest.builder.CommunityBuilder;
-import org.dspace.app.rest.builder.GroupBuilder;
-import org.dspace.app.rest.builder.ItemBuilder;
 import org.dspace.app.rest.matcher.BrowseEntryResourceMatcher;
 import org.dspace.app.rest.matcher.BrowseIndexMatcher;
 import org.dspace.app.rest.matcher.ItemMatcher;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
+import org.dspace.builder.CollectionBuilder;
+import org.dspace.builder.CommunityBuilder;
+import org.dspace.builder.GroupBuilder;
+import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.Item;
@@ -56,19 +57,25 @@ public class BrowsesResourceControllerIT extends AbstractControllerIntegrationTe
                    //Our default Discovery config has 4 browse indexes so we expect this to be reflected in the page
                    // object
                    .andExpect(jsonPath("$.page.size", is(20)))
-                   .andExpect(jsonPath("$.page.totalElements", is(4)))
+                   .andExpect(jsonPath("$.page.totalElements", is(10)))
                    .andExpect(jsonPath("$.page.totalPages", is(1)))
                    .andExpect(jsonPath("$.page.number", is(0)))
 
                    //The array of browse index should have a size 4
-                   .andExpect(jsonPath("$._embedded.browses", hasSize(4)))
+                   .andExpect(jsonPath("$._embedded.browses", hasSize(10)))
 
                    //Check that all (and only) the default browse indexes are present
                    .andExpect(jsonPath("$._embedded.browses", containsInAnyOrder(
                        BrowseIndexMatcher.dateIssuedBrowseIndex("asc"),
                        BrowseIndexMatcher.contributorBrowseIndex("asc"),
                        BrowseIndexMatcher.titleBrowseIndex("asc"),
-                       BrowseIndexMatcher.subjectBrowseIndex("asc")
+                       BrowseIndexMatcher.subjectBrowseIndex("asc"),
+                       BrowseIndexMatcher.rodeptBrowseIndex("asc"),
+                       BrowseIndexMatcher.typeBrowseIndex("asc"),
+                       BrowseIndexMatcher.rpnameBrowseIndex("asc"),
+                       BrowseIndexMatcher.ounameBrowseIndex("asc"),
+                       BrowseIndexMatcher.pjtitleBrowseIndex("asc"),
+                       BrowseIndexMatcher.rpdeptBrowseIndex("asc")
                    )))
         ;
     }
@@ -141,8 +148,12 @@ public class BrowsesResourceControllerIT extends AbstractControllerIntegrationTe
         Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity)
                                            .withName("Sub Community")
                                            .build();
-        Collection col1 = CollectionBuilder.createCollection(context, child1).withName("Collection 1").build();
-        Collection col2 = CollectionBuilder.createCollection(context, child1).withName("Collection 2").build();
+        Collection col1 = CollectionBuilder.createCollection(context, child1)
+                                           .withRelationshipType("Publication")
+                                           .withName("Collection 1").build();
+        Collection col2 = CollectionBuilder.createCollection(context, child1)
+                                           .withRelationshipType("Publication")
+                                           .withName("Collection 2").build();
 
         //2. Three public items that are readable by Anonymous with different subjects
         Item publicItem1 = ItemBuilder.createItem(context, col1)
@@ -226,8 +237,12 @@ public class BrowsesResourceControllerIT extends AbstractControllerIntegrationTe
         Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity)
                                            .withName("Sub Community")
                                            .build();
-        Collection col1 = CollectionBuilder.createCollection(context, child1).withName("Collection 1").build();
-        Collection col2 = CollectionBuilder.createCollection(context, child1).withName("Collection 2").build();
+        Collection col1 = CollectionBuilder.createCollection(context, child1)
+                                           .withRelationshipType("Publication")
+                                           .withName("Collection 1").build();
+        Collection col2 = CollectionBuilder.createCollection(context, child1)
+                                           .withRelationshipType("Publication")
+                                           .withName("Collection 2").build();
 
         //2. Two public items with the same subject and another public item that contains that same subject, but also
         // another one
@@ -305,8 +320,12 @@ public class BrowsesResourceControllerIT extends AbstractControllerIntegrationTe
         Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity)
                                            .withName("Sub Community")
                                            .build();
-        Collection col1 = CollectionBuilder.createCollection(context, child1).withName("Collection 1").build();
-        Collection col2 = CollectionBuilder.createCollection(context, child1).withName("Collection 2").build();
+        Collection col1 = CollectionBuilder.createCollection(context, child1)
+                                           .withRelationshipType("Publication")
+                                           .withName("Collection 1").build();
+        Collection col2 = CollectionBuilder.createCollection(context, child1)
+                                           .withRelationshipType("Publication")
+                                           .withName("Collection 2").build();
 
         //2. Two public items that are readable by Anonymous
         Item publicItem1 = ItemBuilder.createItem(context, col1)
@@ -402,7 +421,9 @@ public class BrowsesResourceControllerIT extends AbstractControllerIntegrationTe
         parentCommunity = CommunityBuilder.createCommunity(context)
                                           .withName("Parent Community")
                                           .build();
-        Collection col1 = CollectionBuilder.createCollection(context, parentCommunity).withName("Collection 1").build();
+        Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
+                                           .withRelationshipType("Publication")
+                                           .withName("Collection 1").build();
 
         //2. Twenty-one public items that are readable by Anonymous
         for (int i = 0; i <= 20; i++) {
@@ -468,8 +489,12 @@ public class BrowsesResourceControllerIT extends AbstractControllerIntegrationTe
         Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity)
                                            .withName("Sub Community")
                                            .build();
-        Collection col1 = CollectionBuilder.createCollection(context, child1).withName("Collection 1").build();
-        Collection col2 = CollectionBuilder.createCollection(context, child1).withName("Collection 2").build();
+        Collection col1 = CollectionBuilder.createCollection(context, child1)
+                                           .withRelationshipType("Publication")
+                                           .withName("Collection 1").build();
+        Collection col2 = CollectionBuilder.createCollection(context, child1)
+                                           .withRelationshipType("Publication")
+                                           .withName("Collection 2").build();
 
         //2. 7 public items that are readable by Anonymous
         Item item1 = ItemBuilder.createItem(context, col1)
@@ -580,8 +605,12 @@ public class BrowsesResourceControllerIT extends AbstractControllerIntegrationTe
         Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity)
                                            .withName("Sub Community")
                                            .build();
-        Collection col1 = CollectionBuilder.createCollection(context, child1).withName("Collection 1").build();
-        Collection col2 = CollectionBuilder.createCollection(context, child1).withName("Collection 2").build();
+        Collection col1 = CollectionBuilder.createCollection(context, child1)
+                                           .withRelationshipType("Publication")
+                                           .withName("Collection 1").build();
+        Collection col2 = CollectionBuilder.createCollection(context, child1)
+                                           .withRelationshipType("Publication")
+                                           .withName("Collection 2").build();
 
         //2. 7 public items that are readable by Anonymous
         Item item1 = ItemBuilder.createItem(context, col1)
@@ -723,8 +752,12 @@ public class BrowsesResourceControllerIT extends AbstractControllerIntegrationTe
         Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity)
                                            .withName("Sub Community")
                                            .build();
-        Collection col1 = CollectionBuilder.createCollection(context, child1).withName("Collection 1").build();
-        Collection col2 = CollectionBuilder.createCollection(context, child1).withName("Collection 2").build();
+        Collection col1 = CollectionBuilder.createCollection(context, child1)
+                                           .withRelationshipType("Publication")
+                                           .withName("Collection 1").build();
+        Collection col2 = CollectionBuilder.createCollection(context, child1)
+                                           .withRelationshipType("Publication")
+                                           .withName("Collection 2").build();
 
         //2. 7 public items that are readable by Anonymous
         Item item1 = ItemBuilder.createItem(context, col1)
@@ -873,8 +906,12 @@ public class BrowsesResourceControllerIT extends AbstractControllerIntegrationTe
         Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity)
                                            .withName("Sub Community")
                                            .build();
-        Collection col1 = CollectionBuilder.createCollection(context, child1).withName("Collection 1").build();
-        Collection col2 = CollectionBuilder.createCollection(context, child1).withName("Collection 2").build();
+        Collection col1 = CollectionBuilder.createCollection(context, child1)
+                                           .withRelationshipType("Publication")
+                                           .withName("Collection 1").build();
+        Collection col2 = CollectionBuilder.createCollection(context, child1)
+                                           .withRelationshipType("Publication")
+                                           .withName("Collection 2").build();
 
         //2. 7 public items that are readable by Anonymous
         Item item1 = ItemBuilder.createItem(context, col1)
@@ -957,5 +994,184 @@ public class BrowsesResourceControllerIT extends AbstractControllerIntegrationTe
                                                                                         "Moon", "2018-01-02")
                                        )));
     }
+
+    @Test
+    public void findBrowseByTitleItemsFullProjectionTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        //** GIVEN **
+        //1. A community-collection structure with one parent community with sub-community and two collections.
+        parentCommunity = CommunityBuilder.createCommunity(context)
+                                          .withName("Parent Community")
+                                          .build();
+        Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity)
+                                           .withName("Sub Community")
+                                           .build();
+        Collection col1 = CollectionBuilder.createCollection(context, child1)
+                .withName("Collection 1")
+                .withRelationshipType("Publication")
+                .build();
+        Collection col2 = CollectionBuilder.createCollection(context, child1)
+                .withName("Collection 2")
+                .withRelationshipType("Publication")
+                .build();
+
+        //2. Two public items that are readable by Anonymous
+        Item publicItem1 = ItemBuilder.createItem(context, col1)
+                                      .withTitle("Public item 1")
+                                      .withIssueDate("2017-10-17")
+                                      .withAuthor("Smith, Donald").withAuthor("Doe, John")
+                                      .withSubject("Java").withSubject("Unit Testing")
+                                      .build();
+
+
+        context.restoreAuthSystemState();
+
+        getClient().perform(get("/api/discover/browses/title/items")
+                                .param("projection", "full"))
+
+                   //** THEN **
+                   //The status has to be 200 OK
+                   .andExpect(status().isOk())
+                   //We expect the content type to be "application/hal+json;charset=UTF-8"
+                   .andExpect(content().contentType(contentType))
+                   // The full projection for anon shouldn't show the adminGroup in the response
+                   .andExpect(
+                       jsonPath("$._embedded.items[0]._embedded.owningCollection._embedded.adminGroup").doesNotExist());
+
+
+        String adminToken = getAuthToken(admin.getEmail(), password);
+        getClient(adminToken).perform(get("/api/discover/browses/title/items")
+                                          .param("projection", "full"))
+
+                             //** THEN **
+                             //The status has to be 200 OK
+                             .andExpect(status().isOk())
+                             //We expect the content type to be "application/hal+json;charset=UTF-8"
+                             .andExpect(content().contentType(contentType))
+                             // The full projection for admin should show the adminGroup in the response
+                             .andExpect(jsonPath("$._embedded.items[0]._embedded.owningCollection._embedded.adminGroup",
+                                                 nullValue()));
+    }
+
+    @Test
+    public void browseByAuthorFullProjectionTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        //** GIVEN **
+        //1. A community-collection structure with one parent community and one collection.
+        parentCommunity = CommunityBuilder.createCommunity(context)
+                                          .withName("Parent Community")
+                                          .build();
+        Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
+                .withName("Collection 1")
+                .withRelationshipType("Publication")
+                .build();
+
+        //2. Twenty-one public items that are readable by Anonymous
+        for (int i = 0; i <= 20; i++) {
+            ItemBuilder.createItem(context, col1)
+                       .withTitle("Public item " + String.format("%02d", i))
+                       .withIssueDate("2017-10-17")
+                       .withAuthor("Test, Author" + String.format("%02d", i))
+                       .withSubject("Java").withSubject("Unit Testing")
+                       .build();
+        }
+
+        context.restoreAuthSystemState();
+
+
+        getClient().perform(get("/api/discover/browses/author/entries")
+                                .param("projection", "full"))
+                   .andExpect(status().isOk())
+                   .andExpect(content().contentType(contentType))
+                   .andExpect(jsonPath("$.page.size", is(20)))
+                   .andExpect(jsonPath("$.page.totalElements", is(21)))
+                   .andExpect(jsonPath("$.page.totalPages", is(2)))
+                   .andExpect(jsonPath("$.page.number", is(0)))
+                   .andExpect(
+                       jsonPath("$._links.next.href", Matchers.containsString("/api/discover/browses/author/entries")))
+                   .andExpect(
+                       jsonPath("$._links.last.href", Matchers.containsString("/api/discover/browses/author/entries")))
+                   .andExpect(
+                       jsonPath("$._links.self.href", Matchers.endsWith("/api/discover/browses/author/entries")));
+
+        String adminToken = getAuthToken(admin.getEmail(), password);
+        getClient(adminToken).perform(get("/api/discover/browses/author/entries")
+                                          .param("projection", "full"))
+                             .andExpect(status().isOk())
+                             .andExpect(content().contentType(contentType))
+                             .andExpect(jsonPath("$.page.size", is(20)))
+                             .andExpect(jsonPath("$.page.totalElements", is(21)))
+                             .andExpect(jsonPath("$.page.totalPages", is(2)))
+                             .andExpect(jsonPath("$.page.number", is(0)))
+                             .andExpect(jsonPath("$._links.next.href",
+                                                 Matchers.containsString("/api/discover/browses/author/entries")))
+                             .andExpect(jsonPath("$._links.last.href",
+                                                 Matchers.containsString("/api/discover/browses/author/entries")))
+                             .andExpect(
+                                 jsonPath("$._links.self.href",
+                                          Matchers.endsWith("/api/discover/browses/author/entries")));
+
+        getClient().perform(get("/api/discover/browses/author/entries"))
+                   .andExpect(status().isOk())
+                   .andExpect(content().contentType(contentType))
+                   .andExpect(jsonPath("$.page.size", is(20)))
+                   .andExpect(jsonPath("$.page.totalElements", is(21)))
+                   .andExpect(jsonPath("$.page.totalPages", is(2)))
+                   .andExpect(jsonPath("$.page.number", is(0)))
+                   .andExpect(
+                       jsonPath("$._links.next.href", Matchers.containsString("/api/discover/browses/author/entries")))
+                   .andExpect(
+                       jsonPath("$._links.last.href", Matchers.containsString("/api/discover/browses/author/entries")))
+                   .andExpect(
+                       jsonPath("$._links.self.href", Matchers.endsWith("/api/discover/browses/author/entries")));
+
+    }
+
+    @Test
+    public void testBrowseByDateIssuedItemsFullProjectionTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        //** GIVEN **
+        //1. A community-collection structure with one parent community with sub-community and two collections.
+        parentCommunity = CommunityBuilder.createCommunity(context)
+                                          .withName("Parent Community")
+                                          .build();
+        Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity)
+                                           .withName("Sub Community")
+                                           .build();
+        Collection col1 = CollectionBuilder.createCollection(context, child1)
+                .withName("Collection 1")
+                .withRelationshipType("Publication")
+                .build();
+        Collection col2 = CollectionBuilder.createCollection(context, child1)
+                .withName("Collection 2")
+                .withRelationshipType("Publication")
+                .build();
+
+        Item item1 = ItemBuilder.createItem(context, col1)
+                                .withTitle("Item 1")
+                                .withIssueDate("2017-10-17")
+                                .build();
+
+        context.restoreAuthSystemState();
+
+        getClient().perform(get("/api/discover/browses/dateissued/items")
+                                .param("projection", "full"))
+
+                   .andExpect(status().isOk())
+                   .andExpect(content().contentType(contentType))
+                   .andExpect(
+                       jsonPath("$._embedded.items[0]._embedded.owningCollection._embedded.adminGroup").doesNotExist());
+
+        String adminToken = getAuthToken(admin.getEmail(), password);
+        getClient(adminToken).perform(get("/api/discover/browses/dateissued/items")
+                                          .param("projection", "full"))
+                             .andExpect(status().isOk())
+                             .andExpect(jsonPath("$._embedded.items[0]._embedded.owningCollection._embedded.adminGroup",
+                                                 nullValue()));
+    }
+
 
 }

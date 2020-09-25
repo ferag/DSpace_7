@@ -79,6 +79,9 @@ public class CrisLayoutTabMetadatasecurityRestController {
                 tabService.update(context, tab);
                 response.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 context.commit();
+            } else {
+                response.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
+                return;
             }
         } catch (Exception e) {
             log.error("An error occured in method for add securitymetadata relation in tabs, idTab <" + idTab + ">", e);
@@ -95,7 +98,7 @@ public class CrisLayoutTabMetadatasecurityRestController {
             @PathVariable(name = "mf_id", required = true) Integer metadatafieldId,
             HttpServletResponse response, HttpServletRequest request) {
         Context context = ContextUtil.obtainContext(request);
-        log.info("Start method for remove box association to tab with tabId <" + idTab + ">");
+        log.info("Start method for remove metadatasecurity association to tab with tabId <" + idTab + ">");
         CrisLayoutTab tab = null;
         try {
             tab = tabService.find(context, idTab);
@@ -115,13 +118,16 @@ public class CrisLayoutTabMetadatasecurityRestController {
                 }
                 if (found) {
                     tabService.update(context, tab);
+                    context.commit();
                 }
             }
         } catch (Exception e) {
             log.error("An error occured in method for remove"
                     + "securitymetadata relation in tabs, idTab <" + idTab + ">", e);
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
         }
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 
     private Set<MetadataField> getMedatafieldList(Context ctx, List<String> links) throws Exception {

@@ -1,0 +1,53 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+       default-autowire-candidates="*Service,*DAO,javax.sql.DataSource">
+
+
+<!-- 
+				<entry key="printISSN" value="dc.identifier.issn" /> -> NON LO TROVO
+				<entry key="translators" value="dc.contributor.other" />
+				<entry key="chairs" value="dc.contributor.other" />
+ -->
+    <context:annotation-config/>
+    <!-- allows us to use spring annotations in beans -->
+
+    <util:map id="aliciaMetadataFieldMap" key-type="org.dspace.importer.external.metadatamapping.MetadataFieldConfig"
+              value-type="org.dspace.importer.external.metadatamapping.contributor.MetadataContributor">
+        <description>Defines which metadatum is mapped on which metadatum. Note that while the key must be unique it
+            only matters here for postprocessing of the value. The mapped MetadatumContributor has full control over
+            what metadatafield is generated.
+        </description>
+        <entry key-ref="alicia.id" value-ref="aliciaIDContrib"/>
+
+
+    </util:map>
+
+    <bean id="aliciaIDContrib" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.id"/>
+        <property name="query" value="$.id"/>
+    </bean>
+    <bean id="alicia.id" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.identifier.other"/>
+    </bean>
+
+    <bean id="" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref=""/>
+        <property name="query" value=""/>
+    </bean>
+    <bean id="" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value=""/>
+    </bean>
+
+
+
+    <bean class="java.lang.Integer" id="maxRetry">
+        <constructor-arg value="3"/>
+    </bean>
+
+</beans>

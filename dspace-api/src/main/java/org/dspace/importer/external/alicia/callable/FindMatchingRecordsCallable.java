@@ -1,0 +1,72 @@
+package org.dspace.importer.external.alicia.callable;
+
+import java.util.concurrent.Callable;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
+
+import org.apache.http.HttpException;
+import org.dspace.importer.external.datamodel.Query;
+
+public class FindMatchingRecordsCallable implements Callable<String> {
+
+    private Query query;
+
+    private WebTarget webTarget;
+
+    private String fields;
+
+    public FindMatchingRecordsCallable(String queryString, Integer maxResult, Integer start, WebTarget webTarget,
+            String fields) {
+        query = new Query();
+        query.addParameter("query", queryString);
+        query.addParameter("count", maxResult);
+        query.addParameter("start", start);
+        this.webTarget = webTarget;
+        this.fields = fields;
+    }
+
+    public FindMatchingRecordsCallable(Query query, WebTarget webTarget) {
+        this.query = query;
+        this.webTarget = webTarget;
+    }
+
+    @Override
+    public String call() throws Exception {
+        String author = query.getParameterAsClass("author", String.class);
+        String title = query.getParameterAsClass("title", String.class);
+        Integer start = query.getParameterAsClass("start", Integer.class);
+        Integer count = query.getParameterAsClass("count", Integer.class);
+        int page = start / count;
+        WebTarget localTarget = webTarget.queryParam("type", "AllField");
+        //pagination is 1 based (first page: start = 0, count = 20 -> page = 0 -> +1 = 1)
+        localTarget = localTarget.queryParam("page", page + 1);
+        localTarget = localTarget.queryParam("limit", count);
+        localTarget = localTarget.queryParam("prettyPrint", true);
+        if (fields != null && !fields.isEmpty()) {
+            localTarget = localTarget.queryParam("field[]", fields);
+        }
+        String filter = null;
+        if (author != null && !author.isEmpty()) {
+            filter = "author:" + author;
+        }
+        if (title != null && !title.isEmpty()) {
+            if (filter != null) {
+                filter = filter + " AND title:" + title;
+            } else {
+                filter = "title:" + title;
+            }
+        }
+        localTarget = localTarget.queryParam("lookfor", filter);
+        Invocation.Builder invocationBuilder = localTarget.request();
+        Response response = invocationBuilder.get();
+        if (response.getStatus() == 200) {
+            return response.readEntity(String.class);
+        } else {
+            //this exception is manager by the caller
+            throw new HttpException();
+        }
+
+    }
+
+}

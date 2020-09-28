@@ -48,6 +48,20 @@
           class="org.dspace.importer.external.arxiv.metadatamapping.ArXivFieldMapping">
     </bean>
 
+    <bean id="aliciaImportService"
+          class="org.dspace.importer.external.alicia.AliciaImportMetadataSourceServiceImpl" scope="singleton">
+          <!-- Alicia search endpoint full address -->
+          <constructor-arg type="java.lang.String" value="http://34.206.108.87/vufind/api/v1/search"/>
+          <!-- Alicia get by id endpoint full address -->
+          <constructor-arg type="java.lang.String" value="http://34.206.108.87/vufind/api/v1/record"/>
+          <!-- Alicia  comma separated response fields list, empty or null force default values-->
+          <constructor-arg type="java.lang.String" value="title,summary,series,languages,isbns,id,authors,cleanDoi,cleanIsbn,cleanIssn,containerVolume"/>
+    </bean>
+    <bean id="aliciaMetadataFieldMapping"
+          class="org.dspace.importer.external.alicia.metadatamapping.AliciaFieldMapping">
+    </bean>
+
+
 
     <bean id="pubmedImportService"
           class="org.dspace.importer.external.pubmed.service.PubmedImportMetadataSourceServiceImpl">

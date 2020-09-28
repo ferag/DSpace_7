@@ -55,5 +55,11 @@
         <property name="recordIdMetadata" value="dc.identifier.other"/>
     </bean>
 
+    <bean id="aliciaLiveImportDataProvider" class="org.dspace.external.provider.impl.LiveImportDataProvider">
+        <property name="metadataSource" ref="aliciaImportService"/>
+        <property name="sourceIdentifier" value="alicia"/>
+        <property name="recordIdMetadata" value="dc.identifier.other"/>
+    </bean>
+
 </beans>
 

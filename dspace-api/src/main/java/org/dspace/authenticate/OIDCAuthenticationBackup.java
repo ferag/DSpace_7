@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -29,8 +31,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.dspace.authenticate.factory.AuthenticateServiceFactory;
-import org.dspace.authenticate.model.OIDCIntrospectResponse;
 import org.dspace.authenticate.model.OIDCTokenResponse;
+import org.dspace.authenticate.service.OidcSpecialGroupMapper;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.MetadataFieldService;
 import org.dspace.content.service.MetadataSchemaService;
@@ -56,7 +58,19 @@ import org.slf4j.LoggerFactory;
  * 
  * @author pasquale.cavallo at 4science dot it
  */
-public class OIDCAuthentication implements AuthenticationMethod {
+public class OIDCAuthenticationBackup implements AuthenticationMethod {
+
+    private OidcSpecialGroupMapper mapper;
+
+    private String jsonPathEperson = "$.sub";
+
+    public void setJsonPathEperson(String jsonPathEperson) {
+        this.jsonPathEperson = jsonPathEperson;
+    }
+
+    public void setMapper(OidcSpecialGroupMapper mapper) {
+        this.mapper = mapper;
+    }
 
     protected EPersonService ePersonService = EPersonServiceFactory.getInstance().getEPersonService();
     protected GroupService groupService = EPersonServiceFactory
@@ -68,7 +82,7 @@ public class OIDCAuthentication implements AuthenticationMethod {
     protected ConfigurationService configurationService = DSpaceServicesFactory
         .getInstance().getConfigurationService();
 
-    private static final Logger log = LoggerFactory.getLogger(OIDCAuthentication.class);
+    private static final Logger log = LoggerFactory.getLogger(OIDCAuthenticationBackup.class);
 
     /**
      * User are not allow to set/change password to them users
@@ -137,8 +151,12 @@ public class OIDCAuthentication implements AuthenticationMethod {
      */
     @Override
     public List<Group> getSpecialGroups(Context context, HttpServletRequest request) throws SQLException {
-        //missing data before authenticate
-        return new ArrayList<>();
+        attemptAuthentication(context, request);
+        ArrayList<Group> groups = (ArrayList<Group>) request.getAttribute("OidcAuthenticationResultEPersonGroup");
+        if (groups != null) {
+            return groups;
+        }
+        return new ArrayList<Group>();
     }
 
     /**
@@ -151,7 +169,7 @@ public class OIDCAuthentication implements AuthenticationMethod {
      * The code will be received in a query string parameter named `code`.
      * 
      * @param context  DSpace context, will be modified (ePerson set) upon success.
-     * @param username Not user
+     * @param username Not used
      * @param password Not used
      * @param realm    Not used
      * @param request  The HTTP request that started this operation, or null if not
@@ -166,66 +184,80 @@ public class OIDCAuthentication implements AuthenticationMethod {
     @Override
     public int authenticate(Context context, String username, String password, String realm, HttpServletRequest request)
         throws SQLException {
-        if (request == null) {
-            log.warn("Unable to authenticate using OpenID Connect because the request object is null.");
-            return BAD_ARGS;
+        EPerson eperson = (EPerson) request.getAttribute("OidcAuthenticationResultEPerson");
+        if (eperson == null) {
+            return NO_SUCH_USER;
+        } else {
+            AuthenticateServiceFactory.getInstance().getAuthenticationService().initEPerson(context, request, eperson);
+            context.setCurrentUser(eperson);
+            log.info(eperson.getEmail() + " has been authenticated via OpenID");
+            return SUCCESS;
         }
-        String clientId = configurationService.getProperty("authentication-oidc.clientid");
-        String clientSecret = configurationService.getProperty("authentication-oidc.clientsecret");
-        String tokenEndpoint = configurationService.getProperty("authentication-oidc.tokenendpoint");
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpPost post = new HttpPost(tokenEndpoint);
-        post.addHeader("Content-Type", "application/x-www-form-urlencoded");
-        post.addHeader("Authorization","Basic " + Base64.getEncoder()
-            .encodeToString((clientId + ":" + clientSecret).getBytes()));
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("code", (String) request.getParameter("code")));
-        params.add(new BasicNameValuePair("grant_type", "authorization_code"));
-        params.add(new BasicNameValuePair("redirect_uri", configurationService.getProperty("dspace.server.url") +
-                "/api/authn/oidc"));
-        params.add(new BasicNameValuePair("client_id", clientId));
-        try {
-            HttpEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
-            StringWriter writerEntity = new StringWriter();
-            IOUtils.copy(entity.getContent(), writerEntity, "UTF-8");
-            post.setEntity(entity);
-            HttpResponse response = client.execute(post);
-            StringWriter writer = new StringWriter();
-            IOUtils.copy(response.getEntity().getContent(), writer, "UTF-8");
-            String body = writer.toString();
-            ObjectMapper om = new ObjectMapper();
-            OIDCTokenResponse tokens = om.readValue(body, OIDCTokenResponse.class);
-            if (tokens.getIdToken() != null && !tokens.getIdToken().isEmpty()) {
-                OIDCIntrospectResponse userData = checkFieldAndExtractEperson(tokens);
-                String ePersonId = userData.getSubject();
-                if (ePersonId != null) {
-                    EPerson eperson = ePersonService.find(context, UUID.fromString(ePersonId));
-                    if (eperson == null) {
-                        log.warn("Cannot find eperson with epersonId: " + ePersonId);
-                        return AuthenticationMethod.NO_SUCH_USER;
-                    } else {
-                        context.setCurrentUser(eperson);
-                        String role = userData.getRole();
-                        if (role != null) {
-                            Group group = groupService.find(context, UUID.fromString(role));
-                            if (group == null) {
-                                log.warn("Role not found: " + role);
-                                throw new RuntimeException("Role " + role + " not found");
-                            } else {
-                                context.setSpecialGroup(UUID.fromString(role));
+
+    }
+
+    private void attemptAuthentication(Context context, HttpServletRequest request) {
+        if (request != null) {
+            String idpDomain = configurationService.getProperty("authentication-oidc.authserverdomain");
+            String clientId = configurationService.getProperty("authentication-oidc.clientid");
+            String clientSecret = configurationService.getProperty("authentication-oidc.clientsecret");
+            String tokenEndpoint = configurationService.getProperty("authentication-oidc.tokenendpoint");
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpPost post = new HttpPost(idpDomain + tokenEndpoint);
+            post.addHeader("Content-Type", "application/x-www-form-urlencoded");
+            post.addHeader("Authorization","Basic " + Base64.getEncoder()
+                .encodeToString((clientId + ":" + clientSecret).getBytes()));
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("code", (String) request.getParameter("code")));
+            params.add(new BasicNameValuePair("grant_type", "authorization_code"));
+            params.add(new BasicNameValuePair("redirect_uri", configurationService.getProperty("dspace.server.url") +
+                 "/server/api/authn/oidc"));
+            params.add(new BasicNameValuePair("client_id", clientId));
+            try {
+                HttpEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
+                StringWriter writerEntity = new StringWriter();
+                IOUtils.copy(entity.getContent(), writerEntity, "UTF-8");
+                post.setEntity(entity);
+                HttpResponse response = client.execute(post);
+                StringWriter writer = new StringWriter();
+                IOUtils.copy(response.getEntity().getContent(), writer, "UTF-8");
+                String body = writer.toString();
+                ObjectMapper om = new ObjectMapper();
+                OIDCTokenResponse tokens = om.readValue(body, OIDCTokenResponse.class);
+                if (tokens.getIdToken() != null && !tokens.getIdToken().isEmpty()) {
+                    String introspectResponse = checkFieldAndExtractEperson(tokens);
+                    String ePersonId = getEpersonByJsonPath(introspectResponse);
+                    if (ePersonId != null) {
+                        EPerson eperson = ePersonService.find(context, UUID.fromString(ePersonId));
+                        if (eperson != null) {
+                            request.setAttribute("OidcAuthenticationResultEPerson", eperson);
+                            List<String> groups = mapper.getSpecialGroup(introspectResponse);
+                            if (groups != null) {
+                                ArrayList<Group> groupList = new ArrayList<>();
+                                for (String group : groups) {
+                                    Group groupItem = groupService.find(context, UUID.fromString(group));
+                                    if (groupItem != null) {
+                                        groupList.add(groupItem);
+                                    }
+                                }
                             }
                         }
-                        AuthenticateServiceFactory.getInstance().getAuthenticationService()
-                            .initEPerson(context, request, eperson);
-                        log.info(ePersonId + " has been authenticated via OpenID");
-                        return AuthenticationMethod.SUCCESS;
                     }
                 }
+            } catch (IOException e) {
+                context.setCurrentUser(null);
+            } catch (SQLException e) {
+                context.setCurrentUser(null);
             }
-        } catch (IOException e) {
-            context.setCurrentUser(null);
+        } else {
+            log.warn("Unable to authenticate using OpenID Connect because the request object is null.");
         }
-        return AuthenticationMethod.NO_SUCH_USER;
+        return;
+    }
+
+    private String getEpersonByJsonPath(String introspectResponse) {
+        DocumentContext document = JsonPath.parse(introspectResponse);
+        return document.read(jsonPathEperson);
     }
 
     /**
@@ -236,13 +268,14 @@ public class OIDCAuthentication implements AuthenticationMethod {
      * @return data get from the instrospect endpoint
      * 
      */
-    private OIDCIntrospectResponse checkFieldAndExtractEperson(OIDCTokenResponse tokens) {
+    private String checkFieldAndExtractEperson(OIDCTokenResponse tokens) {
         try {
+            String idpDomain = configurationService.getProperty("authentication-oidc.authserverdomain");
             String clientId = configurationService.getProperty("authentication-oidc.clientid");
             String clientSecret = configurationService.getProperty("authentication-oidc.clientsecret");
-            String tokenEndpoint = configurationService.getProperty("authentication-oidc.introspectendpoint");
+            String introspectEndpoint = configurationService.getProperty("authentication-oidc.introspectendpoint");
             HttpClient client = HttpClientBuilder.create().build();
-            HttpPost post = new HttpPost(tokenEndpoint);
+            HttpPost post = new HttpPost(idpDomain + introspectEndpoint);
             post.addHeader("Content-Type", "application/x-www-form-urlencoded");
             post.addHeader("Authorization","Basic " + Base64.getEncoder()
                 .encodeToString((clientId + ":" + clientSecret).getBytes()));
@@ -255,9 +288,7 @@ public class OIDCAuthentication implements AuthenticationMethod {
             HttpResponse response = client.execute(post);
             StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, "UTF-8");
-            String body = writer.toString();
-            ObjectMapper om = new ObjectMapper();
-            return om.readValue(body, OIDCIntrospectResponse.class);
+            return  writer.toString();
         } catch (IOException e) {
             log.error("Exception throwing trying to load data from introspection, URL: "
                 + configurationService.getProperty("authentication-oidc.introspectendpoint"));
@@ -278,13 +309,12 @@ public class OIDCAuthentication implements AuthenticationMethod {
      */
     @Override
     public String loginPageURL(Context context, HttpServletRequest request, HttpServletResponse response) {
-        String authorizeUrl = configurationService.getProperty("authentication-oidc.authserverdomain")
-            + configurationService.getProperty("authentication-oidc.authorizeendpoint");
+        String authorizeUrl = configurationService.getProperty("authentication-oidc.authorizeurl");
         String clientId = configurationService.getProperty("authentication-oidc.clientid");
         String redirectUri = configurationService.getProperty("dspace.server.url") + "/api/authn/oidc";
         if (StringUtils.isEmpty(authorizeUrl) || StringUtils.isEmpty(clientId) || StringUtils.isEmpty(redirectUri)) {
             log.error("Missing mandatory configuration properties for OIDCAuthentication");
-            // empty return force the caller to skip this entry
+            // blank return force the caller to skip this entry
             return "";
         } else {
             return authorizeUrl + "?client_id=" + clientId + "&response_type=code&scope=openid&"

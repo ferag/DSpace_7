@@ -37,10 +37,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.dspace.app.rest.builder.CollectionBuilder;
-import org.dspace.app.rest.builder.CommunityBuilder;
-import org.dspace.app.rest.builder.EPersonBuilder;
-import org.dspace.app.rest.builder.GroupBuilder;
 import org.dspace.app.rest.matcher.EPersonMatcher;
 import org.dspace.app.rest.matcher.GroupMatcher;
 import org.dspace.app.rest.matcher.HalMatcher;
@@ -54,6 +50,10 @@ import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
 import org.dspace.app.rest.test.MetadataPatchSuite;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.authorize.service.ResourcePolicyService;
+import org.dspace.builder.CollectionBuilder;
+import org.dspace.builder.CommunityBuilder;
+import org.dspace.builder.EPersonBuilder;
+import org.dspace.builder.GroupBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.factory.ContentServiceFactory;
@@ -106,7 +106,7 @@ public class GroupRestRepositoryIT extends AbstractControllerIntegrationTest {
 
         // hold the id of the created workflow item
         AtomicReference<UUID> idRef = new AtomicReference<>();
-        AtomicReference<UUID> idRefNoEmbeds = new AtomicReference<UUID>();
+        AtomicReference<UUID> idRefNoEmbeds = new AtomicReference<>();
         try {
             ObjectMapper mapper = new ObjectMapper();
             GroupRest groupRest = new GroupRest();
@@ -130,7 +130,7 @@ public class GroupRestRepositoryIT extends AbstractControllerIntegrationTest {
                     .andExpect(jsonPath("$", GroupMatcher.matchFullEmbeds()))
                     .andDo(result -> idRef
                             .set(UUID.fromString(read(result.getResponse().getContentAsString(), "$.id")))
-                    );
+            );
 
             getClient(authToken).perform(get("/api/eperson/groups"))
                        //The status has to be 200 OK
@@ -3137,9 +3137,7 @@ public class GroupRestRepositoryIT extends AbstractControllerIntegrationTest {
         getClient(authToken).perform(post("/api/eperson/groups/" + group.getID() + "/epersons")
             .contentType(parseMediaType(TEXT_URI_LIST_VALUE))
             .content(REST_SERVER_URL + "eperson/groups/" + member.getID()))
-            .andExpect(status().isUnprocessableEntity())
-            .andExpect(status().reason(is("Cannot add ePerson members to ROLE group")));
-
+            .andExpect(status().isUnprocessableEntity());
     }
 
 }

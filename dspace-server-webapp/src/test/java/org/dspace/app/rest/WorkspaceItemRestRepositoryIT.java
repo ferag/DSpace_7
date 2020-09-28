@@ -14,6 +14,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.data.rest.webmvc.RestMediaTypes.TEXT_URI_LIST_VALUE;
 import static org.springframework.http.MediaType.parseMediaType;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -37,14 +38,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.dspace.app.rest.builder.BitstreamBuilder;
-import org.dspace.app.rest.builder.CollectionBuilder;
-import org.dspace.app.rest.builder.CommunityBuilder;
-import org.dspace.app.rest.builder.EPersonBuilder;
-import org.dspace.app.rest.builder.EntityTypeBuilder;
-import org.dspace.app.rest.builder.GroupBuilder;
-import org.dspace.app.rest.builder.ItemBuilder;
-import org.dspace.app.rest.builder.WorkspaceItemBuilder;
 import org.dspace.app.rest.matcher.CollectionMatcher;
 import org.dspace.app.rest.matcher.ItemMatcher;
 import org.dspace.app.rest.matcher.MetadataMatcher;
@@ -54,6 +47,14 @@ import org.dspace.app.rest.model.patch.Operation;
 import org.dspace.app.rest.model.patch.RemoveOperation;
 import org.dspace.app.rest.model.patch.ReplaceOperation;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
+import org.dspace.builder.BitstreamBuilder;
+import org.dspace.builder.CollectionBuilder;
+import org.dspace.builder.CommunityBuilder;
+import org.dspace.builder.EPersonBuilder;
+import org.dspace.builder.EntityTypeBuilder;
+import org.dspace.builder.GroupBuilder;
+import org.dspace.builder.ItemBuilder;
+import org.dspace.builder.WorkspaceItemBuilder;
 import org.dspace.content.Bitstream;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
@@ -894,7 +895,7 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
      *
      * @throws Exception
      */
-    public void createSingleWorkspaceItemFromFileWithOneEntryTest() throws Exception {
+    public void createSingleWorkspaceItemFromBibtexFileWithOneEntryTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
         //** GIVEN **
@@ -908,10 +909,14 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
         Collection col1 = CollectionBuilder.createCollection(context, child1)
                                            .withName("Collection 1")
                                            .withSubmitterGroup(eperson)
+                                           .withRelationshipType("Publication")
+                                           .withSubmissionDefinition("traditional")
                                            .build();
         Collection col2 = CollectionBuilder.createCollection(context, child1)
                                            .withName("Collection 2")
                                            .withSubmitterGroup(eperson)
+                                           .withRelationshipType("Publication")
+                                           .withSubmissionDefinition("traditional")
                                            .build();
 
         InputStream bibtex = getClass().getResourceAsStream("bibtex-test.bib");
@@ -920,11 +925,13 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
 
         context.restoreAuthSystemState();
 
+        AtomicReference<List<Integer>> idRef = new AtomicReference<>();
         String authToken = getAuthToken(eperson.getEmail(), password);
-        // bulk create workspaceitems in the default collection (col1)
-        getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
+        try {
+            // create a workspaceitem from a single bibliographic entry file explicitly in the default collection (col1)
+            getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
                     .file(bibtexFile))
-                // bulk create should return 200, 201 (created) is better for single resource
+                // create should return 200, 201 (created) is better for single resource
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone['dc.title'][0].value",
                         is("My Article")))
@@ -937,11 +944,20 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
                      + ".metadata['dc.title'][0].value",
                         is("bibtex-test.bib")))
                 .andExpect(
-                        jsonPath("$._embedded.workspaceitems[*]._embedded.upload").doesNotExist());
-        ;
+                        jsonPath("$._embedded.workspaceitems[*]._embedded.upload").doesNotExist())
+                .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(),
+                    "$._embedded.workspaceitems[*].id")));
+        } finally {
+            if (idRef != null && idRef.get() != null) {
+                for (int i : idRef.get()) {
+                    WorkspaceItemBuilder.deleteWorkspaceItem(i);
+                }
+            }
+        }
 
-        // bulk create workspaceitems explicitly in the col2
-        getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
+        // create a workspaceitem from a single bibliographic entry file explicitly in the col2
+        try {
+            getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
                     .file(bibtexFile)
                     .param("owningCollection", col2.getID().toString()))
                 .andExpect(status().isOk())
@@ -956,12 +972,546 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
                      + ".files[0].metadata['dc.title'][0].value",
                         is("bibtex-test.bib")))
                 .andExpect(
-                        jsonPath("$._embedded.workspaceitems[*]._embedded.upload").doesNotExist());
-
+                        jsonPath("$._embedded.workspaceitems[*]._embedded.upload").doesNotExist())
+                .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(),
+                        "$._embedded.workspaceitems[*].id")));
+        } finally {
+            if (idRef != null && idRef.get() != null) {
+                for (int i : idRef.get()) {
+                    WorkspaceItemBuilder.deleteWorkspaceItem(i);
+                }
+            }
+        }
         bibtex.close();
     }
 
+    @Test
+    /**
+     * Test the creation of workspaceitems POSTing to the resource collection endpoint a csv file
+     *
+     * @throws Exception
+     */
+    public void createSingleWorkspaceItemFromCSVWithOneEntryTest() throws Exception {
+        context.turnOffAuthorisationSystem();
 
+        //** GIVEN **
+        //1. A community-collection structure with one parent community with sub-community and two collections.
+        parentCommunity = CommunityBuilder.createCommunity(context)
+                                          .withName("Parent Community")
+                                          .build();
+        Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity)
+                                           .withName("Sub Community")
+                                           .build();
+        Collection col1 = CollectionBuilder.createCollection(context, child1)
+                                           .withName("Collection 1")
+                                           .withRelationshipType("Publication")
+                                           .withSubmissionDefinition("traditional")
+                                           .withSubmitterGroup(eperson)
+                                           .build();
+        Collection col2 = CollectionBuilder.createCollection(context, child1)
+                                           .withName("Collection 2")
+                                           .withRelationshipType("Publication")
+                                           .withSubmissionDefinition("traditional")
+                                           .withSubmitterGroup(eperson)
+                                           .build();
+
+        InputStream csv = getClass().getResourceAsStream("csv-test.csv");
+        final MockMultipartFile csvFile = new MockMultipartFile("file", "/local/path/csv-test.csv",
+            "text/csv", csv);
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(eperson.getEmail(), password);
+        // create workspaceitems in the default collection (col1)
+        AtomicReference<List<Integer>> idRef = new AtomicReference<>();
+        try {
+            getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
+                    .file(csvFile))
+                // create should return 200, 201 (created) is better for single resource
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone['dc.title'][0].value",
+                        is("My Article")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                        + "['dc.contributor.author'][0].value",
+                        is("Nobody")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                        + "['dc.date.issued'][0].value",
+                        is("2006")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                        + "['dc.identifier.issn'][0].value",
+                        is("Mock ISSN")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone['dc.type'][0].value",
+                        is("Mock subtype")))
+                .andExpect(
+                        jsonPath("$._embedded.workspaceitems[0]._embedded.collection.id", is(col1.getID().toString())))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.upload.files[0]"
+                     + ".metadata['dc.source'][0].value",
+                        is("/local/path/csv-test.csv")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.upload.files[0]"
+                     + ".metadata['dc.title'][0].value",
+                        is("csv-test.csv")))
+                .andExpect(
+                        jsonPath("$._embedded.workspaceitems[*]._embedded.upload").doesNotExist())
+                .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(),
+                        "$._embedded.workspaceitems[*].id")));
+        } finally {
+            if (idRef != null && idRef.get() != null) {
+                for (int i : idRef.get()) {
+                    WorkspaceItemBuilder.deleteWorkspaceItem(i);
+                }
+            }
+        }
+
+        // create workspaceitems explicitly in the col2
+        try {
+            getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
+                    .file(csvFile)
+                    .param("owningCollection", col2.getID().toString()))
+                    .andExpect(status().isOk())
+                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                     + "['dc.title'][0].value",
+                     is("My Article")))
+                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                     + "['dc.contributor.author'][0].value",
+                     is("Nobody")))
+                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                     + "['dc.date.issued'][0].value",
+                     is("2006")))
+                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                     + "['dc.identifier.issn'][0].value",
+                     is("Mock ISSN")))
+                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone['dc.type'][0].value",
+                     is("Mock subtype")))
+                 .andExpect(
+                        jsonPath("$._embedded.workspaceitems[0]._embedded.collection.id", is(col2.getID().toString())))
+                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.upload.files[0]"
+                     + ".metadata['dc.source'][0].value",
+                        is("/local/path/csv-test.csv")))
+                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.upload"
+                     + ".files[0].metadata['dc.title'][0].value",
+                        is("csv-test.csv")))
+                 .andExpect(
+                     jsonPath("$._embedded.workspaceitems[*]._embedded.upload").doesNotExist())
+                 .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(),
+                         "$._embedded.workspaceitems[*].id")));
+        } finally {
+            if (idRef != null && idRef.get() != null) {
+                for (int i : idRef.get()) {
+                    WorkspaceItemBuilder.deleteWorkspaceItem(i);
+                }
+            }
+        }
+        csv.close();
+    }
+
+    @Test
+    /**
+     * Test the creation of workspaceitems POSTing to the resource collection endpoint a csv file
+     * with some missing data
+     *
+     * @throws Exception
+     */
+    public void createSingleWorkspaceItemFromCSVWithOneEntryAndMissingDataTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        //** GIVEN **
+        //1. A community-collection structure with one parent community with sub-community and two collections.
+        parentCommunity = CommunityBuilder.createCommunity(context)
+                                          .withName("Parent Community")
+                                          .build();
+        Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity)
+                                           .withName("Sub Community")
+                                           .build();
+        Collection col1 = CollectionBuilder.createCollection(context, child1)
+                                           .withName("Collection 1")
+                                           .withRelationshipType("Publication")
+                                           .withSubmissionDefinition("traditional")
+                                           .withSubmitterGroup(eperson)
+                                           .build();
+        Collection col2 = CollectionBuilder.createCollection(context, child1)
+                                           .withName("Collection 2")
+                                           .withRelationshipType("Publication")
+                                           .withSubmissionDefinition("traditional")
+                                           .withSubmitterGroup(eperson)
+                                           .build();
+
+        InputStream csv = getClass().getResourceAsStream("csv-missing-field-test.csv");
+        final MockMultipartFile csvFile = new MockMultipartFile("file", "/local/path/csv-missing-field-test.csv",
+            "text/csv", csv);
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(eperson.getEmail(), password);
+        AtomicReference<List<Integer>> idRef = new AtomicReference<>();
+        // create workspaceitems in the default collection (col1)
+
+        try {
+            getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
+                .file(csvFile))
+            // create should return 200, 201 (created) is better for single resource
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone['dc.title'][0].value",
+                    is("My Article")))
+            .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                + "['dc.contributor.author'][0].value",
+                    is("Nobody")))
+            .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                    + "['dc.contributor.author'][1].value",
+                        is("Try escape, in item")))
+            .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                    + "['dc.date.issued'][0].value").isEmpty())
+            .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                    + "['dc.identifier.issn'][0].value",
+                    is("Mock ISSN")))
+            .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone['dc.type'][0].value"
+                    ).doesNotExist())
+            .andExpect(
+                    jsonPath("$._embedded.workspaceitems[0]._embedded.collection.id", is(col1.getID().toString())))
+            .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.upload.files[0]"
+                 + ".metadata['dc.source'][0].value",
+                    is("/local/path/csv-missing-field-test.csv")))
+            .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.upload.files[0]"
+                 + ".metadata['dc.title'][0].value",
+                    is("csv-missing-field-test.csv")))
+            .andExpect(
+                    jsonPath("$._embedded.workspaceitems[*]._embedded.upload").doesNotExist())
+            .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(),
+                    "$._embedded.workspaceitems[*].id")));
+        } finally {
+            if (idRef != null && idRef.get() != null) {
+                for (int i : idRef.get()) {
+                    WorkspaceItemBuilder.deleteWorkspaceItem(i);
+                }
+            }
+        }
+        csv.close();
+    }
+
+    @Test
+    /**
+     * Test the creation of workspaceitems POSTing to the resource collection endpoint a tsv file
+     *
+     * @throws Exception
+     */
+    public void createSingleWorkspaceItemFromTSVWithOneEntryTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        //** GIVEN **
+        //1. A community-collection structure with one parent community with sub-community and two collections.
+        parentCommunity = CommunityBuilder.createCommunity(context)
+                                          .withName("Parent Community")
+                                          .build();
+        Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity)
+                                           .withName("Sub Community")
+                                           .build();
+        Collection col1 = CollectionBuilder.createCollection(context, child1)
+                                           .withName("Collection 1")
+                                           .withRelationshipType("Publication")
+                                           .withSubmissionDefinition("traditional")
+                                           .withSubmitterGroup(eperson)
+                                           .build();
+        Collection col2 = CollectionBuilder.createCollection(context, child1)
+                                           .withName("Collection 2")
+                                           .withRelationshipType("Publication")
+                                           .withSubmissionDefinition("traditional")
+                                           .withSubmitterGroup(eperson)
+                                           .build();
+
+        InputStream tsv = getClass().getResourceAsStream("tsv-test.tsv");
+        final MockMultipartFile tsvFile = new MockMultipartFile("file", "/local/path/tsv-test.tsv",
+            "text/tsv", tsv);
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(eperson.getEmail(), password);
+        AtomicReference<List<Integer>> idRef = new AtomicReference<>();
+
+        // create workspaceitems in the default collection (col1)
+        try {
+            getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
+                    .file(tsvFile))
+                // create should return 200, 201 (created) is better for single resource
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone['dc.title'][0].value",
+                        is("My Article")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                        + "['dc.contributor.author'][0].value",
+                        is("Nobody")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                        + "['dc.date.issued'][0].value",
+                        is("2006")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                        + "['dc.identifier.issn'][0].value",
+                        is("Mock ISSN")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone['dc.type'][0].value",
+                        is("Mock subtype")))
+                .andExpect(
+                        jsonPath("$._embedded.workspaceitems[0]._embedded.collection.id", is(col1.getID().toString())))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.upload.files[0]"
+                     + ".metadata['dc.source'][0].value",
+                        is("/local/path/tsv-test.tsv")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.upload.files[0]"
+                     + ".metadata['dc.title'][0].value",
+                        is("tsv-test.tsv")))
+                .andExpect(
+                        jsonPath("$._embedded.workspaceitems[*]._embedded.upload").doesNotExist())
+                .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(),
+                        "$._embedded.workspaceitems[*].id")));
+        } finally {
+            if (idRef != null && idRef.get() != null) {
+                for (int i : idRef.get()) {
+                    WorkspaceItemBuilder.deleteWorkspaceItem(i);
+                }
+            }
+        }
+        tsv.close();
+    }
+
+    @Test
+    /**
+     * Test the creation of workspaceitems POSTing to the resource collection endpoint a ris file
+     *
+     * @throws Exception
+     */
+    public void createSingleWorkspaceItemFromRISWithOneEntryTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        //** GIVEN **
+        //1. A community-collection structure with one parent community with sub-community and two collections.
+        parentCommunity = CommunityBuilder.createCommunity(context)
+                                          .withName("Parent Community")
+                                          .build();
+        Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity)
+                                           .withName("Sub Community")
+                                           .build();
+        Collection col1 = CollectionBuilder.createCollection(context, child1)
+                                           .withName("Collection 1")
+                                           .withRelationshipType("Publication")
+                                           .withSubmissionDefinition("traditional")
+                                           .withSubmitterGroup(eperson)
+                                           .build();
+        Collection col2 = CollectionBuilder.createCollection(context, child1)
+                                           .withName("Collection 2")
+                                           .withRelationshipType("Publication")
+                                           .withSubmissionDefinition("traditional")
+                                           .withSubmitterGroup(eperson)
+                                           .build();
+
+        InputStream ris = getClass().getResourceAsStream("ris-test.ris");
+        final MockMultipartFile tsvFile = new MockMultipartFile("file", "/local/path/ris-test.ris",
+            "text/ris", ris);
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(eperson.getEmail(), password);
+        AtomicReference<List<Integer>> idRef = new AtomicReference<>();
+
+        // create workspaceitems in the default collection (col1)
+        try {
+            getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
+                    .file(tsvFile))
+                // create should return 200, 201 (created) is better for single resource
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone['dc.title'][0].value",
+                        is("Challenge–Response Identification")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone['dc.title'][1].value",
+                        is("Challenge–Response Identification second title")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                        + "['dc.contributor.author'][0].value",
+                        is("Just, Mike")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                        + "['dc.date.issued'][0].value",
+                        is("2005")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                        + "['dc.identifier.issn'][0].value",
+                        is("978-0-387-23483-0")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone['dc.type'][0].value",
+                        is("Mock subtype")))
+                .andExpect(
+                        jsonPath("$._embedded.workspaceitems[0]._embedded.collection.id", is(col1.getID().toString())))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.upload.files[0]"
+                     + ".metadata['dc.source'][0].value",
+                        is("/local/path/ris-test.ris")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.upload.files[0]"
+                     + ".metadata['dc.title'][0].value",
+                        is("ris-test.ris")))
+                .andExpect(
+                        jsonPath("$._embedded.workspaceitems[*]._embedded.upload").doesNotExist())
+                .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(),
+                                "$._embedded.workspaceitems[*].id")));
+        } finally {
+            if (idRef != null && idRef.get() != null) {
+                for (int i : idRef.get()) {
+                    WorkspaceItemBuilder.deleteWorkspaceItem(i);
+                }
+            }
+        }
+        ris.close();
+    }
+
+    @Test
+    /**
+     * Test the creation of workspaceitems POSTing to the resource collection endpoint an endnote file
+     *
+     * @throws Exception
+     */
+    public void createSingleWorkspaceItemFromEndnoteWithOneEntryTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        //** GIVEN **
+        //1. A community-collection structure with one parent community with sub-community and two collections.
+        parentCommunity = CommunityBuilder.createCommunity(context)
+                                          .withName("Parent Community")
+                                          .build();
+        Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity)
+                                           .withName("Sub Community")
+                                           .build();
+        Collection col1 = CollectionBuilder.createCollection(context, child1)
+                                           .withName("Collection 1")
+                                           .withRelationshipType("Publication")
+                                           .withSubmissionDefinition("traditional")
+                                           .withSubmitterGroup(eperson)
+                                           .build();
+        Collection col2 = CollectionBuilder.createCollection(context, child1)
+                                           .withName("Collection 2")
+                                           .withRelationshipType("Publication")
+                                           .withSubmissionDefinition("traditional")
+                                           .withSubmitterGroup(eperson)
+                                           .build();
+
+        InputStream endnote = getClass().getResourceAsStream("endnote-test.enw");
+        final MockMultipartFile endnoteFile = new MockMultipartFile("file", "/local/path/endnote-test.enw",
+            "text/endnote", endnote);
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(eperson.getEmail(), password);
+        AtomicReference<List<Integer>> idRef = new AtomicReference<>();
+        // create workspaceitems in the default collection (col1)
+        try {
+            getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
+                    .file(endnoteFile))
+                // create should return 200, 201 (created) is better for single resource
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone['dc.title'][0].value",
+                        is("My Title")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                        + "['dc.contributor.author'][0].value",
+                        is("Author 1")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                        + "['dc.contributor.author'][1].value",
+                        is("Author 2")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                        + "['dc.date.issued'][0].value",
+                        is("2005")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpagetwo"
+                        + "['dc.description.abstract'][0].value",
+                        is("This is my abstract")))
+                .andExpect(
+                        jsonPath("$._embedded.workspaceitems[0]._embedded.collection.id", is(col1.getID().toString())))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.upload.files[0]"
+                     + ".metadata['dc.source'][0].value",
+                        is("/local/path/endnote-test.enw")))
+                .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.upload.files[0]"
+                     + ".metadata['dc.title'][0].value",
+                        is("endnote-test.enw")))
+                .andExpect(
+                        jsonPath("$._embedded.workspaceitems[*]._embedded.upload").doesNotExist())
+                .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(),
+                        "$._embedded.workspaceitems[*].id")));
+        } finally {
+            if (idRef != null && idRef.get() != null) {
+                for (int i : idRef.get()) {
+                     WorkspaceItemBuilder.deleteWorkspaceItem(i);
+                }
+            }
+        }
+        endnote.close();
+    }
+
+
+    @Test
+    /**
+     * Test the creation of workspaceitems POSTing to the resource collection endpoint a csv file
+     * with some missing data and inner tab in field (those have to be read as list)
+     *
+     * @throws Exception
+     */
+    public void createSingleWorkspaceItemFromTSVWithOneEntryAndMissingDataTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        //** GIVEN **
+        //1. A community-collection structure with one parent community with sub-community and two collections.
+        parentCommunity = CommunityBuilder.createCommunity(context)
+                                          .withName("Parent Community")
+                                          .build();
+        Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity)
+                                           .withName("Sub Community")
+                                           .build();
+        Collection col1 = CollectionBuilder.createCollection(context, child1)
+                                           .withName("Collection 1")
+                                           .withRelationshipType("Publication")
+                                           .withSubmissionDefinition("traditional")
+                                           .withSubmitterGroup(eperson)
+                                           .build();
+        Collection col2 = CollectionBuilder.createCollection(context, child1)
+                                           .withName("Collection 2")
+                                           .withRelationshipType("Publication")
+                                           .withSubmissionDefinition("traditional")
+                                           .withSubmitterGroup(eperson)
+                                           .build();
+
+        InputStream tsv = getClass().getResourceAsStream("tsv-missing-field-test.tsv");
+        final MockMultipartFile csvFile = new MockMultipartFile("file", "/local/path/tsv-missing-field-test.tsv",
+            "text/tsv", tsv);
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(eperson.getEmail(), password);
+        AtomicReference<List<Integer>> idRef = new AtomicReference<>();
+
+        // create workspaceitems in the default collection (col1)
+        try {
+            getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
+                .file(csvFile))
+            // create should return 200, 201 (created) is better for single resource
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone['dc.title'][0].value",
+                    is("My Article")))
+            .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                + "['dc.contributor.author'][0].value",
+                    is("Nobody")))
+            .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                    + "['dc.contributor.author'][1].value",
+                        is("Try escape \t\t\tin \t\titem")))
+            .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                    + "['dc.date.issued'][0].value").isEmpty())
+            .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone"
+                    + "['dc.identifier.issn'][0].value",
+                    is("Mock ISSN")))
+            .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone['dc.type'][0].value"
+                    ).doesNotExist())
+            .andExpect(
+                    jsonPath("$._embedded.workspaceitems[0]._embedded.collection.id", is(col1.getID().toString())))
+            .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.upload.files[0]"
+                 + ".metadata['dc.source'][0].value",
+                    is("/local/path/tsv-missing-field-test.tsv")))
+            .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.upload.files[0]"
+                 + ".metadata['dc.title'][0].value",
+                    is("tsv-missing-field-test.tsv")))
+            .andExpect(
+                    jsonPath("$._embedded.workspaceitems[*]._embedded.upload").doesNotExist())
+            .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(),
+                    "$._embedded.workspaceitems[*].id")));
+            } finally {
+                if (idRef != null && idRef.get() != null) {
+                    for (int i : idRef.get()) {
+                        WorkspaceItemBuilder.deleteWorkspaceItem(i);
+                    }
+                }
+            }
+            tsv.close();
+    }
 
     @Test
     /**
@@ -982,10 +1532,14 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
                                            .build();
         Collection col1 = CollectionBuilder.createCollection(context, child1)
                                            .withName("Collection 1")
+                                           .withRelationshipType("Publication")
+                                           .withSubmissionDefinition("traditional")
                                            .withSubmitterGroup(eperson)
                                            .build();
         Collection col2 = CollectionBuilder.createCollection(context, child1)
                                            .withName("Collection 2")
+                                           .withRelationshipType("Publication")
+                                           .withSubmissionDefinition("traditional")
                                            .withSubmitterGroup(eperson)
                                            .build();
 
@@ -999,10 +1553,10 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
         context.restoreAuthSystemState();
 
         String authToken = getAuthToken(eperson.getEmail(), password);
-        // bulk create workspaceitems in the default collection (col1)
+        // create a workspaceitem from a single bibliographic entry file explicitly in the default collection (col1)
         getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
                     .file(bibtexFile).file(pubmedFile))
-                // bulk create should return 200, 201 (created) is better for single resource
+                // create should return 200, 201 (created) is better for single resource
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone['dc.title'][0].value",
                         is("My Article")))
@@ -1023,7 +1577,7 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
                         + ".metadata['dc.title'][0].value",
                             is("pubmed-test.xml")));
 
-        // bulk create workspaceitems explicitly in the col2
+        // create a workspaceitem from a single bibliographic entry file explicitly in the col2
         getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
                     .file(bibtexFile).file(pubmedFile)
                     .param("owningCollection", col2.getID().toString()))
@@ -1085,10 +1639,11 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
         context.restoreAuthSystemState();
 
         String authToken = getAuthToken(eperson.getEmail(), password);
-        // bulk create workspaceitems in the default collection (col1)
+        // create a workspaceitem from a single bibliographic entry file explicitly in the default collection (col1)
         getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
                     .file(bibtexFile))
-                // bulk create should return 200, 201 (created) is better for single resource
+                  // create should return return a 422 because we don't allow/support bibliographic files
+                 // that have multiple metadata records
                 .andExpect(status().is(422));
         bibtex.close();
     }
@@ -1113,10 +1668,14 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
                                            .build();
         Collection col1 = CollectionBuilder.createCollection(context, child1)
                                            .withName("Collection 1")
+                                           .withRelationshipType("Publication")
+                                           .withSubmissionDefinition("traditional")
                                            .withSubmitterGroup(eperson)
                                            .build();
         Collection col2 = CollectionBuilder.createCollection(context, child1)
                                            .withName("Collection 2")
+                                           .withRelationshipType("Publication")
+                                           .withSubmissionDefinition("traditional")
                                            .withSubmitterGroup(eperson)
                                            .build();
         InputStream xmlIS = getClass().getResourceAsStream("pubmed-test.xml");
@@ -1126,10 +1685,9 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
         context.restoreAuthSystemState();
 
         String authToken = getAuthToken(eperson.getEmail(), password);
-        // bulk create workspaceitems in the default collection (col1)
+        // create a workspaceitem from a single bibliographic entry file explicitly in the default collection (col1)
         getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
                     .file(pubmedFile))
-                // bulk create should return 200, 201 (created) is better for single resource
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone['dc.title'][0].value",
                         is("Multistep microreactions with proteins using electrocapture technology.")))
@@ -1147,7 +1705,7 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
                     + ".metadata['dc.title'][0].value",
                         is("pubmed-test.xml")));
 
-        // bulk create workspaceitems explicitly in the col2
+        // create a workspaceitem from a single bibliographic entry file explicitly in the col2
         getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
                     .file(pubmedFile)
                     .param("owningCollection", col2.getID().toString()))
@@ -1189,6 +1747,8 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
                                            .build();
         Collection col1 = CollectionBuilder.createCollection(context, child1)
                 .withName("Collection 1")
+                .withRelationshipType("Publication")
+                .withSubmissionDefinition("traditional")
                 .withSubmitterGroup(eperson)
                 .build();
 
@@ -1249,7 +1809,6 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
                                            .build();
         Collection col1 = CollectionBuilder.createCollection(context, child1)
                 .withName("Collection 1")
-                .withRelationshipType("Publication")
                 .withSubmitterGroup(eperson)
                 .build();
 
@@ -1349,7 +1908,7 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
                         is("10.1021/ac0354342")))
                     .andExpect(jsonPath("$.sections.traditionalpageone['dc.title'][0].value",
                         is("Multistep microreactions with proteins using electrocapture technology.")))
-                    .andExpect(jsonPath("$.sections.traditionalpageone['dc.type'][0].value",
+                    .andExpect(jsonPath("$.sections.traditionalpageone['dc.type'][1].value",
                         is("Journal Article")))
                     .andExpect(jsonPath("$.sections.traditionalpageone['dc.date.issued'][0].value",
                         is("2004-05-01")))
@@ -1381,7 +1940,7 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
                     is("10.1021/ac0354342")))
                 .andExpect(jsonPath("$.sections.traditionalpageone['dc.title'][0].value",
                     is("Multistep microreactions with proteins using electrocapture technology.")))
-                .andExpect(jsonPath("$.sections.traditionalpageone['dc.type'][0].value",
+                .andExpect(jsonPath("$.sections.traditionalpageone['dc.type'][1].value",
                     is("Journal Article")))
                 .andExpect(jsonPath("$.sections.traditionalpageone['dc.date.issued'][0].value",
                     is("2004-05-01")))
@@ -3411,12 +3970,12 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
         context.restoreAuthSystemState();
         // upload the file in our workspaceitem
         getClient(authToken).perform(fileUpload("/api/submission/workspaceitems/" + witem.getID())
-                .file(pdfFile))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.sections.upload.files[0].metadata['dc.title'][0].value",
-                        is("simple-article.pdf")))
-                .andExpect(jsonPath("$.sections.upload.files[0].metadata['dc.source'][0].value",
-                        is("/local/path/simple-article.pdf")))
+            .file(pdfFile))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.sections.upload.files[0].metadata['dc.title'][0].value",
+                is("simple-article.pdf")))
+            .andExpect(jsonPath("$.sections.upload.files[0].metadata['dc.source'][0].value",
+                is("/local/path/simple-article.pdf")))
         ;
 
         //Verify there are no errors since file was uploaded (with upload required set to true)
@@ -4286,7 +4845,7 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
     }
 
     @Test
-    public void patchDeleteSectionWithEpersonTest() throws Exception {
+    public void patchDeleteSectionWithEPersonTest() throws Exception {
         context.turnOffAuthorisationSystem();
         parentCommunity = CommunityBuilder.createCommunity(context)
                                           .withName("Parent Community")
@@ -4406,6 +4965,46 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
                  .andExpect(jsonPath("$",
                          Matchers.is(WorkspaceItemMatcher.matchItemWithTitleAndDateIssuedAndSubject(witem,
                                  "Test title", "2019-04-25", "ExtraEntry"))));
+    }
+
+    @Test
+    public void findOneFullProjectionTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        //** GIVEN **
+        //1. A community-collection structure with one parent community with sub-community and two collections.
+        parentCommunity = CommunityBuilder.createCommunity(context)
+                                          .withName("Parent Community")
+                                          .build();
+        Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity)
+                                           .withName("Sub Community")
+                                           .build();
+        Collection col1 = CollectionBuilder.createCollection(context, child1).withName("Collection 1").build();
+
+        //2. a workspace item
+        WorkspaceItem witem = WorkspaceItemBuilder.createWorkspaceItem(context, col1)
+                                                  .withTitle("Workspace Item 1")
+                                                  .withIssueDate("2017-10-17")
+                                                  .withAuthor("Smith, Donald").withAuthor("Doe, John")
+                                                  .withSubject("ExtraEntry")
+                                                  .build();
+
+        context.restoreAuthSystemState();
+
+        String adminToken = getAuthToken(admin.getEmail(), password);
+        String epersonToken = getAuthToken(eperson.getEmail(), password);
+
+        getClient(adminToken).perform(get("/api/submission/workspaceitems/" + witem.getID())
+                                .param("projection", "full"))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$._embedded.collection._embedded.adminGroup", nullValue()));
+
+
+        getClient(epersonToken).perform(get("/api/submission/workspaceitems/" + witem.getID())
+                                          .param("projection", "full"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$._embedded.collection._embedded.adminGroup").doesNotExist());
+
     }
 
     @Test
@@ -4545,6 +5144,7 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
         Collection col2 = CollectionBuilder.createCollection(context, child1)
                 .withName("Collection 2")
                 .withRelationshipType("Journal")
+                .withSubmissionDefinition("traditional")
                 .withSubmitterGroup(eperson)
                 .build();
         context.restoreAuthSystemState();

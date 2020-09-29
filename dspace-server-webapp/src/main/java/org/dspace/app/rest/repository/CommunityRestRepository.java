@@ -345,6 +345,7 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public CommunityRest createAndReturn(Context context, List<String> stringList)
         throws AuthorizeException, SQLException {
 

@@ -12,6 +12,7 @@ import static org.dspace.app.rest.matcher.HalMatcher.matchEmbeds;
 import static org.dspace.app.rest.test.AbstractControllerIntegrationTest.REST_SERVER_URL;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 import java.util.UUID;
 
@@ -145,6 +146,13 @@ public class CollectionMatcher {
      */
     public static Matcher<? super Object> matchSpecificEmbeds() {
         return matchEmbeds(getEmbedsParameter().split(",")
+        );
+    }
+
+    public static Matcher<? super Object> matchClone(Collection collection) {
+        return allOf(
+            hasJsonPath("$.uuid", not(collection.getID().toString())),
+            hasJsonPath("$.name", is(collection.getName()))
         );
     }
 }

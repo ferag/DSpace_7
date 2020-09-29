@@ -163,7 +163,8 @@ public class Application extends SpringBootServletInitializer {
                                             "X-On-Behalf-Of")
                             // Allow list of response headers allowed to be sent by us (the server)
                             .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials",
-                                            "Authorization");
+                                    "Authorization", "expires", "Location", "Content-Disposition", "WWW-Authenticate",
+                                    "Set-Cookie", "X-Requested-With");
                 }
             }
 

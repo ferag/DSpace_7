@@ -328,4 +328,14 @@ public interface GroupService extends DSpaceObjectService<Group>, DSpaceObjectLe
      * @return the group type as enum
      */
     public GroupType getGroupType(Group group);
+
+    /**
+     * Find all the groups with the given type.
+     *
+     * @param context The DSpace context
+     * @param type    the type of the group to search
+     * @return the group list
+     * @throws SQLException database exception
+     */
+    List<Group> findByGroupType(Context context, GroupType type) throws SQLException;
 }

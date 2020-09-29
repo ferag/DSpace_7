@@ -28,6 +28,8 @@ public class GroupBuilder extends AbstractDSpaceObjectBuilder<Group> {
 
     private Group group;
 
+    private GroupType type;
+
     protected GroupBuilder(Context context) {
         super(context);
 
@@ -78,7 +80,11 @@ public class GroupBuilder extends AbstractDSpaceObjectBuilder<Group> {
 
     public GroupBuilder withName(String groupName) {
         try {
-            groupService.setName(group, groupName);
+            if (type == null) {
+                groupService.setName(group, groupName);
+            } else {
+                groupService.setName(group, type.name() + ":" + group.getName());
+            }
         } catch (Exception e) {
             return handleException(e);
         }
@@ -87,6 +93,8 @@ public class GroupBuilder extends AbstractDSpaceObjectBuilder<Group> {
 
     public GroupBuilder withType(GroupType type) {
         try {
+            this.type = type;
+            groupService.setName(group, type.name() + ":" + group.getName());
             groupService.addMetadata(context, group, "perucris", "group", "type", null, type.name(), null, -1);
         } catch (Exception e) {
             return handleException(e);

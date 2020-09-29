@@ -1,3 +1,10 @@
+/**
+ * The contents of this file are subject to the license and copyright
+ * detailed in the LICENSE and NOTICE files at the root of the source
+ * tree and available online at
+ *
+ * http://www.dspace.org/license/
+ */
 package org.dspace.importer.external.alicia.metadatamapping;
 
 import java.util.Map;
@@ -15,6 +22,7 @@ public class AliciaFieldMapping extends AbstractMetadataFieldMapping {
      * @param metadataFieldMap The map containing the link between retrieve metadata and metadata that will be set to
      *                         the item.
      */
+    @SuppressWarnings("unchecked")
     @Override
     @Resource(name = "aliciaMetadataFieldMap")
     public void setMetadataFieldMap(Map metadataFieldMap) {

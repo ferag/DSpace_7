@@ -1,3 +1,10 @@
+/**
+ * The contents of this file are subject to the license and copyright
+ * detailed in the LICENSE and NOTICE files at the root of the source
+ * tree and available online at
+ *
+ * http://www.dspace.org/license/
+ */
 package org.dspace.importer.external.alicia;
 
 import java.util.ArrayList;
@@ -66,7 +73,7 @@ public class AliciaImportMetadataSourceServiceImpl extends AbstractImportMetadat
 
     @Override
     public Collection<ImportRecord> getRecords(String query, int start, int count) throws MetadataSourceException {
-        String records = retry(new SearchByQueryCallable(query, start, count, searchWebTarget, fields));
+        String records = retry(new SearchByQueryCallable(query, count, start, searchWebTarget, fields));
         return extractMetadataFromRecordList(records);
     }
 
@@ -103,17 +110,22 @@ public class AliciaImportMetadataSourceServiceImpl extends AbstractImportMetadat
     private List<ImportRecord> extractMetadataFromRecordList(String records) {
         List<ImportRecord> recordsResult = new ArrayList<>();
         ReadContext ctx = JsonPath.parse(records);
-        Object o = ctx.read("$.records[*]");
-        if (o.getClass().isAssignableFrom(JSONArray.class)) {
-            JSONArray array = (JSONArray)o;
-            int size = array.size();
-            for (int index = 0; index < size; index++) {
-                Gson gson = new Gson();
-                String innerJson = gson.toJson(array.get(index), LinkedHashMap.class);
-                recordsResult.add(transformSourceRecords(innerJson));
+        try {
+            Object o = ctx.read("$.records[*]");
+            if (o.getClass().isAssignableFrom(JSONArray.class)) {
+                JSONArray array = (JSONArray)o;
+                int size = array.size();
+                for (int index = 0; index < size; index++) {
+                    Gson gson = new Gson();
+                    String innerJson = gson.toJson(array.get(index), LinkedHashMap.class);
+                    recordsResult.add(transformSourceRecords(innerJson));
+                }
+            } else {
+                recordsResult.add(transformSourceRecords(o.toString()));
             }
-        } else {
-            recordsResult.add(transformSourceRecords(o.toString()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error reading data from alicia");
         }
         return recordsResult;
     }

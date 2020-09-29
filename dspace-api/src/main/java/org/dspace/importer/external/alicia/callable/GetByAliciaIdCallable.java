@@ -1,3 +1,10 @@
+/**
+ * The contents of this file are subject to the license and copyright
+ * detailed in the LICENSE and NOTICE files at the root of the source
+ * tree and available online at
+ *
+ * http://www.dspace.org/license/
+ */
 package org.dspace.importer.external.alicia.callable;
 
 import java.util.concurrent.Callable;
@@ -25,7 +32,9 @@ public class GetByAliciaIdCallable implements Callable<String> {
     public String call() throws Exception {
         WebTarget localTarget = webTarget.queryParam("id", id);
         if (fields != null && !fields.isEmpty()) {
-            localTarget = localTarget.queryParam("field[]", fields);
+            for (String field : fields.split(",")) {
+                localTarget = localTarget.queryParam("field[]", field);
+            }
         }
         localTarget = localTarget.queryParam("prettyPrint", false);
         Invocation.Builder invocationBuilder = localTarget.request();

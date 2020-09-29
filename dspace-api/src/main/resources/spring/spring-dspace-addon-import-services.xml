@@ -51,11 +51,12 @@
     <bean id="aliciaImportService"
           class="org.dspace.importer.external.alicia.AliciaImportMetadataSourceServiceImpl" scope="singleton">
           <!-- Alicia search endpoint full address -->
-          <constructor-arg type="java.lang.String" value="http://34.206.108.87/vufind/api/v1/search"/>
-          <!-- Alicia get by id endpoint full address -->
-          <constructor-arg type="java.lang.String" value="http://34.206.108.87/vufind/api/v1/record"/>
+          <constructor-arg type="java.lang.String" value="https://alicia.concytec.gob.pe/vufind/api/v1/search"/>
+          <!-- Alicia get by id endpoint full address dev = http://34.206.108.87-->
+          <constructor-arg type="java.lang.String" value="https://alicia.concytec.gob.pe/vufind/api/v1/record"/>
           <!-- Alicia  comma separated response fields list, empty or null force default values-->
-          <constructor-arg type="java.lang.String" value="title,summary,series,languages,isbns,id,authors,cleanDoi,cleanIsbn,cleanIssn,containerVolume"/>
+          <constructor-arg type="java.lang.String" value="title,id,subjects,urls,authors"/>
+          <property name="metadataFieldMapping" ref="aliciaMetadataFieldMapping"/>
     </bean>
     <bean id="aliciaMetadataFieldMapping"
           class="org.dspace.importer.external.alicia.metadatamapping.AliciaFieldMapping">

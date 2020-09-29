@@ -1,3 +1,10 @@
+/**
+ * The contents of this file are subject to the license and copyright
+ * detailed in the LICENSE and NOTICE files at the root of the source
+ * tree and available online at
+ *
+ * http://www.dspace.org/license/
+ */
 package org.dspace.importer.external.alicia.callable;
 
 import java.util.concurrent.Callable;
@@ -37,14 +44,16 @@ public class FindMatchingRecordsCallable implements Callable<String> {
         String title = query.getParameterAsClass("title", String.class);
         Integer start = query.getParameterAsClass("start", Integer.class);
         Integer count = query.getParameterAsClass("count", Integer.class);
-        int page = start / count;
+        int page = count != 0 ? start / count : 0;
         WebTarget localTarget = webTarget.queryParam("type", "AllField");
         //pagination is 1 based (first page: start = 0, count = 20 -> page = 0 -> +1 = 1)
         localTarget = localTarget.queryParam("page", page + 1);
         localTarget = localTarget.queryParam("limit", count);
         localTarget = localTarget.queryParam("prettyPrint", true);
         if (fields != null && !fields.isEmpty()) {
-            localTarget = localTarget.queryParam("field[]", fields);
+            for (String field : fields.split(",")) {
+                localTarget = localTarget.queryParam("field[]", field);
+            }
         }
         String filter = null;
         if (author != null && !author.isEmpty()) {

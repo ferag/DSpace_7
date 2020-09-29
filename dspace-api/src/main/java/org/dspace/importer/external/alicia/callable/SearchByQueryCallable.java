@@ -1,3 +1,10 @@
+/**
+ * The contents of this file are subject to the license and copyright
+ * detailed in the LICENSE and NOTICE files at the root of the source
+ * tree and available online at
+ *
+ * http://www.dspace.org/license/
+ */
 package org.dspace.importer.external.alicia.callable;
 
 import java.util.concurrent.Callable;
@@ -37,7 +44,7 @@ public class SearchByQueryCallable implements Callable<String> {
     public String call() throws Exception {
         Integer start = query.getParameterAsClass("start", Integer.class);
         Integer count = query.getParameterAsClass("count", Integer.class);
-        int page = start / count;
+        int page = count != 0 ? start / count : 0;
         WebTarget localTarget = webTarget.queryParam("type", "AllField");
         //page looks 1 based (start = 0, count = 20 -> page = 0)
         localTarget = localTarget.queryParam("page", page + 1);
@@ -45,7 +52,9 @@ public class SearchByQueryCallable implements Callable<String> {
         localTarget = localTarget.queryParam("prettyPrint", true);
         localTarget = localTarget.queryParam("lookfor", query.getParameterAsClass("query", String.class));
         if (fields != null && !fields.isEmpty()) {
-            localTarget = localTarget.queryParam("field[]", fields);
+            for (String field : fields.split(",")) {
+                localTarget = localTarget.queryParam("field[]", field);
+            }
         }
         Invocation.Builder invocationBuilder = localTarget.request();
         Response response = invocationBuilder.get();

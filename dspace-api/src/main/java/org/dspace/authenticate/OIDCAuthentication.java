@@ -9,6 +9,8 @@ package org.dspace.authenticate;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -287,8 +289,13 @@ public class OIDCAuthentication implements AuthenticationMethod {
             // empty return force the caller to skip this entry
             return "";
         } else {
-            return authorizeUrl + "?client_id=" + clientId + "&response_type=code&scope=openid&"
-                + "redirect_uri=" + redirectUri;
+            try {
+                return authorizeUrl + "?client_id=" + clientId + "&response_type=code&scope=openid&"
+                    + "redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                return "";
+            }
         }
     }
 

@@ -16,5 +16,6 @@ public enum GroupType {
 
     NORMAL,
     ROLE,
-    INSTITUTIONAL;
+    INSTITUTIONAL,
+    SCOPED;
 }

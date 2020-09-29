@@ -242,4 +242,24 @@ public class Group extends DSpaceObject implements DSpaceObjectLegacySupport {
         permanent = permanence;
         setModified();
     }
+
+    /**
+     * Returns the group name without the type prefix.
+     *
+     * @return the name
+     */
+    public String getNameWithoutTypePrefix() {
+        String name = getName();
+        if (StringUtils.isBlank(name)) {
+            return name;
+        }
+
+        for (GroupType type : GroupType.values()) {
+            if (name.startsWith(type.name() + ":")) {
+                return name.substring(type.name().length() + 1);
+            }
+        }
+
+        return name;
+    }
 }

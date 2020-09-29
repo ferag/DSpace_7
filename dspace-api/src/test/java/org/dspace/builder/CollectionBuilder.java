@@ -133,10 +133,36 @@ public class CollectionBuilder extends AbstractDSpaceObjectBuilder<Collection> {
         return this;
     }
 
+    /**
+     * Create a submitter group for the collection with the specified group members
+     *
+     * @param members groups to add to the submitter group
+     * @return this builder
+     * @throws SQLException
+     * @throws AuthorizeException
+     */
+    public CollectionBuilder withSubmitterGroup(Group... members) throws SQLException, AuthorizeException {
+        Group g = collectionService.createSubmitters(context, collection);
+        for (Group m : members) {
+            groupService.addMember(context, g, m);
+        }
+        groupService.update(context, g);
+        return this;
+    }
+
     public CollectionBuilder withWorkflowGroup(int step, EPerson... members) throws SQLException, AuthorizeException {
         Group g = collectionService.createWorkflowGroup(context, collection, step);
         for (EPerson e : members) {
             groupService.addMember(context, g, e);
+        }
+        groupService.update(context, g);
+        return this;
+    }
+
+    public CollectionBuilder withWorkflowGroup(int step, Group... members) throws SQLException, AuthorizeException {
+        Group g = collectionService.createWorkflowGroup(context, collection, step);
+        for (Group m : members) {
+            groupService.addMember(context, g, m);
         }
         groupService.update(context, g);
         return this;
@@ -154,6 +180,23 @@ public class CollectionBuilder extends AbstractDSpaceObjectBuilder<Collection> {
         Group g = collectionService.createAdministrators(context, collection);
         for (EPerson e : members) {
             groupService.addMember(context, g, e);
+        }
+        groupService.update(context, g);
+        return this;
+    }
+
+    /**
+     * Create an admin group for the collection with the specified group members
+     *
+     * @param members groups to add to the admin group
+     * @return this builder
+     * @throws SQLException
+     * @throws AuthorizeException
+     */
+    public CollectionBuilder withAdminGroup(Group... members) throws SQLException, AuthorizeException {
+        Group g = collectionService.createAdministrators(context, collection);
+        for (Group m : members) {
+            groupService.addMember(context, g, m);
         }
         groupService.update(context, g);
         return this;

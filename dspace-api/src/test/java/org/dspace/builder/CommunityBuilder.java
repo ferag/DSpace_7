@@ -93,6 +93,23 @@ public class CommunityBuilder extends AbstractDSpaceObjectBuilder<Community> {
         return this;
     }
 
+    /**
+     * Create an admin group for the community with the specified group members
+     *
+     * @param members groups to add to the admin group
+     * @return this builder
+     * @throws SQLException
+     * @throws AuthorizeException
+     */
+    public CommunityBuilder withAdminGroup(Group... members) throws SQLException, AuthorizeException {
+        Group g = communityService.createAdministrators(context, community);
+        for (Group m : members) {
+            groupService.addMember(context, g, m);
+        }
+        groupService.update(context, g);
+        return this;
+    }
+
     public CommunityBuilder addParentCommunity(final Context context, final Community parent)
         throws SQLException, AuthorizeException {
         communityService.addSubcommunity(context, parent, community);

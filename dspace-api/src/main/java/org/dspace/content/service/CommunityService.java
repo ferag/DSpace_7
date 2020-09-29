@@ -295,4 +295,21 @@ public interface CommunityService extends DSpaceObjectService<Community>, DSpace
     public List<Community> findAuthorizedGroupMapped(Context context, List<Integer> actions) throws SQLException;
 
     int countTotal(Context context) throws SQLException;
+
+    /**
+     * Create a new community by cloning the given template. The new community will
+     * have all the sub communities and collections of the cloned community. A new
+     * Institutional Scoped Role will be created related to the new community for
+     * each Institutional Role.
+     * 
+     * @param context  the DSpace context
+     * @param template the community to clone
+     * @param parent   the parent community of the new community, if provided
+     * @param name     the name of the new community (mandatory)
+     * @return the created cloned community.
+     * @throws SQLException       if database error
+     * @throws AuthorizeException if authorization error
+     */
+    public Community cloneCommunity(Context context, Community template, Community parent, String name)
+        throws SQLException, AuthorizeException;
 }

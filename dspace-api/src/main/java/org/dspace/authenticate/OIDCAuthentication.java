@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -280,22 +281,20 @@ public class OIDCAuthentication implements AuthenticationMethod {
      */
     @Override
     public String loginPageURL(Context context, HttpServletRequest request, HttpServletResponse response) {
-        String authorizeUrl = configurationService.getProperty("authentication-oidc.authserverdomain")
-            + configurationService.getProperty("authentication-oidc.authorizeendpoint");
+        String authorizeUrl = configurationService.getProperty("authentication-oidc.authorizeendpoint");
         String clientId = configurationService.getProperty("authentication-oidc.clientid");
         String redirectUri = configurationService.getProperty("dspace.server.url") + "/api/authn/oidc";
-        if (StringUtils.isEmpty(authorizeUrl) || StringUtils.isEmpty(clientId) || StringUtils.isEmpty(redirectUri)) {
+        if (StringUtils.isAnyBlank(authorizeUrl, clientId, redirectUri)) {
             log.error("Missing mandatory configuration properties for OIDCAuthentication");
             // empty return force the caller to skip this entry
             return "";
-        } else {
-            try {
-                return authorizeUrl + "?client_id=" + clientId + "&response_type=code&scope=openid&"
-                    + "redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-                return "";
-            }
+        }
+        try {
+            return authorizeUrl + "?client_id=" + clientId + "&response_type=code&scope=openid&"
+                + "redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            log.error(e.getMessage(), e);
+            return "";
         }
     }
 

@@ -706,6 +706,55 @@
       <row>
         <field>
           <dc-schema>dc</dc-schema>
+          <dc-element>subject</dc-element>
+          <dc-qualifier>ddc</dc-qualifier>
+          <label>DDC Subject(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>subject</dc-element>
+          <dc-qualifier>loc</dc-qualifier>
+          <label>LOC Subject(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>subject</dc-element>
+          <dc-qualifier>mesh</dc-qualifier>
+          <label>Mesh Keyword(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>subject</dc-element>
+          <dc-qualifier>ocde</dc-qualifier>
+          <label>OCDE Subject(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+          <vocabulary closed="true">ocde_subjects</vocabulary>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
           <dc-element>description</dc-element>
           <dc-qualifier>abstract</dc-qualifier>
           <label>Abstract</label>
@@ -1614,6 +1663,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint>Enter appropriate subject keywords or phrases.</hint>
         </field>
+      </row>
+      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
@@ -1624,6 +1675,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
         </field>
+      </row>
+      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
@@ -1891,6 +1944,19 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       <row>
         <field>
           <dc-schema>perucris</dc-schema>
+          <dc-element>subject</dc-element>
+          <dc-qualifier>ocde</dc-qualifier>
+          <label>OCDE Subject(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+          <vocabulary closed="true">ocde_subjects</vocabulary>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
           <dc-element>identifier</dc-element>
           <dc-qualifier>dni</dc-qualifier>
           <label>DNI</label>
@@ -2012,7 +2078,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>crisrp</dc-schema>
           <dc-element>country</dc-element>
           <label>Country of Birth</label>
-          <input-type>onebox</input-type>
+          <input-type value-pairs-name="common_iso_countries">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -2094,7 +2160,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>acronym</dc-element>
           <label>Acronym or short form of title</label>
           <input-type>onebox</input-type>
-          <repeatable>true</repeatable>
+          <repeatable>false</repeatable>
           <required />
           <hint />
         </field>
@@ -2208,9 +2274,9 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>address</dc-element>
           <dc-qualifier>addressCountry</dc-qualifier>
           <label>Country</label>
-          <input-type>onebox</input-type>
+          <input-type value-pairs-name="common_iso_countries">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required>You must enter the city name.</required>
+          <required />
           <hint />
         </field>
       </row>
@@ -2221,7 +2287,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Type</label>
           <input-type value-pairs-name="orgunit_types">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required>You must enter the city name.</required>
+          <required />
           <hint />
         </field>
       </row>
@@ -2302,7 +2368,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
-          <label>Subject OCDE</label>
+          <label>OCDE Subject(s)</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -2521,6 +2587,19 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>true</repeatable>
           <required />
           <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>subject</dc-element>
+          <dc-qualifier>ocde</dc-qualifier>
+          <label>OCDE Subject(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+          <vocabulary closed="true">ocde_subjects</vocabulary>
         </field>
       </row>
       <row>
@@ -2829,7 +2908,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>event</dc-element>
           <dc-qualifier>country</dc-qualifier>
           <label>Country</label>
-          <input-type>onebox</input-type>
+          <input-type value-pairs-name="common_iso_countries">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />

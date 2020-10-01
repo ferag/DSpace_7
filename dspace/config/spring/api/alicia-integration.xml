@@ -1,0 +1,96 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+       default-autowire-candidates="*Service,*DAO,javax.sql.DataSource">
+
+    <context:annotation-config/>
+    <!-- allows us to use spring annotations in beans -->
+
+    <util:map id="aliciaMetadataFieldMap" key-type="org.dspace.importer.external.metadatamapping.MetadataFieldConfig"
+              value-type="org.dspace.importer.external.metadatamapping.contributor.MetadataContributor">
+        <description>Defines which metadatum is mapped on which metadatum. Note that while the key must be unique it
+            only matters here for postprocessing of the value. The mapped MetadatumContributor has full control over
+            what metadatafield is generated.
+        </description>
+        <entry key-ref="alicia.id" value-ref="aliciaIDContrib"/>
+        <entry key-ref="alicia.dc.language.iso" value-ref="aliciaLanguages"/>
+        <entry key-ref="alicia.dc.publisher" value-ref="aliciaPublisher"/>
+        <entry key-ref="alicia.dc.title" value-ref="aliciaTitle"/>
+        <entry key-ref="alicia.dc.identifier" value-ref="aliciaIdentifier"/>
+        <entry key-ref="alicia.dc.contributor.author" value-ref="aliciaAuthors"/>
+    </util:map>
+
+    <bean id="aliciaIDContrib" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.id"/>
+        <property name="query" value="$.id"/>
+    </bean>
+    <bean id="alicia.id" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.identifier.other"/>
+    </bean>
+
+
+
+    <bean id="aliciaLanguages" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.language.iso"/>
+        <property name="query" value="$.languages[*]"/>
+    </bean>
+    <bean id="alicia.dc.language.iso" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.language.iso"/>
+    </bean>
+
+    <bean id="aliciaPublisher" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.publisher"/>
+        <property name="query" value="$.publishers[*]"/>
+    </bean>
+    <bean id="alicia.dc.publisher" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.publisher"/>
+    </bean>
+
+    <bean id="aliciaTitle" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.title"/>
+        <property name="query" value="$.title"/>
+    </bean>
+    <bean id="alicia.dc.title" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.title"/>
+    </bean>
+
+    <bean id="aliciaIdentifier" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.identifier"/>
+        <property name="query" value="$.urls[*].url"/>
+    </bean>
+    <bean id="alicia.dc.identifier" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.identifier"/>
+    </bean>
+
+
+    <bean id="aliciaAuthors" class="org.dspace.importer.external.metadatamapping.contributor.MultipleMetadataContributor">
+        <property name="field" ref="alicia.dc.contributor.author"/>
+        <property name="metadatumContributors" ref="aliciaAuthorsList" />
+    </bean>
+
+	<util:list id="aliciaAuthorsList">
+	    <bean id="aliciaPrimaryAuthors" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+	        <property name="field" ref="alicia.dc.contributor.author"/>
+	        <property name="query" value="$.authors.primary.*~" />
+	    </bean>
+	    <bean id="aliciaSecondaryAuthors" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+	        <property name="field" ref="alicia.dc.contributor.author"/>
+	        <property name="query" value="$.authors.secondary.*~" />
+	    </bean>	
+	</util:list>
+    
+    <bean id="alicia.dc.contributor.author" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.contributor.author"/>
+    </bean>
+
+
+    <bean class="java.lang.Integer" id="maxRetry">
+        <constructor-arg value="3"/>
+    </bean>
+
+</beans>

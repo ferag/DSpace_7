@@ -88,4 +88,18 @@
         <scope_note>The larger organization that this organization is a subOrganization of, if any.</scope_note>
     </dc-type>
 
+    <dc-type>
+        <schema>organization</schema>
+        <element>identifier</element>
+        <qualifier>scopusaffid</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <!-- PeruCRIS addition -->
+    <dc-type>
+        <schema>organization</schema>
+        <element>identifier</element>
+        <qualifier>ruc</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
 </dspace-dc-types>

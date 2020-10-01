@@ -1,0 +1,35 @@
+<dspace-dc-types>
+
+    <dspace-header>
+        <title>Peru Renati DSpace Cris Types</title>
+    </dspace-header>
+
+    <dc-schema>
+        <name>renati</name>
+        <namespace>https://perucris.concytec.gob.pe/renati/schemas</namespace>
+    </dc-schema>
+
+    <dc-type>
+        <schema>renati</schema>
+        <element>type</element>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>renati</schema>
+        <element>level</element>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>renati</schema>
+        <element>juror</element>
+        <scope_note></scope_note>
+    </dc-type>
+    
+    <dc-type>
+        <schema>renati</schema>
+        <element>discipline</element>
+        <scope_note></scope_note>
+    </dc-type>
+</dspace-dc-types>

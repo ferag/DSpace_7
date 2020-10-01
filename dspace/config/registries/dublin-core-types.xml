@@ -814,4 +814,31 @@
     <scope_note></scope_note>
   </dc-type>
 
+  <dc-type>
+    <schema>dc</schema>
+    <element>identifier</element>
+    <qualifier>url</qualifier>
+    <scope_note>From OpenAIRE v4 An identifier of a related resource
+	other than the primary Identifier applied to the resource being
+	registered. The type of the RelatedIdentifier: Uniform Resource Locator
+    </scope_note>
+  </dc-type>
+
+  <dc-type>
+    <schema>dc</schema>
+    <element>identifier</element>
+    <qualifier>ark</qualifier>
+    <scope_note>From OpenAIRE v4 An identifier of a related resource
+    other than the primary Identifier applied to the resource being
+    registered. The type of the RelatedIdentifier: Archival Resource Key
+    </scope_note>
+  </dc-type>
+
+  <dc-type>
+    <schema>dc</schema>
+    <element>subject</element>
+    <qualifier>loc</qualifier>
+    <scope_note></scope_note>
+  </dc-type>
+
 </dspace-dc-types>

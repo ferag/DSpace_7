@@ -1,0 +1,4636 @@
+<node id="ubigeo" label="UbiGeo">
+	<isComposedBy>
+		<node id="01" label="Amazonas">
+			<isComposedBy>
+				<node id="0101" label="Chachapoyas">
+					<isComposedBy>
+						<node id="010101" label="Chachapoyas">
+						</node>
+						<node id="010102" label="Asunción">
+						</node>
+						<node id="010103" label="Balsas">
+						</node>
+						<node id="010104" label="Cheto">
+						</node>
+						<node id="010105" label="Chiliquin">
+						</node>
+						<node id="010106" label="Chuquibamba">
+						</node>
+						<node id="010107" label="Granada">
+						</node>
+						<node id="010108" label="Huancas">
+						</node>
+						<node id="010109" label="La Jalca">
+						</node>
+						<node id="010110" label="Leimebamba">
+						</node>
+						<node id="010111" label="Levanto">
+						</node>
+						<node id="010112" label="Magdalena">
+						</node>
+						<node id="010113" label="Mariscal Castilla">
+						</node>
+						<node id="010114" label="Molinopampa">
+						</node>
+						<node id="010115" label="Montevideo">
+						</node>
+						<node id="010116" label="Olleros">
+						</node>
+						<node id="010117" label="Quinjalca">
+						</node>
+						<node id="010118" label="San Francisco de Daguas">
+						</node>
+						<node id="010119" label="San Isidro de Maino">
+						</node>
+						<node id="010120" label="Soloco">
+						</node>
+						<node id="010121" label="Sonche">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0102" label="Bagua">
+					<isComposedBy>
+						<node id="010201" label="Bagua">
+						</node>
+						<node id="010202" label="Aramango">
+						</node>
+						<node id="010203" label="Copallin">
+						</node>
+						<node id="010204" label="El Parco">
+						</node>
+						<node id="010205" label="Imaza">
+						</node>
+						<node id="010206" label="La Peca">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0103" label="Bongará">
+					<isComposedBy>
+						<node id="010301" label="Jumbilla">
+						</node>
+						<node id="010302" label="Chisquilla">
+						</node>
+						<node id="010303" label="Churuja">
+						</node>
+						<node id="010304" label="Corosha">
+						</node>
+						<node id="010305" label="Cuispes">
+						</node>
+						<node id="010306" label="Florida">
+						</node>
+						<node id="010307" label="Jazan">
+						</node>
+						<node id="010308" label="Recta">
+						</node>
+						<node id="010309" label="San Carlos">
+						</node>
+						<node id="010310" label="Shipasbamba">
+						</node>
+						<node id="010311" label="Valera">
+						</node>
+						<node id="010312" label="Yambrasbamba">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0104" label="Condorcanqui">
+					<isComposedBy>
+						<node id="010401" label="Nieva">
+						</node>
+						<node id="010402" label="El Cenepa">
+						</node>
+						<node id="010403" label="Río Santiago">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0105" label="Luya">
+					<isComposedBy>
+						<node id="010501" label="Lamud">
+						</node>
+						<node id="010502" label="Camporredondo">
+						</node>
+						<node id="010503" label="Cocabamba">
+						</node>
+						<node id="010504" label="Colcamar">
+						</node>
+						<node id="010505" label="Conila">
+						</node>
+						<node id="010506" label="Inguilpata">
+						</node>
+						<node id="010507" label="Longuita">
+						</node>
+						<node id="010508" label="Lonya Chico">
+						</node>
+						<node id="010509" label="Luya">
+						</node>
+						<node id="010510" label="Luya Viejo">
+						</node>
+						<node id="010511" label="María">
+						</node>
+						<node id="010512" label="Ocalli">
+						</node>
+						<node id="010513" label="Ocumal">
+						</node>
+						<node id="010514" label="Pisuquia">
+						</node>
+						<node id="010515" label="Providencia">
+						</node>
+						<node id="010516" label="San Cristóbal">
+						</node>
+						<node id="010517" label="San Francisco de Yeso">
+						</node>
+						<node id="010518" label="San Jerónimo">
+						</node>
+						<node id="010519" label="San Juan de Lopecancha">
+						</node>
+						<node id="010520" label="Santa Catalina">
+						</node>
+						<node id="010521" label="Santo Tomas">
+						</node>
+						<node id="010522" label="Tingo">
+						</node>
+						<node id="010523" label="Trita">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0106" label="Rodríguez de Mendoza">
+					<isComposedBy>
+						<node id="010601" label="San Nicolás">
+						</node>
+						<node id="010602" label="Chirimoto">
+						</node>
+						<node id="010603" label="Cochamal">
+						</node>
+						<node id="010604" label="Huambo">
+						</node>
+						<node id="010605" label="Limabamba">
+						</node>
+						<node id="010606" label="Longar">
+						</node>
+						<node id="010607" label="Mariscal Benavides">
+						</node>
+						<node id="010608" label="Milpuc">
+						</node>
+						<node id="010609" label="Omia">
+						</node>
+						<node id="010610" label="Santa Rosa">
+						</node>
+						<node id="010611" label="Totora">
+						</node>
+						<node id="010612" label="Vista Alegre">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0107" label="Utcubamba">
+					<isComposedBy>
+						<node id="010701" label="Bagua Grande">
+						</node>
+						<node id="010702" label="Cajaruro">
+						</node>
+						<node id="010703" label="Cumba">
+						</node>
+						<node id="010704" label="El Milagro">
+						</node>
+						<node id="010705" label="Jamalca">
+						</node>
+						<node id="010706" label="Lonya Grande">
+						</node>
+						<node id="010707" label="Yamon">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="02" label="Áncash">
+			<isComposedBy>
+				<node id="0201" label="Huaraz">
+					<isComposedBy>
+						<node id="020101" label="Huaraz">
+						</node>
+						<node id="020102" label="Cochabamba">
+						</node>
+						<node id="020103" label="Colcabamba">
+						</node>
+						<node id="020104" label="Huanchay">
+						</node>
+						<node id="020105" label="Independencia">
+						</node>
+						<node id="020106" label="Jangas">
+						</node>
+						<node id="020107" label="La Libertad">
+						</node>
+						<node id="020108" label="Olleros">
+						</node>
+						<node id="020109" label="Pampas Grande">
+						</node>
+						<node id="020110" label="Pariacoto">
+						</node>
+						<node id="020111" label="Pira">
+						</node>
+						<node id="020112" label="Tarica">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0202" label="Aija">
+					<isComposedBy>
+						<node id="020201" label="Aija">
+						</node>
+						<node id="020202" label="Coris">
+						</node>
+						<node id="020203" label="Huacllan">
+						</node>
+						<node id="020204" label="La Merced">
+						</node>
+						<node id="020205" label="Succha">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0203" label="Antonio Raymondi">
+					<isComposedBy>
+						<node id="020301" label="Llamellin">
+						</node>
+						<node id="020302" label="Aczo">
+						</node>
+						<node id="020303" label="Chaccho">
+						</node>
+						<node id="020304" label="Chingas">
+						</node>
+						<node id="020305" label="Mirgas">
+						</node>
+						<node id="020306" label="San Juan de Rontoy">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0204" label="Asunción">
+					<isComposedBy>
+						<node id="020401" label="Chacas">
+						</node>
+						<node id="020402" label="Acochaca">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0205" label="Bolognesi">
+					<isComposedBy>
+						<node id="020501" label="Chiquian">
+						</node>
+						<node id="020502" label="Abelardo Pardo Lezameta">
+						</node>
+						<node id="020503" label="Antonio Raymondi">
+						</node>
+						<node id="020504" label="Aquia">
+						</node>
+						<node id="020505" label="Cajacay">
+						</node>
+						<node id="020506" label="Canis">
+						</node>
+						<node id="020507" label="Colquioc">
+						</node>
+						<node id="020508" label="Huallanca">
+						</node>
+						<node id="020509" label="Huasta">
+						</node>
+						<node id="020510" label="Huayllacayan">
+						</node>
+						<node id="020511" label="La Primavera">
+						</node>
+						<node id="020512" label="Mangas">
+						</node>
+						<node id="020513" label="Pacllon">
+						</node>
+						<node id="020514" label="San Miguel de Corpanqui">
+						</node>
+						<node id="020515" label="Ticllos">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0206" label="Carhuaz">
+					<isComposedBy>
+						<node id="020601" label="Carhuaz">
+						</node>
+						<node id="020602" label="Acopampa">
+						</node>
+						<node id="020603" label="Amashca">
+						</node>
+						<node id="020604" label="Anta">
+						</node>
+						<node id="020605" label="Ataquero">
+						</node>
+						<node id="020606" label="Marcara">
+						</node>
+						<node id="020607" label="Pariahuanca">
+						</node>
+						<node id="020608" label="San Miguel de Aco">
+						</node>
+						<node id="020609" label="Shilla">
+						</node>
+						<node id="020610" label="Tinco">
+						</node>
+						<node id="020611" label="Yungar">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0207" label="Carlos Fermín Fitzcarrald">
+					<isComposedBy>
+						<node id="020701" label="San Luis">
+						</node>
+						<node id="020702" label="San Nicolás">
+						</node>
+						<node id="020703" label="Yauya">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0208" label="Casma">
+					<isComposedBy>
+						<node id="020801" label="Casma">
+						</node>
+						<node id="020802" label="Buena Vista Alta">
+						</node>
+						<node id="020803" label="Comandante Noel">
+						</node>
+						<node id="020804" label="Yautan">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0209" label="Corongo">
+					<isComposedBy>
+						<node id="020901" label="Corongo">
+						</node>
+						<node id="020902" label="Aco">
+						</node>
+						<node id="020903" label="Bambas">
+						</node>
+						<node id="020904" label="Cusca">
+						</node>
+						<node id="020905" label="La Pampa">
+						</node>
+						<node id="020906" label="Yanac">
+						</node>
+						<node id="020907" label="Yupan">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0210" label="Huari">
+					<isComposedBy>
+						<node id="021001" label="Huari">
+						</node>
+						<node id="021002" label="Anra">
+						</node>
+						<node id="021003" label="Cajay">
+						</node>
+						<node id="021004" label="Chavin de Huantar">
+						</node>
+						<node id="021005" label="Huacachi">
+						</node>
+						<node id="021006" label="Huacchis">
+						</node>
+						<node id="021007" label="Huachis">
+						</node>
+						<node id="021008" label="Huantar">
+						</node>
+						<node id="021009" label="Masin">
+						</node>
+						<node id="021010" label="Paucas">
+						</node>
+						<node id="021011" label="Ponto">
+						</node>
+						<node id="021012" label="Rahuapampa">
+						</node>
+						<node id="021013" label="Rapayan">
+						</node>
+						<node id="021014" label="San Marcos">
+						</node>
+						<node id="021015" label="San Pedro de Chana">
+						</node>
+						<node id="021016" label="Uco">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0211" label="Huarmey">
+					<isComposedBy>
+						<node id="021101" label="Huarmey">
+						</node>
+						<node id="021102" label="Cochapeti">
+						</node>
+						<node id="021103" label="Culebras">
+						</node>
+						<node id="021104" label="Huayan">
+						</node>
+						<node id="021105" label="Malvas">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0212" label="Huaylas">
+					<isComposedBy>
+						<node id="021201" label="Caraz">
+						</node>
+						<node id="021202" label="Huallanca">
+						</node>
+						<node id="021203" label="Huata">
+						</node>
+						<node id="021204" label="Huaylas">
+						</node>
+						<node id="021205" label="Mato">
+						</node>
+						<node id="021206" label="Pamparomas">
+						</node>
+						<node id="021207" label="Pueblo Libre">
+						</node>
+						<node id="021208" label="Santa Cruz">
+						</node>
+						<node id="021209" label="Santo Toribio">
+						</node>
+						<node id="021210" label="Yuracmarca">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0213" label="Mariscal Luzuriaga">
+					<isComposedBy>
+						<node id="021301" label="Piscobamba">
+						</node>
+						<node id="021302" label="Casca">
+						</node>
+						<node id="021303" label="Eleazar Guzmán Barron">
+						</node>
+						<node id="021304" label="Fidel Olivas Escudero">
+						</node>
+						<node id="021305" label="Llama">
+						</node>
+						<node id="021306" label="Llumpa">
+						</node>
+						<node id="021307" label="Lucma">
+						</node>
+						<node id="021308" label="Musga">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0214" label="Ocros">
+					<isComposedBy>
+						<node id="021401" label="Ocros">
+						</node>
+						<node id="021402" label="Acas">
+						</node>
+						<node id="021403" label="Cajamarquilla">
+						</node>
+						<node id="021404" label="Carhuapampa">
+						</node>
+						<node id="021405" label="Cochas">
+						</node>
+						<node id="021406" label="Congas">
+						</node>
+						<node id="021407" label="Llipa">
+						</node>
+						<node id="021408" label="San Cristóbal de Rajan">
+						</node>
+						<node id="021409" label="San Pedro">
+						</node>
+						<node id="021410" label="Santiago de Chilcas">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0215" label="Pallasca">
+					<isComposedBy>
+						<node id="021501" label="Cabana">
+						</node>
+						<node id="021502" label="Bolognesi">
+						</node>
+						<node id="021503" label="Conchucos">
+						</node>
+						<node id="021504" label="Huacaschuque">
+						</node>
+						<node id="021505" label="Huandoval">
+						</node>
+						<node id="021506" label="Lacabamba">
+						</node>
+						<node id="021507" label="Llapo">
+						</node>
+						<node id="021508" label="Pallasca">
+						</node>
+						<node id="021509" label="Pampas">
+						</node>
+						<node id="021510" label="Santa Rosa">
+						</node>
+						<node id="021511" label="Tauca">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0216" label="Pomabamba">
+					<isComposedBy>
+						<node id="021601" label="Pomabamba">
+						</node>
+						<node id="021602" label="Huayllan">
+						</node>
+						<node id="021603" label="Parobamba">
+						</node>
+						<node id="021604" label="Quinuabamba">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0217" label="Recuay">
+					<isComposedBy>
+						<node id="021701" label="Recuay">
+						</node>
+						<node id="021702" label="Catac">
+						</node>
+						<node id="021703" label="Cotaparaco">
+						</node>
+						<node id="021704" label="Huayllapampa">
+						</node>
+						<node id="021705" label="Llacllin">
+						</node>
+						<node id="021706" label="Marca">
+						</node>
+						<node id="021707" label="Pampas Chico">
+						</node>
+						<node id="021708" label="Pararin">
+						</node>
+						<node id="021709" label="Tapacocha">
+						</node>
+						<node id="021710" label="Ticapampa">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0218" label="Santa">
+					<isComposedBy>
+						<node id="021801" label="Chimbote">
+						</node>
+						<node id="021802" label="Cáceres del Perú">
+						</node>
+						<node id="021803" label="Coishco">
+						</node>
+						<node id="021804" label="Macate">
+						</node>
+						<node id="021805" label="Moro">
+						</node>
+						<node id="021806" label="Nepeña">
+						</node>
+						<node id="021807" label="Samanco">
+						</node>
+						<node id="021808" label="Santa">
+						</node>
+						<node id="021809" label="Nuevo Chimbote">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0219" label="Sihuas">
+					<isComposedBy>
+						<node id="021901" label="Sihuas">
+						</node>
+						<node id="021902" label="Acobamba">
+						</node>
+						<node id="021903" label="Alfonso Ugarte">
+						</node>
+						<node id="021904" label="Cashapampa">
+						</node>
+						<node id="021905" label="Chingalpo">
+						</node>
+						<node id="021906" label="Huayllabamba">
+						</node>
+						<node id="021907" label="Quiches">
+						</node>
+						<node id="021908" label="Ragash">
+						</node>
+						<node id="021909" label="San Juan">
+						</node>
+						<node id="021910" label="Sicsibamba">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0220" label="Yungay">
+					<isComposedBy>
+						<node id="022001" label="Yungay">
+						</node>
+						<node id="022002" label="Cascapara">
+						</node>
+						<node id="022003" label="Mancos">
+						</node>
+						<node id="022004" label="Matacoto">
+						</node>
+						<node id="022005" label="Quillo">
+						</node>
+						<node id="022006" label="Ranrahirca">
+						</node>
+						<node id="022007" label="Shupluy">
+						</node>
+						<node id="022008" label="Yanama">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="03" label="Apurímac">
+			<isComposedBy>
+				<node id="0301" label="Abancay">
+					<isComposedBy>
+						<node id="030101" label="Abancay">
+						</node>
+						<node id="030102" label="Chacoche">
+						</node>
+						<node id="030103" label="Circa">
+						</node>
+						<node id="030104" label="Curahuasi">
+						</node>
+						<node id="030105" label="Huanipaca">
+						</node>
+						<node id="030106" label="Lambrama">
+						</node>
+						<node id="030107" label="Pichirhua">
+						</node>
+						<node id="030108" label="San Pedro de Cachora">
+						</node>
+						<node id="030109" label="Tamburco">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0302" label="Andahuaylas">
+					<isComposedBy>
+						<node id="030201" label="Andahuaylas">
+						</node>
+						<node id="030202" label="Andarapa">
+						</node>
+						<node id="030203" label="Chiara">
+						</node>
+						<node id="030204" label="Huancarama">
+						</node>
+						<node id="030205" label="Huancaray">
+						</node>
+						<node id="030206" label="Huayana">
+						</node>
+						<node id="030207" label="Kishuara">
+						</node>
+						<node id="030208" label="Pacobamba">
+						</node>
+						<node id="030209" label="Pacucha">
+						</node>
+						<node id="030210" label="Pampachiri">
+						</node>
+						<node id="030211" label="Pomacocha">
+						</node>
+						<node id="030212" label="San Antonio de Cachi">
+						</node>
+						<node id="030213" label="San Jerónimo">
+						</node>
+						<node id="030214" label="San Miguel de Chaccrampa">
+						</node>
+						<node id="030215" label="Santa María de Chicmo">
+						</node>
+						<node id="030216" label="Talavera">
+						</node>
+						<node id="030217" label="Tumay Huaraca">
+						</node>
+						<node id="030218" label="Turpo">
+						</node>
+						<node id="030219" label="Kaquiabamba">
+						</node>
+						<node id="030220" label="José María Arguedas">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0303" label="Antabamba">
+					<isComposedBy>
+						<node id="030301" label="Antabamba">
+						</node>
+						<node id="030302" label="El Oro">
+						</node>
+						<node id="030303" label="Huaquirca">
+						</node>
+						<node id="030304" label="Juan Espinoza Medrano">
+						</node>
+						<node id="030305" label="Oropesa">
+						</node>
+						<node id="030306" label="Pachaconas">
+						</node>
+						<node id="030307" label="Sabaino">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0304" label="Aymaraes">
+					<isComposedBy>
+						<node id="030401" label="Chalhuanca">
+						</node>
+						<node id="030402" label="Capaya">
+						</node>
+						<node id="030403" label="Caraybamba">
+						</node>
+						<node id="030404" label="Chapimarca">
+						</node>
+						<node id="030405" label="Colcabamba">
+						</node>
+						<node id="030406" label="Cotaruse">
+						</node>
+						<node id="030407" label="Ihuayllo">
+						</node>
+						<node id="030408" label="Justo Apu Sahuaraura">
+						</node>
+						<node id="030409" label="Lucre">
+						</node>
+						<node id="030410" label="Pocohuanca">
+						</node>
+						<node id="030411" label="San Juan de Chacña">
+						</node>
+						<node id="030412" label="Sañayca">
+						</node>
+						<node id="030413" label="Soraya">
+						</node>
+						<node id="030414" label="Tapairihua">
+						</node>
+						<node id="030415" label="Tintay">
+						</node>
+						<node id="030416" label="Toraya">
+						</node>
+						<node id="030417" label="Yanaca">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0305" label="Cotabambas">
+					<isComposedBy>
+						<node id="030501" label="Tambobamba">
+						</node>
+						<node id="030502" label="Cotabambas">
+						</node>
+						<node id="030503" label="Coyllurqui">
+						</node>
+						<node id="030504" label="Haquira">
+						</node>
+						<node id="030505" label="Mara">
+						</node>
+						<node id="030506" label="Challhuahuacho">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0306" label="Chincheros">
+					<isComposedBy>
+						<node id="030601" label="Chincheros">
+						</node>
+						<node id="030602" label="Anco_Huallo">
+						</node>
+						<node id="030603" label="Cocharcas">
+						</node>
+						<node id="030604" label="Huaccana">
+						</node>
+						<node id="030605" label="Ocobamba">
+						</node>
+						<node id="030606" label="Ongoy">
+						</node>
+						<node id="030607" label="Uranmarca">
+						</node>
+						<node id="030608" label="Ranracancha">
+						</node>
+						<node id="030609" label="Rocchacc">
+						</node>
+						<node id="030610" label="El Porvenir">
+						</node>
+						<node id="030611" label="Los Chankas">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0307" label="Grau">
+					<isComposedBy>
+						<node id="030701" label="Chuquibambilla">
+						</node>
+						<node id="030702" label="Curpahuasi">
+						</node>
+						<node id="030703" label="Gamarra">
+						</node>
+						<node id="030704" label="Huayllati">
+						</node>
+						<node id="030705" label="Mamara">
+						</node>
+						<node id="030706" label="Micaela Bastidas">
+						</node>
+						<node id="030707" label="Pataypampa">
+						</node>
+						<node id="030708" label="Progreso">
+						</node>
+						<node id="030709" label="San Antonio">
+						</node>
+						<node id="030710" label="Santa Rosa">
+						</node>
+						<node id="030711" label="Turpay">
+						</node>
+						<node id="030712" label="Vilcabamba">
+						</node>
+						<node id="030713" label="Virundo">
+						</node>
+						<node id="030714" label="Curasco">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="04" label="Arequipa">
+			<isComposedBy>
+				<node id="0401" label="Arequipa">
+					<isComposedBy>
+						<node id="040101" label="Arequipa">
+						</node>
+						<node id="040102" label="Alto Selva Alegre">
+						</node>
+						<node id="040103" label="Cayma">
+						</node>
+						<node id="040104" label="Cerro Colorado">
+						</node>
+						<node id="040105" label="Characato">
+						</node>
+						<node id="040106" label="Chiguata">
+						</node>
+						<node id="040107" label="Jacobo Hunter">
+						</node>
+						<node id="040108" label="La Joya">
+						</node>
+						<node id="040109" label="Mariano Melgar">
+						</node>
+						<node id="040110" label="Miraflores">
+						</node>
+						<node id="040111" label="Mollebaya">
+						</node>
+						<node id="040112" label="Paucarpata">
+						</node>
+						<node id="040113" label="Pocsi">
+						</node>
+						<node id="040114" label="Polobaya">
+						</node>
+						<node id="040115" label="Quequeña">
+						</node>
+						<node id="040116" label="Sabandia">
+						</node>
+						<node id="040117" label="Sachaca">
+						</node>
+						<node id="040118" label="San Juan de Siguas">
+						</node>
+						<node id="040119" label="San Juan de Tarucani">
+						</node>
+						<node id="040120" label="Santa Isabel de Siguas">
+						</node>
+						<node id="040121" label="Santa Rita de Siguas">
+						</node>
+						<node id="040122" label="Socabaya">
+						</node>
+						<node id="040123" label="Tiabaya">
+						</node>
+						<node id="040124" label="Uchumayo">
+						</node>
+						<node id="040125" label="Vitor">
+						</node>
+						<node id="040126" label="Yanahuara">
+						</node>
+						<node id="040127" label="Yarabamba">
+						</node>
+						<node id="040128" label="Yura">
+						</node>
+						<node id="040129" label="José Luis Bustamante Y Rivero">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0402" label="Camaná">
+					<isComposedBy>
+						<node id="040201" label="Camaná">
+						</node>
+						<node id="040202" label="José María Quimper">
+						</node>
+						<node id="040203" label="Mariano Nicolás Valcárcel">
+						</node>
+						<node id="040204" label="Mariscal Cáceres">
+						</node>
+						<node id="040205" label="Nicolás de Pierola">
+						</node>
+						<node id="040206" label="Ocoña">
+						</node>
+						<node id="040207" label="Quilca">
+						</node>
+						<node id="040208" label="Samuel Pastor">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0403" label="Caravelí">
+					<isComposedBy>
+						<node id="040301" label="Caravelí">
+						</node>
+						<node id="040302" label="Acarí">
+						</node>
+						<node id="040303" label="Atico">
+						</node>
+						<node id="040304" label="Atiquipa">
+						</node>
+						<node id="040305" label="Bella Unión">
+						</node>
+						<node id="040306" label="Cahuacho">
+						</node>
+						<node id="040307" label="Chala">
+						</node>
+						<node id="040308" label="Chaparra">
+						</node>
+						<node id="040309" label="Huanuhuanu">
+						</node>
+						<node id="040310" label="Jaqui">
+						</node>
+						<node id="040311" label="Lomas">
+						</node>
+						<node id="040312" label="Quicacha">
+						</node>
+						<node id="040313" label="Yauca">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0404" label="Castilla">
+					<isComposedBy>
+						<node id="040401" label="Aplao">
+						</node>
+						<node id="040402" label="Andagua">
+						</node>
+						<node id="040403" label="Ayo">
+						</node>
+						<node id="040404" label="Chachas">
+						</node>
+						<node id="040405" label="Chilcaymarca">
+						</node>
+						<node id="040406" label="Choco">
+						</node>
+						<node id="040407" label="Huancarqui">
+						</node>
+						<node id="040408" label="Machaguay">
+						</node>
+						<node id="040409" label="Orcopampa">
+						</node>
+						<node id="040410" label="Pampacolca">
+						</node>
+						<node id="040411" label="Tipan">
+						</node>
+						<node id="040412" label="Uñon">
+						</node>
+						<node id="040413" label="Uraca">
+						</node>
+						<node id="040414" label="Viraco">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0405" label="Caylloma">
+					<isComposedBy>
+						<node id="040501" label="Chivay">
+						</node>
+						<node id="040502" label="Achoma">
+						</node>
+						<node id="040503" label="Cabanaconde">
+						</node>
+						<node id="040504" label="Callalli">
+						</node>
+						<node id="040505" label="Caylloma">
+						</node>
+						<node id="040506" label="Coporaque">
+						</node>
+						<node id="040507" label="Huambo">
+						</node>
+						<node id="040508" label="Huanca">
+						</node>
+						<node id="040509" label="Ichupampa">
+						</node>
+						<node id="040510" label="Lari">
+						</node>
+						<node id="040511" label="Lluta">
+						</node>
+						<node id="040512" label="Maca">
+						</node>
+						<node id="040513" label="Madrigal">
+						</node>
+						<node id="040514" label="San Antonio de Chuca">
+						</node>
+						<node id="040515" label="Sibayo">
+						</node>
+						<node id="040516" label="Tapay">
+						</node>
+						<node id="040517" label="Tisco">
+						</node>
+						<node id="040518" label="Tuti">
+						</node>
+						<node id="040519" label="Yanque">
+						</node>
+						<node id="040520" label="Majes">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0406" label="Condesuyos">
+					<isComposedBy>
+						<node id="040601" label="Chuquibamba">
+						</node>
+						<node id="040602" label="Andaray">
+						</node>
+						<node id="040603" label="Cayarani">
+						</node>
+						<node id="040604" label="Chichas">
+						</node>
+						<node id="040605" label="Iray">
+						</node>
+						<node id="040606" label="Río Grande">
+						</node>
+						<node id="040607" label="Salamanca">
+						</node>
+						<node id="040608" label="Yanaquihua">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0407" label="Islay">
+					<isComposedBy>
+						<node id="040701" label="Mollendo">
+						</node>
+						<node id="040702" label="Cocachacra">
+						</node>
+						<node id="040703" label="Dean Valdivia">
+						</node>
+						<node id="040704" label="Islay">
+						</node>
+						<node id="040705" label="Mejia">
+						</node>
+						<node id="040706" label="Punta de Bombón">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0408" label="La Uniòn">
+					<isComposedBy>
+						<node id="040801" label="Cotahuasi">
+						</node>
+						<node id="040802" label="Alca">
+						</node>
+						<node id="040803" label="Charcana">
+						</node>
+						<node id="040804" label="Huaynacotas">
+						</node>
+						<node id="040805" label="Pampamarca">
+						</node>
+						<node id="040806" label="Puyca">
+						</node>
+						<node id="040807" label="Quechualla">
+						</node>
+						<node id="040808" label="Sayla">
+						</node>
+						<node id="040809" label="Tauria">
+						</node>
+						<node id="040810" label="Tomepampa">
+						</node>
+						<node id="040811" label="Toro">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="05" label="Ayacucho">
+			<isComposedBy>
+				<node id="0501" label="Huamanga">
+					<isComposedBy>
+						<node id="050101" label="Ayacucho">
+						</node>
+						<node id="050102" label="Acocro">
+						</node>
+						<node id="050103" label="Acos Vinchos">
+						</node>
+						<node id="050104" label="Carmen Alto">
+						</node>
+						<node id="050105" label="Chiara">
+						</node>
+						<node id="050106" label="Ocros">
+						</node>
+						<node id="050107" label="Pacaycasa">
+						</node>
+						<node id="050108" label="Quinua">
+						</node>
+						<node id="050109" label="San José de Ticllas">
+						</node>
+						<node id="050110" label="San Juan Bautista">
+						</node>
+						<node id="050111" label="Santiago de Pischa">
+						</node>
+						<node id="050112" label="Socos">
+						</node>
+						<node id="050113" label="Tambillo">
+						</node>
+						<node id="050114" label="Vinchos">
+						</node>
+						<node id="050115" label="Jesús Nazareno">
+						</node>
+						<node id="050116" label="Andrés Avelino Cáceres Dorregaray">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0502" label="Cangallo">
+					<isComposedBy>
+						<node id="050201" label="Cangallo">
+						</node>
+						<node id="050202" label="Chuschi">
+						</node>
+						<node id="050203" label="Los Morochucos">
+						</node>
+						<node id="050204" label="María Parado de Bellido">
+						</node>
+						<node id="050205" label="Paras">
+						</node>
+						<node id="050206" label="Totos">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0503" label="Huanca Sancos">
+					<isComposedBy>
+						<node id="050301" label="Sancos">
+						</node>
+						<node id="050302" label="Carapo">
+						</node>
+						<node id="050303" label="Sacsamarca">
+						</node>
+						<node id="050304" label="Santiago de Lucanamarca">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0504" label="Huanta">
+					<isComposedBy>
+						<node id="050401" label="Huanta">
+						</node>
+						<node id="050402" label="Ayahuanco">
+						</node>
+						<node id="050403" label="Huamanguilla">
+						</node>
+						<node id="050404" label="Iguain">
+						</node>
+						<node id="050405" label="Luricocha">
+						</node>
+						<node id="050406" label="Santillana">
+						</node>
+						<node id="050407" label="Sivia">
+						</node>
+						<node id="050408" label="Llochegua">
+						</node>
+						<node id="050409" label="Canayre">
+						</node>
+						<node id="050410" label="Uchuraccay">
+						</node>
+						<node id="050411" label="Pucacolpa">
+						</node>
+						<node id="050412" label="Chaca">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0505" label="La Mar">
+					<isComposedBy>
+						<node id="050501" label="San Miguel">
+						</node>
+						<node id="050502" label="Anco">
+						</node>
+						<node id="050503" label="Ayna">
+						</node>
+						<node id="050504" label="Chilcas">
+						</node>
+						<node id="050505" label="Chungui">
+						</node>
+						<node id="050506" label="Luis Carranza">
+						</node>
+						<node id="050507" label="Santa Rosa">
+						</node>
+						<node id="050508" label="Tambo">
+						</node>
+						<node id="050509" label="Samugari">
+						</node>
+						<node id="050510" label="Anchihuay">
+						</node>
+						<node id="050511" label="Oronccoy">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0506" label="Lucanas">
+					<isComposedBy>
+						<node id="050601" label="Puquio">
+						</node>
+						<node id="050602" label="Aucara">
+						</node>
+						<node id="050603" label="Cabana">
+						</node>
+						<node id="050604" label="Carmen Salcedo">
+						</node>
+						<node id="050605" label="Chaviña">
+						</node>
+						<node id="050606" label="Chipao">
+						</node>
+						<node id="050607" label="Huac-Huas">
+						</node>
+						<node id="050608" label="Laramate">
+						</node>
+						<node id="050609" label="Leoncio Prado">
+						</node>
+						<node id="050610" label="Llauta">
+						</node>
+						<node id="050611" label="Lucanas">
+						</node>
+						<node id="050612" label="Ocaña">
+						</node>
+						<node id="050613" label="Otoca">
+						</node>
+						<node id="050614" label="Saisa">
+						</node>
+						<node id="050615" label="San Cristóbal">
+						</node>
+						<node id="050616" label="San Juan">
+						</node>
+						<node id="050617" label="San Pedro">
+						</node>
+						<node id="050618" label="San Pedro de Palco">
+						</node>
+						<node id="050619" label="Sancos">
+						</node>
+						<node id="050620" label="Santa Ana de Huaycahuacho">
+						</node>
+						<node id="050621" label="Santa Lucia">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0507" label="Parinacochas">
+					<isComposedBy>
+						<node id="050701" label="Coracora">
+						</node>
+						<node id="050702" label="Chumpi">
+						</node>
+						<node id="050703" label="Coronel Castañeda">
+						</node>
+						<node id="050704" label="Pacapausa">
+						</node>
+						<node id="050705" label="Pullo">
+						</node>
+						<node id="050706" label="Puyusca">
+						</node>
+						<node id="050707" label="San Francisco de Ravacayco">
+						</node>
+						<node id="050708" label="Upahuacho">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0508" label="Pàucar del Sara Sara">
+					<isComposedBy>
+						<node id="050801" label="Pausa">
+						</node>
+						<node id="050802" label="Colta">
+						</node>
+						<node id="050803" label="Corculla">
+						</node>
+						<node id="050804" label="Lampa">
+						</node>
+						<node id="050805" label="Marcabamba">
+						</node>
+						<node id="050806" label="Oyolo">
+						</node>
+						<node id="050807" label="Pararca">
+						</node>
+						<node id="050808" label="San Javier de Alpabamba">
+						</node>
+						<node id="050809" label="San José de Ushua">
+						</node>
+						<node id="050810" label="Sara Sara">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0509" label="Sucre">
+					<isComposedBy>
+						<node id="050901" label="Querobamba">
+						</node>
+						<node id="050902" label="Belén">
+						</node>
+						<node id="050903" label="Chalcos">
+						</node>
+						<node id="050904" label="Chilcayoc">
+						</node>
+						<node id="050905" label="Huacaña">
+						</node>
+						<node id="050906" label="Morcolla">
+						</node>
+						<node id="050907" label="Paico">
+						</node>
+						<node id="050908" label="San Pedro de Larcay">
+						</node>
+						<node id="050909" label="San Salvador de Quije">
+						</node>
+						<node id="050910" label="Santiago de Paucaray">
+						</node>
+						<node id="050911" label="Soras">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0510" label="Víctor Fajardo">
+					<isComposedBy>
+						<node id="051001" label="Huancapi">
+						</node>
+						<node id="051002" label="Alcamenca">
+						</node>
+						<node id="051003" label="Apongo">
+						</node>
+						<node id="051004" label="Asquipata">
+						</node>
+						<node id="051005" label="Canaria">
+						</node>
+						<node id="051006" label="Cayara">
+						</node>
+						<node id="051007" label="Colca">
+						</node>
+						<node id="051008" label="Huamanquiquia">
+						</node>
+						<node id="051009" label="Huancaraylla">
+						</node>
+						<node id="051010" label="Hualla">
+						</node>
+						<node id="051011" label="Sarhua">
+						</node>
+						<node id="051012" label="Vilcanchos">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0511" label="Vilcas Huamán">
+					<isComposedBy>
+						<node id="051101" label="Vilcas Huaman">
+						</node>
+						<node id="051102" label="Accomarca">
+						</node>
+						<node id="051103" label="Carhuanca">
+						</node>
+						<node id="051104" label="Concepción">
+						</node>
+						<node id="051105" label="Huambalpa">
+						</node>
+						<node id="051106" label="Independencia">
+						</node>
+						<node id="051107" label="Saurama">
+						</node>
+						<node id="051108" label="Vischongo">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="06" label="Cajamarca">
+			<isComposedBy>
+				<node id="0601" label="Cajamarca">
+					<isComposedBy>
+						<node id="060101" label="Cajamarca">
+						</node>
+						<node id="060102" label="Asunción">
+						</node>
+						<node id="060103" label="Chetilla">
+						</node>
+						<node id="060104" label="Cospan">
+						</node>
+						<node id="060105" label="Encañada">
+						</node>
+						<node id="060106" label="Jesús">
+						</node>
+						<node id="060107" label="Llacanora">
+						</node>
+						<node id="060108" label="Los Baños del Inca">
+						</node>
+						<node id="060109" label="Magdalena">
+						</node>
+						<node id="060110" label="Matara">
+						</node>
+						<node id="060111" label="Namora">
+						</node>
+						<node id="060112" label="San Juan">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0602" label="Cajabamba">
+					<isComposedBy>
+						<node id="060201" label="Cajabamba">
+						</node>
+						<node id="060202" label="Cachachi">
+						</node>
+						<node id="060203" label="Condebamba">
+						</node>
+						<node id="060204" label="Sitacocha">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0603" label="Celendín">
+					<isComposedBy>
+						<node id="060301" label="Celendín">
+						</node>
+						<node id="060302" label="Chumuch">
+						</node>
+						<node id="060303" label="Cortegana">
+						</node>
+						<node id="060304" label="Huasmin">
+						</node>
+						<node id="060305" label="Jorge Chávez">
+						</node>
+						<node id="060306" label="José Gálvez">
+						</node>
+						<node id="060307" label="Miguel Iglesias">
+						</node>
+						<node id="060308" label="Oxamarca">
+						</node>
+						<node id="060309" label="Sorochuco">
+						</node>
+						<node id="060310" label="Sucre">
+						</node>
+						<node id="060311" label="Utco">
+						</node>
+						<node id="060312" label="La Libertad de Pallan">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0604" label="Chota">
+					<isComposedBy>
+						<node id="060401" label="Chota">
+						</node>
+						<node id="060402" label="Anguia">
+						</node>
+						<node id="060403" label="Chadin">
+						</node>
+						<node id="060404" label="Chiguirip">
+						</node>
+						<node id="060405" label="Chimban">
+						</node>
+						<node id="060406" label="Choropampa">
+						</node>
+						<node id="060407" label="Cochabamba">
+						</node>
+						<node id="060408" label="Conchan">
+						</node>
+						<node id="060409" label="Huambos">
+						</node>
+						<node id="060410" label="Lajas">
+						</node>
+						<node id="060411" label="Llama">
+						</node>
+						<node id="060412" label="Miracosta">
+						</node>
+						<node id="060413" label="Paccha">
+						</node>
+						<node id="060414" label="Pion">
+						</node>
+						<node id="060415" label="Querocoto">
+						</node>
+						<node id="060416" label="San Juan de Licupis">
+						</node>
+						<node id="060417" label="Tacabamba">
+						</node>
+						<node id="060418" label="Tocmoche">
+						</node>
+						<node id="060419" label="Chalamarca">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0605" label="Contumazá">
+					<isComposedBy>
+						<node id="060501" label="Contumaza">
+						</node>
+						<node id="060502" label="Chilete">
+						</node>
+						<node id="060503" label="Cupisnique">
+						</node>
+						<node id="060504" label="Guzmango">
+						</node>
+						<node id="060505" label="San Benito">
+						</node>
+						<node id="060506" label="Santa Cruz de Toledo">
+						</node>
+						<node id="060507" label="Tantarica">
+						</node>
+						<node id="060508" label="Yonan">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0606" label="Cutervo">
+					<isComposedBy>
+						<node id="060601" label="Cutervo">
+						</node>
+						<node id="060602" label="Callayuc">
+						</node>
+						<node id="060603" label="Choros">
+						</node>
+						<node id="060604" label="Cujillo">
+						</node>
+						<node id="060605" label="La Ramada">
+						</node>
+						<node id="060606" label="Pimpingos">
+						</node>
+						<node id="060607" label="Querocotillo">
+						</node>
+						<node id="060608" label="San Andrés de Cutervo">
+						</node>
+						<node id="060609" label="San Juan de Cutervo">
+						</node>
+						<node id="060610" label="San Luis de Lucma">
+						</node>
+						<node id="060611" label="Santa Cruz">
+						</node>
+						<node id="060612" label="Santo Domingo de la Capilla">
+						</node>
+						<node id="060613" label="Santo Tomas">
+						</node>
+						<node id="060614" label="Socota">
+						</node>
+						<node id="060615" label="Toribio Casanova">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0607" label="Hualgayoc">
+					<isComposedBy>
+						<node id="060701" label="Bambamarca">
+						</node>
+						<node id="060702" label="Chugur">
+						</node>
+						<node id="060703" label="Hualgayoc">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0608" label="Jaén">
+					<isComposedBy>
+						<node id="060801" label="Jaén">
+						</node>
+						<node id="060802" label="Bellavista">
+						</node>
+						<node id="060803" label="Chontali">
+						</node>
+						<node id="060804" label="Colasay">
+						</node>
+						<node id="060805" label="Huabal">
+						</node>
+						<node id="060806" label="Las Pirias">
+						</node>
+						<node id="060807" label="Pomahuaca">
+						</node>
+						<node id="060808" label="Pucara">
+						</node>
+						<node id="060809" label="Sallique">
+						</node>
+						<node id="060810" label="San Felipe">
+						</node>
+						<node id="060811" label="San José del Alto">
+						</node>
+						<node id="060812" label="Santa Rosa">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0609" label="San Ignacio">
+					<isComposedBy>
+						<node id="060901" label="San Ignacio">
+						</node>
+						<node id="060902" label="Chirinos">
+						</node>
+						<node id="060903" label="Huarango">
+						</node>
+						<node id="060904" label="La Coipa">
+						</node>
+						<node id="060905" label="Namballe">
+						</node>
+						<node id="060906" label="San José de Lourdes">
+						</node>
+						<node id="060907" label="Tabaconas">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0610" label="San Marcos">
+					<isComposedBy>
+						<node id="061001" label="Pedro Gálvez">
+						</node>
+						<node id="061002" label="Chancay">
+						</node>
+						<node id="061003" label="Eduardo Villanueva">
+						</node>
+						<node id="061004" label="Gregorio Pita">
+						</node>
+						<node id="061005" label="Ichocan">
+						</node>
+						<node id="061006" label="José Manuel Quiroz">
+						</node>
+						<node id="061007" label="José Sabogal">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0611" label="San Miguel">
+					<isComposedBy>
+						<node id="061101" label="San Miguel">
+						</node>
+						<node id="061102" label="Bolívar">
+						</node>
+						<node id="061103" label="Calquis">
+						</node>
+						<node id="061104" label="Catilluc">
+						</node>
+						<node id="061105" label="El Prado">
+						</node>
+						<node id="061106" label="La Florida">
+						</node>
+						<node id="061107" label="Llapa">
+						</node>
+						<node id="061108" label="Nanchoc">
+						</node>
+						<node id="061109" label="Niepos">
+						</node>
+						<node id="061110" label="San Gregorio">
+						</node>
+						<node id="061111" label="San Silvestre de Cochan">
+						</node>
+						<node id="061112" label="Tongod">
+						</node>
+						<node id="061113" label="Unión Agua Blanca">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0612" label="San Pablo">
+					<isComposedBy>
+						<node id="061201" label="San Pablo">
+						</node>
+						<node id="061202" label="San Bernardino">
+						</node>
+						<node id="061203" label="San Luis">
+						</node>
+						<node id="061204" label="Tumbaden">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0613" label="Santa Cruz">
+					<isComposedBy>
+						<node id="061301" label="Santa Cruz">
+						</node>
+						<node id="061302" label="Andabamba">
+						</node>
+						<node id="061303" label="Catache">
+						</node>
+						<node id="061304" label="Chancaybaños">
+						</node>
+						<node id="061305" label="La Esperanza">
+						</node>
+						<node id="061306" label="Ninabamba">
+						</node>
+						<node id="061307" label="Pulan">
+						</node>
+						<node id="061308" label="Saucepampa">
+						</node>
+						<node id="061309" label="Sexi">
+						</node>
+						<node id="061310" label="Uticyacu">
+						</node>
+						<node id="061311" label="Yauyucan">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="07" label="Callao">
+			<isComposedBy>
+				<node id="0701" label="Prov. Const. del Callao">
+					<isComposedBy>
+						<node id="070101" label="Callao">
+						</node>
+						<node id="070102" label="Bellavista">
+						</node>
+						<node id="070103" label="Carmen de la Legua Reynoso">
+						</node>
+						<node id="070104" label="La Perla">
+						</node>
+						<node id="070105" label="La Punta">
+						</node>
+						<node id="070106" label="Ventanilla">
+						</node>
+						<node id="070107" label="Mi Perú">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="08" label="Cusco">
+			<isComposedBy>
+				<node id="0801" label="Cusco">
+					<isComposedBy>
+						<node id="080101" label="Cusco">
+						</node>
+						<node id="080102" label="Ccorca">
+						</node>
+						<node id="080103" label="Poroy">
+						</node>
+						<node id="080104" label="San Jerónimo">
+						</node>
+						<node id="080105" label="San Sebastian">
+						</node>
+						<node id="080106" label="Santiago">
+						</node>
+						<node id="080107" label="Saylla">
+						</node>
+						<node id="080108" label="Wanchaq">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0802" label="Acomayo">
+					<isComposedBy>
+						<node id="080201" label="Acomayo">
+						</node>
+						<node id="080202" label="Acopia">
+						</node>
+						<node id="080203" label="Acos">
+						</node>
+						<node id="080204" label="Mosoc Llacta">
+						</node>
+						<node id="080205" label="Pomacanchi">
+						</node>
+						<node id="080206" label="Rondocan">
+						</node>
+						<node id="080207" label="Sangarara">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0803" label="Anta">
+					<isComposedBy>
+						<node id="080301" label="Anta">
+						</node>
+						<node id="080302" label="Ancahuasi">
+						</node>
+						<node id="080303" label="Cachimayo">
+						</node>
+						<node id="080304" label="Chinchaypujio">
+						</node>
+						<node id="080305" label="Huarocondo">
+						</node>
+						<node id="080306" label="Limatambo">
+						</node>
+						<node id="080307" label="Mollepata">
+						</node>
+						<node id="080308" label="Pucyura">
+						</node>
+						<node id="080309" label="Zurite">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0804" label="Calca">
+					<isComposedBy>
+						<node id="080401" label="Calca">
+						</node>
+						<node id="080402" label="Coya">
+						</node>
+						<node id="080403" label="Lamay">
+						</node>
+						<node id="080404" label="Lares">
+						</node>
+						<node id="080405" label="Pisac">
+						</node>
+						<node id="080406" label="San Salvador">
+						</node>
+						<node id="080407" label="Taray">
+						</node>
+						<node id="080408" label="Yanatile">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0805" label="Canas">
+					<isComposedBy>
+						<node id="080501" label="Yanaoca">
+						</node>
+						<node id="080502" label="Checca">
+						</node>
+						<node id="080503" label="Kunturkanki">
+						</node>
+						<node id="080504" label="Langui">
+						</node>
+						<node id="080505" label="Layo">
+						</node>
+						<node id="080506" label="Pampamarca">
+						</node>
+						<node id="080507" label="Quehue">
+						</node>
+						<node id="080508" label="Tupac Amaru">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0806" label="Canchis">
+					<isComposedBy>
+						<node id="080601" label="Sicuani">
+						</node>
+						<node id="080602" label="Checacupe">
+						</node>
+						<node id="080603" label="Combapata">
+						</node>
+						<node id="080604" label="Marangani">
+						</node>
+						<node id="080605" label="Pitumarca">
+						</node>
+						<node id="080606" label="San Pablo">
+						</node>
+						<node id="080607" label="San Pedro">
+						</node>
+						<node id="080608" label="Tinta">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0807" label="Chumbivilcas">
+					<isComposedBy>
+						<node id="080701" label="Santo Tomas">
+						</node>
+						<node id="080702" label="Capacmarca">
+						</node>
+						<node id="080703" label="Chamaca">
+						</node>
+						<node id="080704" label="Colquemarca">
+						</node>
+						<node id="080705" label="Livitaca">
+						</node>
+						<node id="080706" label="Llusco">
+						</node>
+						<node id="080707" label="Quiñota">
+						</node>
+						<node id="080708" label="Velille">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0808" label="Espinar">
+					<isComposedBy>
+						<node id="080801" label="Espinar">
+						</node>
+						<node id="080802" label="Condoroma">
+						</node>
+						<node id="080803" label="Coporaque">
+						</node>
+						<node id="080804" label="Ocoruro">
+						</node>
+						<node id="080805" label="Pallpata">
+						</node>
+						<node id="080806" label="Pichigua">
+						</node>
+						<node id="080807" label="Suyckutambo">
+						</node>
+						<node id="080808" label="Alto Pichigua">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0809" label="La Convención">
+					<isComposedBy>
+						<node id="080901" label="Santa Ana">
+						</node>
+						<node id="080902" label="Echarate">
+						</node>
+						<node id="080903" label="Huayopata">
+						</node>
+						<node id="080904" label="Maranura">
+						</node>
+						<node id="080905" label="Ocobamba">
+						</node>
+						<node id="080906" label="Quellouno">
+						</node>
+						<node id="080907" label="Kimbiri">
+						</node>
+						<node id="080908" label="Santa Teresa">
+						</node>
+						<node id="080909" label="Vilcabamba">
+						</node>
+						<node id="080910" label="Pichari">
+						</node>
+						<node id="080911" label="Inkawasi">
+						</node>
+						<node id="080912" label="Villa Virgen">
+						</node>
+						<node id="080913" label="Villa Kintiarina">
+						</node>
+						<node id="080914" label="Megantoni">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0810" label="Paruro">
+					<isComposedBy>
+						<node id="081001" label="Paruro">
+						</node>
+						<node id="081002" label="Accha">
+						</node>
+						<node id="081003" label="Ccapi">
+						</node>
+						<node id="081004" label="Colcha">
+						</node>
+						<node id="081005" label="Huanoquite">
+						</node>
+						<node id="081006" label="Omachaç">
+						</node>
+						<node id="081007" label="Paccaritambo">
+						</node>
+						<node id="081008" label="Pillpinto">
+						</node>
+						<node id="081009" label="Yaurisque">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0811" label="Paucartambo">
+					<isComposedBy>
+						<node id="081101" label="Paucartambo">
+						</node>
+						<node id="081102" label="Caicay">
+						</node>
+						<node id="081103" label="Challabamba">
+						</node>
+						<node id="081104" label="Colquepata">
+						</node>
+						<node id="081105" label="Huancarani">
+						</node>
+						<node id="081106" label="Kosñipata">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0812" label="Quispicanchi">
+					<isComposedBy>
+						<node id="081201" label="Urcos">
+						</node>
+						<node id="081202" label="Andahuaylillas">
+						</node>
+						<node id="081203" label="Camanti">
+						</node>
+						<node id="081204" label="Ccarhuayo">
+						</node>
+						<node id="081205" label="Ccatca">
+						</node>
+						<node id="081206" label="Cusipata">
+						</node>
+						<node id="081207" label="Huaro">
+						</node>
+						<node id="081208" label="Lucre">
+						</node>
+						<node id="081209" label="Marcapata">
+						</node>
+						<node id="081210" label="Ocongate">
+						</node>
+						<node id="081211" label="Oropesa">
+						</node>
+						<node id="081212" label="Quiquijana">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0813" label="Urubamba">
+					<isComposedBy>
+						<node id="081301" label="Urubamba">
+						</node>
+						<node id="081302" label="Chinchero">
+						</node>
+						<node id="081303" label="Huayllabamba">
+						</node>
+						<node id="081304" label="Machupicchu">
+						</node>
+						<node id="081305" label="Maras">
+						</node>
+						<node id="081306" label="Ollantaytambo">
+						</node>
+						<node id="081307" label="Yucay">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="09" label="Huancavelica">
+			<isComposedBy>
+				<node id="0901" label="Huancavelica">
+					<isComposedBy>
+						<node id="090101" label="Huancavelica">
+						</node>
+						<node id="090102" label="Acobambilla">
+						</node>
+						<node id="090103" label="Acoria">
+						</node>
+						<node id="090104" label="Conayca">
+						</node>
+						<node id="090105" label="Cuenca">
+						</node>
+						<node id="090106" label="Huachocolpa">
+						</node>
+						<node id="090107" label="Huayllahuara">
+						</node>
+						<node id="090108" label="Izcuchaca">
+						</node>
+						<node id="090109" label="Laria">
+						</node>
+						<node id="090110" label="Manta">
+						</node>
+						<node id="090111" label="Mariscal Cáceres">
+						</node>
+						<node id="090112" label="Moya">
+						</node>
+						<node id="090113" label="Nuevo Occoro">
+						</node>
+						<node id="090114" label="Palca">
+						</node>
+						<node id="090115" label="Pilchaca">
+						</node>
+						<node id="090116" label="Vilca">
+						</node>
+						<node id="090117" label="Yauli">
+						</node>
+						<node id="090118" label="Ascensión">
+						</node>
+						<node id="090119" label="Huando">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0902" label="Acobamba">
+					<isComposedBy>
+						<node id="090201" label="Acobamba">
+						</node>
+						<node id="090202" label="Andabamba">
+						</node>
+						<node id="090203" label="Anta">
+						</node>
+						<node id="090204" label="Caja">
+						</node>
+						<node id="090205" label="Marcas">
+						</node>
+						<node id="090206" label="Paucara">
+						</node>
+						<node id="090207" label="Pomacocha">
+						</node>
+						<node id="090208" label="Rosario">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0903" label="Angaraes">
+					<isComposedBy>
+						<node id="090301" label="Lircay">
+						</node>
+						<node id="090302" label="Anchonga">
+						</node>
+						<node id="090303" label="Callanmarca">
+						</node>
+						<node id="090304" label="Ccochaccasa">
+						</node>
+						<node id="090305" label="Chincho">
+						</node>
+						<node id="090306" label="Congalla">
+						</node>
+						<node id="090307" label="Huanca-Huanca">
+						</node>
+						<node id="090308" label="Huayllay Grande">
+						</node>
+						<node id="090309" label="Julcamarca">
+						</node>
+						<node id="090310" label="San Antonio de Antaparco">
+						</node>
+						<node id="090311" label="Santo Tomas de Pata">
+						</node>
+						<node id="090312" label="Secclla">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0904" label="Castrovirreyna">
+					<isComposedBy>
+						<node id="090401" label="Castrovirreyna">
+						</node>
+						<node id="090402" label="Arma">
+						</node>
+						<node id="090403" label="Aurahua">
+						</node>
+						<node id="090404" label="Capillas">
+						</node>
+						<node id="090405" label="Chupamarca">
+						</node>
+						<node id="090406" label="Cocas">
+						</node>
+						<node id="090407" label="Huachos">
+						</node>
+						<node id="090408" label="Huamatambo">
+						</node>
+						<node id="090409" label="Mollepampa">
+						</node>
+						<node id="090410" label="San Juan">
+						</node>
+						<node id="090411" label="Santa Ana">
+						</node>
+						<node id="090412" label="Tantara">
+						</node>
+						<node id="090413" label="Ticrapo">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0905" label="Churcampa">
+					<isComposedBy>
+						<node id="090501" label="Churcampa">
+						</node>
+						<node id="090502" label="Anco">
+						</node>
+						<node id="090503" label="Chinchihuasi">
+						</node>
+						<node id="090504" label="El Carmen">
+						</node>
+						<node id="090505" label="La Merced">
+						</node>
+						<node id="090506" label="Locroja">
+						</node>
+						<node id="090507" label="Paucarbamba">
+						</node>
+						<node id="090508" label="San Miguel de Mayocc">
+						</node>
+						<node id="090509" label="San Pedro de Coris">
+						</node>
+						<node id="090510" label="Pachamarca">
+						</node>
+						<node id="090511" label="Cosme">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0906" label="Huaytará">
+					<isComposedBy>
+						<node id="090601" label="Huaytara">
+						</node>
+						<node id="090602" label="Ayavi">
+						</node>
+						<node id="090603" label="Córdova">
+						</node>
+						<node id="090604" label="Huayacundo Arma">
+						</node>
+						<node id="090605" label="Laramarca">
+						</node>
+						<node id="090606" label="Ocoyo">
+						</node>
+						<node id="090607" label="Pilpichaca">
+						</node>
+						<node id="090608" label="Querco">
+						</node>
+						<node id="090609" label="Quito-Arma">
+						</node>
+						<node id="090610" label="San Antonio de Cusicancha">
+						</node>
+						<node id="090611" label="San Francisco de Sangayaico">
+						</node>
+						<node id="090612" label="San Isidro">
+						</node>
+						<node id="090613" label="Santiago de Chocorvos">
+						</node>
+						<node id="090614" label="Santiago de Quirahuara">
+						</node>
+						<node id="090615" label="Santo Domingo de Capillas">
+						</node>
+						<node id="090616" label="Tambo">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="0907" label="Tayacaja">
+					<isComposedBy>
+						<node id="090701" label="Pampas">
+						</node>
+						<node id="090702" label="Acostambo">
+						</node>
+						<node id="090703" label="Acraquia">
+						</node>
+						<node id="090704" label="Ahuaycha">
+						</node>
+						<node id="090705" label="Colcabamba">
+						</node>
+						<node id="090706" label="Daniel Hernández">
+						</node>
+						<node id="090707" label="Huachocolpa">
+						</node>
+						<node id="090709" label="Huaribamba">
+						</node>
+						<node id="090710" label="Ñahuimpuquio">
+						</node>
+						<node id="090711" label="Pazos">
+						</node>
+						<node id="090713" label="Quishuar">
+						</node>
+						<node id="090714" label="Salcabamba">
+						</node>
+						<node id="090715" label="Salcahuasi">
+						</node>
+						<node id="090716" label="San Marcos de Rocchac">
+						</node>
+						<node id="090717" label="Surcubamba">
+						</node>
+						<node id="090718" label="Tintay Puncu">
+						</node>
+						<node id="090719" label="Quichuas">
+						</node>
+						<node id="090720" label="Andaymarca">
+						</node>
+						<node id="090721" label="Roble">
+						</node>
+						<node id="090722" label="Pichos">
+						</node>
+						<node id="090723" label="Santiago de Tucuma">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="10" label="Huánuco">
+			<isComposedBy>
+				<node id="1001" label="Huánuco">
+					<isComposedBy>
+						<node id="100101" label="Huanuco">
+						</node>
+						<node id="100102" label="Amarilis">
+						</node>
+						<node id="100103" label="Chinchao">
+						</node>
+						<node id="100104" label="Churubamba">
+						</node>
+						<node id="100105" label="Margos">
+						</node>
+						<node id="100106" label="Quisqui (Kichki)">
+						</node>
+						<node id="100107" label="San Francisco de Cayran">
+						</node>
+						<node id="100108" label="San Pedro de Chaulan">
+						</node>
+						<node id="100109" label="Santa María del Valle">
+						</node>
+						<node id="100110" label="Yarumayo">
+						</node>
+						<node id="100111" label="Pillco Marca">
+						</node>
+						<node id="100112" label="Yacus">
+						</node>
+						<node id="100113" label="San Pablo de Pillao">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1002" label="Ambo">
+					<isComposedBy>
+						<node id="100201" label="Ambo">
+						</node>
+						<node id="100202" label="Cayna">
+						</node>
+						<node id="100203" label="Colpas">
+						</node>
+						<node id="100204" label="Conchamarca">
+						</node>
+						<node id="100205" label="Huacar">
+						</node>
+						<node id="100206" label="San Francisco">
+						</node>
+						<node id="100207" label="San Rafael">
+						</node>
+						<node id="100208" label="Tomay Kichwa">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1003" label="Dos de Mayo">
+					<isComposedBy>
+						<node id="100301" label="La Unión">
+						</node>
+						<node id="100307" label="Chuquis">
+						</node>
+						<node id="100311" label="Marías">
+						</node>
+						<node id="100313" label="Pachas">
+						</node>
+						<node id="100316" label="Quivilla">
+						</node>
+						<node id="100317" label="Ripan">
+						</node>
+						<node id="100321" label="Shunqui">
+						</node>
+						<node id="100322" label="Sillapata">
+						</node>
+						<node id="100323" label="Yanas">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1004" label="Huacaybamba">
+					<isComposedBy>
+						<node id="100401" label="Huacaybamba">
+						</node>
+						<node id="100402" label="Canchabamba">
+						</node>
+						<node id="100403" label="Cochabamba">
+						</node>
+						<node id="100404" label="Pinra">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1005" label="Huamalíes">
+					<isComposedBy>
+						<node id="100501" label="Llata">
+						</node>
+						<node id="100502" label="Arancay">
+						</node>
+						<node id="100503" label="Chavín de Pariarca">
+						</node>
+						<node id="100504" label="Jacas Grande">
+						</node>
+						<node id="100505" label="Jircan">
+						</node>
+						<node id="100506" label="Miraflores">
+						</node>
+						<node id="100507" label="Monzón">
+						</node>
+						<node id="100508" label="Punchao">
+						</node>
+						<node id="100509" label="Puños">
+						</node>
+						<node id="100510" label="Singa">
+						</node>
+						<node id="100511" label="Tantamayo">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1006" label="Leoncio Prado">
+					<isComposedBy>
+						<node id="100601" label="Rupa-Rupa">
+						</node>
+						<node id="100602" label="Daniel Alomía Robles">
+						</node>
+						<node id="100603" label="Hermílio Valdizan">
+						</node>
+						<node id="100604" label="José Crespo y Castillo">
+						</node>
+						<node id="100605" label="Luyando">
+						</node>
+						<node id="100606" label="Mariano Damaso Beraun">
+						</node>
+						<node id="100607" label="Pucayacu">
+						</node>
+						<node id="100608" label="Castillo Grande">
+						</node>
+						<node id="100609" label="Pueblo Nuevo">
+						</node>
+						<node id="100610" label="Santo Domingo de Anda">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1007" label="Marañón">
+					<isComposedBy>
+						<node id="100701" label="Huacrachuco">
+						</node>
+						<node id="100702" label="Cholon">
+						</node>
+						<node id="100703" label="San Buenaventura">
+						</node>
+						<node id="100704" label="La Morada">
+						</node>
+						<node id="100705" label="Santa Rosa de Alto Yanajanca">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1008" label="Pachitea">
+					<isComposedBy>
+						<node id="100801" label="Panao">
+						</node>
+						<node id="100802" label="Chaglla">
+						</node>
+						<node id="100803" label="Molino">
+						</node>
+						<node id="100804" label="Umari">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1009" label="Puerto Inca">
+					<isComposedBy>
+						<node id="100901" label="Puerto Inca">
+						</node>
+						<node id="100902" label="Codo del Pozuzo">
+						</node>
+						<node id="100903" label="Honoria">
+						</node>
+						<node id="100904" label="Tournavista">
+						</node>
+						<node id="100905" label="Yuyapichis">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1010" label="Lauricocha ">
+					<isComposedBy>
+						<node id="101001" label="Jesús">
+						</node>
+						<node id="101002" label="Baños">
+						</node>
+						<node id="101003" label="Jivia">
+						</node>
+						<node id="101004" label="Queropalca">
+						</node>
+						<node id="101005" label="Rondos">
+						</node>
+						<node id="101006" label="San Francisco de Asís">
+						</node>
+						<node id="101007" label="San Miguel de Cauri">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1011" label="Yarowilca ">
+					<isComposedBy>
+						<node id="101101" label="Chavinillo">
+						</node>
+						<node id="101102" label="Cahuac">
+						</node>
+						<node id="101103" label="Chacabamba">
+						</node>
+						<node id="101104" label="Aparicio Pomares">
+						</node>
+						<node id="101105" label="Jacas Chico">
+						</node>
+						<node id="101106" label="Obas">
+						</node>
+						<node id="101107" label="Pampamarca">
+						</node>
+						<node id="101108" label="Choras">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="11" label="Ica">
+			<isComposedBy>
+				<node id="1101" label="Ica ">
+					<isComposedBy>
+						<node id="110101" label="Ica">
+						</node>
+						<node id="110102" label="La Tinguiña">
+						</node>
+						<node id="110103" label="Los Aquijes">
+						</node>
+						<node id="110104" label="Ocucaje">
+						</node>
+						<node id="110105" label="Pachacutec">
+						</node>
+						<node id="110106" label="Parcona">
+						</node>
+						<node id="110107" label="Pueblo Nuevo">
+						</node>
+						<node id="110108" label="Salas">
+						</node>
+						<node id="110109" label="San José de Los Molinos">
+						</node>
+						<node id="110110" label="San Juan Bautista">
+						</node>
+						<node id="110111" label="Santiago">
+						</node>
+						<node id="110112" label="Subtanjalla">
+						</node>
+						<node id="110113" label="Tate">
+						</node>
+						<node id="110114" label="Yauca del Rosario">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1102" label="Chincha ">
+					<isComposedBy>
+						<node id="110201" label="Chincha Alta">
+						</node>
+						<node id="110202" label="Alto Laran">
+						</node>
+						<node id="110203" label="Chavin">
+						</node>
+						<node id="110204" label="Chincha Baja">
+						</node>
+						<node id="110205" label="El Carmen">
+						</node>
+						<node id="110206" label="Grocio Prado">
+						</node>
+						<node id="110207" label="Pueblo Nuevo">
+						</node>
+						<node id="110208" label="San Juan de Yanac">
+						</node>
+						<node id="110209" label="San Pedro de Huacarpana">
+						</node>
+						<node id="110210" label="Sunampe">
+						</node>
+						<node id="110211" label="Tambo de Mora">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1103" label="Nasca ">
+					<isComposedBy>
+						<node id="110301" label="Nasca">
+						</node>
+						<node id="110302" label="Changuillo">
+						</node>
+						<node id="110303" label="El Ingenio">
+						</node>
+						<node id="110304" label="Marcona">
+						</node>
+						<node id="110305" label="Vista Alegre">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1104" label="Palpa ">
+					<isComposedBy>
+						<node id="110401" label="Palpa">
+						</node>
+						<node id="110402" label="Llipata">
+						</node>
+						<node id="110403" label="Río Grande">
+						</node>
+						<node id="110404" label="Santa Cruz">
+						</node>
+						<node id="110405" label="Tibillo">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1105" label="Pisco ">
+					<isComposedBy>
+						<node id="110501" label="Pisco">
+						</node>
+						<node id="110502" label="Huancano">
+						</node>
+						<node id="110503" label="Humay">
+						</node>
+						<node id="110504" label="Independencia">
+						</node>
+						<node id="110505" label="Paracas">
+						</node>
+						<node id="110506" label="San Andrés">
+						</node>
+						<node id="110507" label="San Clemente">
+						</node>
+						<node id="110508" label="Tupac Amaru Inca">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="12" label="Junín">
+			<isComposedBy>
+				<node id="1201" label="Huancayo ">
+					<isComposedBy>
+						<node id="120101" label="Huancayo">
+						</node>
+						<node id="120104" label="Carhuacallanga">
+						</node>
+						<node id="120105" label="Chacapampa">
+						</node>
+						<node id="120106" label="Chicche">
+						</node>
+						<node id="120107" label="Chilca">
+						</node>
+						<node id="120108" label="Chongos Alto">
+						</node>
+						<node id="120111" label="Chupuro">
+						</node>
+						<node id="120112" label="Colca">
+						</node>
+						<node id="120113" label="Cullhuas">
+						</node>
+						<node id="120114" label="El Tambo">
+						</node>
+						<node id="120116" label="Huacrapuquio">
+						</node>
+						<node id="120117" label="Hualhuas">
+						</node>
+						<node id="120119" label="Huancan">
+						</node>
+						<node id="120120" label="Huasicancha">
+						</node>
+						<node id="120121" label="Huayucachi">
+						</node>
+						<node id="120122" label="Ingenio">
+						</node>
+						<node id="120124" label="Pariahuanca">
+						</node>
+						<node id="120125" label="Pilcomayo">
+						</node>
+						<node id="120126" label="Pucara">
+						</node>
+						<node id="120127" label="Quichuay">
+						</node>
+						<node id="120128" label="Quilcas">
+						</node>
+						<node id="120129" label="San Agustín">
+						</node>
+						<node id="120130" label="San Jerónimo de Tunan">
+						</node>
+						<node id="120132" label="Saño">
+						</node>
+						<node id="120133" label="Sapallanga">
+						</node>
+						<node id="120134" label="Sicaya">
+						</node>
+						<node id="120135" label="Santo Domingo de Acobamba">
+						</node>
+						<node id="120136" label="Viques">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1202" label="Concepción ">
+					<isComposedBy>
+						<node id="120201" label="Concepción">
+						</node>
+						<node id="120202" label="Aco">
+						</node>
+						<node id="120203" label="Andamarca">
+						</node>
+						<node id="120204" label="Chambara">
+						</node>
+						<node id="120205" label="Cochas">
+						</node>
+						<node id="120206" label="Comas">
+						</node>
+						<node id="120207" label="Heroínas Toledo">
+						</node>
+						<node id="120208" label="Manzanares">
+						</node>
+						<node id="120209" label="Mariscal Castilla">
+						</node>
+						<node id="120210" label="Matahuasi">
+						</node>
+						<node id="120211" label="Mito">
+						</node>
+						<node id="120212" label="Nueve de Julio">
+						</node>
+						<node id="120213" label="Orcotuna">
+						</node>
+						<node id="120214" label="San José de Quero">
+						</node>
+						<node id="120215" label="Santa Rosa de Ocopa">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1203" label="Chanchamayo ">
+					<isComposedBy>
+						<node id="120301" label="Chanchamayo">
+						</node>
+						<node id="120302" label="Perene">
+						</node>
+						<node id="120303" label="Pichanaqui">
+						</node>
+						<node id="120304" label="San Luis de Shuaro">
+						</node>
+						<node id="120305" label="San Ramón">
+						</node>
+						<node id="120306" label="Vitoc">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1204" label="Jauja ">
+					<isComposedBy>
+						<node id="120401" label="Jauja">
+						</node>
+						<node id="120402" label="Acolla">
+						</node>
+						<node id="120403" label="Apata">
+						</node>
+						<node id="120404" label="Ataura">
+						</node>
+						<node id="120405" label="Canchayllo">
+						</node>
+						<node id="120406" label="Curicaca">
+						</node>
+						<node id="120407" label="El Mantaro">
+						</node>
+						<node id="120408" label="Huamali">
+						</node>
+						<node id="120409" label="Huaripampa">
+						</node>
+						<node id="120410" label="Huertas">
+						</node>
+						<node id="120411" label="Janjaillo">
+						</node>
+						<node id="120412" label="Julcán">
+						</node>
+						<node id="120413" label="Leonor Ordóñez">
+						</node>
+						<node id="120414" label="Llocllapampa">
+						</node>
+						<node id="120415" label="Marco">
+						</node>
+						<node id="120416" label="Masma">
+						</node>
+						<node id="120417" label="Masma Chicche">
+						</node>
+						<node id="120418" label="Molinos">
+						</node>
+						<node id="120419" label="Monobamba">
+						</node>
+						<node id="120420" label="Muqui">
+						</node>
+						<node id="120421" label="Muquiyauyo">
+						</node>
+						<node id="120422" label="Paca">
+						</node>
+						<node id="120423" label="Paccha">
+						</node>
+						<node id="120424" label="Pancan">
+						</node>
+						<node id="120425" label="Parco">
+						</node>
+						<node id="120426" label="Pomacancha">
+						</node>
+						<node id="120427" label="Ricran">
+						</node>
+						<node id="120428" label="San Lorenzo">
+						</node>
+						<node id="120429" label="San Pedro de Chunan">
+						</node>
+						<node id="120430" label="Sausa">
+						</node>
+						<node id="120431" label="Sincos">
+						</node>
+						<node id="120432" label="Tunan Marca">
+						</node>
+						<node id="120433" label="Yauli">
+						</node>
+						<node id="120434" label="Yauyos">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1205" label="Junín ">
+					<isComposedBy>
+						<node id="120501" label="Junin">
+						</node>
+						<node id="120502" label="Carhuamayo">
+						</node>
+						<node id="120503" label="Ondores">
+						</node>
+						<node id="120504" label="Ulcumayo">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1206" label="Satipo ">
+					<isComposedBy>
+						<node id="120601" label="Satipo">
+						</node>
+						<node id="120602" label="Coviriali">
+						</node>
+						<node id="120603" label="Llaylla">
+						</node>
+						<node id="120604" label="Mazamari">
+						</node>
+						<node id="120605" label="Pampa Hermosa">
+						</node>
+						<node id="120606" label="Pangoa">
+						</node>
+						<node id="120607" label="Río Negro">
+						</node>
+						<node id="120608" label="Río Tambo">
+						</node>
+						<node id="120609" label="Vizcatan del Ene">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1207" label="Tarma ">
+					<isComposedBy>
+						<node id="120701" label="Tarma">
+						</node>
+						<node id="120702" label="Acobamba">
+						</node>
+						<node id="120703" label="Huaricolca">
+						</node>
+						<node id="120704" label="Huasahuasi">
+						</node>
+						<node id="120705" label="La Unión">
+						</node>
+						<node id="120706" label="Palca">
+						</node>
+						<node id="120707" label="Palcamayo">
+						</node>
+						<node id="120708" label="San Pedro de Cajas">
+						</node>
+						<node id="120709" label="Tapo">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1208" label="Yauli ">
+					<isComposedBy>
+						<node id="120801" label="La Oroya">
+						</node>
+						<node id="120802" label="Chacapalpa">
+						</node>
+						<node id="120803" label="Huay-Huay">
+						</node>
+						<node id="120804" label="Marcapomacocha">
+						</node>
+						<node id="120805" label="Morococha">
+						</node>
+						<node id="120806" label="Paccha">
+						</node>
+						<node id="120807" label="Santa Bárbara de Carhuacayan">
+						</node>
+						<node id="120808" label="Santa Rosa de Sacco">
+						</node>
+						<node id="120809" label="Suitucancha">
+						</node>
+						<node id="120810" label="Yauli">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1209" label="Chupaca ">
+					<isComposedBy>
+						<node id="120901" label="Chupaca">
+						</node>
+						<node id="120902" label="Ahuac">
+						</node>
+						<node id="120903" label="Chongos Bajo">
+						</node>
+						<node id="120904" label="Huachac">
+						</node>
+						<node id="120905" label="Huamancaca Chico">
+						</node>
+						<node id="120906" label="San Juan de Iscos">
+						</node>
+						<node id="120907" label="San Juan de Jarpa">
+						</node>
+						<node id="120908" label="Tres de Diciembre">
+						</node>
+						<node id="120909" label="Yanacancha">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="13" label="La Libertad">
+			<isComposedBy>
+				<node id="1301" label="Trujillo ">
+					<isComposedBy>
+						<node id="130101" label="Trujillo">
+						</node>
+						<node id="130102" label="El Porvenir">
+						</node>
+						<node id="130103" label="Florencia de Mora">
+						</node>
+						<node id="130104" label="Huanchaco">
+						</node>
+						<node id="130105" label="La Esperanza">
+						</node>
+						<node id="130106" label="Laredo">
+						</node>
+						<node id="130107" label="Moche">
+						</node>
+						<node id="130108" label="Poroto">
+						</node>
+						<node id="130109" label="Salaverry">
+						</node>
+						<node id="130110" label="Simbal">
+						</node>
+						<node id="130111" label="Victor Larco Herrera">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1302" label="Ascope ">
+					<isComposedBy>
+						<node id="130201" label="Ascope">
+						</node>
+						<node id="130202" label="Chicama">
+						</node>
+						<node id="130203" label="Chocope">
+						</node>
+						<node id="130204" label="Magdalena de Cao">
+						</node>
+						<node id="130205" label="Paijan">
+						</node>
+						<node id="130206" label="Rázuri">
+						</node>
+						<node id="130207" label="Santiago de Cao">
+						</node>
+						<node id="130208" label="Casa Grande">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1303" label="Bolívar ">
+					<isComposedBy>
+						<node id="130301" label="Bolívar">
+						</node>
+						<node id="130302" label="Bambamarca">
+						</node>
+						<node id="130303" label="Condormarca">
+						</node>
+						<node id="130304" label="Longotea">
+						</node>
+						<node id="130305" label="Uchumarca">
+						</node>
+						<node id="130306" label="Ucuncha">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1304" label="Chepén ">
+					<isComposedBy>
+						<node id="130401" label="Chepen">
+						</node>
+						<node id="130402" label="Pacanga">
+						</node>
+						<node id="130403" label="Pueblo Nuevo">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1305" label="Julcán ">
+					<isComposedBy>
+						<node id="130501" label="Julcan">
+						</node>
+						<node id="130502" label="Calamarca">
+						</node>
+						<node id="130503" label="Carabamba">
+						</node>
+						<node id="130504" label="Huaso">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1306" label="Otuzco ">
+					<isComposedBy>
+						<node id="130601" label="Otuzco">
+						</node>
+						<node id="130602" label="Agallpampa">
+						</node>
+						<node id="130604" label="Charat">
+						</node>
+						<node id="130605" label="Huaranchal">
+						</node>
+						<node id="130606" label="La Cuesta">
+						</node>
+						<node id="130608" label="Mache">
+						</node>
+						<node id="130610" label="Paranday">
+						</node>
+						<node id="130611" label="Salpo">
+						</node>
+						<node id="130613" label="Sinsicap">
+						</node>
+						<node id="130614" label="Usquil">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1307" label="Pacasmayo ">
+					<isComposedBy>
+						<node id="130701" label="San Pedro de Lloc">
+						</node>
+						<node id="130702" label="Guadalupe">
+						</node>
+						<node id="130703" label="Jequetepeque">
+						</node>
+						<node id="130704" label="Pacasmayo">
+						</node>
+						<node id="130705" label="San José">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1308" label="Pataz ">
+					<isComposedBy>
+						<node id="130801" label="Tayabamba">
+						</node>
+						<node id="130802" label="Buldibuyo">
+						</node>
+						<node id="130803" label="Chillia">
+						</node>
+						<node id="130804" label="Huancaspata">
+						</node>
+						<node id="130805" label="Huaylillas">
+						</node>
+						<node id="130806" label="Huayo">
+						</node>
+						<node id="130807" label="Ongon">
+						</node>
+						<node id="130808" label="Parcoy">
+						</node>
+						<node id="130809" label="Pataz">
+						</node>
+						<node id="130810" label="Pias">
+						</node>
+						<node id="130811" label="Santiago de Challas">
+						</node>
+						<node id="130812" label="Taurija">
+						</node>
+						<node id="130813" label="Urpay">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1309" label="Sánchez Carrión ">
+					<isComposedBy>
+						<node id="130901" label="Huamachuco">
+						</node>
+						<node id="130902" label="Chugay">
+						</node>
+						<node id="130903" label="Cochorco">
+						</node>
+						<node id="130904" label="Curgos">
+						</node>
+						<node id="130905" label="Marcabal">
+						</node>
+						<node id="130906" label="Sanagoran">
+						</node>
+						<node id="130907" label="Sarin">
+						</node>
+						<node id="130908" label="Sartimbamba">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1310" label="Santiago de Chuco ">
+					<isComposedBy>
+						<node id="131001" label="Santiago de Chuco">
+						</node>
+						<node id="131002" label="Angasmarca">
+						</node>
+						<node id="131003" label="Cachicadan">
+						</node>
+						<node id="131004" label="Mollebamba">
+						</node>
+						<node id="131005" label="Mollepata">
+						</node>
+						<node id="131006" label="Quiruvilca">
+						</node>
+						<node id="131007" label="Santa Cruz de Chuca">
+						</node>
+						<node id="131008" label="Sitabamba">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1311" label="Gran Chimú ">
+					<isComposedBy>
+						<node id="131101" label="Cascas">
+						</node>
+						<node id="131102" label="Lucma">
+						</node>
+						<node id="131103" label="Marmot">
+						</node>
+						<node id="131104" label="Sayapullo">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1312" label="Virú ">
+					<isComposedBy>
+						<node id="131201" label="Viru">
+						</node>
+						<node id="131202" label="Chao">
+						</node>
+						<node id="131203" label="Guadalupito">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="14" label="Lambayeque">
+			<isComposedBy>
+				<node id="1401" label="Chiclayo ">
+					<isComposedBy>
+						<node id="140101" label="Chiclayo">
+						</node>
+						<node id="140102" label="Chongoyape">
+						</node>
+						<node id="140103" label="Eten">
+						</node>
+						<node id="140104" label="Eten Puerto">
+						</node>
+						<node id="140105" label="José Leonardo Ortiz">
+						</node>
+						<node id="140106" label="La Victoria">
+						</node>
+						<node id="140107" label="Lagunas">
+						</node>
+						<node id="140108" label="Monsefu">
+						</node>
+						<node id="140109" label="Nueva Arica">
+						</node>
+						<node id="140110" label="Oyotun">
+						</node>
+						<node id="140111" label="Picsi">
+						</node>
+						<node id="140112" label="Pimentel">
+						</node>
+						<node id="140113" label="Reque">
+						</node>
+						<node id="140114" label="Santa Rosa">
+						</node>
+						<node id="140115" label="Saña">
+						</node>
+						<node id="140116" label="Cayalti">
+						</node>
+						<node id="140117" label="Patapo">
+						</node>
+						<node id="140118" label="Pomalca">
+						</node>
+						<node id="140119" label="Pucala">
+						</node>
+						<node id="140120" label="Tuman">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1402" label="Ferreñafe ">
+					<isComposedBy>
+						<node id="140201" label="Ferreñafe">
+						</node>
+						<node id="140202" label="Cañaris">
+						</node>
+						<node id="140203" label="Incahuasi">
+						</node>
+						<node id="140204" label="Manuel Antonio Mesones Muro">
+						</node>
+						<node id="140205" label="Pitipo">
+						</node>
+						<node id="140206" label="Pueblo Nuevo">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1403" label="Lambayeque ">
+					<isComposedBy>
+						<node id="140301" label="Lambayeque">
+						</node>
+						<node id="140302" label="Chochope">
+						</node>
+						<node id="140303" label="Illimo">
+						</node>
+						<node id="140304" label="Jayanca">
+						</node>
+						<node id="140305" label="Mochumi">
+						</node>
+						<node id="140306" label="Morrope">
+						</node>
+						<node id="140307" label="Motupe">
+						</node>
+						<node id="140308" label="Olmos">
+						</node>
+						<node id="140309" label="Pacora">
+						</node>
+						<node id="140310" label="Salas">
+						</node>
+						<node id="140311" label="San José">
+						</node>
+						<node id="140312" label="Tucume">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="15" label="Lima">
+			<isComposedBy>
+				<node id="1501" label="Lima ">
+					<isComposedBy>
+						<node id="150101" label="Lima">
+						</node>
+						<node id="150102" label="Ancón">
+						</node>
+						<node id="150103" label="Ate">
+						</node>
+						<node id="150104" label="Barranco">
+						</node>
+						<node id="150105" label="Breña">
+						</node>
+						<node id="150106" label="Carabayllo">
+						</node>
+						<node id="150107" label="Chaclacayo">
+						</node>
+						<node id="150108" label="Chorrillos">
+						</node>
+						<node id="150109" label="Cieneguilla">
+						</node>
+						<node id="150110" label="Comas">
+						</node>
+						<node id="150111" label="El Agustino">
+						</node>
+						<node id="150112" label="Independencia">
+						</node>
+						<node id="150113" label="Jesús María">
+						</node>
+						<node id="150114" label="La Molina">
+						</node>
+						<node id="150115" label="La Victoria">
+						</node>
+						<node id="150116" label="Lince">
+						</node>
+						<node id="150117" label="Los Olivos">
+						</node>
+						<node id="150118" label="Lurigancho">
+						</node>
+						<node id="150119" label="Lurin">
+						</node>
+						<node id="150120" label="Magdalena del Mar">
+						</node>
+						<node id="150121" label="Pueblo Libre">
+						</node>
+						<node id="150122" label="Miraflores">
+						</node>
+						<node id="150123" label="Pachacamac">
+						</node>
+						<node id="150124" label="Pucusana">
+						</node>
+						<node id="150125" label="Puente Piedra">
+						</node>
+						<node id="150126" label="Punta Hermosa">
+						</node>
+						<node id="150127" label="Punta Negra">
+						</node>
+						<node id="150128" label="Rímac">
+						</node>
+						<node id="150129" label="San Bartolo">
+						</node>
+						<node id="150130" label="San Borja">
+						</node>
+						<node id="150131" label="San Isidro">
+						</node>
+						<node id="150132" label="San Juan de Lurigancho">
+						</node>
+						<node id="150133" label="San Juan de Miraflores">
+						</node>
+						<node id="150134" label="San Luis">
+						</node>
+						<node id="150135" label="San Martín de Porres">
+						</node>
+						<node id="150136" label="San Miguel">
+						</node>
+						<node id="150137" label="Santa Anita">
+						</node>
+						<node id="150138" label="Santa María del Mar">
+						</node>
+						<node id="150139" label="Santa Rosa">
+						</node>
+						<node id="150140" label="Santiago de Surco">
+						</node>
+						<node id="150141" label="Surquillo">
+						</node>
+						<node id="150142" label="Villa El Salvador">
+						</node>
+						<node id="150143" label="Villa María del Triunfo">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1502" label="Barranca ">
+					<isComposedBy>
+						<node id="150201" label="Barranca">
+						</node>
+						<node id="150202" label="Paramonga">
+						</node>
+						<node id="150203" label="Pativilca">
+						</node>
+						<node id="150204" label="Supe">
+						</node>
+						<node id="150205" label="Supe Puerto">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1503" label="Cajatambo ">
+					<isComposedBy>
+						<node id="150301" label="Cajatambo">
+						</node>
+						<node id="150302" label="Copa">
+						</node>
+						<node id="150303" label="Gorgor">
+						</node>
+						<node id="150304" label="Huancapon">
+						</node>
+						<node id="150305" label="Manas">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1504" label="Canta ">
+					<isComposedBy>
+						<node id="150401" label="Canta">
+						</node>
+						<node id="150402" label="Arahuay">
+						</node>
+						<node id="150403" label="Huamantanga">
+						</node>
+						<node id="150404" label="Huaros">
+						</node>
+						<node id="150405" label="Lachaqui">
+						</node>
+						<node id="150406" label="San Buenaventura">
+						</node>
+						<node id="150407" label="Santa Rosa de Quives">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1505" label="Cañete ">
+					<isComposedBy>
+						<node id="150501" label="San Vicente de Cañete">
+						</node>
+						<node id="150502" label="Asia">
+						</node>
+						<node id="150503" label="Calango">
+						</node>
+						<node id="150504" label="Cerro Azul">
+						</node>
+						<node id="150505" label="Chilca">
+						</node>
+						<node id="150506" label="Coayllo">
+						</node>
+						<node id="150507" label="Imperial">
+						</node>
+						<node id="150508" label="Lunahuana">
+						</node>
+						<node id="150509" label="Mala">
+						</node>
+						<node id="150510" label="Nuevo Imperial">
+						</node>
+						<node id="150511" label="Pacaran">
+						</node>
+						<node id="150512" label="Quilmana">
+						</node>
+						<node id="150513" label="San Antonio">
+						</node>
+						<node id="150514" label="San Luis">
+						</node>
+						<node id="150515" label="Santa Cruz de Flores">
+						</node>
+						<node id="150516" label="Zúñiga">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1506" label="Huaral ">
+					<isComposedBy>
+						<node id="150601" label="Huaral">
+						</node>
+						<node id="150602" label="Atavillos Alto">
+						</node>
+						<node id="150603" label="Atavillos Bajo">
+						</node>
+						<node id="150604" label="Aucallama">
+						</node>
+						<node id="150605" label="Chancay">
+						</node>
+						<node id="150606" label="Ihuari">
+						</node>
+						<node id="150607" label="Lampian">
+						</node>
+						<node id="150608" label="Pacaraos">
+						</node>
+						<node id="150609" label="San Miguel de Acos">
+						</node>
+						<node id="150610" label="Santa Cruz de Andamarca">
+						</node>
+						<node id="150611" label="Sumbilca">
+						</node>
+						<node id="150612" label="Veintisiete de Noviembre">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1507" label="Huarochirí ">
+					<isComposedBy>
+						<node id="150701" label="Matucana">
+						</node>
+						<node id="150702" label="Antioquia">
+						</node>
+						<node id="150703" label="Callahuanca">
+						</node>
+						<node id="150704" label="Carampoma">
+						</node>
+						<node id="150705" label="Chicla">
+						</node>
+						<node id="150706" label="Cuenca">
+						</node>
+						<node id="150707" label="Huachupampa">
+						</node>
+						<node id="150708" label="Huanza">
+						</node>
+						<node id="150709" label="Huarochiri">
+						</node>
+						<node id="150710" label="Lahuaytambo">
+						</node>
+						<node id="150711" label="Langa">
+						</node>
+						<node id="150712" label="Laraos">
+						</node>
+						<node id="150713" label="Mariatana">
+						</node>
+						<node id="150714" label="Ricardo Palma">
+						</node>
+						<node id="150715" label="San Andrés de Tupicocha">
+						</node>
+						<node id="150716" label="San Antonio">
+						</node>
+						<node id="150717" label="San Bartolomé">
+						</node>
+						<node id="150718" label="San Damian">
+						</node>
+						<node id="150719" label="San Juan de Iris">
+						</node>
+						<node id="150720" label="San Juan de Tantaranche">
+						</node>
+						<node id="150721" label="San Lorenzo de Quinti">
+						</node>
+						<node id="150722" label="San Mateo">
+						</node>
+						<node id="150723" label="San Mateo de Otao">
+						</node>
+						<node id="150724" label="San Pedro de Casta">
+						</node>
+						<node id="150725" label="San Pedro de Huancayre">
+						</node>
+						<node id="150726" label="Sangallaya">
+						</node>
+						<node id="150727" label="Santa Cruz de Cocachacra">
+						</node>
+						<node id="150728" label="Santa Eulalia">
+						</node>
+						<node id="150729" label="Santiago de Anchucaya">
+						</node>
+						<node id="150730" label="Santiago de Tuna">
+						</node>
+						<node id="150731" label="Santo Domingo de Los Olleros">
+						</node>
+						<node id="150732" label="Surco">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1508" label="Huaura ">
+					<isComposedBy>
+						<node id="150801" label="Huacho">
+						</node>
+						<node id="150802" label="Ambar">
+						</node>
+						<node id="150803" label="Caleta de Carquin">
+						</node>
+						<node id="150804" label="Checras">
+						</node>
+						<node id="150805" label="Hualmay">
+						</node>
+						<node id="150806" label="Huaura">
+						</node>
+						<node id="150807" label="Leoncio Prado">
+						</node>
+						<node id="150808" label="Paccho">
+						</node>
+						<node id="150809" label="Santa Leonor">
+						</node>
+						<node id="150810" label="Santa María">
+						</node>
+						<node id="150811" label="Sayan">
+						</node>
+						<node id="150812" label="Vegueta">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1509" label="Oyón ">
+					<isComposedBy>
+						<node id="150901" label="Oyon">
+						</node>
+						<node id="150902" label="Andajes">
+						</node>
+						<node id="150903" label="Caujul">
+						</node>
+						<node id="150904" label="Cochamarca">
+						</node>
+						<node id="150905" label="Navan">
+						</node>
+						<node id="150906" label="Pachangara">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1510" label="Yauyos ">
+					<isComposedBy>
+						<node id="151001" label="Yauyos">
+						</node>
+						<node id="151002" label="Alis">
+						</node>
+						<node id="151003" label="Allauca">
+						</node>
+						<node id="151004" label="Ayaviri">
+						</node>
+						<node id="151005" label="Azángaro">
+						</node>
+						<node id="151006" label="Cacra">
+						</node>
+						<node id="151007" label="Carania">
+						</node>
+						<node id="151008" label="Catahuasi">
+						</node>
+						<node id="151009" label="Chocos">
+						</node>
+						<node id="151010" label="Cochas">
+						</node>
+						<node id="151011" label="Colonia">
+						</node>
+						<node id="151012" label="Hongos">
+						</node>
+						<node id="151013" label="Huampara">
+						</node>
+						<node id="151014" label="Huancaya">
+						</node>
+						<node id="151015" label="Huangascar">
+						</node>
+						<node id="151016" label="Huantan">
+						</node>
+						<node id="151017" label="Huañec">
+						</node>
+						<node id="151018" label="Laraos">
+						</node>
+						<node id="151019" label="Lincha">
+						</node>
+						<node id="151020" label="Madean">
+						</node>
+						<node id="151021" label="Miraflores">
+						</node>
+						<node id="151022" label="Omas">
+						</node>
+						<node id="151023" label="Putinza">
+						</node>
+						<node id="151024" label="Quinches">
+						</node>
+						<node id="151025" label="Quinocay">
+						</node>
+						<node id="151026" label="San Joaquín">
+						</node>
+						<node id="151027" label="San Pedro de Pilas">
+						</node>
+						<node id="151028" label="Tanta">
+						</node>
+						<node id="151029" label="Tauripampa">
+						</node>
+						<node id="151030" label="Tomas">
+						</node>
+						<node id="151031" label="Tupe">
+						</node>
+						<node id="151032" label="Viñac">
+						</node>
+						<node id="151033" label="Vitis">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="16" label="Loreto">
+			<isComposedBy>
+				<node id="1601" label="Maynas ">
+					<isComposedBy>
+						<node id="160101" label="Iquitos">
+						</node>
+						<node id="160102" label="Alto Nanay">
+						</node>
+						<node id="160103" label="Fernando Lores">
+						</node>
+						<node id="160104" label="Indiana">
+						</node>
+						<node id="160105" label="Las Amazonas">
+						</node>
+						<node id="160106" label="Mazan">
+						</node>
+						<node id="160107" label="Napo">
+						</node>
+						<node id="160108" label="Punchana">
+						</node>
+						<node id="160110" label="Torres Causana">
+						</node>
+						<node id="160112" label="Belén">
+						</node>
+						<node id="160113" label="San Juan Bautista">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1602" label="Alto Amazonas ">
+					<isComposedBy>
+						<node id="160201" label="Yurimaguas">
+						</node>
+						<node id="160202" label="Balsapuerto">
+						</node>
+						<node id="160205" label="Jeberos">
+						</node>
+						<node id="160206" label="Lagunas">
+						</node>
+						<node id="160210" label="Santa Cruz">
+						</node>
+						<node id="160211" label="Teniente Cesar López Rojas">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1603" label="Loreto ">
+					<isComposedBy>
+						<node id="160301" label="Nauta">
+						</node>
+						<node id="160302" label="Parinari">
+						</node>
+						<node id="160303" label="Tigre">
+						</node>
+						<node id="160304" label="Trompeteros">
+						</node>
+						<node id="160305" label="Urarinas">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1604" label="Mariscal Ramón Castilla ">
+					<isComposedBy>
+						<node id="160401" label="Ramón Castilla">
+						</node>
+						<node id="160402" label="Pebas">
+						</node>
+						<node id="160403" label="Yavari">
+						</node>
+						<node id="160404" label="San Pablo">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1605" label="Requena ">
+					<isComposedBy>
+						<node id="160501" label="Requena">
+						</node>
+						<node id="160502" label="Alto Tapiche">
+						</node>
+						<node id="160503" label="Capelo">
+						</node>
+						<node id="160504" label="Emilio San Martín">
+						</node>
+						<node id="160505" label="Maquia">
+						</node>
+						<node id="160506" label="Puinahua">
+						</node>
+						<node id="160507" label="Saquena">
+						</node>
+						<node id="160508" label="Soplin">
+						</node>
+						<node id="160509" label="Tapiche">
+						</node>
+						<node id="160510" label="Jenaro Herrera">
+						</node>
+						<node id="160511" label="Yaquerana">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1606" label="Ucayali ">
+					<isComposedBy>
+						<node id="160601" label="Contamana">
+						</node>
+						<node id="160602" label="Inahuaya">
+						</node>
+						<node id="160603" label="Padre Márquez">
+						</node>
+						<node id="160604" label="Pampa Hermosa">
+						</node>
+						<node id="160605" label="Sarayacu">
+						</node>
+						<node id="160606" label="Vargas Guerra">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1607" label="Datem del Marañón ">
+					<isComposedBy>
+						<node id="160701" label="Barranca">
+						</node>
+						<node id="160702" label="Cahuapanas">
+						</node>
+						<node id="160703" label="Manseriche">
+						</node>
+						<node id="160704" label="Morona">
+						</node>
+						<node id="160705" label="Pastaza">
+						</node>
+						<node id="160706" label="Andoas">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1608" label="Putumayo">
+					<isComposedBy>
+						<node id="160801" label="Putumayo">
+						</node>
+						<node id="160802" label="Rosa Panduro">
+						</node>
+						<node id="160803" label="Teniente Manuel Clavero">
+						</node>
+						<node id="160804" label="Yaguas">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="17" label="Madre de Dios">
+			<isComposedBy>
+				<node id="1701" label="Tambopata ">
+					<isComposedBy>
+						<node id="170101" label="Tambopata">
+						</node>
+						<node id="170102" label="Inambari">
+						</node>
+						<node id="170103" label="Las Piedras">
+						</node>
+						<node id="170104" label="Laberinto">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1702" label="Manu ">
+					<isComposedBy>
+						<node id="170201" label="Manu">
+						</node>
+						<node id="170202" label="Fitzcarrald">
+						</node>
+						<node id="170203" label="Madre de Dios">
+						</node>
+						<node id="170204" label="Huepetuhe">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1703" label="Tahuamanu ">
+					<isComposedBy>
+						<node id="170301" label="Iñapari">
+						</node>
+						<node id="170302" label="Iberia">
+						</node>
+						<node id="170303" label="Tahuamanu">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="18" label="Moquegua">
+			<isComposedBy>
+				<node id="1801" label="Mariscal Nieto ">
+					<isComposedBy>
+						<node id="180101" label="Moquegua">
+						</node>
+						<node id="180102" label="Carumas">
+						</node>
+						<node id="180103" label="Cuchumbaya">
+						</node>
+						<node id="180104" label="Samegua">
+						</node>
+						<node id="180105" label="San Cristóbal">
+						</node>
+						<node id="180106" label="Torata">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1802" label="General Sánchez Cerro ">
+					<isComposedBy>
+						<node id="180201" label="Omate">
+						</node>
+						<node id="180202" label="Chojata">
+						</node>
+						<node id="180203" label="Coalaque">
+						</node>
+						<node id="180204" label="Ichuña">
+						</node>
+						<node id="180205" label="La Capilla">
+						</node>
+						<node id="180206" label="Lloque">
+						</node>
+						<node id="180207" label="Matalaque">
+						</node>
+						<node id="180208" label="Puquina">
+						</node>
+						<node id="180209" label="Quinistaquillas">
+						</node>
+						<node id="180210" label="Ubinas">
+						</node>
+						<node id="180211" label="Yunga">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1803" label="Ilo ">
+					<isComposedBy>
+						<node id="180301" label="Ilo">
+						</node>
+						<node id="180302" label="El Algarrobal">
+						</node>
+						<node id="180303" label="Pacocha">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="19" label="Pasco">
+			<isComposedBy>
+				<node id="1901" label="Pasco ">
+					<isComposedBy>
+						<node id="190101" label="Chaupimarca">
+						</node>
+						<node id="190102" label="Huachon">
+						</node>
+						<node id="190103" label="Huariaca">
+						</node>
+						<node id="190104" label="Huayllay">
+						</node>
+						<node id="190105" label="Ninacaca">
+						</node>
+						<node id="190106" label="Pallanchacra">
+						</node>
+						<node id="190107" label="Paucartambo">
+						</node>
+						<node id="190108" label="San Francisco de Asís de Yarusyacan">
+						</node>
+						<node id="190109" label="Simon Bolívar">
+						</node>
+						<node id="190110" label="Ticlacayan">
+						</node>
+						<node id="190111" label="Tinyahuarco">
+						</node>
+						<node id="190112" label="Vicco">
+						</node>
+						<node id="190113" label="Yanacancha">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1902" label="Daniel Alcides Carrión ">
+					<isComposedBy>
+						<node id="190201" label="Yanahuanca">
+						</node>
+						<node id="190202" label="Chacayan">
+						</node>
+						<node id="190203" label="Goyllarisquizga">
+						</node>
+						<node id="190204" label="Paucar">
+						</node>
+						<node id="190205" label="San Pedro de Pillao">
+						</node>
+						<node id="190206" label="Santa Ana de Tusi">
+						</node>
+						<node id="190207" label="Tapuc">
+						</node>
+						<node id="190208" label="Vilcabamba">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="1903" label="Oxapampa ">
+					<isComposedBy>
+						<node id="190301" label="Oxapampa">
+						</node>
+						<node id="190302" label="Chontabamba">
+						</node>
+						<node id="190303" label="Huancabamba">
+						</node>
+						<node id="190304" label="Palcazu">
+						</node>
+						<node id="190305" label="Pozuzo">
+						</node>
+						<node id="190306" label="Puerto Bermúdez">
+						</node>
+						<node id="190307" label="Villa Rica">
+						</node>
+						<node id="190308" label="Constitución">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="20" label="Piura">
+			<isComposedBy>
+				<node id="2001" label="Piura ">
+					<isComposedBy>
+						<node id="200101" label="Piura">
+						</node>
+						<node id="200104" label="Castilla">
+						</node>
+						<node id="200105" label="Catacaos">
+						</node>
+						<node id="200107" label="Cura Mori">
+						</node>
+						<node id="200108" label="El Tallan">
+						</node>
+						<node id="200109" label="La Arena">
+						</node>
+						<node id="200110" label="La Unión">
+						</node>
+						<node id="200111" label="Las Lomas">
+						</node>
+						<node id="200114" label="Tambo Grande">
+						</node>
+						<node id="200115" label="Veintiseis de Octubre">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2002" label="Ayabaca ">
+					<isComposedBy>
+						<node id="200201" label="Ayabaca">
+						</node>
+						<node id="200202" label="Frias">
+						</node>
+						<node id="200203" label="Jilili">
+						</node>
+						<node id="200204" label="Lagunas">
+						</node>
+						<node id="200205" label="Montero">
+						</node>
+						<node id="200206" label="Pacaipampa">
+						</node>
+						<node id="200207" label="Paimas">
+						</node>
+						<node id="200208" label="Sapillica">
+						</node>
+						<node id="200209" label="Sicchez">
+						</node>
+						<node id="200210" label="Suyo">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2003" label="Huancabamba ">
+					<isComposedBy>
+						<node id="200301" label="Huancabamba">
+						</node>
+						<node id="200302" label="Canchaque">
+						</node>
+						<node id="200303" label="El Carmen de la Frontera">
+						</node>
+						<node id="200304" label="Huarmaca">
+						</node>
+						<node id="200305" label="Lalaquiz">
+						</node>
+						<node id="200306" label="San Miguel de El Faique">
+						</node>
+						<node id="200307" label="Sondor">
+						</node>
+						<node id="200308" label="Sondorillo">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2004" label="Morropón ">
+					<isComposedBy>
+						<node id="200401" label="Chulucanas">
+						</node>
+						<node id="200402" label="Buenos Aires">
+						</node>
+						<node id="200403" label="Chalaco">
+						</node>
+						<node id="200404" label="La Matanza">
+						</node>
+						<node id="200405" label="Morropon">
+						</node>
+						<node id="200406" label="Salitral">
+						</node>
+						<node id="200407" label="San Juan de Bigote">
+						</node>
+						<node id="200408" label="Santa Catalina de Mossa">
+						</node>
+						<node id="200409" label="Santo Domingo">
+						</node>
+						<node id="200410" label="Yamango">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2005" label="Paita ">
+					<isComposedBy>
+						<node id="200501" label="Paita">
+						</node>
+						<node id="200502" label="Amotape">
+						</node>
+						<node id="200503" label="Arenal">
+						</node>
+						<node id="200504" label="Colan">
+						</node>
+						<node id="200505" label="La Huaca">
+						</node>
+						<node id="200506" label="Tamarindo">
+						</node>
+						<node id="200507" label="Vichayal">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2006" label="Sullana ">
+					<isComposedBy>
+						<node id="200601" label="Sullana">
+						</node>
+						<node id="200602" label="Bellavista">
+						</node>
+						<node id="200603" label="Ignacio Escudero">
+						</node>
+						<node id="200604" label="Lancones">
+						</node>
+						<node id="200605" label="Marcavelica">
+						</node>
+						<node id="200606" label="Miguel Checa">
+						</node>
+						<node id="200607" label="Querecotillo">
+						</node>
+						<node id="200608" label="Salitral">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2007" label="Talara ">
+					<isComposedBy>
+						<node id="200701" label="Pariñas">
+						</node>
+						<node id="200702" label="El Alto">
+						</node>
+						<node id="200703" label="La Brea">
+						</node>
+						<node id="200704" label="Lobitos">
+						</node>
+						<node id="200705" label="Los Organos">
+						</node>
+						<node id="200706" label="Mancora">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2008" label="Sechura ">
+					<isComposedBy>
+						<node id="200801" label="Sechura">
+						</node>
+						<node id="200802" label="Bellavista de la Unión">
+						</node>
+						<node id="200803" label="Bernal">
+						</node>
+						<node id="200804" label="Cristo Nos Valga">
+						</node>
+						<node id="200805" label="Vice">
+						</node>
+						<node id="200806" label="Rinconada Llicuar">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="21" label="Puno">
+			<isComposedBy>
+				<node id="2101" label="Puno ">
+					<isComposedBy>
+						<node id="210101" label="Puno">
+						</node>
+						<node id="210102" label="Acora">
+						</node>
+						<node id="210103" label="Amantani">
+						</node>
+						<node id="210104" label="Atuncolla">
+						</node>
+						<node id="210105" label="Capachica">
+						</node>
+						<node id="210106" label="Chucuito">
+						</node>
+						<node id="210107" label="Coata">
+						</node>
+						<node id="210108" label="Huata">
+						</node>
+						<node id="210109" label="Mañazo">
+						</node>
+						<node id="210110" label="Paucarcolla">
+						</node>
+						<node id="210111" label="Pichacani">
+						</node>
+						<node id="210112" label="Plateria">
+						</node>
+						<node id="210113" label="San Antonio">
+						</node>
+						<node id="210114" label="Tiquillaca">
+						</node>
+						<node id="210115" label="Vilque">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2102" label="Azángaro ">
+					<isComposedBy>
+						<node id="210201" label="Azángaro">
+						</node>
+						<node id="210202" label="Achaya">
+						</node>
+						<node id="210203" label="Arapa">
+						</node>
+						<node id="210204" label="Asillo">
+						</node>
+						<node id="210205" label="Caminaca">
+						</node>
+						<node id="210206" label="Chupa">
+						</node>
+						<node id="210207" label="José Domingo Choquehuanca">
+						</node>
+						<node id="210208" label="Muñani">
+						</node>
+						<node id="210209" label="Potoni">
+						</node>
+						<node id="210210" label="Saman">
+						</node>
+						<node id="210211" label="San Anton">
+						</node>
+						<node id="210212" label="San José">
+						</node>
+						<node id="210213" label="San Juan de Salinas">
+						</node>
+						<node id="210214" label="Santiago de Pupuja">
+						</node>
+						<node id="210215" label="Tirapata">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2103" label="Carabaya ">
+					<isComposedBy>
+						<node id="210301" label="Macusani">
+						</node>
+						<node id="210302" label="Ajoyani">
+						</node>
+						<node id="210303" label="Ayapata">
+						</node>
+						<node id="210304" label="Coasa">
+						</node>
+						<node id="210305" label="Corani">
+						</node>
+						<node id="210306" label="Crucero">
+						</node>
+						<node id="210307" label="Ituata">
+						</node>
+						<node id="210308" label="Ollachea">
+						</node>
+						<node id="210309" label="San Gaban">
+						</node>
+						<node id="210310" label="Usicayos">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2104" label="Chucuito ">
+					<isComposedBy>
+						<node id="210401" label="Juli">
+						</node>
+						<node id="210402" label="Desaguadero">
+						</node>
+						<node id="210403" label="Huacullani">
+						</node>
+						<node id="210404" label="Kelluyo">
+						</node>
+						<node id="210405" label="Pisacoma">
+						</node>
+						<node id="210406" label="Pomata">
+						</node>
+						<node id="210407" label="Zepita">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2105" label="El Collao ">
+					<isComposedBy>
+						<node id="210501" label="Ilave">
+						</node>
+						<node id="210502" label="Capazo">
+						</node>
+						<node id="210503" label="Pilcuyo">
+						</node>
+						<node id="210504" label="Santa Rosa">
+						</node>
+						<node id="210505" label="Conduriri">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2106" label="Huancané ">
+					<isComposedBy>
+						<node id="210601" label="Huancane">
+						</node>
+						<node id="210602" label="Cojata">
+						</node>
+						<node id="210603" label="Huatasani">
+						</node>
+						<node id="210604" label="Inchupalla">
+						</node>
+						<node id="210605" label="Pusi">
+						</node>
+						<node id="210606" label="Rosaspata">
+						</node>
+						<node id="210607" label="Taraco">
+						</node>
+						<node id="210608" label="Vilque Chico">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2107" label="Lampa ">
+					<isComposedBy>
+						<node id="210701" label="Lampa">
+						</node>
+						<node id="210702" label="Cabanilla">
+						</node>
+						<node id="210703" label="Calapuja">
+						</node>
+						<node id="210704" label="Nicasio">
+						</node>
+						<node id="210705" label="Ocuviri">
+						</node>
+						<node id="210706" label="Palca">
+						</node>
+						<node id="210707" label="Paratia">
+						</node>
+						<node id="210708" label="Pucara">
+						</node>
+						<node id="210709" label="Santa Lucia">
+						</node>
+						<node id="210710" label="Vilavila">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2108" label="Melgar ">
+					<isComposedBy>
+						<node id="210801" label="Ayaviri">
+						</node>
+						<node id="210802" label="Antauta">
+						</node>
+						<node id="210803" label="Cupi">
+						</node>
+						<node id="210804" label="Llalli">
+						</node>
+						<node id="210805" label="Macari">
+						</node>
+						<node id="210806" label="Nuñoa">
+						</node>
+						<node id="210807" label="Orurillo">
+						</node>
+						<node id="210808" label="Santa Rosa">
+						</node>
+						<node id="210809" label="Umachiri">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2109" label="Moho ">
+					<isComposedBy>
+						<node id="210901" label="Moho">
+						</node>
+						<node id="210902" label="Conima">
+						</node>
+						<node id="210903" label="Huayrapata">
+						</node>
+						<node id="210904" label="Tilali">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2110" label="San Antonio de Putina ">
+					<isComposedBy>
+						<node id="211001" label="Putina">
+						</node>
+						<node id="211002" label="Ananea">
+						</node>
+						<node id="211003" label="Pedro Vilca Apaza">
+						</node>
+						<node id="211004" label="Quilcapuncu">
+						</node>
+						<node id="211005" label="Sina">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2111" label="San Román ">
+					<isComposedBy>
+						<node id="211101" label="Juliaca">
+						</node>
+						<node id="211102" label="Cabana">
+						</node>
+						<node id="211103" label="Cabanillas">
+						</node>
+						<node id="211104" label="Caracoto">
+						</node>
+						<node id="211105" label="San Miguel">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2112" label="Sandia ">
+					<isComposedBy>
+						<node id="211201" label="Sandia">
+						</node>
+						<node id="211202" label="Cuyocuyo">
+						</node>
+						<node id="211203" label="Limbani">
+						</node>
+						<node id="211204" label="Patambuco">
+						</node>
+						<node id="211205" label="Phara">
+						</node>
+						<node id="211206" label="Quiaca">
+						</node>
+						<node id="211207" label="San Juan del Oro">
+						</node>
+						<node id="211208" label="Yanahuaya">
+						</node>
+						<node id="211209" label="Alto Inambari">
+						</node>
+						<node id="211210" label="San Pedro de Putina Punco">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2113" label="Yunguyo ">
+					<isComposedBy>
+						<node id="211301" label="Yunguyo">
+						</node>
+						<node id="211302" label="Anapia">
+						</node>
+						<node id="211303" label="Copani">
+						</node>
+						<node id="211304" label="Cuturapi">
+						</node>
+						<node id="211305" label="Ollaraya">
+						</node>
+						<node id="211306" label="Tinicachi">
+						</node>
+						<node id="211307" label="Unicachi">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="22" label="San Martín">
+			<isComposedBy>
+				<node id="2201" label="Moyobamba ">
+					<isComposedBy>
+						<node id="220101" label="Moyobamba">
+						</node>
+						<node id="220102" label="Calzada">
+						</node>
+						<node id="220103" label="Habana">
+						</node>
+						<node id="220104" label="Jepelacio">
+						</node>
+						<node id="220105" label="Soritor">
+						</node>
+						<node id="220106" label="Yantalo">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2202" label="Bellavista ">
+					<isComposedBy>
+						<node id="220201" label="Bellavista">
+						</node>
+						<node id="220202" label="Alto Biavo">
+						</node>
+						<node id="220203" label="Bajo Biavo">
+						</node>
+						<node id="220204" label="Huallaga">
+						</node>
+						<node id="220205" label="San Pablo">
+						</node>
+						<node id="220206" label="San Rafael">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2203" label="El Dorado ">
+					<isComposedBy>
+						<node id="220301" label="San José de Sisa">
+						</node>
+						<node id="220302" label="Agua Blanca">
+						</node>
+						<node id="220303" label="San Martín">
+						</node>
+						<node id="220304" label="Santa Rosa">
+						</node>
+						<node id="220305" label="Shatoja">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2204" label="Huallaga ">
+					<isComposedBy>
+						<node id="220401" label="Saposoa">
+						</node>
+						<node id="220402" label="Alto Saposoa">
+						</node>
+						<node id="220403" label="El Eslabón">
+						</node>
+						<node id="220404" label="Piscoyacu">
+						</node>
+						<node id="220405" label="Sacanche">
+						</node>
+						<node id="220406" label="Tingo de Saposoa">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2205" label="Lamas ">
+					<isComposedBy>
+						<node id="220501" label="Lamas">
+						</node>
+						<node id="220502" label="Alonso de Alvarado">
+						</node>
+						<node id="220503" label="Barranquita">
+						</node>
+						<node id="220504" label="Caynarachi">
+						</node>
+						<node id="220505" label="Cuñumbuqui">
+						</node>
+						<node id="220506" label="Pinto Recodo">
+						</node>
+						<node id="220507" label="Rumisapa">
+						</node>
+						<node id="220508" label="San Roque de Cumbaza">
+						</node>
+						<node id="220509" label="Shanao">
+						</node>
+						<node id="220510" label="Tabalosos">
+						</node>
+						<node id="220511" label="Zapatero">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2206" label="Mariscal Cáceres ">
+					<isComposedBy>
+						<node id="220601" label="Juanjuí">
+						</node>
+						<node id="220602" label="Campanilla">
+						</node>
+						<node id="220603" label="Huicungo">
+						</node>
+						<node id="220604" label="Pachiza">
+						</node>
+						<node id="220605" label="Pajarillo">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2207" label="Picota ">
+					<isComposedBy>
+						<node id="220701" label="Picota">
+						</node>
+						<node id="220702" label="Buenos Aires">
+						</node>
+						<node id="220703" label="Caspisapa">
+						</node>
+						<node id="220704" label="Pilluana">
+						</node>
+						<node id="220705" label="Pucacaca">
+						</node>
+						<node id="220706" label="San Cristóbal">
+						</node>
+						<node id="220707" label="San Hilarión">
+						</node>
+						<node id="220708" label="Shamboyacu">
+						</node>
+						<node id="220709" label="Tingo de Ponasa">
+						</node>
+						<node id="220710" label="Tres Unidos">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2208" label="Rioja ">
+					<isComposedBy>
+						<node id="220801" label="Rioja">
+						</node>
+						<node id="220802" label="Awajun">
+						</node>
+						<node id="220803" label="Elías Soplin Vargas">
+						</node>
+						<node id="220804" label="Nueva Cajamarca">
+						</node>
+						<node id="220805" label="Pardo Miguel">
+						</node>
+						<node id="220806" label="Posic">
+						</node>
+						<node id="220807" label="San Fernando">
+						</node>
+						<node id="220808" label="Yorongos">
+						</node>
+						<node id="220809" label="Yuracyacu">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2209" label="San Martín ">
+					<isComposedBy>
+						<node id="220901" label="Tarapoto">
+						</node>
+						<node id="220902" label="Alberto Leveau">
+						</node>
+						<node id="220903" label="Cacatachi">
+						</node>
+						<node id="220904" label="Chazuta">
+						</node>
+						<node id="220905" label="Chipurana">
+						</node>
+						<node id="220906" label="El Porvenir">
+						</node>
+						<node id="220907" label="Huimbayoc">
+						</node>
+						<node id="220908" label="Juan Guerra">
+						</node>
+						<node id="220909" label="La Banda de Shilcayo">
+						</node>
+						<node id="220910" label="Morales">
+						</node>
+						<node id="220911" label="Papaplaya">
+						</node>
+						<node id="220912" label="San Antonio">
+						</node>
+						<node id="220913" label="Sauce">
+						</node>
+						<node id="220914" label="Shapaja">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2210" label="Tocache ">
+					<isComposedBy>
+						<node id="221001" label="Tocache">
+						</node>
+						<node id="221002" label="Nuevo Progreso">
+						</node>
+						<node id="221003" label="Polvora">
+						</node>
+						<node id="221004" label="Shunte">
+						</node>
+						<node id="221005" label="Uchiza">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="23" label="Tacna">
+			<isComposedBy>
+				<node id="2301" label="Tacna ">
+					<isComposedBy>
+						<node id="230101" label="Tacna">
+						</node>
+						<node id="230102" label="Alto de la Alianza">
+						</node>
+						<node id="230103" label="Calana">
+						</node>
+						<node id="230104" label="Ciudad Nueva">
+						</node>
+						<node id="230105" label="Inclan">
+						</node>
+						<node id="230106" label="Pachia">
+						</node>
+						<node id="230107" label="Palca">
+						</node>
+						<node id="230108" label="Pocollay">
+						</node>
+						<node id="230109" label="Sama">
+						</node>
+						<node id="230110" label="Coronel Gregorio Albarracín Lanchipa">
+						</node>
+						<node id="230111" label="La Yarada los Palos">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2302" label="Candarave ">
+					<isComposedBy>
+						<node id="230201" label="Candarave">
+						</node>
+						<node id="230202" label="Cairani">
+						</node>
+						<node id="230203" label="Camilaca">
+						</node>
+						<node id="230204" label="Curibaya">
+						</node>
+						<node id="230205" label="Huanuara">
+						</node>
+						<node id="230206" label="Quilahuani">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2303" label="Jorge Basadre ">
+					<isComposedBy>
+						<node id="230301" label="Locumba">
+						</node>
+						<node id="230302" label="Ilabaya">
+						</node>
+						<node id="230303" label="Ite">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2304" label="Tarata ">
+					<isComposedBy>
+						<node id="230401" label="Tarata">
+						</node>
+						<node id="230402" label="Héroes Albarracín">
+						</node>
+						<node id="230403" label="Estique">
+						</node>
+						<node id="230404" label="Estique-Pampa">
+						</node>
+						<node id="230405" label="Sitajara">
+						</node>
+						<node id="230406" label="Susapaya">
+						</node>
+						<node id="230407" label="Tarucachi">
+						</node>
+						<node id="230408" label="Ticaco">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="24" label="Tumbes">
+			<isComposedBy>
+				<node id="2401" label="Tumbes ">
+					<isComposedBy>
+						<node id="240101" label="Tumbes">
+						</node>
+						<node id="240102" label="Corrales">
+						</node>
+						<node id="240103" label="La Cruz">
+						</node>
+						<node id="240104" label="Pampas de Hospital">
+						</node>
+						<node id="240105" label="San Jacinto">
+						</node>
+						<node id="240106" label="San Juan de la Virgen">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2402" label="Contralmirante Villar ">
+					<isComposedBy>
+						<node id="240201" label="Zorritos">
+						</node>
+						<node id="240202" label="Casitas">
+						</node>
+						<node id="240203" label="Canoas de Punta Sal">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2403" label="Zarumilla ">
+					<isComposedBy>
+						<node id="240301" label="Zarumilla">
+						</node>
+						<node id="240302" label="Aguas Verdes">
+						</node>
+						<node id="240303" label="Matapalo">
+						</node>
+						<node id="240304" label="Papayal">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+		<node id="25" label="Ucayali">
+			<isComposedBy>
+				<node id="2501" label="Coronel Portillo ">
+					<isComposedBy>
+						<node id="250101" label="Calleria">
+						</node>
+						<node id="250102" label="Campoverde">
+						</node>
+						<node id="250103" label="Iparia">
+						</node>
+						<node id="250104" label="Masisea">
+						</node>
+						<node id="250105" label="Yarinacocha">
+						</node>
+						<node id="250106" label="Nueva Requena">
+						</node>
+						<node id="250107" label="Manantay">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2502" label="Atalaya ">
+					<isComposedBy>
+						<node id="250201" label="Raymondi">
+						</node>
+						<node id="250202" label="Sepahua">
+						</node>
+						<node id="250203" label="Tahuania">
+						</node>
+						<node id="250204" label="Yurua">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2503" label="Padre Abad ">
+					<isComposedBy>
+						<node id="250301" label="Padre Abad">
+						</node>
+						<node id="250302" label="Irazola">
+						</node>
+						<node id="250303" label="Curimana">
+						</node>
+						<node id="250304" label="Neshuya">
+						</node>
+						<node id="250305" label="Alexander Von Humboldt">
+						</node>
+					</isComposedBy>
+				</node>
+				<node id="2504" label="Purús">
+					<isComposedBy>
+						<node id="250401" label="Purus">
+						</node>
+					</isComposedBy>
+				</node>
+			</isComposedBy>
+		</node>
+	</isComposedBy>
+</node>

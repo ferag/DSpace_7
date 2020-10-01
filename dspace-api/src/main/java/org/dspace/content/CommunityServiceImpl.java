@@ -809,15 +809,22 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
                 groupService.addMember(context, newGroup, scopedRoles.get(subGroup.getID()));
             }
         }
-
+        scopedRoles.put(group.getID(), newGroup);
     }
 
     private void clonePolicies(Context context, DSpaceObject clone, DSpaceObject objectToClone,
         Map<UUID, Group> scopedRoles) throws SQLException, AuthorizeException {
+        authorizeService.removeAllPolicies(context, clone);
         for (ResourcePolicy policy : objectToClone.getResourcePolicies()) {
             Group group = policy.getGroup();
-            if (group != null && scopedRoles.containsKey(group.getID())) {
-                authorizeService.addPolicy(context, clone, policy.getAction(), scopedRoles.get(group.getID()));
+            if (group != null) {
+                if (scopedRoles.containsKey(group.getID())) {
+                    authorizeService.addPolicy(context, clone, policy.getAction(), scopedRoles.get(group.getID()));
+                } else {
+                    authorizeService.addPolicy(context, clone, policy.getAction(), group);
+                }
+            } else {
+                authorizeService.addPolicy(context, clone, policy.getAction(), policy.getEPerson());
             }
         }
     }

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.rest.model.AuthnRest;
 import org.dspace.services.ConfigurationService;
 import org.slf4j.Logger;
@@ -49,11 +50,8 @@ public class OidcRestController implements InitializingBean {
     @RequestMapping(method = RequestMethod.GET)
     public void oidc(HttpServletResponse response,
             @RequestParam(name = "redirectUrl", required = false) String redirectUrl) throws IOException {
-        if (redirectUrl == null) {
-            redirectUrl = configurationService.getProperty("authentication-oidc.redirectUI");
-            if (redirectUrl == null) {
-                redirectUrl = configurationService.getProperty("dspace.ui.url");
-            }
+        if (StringUtils.isBlank(redirectUrl)) {
+            redirectUrl = configurationService.getProperty("dspace.ui.url");
         }
         log.info("Redirecting to " + redirectUrl);
         response.sendRedirect(redirectUrl);

@@ -195,7 +195,7 @@ public class JWTTokenRestAuthenticationServiceImpl implements RestAuthentication
         // we need authentication cookies because Shibboleth can't use the authentication headers due to the redirects
         if (addCookie) {
             Cookie cookie = new Cookie(AUTHORIZATION_COOKIE, token);
-            cookie.setHttpOnly(true);
+            cookie.setHttpOnly(false);
             cookie.setSecure(true);
             response.addCookie(cookie);
         }

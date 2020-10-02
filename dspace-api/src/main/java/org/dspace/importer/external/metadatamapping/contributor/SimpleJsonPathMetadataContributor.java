@@ -99,6 +99,10 @@ public class SimpleJsonPathMetadataContributor implements MetadataContributor<St
         this.metadataProcessor = metadataProcessor;
     }
 
+    public JsonPathMetadataProcessor getMetadataProcessor() {
+        return metadataProcessor;
+    }
+
     /**
      * Retrieve the metadata associated with the given object.
      * The toString() of the resulting object will be used.

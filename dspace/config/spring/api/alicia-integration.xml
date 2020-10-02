@@ -74,11 +74,11 @@
     </bean>
 
 	<util:list id="aliciaAuthorsList">
-	    <bean id="aliciaPrimaryAuthors" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+	    <bean id="aliciaPrimaryAuthors" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathKeyMetadataContributor">
 	        <property name="field" ref="alicia.dc.contributor.author"/>
 	        <property name="query" value="$.authors.primary.*~" />
 	    </bean>
-	    <bean id="aliciaSecondaryAuthors" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+	    <bean id="aliciaSecondaryAuthors" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathKeyMetadataContributor">
 	        <property name="field" ref="alicia.dc.contributor.author"/>
 	        <property name="query" value="$.authors.secondary.*~" />
 	    </bean>	

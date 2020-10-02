@@ -13,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
@@ -172,6 +173,42 @@ public class OIDCAuthentication implements AuthenticationMethod {
             log.warn("Unable to authenticate using OpenID Connect because the request object is null.");
             return BAD_ARGS;
         }
+        Boolean isUserAuthenticated = (Boolean) request.getSession().getAttribute("oidc.isuserauthenticate");
+        if (isUserAuthenticated != null && isUserAuthenticated == true) {
+            String ePersonId = (String) request.getSession().getAttribute("oidc.epersonauthenticated");
+            @SuppressWarnings("unchecked")
+            List<String> groupsIds = (List<String>) request.getSession()
+                .getAttribute("oidc.epersonauthenticated.groups");
+            if (ePersonId != null) {
+                EPerson eperson = ePersonService.find(context, UUID.fromString(ePersonId));
+                if (eperson == null) {
+                    log.warn("Cannot find eperson with epersonId: " + ePersonId);
+                    return AuthenticationMethod.NO_SUCH_USER;
+                } else {
+                    context.setCurrentUser(eperson);
+                    if (groupsIds != null) {
+                        for (String groupId : groupsIds) {
+                            if (groupId != null) {
+                                Group group = groupService.find(context, UUID.fromString(groupId));
+                                if (group == null) {
+                                    log.warn("Role not found: " + groupId);
+                                    throw new RuntimeException("Role " + groupId + " not found");
+                                } else {
+                                    context.setSpecialGroup(UUID.fromString(groupId));
+                                }
+                            }
+                        }
+                    }
+                    AuthenticateServiceFactory.getInstance().getAuthenticationService()
+                        .initEPerson(context, request, eperson);
+                    log.info(ePersonId + " has been authenticated via OpenID");
+                    request.getSession().removeAttribute("oidc.isuserauthenticate");
+                    request.getSession().removeAttribute("oidc.epersonauthenticated");
+                    request.getSession().removeAttribute("oidc.epersonauthenticated.groups");
+                    return AuthenticationMethod.SUCCESS;
+                }
+            }
+        }
         String clientId = configurationService.getProperty("authentication-oidc.clientid");
         String clientSecret = configurationService.getProperty("authentication-oidc.clientsecret");
         String tokenEndpoint = configurationService.getProperty("authentication-oidc.tokenendpoint");
@@ -220,6 +257,9 @@ public class OIDCAuthentication implements AuthenticationMethod {
                         AuthenticateServiceFactory.getInstance().getAuthenticationService()
                             .initEPerson(context, request, eperson);
                         log.info(ePersonId + " has been authenticated via OpenID");
+                        request.getSession().setAttribute("oidc.isuserauthenticate", true);
+                        request.getSession().setAttribute("oidc.epersonauthenticated", ePersonId);
+                        request.getSession().setAttribute("oidc.epersonauthenticated.groups", Arrays.asList(role));
                         return AuthenticationMethod.SUCCESS;
                     }
                 }

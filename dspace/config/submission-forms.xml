@@ -2234,6 +2234,66 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       </row>
       <row>
         <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>renacyt</dc-element>
+          <dc-qualifier>registration</dc-qualifier>
+          <label>Renacyt Registration</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>renacyt</dc-element>
+          <dc-qualifier>dateOfQualification</dc-qualifier>
+          <label>Renacyt Date of Qualification</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>renacyt</dc-element>
+          <dc-qualifier>registrationNumber</dc-qualifier>
+          <label>Renacyt Registration Number</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>renacyt</dc-element>
+          <dc-qualifier>validityOfRegistration</dc-qualifier>
+          <label>Renacyt Validity Of Registration</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>renacyt</dc-element>
+          <dc-qualifier>classification</dc-qualifier>
+          <label>Renacyt Level or Classification</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
           <dc-schema>dc</dc-schema>
           <dc-element>description</dc-element>
           <dc-qualifier>abstract</dc-qualifier>

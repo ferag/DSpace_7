@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -28,11 +30,12 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.dspace.authenticate.factory.AuthenticateServiceFactory;
-import org.dspace.authenticate.model.OIDCIntrospectResponse;
+import org.dspace.authenticate.model.OIDCProfileElementsResponse;
 import org.dspace.authenticate.model.OIDCTokenResponse;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.MetadataFieldService;
@@ -235,8 +238,8 @@ public class OIDCAuthentication implements AuthenticationMethod {
             ObjectMapper om = new ObjectMapper();
             OIDCTokenResponse tokens = om.readValue(body, OIDCTokenResponse.class);
             if (tokens.getIdToken() != null && !tokens.getIdToken().isEmpty()) {
-                OIDCIntrospectResponse userData = checkFieldAndExtractEperson(tokens);
-                String ePersonId = userData.getSubject();
+                OIDCProfileElementsResponse userData = checkFieldAndExtractEperson(tokens);
+                String ePersonId = userData.getSub();
                 if (ePersonId != null) {
                     EPerson eperson = ePersonService.find(context, UUID.fromString(ePersonId));
                     if (eperson == null) {
@@ -244,7 +247,7 @@ public class OIDCAuthentication implements AuthenticationMethod {
                         return AuthenticationMethod.NO_SUCH_USER;
                     } else {
                         context.setCurrentUser(eperson);
-                        String role = userData.getRole();
+                        String role = userData.getPgcRole();
                         if (role != null) {
                             Group group = groupService.find(context, UUID.fromString(role));
                             if (group == null) {
@@ -271,35 +274,34 @@ public class OIDCAuthentication implements AuthenticationMethod {
     }
 
     /**
-     * This method is responsible to call the /introspect endpoint of the OIDC
+     * This method is responsible to call the userinfo endpoint of the OIDC
      * authorization server in order to load the user data.
      * 
      * @param tokens The auth token
      * @return data get from the instrospect endpoint
      * 
      */
-    private OIDCIntrospectResponse checkFieldAndExtractEperson(OIDCTokenResponse tokens) {
+    private OIDCProfileElementsResponse checkFieldAndExtractEperson(OIDCTokenResponse tokens) {
         try {
-            String clientId = configurationService.getProperty("authentication-oidc.clientid");
-            String clientSecret = configurationService.getProperty("authentication-oidc.clientsecret");
-            String tokenEndpoint = configurationService.getProperty("authentication-oidc.introspectendpoint");
+            OIDCProfileElementsResponse data = new OIDCProfileElementsResponse();
+            String userinfoEndpoint = configurationService.getProperty("authentication-oidc.userinfoendpoint");
             HttpClient client = HttpClientBuilder.create().build();
-            HttpPost post = new HttpPost(tokenEndpoint);
-            post.addHeader("Content-Type", "application/x-www-form-urlencoded");
-            post.addHeader("Authorization","Basic " + Base64.getEncoder()
-                .encodeToString((clientId + ":" + clientSecret).getBytes()));
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("token", tokens.getAccessToken()));
-            HttpEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
-            StringWriter writerEntity = new StringWriter();
-            IOUtils.copy(entity.getContent(), writerEntity, "UTF-8");
-            post.setEntity(entity);
-            HttpResponse response = client.execute(post);
+            HttpGet get = new HttpGet(userinfoEndpoint + "?access_token=" + tokens.getAccessToken());
+            HttpResponse response = client.execute(get);
             StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, "UTF-8");
             String body = writer.toString();
-            ObjectMapper om = new ObjectMapper();
-            return om.readValue(body, OIDCIntrospectResponse.class);
+            DocumentContext document = JsonPath.parse(body);
+            String sub = document.read("$.sub", String.class);
+            data.setSub(sub);
+            try {
+                String pgcRole = document.read("$.attributes.pgc-role", String.class);
+                data.setPgcRole(pgcRole);
+            } catch (Exception e) {
+                log.error("Cannot find role in userInfo response");
+                return null;
+            }
+            return data;
         } catch (IOException e) {
             log.error("Exception throwing trying to load data from introspection, URL: "
                 + configurationService.getProperty("authentication-oidc.introspectendpoint"));
@@ -329,7 +331,7 @@ public class OIDCAuthentication implements AuthenticationMethod {
             return "";
         }
         try {
-            return authorizeUrl + "?client_id=" + clientId + "&response_type=code&scope=openid&"
+            return authorizeUrl + "?client_id=" + clientId + "&response_type=code&scope=openid pgc-role&"
                 + "redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             log.error(e.getMessage(), e);

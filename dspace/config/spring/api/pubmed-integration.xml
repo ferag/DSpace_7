@@ -140,8 +140,8 @@
         <constructor-arg value="dc.subject"/>
     </bean>
 
-    <bean id="dc.identifier.other" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
-        <constructor-arg value="dc.identifier.other"/>
+    <bean id="dc.identifier.pmid" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.identifier.pmid"/>
     </bean>
 
 

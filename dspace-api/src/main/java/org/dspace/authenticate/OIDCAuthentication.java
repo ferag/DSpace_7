@@ -143,11 +143,13 @@ public class OIDCAuthentication implements AuthenticationMethod {
      */
     @Override
     public List<Group> getSpecialGroups(Context context, HttpServletRequest request) throws SQLException {
-        Boolean isUserAuthenticated = (Boolean) request.getSession().getAttribute("oidc.isuserauthenticate");
+        Boolean isUserAuthenticated = (Boolean) request.getAttribute("oidc.isuserauthenticate");
+        log.debug("OIDCAuthentication entered getSpecialGroups, isuserauthenticate" + isUserAuthenticated);
         Group choosedGroup = null;
         if (isUserAuthenticated != null && isUserAuthenticated == true) {
-            choosedGroup = (Group)request.getSession().getAttribute("oidc.epersonauthenticated.groups");
+            choosedGroup = (Group)request.getAttribute("oidc.epersonauthenticated.groups");
         }
+        log.debug("OIDCAuthentication entered getSpecialGroups, choosedGroup" + choosedGroup);
         if (choosedGroup != null) {
             return Arrays.asList(choosedGroup);
         } else {
@@ -184,11 +186,11 @@ public class OIDCAuthentication implements AuthenticationMethod {
             log.warn("Unable to authenticate using OpenID Connect because the request object is null.");
             return BAD_ARGS;
         }
-        Boolean isUserAuthenticated = (Boolean) request.getSession().getAttribute("oidc.isuserauthenticate");
+        Boolean isUserAuthenticated = (Boolean) request.getAttribute("oidc.isuserauthenticate");
         if (isUserAuthenticated == null || isUserAuthenticated == false) {
             attachUserDataToRequest(request,context);
         }
-        EPerson eperson  = (EPerson) request.getSession().getAttribute("oidc.epersonauthenticated");
+        EPerson eperson  = (EPerson) request.getAttribute("oidc.epersonauthenticated");
         if (eperson  != null) {
             context.setCurrentUser(eperson);
             AuthenticateServiceFactory.getInstance().getAuthenticationService()
@@ -210,15 +212,16 @@ public class OIDCAuthentication implements AuthenticationMethod {
                 if (eperson == null) {
                     log.warn("Cannot find eperson with epersonId: " + ePersonId);
                 } else {
-                    request.getSession().setAttribute("oidc.epersonauthenticated", eperson);
-                    request.getSession().setAttribute("oidc.isuserauthenticate", true);
+                    request.setAttribute("oidc.epersonauthenticated", eperson);
+                    request.setAttribute("oidc.isuserauthenticate", true);
                     String role = userData.getPgcRole();
+                    log.debug("Released role: " + role);
                     if (role != null) {
                         Group group = groupService.find(context, UUID.fromString(role));
                         if (group == null) {
                             log.warn("Role not found: " + role);
                         } else {
-                            request.getSession().setAttribute("oidc.epersonauthenticated.groups", group);
+                            request.setAttribute("oidc.epersonauthenticated.groups", group);
                         }
                     }
                 }
@@ -281,13 +284,13 @@ public class OIDCAuthentication implements AuthenticationMethod {
                 String pgcRole = document.read("$.attributes.pgc-role", String.class);
                 data.setPgcRole(pgcRole);
             } catch (Exception e) {
-                log.error("Cannot find role in userInfo response");
+                log.warn("Cannot find role in userInfo response");
                 return null;
             }
             return data;
         } catch (IOException e) {
-            log.error("Exception throwing trying to load data from introspection, URL: "
-                + configurationService.getProperty("authentication-oidc.introspectendpoint"));
+            log.error("Exception throwing trying to load data from userInfo, URL: "
+                + configurationService.getProperty("authentication-oidc.userinfoendpoint"));
             //null managed in caller
             return null;
         }

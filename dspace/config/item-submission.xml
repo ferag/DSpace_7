@@ -128,17 +128,31 @@
       <step id="upload" />
       <step id="license" />
     </submission-process>
+    <submission-process name="product-edit">
+      <step id="product" />
+      <step id="product_indexing" />
+      <step id="product_references" />
+      <step id="upload" />
+    </submission-process>
     <submission-process name="orgunit">
       <step id="collection" />
       <step id="orgunit" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
+    <submission-process name="orgunit-edit">
+      <step id="orgunit" />
+      <step id="upload" />
+    </submission-process>
     <submission-process name="project">
       <step id="collection" />
       <step id="project" />
       <step id="upload" />
       <step id="license" />
+    </submission-process>
+    <submission-process name="project-edit">
+      <step id="project" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="journal">
       <step id="collection" />
@@ -156,11 +170,23 @@
       <step id="upload" />
       <step id="license" />
     </submission-process>
+    <submission-process name="publication-edit">
+      <step id="extraction" />
+      <step id="publication" />
+      <step id="publication_indexing" />
+      <step id="publication_bibliographic_details" />
+      <step id="publication_references" />
+      <step id="upload" />
+    </submission-process>
     <submission-process name="person">
       <step id="collection" />
       <step id="person" />
       <step id="upload" />
       <step id="license" />
+    </submission-process>
+    <submission-process name="person-edit">
+      <step id="person" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="event">
       <step id="collection" />

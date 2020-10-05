@@ -8,10 +8,7 @@
 package org.dspace.content.edit.service.impl;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.Item;
@@ -56,7 +53,7 @@ public class EditItemModeServiceImpl implements EditItemModeService {
         if ( item != null ) {
             // retrieves the entityType, used for get edit configuration
             entityType = itemService.getMetadata(item, ETYPE_METADATA);
-            if (entityType != null) {
+            if (Objects.nonNull(entityType) && Objects.nonNull(editModesMap)) {
                 if (editModesMap.containsKey(entityType.toLowerCase())) {
                     List<EditItemMode> configuredModes = editModesMap.get(entityType.toLowerCase());
 

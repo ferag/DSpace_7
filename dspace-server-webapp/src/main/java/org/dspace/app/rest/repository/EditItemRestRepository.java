@@ -242,17 +242,17 @@ public class EditItemRestRepository extends DSpaceRestRepository<EditItemRest, S
                       Patch patch) throws SQLException, AuthorizeException {
         List<Operation> operations = patch.getOperations();
 
-        String uuid = null;
-        String modeName = null;
+        String uuid;
+        String modeName;
         String[] values = data.split(":");
-        if (values != null && values.length > 0) {
+        if (values.length > 0) {
             uuid = values[0];
             modeName = values[1];
         } else {
             throw new DSpaceBadRequestException(
                     "Data: " + data);
         }
-        EditItem source = eis.find(context, UUID.fromString(uuid));
+        EditItem source = eis.find(context, UUID.fromString(uuid), modeName);
         if (source != null && source.getMode() == null) {
             // The user is not allowed to give edit mode, return 403
             throw new AccessDeniedException(

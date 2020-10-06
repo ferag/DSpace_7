@@ -37,7 +37,7 @@
         <property name="prefixToNamespaceMapping" ref="scopusPrism"/>
     </bean>
     <bean id="scopus.identifier" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
-        <constructor-arg value="dc.identifier.other"/>
+        <constructor-arg value="dc.identifier.scopus"/>
     </bean>
 
     <bean id="scopusAuthorsContrib" class="org.dspace.importer.external.metadatamapping.contributor.SimpleXpathMetadatumContributor">

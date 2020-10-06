@@ -210,4 +210,34 @@
         <scope_note></scope_note>
     </dc-type>
 
+    <dc-type>
+        <schema>oairecerif</schema>
+        <element>access</element>
+        <scope_note>To be used when the CRIS system harvest metadata
+			only information from other sources and need to store the access level
+			at the original source</scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>oairecerif</schema>
+        <element>access</element>
+        <qualifier>embargoEnd</qualifier>
+        <scope_note>To be used when the CRIS system harvest metadata
+            only information from other sources and need to store the embargo end date
+            at the original source</scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>oairecerif</schema>
+        <element>patent</element>
+        <qualifier>issuer</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>oairecerif</schema>
+        <element>patent</element>
+        <qualifier>country</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
 </dspace-dc-types>

@@ -33,6 +33,7 @@ import org.springframework.hateoas.server.LinkRelationProvider;
 import org.springframework.lang.NonNull;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -135,6 +136,11 @@ public class Application extends SpringBootServletInitializer {
     }
 
     @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
+    @Bean
     public WebMvcConfigurer webMvcConfigurer() {
 
         return new WebMvcConfigurer() {
@@ -157,7 +163,8 @@ public class Application extends SpringBootServletInitializer {
                                             "X-On-Behalf-Of")
                             // Allow list of response headers allowed to be sent by us (the server)
                             .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials",
-                                            "Authorization");
+                                    "Authorization", "expires", "Location", "Content-Disposition", "WWW-Authenticate",
+                                    "Set-Cookie", "X-Requested-With");
                 }
             }
 

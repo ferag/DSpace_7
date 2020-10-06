@@ -12,6 +12,7 @@ import static org.dspace.app.rest.matcher.HalMatcher.matchEmbeds;
 import static org.dspace.app.rest.test.AbstractControllerIntegrationTest.REST_SERVER_URL;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 import java.util.List;
 import java.util.UUID;
@@ -58,12 +59,23 @@ public class CommunityMatcher {
         );
     }
 
+    public static Matcher<? super Object> matchCommunityEntryNonAdminEmbeds(String name, UUID uuid, String handle) {
+        return allOf(
+            matchProperties(name, uuid, handle),
+            hasJsonPath("$._embedded.collections", Matchers.not(Matchers.empty())),
+            hasJsonPath("$._embedded.logo", Matchers.not(Matchers.empty())),
+            matchLinks(uuid),
+            matchNonAdminEmbeds()
+        );
+    }
+
     public static Matcher<? super Object> matchCommunityEntryFullProjection(String name, UUID uuid, String handle) {
         return allOf(
             matchProperties(name, uuid, handle),
             hasJsonPath("$._embedded.collections", Matchers.not(Matchers.empty())),
             hasJsonPath("$._embedded.logo", Matchers.not(Matchers.empty())),
-            matchLinks(uuid)
+            matchLinks(uuid),
+            matchFullEmbeds()
         );
     }
 
@@ -82,12 +94,25 @@ public class CommunityMatcher {
     /**
      * Gets a matcher for all expected embeds when the full projection is requested.
      */
-    public static Matcher<? super Object> matchFullEmbeds() {
+    public static Matcher<? super Object> matchNonAdminEmbeds() {
         return matchEmbeds(
                 "collections[]",
                 "logo",
                 "parentCommunity",
                 "subcommunities[]"
+        );
+    }
+
+    /**
+     * Gets a matcher for all expected embeds when the full projection is requested.
+     */
+    public static Matcher<? super Object> matchFullEmbeds() {
+        return matchEmbeds(
+            "collections[]",
+            "logo",
+            "parentCommunity",
+            "subcommunities[]",
+            "adminGroup"
         );
     }
 
@@ -117,7 +142,7 @@ public class CommunityMatcher {
         );
     }
 
-    public static String getFullEmbedsParameters() {
+    public static String getNonAdminEmbeds() {
         return "collections,logo,parentCommunity,subcommunities";
     }
 
@@ -126,5 +151,12 @@ public class CommunityMatcher {
                 hasJsonPath("$.name", is(community.getName())),
                 hasJsonPath("$.type", is("community")),
                 hasJsonPath("$.handle", is(community.getHandle())));
+    }
+
+    public static Matcher<? super Object> matchClone(Community com) {
+        return allOf(
+            hasJsonPath("$.uuid", not(com.getID().toString())),
+            hasJsonPath("$.name", is(com.getName()))
+        );
     }
 }

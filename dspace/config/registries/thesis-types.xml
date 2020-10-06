@@ -1,0 +1,32 @@
+<dspace-dc-types>
+
+    <dspace-header>
+        <title>Peru Thesis DSpace Cris Types</title>
+    </dspace-header>
+
+    <dc-schema>
+        <name>thesis</name>
+        <namespace>https://perucris.concytec.gob.pe/thesis/schemas</namespace>
+    </dc-schema>
+
+    <dc-type>
+        <schema>thesis</schema>
+        <element>degree</element>
+        <qualifier>name</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>thesis</schema>
+        <element>degree</element>
+        <qualifier>discipline</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>thesis</schema>
+        <element>degree</element>
+        <qualifier>grantor</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+</dspace-dc-types>

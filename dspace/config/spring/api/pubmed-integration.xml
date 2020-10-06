@@ -19,7 +19,7 @@
         </description>
         <entry key-ref="dc.title" value-ref="titleContrib"/>
         <entry key-ref="dc.description.abstract" value-ref="abstractContrib"/>
-        <entry key-ref="dc.identifier.other" value-ref="pubmedContrib"/>
+        <entry key-ref="dc.identifier.pmid" value-ref="pubmedContrib"/>
         <entry key-ref="dc.contributor.author" value-ref="authorContrib"/>
         <entry key-ref="dc.date.issued" value-ref="dateContrib"/>
         <entry key-ref="dc.language.iso" value-ref="pubmedLanguageContrib"/>
@@ -46,7 +46,7 @@
         <property name="field" ref="dc.date.issued"/>
     </bean>
     <bean id="pubmedContrib" class="org.dspace.importer.external.metadatamapping.contributor.SimpleXpathMetadatumContributor">
-        <property name="field" ref="dc.identifier.other"/>
+        <property name="field" ref="dc.identifier.pmid"/>
         <property name="query" value="descendant::MedlineCitation/PMID"/>
         <property name="prefixToNamespaceMapping" ref="prefixToNamespaceMapping"/>
     </bean>
@@ -140,8 +140,8 @@
         <constructor-arg value="dc.subject"/>
     </bean>
 
-    <bean id="dc.identifier.other" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
-        <constructor-arg value="dc.identifier.other"/>
+    <bean id="dc.identifier.pmid" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.identifier.pmid"/>
     </bean>
 
 

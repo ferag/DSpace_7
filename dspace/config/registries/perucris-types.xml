@@ -57,5 +57,211 @@
         <qualifier>institutional-scoped-role</qualifier>
         <scope_note></scope_note>
     </dc-type>
+    
+    <dc-type>
+        <schema>perucris</schema>
+        <element>oidc</element>
+        <qualifier>granted</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>oidc</element>
+        <qualifier>reject</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+    
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>community</element>
+        <qualifier>institutional-scoped-role</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>author</element>
+        <qualifier>orcid</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>author</element>
+        <qualifier>dni</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>editor</element>
+        <qualifier>orcid</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>editor</element>
+        <qualifier>dni</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>advisor</element>
+        <qualifier>orcid</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>advisor</element>
+        <qualifier>dni</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>subject</element>
+        <qualifier>ocde</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>subject</element>
+        <qualifier>cip</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>apellidoPaterno</element>
+        <scope_note></scope_note>
+    </dc-type>
+    
+    <dc-type>
+        <schema>perucris</schema>
+        <element>apellidoMaterno</element>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>apellidoCasada</element>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>identifier</element>
+        <qualifier>dni</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>identifier</element>
+        <qualifier>dina</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>identifier</element>
+        <qualifier>renacyt</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ubigeo</element>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>type</element>
+        <qualifier>sectorInstitucional</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+    
+    <dc-type>
+        <schema>perucris</schema>
+        <element>type</element>
+        <qualifier>orgunit</qualifier>
+        <scope_note></scope_note>
+    </dc-type>    
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>type</element>
+        <qualifier>educacionSuperior</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+    
+    <dc-type>
+        <schema>perucris</schema>
+        <element>type</element>
+        <qualifier>ciiu</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+    
+    <dc-type>
+        <schema>perucris</schema>
+        <element>type</element>
+        <qualifier>naturaleza</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>paisdeltitular</element>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>renacyt</element>
+        <qualifier>registration</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>renacyt</element>
+        <qualifier>dateOfQualification</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>renacyt</element>
+        <qualifier>registrationNumber</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>renacyt</element>
+        <qualifier>validityOfRegistration</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>renacyt</element>
+        <qualifier>classification</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>description</element>
+        <qualifier>internalNote</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
 
 </dspace-dc-types>

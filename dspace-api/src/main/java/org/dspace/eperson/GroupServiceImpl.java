@@ -765,4 +765,9 @@ public class GroupServiceImpl extends DSpaceObjectServiceImpl<Group> implements 
             throw new IllegalArgumentException("The given group has an unknown type: '" + value + "'", ex);
         }
     }
+
+    @Override
+    public List<Group> findByGroupType(Context context, GroupType type) throws SQLException {
+        return search(context, type.name() + ":");
+    }
 }

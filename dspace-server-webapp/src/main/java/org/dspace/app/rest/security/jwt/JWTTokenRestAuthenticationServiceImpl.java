@@ -74,10 +74,8 @@ public class JWTTokenRestAuthenticationServiceImpl implements RestAuthentication
             Context context = ContextUtil.obtainContext(request);
             context.setCurrentUser(ePersonService.findByEmail(context, authentication.getName()));
 
-            List<Group> groups = authenticationService.getSpecialGroups(context, request);
-
             String token = loginJWTTokenHandler.createTokenForEPerson(context, request,
-                                                                 authentication.getPreviousLoginDate(), groups);
+                                                                 authentication.getPreviousLoginDate());
 
             addTokenToResponse(response, token, addCookie);
             context.commit();
@@ -100,7 +98,7 @@ public class JWTTokenRestAuthenticationServiceImpl implements RestAuthentication
         try {
             String token;
             List<Group> groups = authenticationService.getSpecialGroups(context, request);
-            token = shortLivedJWTTokenHandler.createTokenForEPerson(context, request, null, groups);
+            token = shortLivedJWTTokenHandler.createTokenForEPerson(context, request, null);
             context.commit();
             return new AuthenticationToken(token);
         } catch (JOSEException e) {
@@ -195,7 +193,7 @@ public class JWTTokenRestAuthenticationServiceImpl implements RestAuthentication
         // we need authentication cookies because Shibboleth can't use the authentication headers due to the redirects
         if (addCookie) {
             Cookie cookie = new Cookie(AUTHORIZATION_COOKIE, token);
-            cookie.setHttpOnly(true);
+            cookie.setHttpOnly(false);
             cookie.setSecure(true);
             response.addCookie(cookie);
         }

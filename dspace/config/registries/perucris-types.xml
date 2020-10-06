@@ -260,7 +260,7 @@
     <dc-type>
         <schema>perucris</schema>
         <element>description</element>
-        <qualifier>internalnote</qualifier>
+        <qualifier>internalNote</qualifier>
         <scope_note></scope_note>
     </dc-type>
 

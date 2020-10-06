@@ -12,7 +12,7 @@
                 <entry key="publication">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
-                            <property name="name" value="MODE1" />
+                            <property name="name" value="FULL" />
                             <property name="security">
                               <value type="org.dspace.content.edit.EditItemModeSecurity">
                                 ADMIN
@@ -34,7 +34,7 @@
                 <entry key="person">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
-                            <property name="name" value="MODE1" />
+                            <property name="name" value="FULL" />
                             <property name="security">
                                 <value type="org.dspace.content.edit.EditItemModeSecurity">
                                     ADMIN
@@ -76,7 +76,7 @@
                 <entry key="equipment">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
-                            <property name="name" value="MODE1" />
+                            <property name="name" value="FULL" />
                             <property name="security">
                                 <value type="org.dspace.content.edit.EditItemModeSecurity">
                                     ADMIN
@@ -89,7 +89,7 @@
                 <entry key="funding">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
-                            <property name="name" value="MODE1" />
+                            <property name="name" value="FULL" />
                             <property name="security">
                                 <value type="org.dspace.content.edit.EditItemModeSecurity">
                                     ADMIN
@@ -102,7 +102,7 @@
                 <entry key="orgunit">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
-                            <property name="name" value="MODE1" />
+                            <property name="name" value="FULL" />
                             <property name="security">
                                 <value type="org.dspace.content.edit.EditItemModeSecurity">
                                     ADMIN
@@ -115,7 +115,7 @@
                 <entry key="patent">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
-                            <property name="name" value="MODE1" />
+                            <property name="name" value="FULL" />
                             <property name="security">
                                 <value type="org.dspace.content.edit.EditItemModeSecurity">
                                     ADMIN
@@ -128,7 +128,7 @@
                 <entry key="project">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
-                            <property name="name" value="MODE1" />
+                            <property name="name" value="FULL" />
                             <property name="security">
                                 <value type="org.dspace.content.edit.EditItemModeSecurity">
                                     ADMIN

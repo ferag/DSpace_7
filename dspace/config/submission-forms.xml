@@ -520,6 +520,18 @@
           <hint />
         </field>
       </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>internalNote</dc-qualifier>
+          <label>Internal Note</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
     </form>
     <form name="publication">
       <row>
@@ -674,6 +686,18 @@
           <label>Alternative URL(s)</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>internalNote</dc-qualifier>
+          <label>Internal Note</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
           <required />
           <hint />
         </field>
@@ -1298,6 +1322,18 @@
           <hint />
         </field>
       </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>internalNote</dc-qualifier>
+          <label>Internal Note</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
     </form>
     <form name="product_indexing">
       <row>
@@ -1637,6 +1673,18 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required>You must select a patent type</required>
           <hint>Select the type of content of the patent.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>internalNote</dc-qualifier>
+          <label>Internal Note</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
         </field>
       </row>
     </form>
@@ -2106,6 +2154,18 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <hint />
         </field>
       </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>internalNote</dc-qualifier>
+          <label>Internal Note</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
     </form>
     <form name="orgunit">
       <row>
@@ -2412,6 +2472,18 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <vocabulary closed="true">ocde_subjects</vocabulary>
         </field>
       </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>internalNote</dc-qualifier>
+          <label>Internal Note</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
     </form>
     <form name="project">
       <row>
@@ -2650,6 +2722,18 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <hint />
         </field>
       </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>internalNote</dc-qualifier>
+          <label>Internal Note</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
     </form>
     <form name="funding">
       <row>
@@ -2801,6 +2885,18 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <hint />
         </field>
       </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>internalNote</dc-qualifier>
+          <label>Internal Note</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
     </form>
     <form name="equipment">
       <row>
@@ -2863,6 +2959,18 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>description</dc-element>
           <label>Equipment Description</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>internalNote</dc-qualifier>
+          <label>Internal Note</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -3035,6 +3143,18 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Keyword(s)</label>
           <input-type>tag</input-type>
           <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>internalNote</dc-qualifier>
+          <label>Internal Note</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
           <required />
           <hint />
         </field>

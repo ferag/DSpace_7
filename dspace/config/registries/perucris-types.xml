@@ -257,4 +257,11 @@
         <scope_note></scope_note>
     </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>description</element>
+        <qualifier>internalnote</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
 </dspace-dc-types>

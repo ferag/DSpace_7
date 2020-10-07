@@ -8,7 +8,11 @@
 package org.dspace.content.edit.service.impl;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.Item;

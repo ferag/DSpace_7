@@ -8,7 +8,6 @@
 package org.dspace.app.rest;
 
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
-import static org.dspace.app.rest.matcher.PageMatcher.pageEntryWithTotalPagesAndElements;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -4572,7 +4571,7 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
             .param("query", "Parent Community"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.type", is("discover")))
-            .andExpect(jsonPath("$._embedded.searchResult.page", is(pageEntryWithTotalPagesAndElements(0, 20, 1, 1))));
+            .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(1)));
 
         String originalTemplateId = configurationService.getProperty("institution.template-id");
         try {
@@ -4584,8 +4583,7 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                 .param("query", "Parent Community"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.type", is("discover")))
-                .andExpect(jsonPath("$._embedded.searchResult.page",
-                    is(pageEntryWithTotalPagesAndElements(0, 20, 0, 0))));
+                .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(0)));
 
         } finally {
             configurationService.setProperty("institution.template-id", originalTemplateId);

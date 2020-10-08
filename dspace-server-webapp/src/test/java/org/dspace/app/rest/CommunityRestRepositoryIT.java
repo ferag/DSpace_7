@@ -10,11 +10,15 @@ package org.dspace.app.rest;
 import static com.jayway.jsonpath.JsonPath.read;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
 import static junit.framework.TestCase.assertEquals;
+import static org.dspace.app.rest.matcher.CommunityMatcher.matchCommunity;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadata;
 import static org.dspace.builder.CollectionBuilder.createCollection;
 import static org.dspace.builder.CommunityBuilder.createCommunity;
 import static org.dspace.builder.CommunityBuilder.createSubCommunity;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertNotEquals;
@@ -28,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -64,6 +69,7 @@ import org.dspace.core.Constants;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.GroupType;
+import org.dspace.services.ConfigurationService;
 import org.hamcrest.Matchers;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -88,6 +94,9 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
 
     @Autowired
     private ResourcePolicyService resoucePolicyService;
+
+    @Autowired
+    private ConfigurationService configurationService;
 
     @Test
     public void createTest() throws Exception {
@@ -2034,5 +2043,42 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                                                   parentCommunity.getHandle())
              )))
              .andExpect(jsonPath("$.page.totalElements", is(1)));
+    }
+
+    @Test
+    public void testFindSubCommunitiesWithInstitutionTemplateFilterPlugin() throws SQLException, Exception {
+
+        context.turnOffAuthorisationSystem();
+        parentCommunity = createCommunity(context).withName("Parent Community").build();
+        Community template = createSubCommunity(context, parentCommunity).withName("Template").build();
+        Community community = createSubCommunity(context, parentCommunity).withName("Community").build();
+        context.restoreAuthSystemState();
+
+        String tokenAdmin = getAuthToken(admin.getEmail(), password);
+
+        getClient(tokenAdmin)
+            .perform(get("/api/core/communities/" + parentCommunity.getID().toString() + "/subcommunities"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect((jsonPath("$._embedded.subcommunities", hasSize(2))))
+            .andExpect((jsonPath("$._embedded.subcommunities", containsInAnyOrder(matchCommunity(template),
+                matchCommunity(community)))));
+
+        String originalTemplateId = configurationService.getProperty("institution.template-id");
+        try {
+
+            configurationService.setProperty("institution.template-id", template.getID().toString());
+
+            // no results
+            getClient(tokenAdmin)
+                .perform(get("/api/core/communities/" + parentCommunity.getID().toString() + "/subcommunities"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect((jsonPath("$._embedded.subcommunities", hasSize(1))))
+                .andExpect((jsonPath("$._embedded.subcommunities", contains(matchCommunity(community)))));
+
+        } finally {
+            configurationService.setProperty("institution.template-id", originalTemplateId);
+        }
     }
 }

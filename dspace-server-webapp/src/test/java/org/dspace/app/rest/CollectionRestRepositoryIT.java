@@ -11,6 +11,7 @@ import static com.jayway.jsonpath.JsonPath.read;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadata;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadataDoesNotExist;
+import static org.dspace.builder.CollectionBuilder.createCollection;
 import static org.dspace.core.Constants.WRITE;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -64,6 +65,7 @@ import org.dspace.core.Constants;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.service.GroupService;
+import org.dspace.services.ConfigurationService;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -90,6 +92,10 @@ public class CollectionRestRepositoryIT extends AbstractControllerIntegrationTes
     MetadataFieldService metadataFieldService;
     @Autowired
     EntityTypeService entityTypeService;
+
+    @Autowired
+    ConfigurationService configurationService;
+
     private EntityType publicationType;
     private EntityType journalType;
     private EntityType orgUnitType;
@@ -2031,5 +2037,41 @@ public class CollectionRestRepositoryIT extends AbstractControllerIntegrationTes
                                 CollectionMatcher.matchCollection(col1),
                                 CollectionMatcher.matchCollection(colWithoutMetadata))
                                 )));
+    }
+
+    @Test
+    public void testFindSubmitAuthorizedAndMetadataWithInstitutionTemplateFilterPlugin() throws Exception {
+        context.turnOffAuthorisationSystem();
+        parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
+        createCollection(context, parentCommunity).withName("Collection").withRelationshipType("Person").build();
+        createCollection(context, parentCommunity).withName("Collection 2").withRelationshipType("Person").build();
+        authorizeService.addPolicy(context, parentCommunity, Constants.ADD, eperson);
+        context.restoreAuthSystemState();
+
+        String token = getAuthToken(admin.getEmail(), password);
+
+        getClient(token).perform(get("/api/core/collections/search/findSubmitAuthorizedAndMetadata")
+            .param("metadata", "relationship.type")
+            .param("metadataValue", "Person"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.page.totalElements", equalTo(2)));
+
+        String originalTemplateId = configurationService.getProperty("institution.template-id");
+        try {
+
+            configurationService.setProperty("institution.template-id", parentCommunity.getID().toString());
+
+            // no results
+            getClient(token).perform(get("/api/core/collections/search/findSubmitAuthorizedAndMetadata")
+                .param("metadata", "relationship.type")
+                .param("metadataValue", "Person"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.page.totalElements", equalTo(0)));
+
+        } finally {
+            configurationService.setProperty("institution.template-id", originalTemplateId);
+        }
     }
 }

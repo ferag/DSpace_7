@@ -259,8 +259,23 @@
 
     <dc-type>
         <schema>perucris</schema>
-        <element>description</element>
-        <qualifier>internalNote</qualifier>
+        <element>education</element>
+        <qualifier>country</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+<!--    following metadata have a different schema but are used only in PeruCris-->
+    <dc-type>
+        <schema>crisrp</schema>
+        <element>qualification</element>
+        <qualifier>orgunit</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>subject</element>
+        <qualifier>ocde</qualifier>
         <scope_note></scope_note>
     </dc-type>
 

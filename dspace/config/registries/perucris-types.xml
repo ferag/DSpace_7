@@ -181,6 +181,14 @@
         <scope_note></scope_note>
     </dc-type>
 
+<!--    to be used for custom code from orgunits -->
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ubigeo</element>
+        <qualifier>ubigeoSunat</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
     <dc-type>
         <schema>perucris</schema>
         <element>type</element>
@@ -254,6 +262,20 @@
         <schema>perucris</schema>
         <element>renacyt</element>
         <qualifier>classification</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>renacyt</element>
+        <qualifier>ocde</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>renacyt</element>
+        <qualifier>strength</qualifier>
         <scope_note></scope_note>
     </dc-type>
 

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns1:opConsultarRNGTResponse xmlns:tns="http://wsgt.sunedu.gob.pe/gradosws" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns1="http://wsgt.sunedu.gob.pe/gradosws">
+    <respuesta xsi:type="tns:respuestaType">
+        <fechaSunedu xsi:type="xsd:string">20201020</fechaSunedu>
+        <horaSunedu xsi:type="xsd:string">044456</horaSunedu>
+        <cGenerico xsi:type="xsd:string">00000</cGenerico>
+        <dGenerica xsi:type="xsd:string">PROCESO OK.</dGenerica>
+    </respuesta>
+    <listaGTPersona xsi:type="tns:listaGTPersonaType">
+        <gtPersona xsi:type="tns:gtPersonaType">
+            <tipoDocumento xsi:type="xsd:string">DNI</tipoDocumento>
+            <nroDocumento xsi:type="xsd:string">41918999</nroDocumento>
+            <apellidoPaterno xsi:type="xsd:string">Aliaga</apellidoPaterno>
+            <apellidoMaterno xsi:type="xsd:string">Sanchez</apellidoMaterno>
+            <nombres xsi:type="xsd:string">Sheyla Julissa</nombres>
+            <abreviaturaTitulo xsi:type="xsd:string">T</abreviaturaTitulo>
+            <tituloProfesional xsi:type="xsd:string">TITULO PROFESIONAL DE LICENCIADO EN ADMINISTRACION</tituloProfesional>
+            <universidad xsi:type="xsd:string">UNIVERSIDAD PRIVADA NORBERT WIENER S.A.</universidad>
+            <pais xsi:type="xsd:string">PERU</pais>
+        </gtPersona>
+        <gtPersona xsi:type="tns:gtPersonaType">
+            <tipoDocumento xsi:type="xsd:string">DNI</tipoDocumento>
+            <nroDocumento xsi:type="xsd:string">41918999</nroDocumento>
+            <apellidoPaterno xsi:type="xsd:string">ALIAGA</apellidoPaterno>
+            <apellidoMaterno xsi:type="xsd:string">SANCHEZ</apellidoMaterno>
+            <nombres xsi:type="xsd:string">SHEYLA JULISSA</nombres>
+            <abreviaturaTitulo xsi:type="xsd:string">B</abreviaturaTitulo>
+            <tituloProfesional xsi:type="xsd:string">BACHILLER EN ADMINISTRACION</tituloProfesional>
+            <universidad xsi:type="xsd:string">UNIVERSIDAD PRIVADA NORBERT WIENER S.A.</universidad>
+            <pais xsi:type="xsd:string">PERU</pais>
+        </gtPersona>
+    </listaGTPersona>
+</ns1:opConsultarRNGTResponse>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns1:opConsultarRNGTResponse xmlns:tns="http://wsgt.sunedu.gob.pe/gradosws" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns1="http://wsgt.sunedu.gob.pe/gradosws">
+    <respuesta xsi:type="tns:respuestaType">
+        <fechaSunedu xsi:type="xsd:string">20201019</fechaSunedu>
+        <horaSunedu xsi:type="xsd:string">032634</horaSunedu>
+        <cGenerico xsi:type="xsd:string">00000</cGenerico>
+        <dGenerica xsi:type="xsd:string">PROCESO OK.</dGenerica>
+    </respuesta>
+    <listaGTPersona xsi:type="tns:listaGTPersonaType">
+        <gtPersona xsi:type="tns:gtPersonaType">
+            <tipoDocumento xsi:type="xsd:string">DNI</tipoDocumento>
+            <nroDocumento xsi:type="xsd:string">41918979</nroDocumento>
+            <apellidoPaterno xsi:type="xsd:string">SAUCEDO</apellidoPaterno>
+            <apellidoMaterno xsi:type="xsd:string">ASCONA</apellidoMaterno>
+            <nombres xsi:type="xsd:string">EDWIN MANUEL</nombres>
+            <abreviaturaTitulo xsi:type="xsd:string">T</abreviaturaTitulo>
+            <tituloProfesional xsi:type="xsd:string">INGENIERO DE SISTEMAS</tituloProfesional>
+            <universidad xsi:type="xsd:string">UNIVERSIDAD NACIONAL DE INGENIERÍA</universidad>
+            <pais xsi:type="xsd:string">PERU</pais>
+        </gtPersona>
+    </listaGTPersona>
+</ns1:opConsultarRNGTResponse>

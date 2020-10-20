@@ -301,4 +301,46 @@
         <scope_note></scope_note>
     </dc-type>
 
+<!--    geolocations-->
+    <dc-type>
+        <schema>perucris</schema>
+        <element>geolocationPoint</element>
+        <qualifier>longitude</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>geolocationPoint</element>
+        <qualifier>latitude</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>geolocationBox</element>6
+        <qualifier>westBoundLongitude</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>geolocationBox</element>
+        <qualifier>eastBoundLongitude</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>geolocationBox</element>
+        <qualifier>southBoundLongitude</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>geolocationBox</element>
+        <qualifier>northBoundLongitude</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
 </dspace-dc-types>

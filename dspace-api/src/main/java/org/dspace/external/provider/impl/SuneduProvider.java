@@ -83,32 +83,61 @@ public class SuneduProvider implements ExternalDataProvider {
 
         NodeList nroDocumento = doc.getElementsByTagName("nroDocumento");
         NodeList abreviaturaTituloRecord = doc.getElementsByTagName("abreviaturaTitulo");
-        NodeList tituloProfesionalRecord = doc.getElementsByTagName("tituloProfesional");
-        NodeList universidadRecord = doc.getElementsByTagName("universidad");
-        NodeList paisRecord = doc.getElementsByTagName("pais");
+        NodeList professionalQualificationRecord = doc.getElementsByTagName("tituloProfesional");
+        NodeList universityRecord = doc.getElementsByTagName("universidad");
+        NodeList countryRecord = doc.getElementsByTagName("pais");
 
+        externalDataObject = fillExternalDataObject(externalDataObject, nroDocumento,
+                             abreviaturaTituloRecord, professionalQualificationRecord, universityRecord, countryRecord);
+        return externalDataObject;
+    }
+
+    private ExternalDataObject fillExternalDataObject(ExternalDataObject externalDataObject, NodeList nroDocumento,
+            NodeList abreviaturaTituloRecord, NodeList professionalQualificationRecord, NodeList universityRecord,
+            NodeList countryRecord) {
+        ExternalDataObject edo = externalDataObject;
         String id = nroDocumento.item(0).getTextContent();
-        String abreviaturaTitulo = abreviaturaTituloRecord.item(0).getTextContent();
-        String tituloProfesional = tituloProfesionalRecord.item(0).getTextContent();
-        String universidad = universidadRecord.item(0).getTextContent();
-        String pais = paisRecord.item(0).getTextContent();
+        String university = universityRecord.item(0).getTextContent();
+        String country = countryRecord.item(0).getTextContent();
 
         externalDataObject.setId(id);
-        if (!StringUtils.isBlank(abreviaturaTitulo)) {
-            externalDataObject.addMetadata(
-                              new MetadataValueDTO("crisrp", "qualificatio", null, null, abreviaturaTitulo));
+        for (int i = 0; i < abreviaturaTituloRecord.getLength(); i++) {
+            String abreviaturaTitulo = educationDegree(abreviaturaTituloRecord.item(i).getTextContent());
+            String  professionalQualification = professionalQualificationRecord.item(i).getTextContent();
+            if (!StringUtils.isBlank(abreviaturaTitulo)) {
+                externalDataObject.addMetadata(
+                                  new MetadataValueDTO("crisrp", "qualificatio", null, null, abreviaturaTitulo));
+            }
+            if (!StringUtils.isBlank(professionalQualification)) {
+                externalDataObject.addMetadata(
+                          new MetadataValueDTO("crisrp", "qualificatio", null, null, professionalQualification));
+            }
         }
-        if (!StringUtils.isBlank(tituloProfesional)) {
-            externalDataObject.addMetadata(
-                              new MetadataValueDTO("crisrp", "qualificatio", null, null, tituloProfesional));
+
+        if (!StringUtils.isBlank(university)) {
+            externalDataObject.addMetadata(new MetadataValueDTO("crisrp", "equcation", "grantor", null, university));
         }
-        if (!StringUtils.isBlank(universidad)) {
-            externalDataObject.addMetadata(new MetadataValueDTO("crisrp", "equcation", "grantor", null, universidad));
+        if (!StringUtils.isBlank(country)) {
+            externalDataObject.addMetadata(new MetadataValueDTO("crisrp", "equcation", "country", null, country));
         }
-        if (!StringUtils.isBlank(pais)) {
-            externalDataObject.addMetadata(new MetadataValueDTO("crisrp", "equcation", "country", null, pais));
+        return edo;
+    }
+
+    private String educationDegree(String educationDegree) {
+        switch (educationDegree) {
+            case "B":
+                return "Bachiller";
+            case "T":
+                return "Titulo profesional";
+            case "S":
+                return "Titulo de segunda especialidad";
+            case "M":
+                return "Maestro";
+            case "D":
+                return "Doctor";
+            default:
+                return null;
         }
-        return externalDataObject;
     }
 
     public void setSourceIdentifier(String sourceIdentifier) {

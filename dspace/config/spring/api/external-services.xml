@@ -30,11 +30,9 @@
         <property name="recordIdMetadata" value="dc.identifier.other"/>
     </bean>
 
-    <bean class="org.dspace.external.provider.impl.SuneduProvider">
-        <property name="sourceIdentifier" value="sunedu"/>
-    </bean>
+	<bean class="org.dspace.sunedu.SuneduProvider"/>
 
-    <bean class="org.dspace.external.SuneduRestConnector">
+    <bean class="org.dspace.sunedu.SuneduRestConnector">
         <property name="suneduUrl" value="${sunedu.url}" />
         <property name="clientId" value="${sunedu.clientid}" />
         <property name="clientSecret" value="${sunedu.clientsecret}" />

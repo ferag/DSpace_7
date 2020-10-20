@@ -5,7 +5,7 @@
  *
  * http://www.dspace.org/license/
  */
-package org.dspace.external;
+package org.dspace.sunedu;
 
 import java.io.InputStream;
 import javax.annotation.PostConstruct;
@@ -43,8 +43,14 @@ public class SuneduRestConnector {
 
     @PostConstruct
     private void setup() {
+
+        CredentialsProvider provider = new BasicCredentialsProvider();
+        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(clientId, clientSecret);
+        provider.setCredentials(AuthScope.ANY, credentials);
+
         this.httpClient = HttpClientBuilder.create()
             .setConnectionManager(new PoolingHttpClientConnectionManager())
+            .setDefaultCredentialsProvider(provider)
             .build();
     }
 
@@ -52,10 +58,6 @@ public class SuneduRestConnector {
         InputStream result = null;
         HttpResponse response = null;
         try {
-            CredentialsProvider provider = new BasicCredentialsProvider();
-            UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(clientId, clientSecret);
-            provider.setCredentials(AuthScope.ANY, credentials);
-            httpClient = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
             HttpPost httpPost = new HttpPost(suneduUrl);
             httpPost.setHeader("Content-type", "text/plain");
             httpPost.setHeader("Accept", "*/*");

@@ -5,13 +5,13 @@
  *
  * http://www.dspace.org/license/
  */
-package org.dspace.external.provider.impl;
+package org.dspace.sunedu;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,10 +19,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dspace.content.dto.MetadataValueDTO;
-import org.dspace.external.SuneduRestConnector;
-import org.dspace.external.model.ExternalDataObject;
-import org.dspace.external.provider.ExternalDataProvider;
+import org.dspace.external.model.SuneduDTO;
+import org.dspace.external.provider.impl.OrcidV2AuthorDataProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -34,7 +32,7 @@ import org.xml.sax.SAXException;
  * 
  * @author mykhaylo boychuk (mykhaylo.boychuk at 4science.it)
  */
-public class SuneduProvider implements ExternalDataProvider {
+public class SuneduProvider {
 
     private static Logger log = LogManager.getLogger(OrcidV2AuthorDataProvider.class);
 
@@ -43,17 +41,13 @@ public class SuneduProvider implements ExternalDataProvider {
     @Autowired
     private SuneduRestConnector suneduRestConnector;
 
-    private String sourceIdentifier;
-
-    @Override
-    public Optional<ExternalDataObject> getExternalDataObject(String id) {
+    public SuneduDTO getSundeduObject(String id) {
         InputStream xmlSunedu = getRecords(id);
-        ExternalDataObject externalDataObject = convertToExternalDataObject(xmlSunedu);
-        return Optional.of(externalDataObject);
+        SuneduDTO result = convertToSuneduDTO(xmlSunedu);
+        return result;
     }
 
-    public InputStream getRecords(String id) {
-        log.debug("getBio called with ID=" + id);
+    private InputStream getRecords(String id) {
         if (!isValid(id)) {
             return null;
         }
@@ -65,10 +59,10 @@ public class SuneduProvider implements ExternalDataProvider {
         return StringUtils.isNotBlank(text) && text.matches(SUNEDU_ID_SYNTAX);
     }
 
-    protected ExternalDataObject convertToExternalDataObject(InputStream inputStream) {
+    private SuneduDTO convertToSuneduDTO(InputStream inputStream) {
         Document doc = null;
         DocumentBuilder docBuilder = null;
-        ExternalDataObject externalDataObject = new ExternalDataObject(sourceIdentifier);
+        SuneduDTO suneduObject = new SuneduDTO();
         try {
             DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
             docBuilder = docBuilderFactory.newDocumentBuilder();
@@ -87,40 +81,41 @@ public class SuneduProvider implements ExternalDataProvider {
         NodeList universityRecord = doc.getElementsByTagName("universidad");
         NodeList countryRecord = doc.getElementsByTagName("pais");
 
-        externalDataObject = fillExternalDataObject(externalDataObject, nroDocumento,
-                             abreviaturaTituloRecord, professionalQualificationRecord, universityRecord, countryRecord);
-        return externalDataObject;
+        suneduObject = fillSuneduDTO(suneduObject, nroDocumento, abreviaturaTituloRecord,
+                                     professionalQualificationRecord, universityRecord, countryRecord);
+        return suneduObject;
     }
 
-    private ExternalDataObject fillExternalDataObject(ExternalDataObject externalDataObject, NodeList nroDocumento,
-            NodeList abreviaturaTituloRecord, NodeList professionalQualificationRecord, NodeList universityRecord,
-            NodeList countryRecord) {
-        ExternalDataObject edo = externalDataObject;
-        String id = nroDocumento.item(0).getTextContent();
+    private SuneduDTO fillSuneduDTO(SuneduDTO suneduObject, NodeList nroDocumento, NodeList abreviaturaTituloRecord,
+                  NodeList professionalQualificationRecord, NodeList universityRecord, NodeList countryRecord) {
+
+        SuneduDTO dto = suneduObject;
+        String dni = nroDocumento.item(0).getTextContent();
         String university = universityRecord.item(0).getTextContent();
         String country = countryRecord.item(0).getTextContent();
 
-        externalDataObject.setId(id);
+        dto.setId(dni);
+        Map<String, List<String>> titulo2Qualification = dto.getEducationDegree();
         for (int i = 0; i < abreviaturaTituloRecord.getLength(); i++) {
             String abreviaturaTitulo = educationDegree(abreviaturaTituloRecord.item(i).getTextContent());
-            String  professionalQualification = professionalQualificationRecord.item(i).getTextContent();
-            if (!StringUtils.isBlank(abreviaturaTitulo)) {
-                externalDataObject.addMetadata(
-                                  new MetadataValueDTO("crisrp", "qualificatio", null, null, abreviaturaTitulo));
-            }
-            if (!StringUtils.isBlank(professionalQualification)) {
-                externalDataObject.addMetadata(
-                          new MetadataValueDTO("crisrp", "qualificatio", null, null, professionalQualification));
+            String professionalQualification = professionalQualificationRecord.item(i).getTextContent();
+            if (!StringUtils.isBlank(abreviaturaTitulo) && !StringUtils.isBlank(professionalQualification)) {
+                List<String> qualificationsByTitulo = titulo2Qualification.get(abreviaturaTitulo);
+                if (qualificationsByTitulo == null) {
+                    List<String> qualifications = new ArrayList<String>();
+                    qualifications.add(professionalQualification);
+                    titulo2Qualification.put(abreviaturaTitulo, qualifications);
+                }
             }
         }
 
         if (!StringUtils.isBlank(university)) {
-            externalDataObject.addMetadata(new MetadataValueDTO("crisrp", "equcation", "grantor", null, university));
+            dto.setUniversity(university);
         }
         if (!StringUtils.isBlank(country)) {
-            externalDataObject.addMetadata(new MetadataValueDTO("crisrp", "equcation", "country", null, country));
+            dto.setCountry(country);
         }
-        return edo;
+        return dto;
     }
 
     private String educationDegree(String educationDegree) {
@@ -138,30 +133,6 @@ public class SuneduProvider implements ExternalDataProvider {
             default:
                 return null;
         }
-    }
-
-    public void setSourceIdentifier(String sourceIdentifier) {
-        this.sourceIdentifier = sourceIdentifier;
-    }
-
-    @Override
-    public String getSourceIdentifier() {
-        return sourceIdentifier;
-    }
-
-    @Override
-    public boolean supports(String source) {
-        return StringUtils.equalsIgnoreCase(sourceIdentifier, source);
-    }
-
-    @Override
-    public List<ExternalDataObject> searchExternalDataObjects(String query, int start, int limit) {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public int getNumberOfResults(String query) {
-        return 0;
     }
 
 }

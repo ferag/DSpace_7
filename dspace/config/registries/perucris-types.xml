@@ -181,6 +181,14 @@
         <scope_note></scope_note>
     </dc-type>
 
+<!--    to be used for custom code from orgunits -->
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ubigeo</element>
+        <qualifier>ubigeoSunat</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
     <dc-type>
         <schema>perucris</schema>
         <element>type</element>
@@ -259,9 +267,80 @@
 
     <dc-type>
         <schema>perucris</schema>
-        <element>description</element>
-        <qualifier>internalNote</qualifier>
+        <element>renacyt</element>
+        <qualifier>ocde</qualifier>
         <scope_note></scope_note>
     </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>renacyt</element>
+        <qualifier>strength</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>education</element>
+        <qualifier>country</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+<!--    following metadata have a different schema but are used only in PeruCris-->
+    <dc-type>
+        <schema>crisrp</schema>
+        <element>qualification</element>
+        <qualifier>orgunit</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>subject</element>
+        <qualifier>ocde</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+<!--    geolocations-->
+    <dc-type>
+        <schema>perucris</schema>
+        <element>geolocationPoint</element>
+        <qualifier>longitude</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>geolocationPoint</element>
+        <qualifier>latitude</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>geolocationBox</element>6
+        <qualifier>westBoundLongitude</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>geolocationBox</element>
+        <qualifier>eastBoundLongitude</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>geolocationBox</element>
+        <qualifier>southBoundLongitude</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>geolocationBox</element>
+        <qualifier>northBoundLongitude</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
 </dspace-dc-types>

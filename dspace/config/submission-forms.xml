@@ -342,6 +342,18 @@
           <dc-element>education</dc-element>
           <dc-qualifier>role</dc-qualifier>
           <label>Role</label>
+          <input-type value-pairs-name="renati_levels">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>education</dc-element>
+          <dc-qualifier>grantor</dc-qualifier>
+          <label>Grantor</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />

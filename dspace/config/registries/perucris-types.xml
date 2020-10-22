@@ -286,6 +286,13 @@
         <scope_note></scope_note>
     </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>education</element>
+        <qualifier>grantor</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
 <!--    following metadata have a different schema but are used only in PeruCris-->
     <dc-type>
         <schema>crisrp</schema>

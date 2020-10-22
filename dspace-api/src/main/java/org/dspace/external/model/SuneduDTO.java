@@ -7,10 +7,6 @@
  */
 package org.dspace.external.model;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * The representation model object for SUNEDU Objects
  * 
@@ -18,25 +14,18 @@ import java.util.Map;
  */
 public class SuneduDTO {
 
-    private String id;
-
     private String country;
 
     private String university;
 
-    private Map<String, List<String>> educationDegree = new HashMap<String, List<String>>();
+    private String abreviaturaTitulo;
+
+    private String professionalQualification;
+
     /**
      * Default constructor
      */
     public SuneduDTO() {}
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getCountry() {
         return country;
@@ -54,12 +43,19 @@ public class SuneduDTO {
         this.university = university;
     }
 
-    public Map<String, List<String>> getEducationDegree() {
-        return educationDegree;
+    public String getAbreviaturaTitulo() {
+        return abreviaturaTitulo;
     }
 
-    public void setEducationDegree(Map<String, List<String>> educationDegree) {
-        this.educationDegree = educationDegree;
+    public void setAbreviaturaTitulo(String abreviaturaTitulo) {
+        this.abreviaturaTitulo = abreviaturaTitulo;
     }
 
+    public String getProfessionalQualification() {
+        return professionalQualification;
+    }
+
+    public void setProfessionalQualification(String professionalQualification) {
+        this.professionalQualification = professionalQualification;
+    }
 }

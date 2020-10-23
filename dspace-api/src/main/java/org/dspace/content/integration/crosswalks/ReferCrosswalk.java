@@ -8,6 +8,7 @@
 package org.dspace.content.integration.crosswalks;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.apache.commons.collections4.iterators.EmptyIterator.emptyIterator;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -18,13 +19,17 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.sql.SQLException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -41,13 +46,18 @@ import org.dspace.content.crosswalk.CrosswalkException;
 import org.dspace.content.crosswalk.CrosswalkObjectNotSupported;
 import org.dspace.content.crosswalk.StreamDisseminationCrosswalk;
 import org.dspace.content.integration.crosswalks.model.TemplateLine;
-import org.dspace.content.integration.crosswalks.model.TemplateLineGroup;
 import org.dspace.content.integration.crosswalks.virtualfields.VirtualField;
 import org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldMapper;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.core.CrisConstants;
+import org.dspace.discovery.DiscoverQuery;
+import org.dspace.discovery.DiscoverResultIterator;
+import org.dspace.discovery.IndexableObject;
+import org.dspace.discovery.configuration.DiscoveryConfiguration;
+import org.dspace.discovery.configuration.DiscoveryConfigurationService;
+import org.dspace.discovery.indexobject.IndexableItem;
 import org.dspace.services.ConfigurationService;
 import org.springframework.core.convert.converter.Converter;
 
@@ -69,6 +79,8 @@ public class ReferCrosswalk implements StreamDisseminationCrosswalk, FileNameDis
 
     private final ItemService itemService;
 
+    private final DiscoveryConfigurationService searchConfigurationService;
+
     private final VirtualFieldMapper virtualFieldMapper;
 
     private Converter<String, String> converter;
@@ -89,10 +101,11 @@ public class ReferCrosswalk implements StreamDisseminationCrosswalk, FileNameDis
     private List<TemplateLine> multipleItemsTemplateLines;
 
     public ReferCrosswalk(ConfigurationService configurationService, ItemService itemService,
-        VirtualFieldMapper virtualFieldMapper, String templateFileName, String mimeType, String fileName,
-        String valueDelimiter) {
+        DiscoveryConfigurationService searchConfigurationService, VirtualFieldMapper virtualFieldMapper,
+        String templateFileName, String mimeType, String fileName, String valueDelimiter) {
         this.configurationService = configurationService;
         this.itemService = itemService;
+        this.searchConfigurationService = searchConfigurationService;
         this.virtualFieldMapper = virtualFieldMapper;
         this.templateFileName = templateFileName;
         this.mimeType = mimeType;
@@ -115,7 +128,7 @@ public class ReferCrosswalk implements StreamDisseminationCrosswalk, FileNameDis
     public void disseminate(Context context, DSpaceObject dso, OutputStream out)
         throws CrosswalkException, IOException, SQLException, AuthorizeException {
 
-        List<String> lines = getItemLines(context, dso);
+        List<String> lines = getItemLines(context, dso, true);
 
         if (linesPostProcessor != null) {
             linesPostProcessor.accept(lines);
@@ -126,7 +139,7 @@ public class ReferCrosswalk implements StreamDisseminationCrosswalk, FileNameDis
     }
 
     @Override
-    public void disseminate(Context context, List<DSpaceObject> dsos, OutputStream out)
+    public void disseminate(Context context, Iterator<? extends DSpaceObject> dsoIterator, OutputStream out)
         throws CrosswalkException, IOException, SQLException, AuthorizeException {
 
         if (CollectionUtils.isEmpty(multipleItemsTemplateLines)) {
@@ -139,7 +152,8 @@ public class ReferCrosswalk implements StreamDisseminationCrosswalk, FileNameDis
 
             if (line.isTemplateField()) {
 
-                for (DSpaceObject dso : dsos) {
+                while (dsoIterator.hasNext()) {
+                    DSpaceObject dso = dsoIterator.next();
                     List<String> singleTemplateLines = getSingleItemLines(context, dso, line);
                     for (String singleTemplateLine : singleTemplateLines) {
                         lines.add(line.getBeforeField() + singleTemplateLine);
@@ -205,7 +219,7 @@ public class ReferCrosswalk implements StreamDisseminationCrosswalk, FileNameDis
         return templateLineObj;
     }
 
-    private List<String> getItemLines(Context context, DSpaceObject dso)
+    private List<String> getItemLines(Context context, DSpaceObject dso, boolean findRelatedItems)
         throws CrosswalkObjectNotSupported, IOException {
 
         if (dso.getType() != Constants.ITEM) {
@@ -215,7 +229,7 @@ public class ReferCrosswalk implements StreamDisseminationCrosswalk, FileNameDis
         Item item = (Item) dso;
 
         List<String> lines = new ArrayList<String>();
-        appendLines(context, item, lines);
+        appendLines(context, item, lines, findRelatedItems);
 
         return lines;
     }
@@ -223,7 +237,7 @@ public class ReferCrosswalk implements StreamDisseminationCrosswalk, FileNameDis
     private List<String> getSingleItemLines(Context context, DSpaceObject dso, TemplateLine line)
         throws CrosswalkObjectNotSupported, IOException {
 
-        List<String> singleItemLines = getItemLines(context, dso);
+        List<String> singleItemLines = getItemLines(context, dso, false);
         if (singleItemLines.size() > 0) {
             String lastLine = singleItemLines.get(singleItemLines.size() - 1);
             singleItemLines.set(singleItemLines.size() - 1, lastLine + line.getAfterField());
@@ -232,25 +246,21 @@ public class ReferCrosswalk implements StreamDisseminationCrosswalk, FileNameDis
         return singleItemLines;
     }
 
-    private void appendLines(Context context, Item item, List<String> lines) throws IOException {
-        TemplateLineGroup currentGroup = null;
+    private void appendLines(Context context, Item item, List<String> lines, boolean findRelatedItems)
+        throws IOException {
 
-        for (TemplateLine line : templateLines) {
+        Iterator<TemplateLine> iterator = templateLines.iterator();
 
+        while (iterator.hasNext()) {
+
+            TemplateLine line = iterator.next();
             if (line.isMetadataGroupStartField()) {
-                String groupName = line.getMetadataGroupFieldName();
-                currentGroup = new TemplateLineGroup(groupName, getMetadataGroupSize(item, groupName));
+                handleMetadataGroup(context, item, iterator, line.getMetadataGroupFieldName(), lines);
                 continue;
             }
 
-            if (line.isMetadataGroupEndField()) {
-                appendMetadataGroupLines(context, item, currentGroup, lines);
-                currentGroup = null;
-                continue;
-            }
-
-            if (currentGroup != null) {
-                currentGroup.addTemplateLines(line);
+            if (line.isRelationGroupStartField()) {
+                handleRelationGroup(context, item, iterator, line.getRelationName(), lines, findRelatedItems);
                 continue;
             }
 
@@ -282,11 +292,11 @@ public class ReferCrosswalk implements StreamDisseminationCrosswalk, FileNameDis
         }
     }
 
-    private void appendMetadataGroupLines(Context context, Item item, TemplateLineGroup lineGroup, List<String> lines)
-        throws IOException {
+    private void handleMetadataGroup(Context context, Item item, Iterator<TemplateLine> iterator, String groupName,
+        List<String> lines) throws IOException {
 
-        List<TemplateLine> groupLines = lineGroup.getTemplateLines();
-        int groupSize = lineGroup.getGroupSize();
+        List<TemplateLine> groupLines = getGroupLines(iterator, line -> line.isMetadataGroupEndField());
+        int groupSize = getMetadataGroupSize(item, groupName);
 
         Map<String, List<String>> metadataValues = new HashMap<>();
 
@@ -310,8 +320,8 @@ public class ReferCrosswalk implements StreamDisseminationCrosswalk, FileNameDis
                 }
 
                 if (metadata.size() <= i) {
-                    log.warn("The cardinality of metadata group " + lineGroup.getGroupName()
-                        + " is inconsistent for item with id " + item.getID());
+                    log.warn("The cardinality of metadata group " + groupName + " is inconsistent for item with id "
+                        + item.getID());
                     continue;
                 }
 
@@ -323,6 +333,79 @@ public class ReferCrosswalk implements StreamDisseminationCrosswalk, FileNameDis
             }
         }
 
+    }
+
+    private void handleRelationGroup(Context context, Item item, Iterator<TemplateLine> iterator, String relationName,
+        List<String> lines, boolean findRelatedItems) {
+
+        List<TemplateLine> groupLines = getGroupLines(iterator, line -> line.isRelationGroupEndField());
+
+        if (!findRelatedItems) {
+            return;
+        }
+
+        Iterator<Item> relatedItems = findRelatedItems(context, item, relationName);
+
+        while (relatedItems.hasNext()) {
+            Item relatedItem = relatedItems.next();
+            for (TemplateLine line : groupLines) {
+
+                if (StringUtils.isBlank(line.getField())) {
+                    lines.add(line.getBeforeField());
+                    continue;
+                }
+
+                List<String> metadataValues = getMetadataValuesForLine(context, line, relatedItem);
+                for (String metadataValue : metadataValues) {
+                    appendLine(lines, line, metadataValue);
+                }
+            }
+        }
+
+    }
+
+    private List<TemplateLine> getGroupLines(Iterator<TemplateLine> iterator, Predicate<TemplateLine> breakPredicate) {
+        List<TemplateLine> templateLines = new ArrayList<TemplateLine>();
+        while (iterator.hasNext()) {
+            TemplateLine line = iterator.next();
+            if (breakPredicate.test(line)) {
+                break;
+            }
+            templateLines.add(line);
+        }
+        return templateLines;
+    }
+
+    private Iterator<Item> findRelatedItems(Context context, Item item, String relationName) {
+
+        String entityType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
+        if (entityType == null) {
+            log.warn("The item with id " + item.getID() + " has no relationship.type. No related items is found.");
+            return emptyIterator();
+        }
+
+        DiscoveryConfiguration discoveryConfiguration = findDiscoveryConfiguration(item, entityType, relationName);
+        if (discoveryConfiguration == null) {
+            log.warn("No discovery configuration found for relation " + relationName + " for item with id "
+                + item.getID() + " and type " + entityType + ". No related items is found.");
+            return emptyIterator();
+        }
+
+        DiscoverQuery discoverQuery = new DiscoverQuery();
+        discoverQuery.setDSpaceObjectFilter(IndexableItem.TYPE);
+        discoverQuery.setDiscoveryConfigurationName(discoveryConfiguration.getId());
+        List<String> defaultFilterQueries = discoveryConfiguration.getDefaultFilterQueries();
+        for (String defaultFilterQuery : defaultFilterQueries) {
+            discoverQuery.addFilterQueries(MessageFormat.format(defaultFilterQuery, item.getID()));
+        }
+
+        return new DiscoverResultIterator<Item, UUID>(context, discoverQuery);
+    }
+
+    private DiscoveryConfiguration findDiscoveryConfiguration(Item item, String entityType, String relationName) {
+        IndexableObject<?, ?> scopeObject = new IndexableItem(item);
+        String configurationName = "RELATION." + entityType + "." + relationName;
+        return searchConfigurationService.getDiscoveryConfigurationByNameOrDso(configurationName, scopeObject);
     }
 
     private void appendLine(List<String> lines, TemplateLine line, String value) {

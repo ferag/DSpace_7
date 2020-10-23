@@ -3124,7 +3124,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>internalid</dc-element>
-          <label>Internal Id</label>
+          <label>Institution Unique Identifier</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -3146,7 +3146,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>crisequipment</dc-schema>
           <dc-element>ownerrp</dc-element>
-          <label>Owner (Research Project)</label>
+          <label>Owner (Persons)</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -3157,7 +3157,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>dc</dc-schema>
           <dc-element>description</dc-element>
-          <label>Description</label>
+          <label>Equipment Description</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />

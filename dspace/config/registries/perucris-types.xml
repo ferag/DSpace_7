@@ -350,4 +350,38 @@
         <qualifier>northBoundLongitude</qualifier>
         <scope_note></scope_note>
     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>type</element>
+        <qualifier>usage</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>researchLine</element>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>manufacturingCountry</element>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>date</element>
+        <qualifier>acquisition</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>date</element>
+        <qualifier>manufacturing</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
 </dspace-dc-types>

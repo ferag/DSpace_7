@@ -55,7 +55,6 @@ public class XlsCrosswalk extends TabularCrosswalk {
                 for (String field : row) {
                     Cell cell = sheetRow.createCell(cellCount++);
                     cell.setCellValue(field);
-                    sheet.autoSizeColumn(cellCount);
                 }
             }
 

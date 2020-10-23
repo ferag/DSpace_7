@@ -7,12 +7,15 @@
  */
 package org.dspace.sunedu;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import javax.annotation.PostConstruct;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -55,28 +58,30 @@ public class SuneduRestConnector {
     }
 
     public InputStream get(String id) {
-        InputStream result = null;
-        HttpResponse response = null;
         try {
-            HttpPost httpPost = new HttpPost(suneduUrl);
-            httpPost.setHeader("Content-type", "text/plain");
-            httpPost.setHeader("Accept", "*/*");
-            httpPost.setHeader("Accept-Encoding", "gzip, deflate, br");
-            httpPost.setHeader("Connection", "keep-alive");
-
-            JSONObject jsonBody = new JSONObject();
-            jsonBody.put(DNI, id);
-
-            StringEntity stringEntity = new StringEntity(jsonBody.toString());
-            httpPost.getRequestLine();
-            httpPost.setEntity(stringEntity);
-            response = httpClient.execute(httpPost);
-            result = response.getEntity().getContent();
+            return sendRequestToSunedu(id);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
-        return result;
+    }
+
+    private InputStream sendRequestToSunedu(String id)
+            throws UnsupportedEncodingException, IOException, ClientProtocolException {
+        HttpPost httpPost = new HttpPost(suneduUrl);
+        httpPost.setHeader("Content-type", "text/plain");
+        httpPost.setHeader("Accept", "*/*");
+        httpPost.setHeader("Accept-Encoding", "gzip, deflate, br");
+        httpPost.setHeader("Connection", "keep-alive");
+
+        JSONObject jsonBody = new JSONObject();
+        jsonBody.put(DNI, id);
+
+        StringEntity stringEntity = new StringEntity(jsonBody.toString());
+        httpPost.getRequestLine();
+        httpPost.setEntity(stringEntity);
+        HttpResponse response = httpClient.execute(httpPost);
+        return response.getEntity().getContent();
     }
 
     public String getClientId() {

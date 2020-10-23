@@ -22,11 +22,6 @@ public class SuneduDTO {
 
     private String professionalQualification;
 
-    /**
-     * Default constructor
-     */
-    public SuneduDTO() {}
-
     public String getCountry() {
         return country;
     }

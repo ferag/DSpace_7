@@ -168,6 +168,7 @@ public class UpdateItemWithSuneduInformation {
             throws SQLException, SearchServiceException {
         DiscoverQuery discoverQuery = new DiscoverQuery();
         discoverQuery.setDSpaceObjectFilter(IndexableItem.TYPE);
+        discoverQuery.setMaxResults(20);
         discoverQuery.addFilterQueries("relationship.type:Person");
         discoverQuery.addFilterQueries("perucris.identifier.dni:*");
         discoverQuery.addFilterQueries("location.coll:" + this.collectonUuid.toString());

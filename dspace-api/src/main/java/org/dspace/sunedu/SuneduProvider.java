@@ -44,9 +44,7 @@ public class SuneduProvider {
     private SimpleMapConverterCountry simpleMapConverterCountry;
 
     public List<SuneduDTO> getSundeduObject(String id) {
-        InputStream xmlSunedu = getRecords(id);
-        List<SuneduDTO> result = convertToSuneduDTO(xmlSunedu);
-        return result;
+        return convertToSuneduDTO(getRecords(id));
     }
 
     private InputStream getRecords(String id) {
@@ -69,11 +67,7 @@ public class SuneduProvider {
             DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
             docBuilder = docBuilderFactory.newDocumentBuilder();
             doc = docBuilder.parse(inputStream);
-        } catch (ParserConfigurationException e) {
-            log.error(e.getMessage(), e);
-        } catch (SAXException e) {
-            log.error(e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (ParserConfigurationException | SAXException | IOException e) {
             log.error(e.getMessage(), e);
         }
 
@@ -83,17 +77,12 @@ public class SuneduProvider {
         NodeList countryRecord = doc.getElementsByTagName("pais");
 
         List<SuneduDTO> objects = suneduObjects;
-        int length = abreviaturaTituloRecord.getLength();
-        for (int i = 0; i < length; i++) {
-            String country = getCountryCode(countryRecord.item(i).getTextContent());
-            String university = universityRecord.item(i).getTextContent();
-            String abreviaturaTitulo = educationDegree(abreviaturaTituloRecord.item(i).getTextContent());
-            String professionalQualification = professionalQualificationRecord.item(i).getTextContent();
+        for (int i = 0; i < abreviaturaTituloRecord.getLength(); i++) {
             SuneduDTO dto = new SuneduDTO();
-            dto.setCountry(country);
-            dto.setAbreviaturaTitulo(abreviaturaTitulo);
-            dto.setProfessionalQualification(professionalQualification);
-            dto.setUniversity(university);
+            dto.setCountry(getCountryCode(countryRecord.item(i).getTextContent()));
+            dto.setAbreviaturaTitulo(educationDegree(abreviaturaTituloRecord.item(i).getTextContent()));
+            dto.setProfessionalQualification(professionalQualificationRecord.item(i).getTextContent());
+            dto.setUniversity(universityRecord.item(i).getTextContent());
             objects.add(dto);
         }
         return objects;
@@ -116,7 +105,7 @@ public class SuneduProvider {
             case "D":
                 return "Doctor";
             default:
-                return null;
+                return "N/A";
         }
     }
 

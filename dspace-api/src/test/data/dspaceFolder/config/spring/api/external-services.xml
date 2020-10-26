@@ -10,13 +10,6 @@
         <property name="sourceIdentifier" value="mock"/>
     </bean>
 
-	<bean class="org.dspace.sunedu.SuneduProvider"/>
-
-    <bean class="org.dspace.sunedu.SuneduRestConnector">
-        <property name="suneduUrl" value="${sunedu.url}" />
-        <property name="clientId" value="${sunedu.clientid}" />
-        <property name="clientSecret" value="${sunedu.clientsecret}" />
-    </bean>
     <bean class="org.dspace.external.provider.impl.OrcidV3AuthorDataProvider" init-method="init">
         <constructor-arg value="${orcid.api.url}"/>
         <property name="sourceIdentifier" value="orcid"/>

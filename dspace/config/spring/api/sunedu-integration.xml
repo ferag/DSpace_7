@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config /> <!-- allows us to use spring annotations in beans -->
+
+	<bean name="mapConverterCountryValueISO" class="org.dspace.util.SimpleMapConverterCountry" init-method="init">
+		<property name="converterNameFile" value="peruMapCountries.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+		<property name="defaultValue" value="other"/>
+	</bean>
+
+	<bean class="org.dspace.sunedu.SuneduProvider"/>
+
+	<bean class="org.dspace.sunedu.UpdateItemWithSuneduInformation">
+	    <property name="collectonUuid" value="${sunedu.collectonUuid}" />
+    </bean>
+
+    <bean class="org.dspace.sunedu.SuneduRestConnector">
+        <property name="suneduUrl" value="${sunedu.url}" />
+        <property name="clientId" value="${sunedu.clientid}" />
+        <property name="clientSecret" value="${sunedu.clientsecret}" />
+    </bean>
+</beans>

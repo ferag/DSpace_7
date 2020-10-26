@@ -1,0 +1,108 @@
+/**
+ * The contents of this file are subject to the license and copyright
+ * detailed in the LICENSE and NOTICE files at the root of the source
+ * tree and available online at
+ *
+ * http://www.dspace.org/license/
+ */
+package org.dspace.app.rest;
+
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
+import org.dspace.builder.CollectionBuilder;
+import org.dspace.builder.CommunityBuilder;
+import org.dspace.builder.ItemBuilder;
+import org.dspace.content.Collection;
+import org.dspace.content.Item;
+import org.dspace.sunedu.UpdateItemWithSuneduInformation;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+/**
+ * 
+ * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4Science.it)
+ */
+public class UpdateItemWithSuneduInformationIT extends AbstractControllerIntegrationTest {
+
+    @Autowired
+    private UpdateItemWithSuneduInformation updateItemWithSuneduInformation;
+
+    @Test
+    public void updateItemsWithSuneduInformationsTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
+
+        Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
+                                           .withRelationshipType("Person")
+                                           .withName("Collection 1").build();
+
+        Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
+                                           .withRelationshipType("Person")
+                                           .withName("Collection 2").build();
+
+        Item itemPersonA = ItemBuilder.createItem(context, col1)
+                                     .withPersonIdentifierFirstName("EDWIN")
+                                     .withPersonIdentifierLastName("SAUCEDO")
+                                     .withAbreviaturaTitulo("Bachiller")
+                                     .withDNI("41918979").build();
+
+        Item itemPersonB = ItemBuilder.createItem(context, col1)
+                                      .withPersonIdentifierFirstName("Sheyla")
+                                      .withPersonIdentifierLastName("Aliaga")
+                                      .withDNI("41918999").build();
+
+        Item itemPersonC = ItemBuilder.createItem(context, col2)
+                                      .withPersonIdentifierFirstName("DIEGO")
+                                      .withPersonIdentifierLastName("BEJAR")
+                                      .withDNI("41918988").build();
+
+        context.restoreAuthSystemState();
+
+        updateItemWithSuneduInformation.setCollectonUuid(col1.getID());
+        updateItemWithSuneduInformation.updateInformation();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+
+        getClient(authToken).perform(get("/api/core/items/" + itemPersonA.getID()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.uuid", Matchers.is(itemPersonA.getID().toString())))
+                .andExpect(jsonPath("$.metadata['perucris.identifier.dni'].[0].value", is("41918979")))
+                .andExpect(jsonPath("$.metadata['crisrp.education'].[0].value", is("INGENIERO DE SISTEMAS")))
+                .andExpect(jsonPath("$.metadata['crisrp.education.role'].[0].value", is("Titulo profesional")))
+                .andExpect(jsonPath("$.metadata['perucris.education.country'].[0].value", is("PE")))
+                .andExpect(jsonPath("$.metadata['perucris.education.grantor'].[0].value",
+                                 is("UNIVERSIDAD NACIONAL DE INGENIERÍA")));
+
+        getClient(authToken).perform(get("/api/core/items/" + itemPersonB.getID()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.uuid", Matchers.is(itemPersonB.getID().toString())))
+                .andExpect(jsonPath("$.metadata['perucris.identifier.dni'].[0].value", is("41918999")))
+                .andExpect(jsonPath("$.metadata['crisrp.education'].[0].value",
+                                 is("TITULO PROFESIONAL DE LICENCIADO EN ADMINISTRACION")))
+                .andExpect(jsonPath("$.metadata['crisrp.education'].[1].value", is("BACHILLER EN ADMINISTRACION")))
+                .andExpect(jsonPath("$.metadata['crisrp.education.role'].[0].value", is("Titulo profesional")))
+                .andExpect(jsonPath("$.metadata['crisrp.education.role'].[1].value", is("Bachiller")))
+                .andExpect(jsonPath("$.metadata['perucris.education.grantor'].[0].value",
+                                 is("UNIVERSIDAD PRIVADA NORBERT WIENER S.A.")))
+                .andExpect(jsonPath("$.metadata['perucris.education.grantor'].[1].value",
+                                 is("UNIVERSIDAD PRIVADA NORBERT WIENER S.A.")))
+                .andExpect(jsonPath("$.metadata['perucris.education.country'].[0].value", is("PE")))
+                .andExpect(jsonPath("$.metadata['perucris.education.country'].[1].value", is("PE")));
+
+        getClient(authToken).perform(get("/api/core/items/" + itemPersonC.getID()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.uuid", Matchers.is(itemPersonC.getID().toString())))
+                .andExpect(jsonPath("$.metadata['perucris.identifier.dni'].[0].value", is("41918988")))
+                .andExpect(jsonPath("$.metadata['crisrp.education']").doesNotExist())
+                .andExpect(jsonPath("$.metadata['crisrp.education.role']").doesNotExist())
+                .andExpect(jsonPath("$.metadata['perucris.education.grantor']").doesNotExist())
+                .andExpect(jsonPath("$.metadata['perucris.education.country']").doesNotExist());
+    }
+
+}

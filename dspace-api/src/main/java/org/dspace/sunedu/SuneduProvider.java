@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dspace.external.model.SuneduDTO;
+import org.dspace.util.SimpleMapConverterCountry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -38,6 +39,9 @@ public class SuneduProvider {
 
     @Autowired
     private SuneduRestConnector suneduRestConnector;
+
+    @Autowired
+    private SimpleMapConverterCountry simpleMapConverterCountry;
 
     public List<SuneduDTO> getSundeduObject(String id) {
         InputStream xmlSunedu = getRecords(id);
@@ -81,7 +85,7 @@ public class SuneduProvider {
         List<SuneduDTO> objects = suneduObjects;
         int length = abreviaturaTituloRecord.getLength();
         for (int i = 0; i < length; i++) {
-            String country = countryRecord.item(i).getTextContent();
+            String country = getCountryCode(countryRecord.item(i).getTextContent());
             String university = universityRecord.item(i).getTextContent();
             String abreviaturaTitulo = educationDegree(abreviaturaTituloRecord.item(i).getTextContent());
             String professionalQualification = professionalQualificationRecord.item(i).getTextContent();
@@ -93,6 +97,10 @@ public class SuneduProvider {
             objects.add(dto);
         }
         return objects;
+    }
+
+    private String getCountryCode(String countryName) {
+        return simpleMapConverterCountry.getValue(countryName);
     }
 
     private String educationDegree(String educationDegree) {

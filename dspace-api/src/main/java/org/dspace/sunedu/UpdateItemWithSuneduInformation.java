@@ -53,14 +53,15 @@ public class UpdateItemWithSuneduInformation {
             Iterator<Item> itemIterator = findItems(context);
             log.info("Sunedu update start");
             while (itemIterator.hasNext()) {
-                Item it = itemIterator.next();
-                updateItems(context, it);
+                Item item = itemIterator.next();
+                updateItems(context, item);
                 count++;
-                if (count == 20 | !itemIterator.hasNext()) {
+                if (count == 20) {
                     context.commit();
                     count = 0;
                 }
             }
+            context.commit();
             log.info("Sunedu update end");
             log.info("Item updated " + countItemUpdated);
         } catch (SQLException | SearchServiceException e) {

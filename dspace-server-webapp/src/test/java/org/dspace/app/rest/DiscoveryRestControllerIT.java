@@ -52,15 +52,19 @@ import org.dspace.content.Item;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.dspace.services.ConfigurationService;
 import org.dspace.xmlworkflow.storedcomponents.ClaimedTask;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest {
 
+    @Autowired
+    private ConfigurationService configurationService;
 
     @Test
     public void rootDiscoverTest() throws Exception {
@@ -4551,5 +4555,38 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         )
                 ))
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")));
+    }
+
+    @Test
+    public void testGetSearchObjectsWithInstitutionTemplateFilterPlugin() throws Exception {
+        context.turnOffAuthorisationSystem();
+        parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
+        CollectionBuilder.createCollection(context, parentCommunity).withName("Collection").build();
+        CollectionBuilder.createCollection(context, parentCommunity).withName("Collection 2").build();
+        context.restoreAuthSystemState();
+
+        String adminToken = getAuthToken(admin.getEmail(), password);
+
+        getClient(adminToken).perform(get("/api/discover/search/objects")
+            .param("query", "Parent Community"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.type", is("discover")))
+            .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(1)));
+
+        String originalTemplateId = configurationService.getProperty("institution.template-id");
+        try {
+
+            configurationService.setProperty("institution.template-id", parentCommunity.getID().toString());
+
+            // no results
+            getClient(adminToken).perform(get("/api/discover/search/objects")
+                .param("query", "Parent Community"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.type", is("discover")))
+                .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(0)));
+
+        } finally {
+            configurationService.setProperty("institution.template-id", originalTemplateId);
+        }
     }
 }

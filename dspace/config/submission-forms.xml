@@ -107,7 +107,7 @@
           <dc-schema>perucris</dc-schema>
           <dc-element>editor</dc-element>
           <dc-qualifier>orcid</dc-qualifier>
-          <label>Author’s ORCID</label>
+          <label>Editor’s ORCID</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -119,7 +119,7 @@
           <dc-schema>perucris</dc-schema>
           <dc-element>editor</dc-element>
           <dc-qualifier>dni</dc-qualifier>
-          <label>Author’s DNI</label>
+          <label>Editor’s DNI</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -205,6 +205,32 @@
         </field>
       </row>
     </form>
+    <form name="equipment-dc-relation-funding">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>relation</dc-element>
+          <dc-qualifier>funding</dc-qualifier>
+          <label>Funding</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>relation</dc-element>
+          <dc-qualifier>grantno</dc-qualifier>
+          <label>Grant Number / Funding identifier</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
     <form name="person-oairecerif-person-affiliation">
       <row>
         <field>
@@ -262,6 +288,18 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required>You must enter at least the qualification title.</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crisrp</dc-schema>
+          <dc-element>qualification</dc-element>
+          <dc-qualifier>orgunit</dc-qualifier>
+          <label>Group</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
           <hint />
         </field>
       </row>
@@ -330,7 +368,31 @@
           <dc-element>education</dc-element>
           <dc-qualifier>role</dc-qualifier>
           <label>Role</label>
+          <input-type value-pairs-name="renati_levels">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>education</dc-element>
+          <dc-qualifier>grantor</dc-qualifier>
+          <label>Grantor</label>
           <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>education</dc-element>
+          <dc-qualifier>country</dc-qualifier>
+          <label>Country</label>
+          <input-type value-pairs-name="common_iso_countries">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -456,6 +518,83 @@
           <dc-element>site</dc-element>
           <dc-qualifier>title</dc-qualifier>
           <label>Site Title</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="project-perucris-geolocationPlace">
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>geolocationPlace</dc-element>
+          <label>Geolocation Place</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>geolocationPoint</dc-element>
+          <dc-qualifier>longitude</dc-qualifier>
+          <label>Geolocation Longitude</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>geolocationPoint</dc-element>
+          <dc-qualifier>latitude</dc-qualifier>
+          <label>Geolocation Latitude</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>geolocationBox</dc-element>
+          <dc-qualifier>westBoundLongitude</dc-qualifier>
+          <label>Westbound Longitude</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>geolocationBox</dc-element>
+          <dc-qualifier>eastBoundLongitude</dc-qualifier>
+          <label>Eastbound Longitude</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>geolocationBox</dc-element>
+          <dc-qualifier>southBoundLongitude</dc-qualifier>
+          <label>Southbound Longitude</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>geolocationBox</dc-element>
+          <dc-qualifier>northBoundLongitude</dc-qualifier>
+          <label>Northbound Longitude</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -702,6 +841,41 @@
           <hint />
         </field>
       </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>rights</dc-element>
+          <dc-qualifier>uri</dc-qualifier>
+          <label>License</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>access</dc-element>
+          <label>Access condition</label>
+          <input-type value-pairs-name="peru_oairecerif_access">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>access</dc-element>
+          <dc-qualifier>embargoEnd</dc-qualifier>
+          <label>Embargo End Date</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
     </form>
     <form name="publication_indexing">
       <row>
@@ -906,18 +1080,6 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
-          <dc-element>description</dc-element>
-          <dc-qualifier>sponsorship</dc-qualifier>
-          <label>Sponsors</label>
-          <input-type>onebox</input-type>
-          <repeatable>true</repeatable>
-          <required />
-          <hint>Enter the name of any sponsors.</hint>
-        </field>
-      </row>
-      <row>
-        <field>
           <dc-schema>oaire</dc-schema>
           <dc-element>citation</dc-element>
           <dc-qualifier>volume</dc-qualifier>
@@ -973,7 +1135,7 @@
           <dc-qualifier>advisor</dc-qualifier>
           <label>Advisor</label>
           <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
+          <repeatable>true</repeatable>
           <required />
           <hint />
         </field>
@@ -1030,7 +1192,7 @@
           <dc-schema>renati</dc-schema>
           <dc-element>level</dc-element>
           <label>Level</label>
-          <input-type>onebox</input-type>
+          <input-type value-pairs-name="renati_levels">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -1063,9 +1225,9 @@
         <field>
           <dc-schema>renati</dc-schema>
           <dc-element>juror</dc-element>
-          <label>Juror</label>
+          <label>Juror(s)</label>
           <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
+          <repeatable>true</repeatable>
           <required />
           <hint />
         </field>
@@ -1669,7 +1831,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>type</dc-element>
           <label>Type</label>
-          <input-type value-pairs-name="patent_types">dropdown</input-type>
+          <input-type value-pairs-name="peru_patent_types">dropdown</input-type>
           <repeatable>false</repeatable>
           <required>You must select a patent type</required>
           <hint>Select the type of content of the patent.</hint>
@@ -2273,7 +2435,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>renacyt</dc-element>
           <dc-qualifier>registration</dc-qualifier>
-          <label>Renacyt Registration</label>
+          <label>Renacyt Institution Name</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -2322,8 +2484,33 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>renacyt</dc-element>
           <dc-qualifier>classification</dc-qualifier>
           <label>Renacyt Level or Classification</label>
+          <input-type value-pairs-name="peru_renacyt_classification">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>renacyt</dc-element>
+          <dc-qualifier>ocde</dc-qualifier>
+          <label>Renacyt OCDE Subject</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
+          <required />
+          <hint />
+          <vocabulary closed="true">ocde_subjects</vocabulary>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>renacyt</dc-element>
+          <dc-qualifier>strength</dc-qualifier>
+          <label>Renacyt Institution’s Strength(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
           <required />
           <hint />
         </field>
@@ -2356,7 +2543,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ubigeo</dc-element>
-          <label>UbiGeo</label>
+          <dc-qualifier>ubigeoSunat</dc-qualifier>
+          <label>Sunat UbiGeo</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -2461,7 +2649,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       </row>
       <row>
         <field>
-          <dc-schema>perucris</dc-schema>
+          <dc-schema>dc</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Subject(s)</label>
@@ -2725,6 +2913,17 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       <row>
         <field>
           <dc-schema>perucris</dc-schema>
+          <dc-element>geolocationPlace</dc-element>
+          <label>Project Geolocation(s)</label>
+          <input-type>group</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
           <dc-element>description</dc-element>
           <dc-qualifier>internalNote</dc-qualifier>
           <label>Internal Note</label>
@@ -2960,6 +3159,117 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>description</dc-element>
           <label>Equipment Description</label>
           <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>type</dc-element>
+          <label>Type</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>type</dc-element>
+          <dc-qualifier>usage</dc-qualifier>
+          <label>Usage</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>subject</dc-element>
+          <dc-qualifier>ocde</dc-qualifier>
+          <label>Subject(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+          <vocabulary closed="true">ocde_subjects</vocabulary>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>researchLine</dc-element>
+          <label>Research Line</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>relation</dc-element>
+          <dc-qualifier>funding</dc-qualifier>
+          <label>Funding(s)</label>
+          <input-type>group</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>manufacturingCountry</dc-element>
+          <label>Manufacturing Country</label>
+          <input-type value-pairs-name="common_iso_countries">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>date</dc-element>
+          <dc-qualifier>acquisition</dc-qualifier>
+          <label>Acquisition Date</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>date</dc-element>
+          <dc-qualifier>manufacturing</dc-qualifier>
+          <label>Manufacturing Date</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>amount</dc-element>
+          <label>Amount</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>amount</dc-element>
+          <dc-qualifier>currency</dc-qualifier>
+          <label>Currency</label>
+          <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -5008,6 +5318,72 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       <pair>
         <displayed-value>Zimbabue</displayed-value>
         <stored-value>ZW</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="peru_renacyt_classification" dc-term="peru_renacyt_classification">
+      <pair>
+        <displayed-value>Unspecified</displayed-value>
+        <stored-value />
+      </pair>
+      <pair>
+        <displayed-value>Investigación científica</displayed-value>
+        <stored-value>Investigación científica</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Desarrollo tecnológico</displayed-value>
+        <stored-value>Desarrollo tecnológico</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Innovación tecnológica</displayed-value>
+        <stored-value>Innovación tecnológica</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="renati_levels" dc-term="renati_levels">
+      <pair>
+        <displayed-value>Unspecified</displayed-value>
+        <stored-value />
+      </pair>
+      <pair>
+        <displayed-value>Bachiller</displayed-value>
+        <stored-value>Bachiller</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Título Profesional</displayed-value>
+        <stored-value>Título Profesional</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Segunda Especialidad</displayed-value>
+        <stored-value>Segunda Especialidad</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Maestro</displayed-value>
+        <stored-value>Maestro</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Doctor</displayed-value>
+        <stored-value>Doctor</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="peru_oairecerif_access" dc-term="peru_oairecerif_access">
+      <pair>
+        <displayed-value>Unspecified</displayed-value>
+        <stored-value />
+      </pair>
+      <pair>
+        <displayed-value>open access</displayed-value>
+        <stored-value>open access</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>embargoed access</displayed-value>
+        <stored-value>embargoed access</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>restricted access</displayed-value>
+        <stored-value>restricted access</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>metadata only access</displayed-value>
+        <stored-value>metadata only access</stored-value>
       </pair>
     </value-pairs>
   </form-value-pairs>

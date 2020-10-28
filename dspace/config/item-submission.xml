@@ -134,14 +134,18 @@
       <step id="product_references" />
       <step id="upload" />
     </submission-process>
+    <submission-process name="orgunit-edit">
+      <step id="orgunit" />
+      <step id="upload" />
+    </submission-process>
     <submission-process name="orgunit">
       <step id="collection" />
       <step id="orgunit" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
-    <submission-process name="orgunit-edit">
-      <step id="orgunit" />
+    <submission-process name="project-edit">
+      <step id="project" />
       <step id="upload" />
     </submission-process>
     <submission-process name="project">
@@ -150,23 +154,9 @@
       <step id="upload" />
       <step id="license" />
     </submission-process>
-    <submission-process name="project-edit">
-      <step id="project" />
-      <step id="upload" />
-    </submission-process>
     <submission-process name="journal">
       <step id="collection" />
       <step id="journal" />
-      <step id="upload" />
-      <step id="license" />
-    </submission-process>
-    <submission-process name="publication">
-      <step id="collection" />
-      <step id="extraction" />
-      <step id="publication" />
-      <step id="publication_indexing" />
-      <step id="publication_bibliographic_details" />
-      <step id="publication_references" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
@@ -176,6 +166,22 @@
       <step id="publication_indexing" />
       <step id="publication_bibliographic_details" />
       <step id="publication_references" />
+      <step id="publication_thesis" />
+      <step id="upload" />
+    </submission-process>
+    <submission-process name="publication">
+      <step id="collection" />
+      <step id="extraction" />
+      <step id="publication" />
+      <step id="publication_indexing" />
+      <step id="publication_bibliographic_details" />
+      <step id="publication_references" />
+      <step id="publication_thesis" />
+      <step id="upload" />
+      <step id="license" />
+    </submission-process>
+    <submission-process name="person-edit">
+      <step id="person" />
       <step id="upload" />
     </submission-process>
     <submission-process name="person">
@@ -184,21 +190,27 @@
       <step id="upload" />
       <step id="license" />
     </submission-process>
-    <submission-process name="person-edit">
-      <step id="person" />
-      <step id="upload" />
-    </submission-process>
     <submission-process name="event">
       <step id="collection" />
       <step id="event" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
+    <submission-process name="equipment-edit">
+      <step id="equipment" />
+      <step id="upload" />
+    </submission-process>
     <submission-process name="equipment">
       <step id="collection" />
       <step id="equipment" />
       <step id="upload" />
       <step id="license" />
+    </submission-process>
+    <submission-process name="patent-edit">
+      <step id="patent" />
+      <step id="patent_indexing" />
+      <step id="patent_references" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="patent">
       <step id="collection" />
@@ -207,6 +219,10 @@
       <step id="patent_references" />
       <step id="upload" />
       <step id="license" />
+    </submission-process>
+    <submission-process name="funding-edit">
+      <step id="funding" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="funding">
       <step id="collection" />

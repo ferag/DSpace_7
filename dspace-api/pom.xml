@@ -840,13 +840,13 @@
             <artifactId>aws-java-sdk-s3</artifactId>
             <version>1.10.50</version>
         </dependency>
-
-        <!-- For ORCID v2 integration -->
+        
         <dependency>
-            <groupId>org.dspace</groupId>
-            <artifactId>orcid-jaxb-api</artifactId>
-            <version>2.1.0</version>
-        </dependency>
+			<groupId>org.dspace</groupId>
+			<artifactId>orcid-jaxb-api</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+        
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
@@ -886,6 +886,49 @@
             <artifactId>bcel</artifactId>
             <version>6.4.0</version>
         </dependency>
+        
+        <dependency>
+		    <groupId>org.apache.xmlgraphics</groupId>
+		    <artifactId>fop</artifactId>
+		    <version>2.5</version>
+		    <exclusions>
+		        <exclusion>
+		        	<groupId>javax.servlet</groupId>
+	      			<artifactId>servlet-api</artifactId>
+		        </exclusion>
+	      	</exclusions> 
+		</dependency>
+		
+		<dependency>
+	        <groupId>de.undercouch</groupId>
+	        <artifactId>citeproc-java</artifactId>
+	        <version>1.0.1</version>
+	        <exclusions>
+	            <exclusion>
+	               <groupId>org.apache.commons</groupId>
+	               <artifactId>commons-lang3</artifactId>
+	            </exclusion>
+	            <exclusion>
+	               <groupId>org.jbibtex</groupId>
+	               <artifactId>jbibtex</artifactId>
+	            </exclusion>
+	            <exclusion>
+	               <groupId>org.antlr</groupId>
+	               <artifactId>antlr4-runtime</artifactId>
+	            </exclusion>
+         	</exclusions>
+      </dependency>
+      <dependency>
+	      <groupId>org.citationstyles</groupId>
+	      <artifactId>locales</artifactId>
+	      <version>1.0</version>
+      </dependency>
+      <dependency>
+	      <groupId>org.citationstyles</groupId>
+	      <artifactId>styles</artifactId>
+	      <version>1.0</version>
+      </dependency>
+
         <!-- Reminder: Keep icu4j (in Parent POM) synced with version used by lucene-analyzers-icu below,
              otherwise ICUFoldingFilterFactory may throw errors in tests.  -->
         <dependency>

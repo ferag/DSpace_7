@@ -38,7 +38,13 @@ public class ReniecProvider {
     private ReniecRestConnector reniecRestConnector;
 
     public ReniecDTO getReniecObject(String id) {
-        return convertToReniecDTO(getRecords(id));
+        InputStream is = getRecords(id);
+        if (is != null) {
+            return convertToReniecDTO(getRecords(id));
+        } else {
+            log.error("The dni : " + id + " is wrong!");
+            return null;
+        }
     }
 
     private InputStream getRecords(String id) {
@@ -191,7 +197,6 @@ public class ReniecProvider {
         if (stringDate == null | StringUtils.isNotBlank(stringDate) | stringDate.length() == 8) {
             LocalDate date = LocalDate.of(Integer.parseInt(stringDate.substring(0, 4)),
                     Integer.parseInt(stringDate.substring(4, 6)), Integer.parseInt(stringDate.substring(6)));
-            System.out.println(date);
             dto.setBirthDate(date);
         } else {
             log.error("Wrong format date : " + stringDate);

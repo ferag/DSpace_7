@@ -858,7 +858,7 @@
           <dc-schema>oairecerif</dc-schema>
           <dc-element>access</dc-element>
           <label>Access condition</label>
-          <input-type>onebox</input-type>
+          <input-type value-pairs-name="peru_oairecerif_access">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -5362,6 +5362,28 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       <pair>
         <displayed-value>Doctor</displayed-value>
         <stored-value>Doctor</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="peru_oairecerif_access" dc-term="peru_oairecerif_access">
+      <pair>
+        <displayed-value>Unspecified</displayed-value>
+        <stored-value />
+      </pair>
+      <pair>
+        <displayed-value>open access</displayed-value>
+        <stored-value>open access</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>embargoed access</displayed-value>
+        <stored-value>embargoed access</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>restricted access</displayed-value>
+        <stored-value>restricted access</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>metadata only access</displayed-value>
+        <stored-value>metadata only access</stored-value>
       </pair>
     </value-pairs>
   </form-value-pairs>

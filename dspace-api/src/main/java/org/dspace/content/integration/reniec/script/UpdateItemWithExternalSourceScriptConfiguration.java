@@ -12,13 +12,13 @@ import org.dspace.core.Context;
 import org.dspace.scripts.configuration.ScriptConfiguration;
 
 /**
- * {@link ScriptConfiguration} for the {@link ReniecUpdate}.
+ * {@link ScriptConfiguration} for the {@link UpdateItemWithExternalSource}.
  *
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  *
- * @param <T> the ReniecUpdate type
  */
-public class ReniecUpdateScriptConfiguration<T extends ReniecUpdate> extends ScriptConfiguration<T> {
+public class UpdateItemWithExternalSourceScriptConfiguration<T extends UpdateItemWithExternalSource>
+        extends ScriptConfiguration<T> {
 
     private Class<T> dspaceRunnableClass;
 
@@ -36,6 +36,9 @@ public class ReniecUpdateScriptConfiguration<T extends ReniecUpdate> extends Scr
             options.getOption("i").setType(String.class);
             options.getOption("i").setRequired(false);
 
+            options.addOption("s","service", true, "the name of the external service to use");
+            options.getOption("s").setType(String.class);
+            options.getOption("s").setRequired(false);
             super.options = options;
         }
         return options;

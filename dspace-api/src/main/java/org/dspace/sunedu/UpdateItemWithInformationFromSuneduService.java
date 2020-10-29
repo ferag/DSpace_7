@@ -8,9 +8,7 @@
 package org.dspace.sunedu;
 
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,11 +16,7 @@ import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
-import org.dspace.discovery.DiscoverQuery;
-import org.dspace.discovery.DiscoverResultIterator;
 import org.dspace.discovery.SearchService;
-import org.dspace.discovery.SearchServiceException;
-import org.dspace.discovery.indexobject.IndexableItem;
 import org.dspace.external.model.SuneduDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,11 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  * 
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
-public class UpdateItemWithSuneduInformation {
+public class UpdateItemWithInformationFromSuneduService {
 
-    private static Logger log = LogManager.getLogger(UpdateItemWithSuneduInformation.class);
-
-    private UUID collectonUuid;
+    private static Logger log = LogManager.getLogger(UpdateItemWithInformationFromSuneduService.class);
 
     public static int countItemUpdated = 0;
 
@@ -47,30 +39,7 @@ public class UpdateItemWithSuneduInformation {
     @Autowired
     private ItemService itemService;
 
-    public void updateInformation() {
-        try (Context context = new Context()) {
-            int count = 0;
-            Iterator<Item> itemIterator = findItems(context);
-            log.info("Sunedu update start");
-            while (itemIterator.hasNext()) {
-                Item item = itemIterator.next();
-                updateItems(context, item);
-                count++;
-                if (count == 20) {
-                    context.commit();
-                    count = 0;
-                }
-            }
-            context.commit();
-            log.info("Sunedu update end");
-            log.info("Item updated " + countItemUpdated);
-        } catch (SQLException | SearchServiceException e) {
-            log.error(e.getMessage(), e);
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
-    private void updateItems(Context context, Item item) {
+    public void updateItem(Context context, Item item) {
         String dni = itemService.getMetadataFirstValue(item, "perucris", "identifier", "dni", Item.ANY);
         List<SuneduDTO> suneduInformations = suneduProvider.getSundeduObject(dni);
         if (updateWithSuneduInformations(context, item, suneduInformations)) {
@@ -165,22 +134,4 @@ public class UpdateItemWithSuneduInformation {
         }
     }
 
-    private Iterator<Item> findItems(Context context)
-            throws SQLException, SearchServiceException {
-        DiscoverQuery discoverQuery = new DiscoverQuery();
-        discoverQuery.setDSpaceObjectFilter(IndexableItem.TYPE);
-        discoverQuery.setMaxResults(20);
-        discoverQuery.addFilterQueries("relationship.type:Person");
-        discoverQuery.addFilterQueries("perucris.identifier.dni:*");
-        discoverQuery.addFilterQueries("location.coll:" + this.collectonUuid.toString());
-        return new DiscoverResultIterator<Item, UUID>(context, discoverQuery);
-    }
-
-    public UUID getCollectonUuid() {
-        return collectonUuid;
-    }
-
-    public void setCollectonUuid(UUID collectonUuid) {
-        this.collectonUuid = collectonUuid;
-    }
 }

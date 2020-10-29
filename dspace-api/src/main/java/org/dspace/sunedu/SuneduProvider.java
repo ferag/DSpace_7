@@ -44,7 +44,13 @@ public class SuneduProvider {
     private SimpleMapConverterCountry simpleMapConverterCountry;
 
     public List<SuneduDTO> getSundeduObject(String id) {
-        return convertToSuneduDTO(getRecords(id));
+        InputStream is = getRecords(id);
+        if (is != null) {
+            return convertToSuneduDTO(is);
+        } else {
+            log.error("The dni : " + id + " is wrong!");
+            return null;
+        }
     }
 
     private InputStream getRecords(String id) {

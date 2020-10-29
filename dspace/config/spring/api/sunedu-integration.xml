@@ -17,9 +17,7 @@
 
 	<bean class="org.dspace.sunedu.SuneduProvider"/>
 
-	<bean class="org.dspace.sunedu.UpdateItemWithSuneduInformation">
-	    <property name="collectonUuid" value="${sunedu.collectonUuid}" />
-    </bean>
+	<bean class="org.dspace.sunedu.UpdateItemWithInformationFromSuneduService"/>
 
     <bean class="org.dspace.sunedu.SuneduRestConnector">
         <property name="suneduUrl" value="${sunedu.url}" />

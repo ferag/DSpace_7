@@ -40,7 +40,7 @@ public class ReniecProvider {
     public ReniecDTO getReniecObject(String id) {
         InputStream is = getRecords(id);
         if (is != null) {
-            return convertToReniecDTO(getRecords(id));
+            return convertToReniecDTO(is);
         } else {
             log.error("The dni : " + id + " is wrong!");
             return null;

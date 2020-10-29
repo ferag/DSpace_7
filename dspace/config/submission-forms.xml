@@ -602,6 +602,44 @@
         </field>
       </row>
     </form>
+    <form name="publication_thesis-dc-contributor-advisor">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>contributor</dc-element>
+          <dc-qualifier>advisor</dc-qualifier>
+          <label>Advisor</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>advisor</dc-element>
+          <dc-qualifier>orcid</dc-qualifier>
+          <label>Advisor’s ORCID</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>advisor</dc-element>
+          <dc-qualifier>dni</dc-qualifier>
+          <label>Advisor’s DNI</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
     <form name="journal">
       <row>
         <field>
@@ -1133,33 +1171,9 @@
           <dc-schema>dc</dc-schema>
           <dc-element>contributor</dc-element>
           <dc-qualifier>advisor</dc-qualifier>
-          <label>Advisor</label>
-          <input-type>onebox</input-type>
+          <label>Advisor(s)</label>
+          <input-type>group</input-type>
           <repeatable>true</repeatable>
-          <required />
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>advisor</dc-element>
-          <dc-qualifier>orcid</dc-qualifier>
-          <label>Advisor’s ORCID</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>advisor</dc-element>
-          <dc-qualifier>dni</dc-qualifier>
-          <label>Advisor’s DNI</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
           <required />
           <hint />
         </field>

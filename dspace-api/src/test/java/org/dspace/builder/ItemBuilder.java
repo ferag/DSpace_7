@@ -255,6 +255,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "person", "knowsLanguage", null, lanugage);
     }
 
+    public ItemBuilder withDNI(String dni) {
+        return addMetadataValue(item, "perucris", "identifier", "dni", dni);
+    }
+
     public ItemBuilder makeUnDiscoverable() {
         item.setDiscoverable(false);
         return this;

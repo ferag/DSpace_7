@@ -31,7 +31,7 @@ import org.mockito.junit.MockitoJUnitRunner;
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4Science.it)
  */
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class ReniecTest {
+public class ReniecProviderTest {
 
     @InjectMocks
     private ReniecProvider reniecProvider;

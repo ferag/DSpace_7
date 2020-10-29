@@ -8,11 +8,12 @@
 package org.dspace.content.integration.reniec.script;
 
 /**
- * Extension of {@link ReniecUpdateScriptConfiguration} for CLI.
+ * Extension of {@link UpdateItemWithExternalSourceScriptConfiguration} for CLI.
  *
  * @author mykhaylo boychuk (mykhaylo.boychuk at 4science.it)
  *
  */
-public class ReniecUpdateCliScriptConfiguration<T extends ReniecUpdateCli> extends ReniecUpdateScriptConfiguration<T> {
+public class UpdateItemWithExternalSourceCliScriptConfiguration<T extends UpdateItemWithExternalSourceCli>
+        extends UpdateItemWithExternalSourceScriptConfiguration<T> {
 
 }

@@ -73,7 +73,7 @@ public class ReniecUpdateIT extends AbstractControllerIntegrationTest {
 
         context.restoreAuthSystemState();
 
-        String[] args = new String[] {"reniec-update", "-i", col1.getID().toString()};
+        String[] args = new String[] {"update", "-i", col1.getID().toString(), "-s", "reniec"};
         TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
 
         int status = handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin);
@@ -173,7 +173,7 @@ public class ReniecUpdateIT extends AbstractControllerIntegrationTest {
 
         context.restoreAuthSystemState();
 
-        String[] args = new String[] {"reniec-update", "-i",""};
+        String[] args = new String[] {"update", "-i", "", "-s", "reniec"};
         TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
 
         int status = handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin);
@@ -276,7 +276,7 @@ public class ReniecUpdateIT extends AbstractControllerIntegrationTest {
 
         context.restoreAuthSystemState();
 
-        String[] args = new String[] {"reniec-update", "-i", UUID.randomUUID().toString()};
+        String[] args = new String[] {"update", "-i", UUID.randomUUID().toString(), "-s", "reniec"};
         TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
 
         int status = handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin);

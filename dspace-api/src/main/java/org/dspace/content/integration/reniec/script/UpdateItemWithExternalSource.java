@@ -8,7 +8,9 @@
 package org.dspace.content.integration.reniec.script;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.cli.ParseException;
@@ -22,6 +24,7 @@ import org.dspace.discovery.SearchServiceException;
 import org.dspace.discovery.indexobject.IndexableItem;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.factory.EPersonServiceFactory;
+import org.dspace.reniec.PeruExternalService;
 import org.dspace.reniec.UpdateItemWithInformationFromReniecService;
 import org.dspace.scripts.DSpaceRunnable;
 import org.dspace.util.UUIDUtils;
@@ -31,17 +34,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Implementation of {@link DSpaceRunnable}
  *
- * @author mykhaylo boychuk (mykhaylo.boychuk at 4science.it)
+ * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
-public class ReniecUpdate extends DSpaceRunnable<ReniecUpdateScriptConfiguration<ReniecUpdate>> {
+public class UpdateItemWithExternalSource
+        extends DSpaceRunnable<UpdateItemWithExternalSourceScriptConfiguration<UpdateItemWithExternalSource>> {
 
-    private static Logger log = LogManager.getLogger(ReniecUpdate.class);
+    private static Logger log = LogManager.getLogger(UpdateItemWithExternalSource.class);
 
     public static int countFoundItems = 0;
 
     private UUID collectionUuid;
 
     private Context context;
+
+    private String service;
+
+    private Map<String, PeruExternalService> peruExternalService = new HashMap<String, PeruExternalService>();
 
     @Autowired
     private  UpdateItemWithInformationFromReniecService updateItemWithInformationFromReniecService;
@@ -51,22 +59,32 @@ public class ReniecUpdate extends DSpaceRunnable<ReniecUpdateScriptConfiguration
         this.updateItemWithInformationFromReniecService = new DSpace().getServiceManager().getServiceByName(
                 UpdateItemWithInformationFromReniecService.class.getName(),
                 UpdateItemWithInformationFromReniecService.class);
+        peruExternalService.put("reniec", updateItemWithInformationFromReniecService);
         this.collectionUuid = UUIDUtils.fromString(commandLine.getOptionValue('i'));
+        this.service = commandLine.getOptionValue('s');
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public ReniecUpdateScriptConfiguration<ReniecUpdate> getScriptConfiguration() {
-        return new DSpace().getServiceManager().getServiceByName("reniec-update",
-                   ReniecUpdateScriptConfiguration.class);
+    public UpdateItemWithExternalSourceScriptConfiguration<UpdateItemWithExternalSource> getScriptConfiguration() {
+        return new DSpace().getServiceManager().getServiceByName("update",
+                   UpdateItemWithExternalSourceScriptConfiguration.class);
     }
 
     @Override
     public void internalRun() throws Exception {
         context = new Context();
         assignCurrentUserInContext();
+
+        if (service == null) {
+            throw new IllegalArgumentException("The name of service must be provided");
+        }
+        PeruExternalService externalService = peruExternalService.get(this.service);
+        if (externalService == null) {
+            throw new IllegalArgumentException("The name of service must be provided");
+        }
         try {
-            performReniecUpdate(context);
+            performUpdate(context, externalService);
             context.complete();
         } catch (Exception e) {
             handler.handleException(e);
@@ -74,15 +92,15 @@ public class ReniecUpdate extends DSpaceRunnable<ReniecUpdateScriptConfiguration
         }
     }
 
-    public void performReniecUpdate(Context context) {
+    public void performUpdate(Context context, PeruExternalService externalService) {
         int count = 0;
         try {
             Iterator<Item> itemIterator = findItems(context);
-            log.info("Reniec update start");
+            log.info("Update start");
             while (itemIterator.hasNext()) {
                 Item item = itemIterator.next();
                 countFoundItems++;
-                updateItemWithInformationFromReniecService.updateItem(context, item);
+                externalService.updateItem(context, item);
                 count++;
                 if (count == 20) {
                     context.commit();
@@ -91,8 +109,7 @@ public class ReniecUpdate extends DSpaceRunnable<ReniecUpdateScriptConfiguration
             }
             context.commit();
             log.info("Found " + countFoundItems + " items");
-            log.info("Updated " + UpdateItemWithInformationFromReniecService.countItemUpdated + " items");
-            log.info("Reniec update end");
+            log.info("Update end");
         } catch (SQLException | SearchServiceException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);
@@ -126,5 +143,13 @@ public class ReniecUpdate extends DSpaceRunnable<ReniecUpdateScriptConfiguration
 
     public void setCollectionUuid(UUID collectionUuid) {
         this.collectionUuid = collectionUuid;
+    }
+
+    public Map<String, PeruExternalService> getPeruExternalService() {
+        return peruExternalService;
+    }
+
+    public void setPeruExternalService(Map<String, PeruExternalService> peruExternalService) {
+        this.peruExternalService = peruExternalService;
     }
 }

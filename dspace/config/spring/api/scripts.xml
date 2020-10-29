@@ -43,8 +43,8 @@
         <property name="dspaceRunnableClass" value="org.dspace.content.integration.crosswalks.script.BulkItemExportCli"/>
     </bean>
     
-    <bean id="reniec-update" class="org.dspace.content.integration.reniec.script.ReniecUpdateCliScriptConfiguration">
-        <property name="description" value="Perform the items update with informations from RENIEC API"/>
-        <property name="dspaceRunnableClass" value="org.dspace.content.integration.reniec.script.ReniecUpdateCli"/>
+    <bean id="update" class="org.dspace.content.integration.reniec.script.UpdateItemWithExternalSourceCliScriptConfiguration">
+        <property name="description" value="Perform the items update using external source"/>
+        <property name="dspaceRunnableClass" value="org.dspace.content.integration.reniec.script.UpdateItemWithExternalSourceCli"/>
     </bean>
 </beans>

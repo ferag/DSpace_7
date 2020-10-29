@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * 
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
-public class UpdateItemWithInformationFromReniecService {
+public class UpdateItemWithInformationFromReniecService implements PeruExternalService {
     private static Logger log = LogManager.getLogger(UpdateItemWithInformationFromReniecService.class);
 
     public static int countItemUpdated = 0;
@@ -34,6 +34,7 @@ public class UpdateItemWithInformationFromReniecService {
     @Autowired
     private ItemService itemService;
 
+    @Override
     public void updateItem(Context context, Item item) {
         String dni = itemService.getMetadataFirstValue(item, "perucris", "identifier", "dni", Item.ANY);
         ReniecDTO informationsFromReniec = reniecProvider.getReniecObject(dni);

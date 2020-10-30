@@ -51,8 +51,7 @@ public class ReniecProvider {
         if (!isValid(id)) {
             return null;
         }
-        InputStream bioDocument = reniecRestConnector.get(id);
-        return bioDocument;
+        return reniecRestConnector.get(id);
     }
 
     private boolean isValid(String text) {
@@ -112,9 +111,10 @@ public class ReniecProvider {
         String provinceCode = reniecInfo.item(6).getTextContent();
         String districtCode = reniecInfo.item(7).getTextContent();
 
-        if (regionCode != null && StringUtils.isNotBlank(regionCode) &&
-            provinceCode != null && StringUtils.isNotBlank(provinceCode) &&
-            districtCode != null && StringUtils.isNotBlank(districtCode)) {
+        if (StringUtils.isNotBlank(regionCode) &&
+            StringUtils.isNotBlank(provinceCode) &&
+            StringUtils.isNotBlank(districtCode)) {
+
             homeCode.append(regionCode).append("-").append(provinceCode).append("-").append(districtCode);
             dto.setHomeCode(homeCode.toString());
         } else {
@@ -131,16 +131,16 @@ public class ReniecProvider {
         String districtOfResidence = reniecInfo.item(10).getTextContent();
         String homeAddress = reniecInfo.item(11).getTextContent();
 
-        if (regionOfResidence != null && StringUtils.isNotBlank(regionOfResidence)) {
+        if (StringUtils.isNotBlank(regionOfResidence)) {
             dto.setRegionOfResidence(regionOfResidence);
         }
-        if (provinceOfResidenc != null && StringUtils.isNotBlank(provinceOfResidenc)) {
+        if (StringUtils.isNotBlank(provinceOfResidenc)) {
             dto.setProvinceOfResidence(provinceOfResidenc);
         }
-        if (districtOfResidence != null && StringUtils.isNotBlank(districtOfResidence)) {
+        if (StringUtils.isNotBlank(districtOfResidence)) {
             dto.setDistrictOfResidence(districtOfResidence);
         }
-        if (homeAddress != null && StringUtils.isNotBlank(homeAddress)) {
+        if (StringUtils.isNotBlank(homeAddress)) {
             dto.setHomeAddress(homeAddress);
         }
     }
@@ -161,9 +161,9 @@ public class ReniecProvider {
         String provinceNacimentoCode = reniecInfo.item(15).getTextContent();
         String districtNacimentoCode = reniecInfo.item(16).getTextContent();
 
-        if (regionNacimentoCode != null && StringUtils.isNotBlank(regionNacimentoCode) &&
-            provinceNacimentoCode != null && StringUtils.isNotBlank(provinceNacimentoCode) &&
-            districtNacimentoCode != null && StringUtils.isNotBlank(districtNacimentoCode)) {
+        if (StringUtils.isNotBlank(regionNacimentoCode) &&
+            StringUtils.isNotBlank(provinceNacimentoCode) &&
+            StringUtils.isNotBlank(districtNacimentoCode)) {
 
             nacimientoCode.append(regionNacimentoCode).append("-")
                           .append(provinceNacimentoCode).append("-").append(districtNacimentoCode);
@@ -181,13 +181,13 @@ public class ReniecProvider {
         String provinceOfBirth = reniecInfo.item(18).getTextContent();
         String districtOfBirth = reniecInfo.item(19).getTextContent();
 
-        if (regionOfBirth != null && StringUtils.isNotBlank(regionOfBirth)) {
+        if (StringUtils.isNotBlank(regionOfBirth)) {
             dto.setRegionOfBirth(regionOfBirth);
         }
-        if (provinceOfBirth != null && StringUtils.isNotBlank(provinceOfBirth)) {
+        if (StringUtils.isNotBlank(provinceOfBirth)) {
             dto.setProvinceOfBirth(provinceOfBirth);
         }
-        if (districtOfBirth != null && StringUtils.isNotBlank(districtOfBirth)) {
+        if (StringUtils.isNotBlank(districtOfBirth)) {
             dto.setDistrictOfBirth(districtOfBirth);
         }
     }

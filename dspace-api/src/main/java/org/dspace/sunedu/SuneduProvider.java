@@ -57,8 +57,7 @@ public class SuneduProvider {
         if (!isValid(id)) {
             return null;
         }
-        InputStream bioDocument = suneduRestConnector.get(id);
-        return bioDocument;
+        return suneduRestConnector.get(id);
     }
 
     private boolean isValid(String text) {

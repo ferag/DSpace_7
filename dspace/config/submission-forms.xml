@@ -602,6 +602,44 @@
         </field>
       </row>
     </form>
+    <form name="publication_thesis-dc-contributor-advisor">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>contributor</dc-element>
+          <dc-qualifier>advisor</dc-qualifier>
+          <label>Advisor</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>advisor</dc-element>
+          <dc-qualifier>orcid</dc-qualifier>
+          <label>Advisor’s ORCID</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>advisor</dc-element>
+          <dc-qualifier>dni</dc-qualifier>
+          <label>Advisor’s DNI</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
     <form name="journal">
       <row>
         <field>
@@ -858,7 +896,7 @@
           <dc-schema>oairecerif</dc-schema>
           <dc-element>access</dc-element>
           <label>Access condition</label>
-          <input-type>onebox</input-type>
+          <input-type value-pairs-name="peru_oairecerif_access">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -1133,33 +1171,9 @@
           <dc-schema>dc</dc-schema>
           <dc-element>contributor</dc-element>
           <dc-qualifier>advisor</dc-qualifier>
-          <label>Advisor</label>
-          <input-type>onebox</input-type>
+          <label>Advisor(s)</label>
+          <input-type>group</input-type>
           <repeatable>true</repeatable>
-          <required />
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>advisor</dc-element>
-          <dc-qualifier>orcid</dc-qualifier>
-          <label>Advisor’s ORCID</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>advisor</dc-element>
-          <dc-qualifier>dni</dc-qualifier>
-          <label>Advisor’s DNI</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
           <required />
           <hint />
         </field>
@@ -2324,6 +2338,18 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Internal Note</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>cris</dc-schema>
+          <dc-element>policy</dc-element>
+          <dc-qualifier>group</dc-qualifier>
+          <label>Security Group(s) *</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
           <required />
           <hint />
         </field>
@@ -5362,6 +5388,28 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       <pair>
         <displayed-value>Doctor</displayed-value>
         <stored-value>Doctor</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="peru_oairecerif_access" dc-term="peru_oairecerif_access">
+      <pair>
+        <displayed-value>Unspecified</displayed-value>
+        <stored-value />
+      </pair>
+      <pair>
+        <displayed-value>open access</displayed-value>
+        <stored-value>open access</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>embargoed access</displayed-value>
+        <stored-value>embargoed access</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>restricted access</displayed-value>
+        <stored-value>restricted access</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>metadata only access</displayed-value>
+        <stored-value>metadata only access</stored-value>
       </pair>
     </value-pairs>
   </form-value-pairs>

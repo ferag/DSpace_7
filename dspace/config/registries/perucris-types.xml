@@ -384,4 +384,66 @@
         <scope_note></scope_note>
     </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>domicilio</element>
+        <qualifier>ubigeoReniec</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>domicilio</element>
+        <qualifier>region</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>domicilio</element>
+        <qualifier>provincia</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>domicilio</element>
+        <qualifier>distrito</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>domicilio</element>
+        <qualifier>direccion</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>nacimiento</element>
+        <qualifier>ubigeoReniec</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>nacimiento</element>
+        <qualifier>region</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>nacimiento</element>
+        <qualifier>provincia</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>nacimiento</element>
+        <qualifier>distrito</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
 </dspace-dc-types>

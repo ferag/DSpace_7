@@ -2342,6 +2342,18 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <hint />
         </field>
       </row>
+      <row>
+        <field>
+          <dc-schema>cris</dc-schema>
+          <dc-element>policy</dc-element>
+          <dc-qualifier>group</dc-qualifier>
+          <label>Security Group(s) *</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
     </form>
     <form name="orgunit">
       <row>

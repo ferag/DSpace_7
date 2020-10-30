@@ -92,7 +92,7 @@ public class UpdateItemWithExternalSource
         }
     }
 
-    public void performUpdate(Context context, PeruExternalService externalService) {
+    private void performUpdate(Context context, PeruExternalService externalService) {
         int count = 0;
         try {
             Iterator<Item> itemIterator = findItems(context);

@@ -26,8 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UpdateItemWithInformationFromReniecService implements PeruExternalService {
     private static Logger log = LogManager.getLogger(UpdateItemWithInformationFromReniecService.class);
 
-    public static int countItemUpdated = 0;
-
     @Autowired
     private ReniecProvider reniecProvider;
 
@@ -38,23 +36,14 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
     public void updateItem(Context context, Item item) {
         String dni = itemService.getMetadataFirstValue(item, "perucris", "identifier", "dni", Item.ANY);
         ReniecDTO informationsFromReniec = reniecProvider.getReniecObject(dni);
-        if (updateCurrentItemWithInformationsFromReniec(context, item, informationsFromReniec)) {
-            countItemUpdated++;
-        }
+        updateCurrentItemWithInformationsFromReniec(context, item, informationsFromReniec);
     }
 
-    private boolean updateCurrentItemWithInformationsFromReniec(Context context, Item currentItem,
+    private void updateCurrentItemWithInformationsFromReniec(Context context, Item currentItem,
             ReniecDTO informationsFromReniec) {
-        boolean currentItemUpdated = true;
-        if (informationsFromReniec == null) {
-            return false;
-        }
-        if (checkCurrentItemWithInformationFromReniec(currentItem, informationsFromReniec)) {
-            return currentItemUpdated;
-        } else {
+        if (!checkCurrentItemWithInformationFromReniec(currentItem, informationsFromReniec)) {
             cleanMetadata(context, currentItem);
             addMetadata(context, currentItem, informationsFromReniec);
-            return currentItemUpdated;
         }
     }
 

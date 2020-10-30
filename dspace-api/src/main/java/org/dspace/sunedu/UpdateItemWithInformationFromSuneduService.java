@@ -28,8 +28,6 @@ public class UpdateItemWithInformationFromSuneduService {
 
     private static Logger log = LogManager.getLogger(UpdateItemWithInformationFromSuneduService.class);
 
-    public static int countItemUpdated = 0;
-
     @Autowired
     private SuneduProvider suneduProvider;
 
@@ -42,38 +40,29 @@ public class UpdateItemWithInformationFromSuneduService {
     public void updateItem(Context context, Item item) {
         String dni = itemService.getMetadataFirstValue(item, "perucris", "identifier", "dni", Item.ANY);
         List<SuneduDTO> suneduInformations = suneduProvider.getSundeduObject(dni);
-        if (updateWithSuneduInformations(context, item, suneduInformations)) {
-            countItemUpdated++;
-        }
+        updateWithSuneduInformations(context, item, suneduInformations);
     }
 
-    private boolean updateWithSuneduInformations(Context context, Item currentItem,List<SuneduDTO> suneduInformations) {
-        boolean updated = true;
+    private void updateWithSuneduInformations(Context context, Item currentItem,List<SuneduDTO> suneduInformations) {
         List<MetadataValue> roles =  itemService.getMetadata(currentItem, "crisrp", "education", "role", null);
         List<MetadataValue> professional =  itemService.getMetadata(currentItem, "crisrp", "education", null, null);
         List<MetadataValue> countries = itemService.getMetadata(currentItem, "perucris", "education", "country", null);
         List<MetadataValue> university = itemService.getMetadata(currentItem, "perucris", "education", "grantor", null);
 
-        if (roles.isEmpty() || roles == null) {
+        if (roles == null || roles.isEmpty()
+            || !sameMetadata(roles, countries, university, professional, suneduInformations)) {
+
             cleanMetadata(context, currentItem);
             addMetadata(context, currentItem, suneduInformations);
-            return updated;
-        } else if (checkMetadata(roles, countries, university, professional, suneduInformations)) {
-            return false;
-        } else {
-            cleanMetadata(context, currentItem);
-            addMetadata(context, currentItem, suneduInformations);
-            return updated;
         }
     }
 
-    private boolean checkMetadata(List<MetadataValue> roles,
-                                  List<MetadataValue> countries,
-                                  List<MetadataValue> universities,
-                                  List<MetadataValue> tituloProfesional,
-                                  List<SuneduDTO> suneduInformations) {
+    private boolean sameMetadata(List<MetadataValue> roles,
+                                 List<MetadataValue> countries,
+                                 List<MetadataValue> universities,
+                                 List<MetadataValue> tituloProfesional,
+                                 List<SuneduDTO> suneduInformations) {
 
-        boolean ok = true;
         if (suneduInformations.size() != roles.size()) {
             return false;
         } else {
@@ -92,7 +81,7 @@ public class UpdateItemWithInformationFromSuneduService {
                 }
             }
         }
-        return ok;
+        return true;
     }
 
     private boolean checkWithInformationsFromSunedu(String suneduInfo, List<MetadataValue> currentItemMetadata) {

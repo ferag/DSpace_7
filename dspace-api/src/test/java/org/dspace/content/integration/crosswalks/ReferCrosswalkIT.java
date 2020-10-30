@@ -143,6 +143,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
             .withTitle("First Publication")
             .withIssueDate("2020-01-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -150,6 +151,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
             .withTitle("Second Publication")
             .withIssueDate("2020-04-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -296,6 +298,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
             .withTitle("First Publication")
             .withIssueDate("2020-01-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -303,6 +306,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
             .withTitle("Second Publication")
             .withIssueDate("2020-04-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -357,6 +361,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         // with multiple persons export the publications should not be exported
         ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
             .withTitle("First Publication")
             .withIssueDate("2020-01-01")
             .withAuthor("John Smith", firstItem.getID().toString())
@@ -412,6 +417,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         // with multiple persons export the publications should not be exported
         ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
             .withTitle("First Publication")
             .withIssueDate("2020-01-01")
             .withAuthor("John Smith", firstItem.getID().toString())
@@ -491,6 +497,9 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withRelationFunding("Another Test Funding", funding.getID().toString())
             .withRelationConference("The best Conference")
             .withRelationDataset("DataSet")
+            .withEmbargoEnd("2021-01-01")
+            .withAccess("embargoed access")
+            .withSubjectOCDE("OCDE")
             .build();
 
         context.restoreAuthSystemState();

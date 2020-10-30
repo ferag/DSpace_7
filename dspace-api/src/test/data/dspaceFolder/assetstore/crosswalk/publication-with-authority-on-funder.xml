@@ -89,4 +89,7 @@
 			<Name>DataSet</Name>
 		</Product>
 	</References>
+	<Access xmlns="http://purl.org/coar/access_right" 
+    >
+    </Access>
 </Publication>

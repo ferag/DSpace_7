@@ -155,6 +155,7 @@
 			<map>
 				<entry key="coarTypes" value-ref="mapConverterCoarTypes" />
 				<entry key="fundingTypes" value-ref="mapConverterFundingTypes" />
+                <entry key="accessRight" value-ref="mapConverterAccessRight" />
 			</map>
 		</constructor-arg>
 	</bean>
@@ -171,6 +172,13 @@
 		<property name="converterNameFile" value="mapConverter-fundingTypes.properties" />
 		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
 		<property name="defaultValue" value="https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types"/>
+	</bean>
+	
+	<bean name="mapConverterAccessRight" class="org.dspace.util.SimpleMapConverter" init-method="init">
+	    <constructor-arg value="mapConverterAccessRight" />
+	    <property name="converterNameFile" value="mapConverter-accessRight.properties" />
+	    <property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+	    <property name="defaultValue" value=""/>
 	</bean>
 	
 	<!-- CONDITION EVALUATORS CONFIGURATION -->

@@ -30,6 +30,7 @@
    	<ISI-Number>@dc.identifier.isi@</ISI-Number>
    	<SCP-Number>@dc.identifier.scopus@</SCP-Number>
    	<Keyword>@dc.subject@</Keyword>
+    <Subject scheme="http://purl.org/pe-repo/ocde/ford">@perucris.subject.ocde@</Subject>
    	<Authors>
    		@group.dc-contributor-author.start@
       	<Author>
@@ -112,4 +113,9 @@
 			<Name>@dc.relation.dataset@</Name>
 		</Product>
 	</References>
+	<Access xmlns="http://purl.org/coar/access_right" 
+        endDate="@oairecerif.access.embargoEnd@"
+    >
+        @virtual.mapConverter.accessRight.oairecerif-access@
+    </Access>
 </Publication>

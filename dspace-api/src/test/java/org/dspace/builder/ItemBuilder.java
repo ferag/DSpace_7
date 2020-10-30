@@ -383,6 +383,18 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "perucris", "education", "grantor", universidad);
     }
 
+    public ItemBuilder withEmbargoEnd(String embargoEnd) {
+        return addMetadataValue(item, "oairecerif", "access", "embargoEnd", embargoEnd);
+    }
+
+    public ItemBuilder withAccess(String access) {
+        return addMetadataValue(item, "oairecerif", "access", null, access);
+    }
+
+    public ItemBuilder withSubjectOCDE(String ocde) {
+        return addMetadataValue(item, "perucris", "subject", "ocde", ocde);
+    }
+
     public ItemBuilder makeUnDiscoverable() {
         item.setDiscoverable(false);
         return this;

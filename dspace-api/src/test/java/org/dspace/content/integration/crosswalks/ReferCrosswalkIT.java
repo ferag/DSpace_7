@@ -143,6 +143,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
             .withTitle("First Publication")
             .withIssueDate("2020-01-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -150,6 +151,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
             .withTitle("Second Publication")
             .withIssueDate("2020-04-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -296,6 +298,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
             .withTitle("First Publication")
             .withIssueDate("2020-01-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -303,6 +306,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
             .withTitle("Second Publication")
             .withIssueDate("2020-04-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -357,6 +361,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         // with multiple persons export the publications should not be exported
         ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
             .withTitle("First Publication")
             .withIssueDate("2020-01-01")
             .withAuthor("John Smith", firstItem.getID().toString())
@@ -412,6 +417,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         // with multiple persons export the publications should not be exported
         ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
             .withTitle("First Publication")
             .withIssueDate("2020-01-01")
             .withAuthor("John Smith", firstItem.getID().toString())
@@ -491,6 +497,9 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withRelationFunding("Another Test Funding", funding.getID().toString())
             .withRelationConference("The best Conference")
             .withRelationDataset("DataSet")
+            .withEmbargoEnd("2021-01-01")
+            .withAccess("embargoed access")
+            .withSubjectOCDE("OCDE")
             .build();
 
         context.restoreAuthSystemState();
@@ -577,6 +586,56 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         referCrossWalk.disseminate(context, publication, out);
 
         try (FileInputStream fis = getFileInputStream("publication-with-authority-on-funder.xml")) {
+            String expectedXml = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedXml);
+        }
+    }
+
+    @Test
+    public void testManyPublicationXmlDisseminate() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item firstPublication = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
+            .withTitle("First Publication")
+            .withDoiIdentifier("doi:111.111/publication")
+            .withType("Controlled Vocabulary for Resource Type Genres::learning object")
+            .withIssueDate("2019-12-31")
+            .withAuthor("Edward Smith")
+            .withAuthorAffiliation("Company")
+            .withAuthor("Walter White")
+            .withAuthorAffiliation(CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE)
+            .build();
+
+        Item funding = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Funding")
+            .withTitle("Test Funding")
+            .withType("Contract")
+            .withFunder("Test Funder")
+            .withAcronym("TF-01")
+            .build();
+
+        Item secondPublication = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
+            .withTitle("Second Publication")
+            .withDoiIdentifier("doi:222.222/publication")
+            .withType("Controlled Vocabulary for Resource Type Genres::clinical trial")
+            .withIssueDate("2010-02-01")
+            .withAuthor("Jessie Pinkman")
+            .withRelationFunding("Test Funding", funding.getID().toString())
+            .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("publication-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, Arrays.asList(firstPublication, secondPublication).iterator(), out);
+
+        try (FileInputStream fis = getFileInputStream("publications.xml")) {
             String expectedXml = IOUtils.toString(fis, Charset.defaultCharset());
             compareEachLine(out.toString(), expectedXml);
         }

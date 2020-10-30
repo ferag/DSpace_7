@@ -27,13 +27,13 @@ import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.reniec.PeruExternalService;
 import org.dspace.reniec.UpdateItemWithInformationFromReniecService;
 import org.dspace.scripts.DSpaceRunnable;
+import org.dspace.sunedu.UpdateItemWithInformationFromSuneduService;
 import org.dspace.util.UUIDUtils;
 import org.dspace.utils.DSpace;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Implementation of {@link DSpaceRunnable}
- *
+ * Implementation of {@link DSpaceRunnable} to update items with external service as RENIEC, SUNEDU
+ * 
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
 public class UpdateItemWithExternalSource
@@ -51,15 +51,14 @@ public class UpdateItemWithExternalSource
 
     private Map<String, PeruExternalService> peruExternalService = new HashMap<String, PeruExternalService>();
 
-    @Autowired
-    private  UpdateItemWithInformationFromReniecService updateItemWithInformationFromReniecService;
-
     @Override
     public void setup() throws ParseException {
-        this.updateItemWithInformationFromReniecService = new DSpace().getServiceManager().getServiceByName(
-                UpdateItemWithInformationFromReniecService.class.getName(),
-                UpdateItemWithInformationFromReniecService.class);
-        peruExternalService.put("reniec", updateItemWithInformationFromReniecService);
+        peruExternalService.put("reniec", new DSpace().getServiceManager().getServiceByName(
+                                              UpdateItemWithInformationFromReniecService.class.getName(),
+                                              UpdateItemWithInformationFromReniecService.class));
+        peruExternalService.put("sunedu", new DSpace().getServiceManager().getServiceByName(
+                                              UpdateItemWithInformationFromSuneduService.class.getName(),
+                                              UpdateItemWithInformationFromSuneduService.class));
         this.collectionUuid = UUIDUtils.fromString(commandLine.getOptionValue('i'));
         this.service = commandLine.getOptionValue('s');
     }

@@ -18,13 +18,14 @@ import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.discovery.SearchService;
 import org.dspace.external.model.SuneduDTO;
+import org.dspace.reniec.PeruExternalService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
-public class UpdateItemWithInformationFromSuneduService {
+public class UpdateItemWithInformationFromSuneduService implements PeruExternalService {
 
     private static Logger log = LogManager.getLogger(UpdateItemWithInformationFromSuneduService.class);
 
@@ -37,6 +38,7 @@ public class UpdateItemWithInformationFromSuneduService {
     @Autowired
     private ItemService itemService;
 
+    @Override
     public void updateItem(Context context, Item item) {
         String dni = itemService.getMetadataFirstValue(item, "perucris", "identifier", "dni", Item.ANY);
         List<SuneduDTO> suneduInformations = suneduProvider.getSundeduObject(dni);

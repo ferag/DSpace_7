@@ -92,6 +92,10 @@
 				    	<xsl:with-param name="label" select="'Type'" />
 				    	<xsl:with-param name="value" select="pt:Type" />
 				    </xsl:call-template>
+                    <xsl:call-template name="print-value">
+                        <xsl:with-param name="label" select="'OCDE Subject(s)'" />
+                        <xsl:with-param name="value" select="Subject" />
+                    </xsl:call-template>
 			    	
 			    	
 					<xsl:call-template name="section-title">

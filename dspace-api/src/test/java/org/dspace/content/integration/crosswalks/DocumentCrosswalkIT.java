@@ -78,6 +78,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item personItem = buildPersonItem();
 
         ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
             .withTitle("First Publication")
             .withIssueDate("2020-01-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -85,6 +86,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
             .withTitle("Second Publication")
             .withIssueDate("2020-04-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -111,6 +113,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item personItem = buildPersonItem();
 
         ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
             .withTitle("First Publication")
             .withIssueDate("2020-01-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -118,6 +121,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
             .withTitle("Second Publication")
             .withIssueDate("2020-04-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -144,6 +148,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item personItem = buildPersonItem();
 
         ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
             .withTitle("First Publication")
             .withIssueDate("2020-01-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -151,6 +156,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
             .withTitle("Second Publication")
             .withIssueDate("2020-04-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -185,6 +191,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item personItem = buildPersonItem();
 
         ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
             .withTitle("First Publication")
             .withIssueDate("2020-01-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -192,6 +199,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
             .withTitle("Second Publication")
             .withIssueDate("2020-04-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -275,6 +283,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withEditorAffiliation("Editor Affiliation")
             .withRelationProject("Test Project", project.getID().toString())
             .withRelationFunding("Another Test Funding", funding.getID().toString())
+            .withSubjectOCDE("OCDE")
             .build();
 
         context.restoreAuthSystemState();
@@ -420,6 +429,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(content, containsString("Editors: Editor ( Editor Affiliation )"));
         assertThat(content, containsString("Keywords: test, export"));
         assertThat(content, containsString("Type: http://purl.org/coar/resource_type/c_efa0"));
+        assertThat(content, containsString("OCDE Subject(s): OCDE"));
 
         assertThat(content, containsString("Publication bibliographic details"));
         assertThat(content, containsString("Published in: Published in publication"));

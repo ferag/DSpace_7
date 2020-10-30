@@ -26,6 +26,7 @@
    	<SCP-Number>99999999</SCP-Number>
    	<Keyword>test</Keyword>
    	<Keyword>export</Keyword>
+    <Subject scheme="http://purl.org/pe-repo/ocde/ford">OCDE</Subject>
    	<Authors>
       	<Author>
         	<DisplayName>John Smith</DisplayName>
@@ -96,4 +97,9 @@
 			<Name>DataSet</Name>
 		</Product>
 	</References>
+	<Access xmlns="http://purl.org/coar/access_right" 
+        endDate="2021-01-01"
+    >
+        http://purl.org/coar/access_right/c_f1cf
+    </Access>
 </Publication>

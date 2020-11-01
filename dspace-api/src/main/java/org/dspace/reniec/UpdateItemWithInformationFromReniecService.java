@@ -116,12 +116,7 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
     }
 
     private boolean checkMetadata(String itemMetadata, String infoFromReniec) {
-        if (StringUtils.isNotBlank(itemMetadata) && StringUtils.isNotBlank(infoFromReniec)) {
-            if (itemMetadata.equals(infoFromReniec)) {
-                return true;
-            }
-        }
-        return false;
+        return StringUtils.equals(itemMetadata, infoFromReniec);
     }
 
     private boolean checkSexIndex(String sexIndex, int sexIndexFromReniec) {

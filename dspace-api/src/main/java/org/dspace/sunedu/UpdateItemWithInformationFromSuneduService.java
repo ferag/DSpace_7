@@ -39,13 +39,13 @@ public class UpdateItemWithInformationFromSuneduService implements PeruExternalS
     private ItemService itemService;
 
     @Override
-    public void updateItem(Context context, Item item) {
+    public boolean updateItem(Context context, Item item) {
         String dni = itemService.getMetadataFirstValue(item, "perucris", "identifier", "dni", Item.ANY);
         List<SuneduDTO> suneduInformations = suneduProvider.getSundeduObject(dni);
-        updateWithSuneduInformations(context, item, suneduInformations);
+        return updateWithSuneduInformations(context, item, suneduInformations);
     }
 
-    private void updateWithSuneduInformations(Context context, Item currentItem,List<SuneduDTO> suneduInformations) {
+    private boolean updateWithSuneduInformations(Context context, Item currentItem,List<SuneduDTO> suneduInformations) {
         List<MetadataValue> roles =  itemService.getMetadata(currentItem, "crisrp", "education", "role", null);
         List<MetadataValue> professional =  itemService.getMetadata(currentItem, "crisrp", "education", null, null);
         List<MetadataValue> countries = itemService.getMetadata(currentItem, "perucris", "education", "country", null);
@@ -56,7 +56,9 @@ public class UpdateItemWithInformationFromSuneduService implements PeruExternalS
 
             cleanMetadata(context, currentItem);
             addMetadata(context, currentItem, suneduInformations);
+            return true;
         }
+        return false;
     }
 
     private boolean sameMetadata(List<MetadataValue> roles,

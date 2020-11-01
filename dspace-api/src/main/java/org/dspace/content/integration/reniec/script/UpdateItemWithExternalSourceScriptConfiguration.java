@@ -48,13 +48,15 @@ public class UpdateItemWithExternalSourceScriptConfiguration<T extends UpdateIte
         if (options == null) {
             Options options = new Options();
 
+            options.addOption("s","service", true, "the name of the external service to use, i.e. RENIEC, SUNEDU");
+            options.getOption("s").setType(String.class);
+            options.getOption("s").setRequired(true);
+
             options.addOption("i", "id", true, "the UUID of the collection to performe update");
             options.getOption("i").setType(String.class);
             options.getOption("i").setRequired(false);
 
-            options.addOption("s","service", true, "the name of the external service to use");
-            options.getOption("s").setType(String.class);
-            options.getOption("s").setRequired(false);
+
             super.options = options;
         }
         return options;

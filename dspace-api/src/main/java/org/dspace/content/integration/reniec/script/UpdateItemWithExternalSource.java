@@ -39,9 +39,7 @@ import org.dspace.utils.DSpace;
 public class UpdateItemWithExternalSource
         extends DSpaceRunnable<UpdateItemWithExternalSourceScriptConfiguration<UpdateItemWithExternalSource>> {
 
-    private static Logger log = LogManager.getLogger(UpdateItemWithExternalSource.class);
-
-    public static int countFoundItems = 0;
+    private static final Logger log = LogManager.getLogger(UpdateItemWithExternalSource.class);
 
     private UUID collectionUuid;
 
@@ -66,7 +64,7 @@ public class UpdateItemWithExternalSource
     @Override
     @SuppressWarnings("unchecked")
     public UpdateItemWithExternalSourceScriptConfiguration<UpdateItemWithExternalSource> getScriptConfiguration() {
-        return new DSpace().getServiceManager().getServiceByName("update",
+        return new DSpace().getServiceManager().getServiceByName("update-from-supplier",
                    UpdateItemWithExternalSourceScriptConfiguration.class);
     }
 
@@ -78,7 +76,7 @@ public class UpdateItemWithExternalSource
         if (service == null) {
             throw new IllegalArgumentException("The name of service must be provided");
         }
-        PeruExternalService externalService = peruExternalService.get(this.service);
+        PeruExternalService externalService = peruExternalService.get(this.service.toLowerCase());
         if (externalService == null) {
             throw new IllegalArgumentException("The name of service must be provided");
         }
@@ -86,6 +84,7 @@ public class UpdateItemWithExternalSource
             performUpdate(context, externalService);
             context.complete();
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             handler.handleException(e);
             context.abort();
         }
@@ -95,11 +94,16 @@ public class UpdateItemWithExternalSource
         int count = 0;
         try {
             Iterator<Item> itemIterator = findItems(context);
-            log.info("Update start");
+            handler.logInfo("Update start");
+            int countFoundItems = 0;
+            int countUpdatedItems = 0;
             while (itemIterator.hasNext()) {
                 Item item = itemIterator.next();
                 countFoundItems++;
-                externalService.updateItem(context, item);
+                final boolean updated = externalService.updateItem(context, item);
+                if (updated) {
+                    countUpdatedItems++;
+                }
                 count++;
                 if (count == 20) {
                     context.commit();
@@ -107,8 +111,9 @@ public class UpdateItemWithExternalSource
                 }
             }
             context.commit();
-            log.info("Found " + countFoundItems + " items");
-            log.info("Update end");
+            handler.logInfo("Found " + countFoundItems + " items");
+            handler.logInfo("Updated " + countUpdatedItems + " items");
+            handler.logInfo("Update end");
         } catch (SQLException | SearchServiceException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);

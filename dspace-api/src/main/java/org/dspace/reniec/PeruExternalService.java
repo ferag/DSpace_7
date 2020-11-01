@@ -12,6 +12,6 @@ import org.dspace.core.Context;
 
 public interface PeruExternalService {
 
-    public void updateItem(Context context, Item item);
+    public boolean updateItem(Context context, Item item);
 
 }

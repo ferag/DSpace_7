@@ -33,18 +33,20 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
     private ItemService itemService;
 
     @Override
-    public void updateItem(Context context, Item item) {
+    public boolean updateItem(Context context, Item item) {
         String dni = itemService.getMetadataFirstValue(item, "perucris", "identifier", "dni", Item.ANY);
         ReniecDTO informationsFromReniec = reniecProvider.getReniecObject(dni);
-        updateCurrentItemWithInformationsFromReniec(context, item, informationsFromReniec);
+        return updateCurrentItemWithInformationsFromReniec(context, item, informationsFromReniec);
     }
 
-    private void updateCurrentItemWithInformationsFromReniec(Context context, Item currentItem,
+    private boolean updateCurrentItemWithInformationsFromReniec(Context context, Item currentItem,
             ReniecDTO informationsFromReniec) {
         if (!checkCurrentItemWithInformationFromReniec(currentItem, informationsFromReniec)) {
             cleanMetadata(context, currentItem);
             addMetadata(context, currentItem, informationsFromReniec);
+            return true;
         }
+        return false;
     }
 
     private boolean checkCurrentItemWithInformationFromReniec(Item currentItem, ReniecDTO informationsFromReniec) {

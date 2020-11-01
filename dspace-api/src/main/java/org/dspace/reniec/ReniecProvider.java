@@ -115,7 +115,7 @@ public class ReniecProvider {
             StringUtils.isNotBlank(provinceCode) &&
             StringUtils.isNotBlank(districtCode)) {
 
-            homeCode.append(regionCode).append("-").append(provinceCode).append("-").append(districtCode);
+            homeCode.append(regionCode).append(provinceCode).append(districtCode);
             dto.setHomeCode(homeCode.toString());
         } else {
             log.error("Some fields of HomeCode are empty or null ");

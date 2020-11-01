@@ -65,7 +65,7 @@ public class SuneduUpdateIT extends AbstractControllerIntegrationTest {
 
         context.restoreAuthSystemState();
 
-        String[] args = new String[] {"update", "-i", col1.getID().toString(), "-s", "sunedu"};
+        String[] args = new String[] {"update-from-supplier", "-i", col1.getID().toString(), "-s", "sunedu"};
         TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
 
         int status = handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin);
@@ -142,7 +142,7 @@ public class SuneduUpdateIT extends AbstractControllerIntegrationTest {
 
         context.restoreAuthSystemState();
 
-        String[] args = new String[] {"update", "-i", "", "-s", "sunedu"};
+        String[] args = new String[] {"update-from-supplier", "-i", "", "-s", "sunedu"};
         TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
 
         int status = handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin);
@@ -226,7 +226,7 @@ public class SuneduUpdateIT extends AbstractControllerIntegrationTest {
 
         context.restoreAuthSystemState();
 
-        String[] args = new String[] {"update", "-i", UUID.randomUUID().toString(), "-s", "sunedu"};
+        String[] args = new String[] {"update-from-supplier", "-i", UUID.randomUUID().toString(), "-s", "sunedu"};
         TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
 
         int status = handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin);

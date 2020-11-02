@@ -41,6 +41,9 @@
 			<Product>
 			</Product>
 		</References>
+		<Access xmlns="http://purl.org/coar/access_right" 
+	    >
+	    </Access>
 	</Publication>
 	<Publication id="mock-id">
 		<Type xmlns="https://www.openaire.eu/cerif-profile/vocab/COAR_Publication_Types">http://purl.org/coar/resource_type/c_cb28</Type>
@@ -76,5 +79,8 @@
 			<Product>
 			</Product>
 		</References>
+		<Access xmlns="http://purl.org/coar/access_right" 
+	    >
+	    </Access>
 	</Publication>
 </Publications>

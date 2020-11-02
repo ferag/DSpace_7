@@ -84,6 +84,9 @@
 	"keywords": [
 		"@dc.subject@",
 	],
+	"subjects": [
+		"@perucris.subject.ocde@",
+	],
 	"abstract": "@dc.description.abstract@",
 	"OAMandate": {
 		"mandated": "@oairecerif.oamandate@",

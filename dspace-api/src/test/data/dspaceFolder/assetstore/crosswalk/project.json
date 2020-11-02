@@ -71,6 +71,10 @@
 		"project",
 		"test"
 	],
+	"subjects": [
+		"First OCDE Subject",
+		"Second OCDE Subject"
+	],
 	"abstract": "This is a project to test the export",
 	"OAMandate": {
 		"mandated": "true",

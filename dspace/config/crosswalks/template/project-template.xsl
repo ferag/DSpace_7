@@ -96,6 +96,10 @@
 				    	<xsl:with-param name="label" select="'Other informations'" />
 			    	</xsl:call-template>
 
+                    <xsl:call-template name="print-values">
+                        <xsl:with-param name="label" select="'OCDE Subject(s)'" />
+                        <xsl:with-param name="values" select="Subject" />
+                    </xsl:call-template>
 					<xsl:call-template name="print-values">
 				    	<xsl:with-param name="label" select="'Uses equipment(s)'" />
 				    	<xsl:with-param name="values" select="Uses/Equipment/Name" />

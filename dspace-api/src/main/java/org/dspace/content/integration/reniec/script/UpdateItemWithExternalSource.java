@@ -24,6 +24,7 @@ import org.dspace.discovery.SearchServiceException;
 import org.dspace.discovery.indexobject.IndexableItem;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.factory.EPersonServiceFactory;
+import org.dspace.renacyt.UpdateItemWithInformationFromRenacytService;
 import org.dspace.reniec.PeruExternalService;
 import org.dspace.reniec.UpdateItemWithInformationFromReniecService;
 import org.dspace.scripts.DSpaceRunnable;
@@ -57,6 +58,9 @@ public class UpdateItemWithExternalSource
         peruExternalService.put("sunedu", new DSpace().getServiceManager().getServiceByName(
                                               UpdateItemWithInformationFromSuneduService.class.getName(),
                                               UpdateItemWithInformationFromSuneduService.class));
+        peruExternalService.put("renacyt", new DSpace().getServiceManager().getServiceByName(
+                                               UpdateItemWithInformationFromRenacytService.class.getName(),
+                                               UpdateItemWithInformationFromRenacytService.class));
         this.collectionUuid = UUIDUtils.fromString(commandLine.getOptionValue('i'));
         this.service = commandLine.getOptionValue('s');
     }

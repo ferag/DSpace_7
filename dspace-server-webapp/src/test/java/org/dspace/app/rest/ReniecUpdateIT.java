@@ -24,8 +24,8 @@ import org.dspace.builder.CommunityBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
-import org.dspace.reniec.ReniecProvider;
-import org.dspace.reniec.UpdateItemWithInformationFromReniecService;
+import org.dspace.perucris.externalservices.reniec.ReniecProvider;
+import org.dspace.perucris.externalservices.reniec.UpdateItemWithInformationFromReniecService;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,10 +91,10 @@ public class ReniecUpdateIT extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$.metadata['perucris.apellidoPaterno'].[0].value", is("SAUCEDO")))
                 .andExpect(jsonPath("$.metadata['perucris.domicilio.provincia'].[0].value", is("LIMA")))
                 .andExpect(jsonPath("$.metadata['perucris.domicilio.region'].[0].value", is("LIMA")))
-                .andExpect(jsonPath("$.metadata['perucris.domicilio.ubigeoReniec'].[0].value", is("14-01-37")))
+                .andExpect(jsonPath("$.metadata['perucris.domicilio.ubigeoReniec'].[0].value", is("140137")))
                 .andExpect(jsonPath("$.metadata['perucris.nacimiento.provincia'].[0].value", is("LIMA")))
                 .andExpect(jsonPath("$.metadata['perucris.nacimiento.region'].[0].value", is("LIMA")))
-                .andExpect(jsonPath("$.metadata['perucris.nacimiento.ubigeoReniec'].[0].value", is("14-01-37")))
+                .andExpect(jsonPath("$.metadata['perucris.nacimiento.ubigeoReniec'].[0].value", is("140137")))
                 .andExpect(jsonPath("$.metadata['person.givenName'].[0].value", is("EDWIN MANUEL")))
                 .andExpect(jsonPath("$.metadata['perucris.domicilio.direccion'].[0].value",
                         is("MZ.7 LT.8 ASENT.H.19 DE ABRIL CANTO GRANDE")))
@@ -114,10 +114,10 @@ public class ReniecUpdateIT extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$.metadata['perucris.apellidoPaterno'].[0].value", is("ALIAGA")))
                 .andExpect(jsonPath("$.metadata['perucris.domicilio.provincia'].[0].value", is("LIMA")))
                 .andExpect(jsonPath("$.metadata['perucris.domicilio.region'].[0].value", is("LIMA")))
-                .andExpect(jsonPath("$.metadata['perucris.domicilio.ubigeoReniec'].[0].value", is("14-01-17")))
+                .andExpect(jsonPath("$.metadata['perucris.domicilio.ubigeoReniec'].[0].value", is("140117")))
                 .andExpect(jsonPath("$.metadata['perucris.nacimiento.provincia'].[0].value", is("CELENDIN")))
                 .andExpect(jsonPath("$.metadata['perucris.nacimiento.region'].[0].value", is("CAJAMARCA")))
-                .andExpect(jsonPath("$.metadata['perucris.nacimiento.ubigeoReniec'].[0].value", is("06-03-01")))
+                .andExpect(jsonPath("$.metadata['perucris.nacimiento.ubigeoReniec'].[0].value", is("060301")))
                 .andExpect(jsonPath("$.metadata['person.givenName'].[0].value", is("SHEYLA JULISSA")))
                 .andExpect(jsonPath("$.metadata['perucris.domicilio.distrito'].[0].value", is("PUEBLO LIBRE")))
                 .andExpect(jsonPath("$.metadata['perucris.nacimiento.distrito'].[0].value", is("CELENDIN")))
@@ -191,10 +191,10 @@ public class ReniecUpdateIT extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$.metadata['perucris.apellidoPaterno'].[0].value", is("SAUCEDO")))
                 .andExpect(jsonPath("$.metadata['perucris.domicilio.provincia'].[0].value", is("LIMA")))
                 .andExpect(jsonPath("$.metadata['perucris.domicilio.region'].[0].value", is("LIMA")))
-                .andExpect(jsonPath("$.metadata['perucris.domicilio.ubigeoReniec'].[0].value", is("14-01-37")))
+                .andExpect(jsonPath("$.metadata['perucris.domicilio.ubigeoReniec'].[0].value", is("140137")))
                 .andExpect(jsonPath("$.metadata['perucris.nacimiento.provincia'].[0].value", is("LIMA")))
                 .andExpect(jsonPath("$.metadata['perucris.nacimiento.region'].[0].value", is("LIMA")))
-                .andExpect(jsonPath("$.metadata['perucris.nacimiento.ubigeoReniec'].[0].value", is("14-01-37")))
+                .andExpect(jsonPath("$.metadata['perucris.nacimiento.ubigeoReniec'].[0].value", is("140137")))
                 .andExpect(jsonPath("$.metadata['person.givenName'].[0].value", is("EDWIN MANUEL")))
                 .andExpect(jsonPath("$.metadata['perucris.domicilio.direccion'].[0].value",
                         is("MZ.7 LT.8 ASENT.H.19 DE ABRIL CANTO GRANDE")))
@@ -214,10 +214,10 @@ public class ReniecUpdateIT extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$.metadata['perucris.apellidoPaterno'].[0].value", is("ALIAGA")))
                 .andExpect(jsonPath("$.metadata['perucris.domicilio.provincia'].[0].value", is("LIMA")))
                 .andExpect(jsonPath("$.metadata['perucris.domicilio.region'].[0].value", is("LIMA")))
-                .andExpect(jsonPath("$.metadata['perucris.domicilio.ubigeoReniec'].[0].value", is("14-01-17")))
+                .andExpect(jsonPath("$.metadata['perucris.domicilio.ubigeoReniec'].[0].value", is("140117")))
                 .andExpect(jsonPath("$.metadata['perucris.nacimiento.provincia'].[0].value", is("CELENDIN")))
                 .andExpect(jsonPath("$.metadata['perucris.nacimiento.region'].[0].value", is("CAJAMARCA")))
-                .andExpect(jsonPath("$.metadata['perucris.nacimiento.ubigeoReniec'].[0].value", is("06-03-01")))
+                .andExpect(jsonPath("$.metadata['perucris.nacimiento.ubigeoReniec'].[0].value", is("060301")))
                 .andExpect(jsonPath("$.metadata['person.givenName'].[0].value", is("SHEYLA JULISSA")))
                 .andExpect(jsonPath("$.metadata['perucris.domicilio.distrito'].[0].value", is("PUEBLO LIBRE")))
                 .andExpect(jsonPath("$.metadata['perucris.nacimiento.distrito'].[0].value", is("CELENDIN")))
@@ -234,10 +234,10 @@ public class ReniecUpdateIT extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$.metadata['perucris.apellidoPaterno'].[0].value", is("BASILIO")))
                 .andExpect(jsonPath("$.metadata['perucris.domicilio.provincia'].[0].value", is("LIMA")))
                 .andExpect(jsonPath("$.metadata['perucris.domicilio.region'].[0].value", is("LIMA")))
-                .andExpect(jsonPath("$.metadata['perucris.domicilio.ubigeoReniec'].[0].value", is("14-01-06")))
+                .andExpect(jsonPath("$.metadata['perucris.domicilio.ubigeoReniec'].[0].value", is("140106")))
                 .andExpect(jsonPath("$.metadata['perucris.nacimiento.provincia'].[0].value", is("LIMA")))
                 .andExpect(jsonPath("$.metadata['perucris.nacimiento.region'].[0].value", is("LIMA")))
-                .andExpect(jsonPath("$.metadata['perucris.nacimiento.ubigeoReniec'].[0].value", is("14-01-06")))
+                .andExpect(jsonPath("$.metadata['perucris.nacimiento.ubigeoReniec'].[0].value", is("140106")))
                 .andExpect(jsonPath("$.metadata['person.givenName'].[0].value", is("JAIME JHONI")))
                 .andExpect(jsonPath("$.metadata['perucris.domicilio.distrito'].[0].value", is("COMAS")))
                 .andExpect(jsonPath("$.metadata['perucris.nacimiento.distrito'].[0].value", is("COMAS")))

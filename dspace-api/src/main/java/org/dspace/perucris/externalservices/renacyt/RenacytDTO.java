@@ -5,7 +5,7 @@
  *
  * http://www.dspace.org/license/
  */
-package org.dspace.renacyt;
+package org.dspace.perucris.externalservices.renacyt;
 
 import java.time.LocalDate;
 

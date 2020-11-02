@@ -5,7 +5,7 @@
  *
  * http://www.dspace.org/license/
  */
-package org.dspace.sunedu;
+package org.dspace.perucris.externalservices.sunedu;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +18,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dspace.external.model.SuneduDTO;
 import org.dspace.util.SimpleMapConverterCountry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.Document;

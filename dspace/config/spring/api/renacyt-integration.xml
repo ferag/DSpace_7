@@ -9,11 +9,11 @@
 
     <context:annotation-config /> <!-- allows us to use spring annotations in beans -->
 
-    <bean class="org.dspace.renacyt.UpdateItemWithInformationFromRenacytService"/>
+    <bean class="org.dspace.perucris.externalservices.renacyt.UpdateItemWithInformationFromRenacytService"/>
 
-	<bean class="org.dspace.renacyt.RenacytProvider"/>
+	<bean class="org.dspace.perucris.externalservices.renacyt.RenacytProvider"/>
 
-    <bean class="org.dspace.renacyt.RenacytRestConnector">
+    <bean class="org.dspace.perucris.externalservices.renacyt.RenacytRestConnector">
         <property name="renacytUrl" value="${renacyt.url}" />
         <property name="clientId" value="${renacyt.clientid}" />
         <property name="clientSecret" value="${renacyt.clientsecret}" />

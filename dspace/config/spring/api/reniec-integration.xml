@@ -9,11 +9,11 @@
 
     <context:annotation-config /> <!-- allows us to use spring annotations in beans -->
 
-	<bean class="org.dspace.reniec.UpdateItemWithInformationFromReniecService"/>
+	<bean class="org.dspace.perucris.externalservices.reniec.UpdateItemWithInformationFromReniecService"/>
 
-	<bean class="org.dspace.reniec.ReniecProvider"/>
+	<bean class="org.dspace.perucris.externalservices.reniec.ReniecProvider"/>
 
-    <bean class="org.dspace.reniec.ReniecRestConnector">
+    <bean class="org.dspace.perucris.externalservices.reniec.ReniecRestConnector">
         <property name="reniecUrl" value="${reniec.url}" />
         <property name="clientId" value="${reniec.clientid}" />
         <property name="clientSecret" value="${reniec.clientsecret}" />

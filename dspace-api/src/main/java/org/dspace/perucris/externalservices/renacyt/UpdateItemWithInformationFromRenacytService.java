@@ -5,7 +5,7 @@
  *
  * http://www.dspace.org/license/
  */
-package org.dspace.renacyt;
+package org.dspace.perucris.externalservices.renacyt;
 
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
@@ -18,7 +18,7 @@ import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
-import org.dspace.reniec.PeruExternalService;
+import org.dspace.perucris.externalservices.PeruExternalService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

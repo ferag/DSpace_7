@@ -57,8 +57,8 @@
         <property name="dspaceRunnableClass" value="org.dspace.content.integration.crosswalks.script.BulkItemExportCli"/>
     </bean>
     
-    <bean id="update-from-supplier" class="org.dspace.content.integration.reniec.script.UpdateItemWithExternalSourceCliScriptConfiguration">
+    <bean id="update-from-supplier" class="org.dspace.perucris.externalservices.UpdateItemWithExternalSourceCliScriptConfiguration">
         <property name="description" value="Perform the items update using external source"/>
-        <property name="dspaceRunnableClass" value="org.dspace.content.integration.reniec.script.UpdateItemWithExternalSourceCli"/>
+        <property name="dspaceRunnableClass" value="org.dspace.perucris.externalservices.UpdateItemWithExternalSourceCli"/>
     </bean>
 </beans>

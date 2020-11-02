@@ -5,7 +5,7 @@
  *
  * http://www.dspace.org/license/
  */
-package org.dspace.reniec;
+package org.dspace.perucris.externalservices.reniec;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import org.dspace.content.Item;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
+import org.dspace.perucris.externalservices.PeruExternalService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

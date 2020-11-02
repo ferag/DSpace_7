@@ -5,7 +5,7 @@
  *
  * http://www.dspace.org/license/
  */
-package org.dspace.content.integration.reniec.script;
+package org.dspace.perucris.externalservices;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -24,11 +24,10 @@ import org.dspace.discovery.SearchServiceException;
 import org.dspace.discovery.indexobject.IndexableItem;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.factory.EPersonServiceFactory;
-import org.dspace.renacyt.UpdateItemWithInformationFromRenacytService;
-import org.dspace.reniec.PeruExternalService;
-import org.dspace.reniec.UpdateItemWithInformationFromReniecService;
+import org.dspace.perucris.externalservices.renacyt.UpdateItemWithInformationFromRenacytService;
+import org.dspace.perucris.externalservices.reniec.UpdateItemWithInformationFromReniecService;
+import org.dspace.perucris.externalservices.sunedu.UpdateItemWithInformationFromSuneduService;
 import org.dspace.scripts.DSpaceRunnable;
-import org.dspace.sunedu.UpdateItemWithInformationFromSuneduService;
 import org.dspace.util.UUIDUtils;
 import org.dspace.utils.DSpace;
 

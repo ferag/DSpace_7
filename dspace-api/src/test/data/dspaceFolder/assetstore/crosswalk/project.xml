@@ -49,6 +49,8 @@
 	</Funded>
 	<Keyword>project</Keyword>
 	<Keyword>test</Keyword>
+	<Subject scheme="http://purl.org/pe-repo/ocde/ford">First OCDE Subject</Subject>
+	<Subject scheme="http://purl.org/pe-repo/ocde/ford">Second OCDE Subject</Subject>
 	<Abstract>This is a project to test the export</Abstract>
 	<OAMandate 
 		mandated="true" 

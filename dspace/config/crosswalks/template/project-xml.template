@@ -78,6 +78,7 @@
 	</Funded>
 	@relation.grants.end@
 	<Keyword>@dc.subject@</Keyword>
+	<Subject scheme="http://purl.org/pe-repo/ocde/ford">@perucris.subject.ocde@</Subject>
 	<Abstract>@dc.description.abstract@</Abstract>
 	<OAMandate 
 		mandated="@oairecerif.oamandate@" 

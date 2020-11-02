@@ -333,6 +333,8 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withRelationEquipment("Test equipment")
             .withSubject("project")
             .withSubject("test")
+            .withSubjectOCDE("First OCDE Subject")
+            .withSubjectOCDE("Second OCDE Subject")
             .withDescriptionAbstract("This is a project to test the export")
             .withOAMandate("true")
             .withOAMandateURL("oamandate-url")
@@ -536,6 +538,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(content, containsString("Co-Investigator(s): First coinvestigator, Second coinvestigator"));
 
         assertThat(content, containsString("Other informations"));
+        assertThat(content, containsString("OCDE Subject(s): First OCDE Subject, Second OCDE Subject"));
         assertThat(content, containsString("Uses equipment(s): Test equipment"));
         assertThat(content, containsString("Keyword(s): project, test"));
         assertThat(content, containsString("OA Mandate: true"));

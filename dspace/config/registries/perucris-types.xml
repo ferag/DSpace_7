@@ -72,6 +72,12 @@
         <scope_note></scope_note>
     </dc-type>
     
+    <dc-type>
+        <schema>perucris</schema>
+        <element>authentication</element>
+        <qualifier>twophase</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
 
     <dc-type>
         <schema>perucris</schema>

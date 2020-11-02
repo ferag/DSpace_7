@@ -315,6 +315,34 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "oairecerif", "project", "endDate", endDate);
     }
 
+    public ItemBuilder withProjectStatus(String status) {
+        return addMetadataValue(item, "oairecerif", "project", "status", status);
+    }
+
+    public ItemBuilder withProjectPartner(String partner) {
+        return addMetadataValue(item, "crispj", "partnerou", null, partner);
+    }
+
+    public ItemBuilder withProjectOrganization(String organization) {
+        return addMetadataValue(item, "crispj", "organization", null, organization);
+    }
+
+    public ItemBuilder withProjectInvestigator(String investigator) {
+        return addMetadataValue(item, "crispj", "investigator", null, investigator);
+    }
+
+    public ItemBuilder withProjectCoinvestigators(String coinvestigators) {
+        return addMetadataValue(item, "crispj", "coinvestigators", null, coinvestigators);
+    }
+
+    public ItemBuilder withProjectCoordinator(String coordinator) {
+        return addMetadataValue(item, "crispj", "coordinator", null, coordinator);
+    }
+
+    public ItemBuilder withProjectCoordinator(String coordinator, String authority) {
+        return addMetadataValue(item, "crispj", "coordinator", null, null, coordinator, authority, 600);
+    }
+
     public ItemBuilder withType(String type) {
         return addMetadataValue(item, "dc", "type", null, type);
     }
@@ -349,6 +377,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withRelationDataset(String dataset) {
         return addMetadataValue(item, "dc", "relation", "dataset", dataset);
+    }
+
+    public ItemBuilder withRelationEquipment(String equipment) {
+        return addMetadataValue(item, "dc", "relation", "equipment", equipment);
     }
 
     public ItemBuilder withVolume(String volume) {
@@ -387,6 +419,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "perucris", "education", "grantor", universidad);
     }
 
+    public ItemBuilder withOpenaireId(String openaireid) {
+        return addMetadataValue(item, "crispj", "openaireid", null, openaireid);
+    }
+
     public ItemBuilder withEmbargoEnd(String embargoEnd) {
         return addMetadataValue(item, "oairecerif", "access", "embargoEnd", embargoEnd);
     }
@@ -402,6 +438,18 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
     public ItemBuilder makeUnDiscoverable() {
         item.setDiscoverable(false);
         return this;
+    }
+
+    public ItemBuilder withUrlIdentifier(String urlIdentifier) {
+        return addMetadataValue(item, "oairecerif", "identifier", "url", urlIdentifier);
+    }
+
+    public ItemBuilder withOAMandate(String oamandate) {
+        return addMetadataValue(item, "oairecerif", "oamandate", null, oamandate);
+    }
+
+    public ItemBuilder withOAMandateURL(String oamandateUrl) {
+        return addMetadataValue(item, "oairecerif", "oamandate", "url", oamandateUrl);
     }
 
     public ItemBuilder withHandle(String handle) {

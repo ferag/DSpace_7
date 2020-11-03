@@ -46,6 +46,7 @@ import org.dspace.core.factory.CoreServiceFactory;
 import org.dspace.utils.DSpace;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -54,6 +55,7 @@ import org.junit.Test;
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  *
  */
+@Ignore
 public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
     private static final String BASE_OUTPUT_DIR_PATH = "./target/testing/dspace/assetstore/crosswalk/";
@@ -931,6 +933,330 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             compareEachLine(out.toString(), expectedJson);
         }
 
+    }
+
+    @Test
+    public void testOrgUnitXmlDisseminate() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item parent = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("OrgUnit")
+            .withAcronym("POU")
+            .withTitle("Parent OrgUnit")
+            .build();
+
+        Item orgUnit = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("OrgUnit")
+            .withAcronym("TOU")
+            .withTitle("Test OrgUnit")
+            .withOrgUnitLegalName("Test OrgUnit LegalName")
+            .withType("Strategic Research Insitute")
+            .withParentOrganization("Parent OrgUnit", parent.getID().toString())
+            .withOrgUnitIdentifier("ID-01")
+            .withOrgUnitIdentifier("ID-02")
+            .withUrlIdentifier("www.orgUnit.com")
+            .withUrlIdentifier("www.orgUnit.it")
+            .build();
+
+        ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Person")
+            .withTitle("Walter White")
+            .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
+            .build();
+
+        ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Person")
+            .withTitle("Jesse Pinkman")
+            .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
+            .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("orgUnit-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, orgUnit, out);
+
+        try (FileInputStream fis = getFileInputStream("orgUnit.xml")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+    }
+
+    @Test
+    public void testOrgUnitJsonDisseminate() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item parent = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("OrgUnit")
+            .withAcronym("POU")
+            .withTitle("Parent OrgUnit")
+            .build();
+
+        Item orgUnit = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("OrgUnit")
+            .withAcronym("TOU")
+            .withTitle("Test OrgUnit")
+            .withOrgUnitLegalName("Test OrgUnit LegalName")
+            .withType("Strategic Research Insitute")
+            .withParentOrganization("Parent OrgUnit", parent.getID().toString())
+            .withOrgUnitIdentifier("ID-01")
+            .withOrgUnitIdentifier("ID-02")
+            .withUrlIdentifier("www.orgUnit.com")
+            .withUrlIdentifier("www.orgUnit.it")
+            .build();
+
+        ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Person")
+            .withTitle("Walter White")
+            .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
+            .build();
+
+        ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Person")
+            .withTitle("Jesse Pinkman")
+            .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
+            .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("orgUnit-json");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, orgUnit, out);
+
+        try (FileInputStream fis = getFileInputStream("orgUnit.json")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+    }
+
+    @Test
+    public void testManyOrgUnitsXmlDisseminate() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item firstOrgUnit = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("OrgUnit")
+            .withAcronym("TOU")
+            .withTitle("Test OrgUnit")
+            .withOrgUnitLegalName("Test OrgUnit LegalName")
+            .withType("Strategic Research Insitute")
+            .withParentOrganization("Parent OrgUnit")
+            .withOrgUnitIdentifier("ID-01")
+            .withOrgUnitIdentifier("ID-02")
+            .withUrlIdentifier("www.orgUnit.com")
+            .withUrlIdentifier("www.orgUnit.it")
+            .build();
+
+        Item secondOrgUnit = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("OrgUnit")
+            .withAcronym("ATOU")
+            .withTitle("Another Test OrgUnit")
+            .withType("Private non-profit")
+            .withParentOrganization("Parent OrgUnit")
+            .withOrgUnitIdentifier("ID-03")
+            .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("orgUnit-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, Arrays.asList(firstOrgUnit, secondOrgUnit).iterator(), out);
+
+        try (FileInputStream fis = getFileInputStream("orgUnits.xml")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+    }
+
+    @Test
+    public void testManyOrgUnitsJsonDisseminate() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item firstOrgUnit = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("OrgUnit")
+            .withAcronym("TOU")
+            .withTitle("Test OrgUnit")
+            .withOrgUnitLegalName("Test OrgUnit LegalName")
+            .withType("Strategic Research Insitute")
+            .withParentOrganization("Parent OrgUnit")
+            .withOrgUnitIdentifier("ID-01")
+            .withOrgUnitIdentifier("ID-02")
+            .withUrlIdentifier("www.orgUnit.com")
+            .withUrlIdentifier("www.orgUnit.it")
+            .build();
+
+        Item secondOrgUnit = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("OrgUnit")
+            .withAcronym("ATOU")
+            .withTitle("Another Test OrgUnit")
+            .withType("Private non-profit")
+            .withParentOrganization("Parent OrgUnit")
+            .withOrgUnitIdentifier("ID-03")
+            .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("orgUnit-json");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, Arrays.asList(firstOrgUnit, secondOrgUnit).iterator(), out);
+
+        try (FileInputStream fis = getFileInputStream("orgUnits.json")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+    }
+
+    @Test
+    public void testEquipmentJsonDisseminate() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item equipment = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Equipment")
+            .withAcronym("T-EQ")
+            .withTitle("Test Equipment")
+            .withInternalId("ID-01")
+            .withDescription("This is an equipment to test the export functionality")
+            .withEquipmentOwnerOrgUnit("Test OrgUnit")
+            .withEquipmentOwnerPerson("Walter White")
+            .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("equipment-json");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, equipment, out);
+
+        try (FileInputStream fis = getFileInputStream("equipment.json")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+    }
+
+    @Test
+    public void testEquipmentXmlDisseminate() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item equipment = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Equipment")
+            .withAcronym("T-EQ")
+            .withTitle("Test Equipment")
+            .withInternalId("ID-01")
+            .withDescription("This is an equipment to test the export functionality")
+            .withEquipmentOwnerOrgUnit("Test OrgUnit")
+            .withEquipmentOwnerPerson("Walter White")
+            .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("equipment-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, equipment, out);
+
+        try (FileInputStream fis = getFileInputStream("equipment.xml")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+    }
+
+    @Test
+    public void testManyEquipmentJsonDisseminate() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item firstEquipment = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Equipment")
+            .withAcronym("FT-EQ")
+            .withTitle("First Test Equipment")
+            .withInternalId("ID-01")
+            .withDescription("This is an equipment to test the export functionality")
+            .withEquipmentOwnerOrgUnit("Test OrgUnit")
+            .withEquipmentOwnerPerson("Walter White")
+            .build();
+
+        Item secondEquipment = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Equipment")
+            .withAcronym("ST-EQ")
+            .withTitle("Second Test Equipment")
+            .withInternalId("ID-02")
+            .withDescription("This is another equipment to test the export functionality")
+            .withEquipmentOwnerPerson("John Smith")
+            .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("equipment-json");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, Arrays.asList(firstEquipment, secondEquipment).iterator(), out);
+
+        try (FileInputStream fis = getFileInputStream("equipments.json")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+    }
+
+    @Test
+    public void testManyEquipmentXmlDisseminate() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item firstEquipment = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Equipment")
+            .withAcronym("FT-EQ")
+            .withTitle("First Test Equipment")
+            .withInternalId("ID-01")
+            .withDescription("This is an equipment to test the export functionality")
+            .withEquipmentOwnerOrgUnit("Test OrgUnit")
+            .withEquipmentOwnerPerson("Walter White")
+            .build();
+
+        Item secondEquipment = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Equipment")
+            .withAcronym("ST-EQ")
+            .withTitle("Second Test Equipment")
+            .withInternalId("ID-02")
+            .withDescription("This is another equipment to test the export functionality")
+            .withEquipmentOwnerPerson("John Smith")
+            .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("equipment-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, Arrays.asList(firstEquipment, secondEquipment).iterator(), out);
+
+        try (FileInputStream fis = getFileInputStream("equipments.xml")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
     }
 
     private void compareEachLine(String result, String expectedResult) {

@@ -29,7 +29,7 @@ public class UpdateItemWithInformationFromRenacytService implements PeruExternal
     private static Logger log = LogManager.getLogger(UpdateItemWithInformationFromRenacytService.class);
 
     @Autowired
-    private RenacytProvider renasytProvider;
+    private RenacytProvider renacytProvider;
 
     @Autowired
     private ItemService itemService;
@@ -37,12 +37,15 @@ public class UpdateItemWithInformationFromRenacytService implements PeruExternal
     @Override
     public boolean updateItem(Context context, Item item) {
         String dni = itemService.getMetadataFirstValue(item, "perucris", "identifier", "dni", Item.ANY);
-        RenacytDTO informationsFromReniec = renasytProvider.getRenacytObject(dni);
-        return updateCurrentItemWithInformationsFromReniec(context, item, informationsFromReniec);
+        RenacytDTO informationsFromRenacyt = renacytProvider.getRenacytObject(dni);
+        return updateCurrentItemWithInformationsFromRenacyt(context, item, informationsFromRenacyt);
     }
 
-    private boolean updateCurrentItemWithInformationsFromReniec(Context context, Item currentItem,
-            RenacytDTO informationsFromRenacyt) {
+    private boolean updateCurrentItemWithInformationsFromRenacyt(Context context, Item currentItem,
+                                                                 RenacytDTO informationsFromRenacyt) {
+        if (informationsFromRenacyt.isEmpty()) {
+            return false;
+        }
         boolean updated = false;
         if (tryToAddMetadataIfNotExistYet(context, currentItem, informationsFromRenacyt.getLevel(), "crisrp",
                 "qualification", null)) {

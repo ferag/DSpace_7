@@ -7,14 +7,14 @@
  */
 package org.dspace.perucris.externalservices.renacyt;
 
-import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.Map;
 
+import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -51,13 +51,8 @@ public class RenacytProvider {
 
     @SuppressWarnings("unchecked")
     private RenacytDTO convertToRenacytDTO(InputStream in) {
-        ObjectMapper mapper = new ObjectMapper();
         Map<String, String> jsonMap = null;
-        try {
-            jsonMap = mapper.readValue(in, Map.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        jsonMap = new Gson().fromJson(new InputStreamReader(in), Map.class);
         String level = jsonMap.get("nivel");
         String group = jsonMap.get("grupo");
         String startDate = jsonMap.get("fechaInicio");

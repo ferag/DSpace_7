@@ -10,6 +10,7 @@ package org.dspace.perucris.externalservices.reniec;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -42,6 +43,9 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
 
     private boolean updateCurrentItemWithInformationsFromReniec(Context context, Item currentItem,
             ReniecDTO informationsFromReniec) {
+        if (Objects.isNull(informationsFromReniec)) {
+            return false;
+        }
         if (!checkCurrentItemWithInformationFromReniec(currentItem, informationsFromReniec)) {
             cleanMetadata(context, currentItem);
             addMetadata(context, currentItem, informationsFromReniec);

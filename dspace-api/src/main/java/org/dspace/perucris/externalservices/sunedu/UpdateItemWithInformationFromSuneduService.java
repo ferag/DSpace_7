@@ -45,6 +45,10 @@ public class UpdateItemWithInformationFromSuneduService implements PeruExternalS
     }
 
     private boolean updateWithSuneduInformations(Context context, Item currentItem,List<SuneduDTO> suneduInformations) {
+
+        if (suneduInformations == null || suneduInformations.isEmpty()) {
+            return false;
+        }
         List<MetadataValue> roles =  itemService.getMetadata(currentItem, "crisrp", "education", "role", null);
         List<MetadataValue> professional =  itemService.getMetadata(currentItem, "crisrp", "education", null, null);
         List<MetadataValue> countries = itemService.getMetadata(currentItem, "perucris", "education", "country", null);

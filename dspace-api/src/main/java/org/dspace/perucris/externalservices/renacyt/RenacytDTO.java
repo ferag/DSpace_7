@@ -8,6 +8,8 @@
 package org.dspace.perucris.externalservices.renacyt;
 
 import java.time.LocalDate;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  * The representation model object for RENASYT Object
@@ -58,5 +60,10 @@ public class RenacytDTO {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    public boolean isEmpty() {
+        return Stream.of(level, group, startDate, endDate)
+            .allMatch(Objects::isNull);
     }
 }

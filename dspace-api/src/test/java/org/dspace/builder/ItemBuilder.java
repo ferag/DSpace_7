@@ -403,10 +403,6 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "oaire", "citation", "endPage", endPage);
     }
 
-    public ItemBuilder withOpenaireId(String openaireid) {
-        return addMetadataValue(item, "crispj", "openaireid", null, openaireid);
-    }
-
     public ItemBuilder withDNI(String dni) {
         return addMetadataValue(item, "perucris", "identifier", "dni", dni);
     }

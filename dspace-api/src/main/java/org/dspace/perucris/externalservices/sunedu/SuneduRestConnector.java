@@ -5,7 +5,7 @@
  *
  * http://www.dspace.org/license/
  */
-package org.dspace.reniec;
+package org.dspace.perucris.externalservices.sunedu;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,20 +27,20 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 /**
- * This class deals with logic management to connect to the RENIEC outdoor service
+ * This class deals with logic management to connect to the SUNEDU outdoor service
  * 
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
-public class ReniecRestConnector {
+public class SuneduRestConnector {
 
-    private static Logger log = org.apache.logging.log4j.LogManager.getLogger(ReniecRestConnector.class);
+    private static Logger log = org.apache.logging.log4j.LogManager.getLogger(SuneduRestConnector.class);
 
     private static final String DNI = "dni";
 
     private String clientId;
     private String clientSecret;
 
-    private String reniecUrl;
+    private String suneduUrl;
 
     private HttpClient httpClient;
 
@@ -59,16 +59,16 @@ public class ReniecRestConnector {
 
     public InputStream get(String id) {
         try {
-            return sendRequestToReniec(id);
+            return sendRequestToSunedu(id);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
 
-    private InputStream sendRequestToReniec(String id)
+    private InputStream sendRequestToSunedu(String id)
             throws UnsupportedEncodingException, IOException, ClientProtocolException {
-        HttpPost httpPost = new HttpPost(reniecUrl);
+        HttpPost httpPost = new HttpPost(suneduUrl);
         httpPost.setHeader("Content-type", "text/plain");
         httpPost.setHeader("Accept", "*/*");
         httpPost.setHeader("Accept-Encoding", "gzip, deflate, br");
@@ -100,12 +100,12 @@ public class ReniecRestConnector {
         this.clientSecret = clientSecret;
     }
 
-    public String getReniecUrl() {
-        return reniecUrl;
+    public String getSuneduUrl() {
+        return suneduUrl;
     }
 
-    public void setReniecUrl(String reniecUrl) {
-        this.reniecUrl = reniecUrl;
+    public void setSuneduUrl(String suneduUrl) {
+        this.suneduUrl = suneduUrl;
     }
 
     public HttpClient getHttpClient() {

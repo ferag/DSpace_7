@@ -15,11 +15,11 @@
 		<property name="defaultValue" value="other"/>
 	</bean>
 
-	<bean class="org.dspace.sunedu.SuneduProvider"/>
+	<bean class="org.dspace.perucris.externalservices.sunedu.SuneduProvider"/>
 
-	<bean class="org.dspace.sunedu.UpdateItemWithInformationFromSuneduService"/>
+	<bean class="org.dspace.perucris.externalservices.sunedu.UpdateItemWithInformationFromSuneduService"/>
 
-    <bean class="org.dspace.sunedu.SuneduRestConnector">
+    <bean class="org.dspace.perucris.externalservices.sunedu.SuneduRestConnector">
         <property name="suneduUrl" value="${sunedu.url}" />
         <property name="clientId" value="${sunedu.clientid}" />
         <property name="clientSecret" value="${sunedu.clientsecret}" />

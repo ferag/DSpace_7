@@ -5,7 +5,7 @@
  *
  * http://www.dspace.org/license/
  */
-package org.dspace.content.integration.reniec.script;
+package org.dspace.perucris.externalservices;
 
 import java.sql.SQLException;
 

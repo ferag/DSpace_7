@@ -5,7 +5,7 @@
  *
  * http://www.dspace.org/license/
  */
-package org.dspace.sunedu;
+package org.dspace.perucris.externalservices.sunedu;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -17,8 +17,7 @@ import org.dspace.content.MetadataValue;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.discovery.SearchService;
-import org.dspace.external.model.SuneduDTO;
-import org.dspace.reniec.PeruExternalService;
+import org.dspace.perucris.externalservices.PeruExternalService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

@@ -17,8 +17,8 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dspace.perucris.externalservices.sunedu.SuneduProvider;
 import org.dspace.services.ConfigurationService;
-import org.dspace.sunedu.SuneduProvider;
 
 /**
  * 

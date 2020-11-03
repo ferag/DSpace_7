@@ -5,7 +5,7 @@
  *
  * http://www.dspace.org/license/
  */
-package org.dspace.external.model;
+package org.dspace.perucris.externalservices.sunedu;
 
 /**
  * The representation model object for SUNEDU Objects

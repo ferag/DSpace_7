@@ -283,6 +283,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "crisrp", "qualification", "end", endDate);
     }
 
+    public ItemBuilder withPersonQualificationGroup(String group) {
+        return addMetadataValue(item, "crisrp", "qualification", "group", group);
+    }
+
     public ItemBuilder withPersonKnowsLanguages(String languages) {
         return addMetadataValue(item, "person", "knowsLanguage", null, languages);
     }
@@ -417,6 +421,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withUniversidad(String universidad) {
         return addMetadataValue(item, "perucris", "education", "grantor", universidad);
+    }
+
+    public ItemBuilder withOpenaireId(String openaireid) {
+        return addMetadataValue(item, "crispj", "openaireid", null, openaireid);
     }
 
     public ItemBuilder withEmbargoEnd(String embargoEnd) {

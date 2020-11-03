@@ -5,7 +5,7 @@
  *
  * http://www.dspace.org/license/
  */
-package org.dspace.reniec;
+package org.dspace.perucris.externalservices.reniec;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -165,8 +165,7 @@ public class ReniecProvider {
             StringUtils.isNotBlank(provinceNacimentoCode) &&
             StringUtils.isNotBlank(districtNacimentoCode)) {
 
-            nacimientoCode.append(regionNacimentoCode).append("-")
-                          .append(provinceNacimentoCode).append("-").append(districtNacimentoCode);
+            nacimientoCode.append(regionNacimentoCode).append(provinceNacimentoCode).append(districtNacimentoCode);
             dto.setNacimientoCode(nacimientoCode.toString());
         } else {
             log.error("Some fields of Nacimiento Code are empty or null ");

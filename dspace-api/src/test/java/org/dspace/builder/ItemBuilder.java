@@ -403,6 +403,22 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "crispj", "openaireid", null, openaireid);
     }
 
+    public ItemBuilder withDNI(String dni) {
+        return addMetadataValue(item, "perucris", "identifier", "dni", dni);
+    }
+
+    public ItemBuilder withTituloProfesional(String tituloProfesional) {
+        return addMetadataValue(item, "crisrp", "education", null, tituloProfesional);
+    }
+
+    public ItemBuilder withAbreviaturaTitulo(String abreviaturaTitulo) {
+        return addMetadataValue(item, "crisrp", "education", "role", abreviaturaTitulo);
+    }
+
+    public ItemBuilder withUniversidad(String universidad) {
+        return addMetadataValue(item, "perucris", "education", "grantor", universidad);
+    }
+
     public ItemBuilder withEmbargoEnd(String embargoEnd) {
         return addMetadataValue(item, "oairecerif", "access", "embargoEnd", embargoEnd);
     }

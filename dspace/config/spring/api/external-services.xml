@@ -40,12 +40,5 @@
         </property>
     </bean>
 
-	<bean class="org.dspace.sunedu.SuneduProvider"/>
-
-    <bean class="org.dspace.sunedu.SuneduRestConnector">
-        <property name="suneduUrl" value="${sunedu.url}" />
-        <property name="clientId" value="${sunedu.clientid}" />
-        <property name="clientSecret" value="${sunedu.clientsecret}" />
-    </bean>
 </beans>
 

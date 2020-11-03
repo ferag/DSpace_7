@@ -42,5 +42,9 @@
         <property name="description" value="Perform the multiple items export in the given format"/>
         <property name="dspaceRunnableClass" value="org.dspace.content.integration.crosswalks.script.BulkItemExportCli"/>
     </bean>
-    
+
+    <bean id="update-from-supplier" class="org.dspace.content.integration.reniec.script.UpdateItemWithExternalSourceCliScriptConfiguration">
+        <property name="description" value="Perform the items update using external source"/>
+        <property name="dspaceRunnableClass" value="org.dspace.content.integration.reniec.script.UpdateItemWithExternalSourceCli"/>
+    </bean>
 </beans>

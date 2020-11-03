@@ -10,14 +10,6 @@
         <property name="sourceIdentifier" value="mock"/>
     </bean>
 
-	<bean class="org.dspace.sunedu.SuneduProvider"/>
-
-    <bean class="org.dspace.sunedu.SuneduRestConnector">
-        <property name="suneduUrl" value="${sunedu.url}" />
-        <property name="clientId" value="${sunedu.clientid}" />
-        <property name="clientSecret" value="${sunedu.clientsecret}" />
-    </bean>
-
     <bean class="org.dspace.external.provider.impl.MockDataProvider" init-method="init">
         <property name="sourceIdentifier" value="mock2"/>
         <property name="supportedEntityTypes">
@@ -54,4 +46,3 @@
         <property name="OAUTHUrl" value="${orcid.oauth.url}" />
     </bean>
 </beans>
-

@@ -21,10 +21,12 @@ import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.dspace.AbstractDSpaceIntegrationTest;
 import org.dspace.external.model.SuneduDTO;
+import org.dspace.util.SimpleMapConverterCountry;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 /**
@@ -40,6 +42,9 @@ public class SuneduTest {
     @Mock
     private SuneduRestConnector suneduRestConnector;
 
+    @Mock
+    private SimpleMapConverterCountry simpleMapConverterCountry;
+
     protected static Properties testProps;
 
     @Test
@@ -54,10 +59,11 @@ public class SuneduTest {
 
             String DNI = "41918979";
             when(suneduRestConnector.get(DNI)).thenReturn(inputStream);
+            when(simpleMapConverterCountry.getValue(Mockito.anyString())).thenReturn("PE");
 
             List<SuneduDTO> suneduObject = suneduProvider.getSundeduObject(DNI);
             assertEquals(1, suneduObject.size());
-            assertEquals("PERU", suneduObject.get(0).getCountry());
+            assertEquals("PE", suneduObject.get(0).getCountry());
             assertEquals("UNIVERSIDAD NACIONAL DE INGENIERÍA", suneduObject.get(0).getUniversity());
             assertEquals("Titulo profesional", suneduObject.get(0).getAbreviaturaTitulo());
             assertEquals("INGENIERO DE SISTEMAS", suneduObject.get(0).getProfessionalQualification());
@@ -77,18 +83,19 @@ public class SuneduTest {
 
             String DNI = "41918999";
             when(suneduRestConnector.get(DNI)).thenReturn(inputStream);
+            when(simpleMapConverterCountry.getValue(Mockito.anyString())).thenReturn("PE");
 
             List<SuneduDTO> suneduObjects = suneduProvider.getSundeduObject(DNI);
             assertEquals(2, suneduObjects.size());
             for (SuneduDTO dto : suneduObjects) {
                 if (dto.getAbreviaturaTitulo().equals("Titulo profesional")) {
-                    assertEquals("PERU", dto.getCountry());
+                    assertEquals("PE", dto.getCountry());
                     assertEquals("UNIVERSIDAD PRIVADA NORBERT WIENER S.A.", dto.getUniversity());
                     assertEquals("Titulo profesional", dto.getAbreviaturaTitulo());
                     assertEquals("TITULO PROFESIONAL DE LICENCIADO EN ADMINISTRACION",
                             dto.getProfessionalQualification());
                 } else {
-                    assertEquals("PERU", dto.getCountry());
+                    assertEquals("PE", dto.getCountry());
                     assertEquals("UNIVERSIDAD PRIVADA NORBERT WIENER S.A.", dto.getUniversity());
                     assertEquals("Bachiller", dto.getAbreviaturaTitulo());
                     assertEquals("BACHILLER EN ADMINISTRACION", dto.getProfessionalQualification());

@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dspace.external.model.SuneduDTO;
+import org.dspace.util.SimpleMapConverterCountry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -39,16 +40,24 @@ public class SuneduProvider {
     @Autowired
     private SuneduRestConnector suneduRestConnector;
 
+    @Autowired
+    private SimpleMapConverterCountry simpleMapConverterCountry;
+
     public List<SuneduDTO> getSundeduObject(String id) {
-        return convertToSuneduDTO(getRecords(id));
+        InputStream is = getRecords(id);
+        if (is != null) {
+            return convertToSuneduDTO(is);
+        } else {
+            log.error("The dni : " + id + " is wrong!");
+            return null;
+        }
     }
 
     private InputStream getRecords(String id) {
         if (!isValid(id)) {
             return null;
         }
-        InputStream bioDocument = suneduRestConnector.get(id);
-        return bioDocument;
+        return suneduRestConnector.get(id);
     }
 
     private boolean isValid(String text) {
@@ -75,13 +84,17 @@ public class SuneduProvider {
         List<SuneduDTO> objects = suneduObjects;
         for (int i = 0; i < abreviaturaTituloRecord.getLength(); i++) {
             SuneduDTO dto = new SuneduDTO();
-            dto.setCountry(countryRecord.item(i).getTextContent());
+            dto.setCountry(getCountryCode(countryRecord.item(i).getTextContent()));
             dto.setAbreviaturaTitulo(educationDegree(abreviaturaTituloRecord.item(i).getTextContent()));
             dto.setProfessionalQualification(professionalQualificationRecord.item(i).getTextContent());
             dto.setUniversity(universityRecord.item(i).getTextContent());
             objects.add(dto);
         }
         return objects;
+    }
+
+    private String getCountryCode(String countryName) {
+        return simpleMapConverterCountry.getValue(countryName);
     }
 
     private String educationDegree(String educationDegree) {

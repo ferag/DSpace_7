@@ -52,7 +52,7 @@ public class UpdateItemWithInformationFromRenacytService implements PeruExternal
             updated = true;
         }
         if (tryToAddMetadataIfNotExistYet(context, currentItem, informationsFromRenacyt.getGroup(), "crisrp",
-                "qualification", "group")) {
+                "qualification", "orgunit")) {
             updated = true;
         }
         if (informationsFromRenacyt.getStartDate() != null) {

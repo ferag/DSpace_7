@@ -86,7 +86,8 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$.metadata['crisrp.qualification'].[0].value", is("III")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.start'].[0].value", is("24-07-2020")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.end'].[0].value", is("24-07-2022")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.group'].[0].value", is("Carlos Monge Medrano")));
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit'].[0].value",
+                                    is("Carlos Monge Medrano")));
 
         getClient(authToken).perform(get("/api/core/items/" + itemPersonB.getID()))
                 .andExpect(status().isOk())
@@ -95,7 +96,7 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$.metadata['crisrp.qualification'].[0].value", is("III")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.start'].[0].value", is("16-09-2020")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.end'].[0].value", is("16-09-2022")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.group'].[0].value", is("María Rostworowski")));
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit'].[0].value", is("María Rostworowski")));
 
         getClient(authToken).perform(get("/api/core/items/" + itemPersonC.getID()))
                 .andExpect(status().isOk())
@@ -104,7 +105,7 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$.metadata['crisrp.qualification']").doesNotExist())
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.start']").doesNotExist())
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.end']").doesNotExist())
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.group']").doesNotExist());
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit']").doesNotExist());
 
         getClient(authToken).perform(get("/api/core/items/" + itemPersonD.getID()))
                 .andExpect(status().isOk())
@@ -113,7 +114,7 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$.metadata['crisrp.qualification']").doesNotExist())
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.start']").doesNotExist())
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.end']").doesNotExist())
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.group']").doesNotExist());
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit']").doesNotExist());
     }
 
     @Test
@@ -163,13 +164,14 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
         String authToken = getAuthToken(admin.getEmail(), password);
 
         getClient(authToken).perform(get("/api/core/items/" + itemPersonA.getID()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.uuid", Matchers.is(itemPersonA.getID().toString())))
-                .andExpect(jsonPath("$.metadata['perucris.identifier.dni'].[0].value", is("08794686")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification'].[0].value", is("III")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.start'].[0].value", is("24-07-2020")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.end'].[0].value", is("24-07-2022")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.group'].[0].value", is("Carlos Monge Medrano")));
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$.uuid", Matchers.is(itemPersonA.getID().toString())))
+                            .andExpect(jsonPath("$.metadata['perucris.identifier.dni'].[0].value", is("08794686")))
+                            .andExpect(jsonPath("$.metadata['crisrp.qualification'].[0].value", is("III")))
+                            .andExpect(jsonPath("$.metadata['crisrp.qualification.start'].[0].value", is("24-07-2020")))
+                            .andExpect(jsonPath("$.metadata['crisrp.qualification.end'].[0].value", is("24-07-2022")))
+                            .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit'].[0].value",
+                                                is("Carlos Monge Medrano")));
 
         getClient(authToken).perform(get("/api/core/items/" + itemPersonB.getID()))
                 .andExpect(status().isOk())
@@ -178,7 +180,7 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$.metadata['crisrp.qualification'].[0].value", is("III")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.start'].[0].value", is("16-09-2020")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.end'].[0].value", is("16-09-2022")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.group'].[0].value", is("María Rostworowski")));
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit'].[0].value", is("María Rostworowski")));
 
         getClient(authToken).perform(get("/api/core/items/" + itemPersonC.getID()))
                 .andExpect(status().isOk())
@@ -187,7 +189,7 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$.metadata['crisrp.qualification']").doesNotExist())
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.start']").doesNotExist())
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.end']").doesNotExist())
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.group']").doesNotExist());
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit']").doesNotExist());
 
         getClient(authToken).perform(get("/api/core/items/" + itemPersonD.getID()))
                 .andExpect(status().isOk())
@@ -196,7 +198,8 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$.metadata['crisrp.qualification'].[0].value", is("II")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.start'].[0].value", is("01-10-2019")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.end'].[0].value", is("01-10-2022")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.group'].[0].value", is("Carlos Monge Medrano")));
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit'].[0].value",
+                                    is("Carlos Monge Medrano")));
     }
 
     @Test
@@ -252,7 +255,7 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$.metadata['crisrp.qualification']").doesNotExist())
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.start']").doesNotExist())
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.end']").doesNotExist())
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.group']").doesNotExist());
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit']").doesNotExist());
 
         getClient(authToken).perform(get("/api/core/items/" + itemPersonB.getID()))
                 .andExpect(status().isOk())
@@ -261,7 +264,7 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$.metadata['crisrp.qualification']").doesNotExist())
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.start']").doesNotExist())
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.end']").doesNotExist())
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.group']").doesNotExist());
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit']").doesNotExist());
 
         getClient(authToken).perform(get("/api/core/items/" + itemPersonC.getID()))
                 .andExpect(status().isOk())
@@ -270,7 +273,7 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$.metadata['crisrp.qualification']").doesNotExist())
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.start']").doesNotExist())
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.end']").doesNotExist())
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.group']").doesNotExist());
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit']").doesNotExist());
 
         getClient(authToken).perform(get("/api/core/items/" + itemPersonD.getID()))
                 .andExpect(status().isOk())
@@ -279,7 +282,7 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$.metadata['crisrp.qualification']").doesNotExist())
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.start']").doesNotExist())
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.end']").doesNotExist())
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.group']").doesNotExist());
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit']").doesNotExist());
     }
 
     @Test
@@ -298,7 +301,7 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
                                       .withPersonQualification("II")
                                       .withPersonQualificationStartDate("01-01-2018")
                                       .withPersonQualificationEndDate("01-01-2021")
-                                      .withPersonQualificationGroup("X-Group")
+                                      .withPersonQualificationOrgUnit("X-Group")
                                       .withDNI("08794686").build();
 
         Item itemPersonB = ItemBuilder.createItem(context, col1)
@@ -327,8 +330,9 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.start'].[1].value", is("24-07-2020")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.end'].[0].value", is("01-01-2021")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.end'].[1].value", is("24-07-2022")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.group'].[0].value", is("X-Group")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.group'].[1].value", is("Carlos Monge Medrano")));
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit'].[0].value", is("X-Group")))
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit'].[1].value",
+                                    is("Carlos Monge Medrano")));
 
         getClient(authToken).perform(get("/api/core/items/" + itemPersonB.getID()))
                 .andExpect(status().isOk())
@@ -337,7 +341,8 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$.metadata['crisrp.qualification'].[0].value", is("II")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.start'].[0].value", is("01-10-2019")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.end'].[0].value", is("01-10-2022")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.group'].[0].value", is("Carlos Monge Medrano")));
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit'].[0].value",
+                                    is("Carlos Monge Medrano")));
 
     }
 

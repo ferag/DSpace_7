@@ -291,6 +291,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "crisrp", "qualification", "end", endDate);
     }
 
+    public ItemBuilder withPersonQualificationOrgUnit(String endDate) {
+        return addMetadataValue(item, "crisrp", "qualification", "orgunit", endDate);
+    }
+
     public ItemBuilder withPersonQualificationGroup(String group) {
         return addMetadataValue(item, "crisrp", "qualification", "group", group);
     }

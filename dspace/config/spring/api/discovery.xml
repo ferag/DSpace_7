@@ -1481,6 +1481,7 @@
                 <ref bean="searchFilterKnowsLanguage"/>
                 <ref bean="searchFilterPersonOrgUnit"/>
                 <ref bean="searchFilterUbigeo"/>
+                <ref bean="searchFilterOcde"/>
 <!--                <ref bean="searchFilterBirthdate"/>-->
             </list>
         </property>
@@ -1493,6 +1494,7 @@
                 <ref bean="searchFilterKnowsLanguage"/>
                 <ref bean="searchFilterPersonOrgUnit"/>
                 <ref bean="searchFilterUbigeo"/>
+                <ref bean="searchFilterOcde"/>
 <!--                <ref bean="searchFilterBirthdate"/>-->
             </list>
         </property>

@@ -3017,7 +3017,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>fundingProgram</dc-element>
-          <label>Owner (Persons)</label>
+          <label>Part Of</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />

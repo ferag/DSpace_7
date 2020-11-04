@@ -32,6 +32,13 @@
 
     <dc-type>
         <schema>crisrp</schema>
+        <element>qualification</element>
+        <qualifier>group</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>crisrp</schema>
         <element>education</element>
         <qualifier></qualifier>
         <scope_note></scope_note>

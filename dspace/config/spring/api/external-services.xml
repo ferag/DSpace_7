@@ -11,32 +11,46 @@
         <property name="metadataSource" ref="pubmedImportService"/>
         <property name="sourceIdentifier" value="pubmed"/>
         <property name="recordIdMetadata" value="dc.identifier.pmid"/>
+        <property name="supportedEntityTypes">
+            <list>
+                <value>Publication</value>
+            </list>
+        </property>
     </bean>
 
     <bean id="scopusLiveImportDataProvider" class="org.dspace.external.provider.impl.LiveImportDataProvider">
         <property name="metadataSource" ref="ScopusImportService"/>
         <property name="sourceIdentifier" value="scopus"/>
         <property name="recordIdMetadata" value="dc.identifier.scopus"/>
+        <property name="supportedEntityTypes">
+            <list>
+                <value>Publication</value>
+            </list>
+        </property>
     </bean>
-<!--
-    <bean id="epoLiveImportDataProvider" class="org.dspace.external.provider.impl.LiveImportDataProvider">
-        <property name="metadataSource" ref="EpoImportService"/>
-        <property name="sourceIdentifier" value="epo"/>
-        <property name="recordIdMetadata" value="dc.identifier.other"/>
-    </bean>
- -->
+
     <bean id="aliciaLiveImportDataProvider" class="org.dspace.external.provider.impl.LiveImportDataProvider">
         <property name="metadataSource" ref="aliciaImportService"/>
         <property name="sourceIdentifier" value="alicia"/>
         <property name="recordIdMetadata" value="dc.identifier.other"/>
+        <property name="supportedEntityTypes">
+            <list>
+                <value>Publication</value>
+            </list>
+        </property>
     </bean>
 
-	<bean class="org.dspace.sunedu.SuneduProvider"/>
-
-    <bean class="org.dspace.sunedu.SuneduRestConnector">
-        <property name="suneduUrl" value="${sunedu.url}" />
-        <property name="clientId" value="${sunedu.clientid}" />
-        <property name="clientSecret" value="${sunedu.clientsecret}" />
+    <bean id="crossRefLiveImportDataProvider" class="org.dspace.external.provider.impl.LiveImportDataProvider">
+        <property name="metadataSource" ref="CrossRefImportService"/>
+        <property name="sourceIdentifier" value="crossref"/>
+        <property name="recordIdMetadata" value="dc.identifier.other"/>
+        <property name="supportedEntityTypes">
+            <list>
+                <value>Publication</value>
+            </list>
+        </property>
     </bean>
+
+    
 </beans>
 

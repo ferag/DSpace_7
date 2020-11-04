@@ -18,6 +18,11 @@
         <property name="dspaceRunnableClass" value="org.dspace.app.bulkedit.MetadataExportCli"/>
     </bean>
 
+    <bean id="retry-tracker" class="org.dspace.statistics.export.RetryFailedOpenUrlTrackerScriptConfiguration" scope="prototype">
+        <property name="description" value="Retry all failed commits to the OpenURLTracker"/>
+        <property name="dspaceRunnableClass" value="org.dspace.statistics.export.RetryFailedOpenUrlTracker"/>
+    </bean>
+
     <bean id="curate" class="org.dspace.curate.CurationCliScriptConfiguration">
         <property name="description" value="Curation tasks"/>
         <property name="dspaceRunnableClass" value="org.dspace.curate.CurationCli"/>
@@ -42,5 +47,9 @@
         <property name="description" value="Perform the multiple items export in the given format"/>
         <property name="dspaceRunnableClass" value="org.dspace.content.integration.crosswalks.script.BulkItemExportCli"/>
     </bean>
-    
+
+    <bean id="update-from-supplier" class="org.dspace.perucris.externalservices.UpdateItemWithExternalSourceCliScriptConfiguration">
+        <property name="description" value="Perform the items update using external source"/>
+        <property name="dspaceRunnableClass" value="org.dspace.perucris.externalservices.UpdateItemWithExternalSourceCli"/>
+    </bean>
 </beans>

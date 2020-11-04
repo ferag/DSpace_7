@@ -34,10 +34,13 @@ import org.dspace.AbstractIntegrationTestWithDatabase;
 import org.dspace.app.util.DCInputsReader;
 import org.dspace.app.util.DCInputsReaderException;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.Item;
+import org.dspace.core.CrisConstants;
 import org.dspace.utils.DSpace;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,6 +57,8 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     private Collection collection;
 
     private StreamDisseminationCrosswalkMapper crosswalkMapper;
+
+    private XlsCrosswalk xlsCrosswalk;
 
     private DCInputsReader dcInputsReader;
 
@@ -89,6 +94,21 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .thenReturn(Arrays.asList("crisrp.qualification", "crisrp.qualification.start",
                 "crisrp.qualification.end"));
 
+        when(dcInputsReader.hasFormWithName("traditional-dc-contributor-author")).thenReturn(true);
+        when(dcInputsReader.getAllFieldNamesByFormName("traditional-dc-contributor-author"))
+            .thenReturn(Arrays.asList("dc.contributor.author", "oairecerif.author.affiliation"));
+
+        when(dcInputsReader.hasFormWithName("traditional-dc-contributor-editor")).thenReturn(true);
+        when(dcInputsReader.getAllFieldNamesByFormName("traditional-dc-contributor-editor"))
+            .thenReturn(Arrays.asList("dc.contributor.editor", "oairecerif.editor.affiliation"));
+
+    }
+
+    @After
+    public void after() throws DCInputsReaderException {
+        if (this.xlsCrosswalk != null) {
+            this.xlsCrosswalk.setDCInputsReader(new DCInputsReader());
+        }
     }
 
     @Test
@@ -99,6 +119,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item firstItem = createFullPersonItem();
 
         Item secondItem = createItem(context, collection)
+            .withRelationshipType("Person")
             .withTitle("Edward Red")
             .withGivenName("Edward")
             .withFamilyName("Red")
@@ -111,6 +132,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item thirdItem = createItem(context, collection)
+            .withRelationshipType("Person")
             .withTitle("Adam White")
             .withGivenName("Adam")
             .withFamilyName("White")
@@ -128,7 +150,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         context.restoreAuthSystemState();
 
-        XlsCrosswalk xlsCrosswalk = (XlsCrosswalk) crosswalkMapper.getByType("person-xls");
+        xlsCrosswalk = (XlsCrosswalk) crosswalkMapper.getByType("person-xls");
         assertThat(xlsCrosswalk, notNullValue());
         xlsCrosswalk.setDCInputsReader(dcInputsReader);
 
@@ -169,6 +191,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item item = createItem(context, collection)
+            .withRelationshipType("Person")
             .withTitle("Walter White")
             .withVariantName("Heisenberg")
             .withVariantName("W.W.")
@@ -195,7 +218,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         context.restoreAuthSystemState();
 
-        XlsCrosswalk xlsCrosswalk = (XlsCrosswalk) crosswalkMapper.getByType("person-xls");
+        xlsCrosswalk = (XlsCrosswalk) crosswalkMapper.getByType("person-xls");
         assertThat(xlsCrosswalk, notNullValue());
         xlsCrosswalk.setDCInputsReader(dcInputsReader);
 
@@ -220,9 +243,284 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
     }
 
+    @Test
+    public void testDisseminatePublications() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item firstItem = createFullPublicationItem();
+
+        Item secondItem = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
+            .withTitle("Second Publication")
+            .withDoiIdentifier("doi:222.222/publication")
+            .withType("Controlled Vocabulary for Resource Type Genres::learning object")
+            .withIssueDate("2019-12-31")
+            .withAuthor("Edward Smith")
+            .withAuthorAffiliation("Company")
+            .withAuthor("Walter White")
+            .withVolume("V-02")
+            .withCitationStartPage("1")
+            .withCitationEndPage("20")
+            .withAuthorAffiliation(CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE)
+            .build();
+
+        Item thirdItem = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
+            .withTitle("Another Publication")
+            .withDoiIdentifier("doi:333.333/publication")
+            .withType("Controlled Vocabulary for Resource Type Genres::clinical trial")
+            .withIssueDate("2010-02-01")
+            .withAuthor("Jessie Pinkman")
+            .withDescriptionAbstract("Description of publication")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        xlsCrosswalk = (XlsCrosswalk) crosswalkMapper.getByType("publication-xls");
+        assertThat(xlsCrosswalk, notNullValue());
+        xlsCrosswalk.setDCInputsReader(dcInputsReader);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        xlsCrosswalk.disseminate(context, Arrays.asList(firstItem, secondItem, thirdItem).iterator(), baos);
+
+        Workbook workbook = WorkbookFactory.create(new ByteArrayInputStream(baos.toByteArray()));
+        assertThat(workbook.getNumberOfSheets(), equalTo(1));
+
+        Sheet sheet = workbook.getSheetAt(0);
+        assertThat(sheet.getPhysicalNumberOfRows(), equalTo(4));
+
+        assertThat(getRowValues(sheet.getRow(0)), contains("Title", "Subtitle", "Type", "Language", "Publication date",
+            "Part of", "Journal or Serie", "ISBN (of the container)", "ISSN (of the container)",
+            "DOI (of the container)", "Publisher", "DOI", "ISBN", "ISSN", "ISI-Number", "SCP-Number", "Volume", "Issue",
+            "Start page", "End page", "Authors", "Editors", "Abstract", "Event", "Product"));
+
+        assertThat(getRowValues(sheet.getRow(1)), contains("Test Publication", "Alternative publication title",
+            "http://purl.org/coar/resource_type/c_efa0", "en", "2020-01-01", "Published in publication", "", "", "",
+            "doi:10.3972/test", "Publication publisher", "doi:111.111/publication", "978-3-16-148410-0", "2049-3630",
+            "111-222-333", "99999999", "V.01", "Issue", "", "", "John Smith||Walter White/Company",
+            "Editor/Editor Affiliation", "", "The best Conference", "DataSet"));
+
+        assertThat(getRowValues(sheet.getRow(2)), contains("Second Publication", "",
+            "http://purl.org/coar/resource_type/c_e059", "", "2019-12-31", "", "", "", "", "", "",
+            "doi:222.222/publication", "", "", "", "", "V-02", "", "1", "20", "Edward Smith/Company||Walter White", "",
+            "", "", ""));
+
+        assertThat(getRowValues(sheet.getRow(3)), contains("Another Publication", "",
+            "http://purl.org/coar/resource_type/c_cb28", "", "2010-02-01", "", "", "", "", "", "",
+            "doi:333.333/publication", "", "", "", "", "", "", "", "", "Jessie Pinkman", "",
+            "Description of publication", "", ""));
+
+    }
+
+    @Test
+    public void testDisseminateProjects() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item firstItem = createFullProjectItem();
+
+        Item secondItem = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Project")
+            .withAcronym("STP")
+            .withTitle("Second Test Project")
+            .withOpenaireId("55-66-77")
+            .withOpenaireId("11-33-22")
+            .withUrlIdentifier("www.project.test")
+            .withProjectStartDate("2010-01-01")
+            .withProjectEndDate("2012-12-31")
+            .withProjectStatus("Status")
+            .withProjectCoordinator("Second Coordinator OrgUnit")
+            .withProjectInvestigator("Second investigator")
+            .withProjectCoinvestigators("Coinvestigator")
+            .withRelationEquipment("Another test equipment")
+            .withOAMandateURL("oamandate")
+            .build();
+
+        Item thirdItem = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Project")
+            .withAcronym("TTP")
+            .withTitle("Third Test Project")
+            .withOpenaireId("88-22-33")
+            .withUrlIdentifier("www.project.test")
+            .withProjectStartDate("2020-01-01")
+            .withProjectEndDate("2020-12-31")
+            .withProjectStatus("OPEN")
+            .withProjectCoordinator("Third Coordinator OrgUnit")
+            .withProjectPartner("Partner OrgUnit")
+            .withProjectOrganization("Member OrgUnit")
+            .withProjectInvestigator("Investigator")
+            .withProjectCoinvestigators("First coinvestigator")
+            .withProjectCoinvestigators("Second coinvestigator")
+            .withSubject("project")
+            .withSubject("test")
+            .withOAMandate("false")
+            .withOAMandateURL("www.oamandate.com")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        xlsCrosswalk = (XlsCrosswalk) crosswalkMapper.getByType("project-xls");
+        assertThat(xlsCrosswalk, notNullValue());
+        xlsCrosswalk.setDCInputsReader(dcInputsReader);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        xlsCrosswalk.disseminate(context, Arrays.asList(firstItem, secondItem, thirdItem).iterator(), baos);
+
+        Workbook workbook = WorkbookFactory.create(new ByteArrayInputStream(baos.toByteArray()));
+        assertThat(workbook.getNumberOfSheets(), equalTo(1));
+
+        Sheet sheet = workbook.getSheetAt(0);
+        assertThat(sheet.getPhysicalNumberOfRows(), equalTo(4));
+
+        assertThat(getRowValues(sheet.getRow(0)), contains("Title", "Acronym", "OpenAIRE id(s)", "URL(s)", "Start date",
+            "End date", "Status", "Coordinator(s)", "Partner Organization(s)", "Participant Organization(s)",
+            "Project Coordinator", "Co-Investigator(s)", "Uses equipment(s)", "Keyword(s)", "Description", "OA Mandate",
+            "OA Policy URL"));
+
+        assertThat(getRowValues(sheet.getRow(1)), contains("Test Project", "TP", "11-22-33", "www.project.test",
+            "2020-01-01", "2020-12-31", "OPEN", "Coordinator OrgUnit", "Partner OrgUnit||Another Partner OrgUnit",
+            "First Member OrgUnit||Second Member OrgUnit||Third Member OrgUnit", "Investigator",
+            "First coinvestigator||Second coinvestigator", "Test equipment", "project||test",
+            "This is a project to test the export", "true", "oamandate-url"));
+
+        assertThat(getRowValues(sheet.getRow(2)), contains("Second Test Project", "STP", "55-66-77||11-33-22",
+            "www.project.test", "2010-01-01", "2012-12-31", "Status", "Second Coordinator OrgUnit", "", "",
+            "Second investigator", "Coinvestigator", "Another test equipment", "", "", "", "oamandate"));
+
+        assertThat(getRowValues(sheet.getRow(3)), contains("Third Test Project", "TTP", "88-22-33", "www.project.test",
+            "2020-01-01", "2020-12-31", "OPEN", "Third Coordinator OrgUnit", "Partner OrgUnit", "Member OrgUnit",
+            "Investigator", "First coinvestigator||Second coinvestigator", "", "project||test", "", "false",
+            "www.oamandate.com"));
+    }
+
+    @Test
+    public void testDisseminateOrgUnits() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item firstItem = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("OrgUnit")
+            .withAcronym("TOU")
+            .withTitle("Test OrgUnit")
+            .withOrgUnitLegalName("Test OrgUnit LegalName")
+            .withType("Strategic Research Insitute")
+            .withParentOrganization("Parent OrgUnit")
+            .withOrgUnitIdentifier("ID-01")
+            .withOrgUnitIdentifier("ID-02")
+            .withUrlIdentifier("www.orgUnit.com")
+            .withUrlIdentifier("www.orgUnit.it")
+            .build();
+
+        Item secondItem = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("OrgUnit")
+            .withAcronym("ATOU")
+            .withTitle("Another Test OrgUnit")
+            .withType("Private non-profit")
+            .withParentOrganization("Parent OrgUnit")
+            .withOrgUnitIdentifier("ID-03")
+            .build();
+
+        Item thirdItem = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("OrgUnit")
+            .withAcronym("TTOU")
+            .withTitle("Third Test OrgUnit")
+            .withType("Private non-profit")
+            .withOrgUnitIdentifier("ID-03")
+            .withUrlIdentifier("www.orgUnit.test")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        xlsCrosswalk = (XlsCrosswalk) crosswalkMapper.getByType("orgUnit-xls");
+        assertThat(xlsCrosswalk, notNullValue());
+        xlsCrosswalk.setDCInputsReader(dcInputsReader);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        xlsCrosswalk.disseminate(context, Arrays.asList(firstItem, secondItem, thirdItem).iterator(), baos);
+
+        Workbook workbook = WorkbookFactory.create(new ByteArrayInputStream(baos.toByteArray()));
+        assertThat(workbook.getNumberOfSheets(), equalTo(1));
+
+        Sheet sheet = workbook.getSheetAt(0);
+        assertThat(sheet.getPhysicalNumberOfRows(), equalTo(4));
+
+        assertThat(getRowValues(sheet.getRow(0)), contains("Name", "Legal name", "Acronym", "Type", "Parent OrgUnit",
+            "Identifier(s)", "URL(s)"));
+
+        assertThat(getRowValues(sheet.getRow(1)), contains("Test OrgUnit", "Test OrgUnit LegalName", "TOU",
+            "https://w3id.org/cerif/vocab/OrganisationTypes#StrategicResearchInsitute", "Parent OrgUnit",
+            "ID-01||ID-02", "www.orgUnit.com||www.orgUnit.it"));
+
+        assertThat(getRowValues(sheet.getRow(2)), contains("Another Test OrgUnit", "", "ATOU",
+            "https://w3id.org/cerif/vocab/OrganisationTypes#Privatenonprofit", "Parent OrgUnit", "ID-03", ""));
+
+        assertThat(getRowValues(sheet.getRow(3)), contains("Third Test OrgUnit", "", "TTOU",
+            "https://w3id.org/cerif/vocab/OrganisationTypes#Privatenonprofit", "", "ID-03", "www.orgUnit.test"));
+    }
+
+    @Test
+    public void testDisseminateEquipments() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item firstItem = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Equipment")
+            .withAcronym("FT-EQ")
+            .withTitle("First Test Equipment")
+            .withInternalId("ID-01")
+            .withDescription("This is an equipment to test the export functionality")
+            .withEquipmentOwnerOrgUnit("Test OrgUnit")
+            .withEquipmentOwnerPerson("Walter White")
+            .build();
+
+        Item secondItem = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Equipment")
+            .withAcronym("ST-EQ")
+            .withTitle("Second Test Equipment")
+            .withInternalId("ID-02")
+            .withDescription("This is another equipment to test the export functionality")
+            .withEquipmentOwnerPerson("John Smith")
+            .build();
+
+        Item thirdItem = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Equipment")
+            .withAcronym("TT-EQ")
+            .withTitle("Third Test Equipment")
+            .withInternalId("ID-03")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        xlsCrosswalk = (XlsCrosswalk) crosswalkMapper.getByType("equipment-xls");
+        assertThat(xlsCrosswalk, notNullValue());
+        xlsCrosswalk.setDCInputsReader(dcInputsReader);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        xlsCrosswalk.disseminate(context, Arrays.asList(firstItem, secondItem, thirdItem).iterator(), baos);
+
+        Workbook workbook = WorkbookFactory.create(new ByteArrayInputStream(baos.toByteArray()));
+        assertThat(workbook.getNumberOfSheets(), equalTo(1));
+
+        Sheet sheet = workbook.getSheetAt(0);
+        assertThat(sheet.getPhysicalNumberOfRows(), equalTo(4));
+
+        assertThat(getRowValues(sheet.getRow(0)), contains("Name", "Acronym", "Institution assigned identifier",
+            "Description", "Owner organization", "Owner person"));
+
+        assertThat(getRowValues(sheet.getRow(1)), contains("First Test Equipment", "FT-EQ", "ID-01",
+            "This is an equipment to test the export functionality", "Test OrgUnit", "Walter White"));
+
+        assertThat(getRowValues(sheet.getRow(2)), contains("Second Test Equipment", "ST-EQ", "ID-02",
+            "This is another equipment to test the export functionality", "", "John Smith"));
+
+        assertThat(getRowValues(sheet.getRow(3)), contains("Third Test Equipment", "TT-EQ", "ID-03", "", "", ""));
+    }
+
     private Item createFullPersonItem() {
         Item item = createItem(context, collection)
             .withTitle("John Smith")
+            .withRelationshipType("Person")
             .withFullName("John Smith")
             .withVernacularName("JOHN SMITH")
             .withVariantName("J.S.")
@@ -267,6 +565,65 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withPersonQualificationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
             .build();
         return item;
+    }
+
+    private Item createFullPublicationItem() {
+        return ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
+            .withTitle("Test Publication")
+            .withAlternativeTitle("Alternative publication title")
+            .withRelationPublication("Published in publication")
+            .withRelationDoi("doi:10.3972/test")
+            .withDoiIdentifier("doi:111.111/publication")
+            .withIsbnIdentifier("978-3-16-148410-0")
+            .withIssnIdentifier("2049-3630")
+            .withIsiIdentifier("111-222-333")
+            .withScopusIdentifier("99999999")
+            .withLanguage("en")
+            .withPublisher("Publication publisher")
+            .withVolume("V.01")
+            .withIssue("Issue")
+            .withSubject("test")
+            .withSubject("export")
+            .withType("Controlled Vocabulary for Resource Type Genres::text::review")
+            .withIssueDate("2020-01-01")
+            .withAuthor("John Smith")
+            .withAuthorAffiliation(CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withAuthor("Walter White")
+            .withAuthorAffiliation("Company")
+            .withEditor("Editor")
+            .withEditorAffiliation("Editor Affiliation")
+            .withRelationConference("The best Conference")
+            .withRelationDataset("DataSet")
+            .build();
+    }
+
+    private Item createFullProjectItem() {
+        return ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Project")
+            .withAcronym("TP")
+            .withTitle("Test Project")
+            .withOpenaireId("11-22-33")
+            .withUrlIdentifier("www.project.test")
+            .withProjectStartDate("2020-01-01")
+            .withProjectEndDate("2020-12-31")
+            .withProjectStatus("OPEN")
+            .withProjectCoordinator("Coordinator OrgUnit")
+            .withProjectPartner("Partner OrgUnit")
+            .withProjectPartner("Another Partner OrgUnit")
+            .withProjectOrganization("First Member OrgUnit")
+            .withProjectOrganization("Second Member OrgUnit")
+            .withProjectOrganization("Third Member OrgUnit")
+            .withProjectInvestigator("Investigator")
+            .withProjectCoinvestigators("First coinvestigator")
+            .withProjectCoinvestigators("Second coinvestigator")
+            .withRelationEquipment("Test equipment")
+            .withSubject("project")
+            .withSubject("test")
+            .withDescriptionAbstract("This is a project to test the export")
+            .withOAMandate("true")
+            .withOAMandateURL("oamandate-url")
+            .build();
     }
 
     private List<String> getRowValues(Row row) {

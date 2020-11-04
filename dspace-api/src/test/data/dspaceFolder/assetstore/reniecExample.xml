@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns0:getRegIdentConsolidada2Response xmlns:ns0="http://rel.reniec.org/">
+    <return>0000</return>
+    <return>SAUCEDO</return>
+    <return>ASCONA</return>
+    <return/>
+    <return>EDWIN MANUEL</return>
+    <return>14</return>
+    <return>01</return>
+    <return>37</return>
+    <return>LIMA</return>
+    <return>LIMA</return>
+    <return>SAN JUAN DE LURIGANCHO</return>
+    <return>MZ.7 LT.8 ASENT.H.19 DE ABRIL CANTO GRANDE</return>
+    <return>1</return>
+    <return>1</return>
+    <return>14</return>
+    <return>01</return>
+    <return>37</return>
+    <return>LIMA</return>
+    <return>LIMA</return>
+    <return>SAN JUAN DE LURIGANCHO</return>
+    <return>19830814</return>
+    <return> </return>
+    <return>41918979</return>
+    <return>20</return>
+    <return>22</return>
+    <return> </return>
+</ns0:getRegIdentConsolidada2Response>

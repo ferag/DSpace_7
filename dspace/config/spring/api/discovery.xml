@@ -1413,6 +1413,7 @@
             <ref bean="searchFilterFunding" />
             <ref bean="searchFilterContentInOriginalBundle"/>
             <ref bean="searchFilterEntityType"/>
+            <ref bean="searchFilterOcde"/>
         </list>
     </property>
     <!-- Set TagCloud configuration per discovery configuration -->
@@ -1430,6 +1431,7 @@
             <ref bean="searchFilterFileNameInOriginalBundle" />
             <ref bean="searchFilterFileDescriptionInOriginalBundle" />
             <ref bean="searchFilterEntityType"/>
+            <ref bean="searchFilterOcde"/>
         </list>
     </property>
     <!--The sort filters for the discovery search-->
@@ -1478,6 +1480,7 @@
                 <ref bean="searchFilterJobtitle"/>
                 <ref bean="searchFilterKnowsLanguage"/>
                 <ref bean="searchFilterPersonOrgUnit"/>
+                <ref bean="searchFilterUbigeo"/>
 <!--                <ref bean="searchFilterBirthdate"/>-->
             </list>
         </property>
@@ -1489,6 +1492,7 @@
                 <ref bean="searchFilterJobtitle"/>
                 <ref bean="searchFilterKnowsLanguage"/>
                 <ref bean="searchFilterPersonOrgUnit"/>
+                <ref bean="searchFilterUbigeo"/>
 <!--                <ref bean="searchFilterBirthdate"/>-->
             </list>
         </property>
@@ -1596,8 +1600,11 @@
             <list>
                 <ref bean="searchFilterSubject"/>
                 <ref bean="searchFilterEntityType"/>
+                <ref bean="searchFilterType"/>
                 <ref bean="searchFilterInvestigators"/>
                 <ref bean="searchFilterProjectOrgUnits" />
+                <ref bean="searchFilterOcde" />
+                <ref bean="searchFilterGeolocation" />
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
@@ -1605,9 +1612,12 @@
             <list>
                 <ref bean="searchFilterSubject"/>
                 <ref bean="searchFilterEntityType"/>
+                <ref bean="searchFilterType"/>
                 <ref bean="searchFilterInvestigators"/>
                 <ref bean="searchFilterProjectOrgUnits"/>
                 <ref bean="searchFilterIdentifier"/>
+                <ref bean="searchFilterOcde" />
+                <ref bean="searchFilterGeolocation" />
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -1655,6 +1665,13 @@
             <list>
                 <ref bean="searchFilterOrganizationAddressCountry"/>
                 <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationPeruCrisSector"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationSuneduClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
 <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
             </list>
         </property>
@@ -1664,6 +1681,13 @@
                 <ref bean="searchFilterOrganizationLegalName"/>
                 <ref bean="searchFilterOrganizationAddressCountry"/>
                 <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationPeruCrisSector"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationSuneduClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
 <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
             </list>
         </property>
@@ -1717,6 +1741,12 @@
             <list>
                 <ref bean="searchFilterEquipmentOwner"/>
                 <ref bean="searchFilterEquipmentOrgUnit"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterPeruCrisEquipmentUsage"/>
+                <ref bean="searchFilterPeruCrisEquipmentResearchLine"/>
+                <ref bean="searchFilterFunding"/>
+                <ref bean="searchFilterPeruCrisEquipmentManufacturingCountry"/>
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
@@ -1724,6 +1754,12 @@
             <list>
                 <ref bean="searchFilterEquipmentOwner"/>
                 <ref bean="searchFilterEquipmentOrgUnit"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterPeruCrisEquipmentUsage"/>
+                <ref bean="searchFilterPeruCrisEquipmentResearchLine"/>
+                <ref bean="searchFilterFunding"/>
+                <ref bean="searchFilterPeruCrisEquipmentManufacturingCountry"/>
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -2954,6 +2990,191 @@
         </property>
         <property name="isOpenByDefault" value="false"/>
         <property name="pageSize" value="10"/>
+    </bean>
+
+    <!-- PeruCRIS  custom filters -->
+    <bean id="searchFilterOcde" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="ocde"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.subject.ocde</value>
+                <value>dc.subject.ocde</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+
+    <bean id="searchFilterUbigeo" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="ubigeo"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.ubigeo</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+
+    <bean id="searchFilterGeolocation" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="geolocation"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.geolocationPlace</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+
+    <bean id="searchFilterOrganizationPeruCrisSector"
+          class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="peruCrisSector"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.type.sectorInstitucional</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+        <property name="isOpenByDefault" value="true"/>
+        <property name="pageSize" value="10"/>
+        <property name="exposeMinAndMaxValue" value="true"/>
+    </bean>
+
+    <bean id="searchFilterOrganizationPeruCrisClassification"
+          class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="peruCrisClassification"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.type.orgunit</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+        <property name="isOpenByDefault" value="true"/>
+        <property name="pageSize" value="10"/>
+        <property name="exposeMinAndMaxValue" value="true"/>
+    </bean>
+
+    <bean id="searchFilterOrganizationSuneduClassification"
+          class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="suneduClassification"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.type.educacionSuperior</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+        <property name="isOpenByDefault" value="true"/>
+        <property name="pageSize" value="10"/>
+        <property name="exposeMinAndMaxValue" value="true"/>
+    </bean>
+
+    <bean id="searchFilterOrganizationPeruCrisCiiu"
+          class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="peruCrisCiuu"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.type.ciiu</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+        <property name="isOpenByDefault" value="true"/>
+        <property name="pageSize" value="10"/>
+        <property name="exposeMinAndMaxValue" value="true"/>
+    </bean>
+
+    <bean id="searchFilterOrganizationPeruCrisJuridicalNature"
+          class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="peruCrisJuridicalNature"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.type.naturaleza</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+        <property name="isOpenByDefault" value="true"/>
+        <property name="pageSize" value="10"/>
+        <property name="exposeMinAndMaxValue" value="true"/>
+    </bean>
+
+    <bean id="searchFilterOrganizationPeruCrisKeywords"
+          class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="peruCrisKeywords"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.subject</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+        <property name="isOpenByDefault" value="true"/>
+        <property name="pageSize" value="10"/>
+        <property name="exposeMinAndMaxValue" value="true"/>
+    </bean>
+
+    <bean id="searchFilterPeruCrisEquipmentUsage"
+          class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="equipmentUsage"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.type.usage</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+        <property name="isOpenByDefault" value="true"/>
+        <property name="pageSize" value="10"/>
+        <property name="exposeMinAndMaxValue" value="true"/>
+    </bean>
+
+    <bean id="searchFilterPeruCrisEquipmentResearchLine"
+          class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="equipmentResearchLine"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.researchLine</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+        <property name="isOpenByDefault" value="true"/>
+        <property name="pageSize" value="10"/>
+        <property name="exposeMinAndMaxValue" value="true"/>
+    </bean>
+
+    <bean id="searchFilterPeruCrisEquipmentManufacturingCountry"
+          class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="equipmentManufacturingCountry"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.manufacturingCountry</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+        <property name="isOpenByDefault" value="true"/>
+        <property name="pageSize" value="10"/>
+        <property name="exposeMinAndMaxValue" value="true"/>
     </bean>
 
     <!--Sort properties-->

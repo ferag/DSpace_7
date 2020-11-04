@@ -1,29 +1,66 @@
+/**
+ * The contents of this file are subject to the license and copyright
+ * detailed in the LICENSE and NOTICE files at the root of the source
+ * tree and available online at
+ *
+ * http://www.dspace.org/license/
+ */
 package org.dspace.importer.external.metadatamapping.contributor;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import org.dspace.importer.external.metadatamapping.MetadatumDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * This class allow the user to get a list of metadata from json keys.
- * Reading keys using JsonPath, for each key, the resulting object will be an HashMap like
- * this: [{"role":["author"]}], unlike value reading, which return a string or at most an array.
- * This behaviour require a specific implementation to be managed.
+ * This class is a metadata contributor implementation which get metadata values from
+ * Json names (keys).
+ * The class level variable "query" must match the key's parent node,
+ * or in other words the element which contains the keys.
+ * 
+ * For example, starting from this json:
+ * {
+ *   "authors": {
+ *     "primary": {
+ *       "Surname, Name": {
+ *         "role": ["author"]
+ *       },
+ *       ...
+ *     }
+ *   }
+ * }
+ *
+ * To get the authors, json path expression must be $.authors.primary
  * 
  * @author Pasquale Cavallo (pasquale.cavallo at 4science dot it)
  *
  */
 public class SimpleJsonPathKeyMetadataContributor extends SimpleJsonPathMetadataContributor {
 
+    private static final Logger logger = LoggerFactory.getLogger(SimpleJsonPathKeyMetadataContributor.class);
 
     /**
-     * In this method, "query" must match the
+     * This method return metadata from a JSON input using json names (key) as metadata value.
+     * In this method, the class level variable "query" must match the parent element which contains the keys.
+     * 
+     * For example, starting from the following Json:
+     * {
+     *   "authors": {
+     *     "primary": {
+     *       "Surname, Name": {
+     *         "role": ["author"]
+     *       }
+     *     }
+     *   }
+     * }
+     *
+     * To get the authors, json path expression must be $.authors.primary
      */
     @Override
     public Collection<MetadatumDTO> contributeMetadata(String fullJson) {
@@ -32,23 +69,19 @@ public class SimpleJsonPathKeyMetadataContributor extends SimpleJsonPathMetadata
         if (getMetadataProcessor() != null) {
             metadataValue = getMetadataProcessor().processMetadata(fullJson);
         } else {
-            ReadContext ctx = JsonPath.parse(fullJson);
-            String innerJson = ctx.read(getQuery(), String.class);
-            JsonParser jsonParser = new JsonParser();
-            JsonObject jsonObject = jsonParser.parse(innerJson).getAsJsonObject();
-            Set<String> keys = jsonObject.keySet();
-            for (String value : keys) {
-                metadataValue.add(value);
+            try {
+                ReadContext ctx = JsonPath.parse(fullJson);
+                Object innerJson = ctx.read(getQuery());
+                HashMap<String, Object> jsonHashMap = (HashMap<String, Object>) innerJson;
+                if (jsonHashMap != null) {
+                    for (Entry<String, Object> entry : jsonHashMap.entrySet()) {
+                        metadataValue.add(entry.getKey());
+                    }
+                }
+            } catch (Exception e) {
+                logger.debug("Cannot extract Alicia author using jsonpath expression " + getQuery() +
+                    " from json " + fullJson);
             }
-//            if (o.getClass().isAssignableFrom(JSONArray.class)) {
-//                JSONArray results = (JSONArray)o;
-//                for (int i = 0; i < results.size(); i++) {
-//                    String value = results.get(i).toString();
-//                    metadataValue.add(value);
-//                }
-//            } else {
-//                metadataValue.add(o.toString());
-//            }
         }
         for (String value : metadataValue) {
             MetadatumDTO metadatumDto = new MetadatumDTO();
@@ -59,7 +92,5 @@ public class SimpleJsonPathKeyMetadataContributor extends SimpleJsonPathMetadata
             metadata.add(metadatumDto);
         }
         return metadata;
-
     }
-
 }

@@ -28,7 +28,7 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * 
+ *
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4Science.it)
  */
 public class SuneduUpdateIT extends AbstractControllerIntegrationTest {
@@ -195,7 +195,7 @@ public class SuneduUpdateIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
-    public void updateItemsWithInformationFromReniecByWrongIDColTest() throws Exception {
+    public void updateItemsWithInformationFromSuneduByWrongIDColTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
         parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();

@@ -1676,7 +1676,6 @@
             <list>
                 <ref bean="searchFilterOrganizationAddressCountry"/>
                 <ref bean="searchFilterOrganizationAddressLocality"/>
-                <ref bean="searchFilterOrganizationFoundingDate"/>
                 <ref bean="searchFilterOrganizationPeruCrisSector"/>
                 <ref bean="searchFilterType"/>
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>

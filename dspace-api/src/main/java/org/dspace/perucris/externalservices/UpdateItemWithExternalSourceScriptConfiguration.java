@@ -48,7 +48,8 @@ public class UpdateItemWithExternalSourceScriptConfiguration<T extends UpdateIte
         if (options == null) {
             Options options = new Options();
 
-            options.addOption("s","service", true, "the name of the external service to use, i.e. RENIEC, SUNEDU or RENACYT");
+            options.addOption("s", "service", true,
+                "the name of the external service to use, i.e. RENIEC, SUNEDU or RENACYT");
             options.getOption("s").setType(String.class);
             options.getOption("s").setRequired(true);
 

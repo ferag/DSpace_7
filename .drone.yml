@@ -10,6 +10,10 @@ steps:
     MAVEN_OPTS: -Xmx1024M -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
   commands:         
   - mvn install -B -V -P-assembly -Pcoverage-report -Dtest.argLine=-Xmx2048m -DskipUnitTests=false -Pdspace-rest
+  when:
+    branch:
+      exclude:
+      - dspace-cris-7
 
 ---
 kind: pipeline
@@ -34,4 +38,7 @@ steps:
   commands:
   - ./dspace-api/src/test/data/dspaceFolder/bin/install_grobid.sh
   - mvn install -B -V -P-assembly -Pcoverage-report -DskipIntegrationTests=false -Denforcer.skip=true -Dcheckstyle.skip=true -Dlicense.skip=true -Dxml.skip=true
-  
+  when:
+    branch:
+      exclude:
+      - dspace-cris-7

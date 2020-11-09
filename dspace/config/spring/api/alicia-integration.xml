@@ -323,7 +323,7 @@
         <constructor-arg value="dc.subject"/>
     </bean>
 
-    <bean id="aliciaAuthors" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathKeyMetadataContributor">
+    <bean id="aliciaAuthors" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
         <property name="field" ref="alicia.dc.contributor.author"/>
         <property name="query" value="$.dcContributorAuthor[*]"/>
     </bean>

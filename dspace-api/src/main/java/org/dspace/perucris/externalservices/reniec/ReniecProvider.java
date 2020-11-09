@@ -68,8 +68,11 @@ public class ReniecProvider {
         } catch (ParserConfigurationException | SAXException | IOException e) {
             log.error(e.getMessage(), e);
         }
-        ReniecDTO dto = new ReniecDTO();
+        if (doc == null | doc.getElementsByTagName("return").item(22) == null) {
+            return null;
+        }
         NodeList reniecInfo = doc.getElementsByTagName("return");
+        ReniecDTO dto = new ReniecDTO();
         setLastName(dto, reniecInfo);
         setNames(dto, reniecInfo);
         setHomeCode(dto, reniecInfo);
@@ -83,65 +86,50 @@ public class ReniecProvider {
     }
 
     private void setLastName(ReniecDTO dto, NodeList reniecInfo) {
-        String fatherLastName = reniecInfo.item(1).getTextContent();
-        String maternalLastName = reniecInfo.item(2).getTextContent();
-        String lastNameMarried = reniecInfo.item(3).getTextContent();
-        if (fatherLastName != null && StringUtils.isNotBlank(fatherLastName)) {
-            dto.setFatherLastName(fatherLastName);
+        if (StringUtils.isNotBlank(reniecInfo.item(1).getTextContent())) {
+            dto.setFatherLastName(reniecInfo.item(1).getTextContent());
         }
-        if (maternalLastName != null && StringUtils.isNotBlank(maternalLastName)) {
-            dto.setMaternalLastName(maternalLastName);
+        if (StringUtils.isNotBlank(reniecInfo.item(2).getTextContent())) {
+            dto.setMaternalLastName(reniecInfo.item(2).getTextContent());
         }
-        if (lastNameMarried != null && StringUtils.isNotBlank(lastNameMarried)) {
-            dto.setLastNameMarried(lastNameMarried);
+        if (StringUtils.isNotBlank(reniecInfo.item(3).getTextContent())) {
+            dto.setLastNameMarried(reniecInfo.item(3).getTextContent());
         }
     }
 
     private void setNames(ReniecDTO dto, NodeList reniecInfo) {
-        String names = reniecInfo.item(4).getTextContent();
-        if (names != null && StringUtils.isNotBlank(names)) {
-            dto.setNames(names);
+        if (StringUtils.isNotBlank(reniecInfo.item(4).getTextContent())) {
+            dto.setNames(reniecInfo.item(4).getTextContent());
         }
     }
 
     private void setHomeCode(ReniecDTO dto, NodeList reniecInfo) {
-
         StringBuilder homeCode = new StringBuilder();
-        String regionCode = reniecInfo.item(5).getTextContent();
-        String provinceCode = reniecInfo.item(6).getTextContent();
-        String districtCode = reniecInfo.item(7).getTextContent();
+        if (StringUtils.isNotBlank(reniecInfo.item(5).getTextContent()) &&
+            StringUtils.isNotBlank(reniecInfo.item(6).getTextContent()) &&
+            StringUtils.isNotBlank(reniecInfo.item(7).getTextContent())) {
 
-        if (StringUtils.isNotBlank(regionCode) &&
-            StringUtils.isNotBlank(provinceCode) &&
-            StringUtils.isNotBlank(districtCode)) {
-
-            homeCode.append(regionCode).append(provinceCode).append(districtCode);
+            homeCode.append(reniecInfo.item(5).getTextContent())
+                    .append(reniecInfo.item(6).getTextContent())
+                    .append(reniecInfo.item(7).getTextContent());
             dto.setHomeCode(homeCode.toString());
         } else {
-            log.error("Some fields of HomeCode are empty or null ");
-            log.error("Region code is : " + regionCode);
-            log.error("Province code is : " + provinceCode);
-            log.error("District code is : " + districtCode);
+            log.error("Some fields of HomeCode are empty or null!");
         }
     }
 
     private void setResidence(ReniecDTO dto, NodeList reniecInfo) {
-        String regionOfResidence = reniecInfo.item(8).getTextContent();
-        String provinceOfResidenc = reniecInfo.item(9).getTextContent();
-        String districtOfResidence = reniecInfo.item(10).getTextContent();
-        String homeAddress = reniecInfo.item(11).getTextContent();
-
-        if (StringUtils.isNotBlank(regionOfResidence)) {
-            dto.setRegionOfResidence(regionOfResidence);
+        if (StringUtils.isNotBlank(reniecInfo.item(8).getTextContent())) {
+            dto.setRegionOfResidence(reniecInfo.item(8).getTextContent());
         }
-        if (StringUtils.isNotBlank(provinceOfResidenc)) {
-            dto.setProvinceOfResidence(provinceOfResidenc);
+        if (StringUtils.isNotBlank(reniecInfo.item(9).getTextContent())) {
+            dto.setProvinceOfResidence(reniecInfo.item(9).getTextContent());
         }
-        if (StringUtils.isNotBlank(districtOfResidence)) {
-            dto.setDistrictOfResidence(districtOfResidence);
+        if (StringUtils.isNotBlank(reniecInfo.item(10).getTextContent())) {
+            dto.setDistrictOfResidence(reniecInfo.item(10).getTextContent());
         }
-        if (StringUtils.isNotBlank(homeAddress)) {
-            dto.setHomeAddress(homeAddress);
+        if (StringUtils.isNotBlank(reniecInfo.item(11).getTextContent())) {
+            dto.setHomeAddress(reniecInfo.item(11).getTextContent());
         }
     }
 
@@ -157,48 +145,40 @@ public class ReniecProvider {
 
     private void setNacimento(ReniecDTO dto, NodeList reniecInfo) {
         StringBuilder nacimientoCode = new StringBuilder();
-        String regionNacimentoCode = reniecInfo.item(14).getTextContent();
-        String provinceNacimentoCode = reniecInfo.item(15).getTextContent();
-        String districtNacimentoCode = reniecInfo.item(16).getTextContent();
+        if (StringUtils.isNotBlank(reniecInfo.item(14).getTextContent()) &&
+            StringUtils.isNotBlank(reniecInfo.item(15).getTextContent()) &&
+            StringUtils.isNotBlank(reniecInfo.item(16).getTextContent())) {
 
-        if (StringUtils.isNotBlank(regionNacimentoCode) &&
-            StringUtils.isNotBlank(provinceNacimentoCode) &&
-            StringUtils.isNotBlank(districtNacimentoCode)) {
-
-            nacimientoCode.append(regionNacimentoCode).append(provinceNacimentoCode).append(districtNacimentoCode);
+            nacimientoCode.append(reniecInfo.item(14).getTextContent())
+                          .append(reniecInfo.item(15).getTextContent())
+                          .append(reniecInfo.item(16).getTextContent());
             dto.setNacimientoCode(nacimientoCode.toString());
         } else {
-            log.error("Some fields of Nacimiento Code are empty or null ");
-            log.error("Region code is : " + regionNacimentoCode);
-            log.error("Province code is : " + provinceNacimentoCode);
-            log.error("District code is : " + districtNacimentoCode);
+            log.error("Some fields of Nacimiento Code are empty or null!");
         }
     }
 
     private void setDescriptionOfBirth(ReniecDTO dto, NodeList reniecInfo) {
-        String regionOfBirth = reniecInfo.item(17).getTextContent();
-        String provinceOfBirth = reniecInfo.item(18).getTextContent();
-        String districtOfBirth = reniecInfo.item(19).getTextContent();
-
-        if (StringUtils.isNotBlank(regionOfBirth)) {
-            dto.setRegionOfBirth(regionOfBirth);
+        if (StringUtils.isNotBlank(reniecInfo.item(17).getTextContent())) {
+            dto.setRegionOfBirth(reniecInfo.item(17).getTextContent());
         }
-        if (StringUtils.isNotBlank(provinceOfBirth)) {
-            dto.setProvinceOfBirth(provinceOfBirth);
+        if (StringUtils.isNotBlank(reniecInfo.item(18).getTextContent())) {
+            dto.setProvinceOfBirth(reniecInfo.item(18).getTextContent());
         }
-        if (StringUtils.isNotBlank(districtOfBirth)) {
-            dto.setDistrictOfBirth(districtOfBirth);
+        if (StringUtils.isNotBlank(reniecInfo.item(19).getTextContent())) {
+            dto.setDistrictOfBirth(reniecInfo.item(19).getTextContent());
         }
     }
 
     private void setBirthDate(ReniecDTO dto, NodeList reniecInfo) {
-        String stringDate = reniecInfo.item(20).getTextContent();
-        if (stringDate == null | StringUtils.isNotBlank(stringDate) | stringDate.length() == 8) {
-            LocalDate date = LocalDate.of(Integer.parseInt(stringDate.substring(0, 4)),
-                    Integer.parseInt(stringDate.substring(4, 6)), Integer.parseInt(stringDate.substring(6)));
+        if (StringUtils.isNotBlank(reniecInfo.item(20).getTextContent()) &&
+            reniecInfo.item(20).getTextContent().length() == 8) {
+            LocalDate date = LocalDate.of(Integer.parseInt(reniecInfo.item(20).getTextContent().substring(0, 4)),
+                                          Integer.parseInt(reniecInfo.item(20).getTextContent().substring(4, 6)),
+                                          Integer.parseInt(reniecInfo.item(20).getTextContent().substring(6)));
             dto.setBirthDate(date);
         } else {
-            log.error("Wrong format date : " + stringDate);
+            log.error("Wrong format date, is empty or null!");
         }
     }
 }

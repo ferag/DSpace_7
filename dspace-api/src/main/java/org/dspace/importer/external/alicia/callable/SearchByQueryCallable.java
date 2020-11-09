@@ -31,13 +31,21 @@ public class SearchByQueryCallable implements Callable<String> {
         query.addParameter("count", maxResult);
         query.addParameter("start", start);
         this.webTarget = webTarget;
-        this.fields = fields;
+        if (fields != null && fields.length() > 0) {
+            this.fields = fields;
+        } else {
+            this.fields = null;
+        }
     }
 
     public SearchByQueryCallable(Query query, WebTarget webTarget, String fields) {
         this.query = query;
         this.webTarget = webTarget;
-        this.fields = fields;
+        if (fields != null && fields.length() > 0) {
+            this.fields = fields;
+        } else {
+            this.fields = null;
+        }
     }
 
     @Override

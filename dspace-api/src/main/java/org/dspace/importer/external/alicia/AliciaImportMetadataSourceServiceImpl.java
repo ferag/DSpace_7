@@ -34,9 +34,6 @@ import org.dspace.importer.external.service.components.QuerySource;
 public class AliciaImportMetadataSourceServiceImpl extends AbstractImportMetadataSourceService<String>
     implements QuerySource {
 
-//    private final String aliciaSearchUrl = "https://alicia.concytec.gob.pe/vufind/api/v1/search";
-//  private final String aliciaSearchUrl = "https://alicia.concytec.gob.pe/vufind/api/v1/search";
-
     private String fields;
 
     private final WebTarget searchWebTarget;

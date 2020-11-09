@@ -69,6 +69,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/api/authn/login")
                 .antMatchers(HttpMethod.PATCH, "/api/authn/login")
                 .antMatchers(HttpMethod.DELETE, "/api/authn/login");
+
     }
 
 

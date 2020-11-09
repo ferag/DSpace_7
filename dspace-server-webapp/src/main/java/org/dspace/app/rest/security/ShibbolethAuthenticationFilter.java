@@ -33,7 +33,6 @@ public class ShibbolethAuthenticationFilter extends StatelessLoginFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req,
                                                 HttpServletResponse res) throws AuthenticationException {
-
         return authenticationManager.authenticate(
                 new DSpaceAuthentication(null, null, new ArrayList<>())
         );

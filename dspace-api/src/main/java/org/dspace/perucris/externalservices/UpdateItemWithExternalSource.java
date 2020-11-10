@@ -26,6 +26,7 @@ import org.dspace.eperson.EPerson;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.perucris.externalservices.renacyt.UpdateItemWithInformationFromRenacytService;
 import org.dspace.perucris.externalservices.reniec.UpdateItemWithInformationFromReniecService;
+import org.dspace.perucris.externalservices.sunat.UpdateItemWithInformationFromSunatService;
 import org.dspace.perucris.externalservices.sunedu.UpdateItemWithInformationFromSuneduService;
 import org.dspace.scripts.DSpaceRunnable;
 import org.dspace.util.UUIDUtils;
@@ -60,6 +61,9 @@ public class UpdateItemWithExternalSource
         peruExternalService.put("renacyt", new DSpace().getServiceManager().getServiceByName(
                                                UpdateItemWithInformationFromRenacytService.class.getName(),
                                                UpdateItemWithInformationFromRenacytService.class));
+        peruExternalService.put("sunat", new DSpace().getServiceManager().getServiceByName(
+                                             UpdateItemWithInformationFromSunatService.class.getName(),
+                                             UpdateItemWithInformationFromSunatService.class));
         this.collectionUuid = UUIDUtils.fromString(commandLine.getOptionValue('i'));
         this.service = commandLine.getOptionValue('s');
     }
@@ -84,7 +88,7 @@ public class UpdateItemWithExternalSource
             throw new IllegalArgumentException("The name of service must be provided");
         }
         try {
-            performUpdate(context, externalService);
+            performUpdate(context, externalService, service);
             context.complete();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -93,10 +97,10 @@ public class UpdateItemWithExternalSource
         }
     }
 
-    private void performUpdate(Context context, PeruExternalService externalService) {
+    private void performUpdate(Context context, PeruExternalService externalService, String service) {
         int count = 0;
         try {
-            Iterator<Item> itemIterator = findItems(context);
+            Iterator<Item> itemIterator = findItems(context, service);
             handler.logInfo("Update start");
             int countFoundItems = 0;
             int countUpdatedItems = 0;
@@ -123,17 +127,27 @@ public class UpdateItemWithExternalSource
         }
     }
 
-    private Iterator<Item> findItems(Context context)
+    private Iterator<Item> findItems(Context context, String service)
             throws SQLException, SearchServiceException {
         DiscoverQuery discoverQuery = new DiscoverQuery();
         discoverQuery.setDSpaceObjectFilter(IndexableItem.TYPE);
         discoverQuery.setMaxResults(20);
-        discoverQuery.addFilterQueries("relationship.type:Person");
-        discoverQuery.addFilterQueries("perucris.identifier.dni:*");
+        setFilter(discoverQuery, service);
         if (this.collectionUuid != null) {
             discoverQuery.addFilterQueries("location.coll:" + this.collectionUuid.toString());
         }
         return new DiscoverResultIterator<Item, UUID>(context, discoverQuery);
+    }
+
+    private void setFilter(DiscoverQuery discoverQuery, String service) {
+        if ("reniec".equals(service) | "sunedu".equals(service) | "renacyt".equals(service)) {
+            discoverQuery.addFilterQueries("relationship.type:Person");
+            discoverQuery.addFilterQueries("perucris.identifier.dni:*");
+        }
+        if ("sunat".equals(service)) {
+            discoverQuery.addFilterQueries("relationship.type:OrgUnit");
+            discoverQuery.addFilterQueries("organization.identifier.ruc:*");
+        }
     }
 
     private void assignCurrentUserInContext() throws SQLException {

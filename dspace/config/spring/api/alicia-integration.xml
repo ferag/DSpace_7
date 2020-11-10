@@ -23,7 +23,257 @@
         <entry key-ref="alicia.dc.title" value-ref="aliciaTitle"/>
         <entry key-ref="alicia.dc.identifier" value-ref="aliciaIdentifier"/>
         <entry key-ref="alicia.dc.contributor.author" value-ref="aliciaAuthors"/>
+        <entry key-ref="alicia.dc.subject" value-ref="aliciaSubject"></entry>
+        <entry key-ref="alicia.dc.subject.ocde" value-ref="aliciaSubjectOcde"></entry>
+        <entry key-ref="alicia.dc.description.abstract" value-ref="aliciaAbstract"></entry>
+        <entry key-ref="alicia.dc.description.tableOfContents" value-ref="aliciaTableOfContents"></entry>
+        <entry key-ref="alicia.dc.titlealternative" value-ref="aliciaTitleAlternative"></entry>
+        <entry key-ref="alicia.renati.author.dni" value-ref="aliciaRenatiAuthorDNI"></entry>
+        <entry key-ref="alicia.dc.contributor.advisor" value-ref="aliciaContributorAdvisor"></entry>
+        <entry key-ref="alicia.renati.advisor.orcid" value-ref="aliciaRenatiAdvisorORCID"></entry>
+        <entry key-ref="alicia.renati.advisor.dni" value-ref="aliciaRenatiAdvisorDNI"></entry>
+        <entry key-ref="alicia.dc.contributor.editor" value-ref="aliciaContributorEditor"></entry>
+        <entry key-ref="alicia.dc.rights" value-ref="aliciaRights"></entry>
+        <entry key-ref="alicia.dc.date.embargoEnd" value-ref="aliciaDateEmbargoEnd"></entry>
+        <entry key-ref="alicia.dc.rights.uri" value-ref="aliciaRightsUri"></entry>
+        <entry key-ref="alicia.dc.type" value-ref="aliciaType"></entry>
+        <entry key-ref="alicia.dc.type.version" value-ref="aliciaTypeVersion"></entry>
+        <entry key-ref="alicia.dc.relation.uri" value-ref="aliciaRelationURI"></entry>
+        <entry key-ref="alicia.dc.date.issued" value-ref="aliciaDateIssued"></entry>
+        <entry key-ref="alicia.dc.description.sponsorship" value-ref="aliciaDescriptionSponsorship"></entry>
+        <entry key-ref="alicia.dc.identifier.uri" value-ref="aliciaIdentifierHandle"></entry>
+        <entry key-ref="alicia.dc.identifier.doi" value-ref="aliciaIdentifierDoi"></entry>
+        <entry key-ref="alicia.dc.identifier.isbn" value-ref="aliciaIdentifierIsbn"></entry>
+        <entry key-ref="alicia.renati.type" value-ref="aliciaRenatiType"></entry>
+        <entry key-ref="alicia.thesis.degree.name" value-ref="aliciaThesisDegreeName"></entry>        
+        <entry key-ref="alicia.renati.level" value-ref="aliciaRenatiLevel"></entry>
+        <entry key-ref="alicia.thesis.degree.discipline" value-ref="aliciaThesisDegreeDiscipline"></entry>
+        <entry key-ref="alicia.renati.discipline" value-ref="aliciaRenatiDiscipline"></entry>
+        <entry key-ref="alicia.thesis.degree.grantor" value-ref="aliciaThesisDegreeGrantor"></entry>
+        <entry key-ref="alicia.renati.juror" value-ref="aliciaRenatiJuror"></entry>
     </util:map>
+    
+    <bean id="aliciaRenatiJuror" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.renati.juror"/>
+        <property name="query" value="$.renatiJuror[*]"/>
+    </bean>
+    <bean id="alicia.renati.juror" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="renati.juror"/>
+    </bean>
+
+
+    <bean id="aliciaThesisDegreeGrantor" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.thesis.degree.grantor"/>
+        <property name="query" value="$.thesisDegreeGrantor[*]"/>
+    </bean>
+    <bean id="alicia.thesis.degree.grantor" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="thesis.degree.grantor"/>
+    </bean>
+    
+    
+    
+    <bean id="aliciaRenatiDiscipline" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.renati.discipline"/>
+        <property name="query" value="$.renatiDiscipline[*]"/>
+    </bean>
+    <bean id="alicia.renati.discipline" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="renati.discipline"/>
+    </bean>
+
+    <bean id="aliciaThesisDegreeDiscipline" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.thesis.degree.discipline"/>
+        <property name="query" value="$.thesisDegreeDiscipline[*]"/>
+    </bean>
+    <bean id="alicia.thesis.degree.discipline" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="thesis.degree.discipline"/>
+    </bean>
+
+    <bean id="aliciaRenatiLevel" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.renati.level"/>
+        <property name="query" value="$.renatiLevel[*]"/>
+    </bean>
+    <bean id="alicia.renati.level" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="renati.level"/>
+    </bean>
+    
+    <bean id="aliciaThesisDegreeName" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.thesis.degree.name"/>
+        <property name="query" value="$.thesisDegreeName[*]"/>
+    </bean>
+    <bean id="alicia.thesis.degree.name" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="thesis.degree.name"/>
+    </bean>
+    
+    <bean id="aliciaRenatiType" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.renati.type"/>
+        <property name="query" value="$.renatiType[*]"/>
+    </bean>
+    <bean id="alicia.renati.type" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="renati.type"/>
+    </bean>
+
+    <bean id="aliciaIdentifierIsbn" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.identifier.isbn"/>
+        <property name="query" value="$.dcIdentifierIsbn[*]"/>
+    </bean>
+    <bean id="alicia.dc.identifier.isbn" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.identifier.isbn"/>
+    </bean>
+
+    <bean id="aliciaIdentifierDoi" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.identifier.doi"/>
+        <property name="query" value="$.dcIdentifierDoi[*]"/>
+    </bean>
+    <bean id="alicia.dc.identifier.doi" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.identifier.doi"/>
+    </bean>
+                    
+    <bean id="aliciaIdentifierHandle" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.identifier.uri"/>
+        <property name="query" value="$.dcIdentifierHandle[*]"/>
+    </bean>
+    <bean id="alicia.dc.identifier.uri" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.identifier.uri"/>
+    </bean>
+        
+    <bean id="aliciaDescriptionSponsorship" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.description.sponsorship"/>
+        <property name="query" value="$.dcDescriptionSponsorship[*]"/>
+    </bean>
+    <bean id="alicia.dc.description.sponsorship" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.description.sponsorship"/>
+    </bean>
+    
+    
+    <bean id="aliciaDateIssued" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.date.issued"/>
+        <property name="query" value="$.dcDateIssued[*]"/>
+    </bean>
+    <bean id="alicia.dc.date.issued" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.date.issued"/>
+    </bean>
+    
+    
+    <bean id="aliciaRelationURI" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.relation.uri"/>
+        <property name="query" value="$.dcRelationURI[*]"/>
+    </bean>
+    <bean id="alicia.dc.relation.uri" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.relation.uri"/>
+    </bean>
+    
+    
+    <bean id="aliciaTypeVersion" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.type.version"/>
+        <property name="query" value="$.dcTypeVersion[*]"/>
+    </bean>
+    <bean id="alicia.dc.type.version" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.type.version"/>
+    </bean>
+
+    <bean id="aliciaType" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.type"/>
+        <property name="query" value="$.dcType[*]"/>
+    </bean>
+    <bean id="alicia.dc.type" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.type"/>
+    </bean>
+
+    <bean id="aliciaRightsUri" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.rights.uri"/>
+        <property name="query" value="$.dcRightsUri[*]"/>
+    </bean>
+    <bean id="alicia.dc.rights.uri" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.rights.uri"/>
+    </bean>
+
+    <bean id="aliciaDateEmbargoEnd" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.date.embargoEnd"/>
+        <property name="query" value="$.dcDateEmbargoEnd[*]"/>
+    </bean>
+    <bean id="alicia.dc.date.embargoEnd" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.date.embargoEnd"/>
+    </bean>
+
+    <bean id="aliciaRights" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.rights"/>
+        <property name="query" value="$.dcRights[*]"/>
+    </bean>
+    <bean id="alicia.dc.rights" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.rights"/>
+    </bean>
+
+    <bean id="aliciaContributorEditor" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.contributor.editor"/>
+        <property name="query" value="$.dcContributorEditor[*]"/>
+    </bean>
+    <bean id="alicia.dc.contributor.editor" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.contributor.editor"/>
+    </bean>
+
+    <bean id="aliciaRenatiAdvisorDNI" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.renati.advisor.dni"/>
+        <property name="query" value="$.renatiAdvisorDNI[*]"/>
+    </bean>
+    <bean id="alicia.renati.advisor.dni" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="renati.advisor.dni"/>
+    </bean>
+    
+    <bean id="aliciaRenatiAdvisorORCID" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.renati.advisor.orcid"/>
+        <property name="query" value="$.renatiAdvisorORCID[*]"/>
+    </bean>
+    <bean id="alicia.renati.advisor.orcid" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="renati.advisor.orcid"/>
+    </bean>
+    
+    <bean id="aliciaContributorAdvisor" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.contributor.advisor"/>
+        <property name="query" value="$.dcContributorAdvisor[*]"/>
+    </bean>
+    <bean id="alicia.dc.contributor.advisor" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.contributor.advisor"/>
+    </bean>
+    
+    <bean id="aliciaRenatiAuthorDNI" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.renati.author.dni"/>
+        <property name="query" value="$.renatiAuthorDNI[*]"/>
+    </bean>
+    <bean id="alicia.renati.author.dni" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="renati.author.dni"/>
+    </bean>
+
+    <bean id="aliciaTitleAlternative" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.titlealternative"/>
+        <property name="query" value="$.dcTitleAlternative[*]"/>
+    </bean>
+    <bean id="alicia.dc.titlealternative" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.title.alternative"/>
+    </bean>
+    
+    <bean id="aliciaTableOfContents" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.description.tableOfContents"/>
+        <property name="query" value="$.dcTableOfContents[*]"/>
+    </bean>
+    <bean id="alicia.dc.description.tableOfContents" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.description.tableOfContents"/>
+    </bean>
+
+    <bean id="aliciaAbstract" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.description.abstract"/>
+        <property name="query" value="$.dcDescriptionAbstract[*]"/>
+    </bean>
+    <bean id="alicia.dc.description.abstract" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.description.abstract"/>
+    </bean>
+
+    <bean id="aliciaSubjectOcde" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.subject.ocde"/>
+        <property name="query" value="$.dcSubjectOCDE[*]"/>
+    </bean>
+    <bean id="alicia.dc.subject.ocde" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.subject.ocde"/>
+    </bean>
 
     <bean id="aliciaIDContrib" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
         <property name="field" ref="alicia.id"/>
@@ -32,8 +282,6 @@
     <bean id="alicia.id" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
         <constructor-arg value="dc.identifier.other"/>
     </bean>
-
-
 
     <bean id="aliciaLanguages" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
         <property name="field" ref="alicia.dc.language.iso"/>
@@ -45,7 +293,7 @@
 
     <bean id="aliciaPublisher" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
         <property name="field" ref="alicia.dc.publisher"/>
-        <property name="query" value="$.publishers[*]"/>
+        <property name="query" value="$.dcPublisher[*]"/>
     </bean>
     <bean id="alicia.dc.publisher" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
         <constructor-arg value="dc.publisher"/>
@@ -53,7 +301,7 @@
 
     <bean id="aliciaTitle" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
         <property name="field" ref="alicia.dc.title"/>
-        <property name="query" value="$.title"/>
+        <property name="query" value="$.dcTitle[*]"/>
     </bean>
     <bean id="alicia.dc.title" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
         <constructor-arg value="dc.title"/>
@@ -67,27 +315,21 @@
         <constructor-arg value="dc.identifier"/>
     </bean>
 
-
-    <bean id="aliciaAuthors" class="org.dspace.importer.external.metadatamapping.contributor.MultipleMetadataContributor">
-        <property name="field" ref="alicia.dc.contributor.author"/>
-        <property name="metadatumContributors" ref="aliciaAuthorsList" />
+    <bean id="aliciaSubject" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.subject"/>
+        <property name="query" value="$.subjects[*][*]"/>
+    </bean>
+    <bean id="alicia.dc.subject" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.subject"/>
     </bean>
 
-	<util:list id="aliciaAuthorsList">
-	    <bean id="aliciaPrimaryAuthors" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
-	        <property name="field" ref="alicia.dc.contributor.author"/>
-	        <property name="query" value="$.authors.primary.*~" />
-	    </bean>
-	    <bean id="aliciaSecondaryAuthors" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
-	        <property name="field" ref="alicia.dc.contributor.author"/>
-	        <property name="query" value="$.authors.secondary.*~" />
-	    </bean>	
-	</util:list>
-    
+    <bean id="aliciaAuthors" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+        <property name="field" ref="alicia.dc.contributor.author"/>
+        <property name="query" value="$.dcContributorAuthor[*]"/>
+    </bean>
     <bean id="alicia.dc.contributor.author" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
         <constructor-arg value="dc.contributor.author"/>
     </bean>
-
 
     <bean class="java.lang.Integer" id="maxRetry">
         <constructor-arg value="3"/>

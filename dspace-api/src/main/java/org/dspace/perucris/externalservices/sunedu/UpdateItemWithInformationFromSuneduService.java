@@ -104,8 +104,6 @@ public class UpdateItemWithInformationFromSuneduService implements PeruExternalS
         try {
             itemService.clearMetadata(context, currentItem, "crisrp", "education", null, Item.ANY);
             itemService.clearMetadata(context, currentItem, "crisrp", "education", "role", Item.ANY);
-            itemService.clearMetadata(context, currentItem, "crisrp", "qualification", "end", Item.ANY);
-            itemService.clearMetadata(context, currentItem, "crisrp", "qualification", "start", Item.ANY);
             itemService.clearMetadata(context, currentItem, "perucris", "education", "country", Item.ANY);
             itemService.clearMetadata(context, currentItem, "perucris", "education", "grantor", Item.ANY);
         } catch (SQLException e) {

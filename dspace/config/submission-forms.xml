@@ -3077,12 +3077,24 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
         </field>
+      </row>
+      <row>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>funding</dc-element>
-          <dc-qualifier>duration</dc-qualifier>
-          <label>Duration</label>
-          <input-type>onebox</input-type>
+          <dc-qualifier>startDate</dc-qualifier>
+          <label>Start date</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>funding</dc-element>
+          <dc-qualifier>endDate</dc-qualifier>
+          <label>End date</label>
+          <input-type>date</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />

@@ -25,7 +25,11 @@ public class GetByAliciaIdCallable implements Callable<String> {
     public GetByAliciaIdCallable(String id, WebTarget webTarget, String fields) {
         this.id = id;
         this.webTarget = webTarget;
-        this.fields = fields;
+        if (fields != null && fields.length() > 0) {
+            this.fields = fields;
+        } else {
+            this.fields = null;
+        }
     }
 
     @Override

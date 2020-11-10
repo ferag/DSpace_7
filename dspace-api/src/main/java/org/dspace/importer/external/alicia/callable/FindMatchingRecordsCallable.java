@@ -30,7 +30,11 @@ public class FindMatchingRecordsCallable implements Callable<String> {
         query.addParameter("count", maxResult);
         query.addParameter("start", start);
         this.webTarget = webTarget;
-        this.fields = fields;
+        if (fields != null && fields.length() > 0) {
+            this.fields = fields;
+        } else {
+            this.fields = null;
+        }
     }
 
     public FindMatchingRecordsCallable(Query query, WebTarget webTarget) {

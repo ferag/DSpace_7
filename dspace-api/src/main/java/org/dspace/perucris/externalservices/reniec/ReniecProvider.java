@@ -68,7 +68,7 @@ public class ReniecProvider {
         } catch (ParserConfigurationException | SAXException | IOException e) {
             log.error(e.getMessage(), e);
         }
-        if (doc == null | doc.getElementsByTagName("return").item(22) == null) {
+        if (doc == null || doc.getElementsByTagName("return").item(22) == null) {
             return null;
         }
         NodeList reniecInfo = doc.getElementsByTagName("return");
@@ -177,8 +177,10 @@ public class ReniecProvider {
                                           Integer.parseInt(reniecInfo.item(20).getTextContent().substring(4, 6)),
                                           Integer.parseInt(reniecInfo.item(20).getTextContent().substring(6)));
             dto.setBirthDate(date);
+        } else if (StringUtils.isNotBlank(reniecInfo.item(20).getTextContent())) {
+            log.error("Wrong format date : " + reniecInfo.item(20).getTextContent());
         } else {
-            log.error("Wrong format date, is empty or null!");
+            log.error("Date is blank: " + reniecInfo.item(20).getTextContent());
         }
     }
 }

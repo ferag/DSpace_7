@@ -62,13 +62,13 @@ public class ReniecProviderTest {
             assertEquals("ASCONA", suneduObject.getMaternalLastName());
             assertNull(suneduObject.getLastNameMarried());
             assertEquals("EDWIN MANUEL", suneduObject.getNames());
-            assertEquals("14-01-37", suneduObject.getHomeCode());
+            assertEquals("140137", suneduObject.getHomeCode());
             assertEquals("LIMA", suneduObject.getRegionOfResidence());
             assertEquals("LIMA", suneduObject.getProvinceOfResidence());
             assertEquals("SAN JUAN DE LURIGANCHO", suneduObject.getDistrictOfResidence());
             assertEquals("MZ.7 LT.8 ASENT.H.19 DE ABRIL CANTO GRANDE", suneduObject.getHomeAddress());
             assertEquals(1, suneduObject.getIndexSex());
-            assertEquals("14-01-37", suneduObject.getNacimientoCode());
+            assertEquals("140137", suneduObject.getNacimientoCode());
             assertEquals("LIMA", suneduObject.getRegionOfBirth());
             assertEquals("LIMA", suneduObject.getProvinceOfBirth());
             assertEquals("SAN JUAN DE LURIGANCHO", suneduObject.getDistrictOfBirth());
@@ -82,5 +82,23 @@ public class ReniecProviderTest {
         String DNI = "wrongDNI";
         ReniecDTO suneduObject = reniecProvider.getReniecObject(DNI);
         assertNull(suneduObject);
+    }
+
+    @Test
+    public void reniecServiceReturnEmptyXMLMockitoTest() throws Exception {
+        testProps = new Properties();
+        URL properties = AbstractDSpaceIntegrationTest.class.getClassLoader().getResource("test-config.properties");
+        testProps.load(properties.openStream());
+        String path = testProps.get("test.reniecEmptyXML").toString();
+        try (FileInputStream file = new FileInputStream(path)) {
+            String reniecEmptyXML = IOUtils.toString(file, Charset.defaultCharset());
+            InputStream inputStream = new StringInputStream(reniecEmptyXML);
+
+            String DNI = "41914191";
+            when(reniecRestConnector.get(DNI)).thenReturn(inputStream);
+
+            ReniecDTO suneduObject = reniecProvider.getReniecObject(DNI);
+            assertNull(suneduObject);
+        }
     }
 }

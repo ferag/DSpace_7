@@ -1,0 +1,51 @@
+<ns3:getDatosPrincipalesResponse
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ns2="http://service.consultaruc.registro.servicio2.sunat.gob.pe"
+	xmlns:ns3="http://wscr.sunat.gob.pe:90/cl-ti-iaconsulruc-ws/services/ConsultaRuc">
+	<getDatosPrincipalesReturn   id="id0" root="0"  >
+		<cod_dep xsi:type="xsd:string">20</cod_dep>
+		<cod_dist xsi:type="xsd:string">200101</cod_dist>
+		<cod_prov xsi:type="xsd:string">2001</cod_prov>
+		<ddp_ciiu xsi:type="xsd:string">80309</ddp_ciiu>
+		<ddp_doble xsi:type="xsd:string" xsi:nil="true"/>
+		<ddp_estado xsi:type="xsd:string">00</ddp_estado>
+		<ddp_fecact xsi:type="xsd:string">27/09/2002</ddp_fecact>
+		<ddp_fecalt xsi:type="xsd:string">08/09/1993</ddp_fecalt>
+		<ddp_fecbaj xsi:type="xsd:string"/>
+		<ddp_flag22 xsi:type="xsd:string">00</ddp_flag22>
+		<ddp_identi xsi:type="xsd:string">02</ddp_identi>
+		<ddp_inter1 xsi:type="xsd:string">-   </ddp_inter1>
+		<ddp_lllttt xsi:type="xsd:string">95H1162</ddp_lllttt>
+		<ddp_mclase xsi:type="xsd:string" xsi:nil="true"/>
+		<ddp_nombre xsi:type="xsd:string">UNIVERSIDAD DE PIURA                                                                                </ddp_nombre>
+		<ddp_nomvia xsi:type="xsd:string">RAMON MUGICA</ddp_nomvia>
+		<ddp_nomzon xsi:type="xsd:string">SAN EDUARDO</ddp_nomzon>
+		<ddp_numer1 xsi:type="xsd:string">131 </ddp_numer1>
+		<ddp_numreg xsi:type="xsd:string">0081</ddp_numreg>
+		<ddp_numruc xsi:type="xsd:string">20172627421</ddp_numruc>
+		<ddp_reacti xsi:type="xsd:string" xsi:nil="true"/>
+		<ddp_refer1 xsi:type="xsd:string">SECTOR EL CHIPE</ddp_refer1>
+		<ddp_secuen xsi:type="xsd:int">0</ddp_secuen>
+		<ddp_tamano xsi:type="xsd:string" xsi:nil="true"/>
+		<ddp_tipvia xsi:type="xsd:string">01</ddp_tipvia>
+		<ddp_tipzon xsi:type="xsd:string">01</ddp_tipzon>
+		<ddp_tpoemp xsi:type="xsd:string">19</ddp_tpoemp>
+		<ddp_ubigeo xsi:type="xsd:string">200101</ddp_ubigeo>
+		<ddp_userna xsi:type="xsd:string" xsi:nil="true"/>
+		<desc_ciiu xsi:type="xsd:string">ENSEÑANZA SUPERIOR                     </desc_ciiu>
+		<desc_dep xsi:type="xsd:string">PIURA</desc_dep>
+		<desc_dist xsi:type="xsd:string">PIURA                        </desc_dist>
+		<desc_estado xsi:type="xsd:string">ACTIVO                  </desc_estado>
+		<desc_flag22 xsi:type="xsd:string">HABIDO                            </desc_flag22>
+		<desc_identi xsi:type="xsd:string">PERSONA JURIDICA</desc_identi>
+		<desc_numreg xsi:type="xsd:string">I.R.PIURA-PRICO        </desc_numreg>
+		<desc_prov xsi:type="xsd:string">PIURA</desc_prov>
+		<desc_tamano xsi:type="xsd:string" xsi:nil="true"/>
+		<desc_tipvia xsi:type="xsd:string">AVENIDA</desc_tipvia>
+		<desc_tipzon xsi:type="xsd:string">URBANIZACION</desc_tipzon>
+		<desc_tpoemp xsi:type="xsd:string">UNIVERS. CENTROS EDUCAT. Y CULT.  </desc_tpoemp>
+		<esActivo xsi:type="xsd:boolean">true</esActivo>
+		<esHabido xsi:type="xsd:boolean">true</esHabido>
+	</getDatosPrincipalesReturn>
+</ns3:getDatosPrincipalesResponse>

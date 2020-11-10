@@ -57,12 +57,12 @@ public class BrowsesResourceControllerIT extends AbstractControllerIntegrationTe
                    //Our default Discovery config has 4 browse indexes so we expect this to be reflected in the page
                    // object
                    .andExpect(jsonPath("$.page.size", is(20)))
-                   .andExpect(jsonPath("$.page.totalElements", is(11)))
-                   .andExpect(jsonPath("$.page.totalPages", is(1)))
+                   .andExpect(jsonPath("$.page.totalElements", is(26)))
+                   .andExpect(jsonPath("$.page.totalPages", is(2)))
                    .andExpect(jsonPath("$.page.number", is(0)))
 
                    //The array of browse index should have a size 4
-                   .andExpect(jsonPath("$._embedded.browses", hasSize(11)))
+                   .andExpect(jsonPath("$._embedded.browses", hasSize(26)))
 
                    //Check that all (and only) the default browse indexes are present
                    .andExpect(jsonPath("$._embedded.browses", containsInAnyOrder(
@@ -76,7 +76,22 @@ public class BrowsesResourceControllerIT extends AbstractControllerIntegrationTe
                        BrowseIndexMatcher.ounameBrowseIndex("asc"),
                        BrowseIndexMatcher.pjtitleBrowseIndex("asc"),
                        BrowseIndexMatcher.rpdeptBrowseIndex("asc"),
-                       BrowseIndexMatcher.eqtitleBrowseIndex("asc")
+                       BrowseIndexMatcher.eqtitleBrowseIndex("asc"),
+                       BrowseIndexMatcher.rotitleBrowseIndex("asc"),
+                       BrowseIndexMatcher.rodatecreatedBrowseIndex("asc"),
+                       BrowseIndexMatcher.rodatemodifiedBrowseIndex("asc"),
+                       BrowseIndexMatcher.rodateissuedBrowseIndex("asc"),
+                       BrowseIndexMatcher.rpdatecreatedBrowseIndex("asc"),
+                       BrowseIndexMatcher.rpdatemodifiedBrowseIndex("asc"),
+                       BrowseIndexMatcher.oudatecreatedBrowseIndex("asc"),
+                       BrowseIndexMatcher.oudatemodifiedBrowseIndex("asc"),
+                       BrowseIndexMatcher.pftitleBrowseIndex("asc"),
+                       BrowseIndexMatcher.pfdatecreatedBrowseIndex("asc"),
+                       BrowseIndexMatcher.pfdatemodifiedBrowseIndex("asc"),
+                       BrowseIndexMatcher.pfdatestartBrowseIndex("asc"),
+                       BrowseIndexMatcher.pfdateendBrowseIndex("asc"),
+                       BrowseIndexMatcher.eqdatecreatedBrowseIndex("asc"),
+                       BrowseIndexMatcher.eqdatemodifiedBrowseIndex("asc")
                    )))
         ;
     }

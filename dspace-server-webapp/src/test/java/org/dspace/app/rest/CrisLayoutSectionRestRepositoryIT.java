@@ -36,7 +36,7 @@ public class CrisLayoutSectionRestRepositoryIT extends AbstractControllerIntegra
     @Test
     public void testFindAll() throws Exception {
 
-        String[] expectedBrowseNames = new String[] { "rodept", "author", "title", "type", "dateissued", "subject" };
+        String[] expectedBrowseNames = new String[] { "rotitle", "rodatecreated", "rodatemodified", "rodateissued"};
 
         getClient().perform(get("/api/layout/sections"))
             .andExpect(status().isOk())
@@ -56,23 +56,27 @@ public class CrisLayoutSectionRestRepositoryIT extends AbstractControllerIntegra
                 hasItem(withIdAndFacetComponent("researchoutputs", 2, 0, "col-md-12", "researchoutputs"))))
 
             .andExpect(jsonPath("$._embedded.sections",
-                hasItem(withIdAndBrowseComponent("researcherprofiles", 0, 0, "col-md-4", "rpname", "rpdept"))))
+                hasItem(withIdAndBrowseComponent("researcherprofiles", 0, 0, "col-md-4",
+                                                 "rpname", "rpdatecreated", "rpdatemodified"))))
             .andExpect(jsonPath("$._embedded.sections",
                 hasItem(withIdAndSearchComponent("researcherprofiles", 0, 1, "col-md-8", "person"))))
 
             .andExpect(jsonPath("$._embedded.sections",
-                hasItem(withIdAndBrowseComponent("fundings_and_projects", 0, 0, "col-md-4", "pjtitle"))))
+                hasItem(withIdAndBrowseComponent("fundings_and_projects", 0, 0, "col-md-4", "pftitle",
+                                                 "pfdatecreated", "pfdatemodified", "pfdatestart", "pfdateend"))))
             .andExpect(jsonPath("$._embedded.sections",
                 hasItem(withIdAndSearchComponent("fundings_and_projects", 0, 1, "col-md-8", "project_funding"))))
 
             .andExpect(jsonPath("$._embedded.sections",
-                hasItem(withIdAndBrowseComponent("orgunits", 0, 0, "col-md-4", "ouname"))))
+                hasItem(withIdAndBrowseComponent("orgunits", 0, 0, "col-md-4", "ouname", "oudatecreated",
+                                                 "oudatemodified"))))
             .andExpect(jsonPath("$._embedded.sections",
                 hasItem(withIdAndSearchComponent("orgunits", 0, 1, "col-md-8", "orgunit"))))
             .andExpect(jsonPath("$._embedded.sections",
                 hasItem(withIdAndFacetComponent("orgunits", 1, 0, "col-md-12", "orgunit"))))
             .andExpect(jsonPath("$._embedded.sections",
-                hasItem(withIdAndBrowseComponent("infrastructure", 0, 0, "col-md-4", "eqtitle"))))
+                hasItem(withIdAndBrowseComponent("infrastructure", 0, 0, "col-md-4", "eqtitle", "eqdatecreated",
+                                                 "eqdatemodified"))))
             .andExpect(jsonPath("$._embedded.sections",
                 hasItem(withIdAndSearchComponent("infrastructure", 0, 1, "col-md-8", "infrastructure"))))
             .andExpect(jsonPath("$._embedded.sections",
@@ -82,7 +86,7 @@ public class CrisLayoutSectionRestRepositoryIT extends AbstractControllerIntegra
     @Test
     public void testFindOne() throws Exception {
 
-        String[] expectedBrowseNames = new String[] { "rodept", "author", "title", "type", "dateissued", "subject" };
+        String[] expectedBrowseNames = new String[] { "rotitle", "rodatecreated", "rodatemodified", "rodateissued" };
 
         getClient().perform(get("/api/layout/sections/{id}", "researchoutputs"))
             .andExpect(status().isOk())

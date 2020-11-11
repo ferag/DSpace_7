@@ -81,7 +81,7 @@
                 <entry key="openAIREFundingAgency" value-ref="openAIREFundingAgency"/>
                 <!-- Person Related items -->
                 <entry key="RELATION.Person.projects" value-ref="relationInvestigatorProjectsConfiguration"/>
-                <entry key="RELATION.Person.researchoutputs" value-ref="relationAuthorPublicationsConfiguration"/>
+                <entry key="RELATION.Person.researchoutputs" value-ref="relationAuthorResearchOutputsConfiguration"/>
                 <entry key="RELATION.Person.patents" value-ref="relationAuthorPatentsConfiguration"/>
                 <!-- OrgUnit Related items -->
                 <entry key="RELATION.OrgUnit.rpprojects" value-ref="relationOrgunitRPProjectConfiguration"/>
@@ -976,13 +976,20 @@
     
     
     <!-- publications of an author -->
-    <bean id="relationAuthorPublicationsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+    <bean id="relationAuthorResearchOutputsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="searchFilterIssued" />
                 <ref bean="searchFilterAuthor" />
-                <ref bean="searchFilterEntityType"/>
-                <ref bean="searchFilterSubject" />
+	            <ref bean="searchFilterEditor" />
+	            <ref bean="searchFilterOrgUnit" />
+	            <ref bean="searchFilterSubject" />
+	            <ref bean="searchFilterFunding" />
+	            <ref bean="searchFilterContentInOriginalBundle"/>
+	            <ref bean="searchFilterType" />
             </list>
         </property>
         <!-- Set TagCloud configuration per discovery configuration -->
@@ -990,9 +997,17 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
+                <ref bean="searchFilterTitle" />
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="searchFilterIssued" />
                 <ref bean="searchFilterAuthor" />
-                <ref bean="searchFilterEntityType"/>
+                <ref bean="searchFilterEditor" />
+                <ref bean="searchFilterOrgUnit" />
                 <ref bean="searchFilterSubject" />
+                <ref bean="searchFilterFunding" />
+                <ref bean="searchFilterContentInOriginalBundle"/>
+                <ref bean="searchFilterType" />
             </list>
         </property>
         <!--The sort filters for the discovery search-->

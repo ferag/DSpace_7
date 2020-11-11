@@ -1,0 +1,9 @@
+<ns3:getDatosPrincipalesResponse
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ns2="http://service.consultaruc.registro.servicio2.sunat.gob.pe"
+	xmlns:ns3="http://wscr.sunat.gob.pe:90/cl-ti-iaconsulruc-ws/services/ConsultaRuc">
+	<getDatosPrincipalesReturn   id="id0" root="0"  >
+
+	</getDatosPrincipalesReturn>
+</ns3:getDatosPrincipalesResponse>

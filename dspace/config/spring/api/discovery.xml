@@ -144,7 +144,10 @@
         <property name="id" value="defaultConfiguration"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
-            <list>
+		<list>
+
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
                 <ref bean="searchFilterIssued" />
@@ -157,6 +160,8 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterTitle" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
@@ -574,11 +579,11 @@
         <property name="sidebarFacets">
             <list>
                 <ref bean="searchFilterType" />
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphEntityByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
-                <ref bean="searchFilterIssued" />
+<!--                <ref bean="searchFilterIssued" />-->
                 <ref bean="searchFilterContentInOriginalBundle"/>
                 <ref bean="searchFilterEntityType"/>
             </list>
@@ -589,12 +594,12 @@
         <property name="searchFilters">
             <list>
                 <ref bean="searchFilterType" />
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphEntityByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterTitle" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
-                <ref bean="searchFilterIssued" />
+<!--                <ref bean="searchFilterIssued" />-->
                 <ref bean="searchFilterContentInOriginalBundle"/>
                 <ref bean="searchFilterFileNameInOriginalBundle" />
                 <ref bean="searchFilterFileDescriptionInOriginalBundle" />
@@ -701,7 +706,7 @@
             <list>
                 <ref bean="searchFilterObjectNamedType" />
                 <ref bean="searchFilterType" />
-                <ref bean="searchFilterIssued" />
+<!--                <ref bean="searchFilterIssued" />-->
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page -->
@@ -709,7 +714,7 @@
             <list>
                 <ref bean="searchFilterObjectNamedType" />
                 <ref bean="searchFilterType" />
-                <ref bean="searchFilterIssued" />
+<!--                <ref bean="searchFilterIssued" />-->
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -777,7 +782,7 @@
             <list>
                 <ref bean="searchFilterObjectNamedType" />
                 <ref bean="searchFilterType" />
-                <ref bean="searchFilterIssued" />
+<!--                <ref bean="searchFilterIssued" />-->
                 <ref bean="searchFilterSubmitter" />
             </list>
         </property>
@@ -786,7 +791,7 @@
             <list>
                 <ref bean="searchFilterObjectNamedType" />
                 <ref bean="searchFilterType" />
-                <ref bean="searchFilterIssued" />
+<!--                <ref bean="searchFilterIssued" />-->
                 <ref bean="searchFilterSubmitter" />
             </list>
         </property>
@@ -855,7 +860,7 @@
             <list>
                 <ref bean="searchFilterObjectNamedType" />
                 <ref bean="searchFilterType" />
-                <ref bean="searchFilterIssued" />
+<!--                <ref bean="searchFilterIssued" />-->
                 <ref bean="searchFilterSubmitter" />
             </list>
         </property>
@@ -864,7 +869,7 @@
             <list>
                 <ref bean="searchFilterObjectNamedType" />
                 <ref bean="searchFilterType" />
-                <ref bean="searchFilterIssued" />
+<!--                <ref bean="searchFilterIssued" />-->
                 <ref bean="searchFilterSubmitter" />
             </list>
         </property>
@@ -926,14 +931,18 @@
     <bean id="relationInvestigatorProjectsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
-            <list>
-                <ref bean="searchFilterEntityType" />
+		<list>
+			 <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+		<ref bean="searchFilterType" />
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
-            <list>
-                <ref bean="searchFilterEntityType" />
+		<list>
+			 <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+		<ref bean="searchFilterType" />
                 <ref bean="searchFilterProjectInvestigator"/>
             </list>
         </property>
@@ -982,7 +991,7 @@
             <list>
                 <ref bean="graphPublicationByType" />
                 <ref bean="graphPublicationByDate" />
-                <ref bean="searchFilterIssued" />
+<!--                <ref bean="searchFilterIssued" />-->
                 <ref bean="searchFilterAuthor" />
 	            <ref bean="searchFilterEditor" />
 	            <ref bean="searchFilterOrgUnit" />
@@ -1000,7 +1009,7 @@
                 <ref bean="searchFilterTitle" />
                 <ref bean="graphPublicationByType" />
                 <ref bean="graphPublicationByDate" />
-                <ref bean="searchFilterIssued" />
+<!--                <ref bean="searchFilterIssued" />-->
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterEditor" />
                 <ref bean="searchFilterOrgUnit" />
@@ -1049,9 +1058,11 @@
     <bean id="relationAuthorPatentsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
-            <list>
+		<list>
+			 <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
-                <ref bean="searchFilterEntityType"/>
+                <ref bean="searchFilterType"/>
                 <ref bean="searchFilterSubject" />
             </list>
         </property>
@@ -1059,9 +1070,12 @@
         <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
-            <list>
+		<list>
+			 <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
                 <ref bean="searchFilterAuthor" />
-                <ref bean="searchFilterEntityType"/>
+                <ref bean="searchFilterType"/>
                 <ref bean="searchFilterSubject" />
             </list>
         </property>
@@ -1104,7 +1118,28 @@
 
     <!-- project investigated by people affiliated to an orgunit -->
     <bean id="relationOrgunitRPProjectConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
-        <!--The sort filters for the discovery search-->
+            <property name="sidebarFacets">
+                <list>
+                         <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="searchFilterAuthor" />
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterSubject" />
+            </list>
+        </property>
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+                <list>
+                         <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterAuthor" />
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterSubject" />
+            </list>
+        </property>
+
+	    <!--The sort filters for the discovery search-->
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <!--<property name="defaultSort" ref="sortDateIssued"/>-->
@@ -1129,7 +1164,28 @@
 
     <!-- publication sponsored by an orgunit -->
     <bean id="relationOrgunitPublicationsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
-        <!--The sort filters for the discovery search-->
+                <property name="sidebarFacets">
+                <list>
+                         <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="searchFilterAuthor" />
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterSubject" />
+            </list>
+        </property>
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+                <list>
+                         <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterAuthor" />
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterSubject" />
+            </list>
+        </property>
+
+	    <!--The sort filters for the discovery search-->
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <!--<property name="defaultSort" ref="sortDateIssued"/>-->
@@ -1154,7 +1210,28 @@
 
     <!-- publication authored by people affiliated to an orgunit -->
     <bean id="relationOrgunitRPPublicationsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
-        <!--The sort filters for the discovery search-->
+                <property name="sidebarFacets">
+                <list>
+                         <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="searchFilterAuthor" />
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterSubject" />
+            </list>
+        </property>
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+                <list>
+                         <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterAuthor" />
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterSubject" />
+            </list>
+        </property>
+
+	    <!--The sort filters for the discovery search-->
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <!--<property name="defaultSort" ref="sortDateIssued"/>-->
@@ -1205,7 +1282,28 @@
 
     <!-- project participated by an orgunit -->
     <bean id="relationOrgunitProjectsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
-        <!--The sort filters for the discovery search-->
+                <property name="sidebarFacets">
+                <list>
+                         <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="searchFilterAuthor" />
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterSubject" />
+            </list>
+        </property>
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+                <list>
+                         <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterAuthor" />
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterSubject" />
+            </list>
+        </property>
+
+	    <!--The sort filters for the discovery search-->
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <!--<property name="defaultSort" ref="sortDateIssued"/>-->
@@ -1305,7 +1403,28 @@
 
     <!-- publications related to a project -->
     <bean id="relationProjectPublicationConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
-        <!--The sort filters for the discovery search-->
+                <property name="sidebarFacets">
+                <list>
+                         <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="searchFilterAuthor" />
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterSubject" />
+            </list>
+        </property>
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+                <list>
+                         <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterAuthor" />
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterSubject" />
+            </list>
+        </property>
+
+	    <!--The sort filters for the discovery search-->
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <!--<property name="defaultSort" ref="sortDateIssued"/>-->
@@ -1330,7 +1449,28 @@
 
     <!-- patents related to a project -->
     <bean id="relationProjectPatentConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
-        <!--The sort filters for the discovery search-->
+                <property name="sidebarFacets">
+                <list>
+                         <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="searchFilterAuthor" />
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterSubject" />
+            </list>
+        </property>
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+                <list>
+                         <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterAuthor" />
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterSubject" />
+            </list>
+        </property>
+
+	    <!--The sort filters for the discovery search-->
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <!--<property name="defaultSort" ref="sortDateIssued"/>-->
@@ -1358,32 +1498,31 @@
         <property name="indexAlways" value="true"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
-            <list>
+		<list>
+	 <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
-                <ref bean="searchFilterIssued" />
+<!--                <ref bean="searchFilterIssued" />-->
                 <ref bean="searchFilterContentInOriginalBundle"/>
-                <ref bean="searchFilterEntityType"/>
+                <ref bean="searchFilterType"/>
             </list>
         </property>
         <!-- Set TagCloud configuration per discovery configuration -->
         <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
-            <list>
+		<list>
+			 <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterTitle" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
-                <ref bean="searchFilterIssued" />
+<!--                <ref bean="searchFilterIssued" />-->
                 <ref bean="searchFilterContentInOriginalBundle"/>
                 <ref bean="searchFilterFileNameInOriginalBundle" />
                 <ref bean="searchFilterFileDescriptionInOriginalBundle" />
-                <ref bean="searchFilterEntityType"/>
-                <ref bean="searchFilterIsAuthorOfPublicationRelation"/>
-                <ref bean="searchFilterIsProjectOfPublicationRelation"/>
-                <ref bean="searchFilterIsOrgUnitOfPublicationRelation"/>
-                <ref bean="searchFilterIsPublicationOfJournalIssueRelation"/>
-                <ref bean="searchFilterIsJournalOfPublicationRelation"/>
+                <ref bean="searchFilterType"/>
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -1429,7 +1568,10 @@
     <property name="indexAlways" value="true"/>
     <!--Which sidebar facets are to be displayed-->
     <property name="sidebarFacets">
-        <list>
+	    <list>
+		     <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
             <ref bean="searchFilterAuthor" />
             <ref bean="searchFilterEditor" />
             <ref bean="searchFilterOrgUnit" />
@@ -1444,7 +1586,10 @@
     <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/>
     <!--The search filters which can be used on the discovery search page-->
     <property name="searchFilters">
-        <list>
+	    <list>
+		     <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
             <ref bean="searchFilterTitle" />
             <ref bean="searchFilterAuthor" />
             <ref bean="searchFilterEditor" />
@@ -1566,13 +1711,17 @@
         <property name="indexAlways" value="true"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
-            <list>
+		<list>
+			 <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterSubject"/>
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
-            <list>
+		<list>
+			 <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterSubject"/>
                 <ref bean="searchFilterIdentifier"/>
                 <ref bean="searchFilterIsOrgUnitOfProjectRelation"/>
@@ -1623,7 +1772,10 @@
         <property name="indexAlways" value="true"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
-            <list>
+		<list>
+			 <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
                 <ref bean="searchFilterSubject"/>
                 <ref bean="searchFilterEntityType"/>
                 <ref bean="searchFilterType"/>
@@ -1635,7 +1787,10 @@
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
-            <list>
+		<list>
+			 <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
                 <ref bean="searchFilterSubject"/>
                 <ref bean="searchFilterEntityType"/>
                 <ref bean="searchFilterType"/>
@@ -1688,7 +1843,10 @@
         <property name="indexAlways" value="true"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
-            <list>
+		<list>
+			 <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
                 <ref bean="searchFilterOrganizationAddressCountry"/>
                 <ref bean="searchFilterOrganizationAddressLocality"/>
                 <ref bean="searchFilterOrganizationPeruCrisSector"/>
@@ -1703,7 +1861,10 @@
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
-            <list>
+		<list>
+			 <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
                 <ref bean="searchFilterOrganizationLegalName"/>
                 <ref bean="searchFilterOrganizationAddressCountry"/>
                 <ref bean="searchFilterOrganizationAddressLocality"/>
@@ -1764,7 +1925,10 @@
         <property name="indexAlways" value="true"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
-            <list>
+		<list>
+			 <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
                 <ref bean="searchFilterEquipmentOwner"/>
                 <ref bean="searchFilterEquipmentOrgUnit"/>
                 <ref bean="searchFilterType"/>
@@ -1777,7 +1941,10 @@
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
-            <list>
+		<list>
+			 <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
                 <ref bean="searchFilterEquipmentOwner"/>
                 <ref bean="searchFilterEquipmentOrgUnit"/>
                 <ref bean="searchFilterType"/>
@@ -2373,7 +2540,7 @@
         <property name="facetLimit" value="5"/>
         <property name="sortOrderSidebar" value="COUNT"/>
         <property name="sortOrderFilterPage" value="COUNT"/>
-        <property name="isOpenByDefault" value="true"/>
+	<property name="isOpenByDefault" value="true"/>
         <property name="pageSize" value="10"/>
         <property name="exposeMinAndMaxValue" value="true"/>
     </bean>
@@ -2472,6 +2639,12 @@
         <property name="metadataFields">
             <list>
                 <value>dc.date.issued</value>
+                <value>organization.foundingDate</value>
+                <value>perucris.date.acquisition</value>
+                <value>perucris.date.manufacturing</value>
+		<value>oairecerif.project.startDate</value>
+		<value>oairecerif.funding.startDate</value>
+		<value>oairecerif.event.startDate</value>
             </list>
         </property>
         <property name="type" value="date"/>
@@ -3216,6 +3389,13 @@
         <property name="dataFacet" ref="searchFilterType" />
         <property name="graphType" value="pie" />
     </bean>
+
+    <bean id="graphEntityByType" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
+    	<property name="facetLimit" value="100"/>
+        <property name="dataFacet" ref="searchFilterEntityType" />
+        <property name="graphType" value="pie" />
+    </bean>
+
     <!--Sort properties-->
     <bean id="sortTitle" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
         <property name="metadataField" value="dc.title"/>

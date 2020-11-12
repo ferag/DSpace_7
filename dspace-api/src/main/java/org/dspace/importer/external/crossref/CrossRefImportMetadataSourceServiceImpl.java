@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import javax.el.MethodNotFoundException;
 import javax.ws.rs.client.Client;
@@ -43,7 +44,6 @@ public class CrossRefImportMetadataSourceServiceImpl
 
     private WebTarget webTarget;
 
-
     @Override
     public String getImportSource() {
         return "crossref";
@@ -63,21 +63,40 @@ public class CrossRefImportMetadataSourceServiceImpl
 
     @Override
     public int getRecordsCount(String query) throws MetadataSourceException {
+        //TODO if a doi check if exists
+        if (CrossRefDoiCheck.isDoi(query)) {
+            return retry(new DoiCheckCallable(query));
+        }
         return retry(new CountByQueryCallable(query));
     }
 
     @Override
     public int getRecordsCount(Query query) throws MetadataSourceException {
+        //TODO if a doi check if exists (making a head http request to the https://api.crossref.org/works/<id>)
+
+        if (isDoi(query)) {
+            return retry(new DoiCheckCallable(query));
+        }
         return retry(new CountByQueryCallable(query));
     }
 
+
     @Override
     public Collection<ImportRecord> getRecords(String query, int start, int count) throws MetadataSourceException {
+        //TODO if a doi call SearchByIdCallable
+        if (CrossRefDoiCheck.isDoi(query)) {
+            return retry(new SearchByIdCallable(query));
+        }
         return retry(new SearchByQueryCallable(query, count, start));
     }
 
     @Override
     public Collection<ImportRecord> getRecords(Query query) throws MetadataSourceException {
+        //TODO if a doi call SearchByIdCallable
+        final boolean isDoi = isDoi(query);
+        if (isDoi) {
+            return retry(new SearchByIdCallable(query));
+        }
         return retry(new SearchByQueryCallable(query));
     }
 
@@ -89,12 +108,26 @@ public class CrossRefImportMetadataSourceServiceImpl
 
     @Override
     public Collection<ImportRecord> findMatchingRecords(Query query) throws MetadataSourceException {
+        //TODO if a doi call SearchByIdCallable
+        if (isDoi(query)) {
+            return retry(new SearchByIdCallable(query));
+        }
         return retry(new FindMatchingRecordCallable(query));
     }
+
 
     @Override
     public Collection<ImportRecord> findMatchingRecords(Item item) throws MetadataSourceException {
         throw new MethodNotFoundException("This method is not implemented for CrossRef");
+    }
+
+    private boolean isDoi(final Query query) {
+        return Optional.ofNullable(query.getParameter("id"))
+                       .filter(c -> !c.isEmpty())
+                       .map(c -> c.iterator().next())
+                       .map(o -> (String) o)
+                       .filter(value -> CrossRefDoiCheck.isDoi(value))
+                       .isPresent();
     }
 
     private class SearchByQueryCallable implements Callable<List<ImportRecord>> {
@@ -154,6 +187,7 @@ public class CrossRefImportMetadataSourceServiceImpl
                 }
             }
         }
+
     }
 
     private class SearchByIdCallable implements Callable<List<ImportRecord>> {
@@ -308,6 +342,29 @@ public class CrossRefImportMetadataSourceServiceImpl
                     method.releaseConnection();
                 }
             }
+        }
+    }
+
+    private class DoiCheckCallable implements Callable<Integer> {
+
+        private final Query query;
+
+        private DoiCheckCallable(final String id) {
+            final Query query = new Query();
+            query.addParameter("id", id);
+            this.query = query;
+        }
+
+        private DoiCheckCallable(final Query query) {
+            this.query = query;
+        }
+
+        @Override
+        public Integer call() throws Exception {
+            WebTarget local = webTarget.path(query.getParameterAsClass("id", String.class));
+            Invocation.Builder invocationBuilder = local.request();
+            Response response = invocationBuilder.head();
+            return response.getStatus() == 200 ? 1 : 0;
         }
     }
 

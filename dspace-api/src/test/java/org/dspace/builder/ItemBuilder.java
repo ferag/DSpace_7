@@ -508,6 +508,14 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "oairecerif", "funding", "endDate", endDate);
     }
 
+    public ItemBuilder withOrganizationRuc(String ruc) {
+        return addMetadataValue(item, "organization", "identifier", "ruc", ruc);
+    }
+
+    public ItemBuilder withOrgUnitCountry(String country) {
+        return addMetadataValue(item, "orgunit", "identifier", "country", country);
+    }
+
     public ItemBuilder withHandle(String handle) {
         this.handle = handle;
         return this;

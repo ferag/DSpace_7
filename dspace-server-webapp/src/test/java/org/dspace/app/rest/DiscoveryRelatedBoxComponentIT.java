@@ -249,7 +249,7 @@ public class DiscoveryRelatedBoxComponentIT extends AbstractControllerIntegratio
                         FacetEntryMatcher.anyFacet("organization", "text"),
                         FacetEntryMatcher.anyFacet("funding", "text"),
                         FacetEntryMatcher.subjectFacet(false),
-                        FacetEntryMatcher.dateIssuedFacet(false),
+//                        FacetEntryMatcher.dateIssuedFacet(false),
                         FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
                 )))
                 //There always needs to be a self link available
@@ -289,7 +289,7 @@ public class DiscoveryRelatedBoxComponentIT extends AbstractControllerIntegratio
                         FacetEntryMatcher.anyFacet("organization", "text"),
                         FacetEntryMatcher.anyFacet("funding", "text"),
                         FacetEntryMatcher.subjectFacet(false),
-                        FacetEntryMatcher.dateIssuedFacet(false),
+//                        FacetEntryMatcher.dateIssuedFacet(false),
                         FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
                 )))
                 //There always needs to be a self link available
@@ -331,7 +331,7 @@ public class DiscoveryRelatedBoxComponentIT extends AbstractControllerIntegratio
                         FacetEntryMatcher.anyFacet("organization", "text"),
                         FacetEntryMatcher.anyFacet("funding", "text"),
                         FacetEntryMatcher.subjectFacet(false),
-                        FacetEntryMatcher.dateIssuedFacet(false),
+//                        FacetEntryMatcher.dateIssuedFacet(false),
                         FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
                 )))
                 //There always needs to be a self link available

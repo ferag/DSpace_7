@@ -306,6 +306,13 @@
         <scope_note></scope_note>
     </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>description</element>
+        <qualifier>internalNote</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
 <!--    following metadata have a different schema but are used only in PeruCris-->
     <dc-type>
         <schema>crisrp</schema>
@@ -322,6 +329,13 @@
     </dc-type>
 
 <!--    geolocations-->
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>geolocationPlace</element>
+        <scope_note></scope_note>
+    </dc-type>
+
     <dc-type>
         <schema>perucris</schema>
         <element>geolocationPoint</element>

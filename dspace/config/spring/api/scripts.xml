@@ -52,4 +52,10 @@
         <property name="description" value="Perform the items update using external source"/>
         <property name="dspaceRunnableClass" value="org.dspace.perucris.externalservices.UpdateItemWithExternalSourceCli"/>
     </bean>
+
+    <bean id="collection-export" class="org.dspace.app.bulkedit.CollectionExportCliScriptConfiguration">
+        <property name="description" value="Perform the export of all the archived items of the given collection in xls format"/>
+        <property name="dspaceRunnableClass" value="org.dspace.app.bulkedit.CollectionExportCli"/>
+    </bean>
+
 </beans>

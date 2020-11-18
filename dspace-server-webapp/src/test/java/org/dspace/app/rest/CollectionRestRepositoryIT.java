@@ -2098,16 +2098,16 @@ public class CollectionRestRepositoryIT extends AbstractControllerIntegrationTes
     public void testFindSubmitAuthorizedAndMetadataWithInstitutionTemplateFilterPlugin() throws Exception {
         context.turnOffAuthorisationSystem();
         parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
-        createCollection(context, parentCommunity).withName("Collection").withRelationshipType("Person").build();
-        createCollection(context, parentCommunity).withName("Collection 2").withRelationshipType("Person").build();
+        createCollection(context, parentCommunity).withName("Collection").withRelationshipType("Publication").build();
+        createCollection(context, parentCommunity).withName("Collection 2").withRelationshipType("Publication").build();
         authorizeService.addPolicy(context, parentCommunity, Constants.ADD, eperson);
         context.restoreAuthSystemState();
 
         String token = getAuthToken(admin.getEmail(), password);
 
-        getClient(token).perform(get("/api/core/collections/search/findSubmitAuthorizedAndMetadata")
-            .param("metadata", "relationship.type")
-            .param("metadataValue", "Person"))
+        getClient(token).perform(get("/api/core/collections/search/findSubmitAuthorizedByEntityType")
+            .param("uuid", parentCommunity.getID().toString())
+            .param("entityType", "Publication"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.page.totalElements", equalTo(2)));
@@ -2118,9 +2118,9 @@ public class CollectionRestRepositoryIT extends AbstractControllerIntegrationTes
             configurationService.setProperty("institution.template-id", parentCommunity.getID().toString());
 
             // no results
-            getClient(token).perform(get("/api/core/collections/search/findSubmitAuthorizedAndMetadata")
-                .param("metadata", "relationship.type")
-                .param("metadataValue", "Person"))
+            getClient(token).perform(get("/api/core/collections/search/findSubmitAuthorizedByEntityType")
+                .param("uuid", parentCommunity.getID().toString())
+                .param("entityType", "Publication"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$.page.totalElements", equalTo(0)));

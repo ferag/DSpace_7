@@ -367,6 +367,7 @@
  <copyField source="lastModified" dest="lastModified_dt"/>
  <copyField source="title" dest="itemauthoritylookup"/>
  <copyField source="title" dest="itemauthoritylookupexactmatch"/>
+ <copyField source="lastModified" dest="bi_sort_4_sort"/>
  <copyField source="relationship.type" dest="search.entitytype"/>
 
 </schema>

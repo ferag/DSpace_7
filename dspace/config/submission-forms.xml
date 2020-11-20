@@ -525,11 +525,11 @@
         </field>
       </row>
     </form>
-    <form name="project-perucris-geolocationPlace">
+    <form name="project-datacite-geoLocationPlace">
       <row>
         <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>geolocationPlace</dc-element>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationPlace</dc-element>
           <label>Geolocation Place</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
@@ -539,9 +539,9 @@
       </row>
       <row>
         <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>geolocationPoint</dc-element>
-          <dc-qualifier>longitude</dc-qualifier>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationPoint</dc-element>
+          <dc-qualifier>pointLongitude</dc-qualifier>
           <label>Geolocation Longitude</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
@@ -549,9 +549,9 @@
           <hint />
         </field>
         <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>geolocationPoint</dc-element>
-          <dc-qualifier>latitude</dc-qualifier>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationPoint</dc-element>
+          <dc-qualifier>pointLatitude</dc-qualifier>
           <label>Geolocation Latitude</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
@@ -561,8 +561,8 @@
       </row>
       <row>
         <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>geolocationBox</dc-element>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationBox</dc-element>
           <dc-qualifier>westBoundLongitude</dc-qualifier>
           <label>Westbound Longitude</label>
           <input-type>onebox</input-type>
@@ -571,8 +571,8 @@
           <hint />
         </field>
         <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>geolocationBox</dc-element>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationBox</dc-element>
           <dc-qualifier>eastBoundLongitude</dc-qualifier>
           <label>Eastbound Longitude</label>
           <input-type>onebox</input-type>
@@ -581,8 +581,8 @@
           <hint />
         </field>
         <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>geolocationBox</dc-element>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationBox</dc-element>
           <dc-qualifier>southBoundLongitude</dc-qualifier>
           <label>Southbound Longitude</label>
           <input-type>onebox</input-type>
@@ -591,8 +591,8 @@
           <hint />
         </field>
         <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>geolocationBox</dc-element>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationBox</dc-element>
           <dc-qualifier>northBoundLongitude</dc-qualifier>
           <label>Northbound Longitude</label>
           <input-type>onebox</input-type>
@@ -2938,8 +2938,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       </row>
       <row>
         <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>geolocationPlace</dc-element>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationPlace</dc-element>
           <label>Project Geolocation(s)</label>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
@@ -3077,8 +3077,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
         </field>
-      </row>
-      <row>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>funding</dc-element>

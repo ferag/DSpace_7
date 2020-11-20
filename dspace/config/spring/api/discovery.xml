@@ -3219,7 +3219,7 @@
         <property name="indexFieldName" value="geolocation"/>
         <property name="metadataFields">
             <list>
-                <value>perucris.geolocationPlace</value>
+                <value>datacite.geolocationPlace</value>
             </list>
         </property>
         <property name="facetLimit" value="5"/>

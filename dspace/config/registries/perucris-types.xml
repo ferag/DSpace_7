@@ -329,51 +329,52 @@
     </dc-type>
 
 <!--    geolocations-->
+<!--Using Openaire datacite schema-->
 
     <dc-type>
-        <schema>perucris</schema>
-        <element>geolocationPlace</element>
+        <schema>datacite</schema>
+        <element>geoLocationPlace</element>
         <scope_note></scope_note>
     </dc-type>
 
     <dc-type>
-        <schema>perucris</schema>
-        <element>geolocationPoint</element>
-        <qualifier>longitude</qualifier>
+        <schema>datacite</schema>
+        <element>geoLocationPoint</element>
+        <qualifier>pointLongitude</qualifier>
         <scope_note></scope_note>
     </dc-type>
 
     <dc-type>
-        <schema>perucris</schema>
-        <element>geolocationPoint</element>
-        <qualifier>latitude</qualifier>
+        <schema>datacite</schema>
+        <element>geoLocationPoint</element>
+        <qualifier>pointLatitude</qualifier>
         <scope_note></scope_note>
     </dc-type>
 
     <dc-type>
-        <schema>perucris</schema>
-        <element>geolocationBox</element>6
+        <schema>datacite</schema>
+        <element>geoLocationBox</element>6
         <qualifier>westBoundLongitude</qualifier>
         <scope_note></scope_note>
     </dc-type>
 
     <dc-type>
-        <schema>perucris</schema>
-        <element>geolocationBox</element>
+        <schema>datacite</schema>
+        <element>geoLocationBox</element>
         <qualifier>eastBoundLongitude</qualifier>
         <scope_note></scope_note>
     </dc-type>
 
     <dc-type>
-        <schema>perucris</schema>
-        <element>geolocationBox</element>
+        <schema>datacite</schema>
+        <element>geoLocationBox</element>
         <qualifier>southBoundLongitude</qualifier>
         <scope_note></scope_note>
     </dc-type>
 
     <dc-type>
-        <schema>perucris</schema>
-        <element>geolocationBox</element>
+        <schema>datacite</schema>
+        <element>geoLocationBox</element>
         <qualifier>northBoundLongitude</qualifier>
         <scope_note></scope_note>
     </dc-type>

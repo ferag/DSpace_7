@@ -1741,6 +1741,8 @@
           <required />
           <hint />
         </field>
+      </row>
+      <row>
         <field>
           <dc-schema>dcterms</dc-schema>
           <dc-element>dateSubmitted</dc-element>
@@ -1751,8 +1753,6 @@
           <hint>Date of filing the application.
 You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
-      </row>
-      <row>
         <field>
           <dc-schema>dc</dc-schema>
           <dc-element>date</dc-element>
@@ -1764,6 +1764,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <hint>Date of making available to the public by printing or similar process of a patent document on which grant has taken place on or before the said date.
 You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
+      </row>
+      <row>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>patent</dc-element>
@@ -2197,6 +2199,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <hint />
           <vocabulary closed="true">ocde_subjects</vocabulary>
         </field>
+      </row>
+      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
@@ -2207,6 +2211,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
         </field>
+      </row>
+      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
@@ -2356,6 +2362,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <hint />
           <vocabulary closed="true">peru_ubigeo</vocabulary>
         </field>
+      </row>
+      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>address</dc-element>
@@ -3038,7 +3046,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>crispj</dc-schema>
           <dc-element>supportingStaff</dc-element>
-          <label>Supportinf staff</label>
+          <label>Supporting staff</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -3434,7 +3442,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>type</dc-element>
           <dc-qualifier>usage</dc-qualifier>
           <label>Usage</label>
-          <input-type>onebox</input-type>
+          <input-type value-pairs-name="peru_type_usages">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -5695,6 +5703,20 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       <pair>
         <displayed-value>Concluido</displayed-value>
         <stored-value>Finished</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="peru_type_usages" dc-term="peru_type_usages">
+      <pair>
+        <displayed-value>Investigación científica y desarrollo experimental</displayed-value>
+        <stored-value>Investigación científica y desarrollo experimental</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Enseñanza y formación Científico-Técnica</displayed-value>
+        <stored-value>Enseñanza y formación Científico-Técnica</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Servicios científicos y tecnológicos</displayed-value>
+        <stored-value>Servicios científicos y tecnológicos</stored-value>
       </pair>
     </value-pairs>
   </form-value-pairs>

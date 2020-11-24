@@ -143,7 +143,7 @@
     </dc-type>
 
     <dc-type>
-        <schema>perucris</schema>
+        <schema>dc</schema>
         <element>subject</element>
         <qualifier>cip</qualifier>
         <scope_note></scope_note>
@@ -171,6 +171,20 @@
         <schema>perucris</schema>
         <element>identifier</element>
         <qualifier>dni</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>identifier</element>
+        <qualifier>passport</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>identifier</element>
+        <qualifier>immigrationCard</qualifier>
         <scope_note></scope_note>
     </dc-type>
 
@@ -454,6 +468,8 @@
         <scope_note></scope_note>
     </dc-type>
 
+
+
     <dc-type>
         <schema>perucris</schema>
         <element>nacimiento</element>
@@ -474,4 +490,92 @@
         <qualifier>distrito</qualifier>
         <scope_note></scope_note>
     </dc-type>
+
+    <!-- contact data -->
+    <dc-type>
+        <schema>perucris</schema>
+        <element>phone</element>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>mobilePhone</element>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>address</element>
+        <qualifier>legalAddress</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>address</element>
+        <qualifier>streetAddress</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>address</element>
+        <qualifier>postalCode</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>address</element>
+        <qualifier>addressCountry</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <!-- funding amount executed -->
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>executedAmount</element>
+        <qualifier>currency</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>executedAmount</element>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <!-- project types for PeruCris -->
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>project</element>
+        <qualifier>typeOcde</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>project</element>
+        <qualifier>typeOther</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <!-- custom PeruCris crispj metadata -->
+
+    <dc-type>
+        <schema>crispj</schema>
+        <element>techniciansAndEquivalentStaff</element>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>crispj</schema>
+        <element>supportingStaff</element>
+        <scope_note></scope_note>
+    </dc-type>
+
+
 </dspace-dc-types>

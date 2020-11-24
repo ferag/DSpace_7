@@ -977,7 +977,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>perucris</dc-schema>
+          <dc-schema>dc</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Subject(s)</label>
@@ -1070,7 +1070,7 @@
           <dc-schema>dc</dc-schema>
           <dc-element>relation</dc-element>
           <dc-qualifier>issn</dc-qualifier>
-          <label>ISSN</label>
+          <label>ISSN (of the container)</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -1574,7 +1574,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>perucris</dc-schema>
+          <dc-schema>dc</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Subject(s)</label>
@@ -1890,7 +1890,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       </row>
       <row>
         <field>
-          <dc-schema>perucris</dc-schema>
+          <dc-schema>dc</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>cip</dc-qualifier>
           <label>CIP Subject(s)</label>
@@ -1902,7 +1902,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       </row>
       <row>
         <field>
-          <dc-schema>perucris</dc-schema>
+          <dc-schema>dc</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Subject(s)</label>
@@ -2101,6 +2101,26 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       </row>
       <row>
         <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>phone</dc-element>
+          <label>Telephone Number</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>mobilePhone</dc-element>
+          <label>Cellphone Number</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
           <dc-schema>person</dc-schema>
           <dc-element>jobTitle</dc-element>
           <label>Job Title</label>
@@ -2177,6 +2197,26 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <hint />
           <vocabulary closed="true">ocde_subjects</vocabulary>
         </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>subject</dc-element>
+          <dc-qualifier>minam</dc-qualifier>
+          <label>MINAM Subject(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>subject</dc-element>
+          <dc-qualifier>ins</dc-qualifier>
+          <label>INS Subject(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
       </row>
       <row>
         <field>
@@ -2184,6 +2224,26 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>identifier</dc-element>
           <dc-qualifier>dni</dc-qualifier>
           <label>DNI</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>passport</dc-qualifier>
+          <label>Passport</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>immigrationCard</dc-qualifier>
+          <label>Immigration Card</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -2265,6 +2325,29 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       <row>
         <field>
           <dc-schema>perucris</dc-schema>
+          <dc-element>domicilio</dc-element>
+          <dc-qualifier>ubigeoReniec</dc-qualifier>
+          <label>RENIEC Home UbiGeo</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+          <vocabulary closed="true">peru_ubigeo</vocabulary>
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>address</dc-element>
+          <dc-qualifier>legalAddress</dc-qualifier>
+          <label>RENIEC Home Address</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
           <dc-element>ubigeo</dc-element>
           <label>UbiGeo</label>
           <input-type>onebox</input-type>
@@ -2272,6 +2355,36 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
           <vocabulary closed="true">peru_ubigeo</vocabulary>
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>address</dc-element>
+          <dc-qualifier>streetAddress</dc-qualifier>
+          <label>Street Address</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>address</dc-element>
+          <dc-qualifier>postalCode</dc-qualifier>
+          <label>Postal Code</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>address</dc-element>
+          <dc-qualifier>addressCountry</dc-qualifier>
+          <label>Country of Residence</label>
+          <input-type value-pairs-name="common_iso_countries">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
         </field>
       </row>
       <row>
@@ -2569,8 +2682,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ubigeo</dc-element>
-          <dc-qualifier>ubigeoSunat</dc-qualifier>
-          <label>Sunat UbiGeo</label>
+          <label>UbiGeo INEI</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -2860,7 +2972,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>project</dc-element>
           <dc-qualifier>status</dc-qualifier>
           <label>Status</label>
-          <input-type>onebox</input-type>
+          <input-type value-pairs-name="project_status">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -2868,10 +2980,21 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
-          <dc-element>type</dc-element>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>project</dc-element>
+          <dc-qualifier>typeOcde</dc-qualifier>
           <label>Project type</label>
           <input-type value-pairs-name="project_types">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>project</dc-element>
+          <dc-qualifier>typeOther</dc-qualifier>
+          <label>Project type</label>
+          <input-type value-pairs-name="project_types_other">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -2883,7 +3006,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>description</dc-element>
           <dc-qualifier>abstract</dc-qualifier>
           <label>Abstract</label>
-          <input-type>onebox</input-type>
+          <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -2894,6 +3017,28 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>crispj</dc-schema>
           <dc-element>coinvestigators</dc-element>
           <label>Co-Investigator(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crispj</dc-schema>
+          <dc-element>techniciansAndEquivalentStaff</dc-element>
+          <label>Technicians and equivalent staff</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crispj</dc-schema>
+          <dc-element>supportingStaff</dc-element>
+          <label>Supportinf staff</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -2913,7 +3058,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       </row>
       <row>
         <field>
-          <dc-schema>perucris</dc-schema>
+          <dc-schema>dc</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Subject(s)</label>
@@ -2922,6 +3067,48 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
           <vocabulary closed="true">ocde_subjects</vocabulary>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>type</dc-element>
+          <dc-qualifier>ciiu</dc-qualifier>
+          <label>Industrial Classification</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+          <vocabulary closed="true">peru_ciiu</vocabulary>
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>researchLine</dc-element>
+          <label>Research Line</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>funder</dc-element>
+          <label>Funded/By</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>fundingProgram</dc-element>
+          <label>Funded/As</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
         </field>
       </row>
       <row>
@@ -3068,6 +3255,27 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       </row>
       <row>
         <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>executedAmount</dc-element>
+          <dc-qualifier>currency</dc-qualifier>
+          <label>Currency of Amount Executed</label>
+          <input-type value-pairs-name="currency">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>executedAmount</dc-element>
+          <label>Amount Executed</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>funding</dc-element>
           <dc-qualifier>identifier</dc-qualifier>
@@ -3116,6 +3324,17 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Equipment Description</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>subject</dc-element>
+          <label>Keyword(s)</label>
+          <input-type>tag</input-type>
+          <repeatable>true</repeatable>
           <required />
           <hint />
         </field>
@@ -3305,7 +3524,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>amount</dc-element>
           <dc-qualifier>currency</dc-qualifier>
           <label>Currency</label>
-          <input-type>onebox</input-type>
+          <input-type value-pairs-name="currency">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -3982,6 +4201,10 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <stored-value>Norwegian krone</stored-value>
       </pair>
       <pair>
+        <displayed-value>Peruvian Sole</displayed-value>
+        <stored-value>Peruvian Sole</stored-value>
+      </pair>
+      <pair>
         <displayed-value>Polish zloty</displayed-value>
         <stored-value>Polish zloty</stored-value>
       </pair>
@@ -4012,6 +4235,10 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       <pair>
         <displayed-value>Ukrainian hryvnia</displayed-value>
         <stored-value>Ukrainian hryvnia</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>US Dollar</displayed-value>
+        <stored-value>US Dollar</stored-value>
       </pair>
       <pair>
         <displayed-value>Pound sterling</displayed-value>
@@ -4150,6 +4377,40 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       <pair>
         <displayed-value>experimental development</displayed-value>
         <stored-value>experimental development</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="project_types_other" dc-term="project_types_other">
+      <pair>
+        <displayed-value>Desarrollo tecnológico</displayed-value>
+        <stored-value>Technological development</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Transferencia tecnológica</displayed-value>
+        <stored-value>Technology transfer</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Investigación adaptativa</displayed-value>
+        <stored-value>Adaptive research</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Investigación económica</displayed-value>
+        <stored-value>Economic research</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Servicios de extensión</displayed-value>
+        <stored-value>Extension services</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Fortalecimiento de capacidades</displayed-value>
+        <stored-value>Capacity building</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Incubación y desarrollo de empresas</displayed-value>
+        <stored-value>Business incubation and development</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Equipamiento científico</displayed-value>
+        <stored-value>Scientific equipment</stored-value>
       </pair>
     </value-pairs>
     <value-pairs value-pairs-name="funding_types" dc-term="funding_types">
@@ -5420,6 +5681,20 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       <pair>
         <displayed-value>metadata only access</displayed-value>
         <stored-value>metadata only access</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="project_status" dc-term="project_status">
+      <pair>
+        <displayed-value>Activo</displayed-value>
+        <stored-value>Active</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Suspendido</displayed-value>
+        <stored-value>Suspended</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Concluido</displayed-value>
+        <stored-value>Finished</stored-value>
       </pair>
     </value-pairs>
   </form-value-pairs>

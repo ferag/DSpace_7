@@ -4562,6 +4562,10 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <displayed-value>Patente de Modelo de utilidad</displayed-value>
         <stored-value>Utility model</stored-value>
       </pair>
+      <pair>
+        <displayed-value>Certificado de Obtentor</displayed-value>
+        <stored-value>Certificate of plant breeder's right</stored-value>
+      </pair>
     </value-pairs>
     <value-pairs value-pairs-name="coar_versions" dc-term="coar_versions">
       <pair>

@@ -12,6 +12,7 @@ import static org.dspace.app.rest.matcher.HalMatcher.matchLinks;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadata;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.springframework.data.rest.webmvc.RestMediaTypes.TEXT_URI_LIST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -35,6 +36,7 @@ import org.dspace.builder.CommunityBuilder;
 import org.dspace.builder.EPersonBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
+import org.dspace.content.Item;
 import org.dspace.eperson.EPerson;
 import org.dspace.services.ConfigurationService;
 import org.junit.Test;
@@ -46,6 +48,7 @@ import org.springframework.test.web.servlet.MvcResult;
  * Integration tests for {@link ResearcherProfileRestRepository}.
  *
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
+ * @author Corrado Lombardi (corrado.lombardi at 4science.it)
  *
  */
 public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegrationTest {
@@ -682,6 +685,54 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
         assertEquals("The item should be the same", firstItemId, secondItemId);
 
     }
+
+
+    /**
+     * Given a request containing another DSpace Object URI, verifies that a researcherProfile is created with
+     * public data cloned from source object.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testCloneFromOtherDSpaceObject() throws Exception {
+        context.turnOffAuthorisationSystem();
+        Item person = ItemBuilder.createItem(context, personCollection)
+                .withFullName("Mario Rossi")
+                .withRelationshipType("Person")
+                .withBirthDate("1982-12-17").build();
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(user.getEmail(), password);
+
+        getClient(authToken).perform(post("/api/cris/profiles/")
+                .contentType(TEXT_URI_LIST).content("http://localhost:8080/server/api/integration/externalsources/dspace/entryValues/" + person.getID()))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id", is(user.getID())))
+                .andExpect(jsonPath("$.visible", is(false)))
+                .andExpect(jsonPath("$.type", is("item")))
+                .andExpect(jsonPath("$.metadata['person.birthDate']", is("1982-12-17")))
+                .andExpect(jsonPath("$.metadata['crisrp.name']", is("Mario Rossi")))
+                .andExpect(jsonPath("$", matchLinks("http://localhost/api/cris/profiles/" + user.getID(), "item", "eperson")));
+
+//        getClient(authToken).perform(get("/api/cris/profiles/{id}", id))
+//                .andExpect(status().isOk());
+//
+//        getClient(authToken).perform(get("/api/cris/profiles/{id}/item", id))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.type", is("item")))
+//                .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", name, id.toString(), 0)))
+//                .andExpect(jsonPath("$.metadata", matchMetadata("cris.sourceId", id, 0)))
+//                .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "Person", 0)));
+//
+//        getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", id))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.type", is("eperson")))
+//                .andExpect(jsonPath("$.name", is(name)));
+    }
+
+    // test with empty source list
+
+    // test with multiple sources
 
     private String getItemIdByProfileId(String token, String id) throws SQLException, Exception {
         MvcResult result = getClient(token).perform(get("/api/cris/profiles/{id}/item", id))

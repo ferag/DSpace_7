@@ -135,7 +135,9 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
         }
 
         context.turnOffAuthorisationSystem();
-        Item item = importResearcherProfileService.createFrom(context, ePerson, source);
+        Item item = importResearcherProfileService.importProfile(context, source, collection);
+        itemService.addMetadata(context, item, "cris", "owner", null, null, ePerson.getName(),
+                ePerson.getID().toString(), CF_ACCEPTED);
         context.restoreAuthSystemState();
         return new ResearcherProfile(item);
     }

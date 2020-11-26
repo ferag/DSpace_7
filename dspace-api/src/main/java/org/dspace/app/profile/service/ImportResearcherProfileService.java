@@ -8,10 +8,12 @@
 package org.dspace.app.profile.service;
 
 import java.net.URI;
+import java.sql.SQLException;
 
+import org.dspace.authorize.AuthorizeException;
+import org.dspace.content.Collection;
 import org.dspace.content.Item;
 import org.dspace.core.Context;
-import org.dspace.eperson.EPerson;
 
 /**
  * Service that creates a researcher profile starting from a given source.
@@ -22,9 +24,9 @@ public interface ImportResearcherProfileService {
 
     /**
      * @param context
-     * @param ePerson
      * @param source
+     * @param collection
      * @return
      */
-    Item createFrom(Context context, EPerson ePerson, URI source);
+    Item importProfile(Context context, URI source, Collection collection) throws AuthorizeException, SQLException;
 }

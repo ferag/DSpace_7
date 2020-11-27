@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+    default-lazy-init="true">
+
+    <bean id="importResearcherProfile" class="org.dspace.app.profile.service.ImportResearcherProfileServiceImpl">
+        <constructor-arg name="externalDataService" ref="importProfileExternalDataService"/>
+        <constructor-arg ref="org.dspace.content.InstallItemServiceImpl"/>
+    </bean>
+
+    <bean id="importProfileExternalDataService" class="org.dspace.external.service.impl.ExternalDataServiceImpl">
+        <property name="externalDataProviders">
+            <util:list/>
+        </property>
+    </bean>
+
+    <!-- TODO: set orcid import -->
+    
+</beans>
+

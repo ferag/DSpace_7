@@ -9,70 +9,91 @@
 package org.dspace.importer.external.dspace;
 
 import java.util.Collection;
+import java.util.UUID;
 
 import org.dspace.content.Item;
+import org.dspace.content.service.ItemService;
+import org.dspace.core.Context;
 import org.dspace.importer.external.datamodel.ImportRecord;
 import org.dspace.importer.external.datamodel.Query;
 import org.dspace.importer.external.exception.MetadataSourceException;
 import org.dspace.importer.external.service.AbstractImportMetadataSourceService;
 import org.dspace.importer.external.service.components.QuerySource;
+import org.dspace.services.RequestService;
 
 
 /**
  * This import service does not perform queries against external services, but lookup for items
  * into same DSpace instance.
+ * <p>
+ * For metadata field mapping it is mandatory the usage of an instance of {@link DSpaceInternalMetadataFieldMapping}
  *
  * @author Corrado Lombardi (corrado.lombardi at 4science.it)
  */
 public class DSpaceImportService extends AbstractImportMetadataSourceService<Item> implements QuerySource {
 
+    private final ItemService itemService;
+    private final RequestService requestService;
+
+    public DSpaceImportService(ItemService itemService, RequestService requestService,
+                               DSpaceInternalMetadataFieldMapping metadataFieldMapping) {
+        this.itemService = itemService;
+        this.requestService = requestService;
+        setMetadataFieldMapping(metadataFieldMapping);
+    }
+
     @Override
     public void init() throws Exception {
-
     }
 
     @Override
     public ImportRecord getRecord(String id) throws MetadataSourceException {
-        return null;
+        Context context = (Context) requestService.getCurrentRequest().getAttribute("context");
+        try {
+            Item item = itemService.find(context, UUID.fromString(id));
+            return transformSourceRecords(item);
+        } catch (Exception e) {
+            throw new MetadataSourceException(e);
+        }
     }
 
     @Override
     public int getRecordsCount(String query) throws MetadataSourceException {
-        return 0;
+        throw new UnsupportedOperationException("This service does not support queries");
     }
 
     @Override
     public int getRecordsCount(Query query) throws MetadataSourceException {
-        return 0;
+        throw new UnsupportedOperationException("This service does not support queries");
     }
 
     @Override
     public Collection<ImportRecord> getRecords(String query, int start, int count) throws MetadataSourceException {
-        return null;
+        throw new UnsupportedOperationException("This service does not support queries");
     }
 
     @Override
     public Collection<ImportRecord> getRecords(Query query) throws MetadataSourceException {
-        return null;
+        throw new UnsupportedOperationException("This service does not support queries");
     }
 
     @Override
     public ImportRecord getRecord(Query query) throws MetadataSourceException {
-        return null;
+        throw new UnsupportedOperationException("This service does not support queries");
     }
 
     @Override
     public Collection<ImportRecord> findMatchingRecords(Query query) throws MetadataSourceException {
-        return null;
+        throw new UnsupportedOperationException("This service does not support queries");
     }
 
     @Override
     public Collection<ImportRecord> findMatchingRecords(Item item) throws MetadataSourceException {
-        return null;
+        throw new UnsupportedOperationException("This service does not support queries");
     }
 
     @Override
     public String getImportSource() {
-        return null;
+        return "DSpace";
     }
 }

@@ -689,8 +689,8 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
 
     /**
-     * Given a request containing another DSpace Object URI, verifies that a researcherProfile is created with
-     * public data cloned from source object.
+     * Given a request containing an external reference URI, verifies that a researcherProfile is created with
+     * data cloned from source object.
      *
      * @throws Exception
      */

@@ -739,6 +739,50 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
     // test with multiple sources
 
+    /**
+     * Given a request containing a DSpace Object URI, verifies that a researcherProfile is created with
+     * data cloned from source object's public data.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testCloneFromDSpaceSource() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+        Item person = ItemBuilder.createItem(context, personCollection)
+                .withFullName("Giuseppe Verdi")
+                .withRelationshipType("Person")
+                .withBirthDate("1813-10-10").build();
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(user.getEmail(), password);
+
+        getClient(authToken).perform(post("/api/cris/profiles/")
+                .contentType(TEXT_URI_LIST).content("http://localhost:8080/server/api/integration/externalsources/dspace/entryValues/" + person.getID()))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id", is(user.getID())))
+                .andExpect(jsonPath("$.visible", is(false)))
+                .andExpect(jsonPath("$.type", is("item")))
+                .andExpect(jsonPath("$.metadata['person.birthDate']", is("1982-12-17")))
+                .andExpect(jsonPath("$.metadata['crisrp.name']", is("Mario Rossi")))
+                .andExpect(jsonPath("$", matchLinks("http://localhost/api/cris/profiles/" + user.getID(), "item", "eperson")));
+
+//        getClient(authToken).perform(get("/api/cris/profiles/{id}", id))
+//                .andExpect(status().isOk());
+//
+//        getClient(authToken).perform(get("/api/cris/profiles/{id}/item", id))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.type", is("item")))
+//                .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", name, id.toString(), 0)))
+//                .andExpect(jsonPath("$.metadata", matchMetadata("cris.sourceId", id, 0)))
+//                .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "Person", 0)));
+//
+//        getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", id))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.type", is("eperson")))
+//                .andExpect(jsonPath("$.name", is(name)));
+    }
+
     private String getItemIdByProfileId(String token, String id) throws SQLException, Exception {
         MvcResult result = getClient(token).perform(get("/api/cris/profiles/{id}/item", id))
             .andExpect(status().isOk())

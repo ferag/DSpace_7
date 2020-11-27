@@ -1,21 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:util="http://www.springframework.org/schema/util"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
-    default-lazy-init="true">
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+       default-lazy-init="true">
 
     <bean id="importResearcherProfile" class="org.dspace.app.profile.service.ImportResearcherProfileServiceImpl">
         <constructor-arg name="externalDataService" ref="importProfileExternalDataService"/>
-        <constructor-arg ref="org.dspace.content.InstallItemServiceImpl"/>
+        <constructor-arg name="installItemService" ref="org.dspace.content.InstallItemServiceImpl"/>
+        <constructor-arg name="requestService" ref="org.dspace.services.RequestService"/>
     </bean>
 
     <bean id="importProfileExternalDataService" class="org.dspace.external.service.impl.ExternalDataServiceImpl">
         <property name="externalDataProviders">
-            <util:list/>
+            <list>
+                <ref bean="dspaceLiveImportDataProvider"/>
+            </list>
         </property>
     </bean>
 
+    <bean id="dspaceLiveImportDataProvider" class="org.dspace.external.provider.impl.LiveImportDataProvider">
+        <property name="metadataSource" ref="dspaceImportService"/>
+        <property name="sourceIdentifier" value="dspace"/>
+        <property name="recordIdMetadata" value="dc.identifier.pmid"/>
+        <property name="supportedEntityTypes">
+            <list>
+                <value>PersonCv</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="dspaceImportService" class="org.dspace.importer.external.dspace.DSpaceImportService">
+        <constructor-arg name="itemService" ref="org.dspace.content.ItemServiceImpl"/>
+        <constructor-arg name="requestService" ref="org.dspace.services.RequestService"/>
+        <constructor-arg name="metadataFieldMapping" ref="dspaceInternalMetadataFieldMapping"/>
+    </bean>
+
+    <bean id="dspaceInternalMetadataFieldMapping" class="org.dspace.importer.external.dspace.DSpaceInternalMetadataFieldMapping">
+        <constructor-arg name="itemService" ref="org.dspace.content.ItemServiceImpl"/>
+        <constructor-arg name="requestService" ref="org.dspace.services.RequestService"/>
+        <constructor-arg name="crisLayoutBoxService" ref="org.dspace.layout.service.impl.CrisLayoutBoxServiceImpl"/>
+    </bean>
+
     <!-- TODO: set orcid import -->
-    
+
 </beans>
 

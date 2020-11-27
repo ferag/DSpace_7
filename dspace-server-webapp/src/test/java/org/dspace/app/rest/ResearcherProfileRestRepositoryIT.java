@@ -39,6 +39,7 @@ import org.dspace.content.Collection;
 import org.dspace.content.Item;
 import org.dspace.eperson.EPerson;
 import org.dspace.services.ConfigurationService;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -694,18 +695,22 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
      * @throws Exception
      */
     @Test
-    public void testCloneFromOtherDSpaceObject() throws Exception {
+    @Ignore
+    public void testCloneFromExternalSource() throws Exception {
+        // FIXME: unIgnore once orcid integration ready
+
         context.turnOffAuthorisationSystem();
         Item person = ItemBuilder.createItem(context, personCollection)
                 .withFullName("Mario Rossi")
                 .withRelationshipType("Person")
+                .withOrcidIdentifier("0000-1234-1234-1111")
                 .withBirthDate("1982-12-17").build();
         context.restoreAuthSystemState();
 
         String authToken = getAuthToken(user.getEmail(), password);
 
         getClient(authToken).perform(post("/api/cris/profiles/")
-                .contentType(TEXT_URI_LIST).content("http://localhost:8080/server/api/integration/externalsources/dspace/entryValues/" + person.getID()))
+                .contentType(TEXT_URI_LIST).content("http://localhost:8080/server/api/integration/externalsources/orcid/entryValues/0000-1234-1234-1111"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", is(user.getID())))
                 .andExpect(jsonPath("$.visible", is(false)))

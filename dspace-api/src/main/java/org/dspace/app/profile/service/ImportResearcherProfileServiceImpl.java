@@ -52,8 +52,9 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
 
     @Override
     public Item importProfile(Context context, URI source, Collection collection)
-            throws AuthorizeException, SQLException {
+        throws AuthorizeException, SQLException {
 
+        requestService.getCurrentRequest().setAttribute("context", context);
         Optional<ExternalDataObject> externalDataObject = objectLookup(source);
 
 
@@ -64,15 +65,15 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
     }
 
     private Item createItem(Context context, Collection collection, ExternalDataObject externalDataObject)
-            throws AuthorizeException, SQLException {
+        throws AuthorizeException, SQLException {
         try {
-            requestService.getCurrentRequest().setAttribute("context", context);
+
             WorkspaceItem workspaceItem = externalDataService.createWorkspaceItemFromExternalDataObject(context,
-                    externalDataObject,
-                    collection);
+                externalDataObject,
+                collection);
             Item item = installItemService.installItem(context, workspaceItem);
             Optional.ofNullable(afterImportActionList)
-                    .ifPresent(l -> l.forEach(action -> action.applyTo(item)));
+                .ifPresent(l -> l.forEach(action -> action.applyTo(item)));
             return item;
         } catch (AuthorizeException | SQLException e) {
             log.error("Error while importing item into collection {}", e.getMessage(), e);

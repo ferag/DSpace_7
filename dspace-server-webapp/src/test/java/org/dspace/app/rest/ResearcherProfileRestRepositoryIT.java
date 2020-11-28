@@ -23,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.jayway.jsonpath.JsonPath;
@@ -33,11 +34,21 @@ import org.dspace.app.rest.model.patch.ReplaceOperation;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
 import org.dspace.builder.CollectionBuilder;
 import org.dspace.builder.CommunityBuilder;
+import org.dspace.builder.CrisLayoutBoxBuilder;
+import org.dspace.builder.CrisLayoutFieldBuilder;
 import org.dspace.builder.EPersonBuilder;
+import org.dspace.builder.EntityTypeBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
+import org.dspace.content.EntityType;
 import org.dspace.content.Item;
+import org.dspace.content.MetadataField;
+import org.dspace.content.MetadataSchema;
+import org.dspace.content.service.MetadataFieldService;
+import org.dspace.content.service.MetadataSchemaService;
 import org.dspace.eperson.EPerson;
+import org.dspace.layout.CrisLayoutBox;
+import org.dspace.layout.LayoutSecurity;
 import org.dspace.services.ConfigurationService;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -56,6 +67,12 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
     @Autowired
     private ConfigurationService configurationService;
+
+    @Autowired
+    private MetadataSchemaService metadataSchemaService;
+
+    @Autowired
+    private MetadataFieldService metadataFieldService;
 
     private EPerson user;
 
@@ -750,37 +767,74 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
         context.turnOffAuthorisationSystem();
         Item person = ItemBuilder.createItem(context, personCollection)
-                .withFullName("Giuseppe Verdi")
-                .withRelationshipType("Person")
-                .withBirthDate("1813-10-10").build();
+            .withFullName("Giuseppe Verdi")
+            .withRelationshipType("Person")
+            .withBirthDate("1813-10-10")
+            .withDNI("123123").build();
+
+        EntityType entityType = EntityTypeBuilder.createEntityTypeBuilder(context, "Person").build();
+
+        CrisLayoutBox publicBox = CrisLayoutBoxBuilder.createBuilder(context, entityType, false, false)
+            .withSecurity(LayoutSecurity.PUBLIC).build();
+
+        CrisLayoutBox ownerAndAdministratorBox = CrisLayoutBoxBuilder.createBuilder(context, entityType, false, false)
+            .withSecurity(LayoutSecurity.OWNER_AND_ADMINISTRATOR).build();
+
+
+        CrisLayoutFieldBuilder.createMetadataField(context,
+            metadataField("crisrp", "name", Optional.empty()),
+            1, 1)
+            .withBox(publicBox)
+            .build();
+
+        CrisLayoutFieldBuilder.createMetadataField(context,
+            metadataField("person", "birthDate", Optional.empty()),
+            2, 1)
+            .withBox(publicBox).build();
+
+        CrisLayoutFieldBuilder.createMetadataField(context,
+            metadataField("perucris", "identifier", Optional.of("dni")),
+            1, 1)
+            .withBox(ownerAndAdministratorBox).build();
+
         context.restoreAuthSystemState();
 
         String authToken = getAuthToken(user.getEmail(), password);
 
         getClient(authToken).perform(post("/api/cris/profiles/")
-                .contentType(TEXT_URI_LIST).content("http://localhost:8080/server/api/integration/externalsources/dspace/entryValues/" + person.getID()))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id", is(user.getID())))
-                .andExpect(jsonPath("$.visible", is(false)))
-                .andExpect(jsonPath("$.type", is("item")))
-                .andExpect(jsonPath("$.metadata['person.birthDate']", is("1982-12-17")))
-                .andExpect(jsonPath("$.metadata['crisrp.name']", is("Mario Rossi")))
-                .andExpect(jsonPath("$", matchLinks("http://localhost/api/cris/profiles/" + user.getID(), "item", "eperson")));
+            .contentType(TEXT_URI_LIST).content("http://localhost:8080/server/api/integration/externalsources/dspace/entryValues/" + person.getID()))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id", is(user.getID().toString())))
+            .andExpect(jsonPath("$.visible", is(false)))
+            .andExpect(jsonPath("$.type", is("profile")))
+            .andExpect(jsonPath("$", matchLinks("http://localhost/api/cris/profiles/" + user.getID(), "item", "eperson")));
 
-//        getClient(authToken).perform(get("/api/cris/profiles/{id}", id))
-//                .andExpect(status().isOk());
-//
-//        getClient(authToken).perform(get("/api/cris/profiles/{id}/item", id))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.type", is("item")))
-//                .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", name, id.toString(), 0)))
-//                .andExpect(jsonPath("$.metadata", matchMetadata("cris.sourceId", id, 0)))
-//                .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "Person", 0)));
-//
-//        getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", id))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.type", is("eperson")))
-//                .andExpect(jsonPath("$.name", is(name)));
+        getClient(authToken).perform(get("/api/cris/profiles/{id}", user.getID()))
+            .andExpect(status().isOk());
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}/item", user.getID()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.type", is("item")))
+            .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", user.getName(), user.getID().toString(), 0)))
+            .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.name", "Giuseppe Verdi", 0)))
+            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "Person", 0)))
+            .andExpect(jsonPath("$.metadata", matchMetadata("person.birthDate", "1813-10-10", 0)));
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", user.getID()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.type", is("eperson")))
+            .andExpect(jsonPath("$.name", is(user.getName())));
+    }
+
+    private MetadataField metadataField(String schema, String element, Optional<String> qualifier)
+        throws SQLException {
+
+        MetadataSchema metadataSchema = metadataSchemaService.find(context, schema);
+
+        return metadataFieldService.findByElement(context,
+            metadataSchema,
+            element,
+            qualifier.orElse(null));
     }
 
     private String getItemIdByProfileId(String token, String id) throws SQLException, Exception {

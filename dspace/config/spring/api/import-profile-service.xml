@@ -11,7 +11,7 @@
 
     <bean id="importProfileExternalDataService" class="org.dspace.external.service.impl.ExternalDataServiceImpl">
         <property name="externalDataProviders">
-            <util:list/>
+            <list/>
         </property>
     </bean>
 

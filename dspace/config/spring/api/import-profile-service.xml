@@ -35,7 +35,8 @@
         <constructor-arg name="metadataFieldMapping" ref="dspaceInternalMetadataFieldMapping"/>
     </bean>
 
-    <bean id="dspaceInternalMetadataFieldMapping" class="org.dspace.importer.external.dspace.DSpaceInternalMetadataFieldMapping">
+    <bean id="dspaceInternalMetadataFieldMapping"
+          class="org.dspace.importer.external.dspace.DSpaceInternalMetadataFieldMapping">
         <constructor-arg name="itemService" ref="org.dspace.content.ItemServiceImpl"/>
         <constructor-arg name="requestService" ref="org.dspace.services.RequestService"/>
         <constructor-arg name="crisLayoutBoxService" ref="org.dspace.layout.service.impl.CrisLayoutBoxServiceImpl"/>

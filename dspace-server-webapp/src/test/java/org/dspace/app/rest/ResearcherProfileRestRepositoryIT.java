@@ -871,17 +871,6 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
             .andExpect(jsonPath("$.name", is(user.getName())));
     }
 
-    private MetadataField metadataField(String schema, String element, Optional<String> qualifier)
-        throws SQLException {
-
-        MetadataSchema metadataSchema = metadataSchemaService.find(context, schema);
-
-        return metadataFieldService.findByElement(context,
-            metadataSchema,
-            element,
-            qualifier.orElse(null));
-    }
-
     private String getItemIdByProfileId(String token, String id) throws SQLException, Exception {
         MvcResult result = getClient(token).perform(get("/api/cris/profiles/{id}/item", id))
             .andExpect(status().isOk())

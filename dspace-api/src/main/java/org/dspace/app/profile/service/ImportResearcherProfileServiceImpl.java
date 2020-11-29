@@ -2,7 +2,7 @@
  * The contents of this file are subject to the license and copyright
  * detailed in the LICENSE and NOTICE files at the root of the source
  * tree and available online at
- *
+ * <p>
  * http://www.dspace.org/license/
  */
 
@@ -11,6 +11,7 @@ package org.dspace.app.profile.service;
 import java.net.URI;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.velocity.exception.ResourceNotFoundException;
@@ -43,7 +44,6 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
     private List<AfterImportAction> afterImportActionList;
 
 
-
     public ImportResearcherProfileServiceImpl(ExternalDataService externalDataService,
                                               InstallItemService installItemService,
                                               RequestService requestService) {
@@ -54,12 +54,12 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
 
     @Override
     public Item importProfile(Context context, URI source, Collection collection)
-            throws AuthorizeException, SQLException {
+        throws AuthorizeException, SQLException {
 
         ResearcherProfileSource researcherProfileSource = new ResearcherProfileSource(source);
         requestService.getCurrentRequest().setAttribute("context", context);
         Optional<ExternalDataObject> externalDataObject = externalDataService
-                .getExternalDataObject(researcherProfileSource.source(), researcherProfileSource.id());
+            .getExternalDataObject(researcherProfileSource.source(), researcherProfileSource.id());
 
         if (externalDataObject.isEmpty()) {
             throw new ResourceNotFoundException("resource for uri " + source + " not found");
@@ -78,12 +78,20 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
                 externalDataObject,
                 collection);
             Item item = installItemService.installItem(context, workspaceItem);
-            Optional.ofNullable(afterImportActionList)
-                .ifPresent(l -> l.forEach(action -> action.applyTo(context, item, externalDataObject)));
+            applyAfterImportActions(context, item, externalDataObject);
             return item;
         } catch (AuthorizeException | SQLException e) {
             log.error("Error while importing item into collection {}", e.getMessage(), e);
             throw e;
+        }
+    }
+
+    private void applyAfterImportActions(Context context, Item item, ExternalDataObject externalDataObject)
+        throws SQLException, AuthorizeException {
+        if (Objects.nonNull(afterImportActionList)) {
+            for (AfterImportAction action : afterImportActionList) {
+                action.applyTo(context, item, externalDataObject);
+            }
         }
     }
 

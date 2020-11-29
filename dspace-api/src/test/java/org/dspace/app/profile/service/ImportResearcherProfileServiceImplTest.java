@@ -42,17 +42,17 @@ public class ImportResearcherProfileServiceImplTest {
 
     private ImportResearcherProfileServiceImpl importResearcherProfileService;
 
-    private final ExternalDataService externalDataService = mock(ExternalDataService.class);
-    private final InstallItemService installItemService = mock(InstallItemService.class);
-    private final Context context = mock(Context.class);
-    private final Request currentRequest = mock(Request.class);
+    private ExternalDataService externalDataService = mock(ExternalDataService.class);
+    private InstallItemService installItemService = mock(InstallItemService.class);
+
+    private Context context = mock(Context.class);
+    private Request currentRequest = mock(Request.class);
 
 
     @Before
     public void setUp() throws Exception {
         RequestService requestService = mock(RequestService.class);
-        when(requestService.getCurrentRequest())
-                .thenReturn(currentRequest);
+        when(requestService.getCurrentRequest()).thenReturn(currentRequest);
         importResearcherProfileService = new ImportResearcherProfileServiceImpl(externalDataService,
                 installItemService, requestService);
     }

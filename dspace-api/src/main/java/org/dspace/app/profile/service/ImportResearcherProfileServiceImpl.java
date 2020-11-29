@@ -43,8 +43,10 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
     private List<AfterImportAction> afterImportActionList;
 
 
+
     public ImportResearcherProfileServiceImpl(ExternalDataService externalDataService,
-                                              InstallItemService installItemService, RequestService requestService) {
+                                              InstallItemService installItemService,
+                                              RequestService requestService) {
         this.externalDataService = externalDataService;
         this.installItemService = installItemService;
         this.requestService = requestService;
@@ -52,11 +54,12 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
 
     @Override
     public Item importProfile(Context context, URI source, Collection collection)
-        throws AuthorizeException, SQLException {
+            throws AuthorizeException, SQLException {
 
+        ResearcherProfileSource researcherProfileSource = new ResearcherProfileSource(source);
         requestService.getCurrentRequest().setAttribute("context", context);
-        Optional<ExternalDataObject> externalDataObject = objectLookup(source);
-
+        Optional<ExternalDataObject> externalDataObject = externalDataService
+                .getExternalDataObject(researcherProfileSource.source(), researcherProfileSource.id());
 
         if (externalDataObject.isEmpty()) {
             throw new ResourceNotFoundException("resource for uri " + source + " not found");
@@ -64,10 +67,13 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
         return createItem(context, collection, externalDataObject.get());
     }
 
+    public void setAfterImportActionList(List<AfterImportAction> afterImportActionList) {
+        this.afterImportActionList = afterImportActionList;
+    }
+
     private Item createItem(Context context, Collection collection, ExternalDataObject externalDataObject)
         throws AuthorizeException, SQLException {
         try {
-
             WorkspaceItem workspaceItem = externalDataService.createWorkspaceItemFromExternalDataObject(context,
                 externalDataObject,
                 collection);
@@ -79,17 +85,6 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
             log.error("Error while importing item into collection {}", e.getMessage(), e);
             throw e;
         }
-    }
-
-    private Optional<ExternalDataObject> objectLookup(URI source) {
-        ResearcherProfileSource researcherProfileSource = new ResearcherProfileSource(source);
-        Optional<ExternalDataObject> externalDataObject = externalDataService
-                .getExternalDataObject(researcherProfileSource.source(), researcherProfileSource.id());
-        return externalDataObject;
-    }
-
-    public void setAfterImportActionList(List<AfterImportAction> afterImportActionList) {
-        this.afterImportActionList = afterImportActionList;
     }
 
     private static class ResearcherProfileSource {

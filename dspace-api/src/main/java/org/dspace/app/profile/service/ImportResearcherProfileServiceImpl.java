@@ -66,6 +66,15 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
 
     private Item createItem(Context context, Collection collection, ExternalDataObject externalDataObject)
         throws AuthorizeException, SQLException {
+        return createItem(context, collection, externalDataObject.get());
+    }
+
+    public void setAfterImportActionList(List<AfterImportAction> afterImportActionList) {
+        this.afterImportActionList = afterImportActionList;
+    }
+
+    private Item createItem(Context context, Collection collection, ExternalDataObject externalDataObject)
+        throws AuthorizeException, SQLException {
         try {
 
             WorkspaceItem workspaceItem = externalDataService.createWorkspaceItemFromExternalDataObject(context,

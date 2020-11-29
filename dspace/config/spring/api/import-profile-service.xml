@@ -21,7 +21,7 @@
     <bean id="dspaceLiveImportDataProvider" class="org.dspace.external.provider.impl.LiveImportDataProvider">
         <property name="metadataSource" ref="dspaceImportService"/>
         <property name="sourceIdentifier" value="dspace"/>
-        <property name="recordIdMetadata" value="dc.identifier.pmid"/>
+        <property name="recordIdMetadata" value="dc.identifier"/>
         <property name="supportedEntityTypes">
             <list>
                 <value>PersonCv</value>
@@ -40,6 +40,7 @@
         <constructor-arg name="itemService" ref="org.dspace.content.ItemServiceImpl"/>
         <constructor-arg name="requestService" ref="org.dspace.services.RequestService"/>
         <constructor-arg name="crisLayoutBoxService" ref="org.dspace.layout.service.impl.CrisLayoutBoxServiceImpl"/>
+        <property name="identifierMetadata" value="dc.identifier"/>
     </bean>
 
     <!-- TODO: set orcid import -->

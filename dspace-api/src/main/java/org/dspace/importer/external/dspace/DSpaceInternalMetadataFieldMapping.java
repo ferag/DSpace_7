@@ -2,7 +2,7 @@
  * The contents of this file are subject to the license and copyright
  * detailed in the LICENSE and NOTICE files at the root of the source
  * tree and available online at
- *
+ * <p>
  * http://www.dspace.org/license/
  */
 
@@ -10,7 +10,9 @@ package org.dspace.importer.external.dspace;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.dspace.content.Item;
@@ -42,6 +44,8 @@ public class DSpaceInternalMetadataFieldMapping implements MetadataFieldMapping<
     private final RequestService requestService;
     private final CrisLayoutBoxService crisLayoutBoxService;
 
+    private String[] identifierMetadata = "dc.identifier".split("\\.");
+
     public DSpaceInternalMetadataFieldMapping(ItemService itemService, RequestService requestService,
                                               CrisLayoutBoxService crisLayoutBoxService) {
         this.itemService = itemService;
@@ -62,16 +66,36 @@ public class DSpaceInternalMetadataFieldMapping implements MetadataFieldMapping<
             List<MetadataField> publicMetadataFields = publicMetadataFields(context, record);
 
             List<MetadataValue> fullList = itemService.getMetadata(record, Item.ANY, Item.ANY,
-                    Item.ANY, Item.ANY, false);
+                Item.ANY, Item.ANY, false);
 
-            return fullList.stream()
-                    .filter(mv -> publicMetadataFields.contains(mv.getMetadataField()))
-                    .map(this::toDto)
-                    .collect(Collectors.toList());
+            List<MetadatumDTO> metadataList = new LinkedList<>();
+            metadataList.add(identifierMetadata(record.getID()));
+            fullList.stream()
+                .filter(mv -> publicMetadataFields.contains(mv.getMetadataField()))
+                .map(this::toDto)
+                .forEach(metadataList::add);
+
+            return metadataList;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void setIdentifierMetadata(String identifierMetadata) {
+        this.identifierMetadata = identifierMetadata.split("\\.");
+    }
+
+    private MetadatumDTO identifierMetadata(UUID id) {
+        MetadatumDTO metadatumDTO = new MetadatumDTO();
+
+        metadatumDTO.setSchema(identifierMetadata[0]);
+        metadatumDTO.setElement(identifierMetadata[1]);
+        if (identifierMetadata.length == 3) {
+            metadatumDTO.setQualifier(identifierMetadata[2]);
+        }
+        metadatumDTO.setValue(id.toString());
+        return metadatumDTO;
     }
 
     private MetadatumDTO toDto(MetadataValue metadataValue) {
@@ -87,13 +111,13 @@ public class DSpaceInternalMetadataFieldMapping implements MetadataFieldMapping<
 
     private List<MetadataField> publicMetadataFields(Context context, Item record) throws SQLException {
         String entityType = itemService.getMetadataFirstValue(record, MetadataSchemaEnum.RELATIONSHIP.getName(),
-                "type", null, Item.ANY);
+            "type", null, Item.ANY);
         List<CrisLayoutBox> boxes = crisLayoutBoxService.findEntityBoxes(context, entityType, 1000, 0);
 
         return boxes.stream()
-                .filter(b -> LayoutSecurity.valueOf(b.getSecurity()).equals(LayoutSecurity.PUBLIC))
-                .flatMap(b -> b.getLayoutFields().stream())
-                .map(CrisLayoutField::getMetadataField)
-                .collect(Collectors.toList());
+            .filter(b -> LayoutSecurity.valueOf(b.getSecurity()).equals(LayoutSecurity.PUBLIC))
+            .flatMap(b -> b.getLayoutFields().stream())
+            .map(CrisLayoutField::getMetadataField)
+            .collect(Collectors.toList());
     }
 }

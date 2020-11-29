@@ -9,7 +9,6 @@
 package org.dspace.importer.external.dspace;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -17,10 +16,10 @@ import static org.mockito.Mockito.when;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -66,10 +65,11 @@ public class DSpaceInternalMetadataFieldMappingTest {
     }
 
     @Test
-    public void onlyPublicMetadataAreImported() throws Exception {
+    public void idAndPublicMetadataAreImported() throws Exception {
 
         String entityType = "Person";
-        Item item = item();
+        UUID itemId = UUID.randomUUID();
+        Item item = item(itemId);
         List<CrisLayoutBox> boxes = Arrays.asList(
                 boxWithMetadata(
                         LayoutSecurity.PUBLIC,
@@ -113,16 +113,18 @@ public class DSpaceInternalMetadataFieldMappingTest {
         Collection<MetadatumDTO> metadatumDtoList = metadataFieldMapping.resultToDCValueMapping(item);
 
         assertThat(metadatumDtoList, Matchers.containsInAnyOrder(
+                MetadatumDTOMatcher.of("dc", "identifier", itemId.toString()),
                 MetadatumDTOMatcher.of("metadata1", "foo", "metadata1Value"),
                 MetadatumDTOMatcher.of("metadata4", "foo", "metadata4Value")
         ));
     }
 
     @Test
-    public void noPublicMetadataToImport() throws Exception {
+    public void noPublicMetadataToImportOnlyIdImported() throws Exception {
 
         String entityType = "Person";
-        Item item = item();
+        UUID uuid = UUID.randomUUID();
+        Item item = item(uuid);
         List<CrisLayoutBox> boxes = Arrays.asList(
                 boxWithMetadata(
                         LayoutSecurity.ADMINISTRATOR,
@@ -163,15 +165,19 @@ public class DSpaceInternalMetadataFieldMappingTest {
         when(itemService.getMetadata(item, Item.ANY, Item.ANY, Item.ANY, Item.ANY, false))
                 .thenReturn(itemMetadata);
 
+        metadataFieldMapping.setIdentifierMetadata("cl.identifier.custom");
         Collection<MetadatumDTO> metadatumDtoList = metadataFieldMapping.resultToDCValueMapping(item);
 
-        assertThat(metadatumDtoList, is(Collections.emptyList()));
+        assertThat(metadatumDtoList, Matchers.contains(
+            MetadatumDTOMatcher.
+                of("cl", "identifier", "custom", uuid.toString())
+        ));
     }
 
     @Test(expected = RuntimeException.class)
     public void exceptionWhileGettingPublicFields() {
 
-        Item item = item();
+        Item item = item(UUID.randomUUID());
 
         doThrow(new SQLException("sql exception")).when(itemService)
                 .getMetadataFirstValue(item, MetadataSchemaEnum.RELATIONSHIP.getName(),
@@ -211,8 +217,10 @@ public class DSpaceInternalMetadataFieldMappingTest {
         return field;
     }
 
-    private Item item() {
-        return mock(Item.class);
+    private Item item(UUID uuid) {
+        Item item = mock(Item.class);
+        when(item.getID()).thenReturn(uuid);
+        return item;
     }
 
     private RequestService requestService() {
@@ -244,6 +252,11 @@ public class DSpaceInternalMetadataFieldMappingTest {
 
         static MetadatumDTOMatcher of(String schema, String element, String value) {
             return new MetadatumDTOMatcher(schema, element, null, value);
+        }
+
+        public static MetadatumDTOMatcher of(String schema, String element, String qualifier,
+                                                            String value) {
+            return new MetadatumDTOMatcher(schema, element, qualifier, value);
         }
 
         @Override

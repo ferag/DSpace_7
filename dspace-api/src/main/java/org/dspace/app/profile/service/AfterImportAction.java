@@ -9,6 +9,7 @@
 package org.dspace.app.profile.service;
 
 import org.dspace.content.Item;
+import org.dspace.core.Context;
 import org.dspace.external.model.ExternalDataObject;
 
 /**
@@ -21,8 +22,9 @@ public interface AfterImportAction {
     /**
      * Manipulates and performs actions on a given item.
      *
+     * @param context
      * @param item item to be manipulated by this action implementation
      * @param externalDataObject external data object used as source of created item
      */
-    void applyTo(Item item, ExternalDataObject externalDataObject);
+    void applyTo(Context context, Item item, ExternalDataObject externalDataObject);
 }

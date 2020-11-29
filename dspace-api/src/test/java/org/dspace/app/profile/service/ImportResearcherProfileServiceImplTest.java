@@ -144,7 +144,7 @@ public class ImportResearcherProfileServiceImplTest {
         importResearcherProfileService.importProfile(context, source,
                 collection);
 
-        verify(afterImportAction).applyTo(item, externalDataObject);
+        verify(afterImportAction).applyTo(context, item, externalDataObject);
     }
 
     private ExternalDataObject createExternalDataObject(String s) {

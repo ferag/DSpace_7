@@ -57,22 +57,27 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
         if (externalDataObject.isEmpty()) {
             throw new ResourceNotFoundException("resource for uri " + source + " not found");
         }
+        return createItem(context, collection, externalDataObject.get());
+    }
+
+    public void setAfterImportActionList(List<AfterImportAction> afterImportActionList) {
+        this.afterImportActionList = afterImportActionList;
+    }
+
+    private Item createItem(Context context, Collection collection, ExternalDataObject externalDataObject)
+        throws AuthorizeException, SQLException {
         try {
             WorkspaceItem workspaceItem = externalDataService.createWorkspaceItemFromExternalDataObject(context,
-                    externalDataObject.get(),
-                    collection);
+                externalDataObject,
+                collection);
             Item item = installItemService.installItem(context, workspaceItem);
             Optional.ofNullable(afterImportActionList)
-                    .ifPresent(l -> l.forEach(action -> action.applyTo(item, externalDataObject.get())));
+                .ifPresent(l -> l.forEach(action -> action.applyTo(item, externalDataObject)));
             return item;
         } catch (AuthorizeException | SQLException e) {
             log.error("Error while importing item into collection {}", e.getMessage(), e);
             throw e;
         }
-    }
-
-    public void setAfterImportActionList(List<AfterImportAction> afterImportActionList) {
-        this.afterImportActionList = afterImportActionList;
     }
 
     private static class ResearcherProfileSource {

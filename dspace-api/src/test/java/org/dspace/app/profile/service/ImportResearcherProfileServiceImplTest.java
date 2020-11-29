@@ -29,6 +29,8 @@ import org.dspace.content.service.InstallItemService;
 import org.dspace.core.Context;
 import org.dspace.external.model.ExternalDataObject;
 import org.dspace.external.service.ExternalDataService;
+import org.dspace.services.RequestService;
+import org.dspace.services.model.Request;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,12 +47,15 @@ public class ImportResearcherProfileServiceImplTest {
     private InstallItemService installItemService = mock(InstallItemService.class);
 
     private Context context = mock(Context.class);
+    private Request currentRequest = mock(Request.class);
 
 
     @Before
     public void setUp() throws Exception {
+        RequestService requestService = mock(RequestService.class);
+        when(requestService.getCurrentRequest()).thenReturn(currentRequest);
         importResearcherProfileService = new ImportResearcherProfileServiceImpl(externalDataService,
-                installItemService);
+                installItemService, requestService);
     }
 
     @Test
@@ -72,6 +77,7 @@ public class ImportResearcherProfileServiceImplTest {
                 collection);
 
         verify(installItemService).installItem(context, workspaceItem);
+        verify(currentRequest).setAttribute("context", context);
 
     }
 

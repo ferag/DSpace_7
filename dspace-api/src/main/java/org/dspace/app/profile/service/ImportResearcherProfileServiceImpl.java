@@ -22,6 +22,7 @@ import org.dspace.content.service.InstallItemService;
 import org.dspace.core.Context;
 import org.dspace.external.model.ExternalDataObject;
 import org.dspace.external.service.ExternalDataService;
+import org.dspace.services.RequestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,13 +38,18 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
 
     private final InstallItemService installItemService;
 
+    private final RequestService requestService;
+
     private List<AfterImportAction> afterImportActionList;
 
 
+
     public ImportResearcherProfileServiceImpl(ExternalDataService externalDataService,
-                                              InstallItemService installItemService) {
+                                              InstallItemService installItemService,
+                                              RequestService requestService) {
         this.externalDataService = externalDataService;
         this.installItemService = installItemService;
+        this.requestService = requestService;
     }
 
     @Override
@@ -51,6 +57,7 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
             throws AuthorizeException, SQLException {
 
         ResearcherProfileSource researcherProfileSource = new ResearcherProfileSource(source);
+        requestService.getCurrentRequest().setAttribute("context", context);
         Optional<ExternalDataObject> externalDataObject = externalDataService
                 .getExternalDataObject(researcherProfileSource.source(), researcherProfileSource.id());
 

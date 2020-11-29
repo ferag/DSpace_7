@@ -2,7 +2,7 @@
  * The contents of this file are subject to the license and copyright
  * detailed in the LICENSE and NOTICE files at the root of the source
  * tree and available online at
- *
+ * <p>
  * http://www.dspace.org/license/
  */
 package org.dspace.app.profile.service;
@@ -35,7 +35,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-
 /**
  * @author Corrado Lombardi (corrado.lombardi at 4science.it)
  */
@@ -55,7 +54,7 @@ public class ImportResearcherProfileServiceImplTest {
         RequestService requestService = mock(RequestService.class);
         when(requestService.getCurrentRequest()).thenReturn(currentRequest);
         importResearcherProfileService = new ImportResearcherProfileServiceImpl(externalDataService,
-                installItemService, requestService);
+            installItemService, requestService);
     }
 
     @Test
@@ -66,15 +65,15 @@ public class ImportResearcherProfileServiceImplTest {
 
         ExternalDataObject externalDataObject = createExternalDataObject("1234");
         when(externalDataService.getExternalDataObject("serviceId", "1234"))
-                .thenReturn(Optional.of(externalDataObject));
+            .thenReturn(Optional.of(externalDataObject));
 
         WorkspaceItem workspaceItem = workspaceItem(1234);
 
         when(externalDataService.createWorkspaceItemFromExternalDataObject(context, externalDataObject, collection))
-                .thenReturn(workspaceItem);
+            .thenReturn(workspaceItem);
 
         importResearcherProfileService.importProfile(context, source,
-                collection);
+            collection);
 
         verify(installItemService).installItem(context, workspaceItem);
         verify(currentRequest).setAttribute("context", context);
@@ -88,11 +87,11 @@ public class ImportResearcherProfileServiceImplTest {
         Collection collection = mock(Collection.class);
 
         when(externalDataService.getExternalDataObject("serviceId", "5678"))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
 
         importResearcherProfileService.importProfile(context, source,
-                collection);
+            collection);
 
         verifyNoInteractions(installItemService);
 
@@ -107,13 +106,13 @@ public class ImportResearcherProfileServiceImplTest {
         ExternalDataObject externalDataObject = createExternalDataObject("9999");
 
         when(externalDataService.getExternalDataObject("serviceId", "9999"))
-                .thenReturn(Optional.of(externalDataObject));
+            .thenReturn(Optional.of(externalDataObject));
         doThrow(new AuthorizeException("not authorized"))
-                .when(externalDataService)
-                .createWorkspaceItemFromExternalDataObject(context, externalDataObject, collection);
+            .when(externalDataService)
+            .createWorkspaceItemFromExternalDataObject(context, externalDataObject, collection);
 
         importResearcherProfileService.importProfile(context, source,
-                collection);
+            collection);
 
         verifyNoInteractions(installItemService);
 
@@ -130,21 +129,50 @@ public class ImportResearcherProfileServiceImplTest {
 
         ExternalDataObject externalDataObject = createExternalDataObject("1234");
         when(externalDataService.getExternalDataObject("serviceId", "1234"))
-                .thenReturn(Optional.of(externalDataObject));
+            .thenReturn(Optional.of(externalDataObject));
 
         WorkspaceItem workspaceItem = workspaceItem(1234);
 
         when(externalDataService.createWorkspaceItemFromExternalDataObject(context, externalDataObject, collection))
-                .thenReturn(workspaceItem);
+            .thenReturn(workspaceItem);
 
         Item item = item();
         when(installItemService.installItem(context, workspaceItem))
-                .thenReturn(item);
+            .thenReturn(item);
 
         importResearcherProfileService.importProfile(context, source,
-                collection);
+            collection);
 
         verify(afterImportAction).applyTo(context, item, externalDataObject);
+    }
+
+    @Test(expected = SQLException.class)
+    public void exceptionDuringAfterImport() throws Exception {
+
+        AfterImportAction afterImportAction = mock(AfterImportAction.class);
+
+        importResearcherProfileService.setAfterImportActionList(Collections.singletonList(afterImportAction));
+
+        URI source = URI.create("http://localhost:8080/path_to_external/serviceId/entry/1234");
+        Collection collection = mock(Collection.class);
+
+        ExternalDataObject externalDataObject = createExternalDataObject("1234");
+        when(externalDataService.getExternalDataObject("serviceId", "1234"))
+            .thenReturn(Optional.of(externalDataObject));
+
+        WorkspaceItem workspaceItem = workspaceItem(1234);
+
+        when(externalDataService.createWorkspaceItemFromExternalDataObject(context, externalDataObject, collection))
+            .thenReturn(workspaceItem);
+
+        Item item = item();
+        when(installItemService.installItem(context, workspaceItem))
+            .thenReturn(item);
+
+        doThrow(new SQLException("SqlException")).when(afterImportAction).applyTo(context, item, externalDataObject);
+
+        importResearcherProfileService.importProfile(context, source,
+            collection);
     }
 
     private ExternalDataObject createExternalDataObject(String s) {

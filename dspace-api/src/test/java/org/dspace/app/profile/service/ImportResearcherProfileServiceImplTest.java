@@ -63,7 +63,7 @@ public class ImportResearcherProfileServiceImplTest {
         URI source = URI.create("http://localhost:8080/path_to_external/serviceId/entry/1234");
         Collection collection = mock(Collection.class);
 
-        ExternalDataObject externalDataObject = externalDataObject("1234");
+        ExternalDataObject externalDataObject = createExternalDataObject("1234");
         when(externalDataService.getExternalDataObject("serviceId", "1234"))
                 .thenReturn(Optional.of(externalDataObject));
 
@@ -103,7 +103,7 @@ public class ImportResearcherProfileServiceImplTest {
         URI source = URI.create("http://localhost:8080/path_to_external/serviceId/entry/9999");
         Collection collection = mock(Collection.class);
 
-        ExternalDataObject externalDataObject = externalDataObject("9999");
+        ExternalDataObject externalDataObject = createExternalDataObject("9999");
 
         when(externalDataService.getExternalDataObject("serviceId", "9999"))
                 .thenReturn(Optional.of(externalDataObject));
@@ -127,7 +127,7 @@ public class ImportResearcherProfileServiceImplTest {
         URI source = URI.create("http://localhost:8080/path_to_external/serviceId/entry/1234");
         Collection collection = mock(Collection.class);
 
-        ExternalDataObject externalDataObject = externalDataObject("1234");
+        ExternalDataObject externalDataObject = createExternalDataObject("1234");
         when(externalDataService.getExternalDataObject("serviceId", "1234"))
                 .thenReturn(Optional.of(externalDataObject));
 
@@ -143,10 +143,10 @@ public class ImportResearcherProfileServiceImplTest {
         importResearcherProfileService.importProfile(context, source,
                 collection);
 
-        verify(afterImportAction).applyTo(item);
+        verify(afterImportAction).applyTo(item, externalDataObject);
     }
 
-    private ExternalDataObject externalDataObject(String s) {
+    private ExternalDataObject createExternalDataObject(String s) {
         ExternalDataObject externalDataObject = new ExternalDataObject();
         externalDataObject.setId(s);
         return externalDataObject;

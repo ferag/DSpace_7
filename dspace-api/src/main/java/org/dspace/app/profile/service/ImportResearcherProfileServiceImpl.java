@@ -74,6 +74,7 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
             Item item = installItemService.installItem(context, workspaceItem);
             Optional.ofNullable(afterImportActionList)
                 .ifPresent(l -> l.forEach(action -> action.applyTo(item)));
+                    .ifPresent(l -> l.forEach(action -> action.applyTo(item, externalDataObject.get())));
             return item;
         } catch (AuthorizeException | SQLException e) {
             log.error("Error while importing item into collection {}", e.getMessage(), e);

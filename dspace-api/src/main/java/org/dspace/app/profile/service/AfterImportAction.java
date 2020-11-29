@@ -9,6 +9,7 @@
 package org.dspace.app.profile.service;
 
 import org.dspace.content.Item;
+import org.dspace.external.model.ExternalDataObject;
 
 /**
  * Defines a contract that applies on items created with {@link ImportResearcherProfileService}
@@ -21,6 +22,7 @@ public interface AfterImportAction {
      * Manipulates and performs actions on a given item.
      *
      * @param item item to be manipulated by this action implementation
+     * @param externalDataObject external data object used as source of created item
      */
-    void applyTo(Item item);
+    void applyTo(Item item, ExternalDataObject externalDataObject);
 }

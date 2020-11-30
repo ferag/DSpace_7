@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.profile.service.AfterImportAction;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.EntityType;

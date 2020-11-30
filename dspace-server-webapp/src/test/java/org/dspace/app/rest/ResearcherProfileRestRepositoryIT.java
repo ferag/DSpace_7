@@ -801,6 +801,46 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
     }
 
+    @Test
+    public void testCloneFromExternalProfileAlreadyAssociated() throws Exception {
+
+        String id = user.getID().toString();
+        String authToken = getAuthToken(user.getEmail(), password);
+
+        getClient(authToken).perform(post("/api/cris/profiles/")
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id", is(id.toString())))
+            .andExpect(jsonPath("$.visible", is(false)))
+            .andExpect(jsonPath("$.type", is("profile")));
+
+        getClient(authToken).perform(post("/api/cris/profiles/")
+            .contentType(TEXT_URI_LIST)
+            .content("http://localhost:8080/server/api/integration/externalsources/orcid/entryValues/id"))
+            .andExpect(status().isConflict());
+    }
+
+    @Test
+    public void testCloneFromExternalCollectionNotSet() throws Exception {
+
+        configurationService.setProperty("researcher-profile.collection.uuid", "not-existing");
+        String id = user.getID().toString();
+        String authToken = getAuthToken(user.getEmail(), password);
+
+        getClient(authToken).perform(post("/api/cris/profiles/")
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id", is(id.toString())))
+            .andExpect(jsonPath("$.visible", is(false)))
+            .andExpect(jsonPath("$.type", is("profile")));
+
+        getClient(authToken).perform(post("/api/cris/profiles/")
+            .contentType(TEXT_URI_LIST)
+            .content("http://localhost:8080/server/api/integration/externalsources/orcid/entryValues/id \n " +
+                "http://localhost:8080/server/api/integration/externalsources/dspace/entryValues/id"))
+            .andExpect(status().isBadRequest());
+    }
+
     /**
      * Given a request containing a DSpace Object URI, verifies that a researcherProfile is created with
      * data cloned from source object's public data.

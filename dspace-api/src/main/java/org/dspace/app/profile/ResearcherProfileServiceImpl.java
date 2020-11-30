@@ -138,8 +138,16 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
         Item item = importResearcherProfileService.importProfile(context, source, collection);
         itemService.addMetadata(context, item, "cris", "owner", null, null, ePerson.getName(),
                 ePerson.getID().toString(), CF_ACCEPTED);
+
+        setPolicies(context, ePerson, item);
         context.restoreAuthSystemState();
         return new ResearcherProfile(item);
+    }
+
+    private void setPolicies(Context context, EPerson ePerson, Item item) throws SQLException, AuthorizeException {
+        Group anonymous = groupService.findByName(context, ANONYMOUS);
+        authorizeService.removeGroupPolicies(context, item, anonymous);
+        authorizeService.addPolicy(context, item, READ, ePerson);
     }
 
     @Override
@@ -229,9 +237,7 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
 
         item = installItemService.installItem(context, workspaceItem);
 
-        Group anonymous = groupService.findByName(context, ANONYMOUS);
-        authorizeService.removeGroupPolicies(context, item, anonymous);
-        authorizeService.addPolicy(context, item, READ, ePerson);
+        setPolicies(context, ePerson, item);
 
         return item;
     }

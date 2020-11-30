@@ -8,6 +8,12 @@
         <constructor-arg name="externalDataService" ref="importProfileExternalDataService"/>
         <constructor-arg name="installItemService" ref="org.dspace.content.InstallItemServiceImpl"/>
         <constructor-arg name="requestService" ref="org.dspace.services.RequestService"/>
+
+        <property name="afterImportActionList">
+            <list>
+                <ref bean="dspaceAfterImportAction"/>
+            </list>
+        </property>
     </bean>
 
     <bean id="importProfileExternalDataService" class="org.dspace.external.service.impl.ExternalDataServiceImpl">
@@ -41,6 +47,18 @@
         <constructor-arg name="requestService" ref="org.dspace.services.RequestService"/>
         <constructor-arg name="crisLayoutBoxService" ref="org.dspace.layout.service.impl.CrisLayoutBoxServiceImpl"/>
         <property name="identifierMetadata" value="dc.identifier"/>
+    </bean>
+
+    <bean id="dspaceAfterImportAction" class="org.dspace.importer.external.dspace.DspaceAfterImportAction">
+        <constructor-arg name="relationshipTypeService" ref="org.dspace.content.RelationshipTypeServiceImpl"/>
+        <constructor-arg name="relationshipService" ref="org.dspace.content.RelationshipServiceImpl"/>
+        <constructor-arg name="itemService" ref="org.dspace.content.ItemServiceImpl"/>
+        <constructor-arg name="entityTypeService" ref="org.dspace.content.EntityTypeServiceImpl"/>
+
+        <property name="leftEntityType" value="PersonCv"/>
+        <property name="rightEntityType" value="Person"/>
+        <property name="leftwardType" value="isPersonOwner"/>
+        <property name="rightwardType" value="isOwnedByPersonCv"/>
     </bean>
 
     <!-- TODO: set orcid import -->

@@ -97,6 +97,9 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
     @Autowired
     private ConfigurationService configurationService;
 
+    @Autowired
+    private ResourcePolicyService resourcePolicyService;
+
     @Test
     public void createTest() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
@@ -596,8 +599,8 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withName("Sub Community 2")
                 .build();
 
-        resoucePolicyService.removePolicies(context, parentCommunity, Constants.READ);
-        resoucePolicyService.removePolicies(context, child1, Constants.READ);
+        resourcePolicyService.removePolicies(context, parentCommunity, Constants.READ);
+        resourcePolicyService.removePolicies(context, child1, Constants.READ);
         context.restoreAuthSystemState();
 
         // anonymous can see only public communities
@@ -623,8 +626,8 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                    .withName("Sub Community 2")
                    .build();
 
-        resoucePolicyService.removePolicies(context, parentCommunity, Constants.READ);
-        resoucePolicyService.removePolicies(context, child1, Constants.READ);
+        resourcePolicyService.removePolicies(context, parentCommunity, Constants.READ);
+        resourcePolicyService.removePolicies(context, child1, Constants.READ);
         context.restoreAuthSystemState();
 
         String tokenEperson = getAuthToken(eperson.getEmail(), password);
@@ -662,8 +665,8 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withName("Sub Community 2")
                 .build();
 
-        resoucePolicyService.removePolicies(context, parentCommunity, Constants.READ);
-        resoucePolicyService.removePolicies(context, child1, Constants.READ);
+        resourcePolicyService.removePolicies(context, parentCommunity, Constants.READ);
+        resourcePolicyService.removePolicies(context, child1, Constants.READ);
         context.restoreAuthSystemState();
 
         String tokenParentAdmin = getAuthToken(parentAdmin.getEmail(), "qwerty01");
@@ -763,7 +766,7 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withName("Private Community")
                 .build();
 
-        resoucePolicyService.removePolicies(context, privateCommunity, Constants.READ);
+        resourcePolicyService.removePolicies(context, privateCommunity, Constants.READ);
 
         context.restoreAuthSystemState();
 
@@ -779,7 +782,7 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withName("Private Community")
                 .build();
 
-        resoucePolicyService.removePolicies(context, privateCommunity, Constants.READ);
+        resourcePolicyService.removePolicies(context, privateCommunity, Constants.READ);
 
         context.restoreAuthSystemState();
 
@@ -815,7 +818,7 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withAdminGroup(privateCommunityAdmin2)
                 .build();
 
-        resoucePolicyService.removePolicies(context, privateCommunity, Constants.READ);
+        resourcePolicyService.removePolicies(context, privateCommunity, Constants.READ);
 
         context.restoreAuthSystemState();
 
@@ -1071,7 +1074,7 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withName("Sub Community2")
                 .build();
 
-        resoucePolicyService.removePolicies(context, communityChild2, Constants.READ);
+        resourcePolicyService.removePolicies(context, communityChild2, Constants.READ);
         context.restoreAuthSystemState();
 
         // anonymous can NOT see the private communities
@@ -1119,7 +1122,7 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withName("Sub Community2")
                 .build();
 
-        resoucePolicyService.removePolicies(context, communityChild2, Constants.READ);
+        resourcePolicyService.removePolicies(context, communityChild2, Constants.READ);
         context.restoreAuthSystemState();
 
         String tokenEperson = getAuthToken(eperson.getEmail(), password);
@@ -1176,9 +1179,9 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withName("Sub2 Community 1")
                 .build();
 
-        resoucePolicyService.removePolicies(context, parentCommunity, Constants.READ);
-        resoucePolicyService.removePolicies(context, communityChild1, Constants.READ);
-        resoucePolicyService.removePolicies(context, communityChild2, Constants.READ);
+        resourcePolicyService.removePolicies(context, parentCommunity, Constants.READ);
+        resourcePolicyService.removePolicies(context, communityChild1, Constants.READ);
+        resourcePolicyService.removePolicies(context, communityChild2, Constants.READ);
 
         context.restoreAuthSystemState();
 
@@ -1231,8 +1234,8 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withName("Collection 1 child 2")
                 .build();
 
-        resoucePolicyService.removePolicies(context, child1Col2, Constants.READ);
-        resoucePolicyService.removePolicies(context, child2, Constants.READ);
+        resourcePolicyService.removePolicies(context, child1Col2, Constants.READ);
+        resourcePolicyService.removePolicies(context, child2, Constants.READ);
         context.restoreAuthSystemState();
 
         // anonymous can see only public communities
@@ -1276,8 +1279,8 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withName("Collection 1 child 2")
                 .build();
 
-        resoucePolicyService.removePolicies(context, child1Col2, Constants.READ);
-        resoucePolicyService.removePolicies(context, child2, Constants.READ);
+        resourcePolicyService.removePolicies(context, child1Col2, Constants.READ);
+        resourcePolicyService.removePolicies(context, child2, Constants.READ);
         context.restoreAuthSystemState();
 
         String tokenAdmin = getAuthToken(admin.getEmail(), password);
@@ -1342,8 +1345,8 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withName("Child 2 Collection 1")
                 .build();
 
-        resoucePolicyService.removePolicies(context, child1Col2, Constants.READ);
-        resoucePolicyService.removePolicies(context, child2, Constants.READ);
+        resourcePolicyService.removePolicies(context, child1Col2, Constants.READ);
+        resourcePolicyService.removePolicies(context, child2, Constants.READ);
         context.restoreAuthSystemState();
 
         String tokenParentAdmin = getAuthToken(parentAdmin.getEmail(), "qwerty01");

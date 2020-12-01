@@ -78,6 +78,9 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
     @Autowired
     UriListHandlerService uriListHandlerService;
 
+    @Autowired
+    AuthorizeService authorizeService;
+
     private CommunityService cs;
 
     public CommunityRestRepository(CommunityService dsoService) {
@@ -351,7 +354,7 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
         }
 
         if (parentUuid != null) {
-            parent = communityService.find(context, UUID.fromString(parentUuid));
+            parent = cs.find(context, UUID.fromString(parentUuid));
             if (parent == null) {
                 throw new UnprocessableEntityException("The community uuid: " + parentUuid + " is wrong!");
             }
@@ -362,7 +365,7 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
             throw new UnprocessableEntityException("The community to clone doesn't exist");
         }
 
-        Community clone = communityService.cloneCommunity(context, community, parent, name);
+        Community clone = cs.cloneCommunity(context, community, parent, name);
 
         return converter.toRest(clone, utils.obtainProjection());
     }

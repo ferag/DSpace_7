@@ -80,6 +80,29 @@ public class ImportResearcherProfileServiceImplTest {
 
     }
 
+    @Test
+    public void dspaceItemInstalled() throws AuthorizeException, SQLException {
+
+        URI source = URI.create("http://localhost:8080/server/api/core/items/4ede600c-12e4-4934-9d93-ac56cc63f150");
+        Collection collection = mock(Collection.class);
+
+        ExternalDataObject externalDataObject = createExternalDataObject("4ede600c-12e4-4934-9d93-ac56cc63f150");
+        when(externalDataService.getExternalDataObject("dspace", "4ede600c-12e4-4934-9d93-ac56cc63f150"))
+            .thenReturn(Optional.of(externalDataObject));
+
+        WorkspaceItem workspaceItem = workspaceItem(8888);
+
+        when(externalDataService.createWorkspaceItemFromExternalDataObject(context, externalDataObject, collection))
+            .thenReturn(workspaceItem);
+
+        importResearcherProfileService.importProfile(context, source,
+            collection);
+
+        verify(installItemService).installItem(context, workspaceItem);
+        verify(currentRequest).setAttribute("context", context);
+
+    }
+
     @Test(expected = ResourceNotFoundException.class)
     public void resourceNotFoundThrowsException() throws AuthorizeException, SQLException {
 

@@ -100,6 +100,7 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
         private final String[] path;
 
         ResearcherProfileSource(URI source) {
+
             this.path = source.getPath().split("/");
         }
 
@@ -108,7 +109,15 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
         }
 
         String source() {
-            return path[path.length - 3];
+            return isDspace() ? "dspace" : path[path.length - 3];
+        }
+
+        //FIXME: improve way to distinguish between dspace and actually external objects
+        private boolean isDspace() {
+            return "server".equals(path[path.length - 5])
+                && "api".equals(path[path.length - 4])
+                && "core".equals(path[path.length - 3])
+                && "items".equals(path[path.length - 2]);
         }
     }
 }

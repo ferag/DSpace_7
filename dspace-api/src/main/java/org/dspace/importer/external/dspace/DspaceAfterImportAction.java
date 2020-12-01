@@ -29,6 +29,7 @@ import org.dspace.content.service.RelationshipTypeService;
 import org.dspace.core.Context;
 import org.dspace.external.model.ExternalDataObject;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Corrado Lombardi (corrado.lombardi at 4science.it)
@@ -42,6 +43,7 @@ public class DspaceAfterImportAction implements AfterImportAction, InitializingB
 
     private final RelationshipCoordinates relationshipCoordinates = new RelationshipCoordinates();
 
+    @Autowired
     public DspaceAfterImportAction(RelationshipTypeService relationshipTypeService,
                                    RelationshipService relationshipService,
                                    ItemService itemService,

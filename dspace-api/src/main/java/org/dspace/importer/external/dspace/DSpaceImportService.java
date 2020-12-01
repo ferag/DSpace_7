@@ -20,6 +20,7 @@ import org.dspace.importer.external.exception.MetadataSourceException;
 import org.dspace.importer.external.service.AbstractImportMetadataSourceService;
 import org.dspace.importer.external.service.components.QuerySource;
 import org.dspace.services.RequestService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
@@ -35,6 +36,7 @@ public class DSpaceImportService extends AbstractImportMetadataSourceService<Ite
     private final ItemService itemService;
     private final RequestService requestService;
 
+    @Autowired
     public DSpaceImportService(ItemService itemService, RequestService requestService,
                                DSpaceInternalMetadataFieldMapping metadataFieldMapping) {
         this.itemService = itemService;

@@ -35,25 +35,14 @@
         </property>
     </bean>
 
-    <bean id="dspaceImportService" class="org.dspace.importer.external.dspace.DSpaceImportService">
-        <constructor-arg name="itemService" ref="org.dspace.content.ItemServiceImpl"/>
-        <constructor-arg name="requestService" ref="org.dspace.services.RequestService"/>
-        <constructor-arg name="metadataFieldMapping" ref="dspaceInternalMetadataFieldMapping"/>
-    </bean>
+    <bean id="dspaceImportService" class="org.dspace.importer.external.dspace.DSpaceImportService"/>
 
     <bean id="dspaceInternalMetadataFieldMapping"
           class="org.dspace.importer.external.dspace.DSpaceInternalMetadataFieldMapping">
-        <constructor-arg name="itemService" ref="org.dspace.content.ItemServiceImpl"/>
-        <constructor-arg name="requestService" ref="org.dspace.services.RequestService"/>
-        <constructor-arg name="crisLayoutBoxService" ref="org.dspace.layout.service.impl.CrisLayoutBoxServiceImpl"/>
         <property name="identifierMetadata" value="dc.identifier"/>
     </bean>
 
     <bean id="dspaceAfterImportAction" class="org.dspace.importer.external.dspace.DspaceAfterImportAction">
-        <constructor-arg name="relationshipTypeService" ref="org.dspace.content.RelationshipTypeServiceImpl"/>
-        <constructor-arg name="relationshipService" ref="org.dspace.content.RelationshipServiceImpl"/>
-        <constructor-arg name="itemService" ref="org.dspace.content.ItemServiceImpl"/>
-        <constructor-arg name="entityTypeService" ref="org.dspace.content.EntityTypeServiceImpl"/>
 
         <property name="leftEntityType" value="PersonCv"/>
         <property name="rightEntityType" value="Person"/>

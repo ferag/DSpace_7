@@ -30,6 +30,7 @@ import org.dspace.layout.CrisLayoutField;
 import org.dspace.layout.LayoutSecurity;
 import org.dspace.layout.service.CrisLayoutBoxService;
 import org.dspace.services.RequestService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
@@ -46,6 +47,7 @@ public class DSpaceInternalMetadataFieldMapping implements MetadataFieldMapping<
 
     private String[] identifierMetadata = "dc.identifier".split("\\.");
 
+    @Autowired
     public DSpaceInternalMetadataFieldMapping(ItemService itemService, RequestService requestService,
                                               CrisLayoutBoxService crisLayoutBoxService) {
         this.itemService = itemService;

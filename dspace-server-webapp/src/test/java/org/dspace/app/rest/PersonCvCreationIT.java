@@ -165,8 +165,7 @@ public class PersonCvCreationIT extends AbstractControllerIntegrationTest {
 
         getClient(authToken).perform(post("/api/cris/profiles/")
             .contentType(TEXT_URI_LIST).content(
-                "http://localhost:8080/server/api/integration/externalsources/dspace/entryValues/" + person.getID()))
-            .andExpect(status().isCreated())
+                "http://localhost:8080/server/api/core/items/" + person.getID()))
             .andExpect(jsonPath("$.id", is(user.getID().toString())))
             .andExpect(jsonPath("$.visible", is(false)))
             .andExpect(jsonPath("$.type", is("profile")))

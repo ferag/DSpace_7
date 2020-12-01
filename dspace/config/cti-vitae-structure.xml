@@ -9,7 +9,6 @@
         <collection>
             <name>Profiles</name>
             <entity-type>PersonCv</entity-type>
-<!--            <submission-type>cv-profile</submission-type>-->
             <description/>
             <intro/>
             <copyright/>

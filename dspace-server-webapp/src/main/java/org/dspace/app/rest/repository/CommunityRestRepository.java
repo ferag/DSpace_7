@@ -7,7 +7,6 @@
  */
 package org.dspace.app.rest.repository;
 
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -65,52 +64,33 @@ import org.springframework.web.multipart.MultipartFile;
 public class CommunityRestRepository extends DSpaceObjectRestRepository<Community, CommunityRest> {
 
     @Autowired
-    private BitstreamService bitstreamService;
+    BitstreamService bitstreamService;
 
     @Autowired
-    private CommunityRestEqualityUtils communityRestEqualityUtils;
+    CommunityRestEqualityUtils communityRestEqualityUtils;
 
     @Autowired
     private GroupService groupService;
 
     @Autowired
-    private SearchService searchService;
+    SearchService searchService;
 
     @Autowired
-    private AuthorizeService authorizeService;
+    UriListHandlerService uriListHandlerService;
 
-    @Autowired
-    private UriListHandlerService uriListHandlerService;
-
-    private CommunityService communityService;
+    private CommunityService cs;
 
     public CommunityRestRepository(CommunityService dsoService) {
         super(dsoService);
-        this.communityService = dsoService;
+        this.cs = dsoService;
     }
 
     @Override
     @PreAuthorize("hasAuthority('ADMIN')")
     protected CommunityRest createAndReturn(Context context) throws AuthorizeException {
-        HttpServletRequest req = getRequestService().getCurrentRequest().getHttpServletRequest();
-        ObjectMapper mapper = new ObjectMapper();
-        CommunityRest communityRest;
-        try {
-            ServletInputStream input = req.getInputStream();
-            communityRest = mapper.readValue(input, CommunityRest.class);
-        } catch (IOException e1) {
-            throw new UnprocessableEntityException("Error parsing request body: " + e1.toString());
-        }
 
-        Community community;
-        try {
-            // top-level community
-            community = communityService.create(null, context);
-            communityService.update(context, community);
-            metadataConverter.setMetadata(context, community, communityRest.getMetadata());
-        } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        // top-level community
+        Community community = createCommunity(context, null);
 
         return converter.toRest(community, utils.obtainProjection());
     }
@@ -124,6 +104,24 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
                 "Cannot create a SubCommunity without providing a parent Community.");
         }
 
+        Community parent;
+        try {
+            parent = cs.find(context, id);
+            if (parent == null) {
+                throw new UnprocessableEntityException("Parent community for id: "
+                        + id + " not found");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+
+        // sub-community
+        Community community = createCommunity(context, parent);
+
+        return converter.toRest(community, utils.obtainProjection());
+    }
+
+    private Community createCommunity(Context context, Community parent) throws AuthorizeException {
         HttpServletRequest req = getRequestService().getCurrentRequest().getHttpServletRequest();
         ObjectMapper mapper = new ObjectMapper();
         CommunityRest communityRest;
@@ -135,21 +133,15 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
         }
 
         Community community;
+
         try {
-            Community parent = communityService.find(context, id);
-            if (parent == null) {
-                throw new UnprocessableEntityException("Parent community for id: "
-                    + id + " not found");
-            }
-            // sub-community
-            community = communityService.create(parent, context);
-            communityService.update(context, community);
-            metadataConverter.setMetadata(context, community, communityRest.getMetadata());
+            community = cs.create(parent, context);
+            cs.update(context, community);
+            metadataConverter.mergeMetadata(context, community, communityRest.getMetadata());
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-
-        return converter.toRest(community, utils.obtainProjection());
+        return community;
     }
 
     @Override
@@ -157,7 +149,7 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
     public CommunityRest findOne(Context context, UUID id) {
         Community community = null;
         try {
-            community = communityService.find(context, id);
+            community = cs.find(context, id);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -171,8 +163,8 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
     public Page<CommunityRest> findAll(Context context, Pageable pageable) {
         try {
             if (authorizeService.isAdmin(context)) {
-                long total = communityService.countTotal(context);
-                List<Community> communities = communityService.findAll(context, pageable.getPageSize(),
+                long total = cs.countTotal(context);
+                List<Community> communities = cs.findAll(context, pageable.getPageSize(),
                     Math.toIntExact(pageable.getOffset()));
                 return converter.toRestPage(communities, pageable, total, utils.obtainProjection());
             } else {
@@ -201,7 +193,7 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
     @SearchRestMethod(name = "top")
     public Page<CommunityRest> findAllTop(Pageable pageable) {
         try {
-            List<Community> communities = communityService.findAllTop(obtainContext());
+            List<Community> communities = cs.findAllTop(obtainContext());
             return converter.toRestPage(communities, pageable, utils.obtainProjection());
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -231,7 +223,7 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
         } catch (IOException e) {
             throw new UnprocessableEntityException("Error parsing community json: " + e.getMessage());
         }
-        Community community = communityService.find(context, id);
+        Community community = cs.find(context, id);
         if (community == null) {
             throw new ResourceNotFoundException(apiCategory + "." + model + " with id: " + id + " not found");
         }
@@ -249,7 +241,7 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
     protected void delete(Context context, UUID id) throws AuthorizeException {
         Community community = null;
         try {
-            community = communityService.find(context, id);
+            community = cs.find(context, id);
             if (community == null) {
                 throw new ResourceNotFoundException(
                     CommunityRest.CATEGORY + "." + CommunityRest.NAME + " with id: " + id + " not found");
@@ -258,7 +250,7 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
             throw new RuntimeException("Unable to find Community with id = " + id, e);
         }
         try {
-            communityService.delete(context, community);
+            cs.delete(context, community);
         } catch (SQLException e) {
             throw new RuntimeException("Unable to delete Community with id = " + id, e);
         } catch (IOException e) {
@@ -284,8 +276,8 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
             throw new UnprocessableEntityException(
                     "The community with the given uuid already has a logo: " + community.getID());
         }
-        Bitstream bitstream = communityService.setLogo(context, community, uploadfile.getInputStream());
-        communityService.update(context, community);
+        Bitstream bitstream = cs.setLogo(context, community, uploadfile.getInputStream());
+        cs.update(context, community);
         bitstreamService.update(context, bitstream);
         return converter.toRest(context.reloadEntity(bitstream), utils.obtainProjection());
     }
@@ -302,7 +294,7 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
     public GroupRest createAdminGroup(Context context, HttpServletRequest request, Community community)
         throws SQLException, AuthorizeException {
 
-        Group group = communityService.createAdministrators(context, community);
+        Group group = cs.createAdministrators(context, community);
         ObjectMapper mapper = new ObjectMapper();
         GroupRest groupRest = new GroupRest();
         try {
@@ -340,7 +332,7 @@ public class CommunityRestRepository extends DSpaceObjectRestRepository<Communit
     public void deleteAdminGroup(Context context, Community community)
         throws SQLException, AuthorizeException, IOException {
         Group adminGroup = community.getAdministrators();
-        communityService.removeAdministrators(context, community);
+        cs.removeAdministrators(context, community);
         groupService.delete(context, adminGroup);
     }
 

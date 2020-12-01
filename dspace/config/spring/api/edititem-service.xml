@@ -138,6 +138,19 @@
                         </bean>
                     </list>
                 </entry>
+                <entry key="personcv">
+                    <list>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="FULL" />
+                            <property name="security">
+                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                    ADMIN_OWNER
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="person-cv-edit" />
+                        </bean>
+                    </list>
+                </entry>
             </map>
         </property>
     </bean>

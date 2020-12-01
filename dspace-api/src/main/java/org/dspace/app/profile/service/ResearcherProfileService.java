@@ -7,6 +7,7 @@
  */
 package org.dspace.app.profile.service;
 
+import java.net.URI;
 import java.sql.SQLException;
 import java.util.UUID;
 
@@ -72,4 +73,16 @@ public interface ResearcherProfileService {
      */
     public void changeVisibility(Context context, ResearcherProfile profile, boolean visible)
         throws AuthorizeException, SQLException;
+
+    /**
+     * Creates a {@link ResearcherProfile} for the given {@link EPerson},
+     * importing profile data from source {@link URI}
+     *
+     * @param context the relevant DSpace Context.
+     * @param ePerson the ePerson
+     * @param source URI of the Item to be used as source for the profile.
+     * @return
+     */
+    public ResearcherProfile createFromSource(Context context, EPerson ePerson, URI source)
+            throws SQLException, AuthorizeException, SearchServiceException;
 }

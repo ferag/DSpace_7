@@ -582,19 +582,19 @@
     <dc-type>
         <schema>perucris</schema>
         <element>eperson</element>
-        <scope_note>dni</scope_note>
+        <qualifier>dni</qualifier>
     </dc-type>
 
     <dc-type>
         <schema>perucris</schema>
         <element>eperson</element>
-        <scope_note>orcid</scope_note>
+        <qualifier>orcid</qualifier>
     </dc-type>
 
     <dc-type>
         <schema>perucris</schema>
         <element>eperson</element>
-        <scope_note>birthdate</scope_note>
+        <qualifier>birthdate</qualifier>
     </dc-type>
 
 

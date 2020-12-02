@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.content.MetadataField;
 import org.dspace.content.service.DSpaceObjectLegacySupportService;
 import org.dspace.content.service.DSpaceObjectService;
 import org.dspace.core.Context;
@@ -258,4 +259,15 @@ public interface EPersonService extends DSpaceObjectService<EPerson>, DSpaceObje
      * @throws SQLException An exception that provides information on a database access error or other errors.
      */
     int countTotal(Context context) throws SQLException;
+
+    /**
+     * Find the eperson by their eid.
+     *
+     * @param context The relevant DSpace Context.
+     * @param field   The MetadataField representing the eid kind to check
+     * @param value   EPerson's eid to search by
+     * @return EPerson, or {@code null} if none such exists.
+     * @throws SQLException An exception that provides information on a database access error or other errors.
+     */
+    EPerson findByEid(Context context, MetadataField field, String eid) throws SQLException;
 }

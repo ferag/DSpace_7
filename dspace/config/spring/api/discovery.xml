@@ -146,8 +146,8 @@
         <property name="sidebarFacets">
 		<list>
 
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+<!--                <ref bean="graphPublicationByType" />-->
+<!--                <ref bean="graphPublicationByDate" />-->
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
                 <ref bean="searchFilterIssued" />
@@ -160,8 +160,8 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+<!--                <ref bean="graphPublicationByType" />-->
+<!--                <ref bean="graphPublicationByDate" />-->
                 <ref bean="searchFilterTitle" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
@@ -1706,23 +1706,23 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+<!--                <ref bean="graphPublicationByType" />-->
+<!--                <ref bean="graphPublicationByDate" />-->
                 <ref bean="searchFilterSubject"/>
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+<!--                <ref bean="graphPublicationByType" />-->
+<!--                <ref bean="graphPublicationByDate" />-->
                 <ref bean="searchFilterSubject"/>
                 <ref bean="searchFilterIdentifier"/>
-                <ref bean="searchFilterIsOrgUnitOfProjectRelation"/>
-                <ref bean="searchFilterIsPersonOfProjectRelation"/>
-                <ref bean="searchFilterIsPublicationOfProjectRelation"/>
-                <ref bean="searchFilterProjectInvestigator"/>
-                <ref bean="searchFilterProjectOrganisation"/>
+<!--                <ref bean="searchFilterIsOrgUnitOfProjectRelation"/>-->
+<!--                <ref bean="searchFilterIsPersonOfProjectRelation"/>-->
+<!--                <ref bean="searchFilterIsPublicationOfProjectRelation"/>-->
+<!--                <ref bean="searchFilterProjectInvestigator"/>-->
+<!--                <ref bean="searchFilterProjectOrganisation"/>-->
             </list>
         </property>
         <!--The sort filters for the discovery search-->

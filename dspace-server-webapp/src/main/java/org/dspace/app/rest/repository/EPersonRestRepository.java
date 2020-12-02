@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.NotFoundException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +32,8 @@ import org.dspace.app.rest.model.patch.Patch;
 import org.dspace.app.util.AuthorizeUtil;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.service.AuthorizeService;
+import org.dspace.content.MetadataField;
+import org.dspace.content.service.MetadataFieldService;
 import org.dspace.content.service.SiteService;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
@@ -68,6 +71,9 @@ public class EPersonRestRepository extends DSpaceObjectRestRepository<EPerson, E
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private MetadataFieldService metadataFieldService;
 
     @Autowired
     private AuthorizationFeatureService authorizationFeatureService;
@@ -279,7 +285,7 @@ public class EPersonRestRepository extends DSpaceObjectRestRepository<EPerson, E
             Context context = obtainContext();
             long total = es.searchResultCount(context, query);
             List<EPerson> epersons = es.search(context, query, Math.toIntExact(pageable.getOffset()),
-                                               Math.toIntExact(pageable.getPageSize()));
+                                                               Math.toIntExact(pageable.getPageSize()));
             return converter.toRestPage(epersons, pageable, total, utils.obtainProjection());
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -327,5 +333,36 @@ public class EPersonRestRepository extends DSpaceObjectRestRepository<EPerson, E
     public void afterPropertiesSet() throws Exception {
         discoverableEndpointsService.register(this, Arrays.asList(
                 new Link("/api/" + EPersonRest.CATEGORY + "/registrations", EPersonRest.NAME + "-registration")));
+    }
+
+    /**
+     * Find the eperson with the provided eid for a given key if any. The search is delegated to the
+     * {@link EPersonService#findByEid(Context, MetadataField, String)} method
+     *
+     * @param value
+     *            is the *required* eid value
+     * @param key
+     *            is the *required* key (eid type)
+     * @return a Page of EPersonRest instances matching the user query
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @SearchRestMethod(name = "byEid")
+    public EPersonRest findByEid(@Parameter(value = "value", required = true) String value,
+            @Parameter(value = "key", required = true) String key, Pageable pageable) {
+
+        try {
+            Context context = obtainContext();
+            // Currently the lookup is by metadata, so key is something like "perucris.eperson.dni"
+            // Ideally it should be binded to the eid describing table
+            MetadataField metadataField = metadataFieldService.findByString(context, key, '.');
+            EPerson eperson = es.findByEid(context, metadataField, value);
+            if (eperson == null) {
+                throw new NotFoundException();
+            }
+            return converter.toRest(eperson, utils.obtainProjection());
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 }

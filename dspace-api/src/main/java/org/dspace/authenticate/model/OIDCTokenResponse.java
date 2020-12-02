@@ -107,4 +107,72 @@ public class OIDCTokenResponse {
     public void setScope(String scope) {
         this.scope = scope;
     }
+
+    /**
+     * If the relationship is not verified, DSPACE will have to take actions
+     * to generate his internal grants metadata related this released token.
+     * It could happen, for example, when there is enough data to register a new eperson.
+     */
+    @JsonProperty("relationship_verified")
+    private boolean relationshipVerified;
+
+    /**
+     * The clientID for which the token has been release.
+     */
+    @JsonProperty("relationship_client_id")
+    private String relationshipClientId;
+
+    /**
+     * The client name for which the token has been release.
+     */
+    @JsonProperty("relationship_client_name")
+    private String relationshipClientName;
+
+    /**
+     * Compute issued at.
+     */
+    @JsonProperty("relationship_issued_at")
+    private Long relationshipIssuedAt;
+
+    /**
+     * Compute expire at.
+     */
+    @JsonProperty("relationship_expire_at")
+    private Long relationshipExpireAt;
+
+    public boolean isRelationshipVerified() {
+        return relationshipVerified;
+    }
+    public void setRelationshipVerified(boolean relationshipVerified) {
+        this.relationshipVerified = relationshipVerified;
+    }
+
+    public String getRelationshipClientId() {
+        return relationshipClientId;
+    }
+    public void setRelationshipClientId(String relationshipClientId) {
+        this.relationshipClientId = relationshipClientId;
+    }
+
+    public String getRelationshipClientName() {
+        return relationshipClientName;
+    }
+    public void setRelationshipClientName(String relationshipClientName) {
+        this.relationshipClientName = relationshipClientName;
+    }
+
+    public Long getRelationshipIssuedAt() {
+        return relationshipIssuedAt;
+    }
+    public void setRelationshipIssuedAt(Long relationshipIssuedAt) {
+        this.relationshipIssuedAt = relationshipIssuedAt;
+    }
+
+    public Long getRelationshipExpireAt() {
+        return relationshipExpireAt;
+    }
+    public void setRelationshipExpireAt(Long relationshipExpireAt) {
+        this.relationshipExpireAt = relationshipExpireAt;
+    }
+
 }

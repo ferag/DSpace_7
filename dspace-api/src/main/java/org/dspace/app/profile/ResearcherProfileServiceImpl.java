@@ -11,6 +11,7 @@ import static org.dspace.content.authority.Choices.CF_ACCEPTED;
 import static org.dspace.core.Constants.READ;
 import static org.dspace.eperson.Group.ANONYMOUS;
 
+import java.net.URI;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.UUID;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.dspace.app.exception.ResourceConflictException;
+import org.dspace.app.profile.service.ImportResearcherProfileService;
 import org.dspace.app.profile.service.ResearcherProfileService;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.service.AuthorizeService;
@@ -50,6 +52,7 @@ import org.springframework.util.Assert;
  * Implementation of {@link ResearcherProfileService}.
  *
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
+ * @author Corrado Lombardi (corrado.lombardi at 4science.it)
  *
  */
 public class ResearcherProfileServiceImpl implements ResearcherProfileService {
@@ -79,6 +82,9 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
 
     @Autowired
     private AuthorizeService authorizeService;
+
+    @Autowired
+    private ImportResearcherProfileService importResearcherProfileService;
 
     @Override
     public ResearcherProfile findById(Context context, UUID id) throws SQLException, AuthorizeException {
@@ -111,6 +117,37 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
         Item item = createProfileItem(context, ePerson, collection);
         context.restoreAuthSystemState();
         return new ResearcherProfile(item);
+    }
+
+    @Override
+    public ResearcherProfile createFromSource(Context context, EPerson ePerson, URI source)
+            throws SQLException, AuthorizeException, SearchServiceException {
+
+        Item profileItem = findResearcherProfileItemById(context, ePerson.getID());
+        if (profileItem != null) {
+            ResearcherProfile profile = new ResearcherProfile(profileItem);
+            throw new ResourceConflictException("A profile is already linked to the provided User", profile);
+        }
+
+        Collection collection = findProfileCollection(context);
+        if (collection == null) {
+            throw new IllegalStateException("No collection found for researcher profiles");
+        }
+
+        context.turnOffAuthorisationSystem();
+        Item item = importResearcherProfileService.importProfile(context, source, collection);
+        itemService.addMetadata(context, item, "cris", "owner", null, null, ePerson.getName(),
+                ePerson.getID().toString(), CF_ACCEPTED);
+
+        setPolicies(context, ePerson, item);
+        context.restoreAuthSystemState();
+        return new ResearcherProfile(item);
+    }
+
+    private void setPolicies(Context context, EPerson ePerson, Item item) throws SQLException, AuthorizeException {
+        Group anonymous = groupService.findByName(context, ANONYMOUS);
+        authorizeService.removeGroupPolicies(context, item, anonymous);
+        authorizeService.addPolicy(context, item, READ, ePerson);
     }
 
     @Override
@@ -200,9 +237,7 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
 
         item = installItemService.installItem(context, workspaceItem);
 
-        Group anonymous = groupService.findByName(context, ANONYMOUS);
-        authorizeService.removeGroupPolicies(context, item, anonymous);
-        authorizeService.addPolicy(context, item, READ, ePerson);
+        setPolicies(context, ePerson, item);
 
         return item;
     }

@@ -24,12 +24,19 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dspace.content.MetadataField;
+import org.dspace.content.MetadataValue;
 import org.dspace.core.AbstractHibernateDSODAO;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.EPerson_;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.dao.EPersonDAO;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 
 /**
  * Hibernate implementation of the Database Access Object interface class for the EPerson object.
@@ -203,5 +210,23 @@ public class EPersonDAOImpl extends AbstractHibernateDSODAO<EPerson> implements 
     @Override
     public int countRows(Context context) throws SQLException {
         return count(createQuery(context, "SELECT count(*) FROM EPerson"));
+    }
+
+    @Override
+    @Deprecated
+    public List<EPerson> findByMetadataEid(Context context, MetadataField field, String eid)
+            throws SQLException {
+
+        Criteria criteria = getHibernateSession(context).createCriteria(EPerson.class, "eperson");
+
+        DetachedCriteria subcriteria = DetachedCriteria.forClass(MetadataValue.class, "mv");
+        subcriteria.add(Property.forName("mv.dSpaceObject").eqProperty("eperson.id"));
+        subcriteria.setProjection(Projections.property("mv.dSpaceObject"));
+        subcriteria.add(Restrictions.eq("metadataField", field));
+        subcriteria.add(Property.forName("mv.value").eq(eid));
+        criteria.add(Subqueries.exists(subcriteria));
+
+        return ((List<EPerson>) criteria.list());
+
     }
 }

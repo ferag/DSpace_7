@@ -112,6 +112,11 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step>
+    <step id="person-cv" mandatory="true">
+      <heading>submit.progressbar.describe.person-cv</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step>
     <step id="extraction" mandatory="false">
       <heading>submit.progressbar.extraction</heading>
       <processing-class>org.dspace.app.rest.submit.step.ExtractMetadataStep</processing-class>
@@ -190,6 +195,10 @@
       <step id="upload" />
       <step id="license" />
     </submission-process>
+    <submission-process name="person-cv-edit">
+      <step id="person-cv" />
+      <step id="upload" />
+    </submission-process>
     <submission-process name="event">
       <step id="collection" />
       <step id="event" />
@@ -207,6 +216,7 @@
       <step id="license" />
     </submission-process>
     <submission-process name="patent-edit">
+      <step id="collection" />
       <step id="patent" />
       <step id="patent_indexing" />
       <step id="patent_references" />
@@ -221,6 +231,7 @@
       <step id="license" />
     </submission-process>
     <submission-process name="funding-edit">
+      <step id="collection" />
       <step id="funding" />
       <step id="upload" />
     </submission-process>

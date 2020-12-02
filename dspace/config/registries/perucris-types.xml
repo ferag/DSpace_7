@@ -577,6 +577,25 @@
         <scope_note></scope_note>
     </dc-type>
 
+    <!-- metadata for registration via external providers -->
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>eperson</element>
+        <scope_note>dni</scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>eperson</element>
+        <scope_note>orcid</scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>eperson</element>
+        <scope_note>birthdate</scope_note>
+    </dc-type>
 
 
     <!-- custom PeruCRIS relations metadata -->

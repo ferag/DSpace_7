@@ -9,6 +9,8 @@ package org.dspace.content.integration.crosswalks;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.collections4.iterators.EmptyIterator.emptyIterator;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.dspace.core.CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -47,7 +49,6 @@ import org.dspace.content.MetadataValue;
 import org.dspace.content.crosswalk.CrosswalkException;
 import org.dspace.content.crosswalk.CrosswalkMode;
 import org.dspace.content.crosswalk.CrosswalkObjectNotSupported;
-import org.dspace.content.crosswalk.StreamDisseminationCrosswalk;
 import org.dspace.content.integration.crosswalks.evaluators.ConditionEvaluator;
 import org.dspace.content.integration.crosswalks.evaluators.ConditionEvaluatorMapper;
 import org.dspace.content.integration.crosswalks.model.TemplateLine;
@@ -56,7 +57,6 @@ import org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldMappe
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
-import org.dspace.core.CrisConstants;
 import org.dspace.discovery.DiscoverQuery;
 import org.dspace.discovery.DiscoverResultIterator;
 import org.dspace.discovery.configuration.DiscoveryConfiguration;
@@ -67,13 +67,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 
 /**
- * Implementation of {@StreamDisseminationCrosswalk} to produce an output from
- * an Item starting from a template.
+ * Implementation of {@link ItemExportCrosswalk} to produce an output from an
+ * Item starting from a template.
  *
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  *
  */
-public class ReferCrosswalk implements StreamDisseminationCrosswalk, FileNameDisseminator {
+public class ReferCrosswalk implements ItemExportCrosswalk {
 
     private static Logger log = Logger.getLogger(ReferCrosswalk.class);
 
@@ -352,7 +352,7 @@ public class ReferCrosswalk implements StreamDisseminationCrosswalk, FileNameDis
                 }
 
                 String metadataValue = metadata.get(i);
-                if (!CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE.equals(metadataValue)) {
+                if (isNotBlank(metadataValue) && !PLACEHOLDER_PARENT_METADATA_VALUE.equals(metadataValue)) {
                     appendLine(lines, line, metadataValue);
                 }
 
@@ -533,7 +533,7 @@ public class ReferCrosswalk implements StreamDisseminationCrosswalk, FileNameDis
     }
 
     public CrosswalkMode getCrosswalkMode() {
-        return this.crosswalkMode != null ? this.crosswalkMode : StreamDisseminationCrosswalk.super.getCrosswalkMode();
+        return Optional.ofNullable(this.crosswalkMode).orElse(ItemExportCrosswalk.super.getCrosswalkMode());
     }
 
 }

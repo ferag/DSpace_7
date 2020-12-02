@@ -13,9 +13,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -622,5 +624,20 @@ public class EPersonServiceImpl extends DSpaceObjectServiceImpl<EPerson> impleme
     @Override
     public int countTotal(Context context) throws SQLException {
         return ePersonDAO.countRows(context);
+    }
+
+    @Override
+    public EPerson findByEid(Context context, MetadataField field, String eid) throws SQLException {
+
+        // *** Just a PoC, values must be distinct
+        Map<UUID, EPerson> map = new HashMap<UUID, EPerson>();
+        ePersonDAO.findByMetadataEid(context, field, eid).stream().forEach(eperson -> {
+            map.put(eperson.getID(), eperson);
+        });
+        if (map.values().size() > 1) {
+            // field is not unique
+            throw new IllegalStateException();
+        }
+        return map.values().stream().findFirst().orElse(null);
     }
 }

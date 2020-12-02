@@ -12,6 +12,8 @@ import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
 import static junit.framework.TestCase.assertEquals;
 import static org.dspace.app.rest.matcher.CommunityMatcher.matchCommunity;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadata;
+import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadataNotEmpty;
+import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadataStringEndsWith;
 import static org.dspace.builder.CollectionBuilder.createCollection;
 import static org.dspace.builder.CommunityBuilder.createCommunity;
 import static org.dspace.builder.CommunityBuilder.createSubCommunity;
@@ -84,19 +86,19 @@ import org.springframework.test.web.servlet.MvcResult;
 public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest {
 
     @Autowired
-    private CommunityConverter communityConverter;
+    CommunityConverter communityConverter;
 
     @Autowired
-    private CommunityService communityService;
+    CommunityService communityService;
 
     @Autowired
-    private AuthorizeService authorizeService;
-
-    @Autowired
-    private ResourcePolicyService resoucePolicyService;
+    AuthorizeService authorizeService;
 
     @Autowired
     private ConfigurationService configurationService;
+
+    @Autowired
+    private ResourcePolicyService resourcePolicyService;
 
     @Test
     public void createTest() throws Exception {
@@ -138,6 +140,8 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
         // Capture the UUID of the created Community (see andDo() below)
         AtomicReference<UUID> idRef = new AtomicReference<>();
         AtomicReference<UUID> idRefNoEmbeds = new AtomicReference<>();
+        AtomicReference<String> handle = new AtomicReference<>();
+
         try {
             getClient(authToken).perform(post("/api/core/communities")
                                         .content(mapper.writeValueAsBytes(comm))
@@ -157,15 +161,26 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                                     hasJsonPath("$._links.subcommunities.href", not(empty())),
                                     hasJsonPath("$._links.self.href", not(empty())),
                                     hasJsonPath("$.metadata", Matchers.allOf(
-                                        matchMetadata("dc.description", "<p>Some cool HTML code here</p>"),
-                                        matchMetadata("dc.description.abstract",
-                                               "Sample top-level community created via the REST API"),
-                                        matchMetadata("dc.description.tableofcontents", "<p>HTML News</p>"),
-                                        matchMetadata("dc.rights", "Custom Copyright Text"),
-                                        matchMetadata("dc.title", "Title Text")
+                                            matchMetadata("dc.description", "<p>Some cool HTML code here</p>"),
+                                            matchMetadata("dc.description.abstract",
+                                                   "Sample top-level community created via the REST API"),
+                                            matchMetadata("dc.description.tableofcontents", "<p>HTML News</p>"),
+                                            matchMetadata("dc.rights", "Custom Copyright Text"),
+                                            matchMetadata("dc.title", "Title Text")
+                                            )
                                         )
-                                    )
                                 )))
+
+                                // capture "handle" returned in JSON response and check against the metadata
+                                .andDo(result -> handle.set(
+                                        read(result.getResponse().getContentAsString(), "$.handle")))
+                                .andExpect(jsonPath("$",
+                                    hasJsonPath("$.metadata", Matchers.allOf(
+                                        matchMetadataNotEmpty("dc.identifier.uri"),
+                                        matchMetadataStringEndsWith("dc.identifier.uri", handle.get())
+                                        )
+                                    )))
+
                                 // capture "id" returned in JSON response
                                 .andDo(result -> idRef
                                     .set(UUID.fromString(read(result.getResponse().getContentAsString(), "$.id"))));
@@ -254,8 +269,9 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
             .put("dc.title",
                 new MetadataValueRest("Title Text")));
 
-        // Capture the UUID of the created Community (see andDo() below)
+        // Capture the UUID and Handle of the created Community (see andDo() below)
         AtomicReference<UUID> idRef = new AtomicReference<>();
+        AtomicReference<String> handle = new AtomicReference<>();
         try {
             getClient(authToken).perform(post("/api/core/communities")
                 .content(mapper.writeValueAsBytes(comm))
@@ -274,17 +290,26 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                                     hasJsonPath("$._links.subcommunities.href", not(empty())),
                                     hasJsonPath("$._links.self.href", not(empty())),
                                     hasJsonPath("$.metadata", Matchers.allOf(
-                                        MetadataMatcher.matchMetadata("dc.description",
-                                            "<p>Some cool HTML code here</p>"),
-                                        MetadataMatcher.matchMetadata("dc.description.abstract",
-                                            "Sample top-level community created via the REST API"),
-                                        MetadataMatcher.matchMetadata("dc.description.tableofcontents",
-                                            "<p>HTML News</p>"),
-                                        MetadataMatcher.matchMetadata("dc.rights",
-                                            "Custom Copyright Text"),
-                                        MetadataMatcher.matchMetadata("dc.title",
-                                            "Title Text")
+                                            MetadataMatcher.matchMetadata("dc.description",
+                                                "<p>Some cool HTML code here</p>"),
+                                            MetadataMatcher.matchMetadata("dc.description.abstract",
+                                                "Sample top-level community created via the REST API"),
+                                            MetadataMatcher.matchMetadata("dc.description.tableofcontents",
+                                                "<p>HTML News</p>"),
+                                            MetadataMatcher.matchMetadata("dc.rights",
+                                                "Custom Copyright Text"),
+                                            MetadataMatcher.matchMetadata("dc.title",
+                                                "Title Text")
+                                            )
                                         )
+                                )))
+                                // capture "handle" returned in JSON response and check against the metadata
+                                .andDo(result -> handle.set(
+                                        read(result.getResponse().getContentAsString(), "$.handle")))
+                                .andExpect(jsonPath("$",
+                                    hasJsonPath("$.metadata", Matchers.allOf(
+                                        matchMetadataNotEmpty("dc.identifier.uri"),
+                                        matchMetadataStringEndsWith("dc.identifier.uri", handle.get())
                                     )
                                 )))
                                 // capture "id" returned in JSON response
@@ -574,8 +599,8 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withName("Sub Community 2")
                 .build();
 
-        resoucePolicyService.removePolicies(context, parentCommunity, Constants.READ);
-        resoucePolicyService.removePolicies(context, child1, Constants.READ);
+        resourcePolicyService.removePolicies(context, parentCommunity, Constants.READ);
+        resourcePolicyService.removePolicies(context, child1, Constants.READ);
         context.restoreAuthSystemState();
 
         // anonymous can see only public communities
@@ -601,8 +626,8 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                    .withName("Sub Community 2")
                    .build();
 
-        resoucePolicyService.removePolicies(context, parentCommunity, Constants.READ);
-        resoucePolicyService.removePolicies(context, child1, Constants.READ);
+        resourcePolicyService.removePolicies(context, parentCommunity, Constants.READ);
+        resourcePolicyService.removePolicies(context, child1, Constants.READ);
         context.restoreAuthSystemState();
 
         String tokenEperson = getAuthToken(eperson.getEmail(), password);
@@ -640,8 +665,8 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withName("Sub Community 2")
                 .build();
 
-        resoucePolicyService.removePolicies(context, parentCommunity, Constants.READ);
-        resoucePolicyService.removePolicies(context, child1, Constants.READ);
+        resourcePolicyService.removePolicies(context, parentCommunity, Constants.READ);
+        resourcePolicyService.removePolicies(context, child1, Constants.READ);
         context.restoreAuthSystemState();
 
         String tokenParentAdmin = getAuthToken(parentAdmin.getEmail(), "qwerty01");
@@ -741,7 +766,7 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withName("Private Community")
                 .build();
 
-        resoucePolicyService.removePolicies(context, privateCommunity, Constants.READ);
+        resourcePolicyService.removePolicies(context, privateCommunity, Constants.READ);
 
         context.restoreAuthSystemState();
 
@@ -757,7 +782,7 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withName("Private Community")
                 .build();
 
-        resoucePolicyService.removePolicies(context, privateCommunity, Constants.READ);
+        resourcePolicyService.removePolicies(context, privateCommunity, Constants.READ);
 
         context.restoreAuthSystemState();
 
@@ -793,7 +818,7 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withAdminGroup(privateCommunityAdmin2)
                 .build();
 
-        resoucePolicyService.removePolicies(context, privateCommunity, Constants.READ);
+        resourcePolicyService.removePolicies(context, privateCommunity, Constants.READ);
 
         context.restoreAuthSystemState();
 
@@ -1049,7 +1074,7 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withName("Sub Community2")
                 .build();
 
-        resoucePolicyService.removePolicies(context, communityChild2, Constants.READ);
+        resourcePolicyService.removePolicies(context, communityChild2, Constants.READ);
         context.restoreAuthSystemState();
 
         // anonymous can NOT see the private communities
@@ -1097,7 +1122,7 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withName("Sub Community2")
                 .build();
 
-        resoucePolicyService.removePolicies(context, communityChild2, Constants.READ);
+        resourcePolicyService.removePolicies(context, communityChild2, Constants.READ);
         context.restoreAuthSystemState();
 
         String tokenEperson = getAuthToken(eperson.getEmail(), password);
@@ -1154,9 +1179,9 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withName("Sub2 Community 1")
                 .build();
 
-        resoucePolicyService.removePolicies(context, parentCommunity, Constants.READ);
-        resoucePolicyService.removePolicies(context, communityChild1, Constants.READ);
-        resoucePolicyService.removePolicies(context, communityChild2, Constants.READ);
+        resourcePolicyService.removePolicies(context, parentCommunity, Constants.READ);
+        resourcePolicyService.removePolicies(context, communityChild1, Constants.READ);
+        resourcePolicyService.removePolicies(context, communityChild2, Constants.READ);
 
         context.restoreAuthSystemState();
 
@@ -1209,8 +1234,8 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withName("Collection 1 child 2")
                 .build();
 
-        resoucePolicyService.removePolicies(context, child1Col2, Constants.READ);
-        resoucePolicyService.removePolicies(context, child2, Constants.READ);
+        resourcePolicyService.removePolicies(context, child1Col2, Constants.READ);
+        resourcePolicyService.removePolicies(context, child2, Constants.READ);
         context.restoreAuthSystemState();
 
         // anonymous can see only public communities
@@ -1254,8 +1279,8 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withName("Collection 1 child 2")
                 .build();
 
-        resoucePolicyService.removePolicies(context, child1Col2, Constants.READ);
-        resoucePolicyService.removePolicies(context, child2, Constants.READ);
+        resourcePolicyService.removePolicies(context, child1Col2, Constants.READ);
+        resourcePolicyService.removePolicies(context, child2, Constants.READ);
         context.restoreAuthSystemState();
 
         String tokenAdmin = getAuthToken(admin.getEmail(), password);
@@ -1320,8 +1345,8 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
                 .withName("Child 2 Collection 1")
                 .build();
 
-        resoucePolicyService.removePolicies(context, child1Col2, Constants.READ);
-        resoucePolicyService.removePolicies(context, child2, Constants.READ);
+        resourcePolicyService.removePolicies(context, child1Col2, Constants.READ);
+        resourcePolicyService.removePolicies(context, child2, Constants.READ);
         context.restoreAuthSystemState();
 
         String tokenParentAdmin = getAuthToken(parentAdmin.getEmail(), "qwerty01");

@@ -99,6 +99,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, MetadataSchemaEnum.DC.getName(), "contributor", "editor", editorName);
     }
 
+    public ItemBuilder withEditor(final String editorName, final String authority) {
+        return addMetadataValue(item, DC.getName(), "contributor", "editor", null, editorName, authority, 600);
+    }
+
     public ItemBuilder withEditorAffiliation(String affiliation) {
         return addMetadataValue(item, "oairecerif", "editor", "affiliation", affiliation);
     }
@@ -173,6 +177,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withPatentNo(String patentNo) {
         return addMetadataValue(item, "dc", "identifier", "patentno", patentNo);
+    }
+
+    public ItemBuilder withCitationIdentifier(String citation) {
+        return addMetadataValue(item, "dc", "identifier", "citation", citation);
     }
 
     public ItemBuilder withFullName(String fullname) {
@@ -383,6 +391,22 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "dc", "relation", "doi", doi);
     }
 
+    public ItemBuilder withRelationIsbn(String isbn) {
+        return addMetadataValue(item, "dc", "relation", "isbn", isbn);
+    }
+
+    public ItemBuilder withRelationProject(String project) {
+        return addMetadataValue(item, "dc", "relation", "project", project);
+    }
+
+    public ItemBuilder withRelationGrantno(String grantno) {
+        return addMetadataValue(item, "dc", "relation", "grantno", grantno);
+    }
+
+    public ItemBuilder withRelationFunding(String funding) {
+        return addMetadataValue(item, "dc", "relation", "funding", funding);
+    }
+
     public ItemBuilder withRelationConference(String conference) {
         return addMetadataValue(item, "dc", "relation", "conference", conference);
     }
@@ -506,6 +530,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withFundingEndDate(String endDate) {
         return addMetadataValue(item, "oairecerif", "funding", "endDate", endDate);
+    }
+
+    public ItemBuilder withCrisSourceId(String sourceId) {
+        return addMetadataValue(item, "cris", "sourceId", null, sourceId);
     }
 
     public ItemBuilder withOrganizationRuc(String ruc) {

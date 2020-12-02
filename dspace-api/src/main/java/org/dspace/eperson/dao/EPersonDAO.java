@@ -50,4 +50,7 @@ public interface EPersonDAO extends DSpaceObjectDAO<EPerson>, DSpaceObjectLegacy
     public List<EPerson> findAllSubscribers(Context context) throws SQLException;
 
     int countRows(Context context) throws SQLException;
+
+    List<EPerson> findByMetadataEid(Context context, MetadataField field, String eid)
+            throws SQLException;
 }

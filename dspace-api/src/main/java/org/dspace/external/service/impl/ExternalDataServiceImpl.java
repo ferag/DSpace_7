@@ -116,4 +116,8 @@ public class ExternalDataServiceImpl implements ExternalDataService {
             externalDataObject.getId()));
         return workspaceItem;
     }
+
+    public void setExternalDataProviders(List<ExternalDataProvider> externalDataProviders) {
+        this.externalDataProviders = externalDataProviders;
+    }
 }

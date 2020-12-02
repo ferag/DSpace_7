@@ -44,6 +44,8 @@ import org.dspace.eperson.Group;
 import org.dspace.eperson.GroupType;
 import org.dspace.eperson.service.GroupService;
 import org.dspace.event.Event;
+import org.dspace.identifier.IdentifierException;
+import org.dspace.identifier.service.IdentifierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
@@ -81,6 +83,8 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
 
     @Autowired
     protected SiteService siteService;
+    @Autowired(required = true)
+    protected IdentifierService identifierService;
 
     @Autowired
     protected ResourcePolicyService resourcePolicyService;
@@ -105,17 +109,6 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
 
         Community newCommunity = communityDAO.create(context, new Community());
 
-        try {
-            if (handle == null) {
-                handleService.createHandle(context, newCommunity);
-            } else {
-                handleService.createHandle(context, newCommunity, handle);
-            }
-        } catch (IllegalStateException ie) {
-            //If an IllegalStateException is thrown, then an existing object is already using this handle
-            throw ie;
-        }
-
         if (parent != null) {
             parent.addSubCommunity(newCommunity);
             newCommunity.addParentCommunity(parent);
@@ -130,14 +123,24 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
 
         communityDAO.save(context, newCommunity);
 
+        try {
+            if (handle == null) {
+                identifierService.register(context, newCommunity);
+            } else {
+                identifierService.register(context, newCommunity, handle);
+            }
+        }  catch (IllegalStateException | IdentifierException ex) {
+            throw new IllegalStateException(ex);
+        }
+
         context.addEvent(new Event(Event.CREATE, Constants.COMMUNITY, newCommunity.getID(), newCommunity.getHandle(),
-                                   getIdentifiers(context, newCommunity)));
+                getIdentifiers(context, newCommunity)));
 
         // if creating a top-level Community, simulate an ADD event at the Site.
         if (parent == null) {
             context.addEvent(new Event(Event.ADD, Constants.SITE, siteService.findSite(context).getID(),
-                                       Constants.COMMUNITY, newCommunity.getID(), newCommunity.getHandle(),
-                                       getIdentifiers(context, newCommunity)));
+                    Constants.COMMUNITY, newCommunity.getID(), newCommunity.getHandle(),
+                    getIdentifiers(context, newCommunity)));
         }
 
         log.info(LogManager.getHeader(context, "create_community",

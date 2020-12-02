@@ -101,6 +101,8 @@
     <bean class="org.dspace.harvest.HarvestedCollectionServiceImpl"/>
     <bean class="org.dspace.harvest.HarvestedItemServiceImpl"/>
     <bean class="org.dspace.harvest.HarvestSchedulingServiceImpl"/>
+    <bean class="org.dspace.harvest.OAIHarvester"/>
+    <bean class="org.dspace.harvest.OAIHarvesterClientImpl"/>
 
     <bean class="org.dspace.identifier.DOIServiceImpl"/>
 
@@ -136,7 +138,6 @@
     <bean class="org.dspace.batch.ImpBitstreamServiceImpl"/>
     <bean class="org.dspace.batch.ImpMetadatavalueServiceImpl"/>
     <bean class="org.dspace.batch.ImpRecordServiceImpl"/>
-    <bean class="org.dspace.batch.ImpRecordToItemServiceImpl"/>
     <bean class="org.dspace.batch.ImpBitstreamMetadatavalueServiceImpl"/>
     <bean class="org.dspace.batch.ImpWorkflowNStateServiceImpl"/>
 

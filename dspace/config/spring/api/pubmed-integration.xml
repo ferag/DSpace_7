@@ -29,6 +29,7 @@
         <entry key-ref="oaire.citation.volume" value-ref="volumeContrib"/>
         <entry key-ref="oaire.citation.issue" value-ref="issueContrib"/>
         <entry key-ref="dc.identifier.doi" value-ref="doiContrib"/>
+        <entry key-ref="dc.type" value-ref="typeContrib"/>
 
     </util:map>
 
@@ -150,6 +151,12 @@
         <property name="prefixToNamespaceMapping" ref="prefixToNamespaceMapping"/>
     </bean>
 
+    <bean id="typeContrib" class="org.dspace.importer.external.metadatamapping.contributor.SimpleXpathMetadatumContributor">
+        <property name="field" ref="dc.type"/>
+        <property name="query" value="descendant::PublicationTypeList/PublicationType"/>
+        <property name="prefixToNamespaceMapping" ref="prefixToNamespaceMapping"/>
+    </bean>
+
     <bean id="dc.title" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
         <constructor-arg value="dc.title"/>
     </bean>
@@ -198,6 +205,10 @@
 
     <bean id="dc.identifier.doi" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
         <constructor-arg value="dc.identifier.doi"/>
+    </bean>
+
+    <bean id="dc.type" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
+        <constructor-arg value="dc.type"/>
     </bean>
 
     <util:map id="prefixToNamespaceMapping">

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<import_structure>
+    <community>
+        <name>CTI Vitae</name>
+        <description/>
+        <intro/>
+        <copyright/>
+        <sidebar/>
+        <collection>
+            <name>Profiles</name>
+            <entity-type>PersonCv</entity-type>
+            <description/>
+            <intro/>
+            <copyright/>
+            <sidebar/>
+            <license/>
+            <provenance/>
+        </collection>
+    </community>
+</import_structure>
+
+
+
+
+
+
+

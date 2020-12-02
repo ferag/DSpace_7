@@ -143,7 +143,7 @@
     </dc-type>
 
     <dc-type>
-        <schema>perucris</schema>
+        <schema>dc</schema>
         <element>subject</element>
         <qualifier>cip</qualifier>
         <scope_note></scope_note>
@@ -171,6 +171,20 @@
         <schema>perucris</schema>
         <element>identifier</element>
         <qualifier>dni</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>identifier</element>
+        <qualifier>passport</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>identifier</element>
+        <qualifier>immigrationCard</qualifier>
         <scope_note></scope_note>
     </dc-type>
 
@@ -306,6 +320,13 @@
         <scope_note></scope_note>
     </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>description</element>
+        <qualifier>internalNote</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
 <!--    following metadata have a different schema but are used only in PeruCris-->
     <dc-type>
         <schema>crisrp</schema>
@@ -322,44 +343,52 @@
     </dc-type>
 
 <!--    geolocations-->
+<!--Using Openaire datacite schema-->
+
     <dc-type>
-        <schema>perucris</schema>
-        <element>geolocationPoint</element>
-        <qualifier>longitude</qualifier>
+        <schema>datacite</schema>
+        <element>geoLocationPlace</element>
         <scope_note></scope_note>
     </dc-type>
 
     <dc-type>
-        <schema>perucris</schema>
-        <element>geolocationPoint</element>
-        <qualifier>latitude</qualifier>
+        <schema>datacite</schema>
+        <element>geoLocationPoint</element>
+        <qualifier>pointLongitude</qualifier>
         <scope_note></scope_note>
     </dc-type>
 
     <dc-type>
-        <schema>perucris</schema>
-        <element>geolocationBox</element>6
+        <schema>datacite</schema>
+        <element>geoLocationPoint</element>
+        <qualifier>pointLatitude</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>datacite</schema>
+        <element>geoLocationBox</element>6
         <qualifier>westBoundLongitude</qualifier>
         <scope_note></scope_note>
     </dc-type>
 
     <dc-type>
-        <schema>perucris</schema>
-        <element>geolocationBox</element>
+        <schema>datacite</schema>
+        <element>geoLocationBox</element>
         <qualifier>eastBoundLongitude</qualifier>
         <scope_note></scope_note>
     </dc-type>
 
     <dc-type>
-        <schema>perucris</schema>
-        <element>geolocationBox</element>
+        <schema>datacite</schema>
+        <element>geoLocationBox</element>
         <qualifier>southBoundLongitude</qualifier>
         <scope_note></scope_note>
     </dc-type>
 
     <dc-type>
-        <schema>perucris</schema>
-        <element>geolocationBox</element>
+        <schema>datacite</schema>
+        <element>geoLocationBox</element>
         <qualifier>northBoundLongitude</qualifier>
         <scope_note></scope_note>
     </dc-type>
@@ -439,6 +468,8 @@
         <scope_note></scope_note>
     </dc-type>
 
+
+
     <dc-type>
         <schema>perucris</schema>
         <element>nacimiento</element>
@@ -457,6 +488,126 @@
         <schema>perucris</schema>
         <element>nacimiento</element>
         <qualifier>distrito</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <!-- contact data -->
+    <dc-type>
+        <schema>perucris</schema>
+        <element>phone</element>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>mobilePhone</element>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>address</element>
+        <qualifier>legalAddress</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>address</element>
+        <qualifier>streetAddress</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>address</element>
+        <qualifier>postalCode</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>address</element>
+        <qualifier>addressCountry</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <!-- funding amount executed -->
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>executedAmount</element>
+        <qualifier>currency</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>executedAmount</element>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <!-- project types for PeruCris -->
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>project</element>
+        <qualifier>typeOcde</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>project</element>
+        <qualifier>typeOther</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <!-- custom PeruCris crispj metadata -->
+
+    <dc-type>
+        <schema>crispj</schema>
+        <element>techniciansAndEquivalentStaff</element>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>crispj</schema>
+        <element>supportingStaff</element>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <!-- metadata for registration via external providers -->
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>eperson</element>
+        <qualifier>dni</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>eperson</element>
+        <qualifier>orcid</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>eperson</element>
+        <qualifier>birthdate</qualifier>
+    </dc-type>
+
+
+    <!-- custom PeruCRIS relations metadata -->
+    <dc-type>
+        <schema>relation</schema>
+        <element>isPersonOwner</element>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>relation</schema>
+        <element>isOwnedByPersonCv</element>
         <scope_note></scope_note>
     </dc-type>
 </dspace-dc-types>

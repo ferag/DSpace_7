@@ -17,7 +17,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dspace.perucris.externalservices.sunedu.SuneduProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -28,7 +27,7 @@ import org.xml.sax.SAXException;
  */
 public class SunatProvider {
 
-    private static Logger log = LogManager.getLogger(SuneduProvider.class);
+    private static Logger log = LogManager.getLogger(SunatProvider.class);
 
     public static final String SUNAT_ID_SYNTAX = "\\d{11}";
 

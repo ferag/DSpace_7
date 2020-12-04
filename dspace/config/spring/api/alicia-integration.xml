@@ -23,34 +23,34 @@
         <entry key-ref="alicia.dc.title" value-ref="aliciaTitle"/>
         <entry key-ref="alicia.dc.identifier" value-ref="aliciaIdentifier"/>
         <entry key-ref="alicia.dc.contributor.author" value-ref="aliciaAuthors"/>
-        <entry key-ref="alicia.dc.subject" value-ref="aliciaSubject"></entry>
-        <entry key-ref="alicia.dc.subject.ocde" value-ref="aliciaSubjectOcde"></entry>
-        <entry key-ref="alicia.dc.description.abstract" value-ref="aliciaAbstract"></entry>
-        <entry key-ref="alicia.dc.description.tableOfContents" value-ref="aliciaTableOfContents"></entry>
-        <entry key-ref="alicia.dc.titlealternative" value-ref="aliciaTitleAlternative"></entry>
-        <entry key-ref="alicia.renati.author.dni" value-ref="aliciaRenatiAuthorDNI"></entry>
-        <entry key-ref="alicia.dc.contributor.advisor" value-ref="aliciaContributorAdvisor"></entry>
-        <entry key-ref="alicia.renati.advisor.orcid" value-ref="aliciaRenatiAdvisorORCID"></entry>
-        <entry key-ref="alicia.renati.advisor.dni" value-ref="aliciaRenatiAdvisorDNI"></entry>
-        <entry key-ref="alicia.dc.contributor.editor" value-ref="aliciaContributorEditor"></entry>
-        <entry key-ref="alicia.dc.rights" value-ref="aliciaRights"></entry>
-        <entry key-ref="alicia.dc.date.embargoEnd" value-ref="aliciaDateEmbargoEnd"></entry>
-        <entry key-ref="alicia.dc.rights.uri" value-ref="aliciaRightsUri"></entry>
-        <entry key-ref="alicia.dc.type" value-ref="aliciaType"></entry>
-        <entry key-ref="alicia.dc.type.version" value-ref="aliciaTypeVersion"></entry>
-        <entry key-ref="alicia.dc.relation.uri" value-ref="aliciaRelationURI"></entry>
-        <entry key-ref="alicia.dc.date.issued" value-ref="aliciaDateIssued"></entry>
-        <entry key-ref="alicia.dc.description.sponsorship" value-ref="aliciaDescriptionSponsorship"></entry>
-        <entry key-ref="alicia.dc.identifier.uri" value-ref="aliciaIdentifierHandle"></entry>
-        <entry key-ref="alicia.dc.identifier.doi" value-ref="aliciaIdentifierDoi"></entry>
-        <entry key-ref="alicia.dc.identifier.isbn" value-ref="aliciaIdentifierIsbn"></entry>
-        <entry key-ref="alicia.renati.type" value-ref="aliciaRenatiType"></entry>
-        <entry key-ref="alicia.thesis.degree.name" value-ref="aliciaThesisDegreeName"></entry>        
-        <entry key-ref="alicia.renati.level" value-ref="aliciaRenatiLevel"></entry>
-        <entry key-ref="alicia.thesis.degree.discipline" value-ref="aliciaThesisDegreeDiscipline"></entry>
-        <entry key-ref="alicia.renati.discipline" value-ref="aliciaRenatiDiscipline"></entry>
-        <entry key-ref="alicia.thesis.degree.grantor" value-ref="aliciaThesisDegreeGrantor"></entry>
-        <entry key-ref="alicia.renati.juror" value-ref="aliciaRenatiJuror"></entry>
+        <entry key-ref="alicia.dc.subject" value-ref="aliciaSubject"/>
+        <entry key-ref="alicia.dc.subject.ocde" value-ref="aliciaSubjectOcde"/>
+        <entry key-ref="alicia.dc.description.abstract" value-ref="aliciaAbstract"/>
+        <entry key-ref="alicia.dc.description.tableOfContents" value-ref="aliciaTableOfContents"/>
+        <entry key-ref="alicia.dc.titlealternative" value-ref="aliciaTitleAlternative"/>
+        <entry key-ref="alicia.renati.author.dni" value-ref="aliciaRenatiAuthorDNI"/>
+        <entry key-ref="alicia.dc.contributor.advisor" value-ref="aliciaContributorAdvisor"/>
+        <entry key-ref="alicia.renati.advisor.orcid" value-ref="aliciaRenatiAdvisorORCID"/>
+        <entry key-ref="alicia.renati.advisor.dni" value-ref="aliciaRenatiAdvisorDNI"/>
+        <entry key-ref="alicia.dc.contributor.editor" value-ref="aliciaContributorEditor"/>
+        <entry key-ref="alicia.dc.rights" value-ref="aliciaRights"/>
+        <entry key-ref="alicia.dc.date.embargoEnd" value-ref="aliciaDateEmbargoEnd"/>
+        <entry key-ref="alicia.dc.rights.uri" value-ref="aliciaRightsUri"/>
+        <entry key-ref="alicia.dc.type" value-ref="aliciaType"/>
+        <entry key-ref="alicia.dc.type.version" value-ref="aliciaTypeVersion"/>
+        <entry key-ref="alicia.dc.relation.uri" value-ref="aliciaRelationURI"/>
+        <entry key-ref="alicia.dc.date.issued" value-ref="aliciaDateIssued"/>
+        <entry key-ref="alicia.dc.description.sponsorship" value-ref="aliciaDescriptionSponsorship"/>
+        <entry key-ref="alicia.dc.identifier.uri" value-ref="aliciaIdentifierHandle"/>
+        <entry key-ref="alicia.dc.identifier.doi" value-ref="aliciaIdentifierDoi"/>
+        <entry key-ref="alicia.dc.identifier.isbn" value-ref="aliciaIdentifierIsbn"/>
+        <entry key-ref="alicia.renati.type" value-ref="aliciaRenatiType"/>
+        <entry key-ref="alicia.thesis.degree.name" value-ref="aliciaThesisDegreeName"/>
+        <entry key-ref="alicia.renati.level" value-ref="aliciaRenatiLevel"/>
+        <entry key-ref="alicia.thesis.degree.discipline" value-ref="aliciaThesisDegreeDiscipline"/>
+        <entry key-ref="alicia.renati.discipline" value-ref="aliciaRenatiDiscipline"/>
+        <entry key-ref="alicia.thesis.degree.grantor" value-ref="aliciaThesisDegreeGrantor"/>
+        <entry key-ref="alicia.renati.juror" value-ref="aliciaRenatiJuror"/>
     </util:map>
     
     <bean id="aliciaRenatiJuror" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
@@ -161,9 +161,22 @@
     <bean id="alicia.dc.relation.uri" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
         <constructor-arg value="dc.relation.uri"/>
     </bean>
-    
-    
-    <bean id="aliciaTypeVersion" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
+
+    <bean id="aliciaTypeVersion" class="org.dspace.importer.external.metadatamapping.contributor.MappedMetadataContributor">
+        <constructor-arg index="0" ref="aliciaInnerTypeVersion"/>
+        <constructor-arg index="1">
+            <map>
+                <entry key="info:eu-repo/semantics/draft" value="AO"/>
+                <entry key="info:eu-repo/semantics/submittedVersion" value="SMUR"/>
+                <entry key="info:eu-repo/semantics/acceptedVersion" value="AM"/>
+                <entry key="info:eu-repo/semantics/publishedVersion" value="VoR"/>
+                <entry key="info:eu-repo/semantics/publishedVersion" value="CVoR"/>
+            </map>
+        </constructor-arg>
+        <constructor-arg index="2" value="NA"/>
+    </bean>
+
+    <bean id="aliciaInnerTypeVersion" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
         <property name="field" ref="alicia.dc.type.version"/>
         <property name="query" value="$.dcTypeVersion[*]"/>
     </bean>

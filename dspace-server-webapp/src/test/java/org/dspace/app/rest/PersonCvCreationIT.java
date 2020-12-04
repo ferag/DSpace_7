@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.UUID;
 
 import com.jayway.jsonpath.JsonPath;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
@@ -193,6 +194,90 @@ public class PersonCvCreationIT extends AbstractControllerIntegrationTest {
                 is("http://localhost/api/core/items/" + person.getID())));
 
         getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", user.getID()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.type", is("eperson")))
+            .andExpect(jsonPath("$.name", is(user.getName())));
+    }
+
+    /**
+     * Given a request containing an eperson Id, a DSpace Object URI, performed by an admin,
+     * verifies that a researcherProfile is created with
+     * data cloned from source object's public data.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testCloneFromDSpaceSourceByAdmin() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+        Item person = ItemBuilder.createItem(context, personCollection)
+            .withFullName("Mario Rossi")
+            .withRelationshipType("Person")
+            .withBirthDate("1982-12-17")
+            .withDNI("123555").build();
+
+
+        CrisLayoutBox publicBox = CrisLayoutBoxBuilder.createBuilder(context, personEntityType, false, false)
+            .withSecurity(LayoutSecurity.PUBLIC).build();
+
+        CrisLayoutBox ownerAndAdministratorBox =
+            CrisLayoutBoxBuilder.createBuilder(context, personEntityType, false, false)
+                .withSecurity(LayoutSecurity.OWNER_AND_ADMINISTRATOR).build();
+
+
+        CrisLayoutFieldBuilder.createMetadataField(context,
+            metadataField("crisrp", "name", Optional.empty()),
+            1, 1)
+            .withBox(publicBox)
+            .build();
+
+        CrisLayoutFieldBuilder.createMetadataField(context,
+            metadataField("person", "birthDate", Optional.empty()),
+            2, 1)
+            .withBox(publicBox).build();
+
+        CrisLayoutFieldBuilder.createMetadataField(context,
+            metadataField("perucris", "identifier", Optional.of("dni")),
+            1, 1)
+            .withBox(ownerAndAdministratorBox).build();
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+
+        UUID userID = user.getID();
+
+        getClient(authToken).perform(post("/api/cris/profiles/")
+            .param("eperson", userID.toString())
+            .contentType(TEXT_URI_LIST).content(
+                "http://localhost:8080/server/api/core/items/" + person.getID()))
+            .andExpect(jsonPath("$.id", is(userID.toString())))
+            .andExpect(jsonPath("$.visible", is(false)))
+            .andExpect(jsonPath("$.type", is("profile")))
+            .andExpect(
+                jsonPath("$", matchLinks("http://localhost/api/cris/profiles/" + userID, "item", "eperson")));
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}", userID))
+            .andExpect(status().isOk());
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}/item", userID))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.type", is("item")))
+            .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", user.getName(), userID.toString(), 0)))
+            .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.name", "Mario Rossi", 0)))
+            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "PersonCv", 0)))
+            .andExpect(jsonPath("$.metadata", matchMetadata("person.birthDate", "1982-12-17", 0)));
+
+        String profileItemId = getItemIdByProfileId(authToken, userID.toString());
+
+        getClient(authToken).perform(get("/api/core/items/" + profileItemId + "/relationships"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.relationships[0]._links.leftItem.href",
+                is("http://localhost/api/core/items/" + profileItemId)))
+            .andExpect(jsonPath("$._embedded.relationships[0]_links.rightItem.href",
+                is("http://localhost/api/core/items/" + person.getID())));
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", userID))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.type", is("eperson")))
             .andExpect(jsonPath("$.name", is(user.getName())));

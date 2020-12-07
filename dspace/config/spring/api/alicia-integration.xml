@@ -163,17 +163,8 @@
     </bean>
 
     <bean id="aliciaTypeVersion" class="org.dspace.importer.external.metadatamapping.contributor.MappedMetadataContributor">
-        <constructor-arg index="0" ref="aliciaInnerTypeVersion"/>
-        <constructor-arg index="1">
-            <map>
-                <entry key="info:eu-repo/semantics/draft" value="AO"/>
-                <entry key="info:eu-repo/semantics/submittedVersion" value="SMUR"/>
-                <entry key="info:eu-repo/semantics/acceptedVersion" value="AM"/>
-                <entry key="info:eu-repo/semantics/publishedVersion" value="VoR"/>
-                <entry key="info:eu-repo/semantics/publishedVersion" value="CVoR"/>
-            </map>
-        </constructor-arg>
-        <constructor-arg index="2" value="NA"/>
+        <constructor-arg name="innerContributor" ref="aliciaInnerTypeVersion"/>
+        <constructor-arg name="mapConverter" ref="aliciaTypeVersionMapConverter"/>
     </bean>
 
     <bean id="aliciaInnerTypeVersion" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">
@@ -182,6 +173,13 @@
     </bean>
     <bean id="alicia.dc.type.version" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
         <constructor-arg value="dc.type.version"/>
+    </bean>
+
+    <bean name="aliciaTypeVersionMapConverter" class="org.dspace.util.SimpleMapConverter" init-method="init">
+        <constructor-arg value="aliciaCoarTypes" />
+        <property name="converterNameFile" value="mapConverter-aliciaCoarTypes.properties" />
+        <property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+        <property name="defaultValue" value="NA"/>
     </bean>
 
     <bean id="aliciaType" class="org.dspace.importer.external.metadatamapping.contributor.SimpleJsonPathMetadataContributor">

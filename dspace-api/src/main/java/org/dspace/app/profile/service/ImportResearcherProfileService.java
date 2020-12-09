@@ -23,6 +23,7 @@ import org.dspace.core.Context;
 public interface ImportResearcherProfileService {
 
     /**
+     * Import profile from an external source
      * @param context
      * @param source
      * @param collection

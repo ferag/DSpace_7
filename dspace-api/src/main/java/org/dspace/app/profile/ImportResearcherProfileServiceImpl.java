@@ -6,7 +6,7 @@
  * http://www.dspace.org/license/
  */
 
-package org.dspace.app.profile.service;
+package org.dspace.app.profile;
 
 import java.net.URI;
 import java.sql.SQLException;
@@ -15,6 +15,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.velocity.exception.ResourceNotFoundException;
+import org.dspace.app.profile.service.AfterImportAction;
+import org.dspace.app.profile.service.ImportResearcherProfileService;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;

@@ -1858,9 +1858,10 @@
             queries done by discovery for this configuration -->
         <property name="defaultFilterQueries">
             <list>
-                <!--Only find items, communities and collections-->
+                <!--Only find items into claimable collection defined in cfg-->
                 <value>search.resourcetype:Item</value>
                 <value>location.coll:${claimable.collection.uuid}</value>
+                <value>NOT relation.${claimable.relation.rightwardType}:*</value>
             </list>
         </property>
         <!--Default result per page  -->

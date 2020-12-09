@@ -53,6 +53,7 @@ import org.junit.Test;
  * Integration tests for the {@link ReferCrosswalk}.
  *
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
+ * @author Corrado Lombardi (corrado.lombardi at 4science.it)
  *
  */
 @Ignore
@@ -1526,6 +1527,381 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         try (FileInputStream fis = getFileInputStream("fundings.json")) {
             String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
             compareEachLine(out.toString(), expectedContent);
+        }
+    }
+
+    @Test
+    public void testProfileXmlDisseminate() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Item personItem = createItem(context, collection)
+            .withRelationshipType("PersonCv")
+            .withTitle("John Smith")
+            .withFullName("John Smith")
+            .withVariantName("J.S.")
+            .withVariantName("Smith John")
+            .withGivenName("John")
+            .withFamilyName("Smith")
+            .withBirthDate("1992-06-26")
+            .withGender("M")
+            .withJobTitle("Researcher")
+            .withPersonMainAffiliation("University")
+            .withWorkingGroup("First work group")
+            .withWorkingGroup("Second work group")
+            .withPersonalSiteUrl("www.test.com")
+            .withPersonalSiteTitle("Test")
+            .withPersonalSiteUrl("www.john-smith.com")
+            .withPersonalSiteTitle(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPersonalSiteUrl("www.site.com")
+            .withPersonalSiteTitle("Site")
+            .withPersonEmail("test@test.com")
+            .withSubject("Science")
+            .withOrcidIdentifier("0000-0002-9079-5932")
+            .withPersonAffiliation("Company")
+            .withPersonAffiliationStartDate("2018-01-01")
+            .withPersonAffiliationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPersonAffiliationRole("Developer")
+            .withDescriptionAbstract("Biography \n\t<This is my biography>")
+            .withPersonCountry("England")
+            .withPersonKnowsLanguages("English")
+            .withPersonKnowsLanguages("Italian")
+            .withPersonEducation("School")
+            .withPersonEducationStartDate("2000-01-01")
+            .withPersonEducationEndDate("2005-01-01")
+            .withPersonEducationRole("Student")
+            .withPersonQualification("First Qualification")
+            .withPersonQualificationStartDate("2015-01-01")
+            .withPersonQualificationEndDate("2016-01-01")
+            .withPersonQualification("Second Qualification")
+            .withPersonQualificationStartDate("2016-01-02")
+            .withPersonQualificationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("ctivitae-profile-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, personItem, out);
+
+        try (FileInputStream fis = getFileInputStream("ctivitae-profile.xml")) {
+            String expectedXml = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedXml);
+        }
+    }
+
+    @Test
+    public void testProfileXmlCerifDisseminate() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Item personItem = createItem(context, collection)
+            .withRelationshipType("PersonCv")
+            .withTitle("Smith, John")
+            .withVariantName("J.S.")
+            .withVariantName("Smith John")
+            .withGender("M")
+            .withPersonMainAffiliation("University")
+            .withOrcidIdentifier("0000-0002-9079-5932")
+            .withScopusAuthorIdentifier("SA-01")
+            .withPersonEmail("test@test.com")
+            .withResearcherIdentifier("R-01")
+            .withResearcherIdentifier("R-02")
+            .withPersonAffiliation("Company")
+            .withPersonAffiliationStartDate("2018-01-01")
+            .withPersonAffiliationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPersonAffiliationRole("Developer")
+            .withPersonAffiliation("Another Company")
+            .withPersonAffiliationStartDate("2017-01-01")
+            .withPersonAffiliationEndDate("2017-12-31")
+            .withPersonAffiliationRole("Developer")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("ctivitae-profile-xml-cerif");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, personItem, out);
+
+        try (FileInputStream fis = getFileInputStream("ctivitae-profile-cerif.xml")) {
+            String expectedXml = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedXml);
+        }
+    }
+
+    @Test
+    public void testManyProfilesXmlCerifDisseminate() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Item firstPerson = createItem(context, collection)
+            .withRelationshipType("PersonCv")
+            .withTitle("Smith, John")
+            .withVariantName("J.S.")
+            .withVariantName("Smith John")
+            .withGender("M")
+            .withPersonMainAffiliation("University")
+            .withOrcidIdentifier("0000-0002-9079-5932")
+            .withScopusAuthorIdentifier("SA-01")
+            .withPersonEmail("test@test.com")
+            .withResearcherIdentifier("R-01")
+            .withResearcherIdentifier("R-02")
+            .withPersonAffiliation("Company")
+            .withPersonAffiliationStartDate("2018-01-01")
+            .withPersonAffiliationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPersonAffiliationRole("Developer")
+            .withPersonAffiliation("Another Company")
+            .withPersonAffiliationStartDate("2017-01-01")
+            .withPersonAffiliationEndDate("2017-12-31")
+            .withPersonAffiliationRole("Developer")
+            .build();
+
+        Item secondPerson = createItem(context, collection)
+            .withRelationshipType("Person")
+            .withTitle("White, Walter")
+            .withGender("M")
+            .withPersonMainAffiliation("University")
+            .withOrcidIdentifier("0000-0002-9079-5938")
+            .withPersonEmail("w.w@test.com")
+            .withResearcherIdentifier("R-03")
+            .withPersonAffiliation("Company")
+            .withPersonAffiliationStartDate("2018-01-01")
+            .withPersonAffiliationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPersonAffiliationRole("Developer")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("ctivitae-xml-cerif");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, Arrays.asList(firstPerson, secondPerson).iterator(), out);
+
+        try (FileInputStream fis = getFileInputStream("ctivitae-profiles-cerif.xml")) {
+            String expectedXml = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedXml);
+        }
+    }
+
+
+    @Test
+    public void testProfileXmlDisseminateWithPersonalPicture() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item item = createItem(context, collection)
+            .withRelationshipType("PersonCv")
+            .withTitle("John Smith")
+            .build();
+
+        Bundle bundle = BundleBuilder.createBundle(context, item)
+            .withName("ORIGINAL")
+            .build();
+
+        Bitstream bitstream = BitstreamBuilder.createBitstream(context, bundle, getFileInputStream("picture.jpg"))
+            .withType("personal picture")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        StreamDisseminationCrosswalk streamCrosswalk = (StreamDisseminationCrosswalk) CoreServiceFactory
+            .getInstance().getPluginService().getNamedPlugin(StreamDisseminationCrosswalk.class,
+                "ctivitae-profile-xml");
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        streamCrosswalk.disseminate(context, item, out);
+
+        assertThat(out.toString(), containsString("<personal-picture>" + bitstream.getID() + "</personal-picture>"));
+    }
+
+    @Test
+    public void testProfileJsonDisseminate() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Item personItem = createItem(context, collection)
+            .withRelationshipType("Person")
+            .withTitle("John Smith")
+            .withFullName("John Smith")
+            .withVernacularName("JOHN SMITH")
+            .withVariantName("J.S.")
+            .withVariantName("Smith John")
+            .withGivenName("John")
+            .withFamilyName("Smith")
+            .withBirthDate("1992-06-26")
+            .withGender("M")
+            .withJobTitle("Researcher")
+            .withPersonMainAffiliation("University")
+            .withWorkingGroup("First work group")
+            .withWorkingGroup("Second work group")
+            .withPersonalSiteUrl("www.test.com")
+            .withPersonalSiteTitle("Test")
+            .withPersonalSiteUrl("www.john-smith.com")
+            .withPersonalSiteTitle(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPersonalSiteUrl("www.site.com")
+            .withPersonalSiteTitle("Site")
+            .withPersonEmail("test@test.com")
+            .withSubject("Science")
+            .withOrcidIdentifier("0000-0002-9079-5932")
+            .withPersonAffiliation("Company")
+            .withPersonAffiliationStartDate("2018-01-01")
+            .withPersonAffiliationRole("Developer")
+            .withPersonAffiliationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withDescriptionAbstract("Biography: \n\t\"This is my biography\"")
+            .withPersonCountry("England")
+            .withPersonKnowsLanguages("English")
+            .withPersonKnowsLanguages("Italian")
+            .withPersonEducation("School")
+            .withPersonEducationStartDate("2000-01-01")
+            .withPersonEducationEndDate("2005-01-01")
+            .withPersonEducationRole("Student")
+            .withPersonQualification("First Qualification")
+            .withPersonQualificationStartDate("2015-01-01")
+            .withPersonQualificationEndDate("2016-01-01")
+            .withPersonQualification("Second Qualification")
+            .withPersonQualificationStartDate("2016-01-02")
+            .withPersonQualificationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .build();
+
+        ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
+            .withTitle("First Publication")
+            .withIssueDate("2020-01-01")
+            .withAuthor("John Smith", personItem.getID().toString())
+            .withAuthor("Walter White")
+            .build();
+
+        ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
+            .withTitle("Second Publication")
+            .withIssueDate("2020-04-01")
+            .withAuthor("John Smith", personItem.getID().toString())
+            .build();
+
+        context.restoreAuthSystemState();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("person-json");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, personItem, out);
+
+        try (FileInputStream fis = getFileInputStream("person.json")) {
+            String expectedJson = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedJson);
+        }
+    }
+
+    @Test
+    public void testManyProfilesXmlDisseminate() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+        Item firstItem = createItem(context, collection)
+            .withRelationshipType("Person")
+            .withTitle("John Smith")
+            .withGivenName("John")
+            .withFamilyName("Smith")
+            .withBirthDate("1992-06-26")
+            .withGender("M")
+            .withPersonAffiliation("Company")
+            .withPersonAffiliationStartDate("2018-01-01")
+            .withPersonAffiliationRole("Developer")
+            .withPersonAffiliationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .build();
+        Item secondItem = createItem(context, collection)
+            .withRelationshipType("Person")
+            .withTitle("Adam White")
+            .withGivenName("Adam")
+            .withFamilyName("White")
+            .withBirthDate("1962-03-23")
+            .withGender("M")
+            .withJobTitle("Researcher")
+            .withPersonMainAffiliation("University")
+            .withPersonKnowsLanguages("English")
+            .withPersonKnowsLanguages("Italian")
+            .withPersonEducation("School")
+            .withPersonEducationStartDate("2000-01-01")
+            .withPersonEducationEndDate("2005-01-01")
+            .withPersonEducationRole("Student")
+            .build();
+
+        // with multiple persons export the publications should not be exported
+        ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
+            .withTitle("First Publication")
+            .withIssueDate("2020-01-01")
+            .withAuthor("John Smith", firstItem.getID().toString())
+            .withAuthor("Walter White")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("person-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, Arrays.asList(firstItem, secondItem).iterator(), out);
+
+        try (FileInputStream fis = getFileInputStream("persons.xml")) {
+            String expectedXml = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedXml);
+        }
+    }
+
+    @Test
+    public void testManyProfilesJsonDisseminate() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+        Item firstItem = createItem(context, collection)
+            .withRelationshipType("Person")
+            .withTitle("John Smith")
+            .withGivenName("John")
+            .withFamilyName("Smith")
+            .withBirthDate("1992-06-26")
+            .withGender("M")
+            .withPersonAffiliation("Company")
+            .withPersonAffiliationStartDate("2018-01-01")
+            .withPersonAffiliationRole("Developer")
+            .withPersonAffiliationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .build();
+        Item secondItem = createItem(context, collection)
+            .withRelationshipType("Person")
+            .withTitle("Adam White")
+            .withGivenName("Adam")
+            .withFamilyName("White")
+            .withBirthDate("1962-03-23")
+            .withGender("M")
+            .withJobTitle("Researcher")
+            .withPersonMainAffiliation("University")
+            .withPersonKnowsLanguages("English")
+            .withPersonKnowsLanguages("Italian")
+            .withPersonEducation("School")
+            .withPersonEducationStartDate("2000-01-01")
+            .withPersonEducationEndDate("2005-01-01")
+            .withPersonEducationRole("Student")
+            .build();
+
+        // with multiple persons export the publications should not be exported
+        ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
+            .withTitle("First Publication")
+            .withIssueDate("2020-01-01")
+            .withAuthor("John Smith", firstItem.getID().toString())
+            .withAuthor("Walter White")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("person-json");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, Arrays.asList(firstItem, secondItem).iterator(), out);
+
+        try (FileInputStream fis = getFileInputStream("persons.json")) {
+            String expectedJson = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedJson);
         }
     }
 

@@ -15,10 +15,12 @@ import java.net.URI;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.dspace.app.exception.ResourceConflictException;
+import org.dspace.app.profile.service.AfterProfileDeleteAction;
 import org.dspace.app.profile.service.ImportResearcherProfileService;
 import org.dspace.app.profile.service.ResearcherProfileService;
 import org.dspace.authorize.AuthorizeException;
@@ -85,6 +87,9 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
 
     @Autowired
     private ImportResearcherProfileService importResearcherProfileService;
+
+    @Autowired(required = false)
+    private List<AfterProfileDeleteAction> afterProfileDeleteActionList;
 
     @Override
     public ResearcherProfile findById(Context context, UUID id) throws SQLException, AuthorizeException {
@@ -161,6 +166,12 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
 
         List<MetadataValue> metadata = itemService.getMetadata(profileItem, "cris", "owner", null, Item.ANY);
         itemService.removeMetadataValues(context, profileItem, metadata);
+
+        if (Objects.nonNull(afterProfileDeleteActionList)) {
+            for (AfterProfileDeleteAction action : afterProfileDeleteActionList) {
+                action.apply(context, profileItem);
+            }
+        }
     }
 
     @Override

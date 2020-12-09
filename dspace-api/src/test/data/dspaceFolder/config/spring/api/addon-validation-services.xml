@@ -30,10 +30,10 @@
     
     <bean name="personWithOrcidOrDniValidation" class="org.dspace.validation.LogicalStatementValidator">
         <property name="errorKey" value="error.validation.orcidOrDniRequired"/>
-        <property name="metadataFields">
+        <property name="paths">
            <list>
-               <value>person.identifier.orcid</value>
-               <value>perucris.identifier.dni</value>
+               <value>/section/person/person.identifier.orcid</value>
+               <value>/section/person/perucris.identifier.dni</value>
            </list>
         </property>
         <property name="filter" ref="person-has-orcid-or-dni_filter"/>

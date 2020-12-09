@@ -11,6 +11,7 @@ import static org.dspace.app.rest.matcher.HalMatcher.matchLinks;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadata;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.data.rest.webmvc.RestMediaTypes.TEXT_URI_LIST;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -63,12 +64,10 @@ public class PersonCvCreationIT extends AbstractControllerIntegrationTest {
     private MetadataFieldService metadataFieldService;
 
     private EntityType personEntityType;
-    private EntityType personCvEntityType;
 
     private EPerson user;
 
     private Collection personCollection;
-    private Collection cvCollection;
 
     /**
      * Tests setup.
@@ -80,7 +79,7 @@ public class PersonCvCreationIT extends AbstractControllerIntegrationTest {
         context.turnOffAuthorisationSystem();
 
         personEntityType = EntityTypeBuilder.createEntityTypeBuilder(context, "Person").build();
-        personCvEntityType = EntityTypeBuilder.createEntityTypeBuilder(context, "PersonCv").build();
+        EntityType personCvEntityType = EntityTypeBuilder.createEntityTypeBuilder(context, "PersonCv").build();
 
         user = EPersonBuilder.createEPerson(context)
             .withEmail("user@example.com")
@@ -98,7 +97,7 @@ public class PersonCvCreationIT extends AbstractControllerIntegrationTest {
             .withSubmitterGroup(user)
             .build();
 
-        cvCollection = CollectionBuilder.createCollection(context, parentCommunity)
+        Collection cvCollection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Profiles")
             .withRelationshipType("PersonCv")
             .withSubmitterGroup(user)
@@ -197,6 +196,74 @@ public class PersonCvCreationIT extends AbstractControllerIntegrationTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.type", is("eperson")))
             .andExpect(jsonPath("$.name", is(user.getName())));
+    }
+
+    /**
+     * Given a request containing a DSpace Object URI, verifies that a researcherProfile is created with
+     * data cloned from source object's public data.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testRelationDeletedOnClonedProfile() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+        Item person = ItemBuilder.createItem(context, personCollection)
+            .withFullName("Giuseppe Rossi")
+            .withRelationshipType("Person")
+            .withBirthDate("2000-12-10")
+            .withDNI("123123").build();
+
+
+        CrisLayoutBox publicBox = CrisLayoutBoxBuilder.createBuilder(context, personEntityType, false, false)
+            .withSecurity(LayoutSecurity.PUBLIC).build();
+
+        CrisLayoutBox ownerAndAdministratorBox =
+            CrisLayoutBoxBuilder.createBuilder(context, personEntityType, false, false)
+                .withSecurity(LayoutSecurity.OWNER_AND_ADMINISTRATOR).build();
+
+
+        CrisLayoutFieldBuilder.createMetadataField(context,
+            metadataField("crisrp", "name", Optional.empty()),
+            1, 1)
+            .withBox(publicBox)
+            .build();
+
+        CrisLayoutFieldBuilder.createMetadataField(context,
+            metadataField("person", "birthDate", Optional.empty()),
+            2, 1)
+            .withBox(publicBox).build();
+
+        CrisLayoutFieldBuilder.createMetadataField(context,
+            metadataField("perucris", "identifier", Optional.of("dni")),
+            1, 1)
+            .withBox(ownerAndAdministratorBox).build();
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(user.getEmail(), password);
+
+        getClient(authToken).perform(post("/api/cris/profiles/")
+            .contentType(TEXT_URI_LIST).content(
+                "http://localhost:8080/server/api/core/items/" + person.getID()))
+            .andExpect(jsonPath("$.id", is(user.getID().toString())))
+            .andExpect(jsonPath("$.visible", is(false)))
+            .andExpect(jsonPath("$.type", is("profile")))
+            .andExpect(
+                jsonPath("$", matchLinks("http://localhost/api/cris/profiles/" + user.getID(), "item", "eperson")));
+
+        String profileItemId = getItemIdByProfileId(authToken, user.getID().toString());
+
+        getClient(authToken).perform(delete("/api/cris/profiles/{id}", user.getID()))
+            .andExpect(status().isNoContent());
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}/item", user.getID()))
+            .andExpect(status().isNotFound());
+
+        getClient(authToken).perform(get("/api/core/items/" + profileItemId + "/relationships"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.page.totalPages", is(0)));
+
     }
 
     /**

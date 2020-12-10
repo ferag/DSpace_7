@@ -118,6 +118,46 @@
         </property>
     </bean>
     
+    <!-- has dina identifier set -->
+    <bean id="has-dina-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.identifier.dina" />
+            </map>
+        </property>
+    </bean>
+    
+    <!-- has renacyt identifier set -->
+    <bean id="has-renacyt-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.identifier.renacyt" />
+            </map>
+        </property>
+    </bean>
+    
+    <!-- has scopus author identifier set -->
+    <bean id="has-scopus-author-id-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="person.identifier.scopus-author-id" />
+            </map>
+        </property>
+    </bean>
+    
+    <!-- has researcher identifier set -->
+    <bean id="has-researcher-id-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="person.identifier.rid" />
+            </map>
+        </property>
+    </bean>
+    
 
     <!--
          A filter that checks if any value of dc.identifier.uri contains "10.12345/".
@@ -367,7 +407,7 @@
         </property>
     </bean>
     
-    <bean id="person-has-orcid-or-dni_filter" class="org.dspace.content.logic.DefaultFilter">
+    <bean id="person-has-at-least-one-id_filter" class="org.dspace.content.logic.DefaultFilter">
         <property name="statement">
             <bean class="org.dspace.content.logic.operator.Or">
                 <property name="statements">
@@ -379,6 +419,10 @@
                         </bean>
                         <ref bean="has-orcid-set_condition" />
                         <ref bean="has-dni-set_condition" />
+                        <ref bean="has-dina-set_condition" />
+                        <ref bean="has-renacyt-set_condition" />
+                        <ref bean="has-scopus-author-id-set_condition" />
+                        <ref bean="has-researcher-id-set_condition" />
                     </list>
                 </property>
             </bean>

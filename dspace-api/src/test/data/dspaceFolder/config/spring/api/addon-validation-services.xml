@@ -28,15 +28,19 @@
         <property name="uploadConfigurationService" ref="uploadConfigurationService"/>
     </bean>
     
-    <bean name="personWithOrcidOrDniValidation" class="org.dspace.validation.LogicalStatementValidator">
-        <property name="errorKey" value="error.validation.orcidOrDniRequired"/>
+    <bean name="personHasAtLeastOneIdValidation" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.personIdRequired"/>
         <property name="paths">
            <list>
                <value>/section/person/person.identifier.orcid</value>
                <value>/section/person/perucris.identifier.dni</value>
+               <value>/section/person/perucris.identifier.dina</value>
+               <value>/section/person/perucris.identifier.renacyt</value>
+               <value>/section/person/person.identifier.scopus-author-id</value>
+               <value>/section/person/person.identifier.rid</value>
            </list>
         </property>
-        <property name="filter" ref="person-has-orcid-or-dni_filter"/>
+        <property name="filter" ref="person-has-at-least-one-id_filter"/>
     </bean>
 
 </beans>

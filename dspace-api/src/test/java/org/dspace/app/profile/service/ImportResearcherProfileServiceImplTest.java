@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.velocity.exception.ResourceNotFoundException;
+import org.dspace.app.profile.ImportResearcherProfileServiceImpl;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;

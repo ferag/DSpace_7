@@ -7,27 +7,24 @@
  */
 package org.dspace.app.profile.service;
 
-import java.net.URI;
 import java.sql.SQLException;
 
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.content.Collection;
 import org.dspace.content.Item;
 import org.dspace.core.Context;
 
 /**
- * Service that creates a researcher profile starting from a given source.
+ * Contract that defines custom actions to be performed after a researcher profile deletion
  *
  * @author Corrado Lombardi (corrado.lombardi at 4science.it)
+ *
  */
-public interface ImportResearcherProfileService {
-
+public interface AfterProfileDeleteAction {
     /**
-     * Import profile from an external source
-     * @param context
-     * @param source
-     * @param collection
-     * @return
+     *
+     *
+     * @param context current context
+     * @param profileItem item where actions should be executed
      */
-    Item importProfile(Context context, URI source, Collection collection) throws AuthorizeException, SQLException;
+    void apply(Context context, Item profileItem) throws SQLException, AuthorizeException;
 }

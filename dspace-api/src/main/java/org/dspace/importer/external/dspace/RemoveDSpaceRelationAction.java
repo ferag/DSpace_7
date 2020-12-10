@@ -26,13 +26,11 @@ public class RemoveDSpaceRelationAction implements AfterProfileDeleteAction {
 
 
     private final DSpaceItemRelationshipService dSpaceItemRelationshipService;
-    private final ItemService itemService;
 
     @Autowired
     public RemoveDSpaceRelationAction(
-        DSpaceItemRelationshipService dSpaceItemRelationshipService, ItemService itemService) {
+        DSpaceItemRelationshipService dSpaceItemRelationshipService) {
         this.dSpaceItemRelationshipService = dSpaceItemRelationshipService;
-        this.itemService = itemService;
     }
 
 

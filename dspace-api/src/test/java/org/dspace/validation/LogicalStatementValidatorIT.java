@@ -37,6 +37,7 @@ import org.dspace.content.logic.LogicalStatementException;
 import org.dspace.content.logic.condition.RequiredMetadataCondition;
 import org.dspace.content.logic.operator.Or;
 import org.dspace.content.service.ItemService;
+import org.dspace.utils.DSpace;
 import org.dspace.validation.model.ValidationError;
 import org.junit.Before;
 import org.junit.Test;
@@ -164,6 +165,56 @@ public class LogicalStatementValidatorIT extends AbstractIntegrationTestWithData
         ValidationError error = errors.get(0);
         assertThat(error.getMessage(), equalTo("error.validation.test"));
         assertThat(error.getPaths(), contains(doiPath, languagePath));
+    }
+
+    @Test
+    public void testPersonWithOrcidOrDniValidation() throws SubmissionConfigReaderException {
+
+        LogicalStatementValidator validator = getValidatorByName("personWithOrcidOrDniValidation");
+
+        context.turnOffAuthorisationSystem();
+
+        WorkspaceItem firstWSI = WorkspaceItemBuilder
+            .createWorkspaceItem(context, collection)
+            .withRelationshipType("Person")
+            .withOrcidIdentifier("0000-0002-9079-593X")
+            .withDniIdentifier("ID-01")
+            .build();
+
+        WorkspaceItem secondWSI = WorkspaceItemBuilder
+            .createWorkspaceItem(context, collection)
+            .withRelationshipType("Person")
+            .withOrcidIdentifier("0000-0002-9079-593X")
+            .build();
+
+        WorkspaceItem thirdWSI = WorkspaceItemBuilder
+            .createWorkspaceItem(context, collection)
+            .withRelationshipType("Person")
+            .withDniIdentifier("ID-01")
+            .build();
+
+        WorkspaceItem invalidWSI = WorkspaceItemBuilder
+            .createWorkspaceItem(context, collection)
+            .withRelationshipType("Person")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        SubmissionConfig submissionConfig = getSubmissionConfig(collection);
+        assertThat(validator.validate(context, firstWSI, submissionConfig), emptyCollectionOf(ValidationError.class));
+        assertThat(validator.validate(context, secondWSI, submissionConfig), emptyCollectionOf(ValidationError.class));
+        assertThat(validator.validate(context, thirdWSI, submissionConfig), emptyCollectionOf(ValidationError.class));
+
+        List<ValidationError> errors = validator.validate(context, invalidWSI, submissionConfig);
+        assertThat(errors, hasSize(1));
+        assertThat(errors.get(0).getMessage(), equalTo("error.validation.orcidOrDniRequired"));
+        assertThat(errors.get(0).getPaths(),
+            contains("/section/person/person.identifier.orcid", "/section/person/perucris.identifier.dni"));
+
+    }
+
+    private LogicalStatementValidator getValidatorByName(String name) {
+        return new DSpace().getServiceManager().getServiceByName(name, LogicalStatementValidator.class);
     }
 
     private SubmissionConfig getSubmissionConfig(Collection collection) throws SubmissionConfigReaderException {

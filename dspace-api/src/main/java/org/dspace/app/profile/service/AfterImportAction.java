@@ -10,6 +10,7 @@ package org.dspace.app.profile.service;
 
 import java.sql.SQLException;
 
+import org.dspace.app.profile.ImportResearcherProfileServiceImpl;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
 import org.dspace.core.Context;

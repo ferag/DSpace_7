@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
        default-lazy-init="true">
 
-    <bean id="importResearcherProfile" class="org.dspace.app.profile.service.ImportResearcherProfileServiceImpl">
+    <bean id="importResearcherProfile" class="org.dspace.app.profile.ImportResearcherProfileServiceImpl">
         <constructor-arg name="externalDataService" ref="importProfileExternalDataService"/>
         <constructor-arg name="installItemService" ref="org.dspace.content.InstallItemServiceImpl"/>
         <constructor-arg name="requestService" ref="org.dspace.services.RequestService"/>
@@ -44,11 +44,18 @@
 
     <bean id="dspaceAfterImportAction" class="org.dspace.importer.external.dspace.DspaceAfterImportAction">
 
+        <constructor-arg name="dSpaceItemRelationshipService" ref="dspaceItemRelationshipService"/>
+    </bean>
+
+    <bean id="dspaceItemRelationshipService" class="org.dspace.importer.external.dspace.DSpaceItemRelationshipService">
+
         <property name="leftEntityType" value="PersonCv"/>
         <property name="rightEntityType" value="Person"/>
         <property name="leftwardType" value="isPersonOwner"/>
         <property name="rightwardType" value="isOwnedByPersonCv"/>
     </bean>
+
+    <bean id="removeRelationAction" class="org.dspace.importer.external.dspace.RemoveDSpaceRelationAction"/>
 
     <!-- TODO: set orcid import -->
 

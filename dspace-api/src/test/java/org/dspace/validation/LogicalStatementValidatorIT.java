@@ -12,7 +12,7 @@ import static org.dspace.builder.CollectionBuilder.createCollection;
 import static org.dspace.builder.CommunityBuilder.createCommunity;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.emptyCollectionOf;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -87,7 +87,7 @@ public class LogicalStatementValidatorIT extends AbstractIntegrationTestWithData
         context.restoreAuthSystemState();
 
         List<ValidationError> errors = validator.validate(context, workspaceItem, getSubmissionConfig(collection));
-        assertThat(errors, emptyCollectionOf(ValidationError.class));
+        assertThat(errors, empty());
 
     }
 
@@ -168,48 +168,72 @@ public class LogicalStatementValidatorIT extends AbstractIntegrationTestWithData
     }
 
     @Test
-    public void testPersonWithOrcidOrDniValidation() throws SubmissionConfigReaderException {
+    public void testPersonWithoutIdsValidation() throws Exception {
 
-        LogicalStatementValidator validator = getValidatorByName("personWithOrcidOrDniValidation");
+        LogicalStatementValidator validator = getValidatorByName("personHasAtLeastOneIdValidation");
 
         context.turnOffAuthorisationSystem();
 
-        WorkspaceItem firstWSI = WorkspaceItemBuilder
-            .createWorkspaceItem(context, collection)
+        Collection personCollection = createCollection(context, community)
             .withRelationshipType("Person")
-            .withOrcidIdentifier("0000-0002-9079-593X")
-            .withDniIdentifier("ID-01")
+            .withSubmissionDefinition("traditional")
+            .withAdminGroup(eperson)
             .build();
 
-        WorkspaceItem secondWSI = WorkspaceItemBuilder
-            .createWorkspaceItem(context, collection)
-            .withRelationshipType("Person")
+        WorkspaceItem itemWithOrcid = WorkspaceItemBuilder
+            .createWorkspaceItem(context, personCollection)
             .withOrcidIdentifier("0000-0002-9079-593X")
             .build();
 
-        WorkspaceItem thirdWSI = WorkspaceItemBuilder
-            .createWorkspaceItem(context, collection)
-            .withRelationshipType("Person")
-            .withDniIdentifier("ID-01")
+        WorkspaceItem itemWithDni = WorkspaceItemBuilder
+            .createWorkspaceItem(context, personCollection)
+            .withDniIdentifier("DNI-01")
             .build();
 
-        WorkspaceItem invalidWSI = WorkspaceItemBuilder
-            .createWorkspaceItem(context, collection)
-            .withRelationshipType("Person")
+        WorkspaceItem itemWithDina = WorkspaceItemBuilder
+            .createWorkspaceItem(context, personCollection)
+            .withDinaIdentifier("DINA-01")
+            .build();
+
+        WorkspaceItem itemWithRenacyt = WorkspaceItemBuilder
+            .createWorkspaceItem(context, personCollection)
+            .withRenacytIdentifier("Renacyt-01")
+            .build();
+
+        WorkspaceItem itemWithScopusAuthor = WorkspaceItemBuilder
+            .createWorkspaceItem(context, personCollection)
+            .withScopusAuthorIdentifier("Scopus-01")
+            .build();
+
+        WorkspaceItem itemWithResearcherId = WorkspaceItemBuilder
+            .createWorkspaceItem(context, personCollection)
+            .withResearcherIdentifier("R-01")
+            .build();
+
+        WorkspaceItem itemWithoutIds = WorkspaceItemBuilder
+            .createWorkspaceItem(context, personCollection)
             .build();
 
         context.restoreAuthSystemState();
 
-        SubmissionConfig submissionConfig = getSubmissionConfig(collection);
-        assertThat(validator.validate(context, firstWSI, submissionConfig), emptyCollectionOf(ValidationError.class));
-        assertThat(validator.validate(context, secondWSI, submissionConfig), emptyCollectionOf(ValidationError.class));
-        assertThat(validator.validate(context, thirdWSI, submissionConfig), emptyCollectionOf(ValidationError.class));
+        SubmissionConfig submissionConfig = getSubmissionConfig(personCollection);
+        assertThat(validator.validate(context, itemWithOrcid, submissionConfig), empty());
+        assertThat(validator.validate(context, itemWithDni, submissionConfig), empty());
+        assertThat(validator.validate(context, itemWithDina, submissionConfig), empty());
+        assertThat(validator.validate(context, itemWithRenacyt, submissionConfig), empty());
+        assertThat(validator.validate(context, itemWithScopusAuthor, submissionConfig), empty());
+        assertThat(validator.validate(context, itemWithResearcherId, submissionConfig), empty());
 
-        List<ValidationError> errors = validator.validate(context, invalidWSI, submissionConfig);
+        List<ValidationError> errors = validator.validate(context, itemWithoutIds, submissionConfig);
         assertThat(errors, hasSize(1));
-        assertThat(errors.get(0).getMessage(), equalTo("error.validation.orcidOrDniRequired"));
+        assertThat(errors.get(0).getMessage(), equalTo("error.validation.personIdRequired"));
         assertThat(errors.get(0).getPaths(),
-            contains("/section/person/person.identifier.orcid", "/section/person/perucris.identifier.dni"));
+            contains("/section/person/person.identifier.orcid",
+                "/section/person/perucris.identifier.dni",
+                "/section/person/perucris.identifier.dina",
+                "/section/person/perucris.identifier.renacyt",
+                "/section/person/person.identifier.scopus-author-id",
+                "/section/person/person.identifier.rid"));
 
     }
 

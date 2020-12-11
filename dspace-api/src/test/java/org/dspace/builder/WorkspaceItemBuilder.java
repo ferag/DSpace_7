@@ -205,6 +205,22 @@ public class WorkspaceItemBuilder extends AbstractBuilder<WorkspaceItem, Workspa
         return addMetadataValue("perucris", "identifier", "dni", dni);
     }
 
+    public WorkspaceItemBuilder withDinaIdentifier(String dina) {
+        return addMetadataValue("perucris", "identifier", "dina", dina);
+    }
+
+    public WorkspaceItemBuilder withRenacytIdentifier(String renacyt) {
+        return addMetadataValue("perucris", "identifier", "renacyt", renacyt);
+    }
+
+    public WorkspaceItemBuilder withScopusAuthorIdentifier(String scopus) {
+        return addMetadataValue("person","identifier","scopus-author-id", scopus);
+    }
+
+    public WorkspaceItemBuilder withResearcherIdentifier(String rid) {
+        return addMetadataValue("person", "identifier", "rid", rid);
+    }
+
     public WorkspaceItemBuilder grantLicense() {
         Item item = workspaceItem.getItem();
         String license;

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -350,15 +351,22 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
 
     @Override
     public List<Collection> getAllCollections(Context context, Community community) throws SQLException {
+        return getCollections(context, community, (collection) -> true);
+    }
+
+    @Override
+    public List<Collection> getCollections(Context context, Community community, Predicate<Collection> predicate) {
         List<Collection> collectionList = new ArrayList<Collection>();
         List<Community> subCommunities = community.getSubcommunities();
         for (Community subCommunity : subCommunities) {
-            addCollectionList(subCommunity, collectionList);
+            addCollectionList(subCommunity, collectionList, predicate);
         }
 
         List<Collection> collections = community.getCollections();
         for (Collection collection : collections) {
-            collectionList.add(collection);
+            if (predicate.test(collection)) {
+                collectionList.add(collection);
+            }
         }
         return collectionList;
     }
@@ -369,15 +377,18 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
      *
      * @param community      community
      * @param collectionList list of collections
-     * @throws SQLException if database error
+     * @param predicate      the predicate to evaluate
      */
-    protected void addCollectionList(Community community, List<Collection> collectionList) throws SQLException {
+    protected void addCollectionList(Community community, List<Collection> collectionList,
+        Predicate<Collection> predicate) {
         for (Community subcommunity : community.getSubcommunities()) {
-            addCollectionList(subcommunity, collectionList);
+            addCollectionList(subcommunity, collectionList, predicate);
         }
 
         for (Collection collection : community.getCollections()) {
-            collectionList.add(collection);
+            if (predicate.test(collection)) {
+                collectionList.add(collection);
+            }
         }
     }
 

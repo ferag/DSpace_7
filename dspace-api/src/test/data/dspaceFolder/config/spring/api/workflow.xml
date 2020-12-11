@@ -10,6 +10,7 @@
                 <entry key="defaultWorkflow"
                        value-ref="defaultWorkflow"/>
                 <entry key="123456789/workflow-test-1" value-ref="selectSingleReviewer"/>
+                <entry key="123456789/concytec-workflow-test" value-ref="concytecWorkflow"/>
 <!--                <entry key="123456789/5" value-ref="scoreReview"/>-->
             </util:map>
         </property>
@@ -23,6 +24,16 @@
                 <ref bean="reviewstep"/>
                 <ref bean="editstep"/>
                 <ref bean="finaleditstep"/>
+            </util:list>
+        </property>
+    </bean>
+    
+    <!-- CONCYTEC workflow -->
+    <bean name="concytecWorkflow" class="org.dspace.xmlworkflow.state.Workflow">
+        <property name="firstStep" ref="shadowCopyStep"/>
+        <property name="steps">
+            <util:list>
+                <ref bean="shadowCopyStep"/>
             </util:list>
         </property>
     </bean>
@@ -186,5 +197,14 @@
     <bean id="scorereviewers" class="org.dspace.xmlworkflow.Role">
         <property name="scope" value="#{ T(org.dspace.xmlworkflow.Role.Scope).COLLECTION}"/>
         <property name="name" value="ScoreReviewers"/>
+    </bean>
+    
+    <bean name="shadowCopyStep" class="org.dspace.xmlworkflow.state.Step">
+        <property name="userSelectionMethod" ref="noUserSelectionAction"/>
+        <property name="actions">
+            <list>
+                <ref bean="shadowCopyAction"/>
+            </list>
+        </property>
     </bean>
 </beans>

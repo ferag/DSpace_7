@@ -1621,8 +1621,9 @@
         queries done by discovery for this configuration -->
         <property name="defaultFilterQueries">
             <list>
-                <!--Only find items, communities and collections-->
+                <!--Only find items of type Publication, Patent or Dataset-->
                 <value>search.resourcetype:Item AND (entityType_keyword:Publication OR entityType_keyword:Patent OR entityType_keyword:Dataset)</value>
+                <value>location.comm:${directorios-community-id}</value>
             </list>
         </property>
         <!--The configuration for the recent submissions-->
@@ -1686,8 +1687,9 @@
             queries done by discovery for this configuration -->
         <property name="defaultFilterQueries">
             <list>
-                <!--Only find items, communities and collections-->
+                <!--Only find items of type Person-->
                 <value>search.resourcetype:Item AND entityType_keyword:Person</value>
+                <value>location.comm:${directorios-community-id}</value>
             </list>
         </property>
         <!--Default result per page  -->
@@ -1815,8 +1817,9 @@
             queries done by discovery for this configuration -->
         <property name="defaultFilterQueries">
             <list>
-                <!--Only find items, communities and collections-->
+                <!--Only find items of type Project or Funding-->
                 <value>search.resourcetype:Item AND (entityType_keyword:Project OR entityType_keyword:Funding)</value>
+                <value>location.comm:${directorios-community-id}</value>
             </list>
         </property>
         <!--Default result per page  -->
@@ -1945,8 +1948,9 @@
             queries done by discovery for this configuration -->
         <property name="defaultFilterQueries">
             <list>
-                <!--Only find items, communities and collections-->
+                <!--Only find items of type OrgUnit-->
                 <value>search.resourcetype:Item AND entityType_keyword:OrgUnit</value>
+                <value>location.comm:${directorios-community-id}</value>
             </list>
         </property>
         <!--The configuration for the recent submissions-->
@@ -2018,8 +2022,9 @@
             queries done by discovery for this configuration -->
         <property name="defaultFilterQueries">
             <list>
-                <!--Only find items, communities and collections-->
+                <!--Only find items of type Equipment-->
                 <value>search.resourcetype:Item AND entityType_keyword:Equipment</value>
+                <value>location.comm:${directorios-community-id}</value>
             </list>
         </property>
         <!--        &lt;!&ndash;The configuration for the recent submissions&ndash;&gt;-->

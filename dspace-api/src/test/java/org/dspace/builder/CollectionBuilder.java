@@ -23,6 +23,7 @@ import org.dspace.core.Context;
 import org.dspace.discovery.SearchServiceException;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.dspace.xmlworkflow.storedcomponents.CollectionRole;
 
 /**
  * Builder to construct Collection objects
@@ -207,6 +208,25 @@ public class CollectionBuilder extends AbstractDSpaceObjectBuilder<Collection> {
             groupService.addMember(context, g, m);
         }
         groupService.update(context, g);
+        return this;
+    }
+
+    public CollectionBuilder withRoleGroup(String roleId) throws SQLException, AuthorizeException {
+        return withRoleGroup(roleId, null);
+    }
+
+    public CollectionBuilder withRoleGroup(String roleId, Group group) throws SQLException, AuthorizeException {
+        CollectionRole colRole = collectionRoleService.find(context, collection, roleId);
+        if (colRole == null) {
+            colRole = collectionRoleService.create(context, collection, roleId, group);
+        }
+        if (group != null) {
+            group = GroupBuilder.createGroup(context)
+                .withName("COLLECTION_" + collection.getID() + "_" + roleId)
+                .build();
+        }
+        colRole.setGroup(group);
+        collectionRoleService.update(context, colRole);
         return this;
     }
 

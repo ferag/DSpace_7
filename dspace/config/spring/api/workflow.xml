@@ -27,8 +27,8 @@
         </property>
     </bean>
     
-    <!-- CONCYTEC workflow -->
-    <bean name="concytecWorkflow" class="org.dspace.xmlworkflow.state.Workflow">
+    <!-- Institution workflow -->
+    <bean name="institutionWorkflow" class="org.dspace.xmlworkflow.state.Workflow">
         <property name="firstStep" ref="shadowCopyStep"/>
         <property name="steps">
             <util:list>

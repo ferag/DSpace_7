@@ -22,21 +22,17 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
-import org.dspace.content.EntityType;
 import org.dspace.content.Item;
-import org.dspace.content.RelationshipType;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
-import org.dspace.content.service.EntityTypeService;
 import org.dspace.content.service.ItemCopyService;
-import org.dspace.content.service.RelationshipService;
-import org.dspace.content.service.RelationshipTypeService;
 import org.dspace.core.Context;
 import org.dspace.services.ConfigurationService;
 import org.dspace.util.UUIDUtils;
 import org.dspace.workflow.WorkflowException;
 import org.dspace.workflow.WorkflowService;
+import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
 import org.dspace.xmlworkflow.state.Step;
 import org.dspace.xmlworkflow.state.actions.ActionResult;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
@@ -49,10 +45,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  */
 public class ShadowCopyAction extends ProcessingAction {
-
-    public static final String HAS_SHADOW_COPY_RELATIONSHIP = "hasShadowCopy";
-
-    public static final String IS_SHADOW_COPY_RELATIONSHIP = "isShadowCopy";
 
     @Autowired
     private CollectionService collectionService;
@@ -70,13 +62,7 @@ public class ShadowCopyAction extends ProcessingAction {
     private WorkflowService<XmlWorkflowItem> workflowService;
 
     @Autowired
-    private RelationshipService relationshipService;
-
-    @Autowired
-    private RelationshipTypeService relationshipTypeService;
-
-    @Autowired
-    private EntityTypeService entityTypeService;
+    private ConcytecWorkflowService concytecWorkflowService;
 
     @Override
     public void activate(Context context, XmlWorkflowItem workflowItem) {
@@ -94,7 +80,7 @@ public class ShadowCopyAction extends ProcessingAction {
         WorkspaceItem shadowWorkspaceItemCopy = itemCopyService.copy(context, item, directorioCollection);
 
         Item shadowItemCopy = shadowWorkspaceItemCopy.getItem();
-        createShadowRelationship(context, item, shadowItemCopy);
+        concytecWorkflowService.createShadowRelationship(context, item, shadowItemCopy);
 
         workflowService.start(context, shadowWorkspaceItemCopy);
 
@@ -127,30 +113,6 @@ public class ShadowCopyAction extends ProcessingAction {
         String collectionType = collectionService.getMetadataFirstValue(collection, "relationship", "type", null, ANY);
         String itemType = itemService.getMetadataFirstValue(item, "relationship", "type", null, ANY);
         return Objects.equals(collectionType, itemType);
-    }
-
-    private void createShadowRelationship(Context context, Item item, Item shadowItemCopy)
-        throws AuthorizeException, SQLException, WorkflowException {
-
-        RelationshipType shadowRelationshipType = findShadowRelationshipType(context, item, shadowItemCopy);
-        if (shadowRelationshipType == null) {
-            throw new WorkflowException("No " + HAS_SHADOW_COPY_RELATIONSHIP + " relationship type found");
-        }
-
-        relationshipService.create(context, item, shadowItemCopy, shadowRelationshipType, true);
-    }
-
-    private RelationshipType findShadowRelationshipType(Context context, Item item, Item shadowItemCopy)
-        throws SQLException, WorkflowException {
-
-        EntityType entityType = entityTypeService.findByItem(context, item);
-        if (entityType == null) {
-            throw new WorkflowException("No entity type found for the item " + item.getID());
-        }
-
-        return relationshipTypeService.findbyTypesAndTypeName(context, entityType, entityType,
-            HAS_SHADOW_COPY_RELATIONSHIP, IS_SHADOW_COPY_RELATIONSHIP);
-
     }
 
     @Override

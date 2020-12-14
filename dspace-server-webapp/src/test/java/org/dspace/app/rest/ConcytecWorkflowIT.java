@@ -7,8 +7,8 @@
  */
 package org.dspace.app.rest;
 
-import static org.dspace.xmlworkflow.state.actions.processingaction.ShadowCopyAction.HAS_SHADOW_COPY_RELATIONSHIP;
-import static org.dspace.xmlworkflow.state.actions.processingaction.ShadowCopyAction.IS_SHADOW_COPY_RELATIONSHIP;
+import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.HAS_SHADOW_COPY_RELATIONSHIP;
+import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_SHADOW_COPY_RELATIONSHIP;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
@@ -104,6 +104,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .withRelationshipType("Publication")
             .withSubmissionDefinition("traditional")
             .withSubmitterGroup(submitter)
+            .withRoleGroup("reviewer")
             .build();
 
         context.setCurrentUser(submitter);

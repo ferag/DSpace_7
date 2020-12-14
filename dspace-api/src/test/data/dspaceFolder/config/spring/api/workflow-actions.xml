@@ -20,6 +20,8 @@
         <property name="minimumAcceptanceScore" value="50" />
     </bean>
     <bean id="shadowCopyActionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.ShadowCopyAction" scope="prototype"/>
+    <bean id="waitForConcytecActionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.WaitForConcytecAction" scope="prototype"/>
+    <bean id="unlockInstitutionActionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.UnlockInstitutionAction" scope="prototype"/>
 
 
     <bean id="autoassignactionAPI" class="org.dspace.xmlworkflow.state.actions.userassignment.AutoAssignAction" scope="prototype"/>
@@ -74,6 +76,18 @@
     <bean id="shadowCopyAction" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
         <constructor-arg type="java.lang.String" value="shadowCopyAction"/>
         <property name="processingAction" ref="shadowCopyActionAPI" />
+        <property name="requiresUI" value="false"/>
+    </bean>
+
+    <bean id="waitForConcytecAction" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
+        <constructor-arg type="java.lang.String" value="waitForConcytecAction"/>
+        <property name="processingAction" ref="waitForConcytecActionAPI" />
+        <property name="requiresUI" value="true"/>
+    </bean>
+
+    <bean id="unlockInstitutionAction" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
+        <constructor-arg type="java.lang.String" value="unlockInstitutionAction"/>
+        <property name="processingAction" ref="unlockInstitutionActionAPI" />
         <property name="requiresUI" value="false"/>
     </bean>
 

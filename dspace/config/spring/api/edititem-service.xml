@@ -20,6 +20,15 @@
                             </property>
                             <property name="submissionDefinition" value="publication-edit" />
                         </bean>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="CUSTOM" />
+                            <property name="security">
+                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                    CUSTOM
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="publication-edit" />
+                        </bean>
 <!--                        <bean class="org.dspace.content.edit.EditItemMode">-->
 <!--                            <property name="name" value="MODE2" />-->
 <!--                            <property name="security">-->
@@ -38,6 +47,15 @@
                             <property name="security">
                                 <value type="org.dspace.content.edit.EditItemModeSecurity">
                                     ADMIN
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="person-edit" />
+                        </bean>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="CUSTOM" />
+                            <property name="security">
+                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                    CUSTOM
                                 </value>
                             </property>
                             <property name="submissionDefinition" value="person-edit" />
@@ -84,6 +102,15 @@
                             </property>
                             <property name="submissionDefinition" value="equipment-edit" />
                         </bean>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="CUSTOM" />
+                            <property name="security">
+                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                    CUSTOM
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="equipment-edit" />
+                        </bean>
                     </list>
                 </entry>
                 <entry key="funding">
@@ -93,6 +120,15 @@
                             <property name="security">
                                 <value type="org.dspace.content.edit.EditItemModeSecurity">
                                     ADMIN
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="funding-edit" />
+                        </bean>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="CUSTOM" />
+                            <property name="security">
+                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                    CUSTOM
                                 </value>
                             </property>
                             <property name="submissionDefinition" value="funding-edit" />
@@ -110,6 +146,15 @@
                             </property>
                             <property name="submissionDefinition" value="orgunit-edit" />
                         </bean>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="CUSTOM" />
+                            <property name="security">
+                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                    CUSTOM
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="orgunit-edit" />
+                        </bean>
                     </list>
                 </entry>
                 <entry key="patent">
@@ -123,6 +168,15 @@
                             </property>
                             <property name="submissionDefinition" value="patent-edit" />
                         </bean>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="CUSTOM" />
+                            <property name="security">
+                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                    CUSTOM
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="patent-edit" />
+                        </bean>
                     </list>
                 </entry>
                 <entry key="project">
@@ -132,6 +186,15 @@
                             <property name="security">
                                 <value type="org.dspace.content.edit.EditItemModeSecurity">
                                     ADMIN
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="project-edit" />
+                        </bean>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="CUSTOM" />
+                            <property name="security">
+                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                    CUSTOM
                                 </value>
                             </property>
                             <property name="submissionDefinition" value="project-edit" />

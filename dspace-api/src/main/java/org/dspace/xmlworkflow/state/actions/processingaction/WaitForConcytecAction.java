@@ -34,7 +34,6 @@ public class WaitForConcytecAction extends ProcessingAction {
 
     public static final String IS_SHADOW_COPY_RELATIONSHIP = "isShadowCopy";
 
-    private static final String SUBMIT_APPROVE = "submit_approve";
     private static final String SUBMIT_REJECT = "submit_reject";
 
     @Autowired
@@ -54,19 +53,13 @@ public class WaitForConcytecAction extends ProcessingAction {
     public ActionResult execute(Context context, XmlWorkflowItem workflowItem, Step step, HttpServletRequest request)
         throws SQLException, AuthorizeException, IOException {
 
-        switch (Util.getSubmitButton(request, SUBMIT_APPROVE)) {
-            case SUBMIT_APPROVE:
-                return processAccept(context, workflowItem);
+        switch (Util.getSubmitButton(request, SUBMIT_REJECT)) {
             case SUBMIT_REJECT:
                 return processReject(context, workflowItem, request);
             default:
                 return new ActionResult(ActionResult.TYPE.TYPE_CANCEL);
         }
 
-    }
-
-    private ActionResult processAccept(Context context, XmlWorkflowItem workflowItem) {
-        return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, ActionResult.OUTCOME_COMPLETE);
     }
 
     private ActionResult processReject(Context context, XmlWorkflowItem workflowItem, HttpServletRequest request)

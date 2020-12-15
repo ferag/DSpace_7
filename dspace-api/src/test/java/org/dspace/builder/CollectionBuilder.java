@@ -10,6 +10,7 @@ package org.dspace.builder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
@@ -220,7 +221,7 @@ public class CollectionBuilder extends AbstractDSpaceObjectBuilder<Collection> {
         if (colRole == null) {
             colRole = collectionRoleService.create(context, collection, roleId, group);
         }
-        if (group != null) {
+        if (group == null) {
             group = GroupBuilder.createGroup(context)
                 .withName("COLLECTION_" + collection.getID() + "_" + roleId)
                 .build();
@@ -275,13 +276,12 @@ public class CollectionBuilder extends AbstractDSpaceObjectBuilder<Collection> {
     }
 
     public void deleteWorkflowGroups(Context c, Collection collection) throws Exception {
-       for (int i = 1; i <= 3; i++) {
-            Group group = collectionService.getWorkflowGroup(c, collection, i);
-            if (group != null) {
-                collectionService.setWorkflowGroup(c, collection, i, null);
-                groupService.delete(c, group);
-            }
-       }
+        List<CollectionRole> collectionRoles = collectionRoleService.findByCollection(c, collection);
+        for (CollectionRole collectionRole : collectionRoles) {
+            Group group = collectionRole.getGroup();
+            collectionRoleService.delete(c, collectionRole);
+            groupService.delete(c, group);
+        }
     }
 
     public void deleteDefaultReadGroups(Context c, Collection collection) throws Exception {

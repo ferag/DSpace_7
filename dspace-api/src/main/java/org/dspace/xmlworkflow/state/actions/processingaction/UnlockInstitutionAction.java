@@ -17,8 +17,13 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
 import org.dspace.core.Context;
 import org.dspace.workflow.WorkflowException;
+import org.dspace.xmlworkflow.WorkflowConfigurationException;
+import org.dspace.xmlworkflow.factory.XmlWorkflowFactory;
 import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
+import org.dspace.xmlworkflow.service.WorkflowRequirementsService;
+import org.dspace.xmlworkflow.service.XmlWorkflowService;
 import org.dspace.xmlworkflow.state.Step;
+import org.dspace.xmlworkflow.state.Workflow;
 import org.dspace.xmlworkflow.state.actions.ActionResult;
 import org.dspace.xmlworkflow.storedcomponents.ClaimedTask;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
@@ -34,6 +39,15 @@ public class UnlockInstitutionAction extends ProcessingAction {
     private XmlWorkflowItemService workflowItemService;
 
     @Autowired
+    private XmlWorkflowFactory workflowFactory;
+
+    @Autowired
+    private XmlWorkflowService workflowService;
+
+    @Autowired
+    private WorkflowRequirementsService workflowRequirementsService;
+
+    @Autowired
     private ConcytecWorkflowService concytecWorkflowService;
 
     @Override
@@ -44,19 +58,36 @@ public class UnlockInstitutionAction extends ProcessingAction {
     public ActionResult execute(Context context, XmlWorkflowItem workflowItem, Step step, HttpServletRequest request)
         throws SQLException, AuthorizeException, IOException, WorkflowException {
 
-        List<ClaimedTask> tasks = getClaimedTaskOfInstitutionWorkflowItem(context, workflowItem);
+        Item item = concytecWorkflowService.findCopiedItem(context, workflowItem.getItem());
+        XmlWorkflowItem institutionWorkflowItem = workflowItemService.findByItem(context, item);
+
+        Workflow institutionWorkflow = workflowFactory.getWorkflow(item.getOwningCollection());
+
+        workflowService.processOutcome(context, context.getCurrentUser(), institutionWorkflow, currentStep,
+            currentActionConfig,
+            currentOutcome, institutionWorkflow,
+            true);
 
         return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, ActionResult.OUTCOME_COMPLETE);
     }
 
-    private List<ClaimedTask> getClaimedTaskOfInstitutionWorkflowItem(Context context, XmlWorkflowItem workflowItem)
-        throws SQLException {
+//    private void deleteClaimedTasks(Context context, List<ClaimedTask> tasks)
+//        throws SQLException, AuthorizeException, IOException, WorkflowConfigurationException {
+//        for (ClaimedTask task : tasks) {
+//            XmlWorkflowItem workflowItem = task.getWorkflowItem();
+//            workflowService.deleteClaimedTask(context, workflowItem, task);
+//            workflowRequirementsService.removeClaimedUser(context, workflowItem, task.getOwner(), task.getStepID());
+//        }
+//    }
 
-        Item item = concytecWorkflowService.findCopiedItem(context, workflowItem.getItem());
-        XmlWorkflowItem institutionWorkflowItem = workflowItemService.findByItem(context, item);
-
-        return claimedTaskService.findByWorkflowItem(context, institutionWorkflowItem);
-    }
+//    private List<ClaimedTask> getClaimedTaskOfInstitutionWorkflowItem(Context context, XmlWorkflowItem workflowItem)
+//        throws SQLException {
+//
+//        Item item = concytecWorkflowService.findCopiedItem(context, workflowItem.getItem());
+//        XmlWorkflowItem institutionWorkflowItem = workflowItemService.findByItem(context, item);
+//
+//        return claimedTaskService.findByWorkflowItem(context, institutionWorkflowItem);
+//    }
 
     @Override
     public List<String> getOptions() {

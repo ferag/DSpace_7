@@ -61,12 +61,6 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
         return relationships.get(0).getRightItem();
     }
 
-    private List<Relationship> findItemShadowRelationships(Context context, Item item, boolean isLeft)
-        throws SQLException {
-        RelationshipType shadowRelationshipType = findShadowRelationshipType(context, item);
-        return relationshipService.findByItemAndRelationshipType(context, item, shadowRelationshipType, isLeft);
-    }
-
     @Override
     public Item findCopiedItem(Context context, Item shadowItemCopy) throws SQLException {
         List<Relationship> relationships = findItemShadowRelationships(context, shadowItemCopy, false);
@@ -81,6 +75,12 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
 
         return relationships.get(0).getLeftItem();
 
+    }
+
+    private List<Relationship> findItemShadowRelationships(Context context, Item item, boolean isLeft)
+        throws SQLException {
+        RelationshipType shadowRelationshipType = findShadowRelationshipType(context, item);
+        return relationshipService.findByItemAndRelationshipType(context, item, shadowRelationshipType, isLeft);
     }
 
     private RelationshipType findShadowRelationshipType(Context context, Item item) throws SQLException {

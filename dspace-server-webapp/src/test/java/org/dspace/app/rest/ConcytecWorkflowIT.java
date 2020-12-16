@@ -413,6 +413,61 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
     }
 
+    @Test
+    public void testItemSubmissionWithConcytecEdit() throws Exception {
+
+        WorkspaceItem workspaceItem = createWorkspaceItem();
+
+        workflowService.start(context, workspaceItem);
+
+        Item item = workspaceItem.getItem();
+        assertThat(getWorkspaceItem(item), nullValue());
+
+        List<Relationship> relationships = relationshipService.findByItem(context, item);
+        assertThat(relationships, hasSize(1));
+
+        Relationship relationship = relationships.get(0);
+        assertThatIsShadowRelationship(relationship, item);
+
+        item = reloadItem(item);
+        assertThat(item.isArchived(), is(false));
+
+        Item shadowItemCopy = relationship.getRightItem();
+
+        assertThat(shadowItemCopy, not(equalTo(item)));
+        assertThat(item.getMetadata(), hasSize(shadowItemCopy.getMetadata().size() - 1));
+        assertThat(getWorkflowItem(shadowItemCopy), notNullValue());
+
+        XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
+        assertThat(shadowWorkflowItemCopy, notNullValue());
+
+        claimTaskAndApprove(shadowWorkflowItemCopy, admin, directorioReviewGroup);
+
+        assertThat(reloadItem(item).isArchived(), is(false));
+        shadowItemCopy = reloadItem(shadowItemCopy);
+        assertThat(reloadItem(shadowItemCopy).isArchived(), is(false));
+
+        String directorioTitle = "Submission Item Edited";
+        itemService.replaceMetadata(context, shadowItemCopy, "dc", "title", null, null, directorioTitle, null, -1, 0);
+
+        claimTaskAndApprove(shadowWorkflowItemCopy, admin, directorioEditorGroup);
+
+        assertThat(reloadItem(item).isArchived(), is(false));
+        assertThat(reloadItem(shadowItemCopy).isArchived(), is(false));
+
+        claimTaskAndApprove(shadowWorkflowItemCopy, admin, directorioEditorGroup);
+
+        item = reloadItem(item);
+        assertThat(item.isArchived(), is(true));
+        assertThat(getConcytecFeedbackMetadataValue(item), equalTo(APPROVE.name()));
+        assertThat(getTitle(item), equalTo("Submission Item"));
+
+        shadowItemCopy = reloadItem(shadowItemCopy);
+        assertThat(shadowItemCopy.isArchived(), is(true));
+        assertThat(getTitle(shadowItemCopy), equalTo(directorioTitle));
+
+    }
+
     private void assertThatIsShadowRelationship(Relationship relationship, Item leftItem) {
         assertThat(relationship.getLeftItem(), equalTo(leftItem));
         assertThat(relationship.getRelationshipType().getLeftwardType(), equalTo(HAS_SHADOW_COPY_RELATIONSHIP));
@@ -503,6 +558,10 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
     private String getConcytecFeedbackMetadataValue(Item item) {
         return itemService.getMetadataFirstValue(item, "perucris", "concytec", "feedback", ANY);
+    }
+
+    private String getTitle(Item item) {
+        return itemService.getMetadataFirstValue(item, "dc", "title", null, Item.ANY);
     }
 
     private void performActionOnClaimedTaskViaRest(EPerson user, ClaimedTask task, MultiValueMap<String, String> params)

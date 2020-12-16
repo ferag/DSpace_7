@@ -7,6 +7,9 @@
  */
 package org.dspace.app.rest;
 
+import static org.dspace.content.Item.ANY;
+import static org.dspace.xmlworkflow.ConcytecFeedback.APPROVE;
+import static org.dspace.xmlworkflow.ConcytecFeedback.REJECT;
 import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.HAS_SHADOW_COPY_RELATIONSHIP;
 import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_SHADOW_COPY_RELATIONSHIP;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -23,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.UUID;
 
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
 import org.dspace.authorize.AuthorizeException;
@@ -46,10 +48,12 @@ import org.dspace.content.service.WorkspaceItemService;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.services.ConfigurationService;
+import org.dspace.xmlworkflow.service.XmlWorkflowService;
 import org.dspace.xmlworkflow.storedcomponents.ClaimedTask;
 import org.dspace.xmlworkflow.storedcomponents.PoolTask;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.dspace.xmlworkflow.storedcomponents.service.ClaimedTaskService;
+import org.dspace.xmlworkflow.storedcomponents.service.CollectionRoleService;
 import org.dspace.xmlworkflow.storedcomponents.service.PoolTaskService;
 import org.dspace.xmlworkflow.storedcomponents.service.XmlWorkflowItemService;
 import org.junit.After;
@@ -78,6 +82,9 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     private XmlWorkflowItemService workflowItemService;
 
     @Autowired
+    private XmlWorkflowService workflowService;
+
+    @Autowired
     private WorkspaceItemService workspaceItemService;
 
     @Autowired
@@ -87,8 +94,10 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     private PoolTaskService poolTaskService;
 
     @Autowired
-    private ItemService itemService;
+    private CollectionRoleService collectionRoleService;
 
+    @Autowired
+    private ItemService itemService;
 
     private Collection collection;
 
@@ -102,6 +111,8 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     private Collection directorioPublications;
 
     private Group directorioEditorGroup;
+
+    private Group directorioReviewGroup;
 
     @Before
     public void before() throws Exception {
@@ -126,6 +137,12 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .withName("Directorio de Produccion Cientifica")
             .build();
 
+        directorioReviewGroup = GroupBuilder.createGroup(context)
+            .withName("review group")
+            .addMember(admin)
+            .addMember(eperson)
+            .build();
+
         directorioEditorGroup = GroupBuilder.createGroup(context)
             .withName("editor group")
             .addMember(admin)
@@ -136,7 +153,9 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .withName("Publications")
             .withRelationshipType("Publication")
             .withSubmitterGroup(submitter)
+            .withRoleGroup("reviewer", directorioReviewGroup)
             .withRoleGroup("editor", directorioEditorGroup)
+            .withRoleGroup("finaleditor", directorioEditorGroup)
             .build();
 
         parentCommunity = CommunityBuilder.createCommunity(context)
@@ -168,6 +187,8 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     public void destroy() throws Exception {
 
         context.turnOffAuthorisationSystem();
+        collectionRoleService.deleteByCollection(context, collection);
+        collectionRoleService.deleteByCollection(context, directorioPublications);
         workflowItemService.deleteByCollection(context, collection);
         workflowItemService.deleteByCollection(context, directorioPublications);
         workspaceItemService.findAll(context).forEach(this::deleteWorkspaceItem);
@@ -179,37 +200,23 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     @Test
     public void testItemSubmissionWithInstitutionReject() throws Exception {
 
-        InputStream pdf = simpleArticle.getInputStream();
+        WorkspaceItem workspaceItem = createWorkspaceItem();
 
-        WorkspaceItem workspaceItem = WorkspaceItemBuilder.createWorkspaceItem(context, collection)
-            .withTitle("Submission Item")
-            .withIssueDate("2017-10-17")
-            .withFulltext("simple-article.pdf", "/local/path/simple-article.pdf", pdf)
-            .withAuthor("Mario Rossi")
-            .withAuthorAffilitation("4Science")
-            .withEditor("Mario Rossi")
-            .grantLicense()
-            .build();
+        workflowService.start(context, workspaceItem);
 
         Item item = workspaceItem.getItem();
-
-        submitItemViaRest(submitter, workspaceItem.getID());
-
         assertThat(getWorkspaceItem(item), nullValue());
 
         List<Relationship> relationships = relationshipService.findByItem(context, item);
         assertThat(relationships, hasSize(1));
 
         Relationship relationship = relationships.get(0);
-        assertThat(relationship.getLeftItem(), equalTo(item));
-        assertThat(relationship.getRelationshipType().getLeftwardType(), equalTo(HAS_SHADOW_COPY_RELATIONSHIP));
-        assertThat(relationship.getRelationshipType().getRightwardType(), equalTo(IS_SHADOW_COPY_RELATIONSHIP));
+        assertThatIsShadowRelationship(relationship, item);
 
-        item = context.reloadEntity(item);
+        item = reloadItem(item);
         assertThat(item.isArchived(), is(false));
 
         Item shadowItemCopy = relationship.getRightItem();
-        UUID shadowItemCopyId = shadowItemCopy.getID();
 
         assertThat(shadowItemCopy, not(equalTo(item)));
         assertThat(item.getMetadata(), hasSize(shadowItemCopy.getMetadata().size() - 1));
@@ -226,41 +233,77 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         rejectClaimedTaskViaRest(submitter, task, "wrong title");
 
+        assertThat(reloadItem(item).isArchived(), is(false));
         assertThat(getWorkspaceItem(item), notNullValue());
-        assertThat(itemService.find(context, shadowItemCopyId), nullValue());
+        assertThat(reloadItem(shadowItemCopy), nullValue());
 
     }
 
     @Test
-    public void testItemSubmissionWithConcytecApprove() throws Exception {
+    public void testItemSubmissionWithInstitutionRejectAfterDirectorioReviewerApprovement() throws Exception {
 
-        InputStream pdf = simpleArticle.getInputStream();
+        WorkspaceItem workspaceItem = createWorkspaceItem();
 
-        WorkspaceItem workspaceItem = WorkspaceItemBuilder.createWorkspaceItem(context, collection)
-            .withTitle("Submission Item")
-            .withIssueDate("2017-10-17")
-            .withFulltext("simple-article.pdf", "/local/path/simple-article.pdf", pdf)
-            .withAuthor("Mario Rossi")
-            .withAuthorAffilitation("4Science")
-            .withEditor("Mario Rossi")
-            .grantLicense()
-            .build();
+        workflowService.start(context, workspaceItem);
 
         Item item = workspaceItem.getItem();
-
-        submitItemViaRest(submitter, workspaceItem.getID());
-
         assertThat(getWorkspaceItem(item), nullValue());
 
         List<Relationship> relationships = relationshipService.findByItem(context, item);
         assertThat(relationships, hasSize(1));
 
         Relationship relationship = relationships.get(0);
-        assertThat(relationship.getLeftItem(), equalTo(item));
-        assertThat(relationship.getRelationshipType().getLeftwardType(), equalTo(HAS_SHADOW_COPY_RELATIONSHIP));
-        assertThat(relationship.getRelationshipType().getRightwardType(), equalTo(IS_SHADOW_COPY_RELATIONSHIP));
+        assertThatIsShadowRelationship(relationship, item);
 
-        item = context.reloadEntity(item);
+        item = reloadItem(item);
+        assertThat(item.isArchived(), is(false));
+
+        Item shadowItemCopy = relationship.getRightItem();
+        XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
+
+        assertThat(shadowItemCopy, not(equalTo(item)));
+        assertThat(item.getMetadata(), hasSize(shadowItemCopy.getMetadata().size() - 1));
+        assertThat(shadowWorkflowItemCopy, notNullValue());
+
+        XmlWorkflowItem workflowItem = getWorkflowItem(item);
+        assertThat(workflowItem, notNullValue());
+
+        claimTaskAndApprove(shadowWorkflowItemCopy, admin, directorioReviewGroup);
+
+        assertThat(reloadItem(item).isArchived(), is(false));
+        assertThat(reloadItem(shadowItemCopy).isArchived(), is(false));
+
+        List<ClaimedTask> tasks = claimedTaskService.findByWorkflowItem(context, workflowItem);
+        assertThat(tasks, hasSize(1));
+
+        ClaimedTask task = tasks.get(0);
+        assertThat(task.getOwner(), equalTo(submitter));
+
+        rejectClaimedTaskViaRest(submitter, task, "wrong title");
+
+        assertThat(reloadItem(item).isArchived(), is(false));
+        assertThat(getWorkspaceItem(item), notNullValue());
+        assertThat(reloadItem(shadowItemCopy), nullValue());
+
+    }
+
+    @Test
+    public void testItemSubmissionWithConcytecApprove() throws Exception {
+
+        WorkspaceItem workspaceItem = createWorkspaceItem();
+
+        workflowService.start(context, workspaceItem);
+
+        Item item = workspaceItem.getItem();
+        assertThat(getWorkspaceItem(item), nullValue());
+
+        List<Relationship> relationships = relationshipService.findByItem(context, item);
+        assertThat(relationships, hasSize(1));
+
+        Relationship relationship = relationships.get(0);
+        assertThatIsShadowRelationship(relationship, item);
+
+        item = reloadItem(item);
         assertThat(item.isArchived(), is(false));
 
         Item shadowItemCopy = relationship.getRightItem();
@@ -272,24 +315,154 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
         assertThat(shadowWorkflowItemCopy, notNullValue());
 
-        List<PoolTask> poolTasks = poolTaskService.find(context, shadowWorkflowItemCopy);
+        claimTaskAndApprove(shadowWorkflowItemCopy, admin, directorioReviewGroup);
+
+        assertThat(reloadItem(item).isArchived(), is(false));
+        assertThat(reloadItem(shadowItemCopy).isArchived(), is(false));
+
+        claimTaskAndApprove(shadowWorkflowItemCopy, admin, directorioEditorGroup);
+
+        assertThat(reloadItem(item).isArchived(), is(false));
+        assertThat(reloadItem(shadowItemCopy).isArchived(), is(false));
+
+        claimTaskAndApprove(shadowWorkflowItemCopy, admin, directorioEditorGroup);
+
+        item = reloadItem(item);
+        assertThat(item.isArchived(), is(true));
+        assertThat(getConcytecFeedbackMetadataValue(item), equalTo(APPROVE.name()));
+        assertThat(reloadItem(shadowItemCopy).isArchived(), is(true));
+
+    }
+
+    @Test
+    public void testItemSubmissionWithConcytecReviewerReject() throws Exception {
+
+        WorkspaceItem workspaceItem = createWorkspaceItem();
+
+        workflowService.start(context, workspaceItem);
+
+        Item item = workspaceItem.getItem();
+        assertThat(getWorkspaceItem(item), nullValue());
+
+        List<Relationship> relationships = relationshipService.findByItem(context, item);
+        assertThat(relationships, hasSize(1));
+
+        Relationship relationship = relationships.get(0);
+        assertThatIsShadowRelationship(relationship, item);
+
+        item = reloadItem(item);
+        assertThat(item.isArchived(), is(false));
+
+        Item shadowItemCopy = relationship.getRightItem();
+
+        assertThat(shadowItemCopy, not(equalTo(item)));
+        assertThat(item.getMetadata(), hasSize(shadowItemCopy.getMetadata().size() - 1));
+        assertThat(getWorkflowItem(shadowItemCopy), notNullValue());
+
+        XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
+        assertThat(shadowWorkflowItemCopy, notNullValue());
+
+        claimTaskAndReject(shadowWorkflowItemCopy, admin, directorioReviewGroup, "wrong publication");
+
+        item = reloadItem(item);
+        assertThat(item.isArchived(), is(true));
+        assertThat(getConcytecFeedbackMetadataValue(item), equalTo(REJECT.name()));
+        assertThat(reloadItem(shadowItemCopy), nullValue());
+
+    }
+
+    @Test
+    public void testItemSubmissionWithConcytecEditorReject() throws Exception {
+
+        WorkspaceItem workspaceItem = createWorkspaceItem();
+
+        workflowService.start(context, workspaceItem);
+
+        Item item = workspaceItem.getItem();
+        assertThat(getWorkspaceItem(item), nullValue());
+
+        List<Relationship> relationships = relationshipService.findByItem(context, item);
+        assertThat(relationships, hasSize(1));
+
+        Relationship relationship = relationships.get(0);
+        assertThatIsShadowRelationship(relationship, item);
+
+        item = reloadItem(item);
+        assertThat(item.isArchived(), is(false));
+
+        Item shadowItemCopy = relationship.getRightItem();
+
+        assertThat(shadowItemCopy, not(equalTo(item)));
+        assertThat(item.getMetadata(), hasSize(shadowItemCopy.getMetadata().size() - 1));
+        assertThat(getWorkflowItem(shadowItemCopy), notNullValue());
+
+        XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
+        assertThat(shadowWorkflowItemCopy, notNullValue());
+
+        claimTaskAndApprove(shadowWorkflowItemCopy, admin, directorioReviewGroup);
+
+        assertThat(reloadItem(item).isArchived(), is(false));
+        assertThat(reloadItem(shadowItemCopy), notNullValue());
+
+        claimTaskAndReject(shadowWorkflowItemCopy, admin, directorioEditorGroup, "wrong publication");
+
+        item = reloadItem(item);
+        assertThat(item.isArchived(), is(true));
+        assertThat(getConcytecFeedbackMetadataValue(item), equalTo(REJECT.name()));
+        assertThat(reloadItem(shadowItemCopy), nullValue());
+
+    }
+
+    private void assertThatIsShadowRelationship(Relationship relationship, Item leftItem) {
+        assertThat(relationship.getLeftItem(), equalTo(leftItem));
+        assertThat(relationship.getRelationshipType().getLeftwardType(), equalTo(HAS_SHADOW_COPY_RELATIONSHIP));
+        assertThat(relationship.getRelationshipType().getRightwardType(), equalTo(IS_SHADOW_COPY_RELATIONSHIP));
+    }
+
+    private void claimTaskAndApprove(XmlWorkflowItem workflowItem, EPerson user, Group expectedGroup) throws Exception {
+        List<PoolTask> poolTasks = poolTaskService.find(context, workflowItem);
         assertThat(poolTasks, hasSize(1));
 
         PoolTask poolTask = poolTasks.get(0);
-        assertThat(poolTask.getGroup(), equalTo(directorioEditorGroup));
+        assertThat(poolTask.getGroup(), equalTo(expectedGroup));
 
-        performActionOnPoolTaskViaRest(admin, poolTask);
+        performActionOnPoolTaskViaRest(user, poolTask);
 
-        ClaimedTask claimedTask = claimedTaskService.findByWorkflowIdAndEPerson(context, shadowWorkflowItemCopy, admin);
+        ClaimedTask claimedTask = claimedTaskService.findByWorkflowIdAndEPerson(context, workflowItem, user);
         assertThat(claimedTask, notNullValue());
-        approveClaimedTaskViaRest(admin, claimedTask);
 
-        item = context.reloadEntity(item);
-        assertThat(item.isArchived(), is(true));
+        approveClaimedTaskViaRest(user, claimedTask);
+    }
 
-        shadowItemCopy = context.reloadEntity(shadowItemCopy);
-        assertThat(shadowItemCopy.isArchived(), is(true));
+    private void claimTaskAndReject(XmlWorkflowItem workflowItem, EPerson user, Group expectedGroup, String reason)
+        throws Exception {
+        List<PoolTask> poolTasks = poolTaskService.find(context, workflowItem);
+        assertThat(poolTasks, hasSize(1));
 
+        PoolTask poolTask = poolTasks.get(0);
+        assertThat(poolTask.getGroup(), equalTo(expectedGroup));
+
+        performActionOnPoolTaskViaRest(user, poolTask);
+
+        ClaimedTask claimedTask = claimedTaskService.findByWorkflowIdAndEPerson(context, workflowItem, user);
+        assertThat(claimedTask, notNullValue());
+
+        rejectClaimedTaskViaRest(user, claimedTask, password);
+    }
+
+    private WorkspaceItem createWorkspaceItem() throws IOException {
+        InputStream pdf = simpleArticle.getInputStream();
+
+        WorkspaceItem workspaceItem = WorkspaceItemBuilder.createWorkspaceItem(context, collection)
+            .withTitle("Submission Item")
+            .withIssueDate("2017-10-17")
+            .withFulltext("simple-article.pdf", "/local/path/simple-article.pdf", pdf)
+            .withAuthor("Mario Rossi")
+            .withAuthorAffilitation("4Science")
+            .withEditor("Mario Rossi")
+            .grantLicense()
+            .build();
+        return workspaceItem;
     }
 
     private void deleteWorkspaceItem(WorkspaceItem workspaceItem) {
@@ -306,13 +479,6 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
     private WorkspaceItem getWorkspaceItem(Item item) throws SQLException {
         return workspaceItemService.findByItem(context, item);
-    }
-
-    private void submitItemViaRest(EPerson user, Integer wsId) throws Exception, SQLException {
-        getClient(getAuthToken(user.getEmail(), password))
-            .perform(post(BASE_REST_SERVER_URL + "/api/workflow/workflowitems")
-            .content("/api/submission/workspaceitems/" + wsId).contentType(textUriContentType))
-            .andExpect(status().isCreated());
     }
 
     private void rejectClaimedTaskViaRest(EPerson user, ClaimedTask task, String reason) throws Exception {
@@ -335,6 +501,10 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .andExpect(status().isNoContent());
     }
 
+    private String getConcytecFeedbackMetadataValue(Item item) {
+        return itemService.getMetadataFirstValue(item, "perucris", "concytec", "feedback", ANY);
+    }
+
     private void performActionOnClaimedTaskViaRest(EPerson user, ClaimedTask task, MultiValueMap<String, String> params)
         throws Exception {
 
@@ -343,5 +513,9 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .contentType("application/x-www-form-urlencoded"))
             .andExpect(status().isNoContent());
 
+    }
+
+    private Item reloadItem(Item item) throws SQLException {
+        return context.reloadEntity(item);
     }
 }

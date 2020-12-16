@@ -7,6 +7,8 @@
  */
 package org.dspace.xmlworkflow;
 
+import static org.dspace.xmlworkflow.ConcytecFeedback.fromString;
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -17,6 +19,7 @@ import org.dspace.content.Item;
 import org.dspace.content.Relationship;
 import org.dspace.content.RelationshipType;
 import org.dspace.content.service.EntityTypeService;
+import org.dspace.content.service.ItemService;
 import org.dspace.content.service.RelationshipService;
 import org.dspace.content.service.RelationshipTypeService;
 import org.dspace.core.Context;
@@ -38,6 +41,9 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
 
     @Autowired
     private EntityTypeService entityTypeService;
+
+    @Autowired
+    private ItemService itemService;
 
     @Override
     public Relationship createShadowRelationship(Context context, Item item, Item shadowItemCopy)
@@ -75,6 +81,17 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
 
         return relationships.get(0).getLeftItem();
 
+    }
+
+    @Override
+    public void setConcytecFeedback(Context context, Item item, ConcytecFeedback feedback) throws SQLException {
+        itemService.removeMetadataValues(context, item, "perucris", "concytec", "feedback", Item.ANY);
+        itemService.addMetadata(context, item, "perucris", "concytec", "feedback", null, feedback.name());
+    }
+
+    @Override
+    public ConcytecFeedback getConcytecFeedback(Context context, Item item) {
+        return fromString(itemService.getMetadataFirstValue(item, "perucris", "concytec", "feedback", null));
     }
 
     private List<Relationship> findItemShadowRelationships(Context context, Item item, boolean isLeft)

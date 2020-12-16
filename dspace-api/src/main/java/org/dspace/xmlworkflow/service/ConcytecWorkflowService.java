@@ -13,6 +13,7 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
 import org.dspace.content.Relationship;
 import org.dspace.core.Context;
+import org.dspace.xmlworkflow.ConcytecFeedback;
 
 /**
  * Service that handle the relationships between the item related to the
@@ -58,4 +59,26 @@ public interface ConcytecWorkflowService {
      * @throws SQLException if an SQL error occurs
      */
     Item findCopiedItem(Context context, Item shadowItemCopy) throws SQLException;
+
+    /**
+     * Add the Concytec feedback on the given item.
+     *
+     * @param context  the DSpace context
+     * @param item     the item
+     * @param feedback the feedback
+     * @throws SQLException if an SQL error occurs
+     */
+    void setConcytecFeedback(Context context, Item item, ConcytecFeedback feedback) throws SQLException;
+
+    /**
+     * Returns the Concytec feedback regarding the given item, or
+     * {@link ConcytecFeedback}.NONE if no feedback was already given.
+     *
+     * @param context the DSpace context
+     * @param item    the item
+     * @return the Concytec feedback on the given item
+     * @throws SQLException if an SQL error occurs
+     */
+    ConcytecFeedback getConcytecFeedback(Context context, Item item) throws SQLException;
+
 }

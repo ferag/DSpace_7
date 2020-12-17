@@ -10,6 +10,8 @@ package org.dspace.perucris.externalservices.reniec;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +35,15 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
 
     @Autowired
     private ItemService itemService;
+
+    private Map<Integer, String> genderMap;
+
+    public UpdateItemWithInformationFromReniecService() {
+        //FIXME: evaluate if this map needs to / can be injected
+        genderMap = new HashMap<>();
+        genderMap.put(1, "m");
+        genderMap.put(2, "f");
+    }
 
     @Override
     public boolean updateItem(Context context, Item item) {
@@ -109,26 +120,31 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
                 informationsFromReniec.getDistrictOfBirth())) {
             return false;
         }
-        if (!checkSexIndex(itemService.getMetadataFirstValue(currentItem, "oairecerif", "person", "gender", null),
-             informationsFromReniec.getIndexSex())) {
+        if (!checkGender(itemService.getMetadataFirstValue(currentItem, "oairecerif", "person", "gender", null),
+            gender(informationsFromReniec.getIndexSex()))) {
             return false;
         }
-        if (!checkBirthDate(itemService.getMetadataFirstValue(currentItem, "person", "birthDate", null, null),
-                informationsFromReniec.getBirthDate())) {
-            return false;
+        return checkBirthDate(itemService.getMetadataFirstValue(currentItem, "person", "birthDate", null, null),
+            informationsFromReniec.getBirthDate());
+    }
+
+    private String gender(int indexSex) {
+        //FIXME evaluate if this mapping can / needs to be configured
+        if (!genderMap.containsKey(indexSex)) {
+            log.warn("Unknown gender returned from RENIEC: {}", indexSex);
         }
-        return true;
+        return genderMap.get(indexSex);
     }
 
     private boolean checkMetadata(String itemMetadata, String infoFromReniec) {
         return StringUtils.equals(itemMetadata, infoFromReniec);
     }
 
-    private boolean checkSexIndex(String sexIndex, int sexIndexFromReniec) {
-        if (!StringUtils.isNotBlank(sexIndex)) {
+    private boolean checkGender(String gender, String genderFromReniec) {
+        if (StringUtils.isBlank(gender)) {
             return false;
         } else {
-            return Integer.parseInt(sexIndex) != sexIndexFromReniec;
+            return !gender.equals(genderFromReniec);
         }
     }
 
@@ -215,9 +231,9 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
                 itemService.addMetadata(context, currentItem, "perucris", "nacimiento", "distrito", null,
                         dto.getDistrictOfBirth());
             }
-            if (dto.getIndexSex() == 1 | dto.getIndexSex() == 2) {
+            if (Objects.nonNull(gender(dto.getIndexSex()))) {
                 itemService.addMetadata(context, currentItem, "oairecerif", "person", "gender", null,
-                            String.valueOf(dto.getIndexSex()));
+                            gender(dto.getIndexSex()));
             }
             if (dto.getBirthDate() != null) {
                 String birthDate = dto.getBirthDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));

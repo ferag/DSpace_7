@@ -213,19 +213,25 @@ public class CollectionBuilder extends AbstractDSpaceObjectBuilder<Collection> {
     }
 
     public CollectionBuilder withRoleGroup(String roleId) throws SQLException, AuthorizeException {
-        return withRoleGroup(roleId, null);
+        return withRoleGroup(roleId);
     }
 
-    public CollectionBuilder withRoleGroup(String roleId, Group group) throws SQLException, AuthorizeException {
+    public CollectionBuilder withRoleGroup(String roleId, Group... members) throws SQLException, AuthorizeException {
+
+        Group group = GroupBuilder.createGroup(context)
+            .withName("COLLECTION_" + collection.getID() + "_" + roleId)
+            .build();
+
         CollectionRole colRole = collectionRoleService.find(context, collection, roleId);
         if (colRole == null) {
             colRole = collectionRoleService.create(context, collection, roleId, group);
         }
-        if (group == null) {
-            group = GroupBuilder.createGroup(context)
-                .withName("COLLECTION_" + collection.getID() + "_" + roleId)
-                .build();
+
+        for (Group member : members) {
+            groupService.addMember(context, group, member);
         }
+        groupService.update(context, group);
+
         colRole.setGroup(group);
         collectionRoleService.update(context, colRole);
         return this;

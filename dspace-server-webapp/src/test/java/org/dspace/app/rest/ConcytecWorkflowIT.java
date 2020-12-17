@@ -13,6 +13,7 @@ import static org.dspace.xmlworkflow.ConcytecFeedback.REJECT;
 import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.HAS_SHADOW_COPY_RELATIONSHIP;
 import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_SHADOW_COPY_RELATIONSHIP;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -499,7 +500,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(poolTasks, hasSize(1));
 
         PoolTask poolTask = poolTasks.get(0);
-        assertThat(poolTask.getGroup(), equalTo(expectedGroup));
+        assertThat(poolTask.getGroup().getMemberGroups(), contains(expectedGroup));
 
         performActionOnPoolTaskViaRest(user, poolTask);
 
@@ -515,7 +516,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(poolTasks, hasSize(1));
 
         PoolTask poolTask = poolTasks.get(0);
-        assertThat(poolTask.getGroup(), equalTo(expectedGroup));
+        assertThat(poolTask.getGroup().getMemberGroups(), contains(expectedGroup));
 
         performActionOnPoolTaskViaRest(user, poolTask);
 

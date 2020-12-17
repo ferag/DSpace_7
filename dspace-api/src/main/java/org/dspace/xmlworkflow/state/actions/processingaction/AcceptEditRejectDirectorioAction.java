@@ -96,6 +96,7 @@ public class AcceptEditRejectDirectorioAction extends ProcessingAction {
         }
 
         concytecWorkflowService.setConcytecFeedback(context, item, ConcytecFeedback.REJECT);
+        concytecWorkflowService.setConcytecComment(context, item, reason);
         return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, OUTCOME_REJECT);
     }
 

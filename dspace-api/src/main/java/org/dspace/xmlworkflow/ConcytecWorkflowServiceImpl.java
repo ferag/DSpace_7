@@ -85,13 +85,22 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
 
     @Override
     public void setConcytecFeedback(Context context, Item item, ConcytecFeedback feedback) throws SQLException {
-        itemService.removeMetadataValues(context, item, "perucris", "concytec", "feedback", Item.ANY);
-        itemService.addMetadata(context, item, "perucris", "concytec", "feedback", null, feedback.name());
+        replaceMetadata(context, item, "perucris", "concytec", "feedback", feedback.name());
     }
 
     @Override
     public ConcytecFeedback getConcytecFeedback(Context context, Item item) {
         return fromString(itemService.getMetadataFirstValue(item, "perucris", "concytec", "feedback", null));
+    }
+
+    @Override
+    public void setConcytecComment(Context context, Item item, String comment) throws SQLException {
+        replaceMetadata(context, item, "perucris", "concytec", "comment", comment);
+    }
+
+    @Override
+    public String getConcytecComment(Context context, Item item) throws SQLException {
+        return itemService.getMetadataFirstValue(item, "perucris", "concytec", "comment", null);
     }
 
     private List<Relationship> findItemShadowRelationships(Context context, Item item, boolean isLeft)
@@ -120,6 +129,12 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
         }
 
         return relationshipType;
+    }
+
+    private void replaceMetadata(Context context, Item item, String schema, String element, String qualifier,
+        String value) throws SQLException {
+        itemService.removeMetadataValues(context, item, schema, element, qualifier, Item.ANY);
+        itemService.addMetadata(context, item, schema, element, qualifier, null, value);
     }
 
 }

@@ -13,8 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
+import org.dspace.content.service.InstallItemService;
 import org.dspace.core.Context;
 import org.dspace.workflow.WorkflowException;
 import org.dspace.xmlworkflow.ConcytecFeedback;
@@ -49,6 +51,9 @@ public class UnlockInstitutionAction extends ProcessingAction {
     @Autowired
     private ConcytecWorkflowService concytecWorkflowService;
 
+    @Autowired
+    private InstallItemService installItemService;
+
     @Override
     public void activate(Context c, XmlWorkflowItem wf) {
     }
@@ -68,7 +73,8 @@ public class UnlockInstitutionAction extends ProcessingAction {
         }
 
         if (concytecFeedback == ConcytecFeedback.REJECT) {
-            workflowService.deleteWorkflowByWorkflowItem(context, workflowItem, context.getCurrentUser());
+            item = installItemService.installItem(context, workflowItem);
+            itemService.withdraw(context, item);
             return new ActionResult(ActionResult.TYPE.TYPE_CANCEL);
         }
 
@@ -84,6 +90,10 @@ public class UnlockInstitutionAction extends ProcessingAction {
 
         if (concytecFeedback != ConcytecFeedback.NONE) {
             concytecWorkflowService.setConcytecFeedback(context, institutionItem, concytecFeedback);
+            String concytecComment = concytecWorkflowService.getConcytecComment(context, directorioItem);
+            if (StringUtils.isNotBlank(concytecComment)) {
+                concytecWorkflowService.setConcytecComment(context, institutionItem, concytecComment);
+            }
         }
 
         Workflow institutionWorkflow = workflowFactory.getWorkflow(institutionWorkflowItem.getCollection());

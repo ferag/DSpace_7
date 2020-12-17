@@ -81,4 +81,24 @@ public interface ConcytecWorkflowService {
      */
     ConcytecFeedback getConcytecFeedback(Context context, Item item) throws SQLException;
 
+    /**
+     * Add a Concytec comment on the given item.
+     *
+     * @param context the DSpace context
+     * @param item    the item
+     * @param comment the comment to add
+     * @throws SQLException if an SQL error occurs
+     */
+    void setConcytecComment(Context context, Item item, String comment) throws SQLException;
+
+    /**
+     * Returns the Concytec comment regarding the given item.
+     *
+     * @param context the DSpace context
+     * @param item    the item
+     * @return the Concytec comment on the given item
+     * @throws SQLException if an SQL error occurs
+     */
+    String getConcytecComment(Context context, Item item) throws SQLException;
+
 }

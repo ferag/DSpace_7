@@ -26,10 +26,10 @@ import org.dspace.content.Item;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
-import org.dspace.content.service.ItemCopyService;
 import org.dspace.core.Context;
 import org.dspace.services.ConfigurationService;
 import org.dspace.util.UUIDUtils;
+import org.dspace.versioning.ItemCorrectionProvider;
 import org.dspace.workflow.WorkflowException;
 import org.dspace.workflow.WorkflowService;
 import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
@@ -56,7 +56,7 @@ public class ShadowCopyAction extends ProcessingAction {
     private ConfigurationService configurationService;
 
     @Autowired
-    private ItemCopyService itemCopyService;
+    private ItemCorrectionProvider itemCorrectionProvider;
 
     @Autowired
     private WorkflowService<XmlWorkflowItem> workflowService;
@@ -74,17 +74,18 @@ public class ShadowCopyAction extends ProcessingAction {
         throws SQLException, WorkflowException, AuthorizeException, IOException {
 
         Item item = workflowItem.getItem();
-
-        Collection directorioCollection = findDirectorioCollectionByRelationshipType(context, item);
-
-        WorkspaceItem shadowWorkspaceItemCopy = itemCopyService.copy(context, item, directorioCollection);
-
-        Item shadowItemCopy = shadowWorkspaceItemCopy.getItem();
-        concytecWorkflowService.createShadowRelationship(context, item, shadowItemCopy);
+        WorkspaceItem shadowWorkspaceItemCopy = createShadowCopy(context, item);
+        concytecWorkflowService.createShadowRelationship(context, item, shadowWorkspaceItemCopy.getItem());
 
         workflowService.start(context, shadowWorkspaceItemCopy);
 
         return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, ActionResult.OUTCOME_COMPLETE);
+    }
+
+    private WorkspaceItem createShadowCopy(Context context, Item item)
+        throws AuthorizeException, IOException, SQLException, WorkflowException {
+        Collection directorioCollection = findDirectorioCollectionByRelationshipType(context, item);
+        return itemCorrectionProvider.createNewItemAndAddItInWorkspace(context, directorioCollection, item);
     }
 
     private Collection findDirectorioCollectionByRelationshipType(Context context, Item item)

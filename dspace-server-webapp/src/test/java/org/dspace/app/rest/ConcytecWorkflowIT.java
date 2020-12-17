@@ -106,6 +106,12 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
     private EPerson submitter;
 
+    private EPerson firstDirectorioUser;
+
+    private EPerson secondDirectorioUser;
+
+    private EPerson institutionUser;
+
     private Community directorioCommunity;
 
     private Collection directorioPublications;
@@ -124,10 +130,10 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         RelationshipTypeBuilder.createRelationshipTypeBuilder(context, publicationType, publicationType,
             HAS_SHADOW_COPY_RELATIONSHIP, IS_SHADOW_COPY_RELATIONSHIP, 0, 1, 0, 1);
 
-        submitter = EPersonBuilder.createEPerson(context)
-            .withEmail("submitter@example.com")
-            .withPassword(password)
-            .build();
+        submitter = createEPerson("submitter@example.com");
+        firstDirectorioUser = createEPerson("firstDirectorioUser@example.com");
+        secondDirectorioUser = createEPerson("secondDirectorioUser@example.com");
+        institutionUser = createEPerson("user@example.com");
 
         directorioCommunity = CommunityBuilder.createCommunity(context)
             .withName("Directorio Community")
@@ -139,13 +145,13 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         directorioReviewGroup = GroupBuilder.createGroup(context)
             .withName("review group")
-            .addMember(admin)
-            .addMember(eperson)
+            .addMember(firstDirectorioUser)
+            .addMember(secondDirectorioUser)
             .build();
 
         directorioEditorGroup = GroupBuilder.createGroup(context)
             .withName("editor group")
-            .addMember(admin)
+            .addMember(firstDirectorioUser)
             .build();
 
         directorioPublications = CollectionBuilder
@@ -164,7 +170,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         Group reviewGroup = GroupBuilder.createGroup(context)
             .withName("Reviewer group")
-            .addMember(submitter)
+            .addMember(institutionUser)
             .build();
 
         collection = CollectionBuilder.createCollection(context, parentCommunity, "123456789/institution-workflow-test")
@@ -229,9 +235,9 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(tasks, hasSize(1));
 
         ClaimedTask task = tasks.get(0);
-        assertThat(task.getOwner(), equalTo(submitter));
+        assertThat(task.getOwner(), equalTo(institutionUser));
 
-        rejectClaimedTaskViaRest(submitter, task, "wrong title");
+        rejectClaimedTaskViaRest(institutionUser, task, "wrong title");
 
         assertThat(reloadItem(item).isArchived(), is(false));
         assertThat(getWorkspaceItem(item), notNullValue());
@@ -268,7 +274,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         XmlWorkflowItem workflowItem = getWorkflowItem(item);
         assertThat(workflowItem, notNullValue());
 
-        claimTaskAndApprove(shadowWorkflowItemCopy, admin, directorioReviewGroup);
+        claimTaskAndApprove(shadowWorkflowItemCopy, secondDirectorioUser, directorioReviewGroup);
 
         assertThat(reloadItem(item).isArchived(), is(false));
         assertThat(reloadItem(shadowItemCopy).isArchived(), is(false));
@@ -277,9 +283,9 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(tasks, hasSize(1));
 
         ClaimedTask task = tasks.get(0);
-        assertThat(task.getOwner(), equalTo(submitter));
+        assertThat(task.getOwner(), equalTo(institutionUser));
 
-        rejectClaimedTaskViaRest(submitter, task, "wrong title");
+        rejectClaimedTaskViaRest(institutionUser, task, "wrong title");
 
         assertThat(reloadItem(item).isArchived(), is(false));
         assertThat(getWorkspaceItem(item), notNullValue());
@@ -315,17 +321,17 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
         assertThat(shadowWorkflowItemCopy, notNullValue());
 
-        claimTaskAndApprove(shadowWorkflowItemCopy, admin, directorioReviewGroup);
+        claimTaskAndApprove(shadowWorkflowItemCopy, secondDirectorioUser, directorioReviewGroup);
 
         assertThat(reloadItem(item).isArchived(), is(false));
         assertThat(reloadItem(shadowItemCopy).isArchived(), is(false));
 
-        claimTaskAndApprove(shadowWorkflowItemCopy, admin, directorioEditorGroup);
+        claimTaskAndApprove(shadowWorkflowItemCopy, firstDirectorioUser, directorioEditorGroup);
 
         assertThat(reloadItem(item).isArchived(), is(false));
         assertThat(reloadItem(shadowItemCopy).isArchived(), is(false));
 
-        claimTaskAndApprove(shadowWorkflowItemCopy, admin, directorioEditorGroup);
+        claimTaskAndApprove(shadowWorkflowItemCopy, firstDirectorioUser, directorioEditorGroup);
 
         item = reloadItem(item);
         assertThat(item.isArchived(), is(true));
@@ -362,12 +368,19 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
         assertThat(shadowWorkflowItemCopy, notNullValue());
 
-        claimTaskAndReject(shadowWorkflowItemCopy, admin, directorioReviewGroup, "wrong publication");
+        claimTaskAndReject(shadowWorkflowItemCopy, firstDirectorioUser, directorioReviewGroup, "wrong publication");
 
         item = reloadItem(item);
         assertThat(item.isArchived(), is(true));
         assertThat(getConcytecFeedbackMetadataValue(item), equalTo(REJECT.name()));
-        assertThat(reloadItem(shadowItemCopy), nullValue());
+        assertThat(getConcytecCommentMetadataValue(item), equalTo("wrong publication"));
+
+        shadowItemCopy = reloadItem(shadowItemCopy);
+        assertThat(reloadItem(shadowItemCopy), notNullValue());
+        assertThat(shadowItemCopy.isArchived(), is(false));
+        assertThat(shadowItemCopy.isWithdrawn(), is(true));
+        assertThat(getConcytecFeedbackMetadataValue(shadowItemCopy), equalTo(REJECT.name()));
+        assertThat(getConcytecCommentMetadataValue(shadowItemCopy), equalTo("wrong publication"));
 
     }
 
@@ -399,17 +412,24 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
         assertThat(shadowWorkflowItemCopy, notNullValue());
 
-        claimTaskAndApprove(shadowWorkflowItemCopy, admin, directorioReviewGroup);
+        claimTaskAndApprove(shadowWorkflowItemCopy, firstDirectorioUser, directorioReviewGroup);
 
         assertThat(reloadItem(item).isArchived(), is(false));
         assertThat(reloadItem(shadowItemCopy), notNullValue());
 
-        claimTaskAndReject(shadowWorkflowItemCopy, admin, directorioEditorGroup, "wrong publication");
+        claimTaskAndReject(shadowWorkflowItemCopy, firstDirectorioUser, directorioEditorGroup, "wrong publication");
 
         item = reloadItem(item);
         assertThat(item.isArchived(), is(true));
         assertThat(getConcytecFeedbackMetadataValue(item), equalTo(REJECT.name()));
-        assertThat(reloadItem(shadowItemCopy), nullValue());
+        assertThat(getConcytecCommentMetadataValue(item), equalTo("wrong publication"));
+
+        shadowItemCopy = reloadItem(shadowItemCopy);
+        assertThat(reloadItem(shadowItemCopy), notNullValue());
+        assertThat(shadowItemCopy.isArchived(), is(false));
+        assertThat(shadowItemCopy.isWithdrawn(), is(true));
+        assertThat(getConcytecFeedbackMetadataValue(shadowItemCopy), equalTo(REJECT.name()));
+        assertThat(getConcytecCommentMetadataValue(shadowItemCopy), equalTo("wrong publication"));
 
     }
 
@@ -441,7 +461,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
         assertThat(shadowWorkflowItemCopy, notNullValue());
 
-        claimTaskAndApprove(shadowWorkflowItemCopy, admin, directorioReviewGroup);
+        claimTaskAndApprove(shadowWorkflowItemCopy, secondDirectorioUser, directorioReviewGroup);
 
         assertThat(reloadItem(item).isArchived(), is(false));
         shadowItemCopy = reloadItem(shadowItemCopy);
@@ -450,12 +470,12 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         String directorioTitle = "Submission Item Edited";
         itemService.replaceMetadata(context, shadowItemCopy, "dc", "title", null, null, directorioTitle, null, -1, 0);
 
-        claimTaskAndApprove(shadowWorkflowItemCopy, admin, directorioEditorGroup);
+        claimTaskAndApprove(shadowWorkflowItemCopy, firstDirectorioUser, directorioEditorGroup);
 
         assertThat(reloadItem(item).isArchived(), is(false));
         assertThat(reloadItem(shadowItemCopy).isArchived(), is(false));
 
-        claimTaskAndApprove(shadowWorkflowItemCopy, admin, directorioEditorGroup);
+        claimTaskAndApprove(shadowWorkflowItemCopy, firstDirectorioUser, directorioEditorGroup);
 
         item = reloadItem(item);
         assertThat(item.isArchived(), is(true));
@@ -502,7 +522,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         ClaimedTask claimedTask = claimedTaskService.findByWorkflowIdAndEPerson(context, workflowItem, user);
         assertThat(claimedTask, notNullValue());
 
-        rejectClaimedTaskViaRest(user, claimedTask, password);
+        rejectClaimedTaskViaRest(user, claimedTask, reason);
     }
 
     private WorkspaceItem createWorkspaceItem() throws IOException {
@@ -556,6 +576,10 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .andExpect(status().isNoContent());
     }
 
+    private String getConcytecCommentMetadataValue(Item item) {
+        return itemService.getMetadataFirstValue(item, "perucris", "concytec", "comment", ANY);
+    }
+
     private String getConcytecFeedbackMetadataValue(Item item) {
         return itemService.getMetadataFirstValue(item, "perucris", "concytec", "feedback", ANY);
     }
@@ -572,6 +596,13 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .contentType("application/x-www-form-urlencoded"))
             .andExpect(status().isNoContent());
 
+    }
+
+    private EPerson createEPerson(String email) {
+        return EPersonBuilder.createEPerson(context)
+            .withEmail(email)
+            .withPassword(password)
+            .build();
     }
 
     private Item reloadItem(Item item) throws SQLException {

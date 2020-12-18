@@ -884,7 +884,7 @@
         <field>
           <dc-schema>dc</dc-schema>
           <dc-element>subject</dc-element>
-          <label>Keyword(s)</label>
+          <label>Subject Classifications</label>
           <input-type>tag</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -898,7 +898,7 @@
           <label>Description</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required>Enter the description of the journal</required>
+          <required />
           <hint />
         </field>
       </row>
@@ -1137,7 +1137,7 @@
         <field>
           <dc-schema>dc</dc-schema>
           <dc-element>subject</dc-element>
-          <label>Keyword(s)</label>
+          <label>Subject Keywords</label>
           <input-type>tag</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -1275,7 +1275,7 @@
           <dc-schema>dc</dc-schema>
           <dc-element>relation</dc-element>
           <dc-qualifier>issn</dc-qualifier>
-          <label>ISSN (of the container)</label>
+          <label>ISSN</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -1319,6 +1319,18 @@
           <required />
           <hint>The DOI of the reviewed item if it was not found in the system</hint>
           <type-bind>review,book review</type-bind>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>sponsorship</dc-qualifier>
+          <label>Sponsors</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>Enter the name of any sponsors.</hint>
         </field>
       </row>
       <row>
@@ -1794,7 +1806,7 @@
         <field>
           <dc-schema>dc</dc-schema>
           <dc-element>subject</dc-element>
-          <label>Keyword(s)</label>
+          <label>Subject Keywords</label>
           <input-type>tag</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -2088,8 +2100,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>dc</dc-schema>
           <dc-element>subject</dc-element>
-          <label>Keyword(s)</label>
-          <input-type>tag</input-type>
+          <label>Subject Keyword(s)</label>
+          <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
           <hint>Enter appropriate subject keywords or phrases.</hint>
@@ -2240,8 +2252,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
         </field>
-      </row>
-      <row>
         <field>
           <dc-schema>person</dc-schema>
           <dc-element>familyName</dc-element>
@@ -2262,8 +2272,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
         </field>
-      </row>
-      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>apellidoMaterno</dc-element>
@@ -2273,8 +2281,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
         </field>
-      </row>
-      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>apellidoCasada</dc-element>
@@ -2544,16 +2550,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
           <vocabulary closed="true">peru_ubigeo</vocabulary>
-        </field>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>address</dc-element>
-          <dc-qualifier>legalAddress</dc-qualifier>
-          <label>RENIEC Home Address</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint />
         </field>
       </row>
       <row>
@@ -2672,10 +2668,22 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>cris</dc-schema>
           <dc-element>policy</dc-element>
-          <dc-qualifier>group</dc-qualifier>
-          <label>Security Group(s) *</label>
+          <dc-qualifier>eperson</dc-qualifier>
+          <label>Eperson Policy</label>
           <input-type>onebox</input-type>
-          <repeatable>true</repeatable>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>cris</dc-schema>
+          <dc-element>policy</dc-element>
+          <dc-qualifier>group</dc-qualifier>
+          <label>Group Policy</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
           <required />
           <hint />
         </field>
@@ -2738,8 +2746,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
         </field>
-      </row>
-      <row>
         <field>
           <dc-schema>person</dc-schema>
           <dc-element>familyName</dc-element>
@@ -2760,8 +2766,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
         </field>
-      </row>
-      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>apellidoMaterno</dc-element>
@@ -2771,8 +2775,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
         </field>
-      </row>
-      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>apellidoCasada</dc-element>
@@ -2799,26 +2801,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-qualifier>gender</dc-qualifier>
           <label>Gender</label>
           <input-type value-pairs-name="gender">dropdown</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>phone</dc-element>
-          <label>Telephone Number</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint />
-        </field>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>mobilePhone</dc-element>
-          <label>Cellphone Number</label>
-          <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -3062,16 +3044,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
           <vocabulary closed="true">peru_ubigeo</vocabulary>
-        </field>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>address</dc-element>
-          <dc-qualifier>legalAddress</dc-qualifier>
-          <label>RENIEC Home Address</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint />
         </field>
       </row>
       <row>
@@ -3227,7 +3199,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Director</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>You must enter the director name.</required>
+          <required />
           <hint />
         </field>
       </row>
@@ -3269,7 +3241,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>identifier</dc-element>
           <dc-qualifier>url</dc-qualifier>
-          <label>Web Site(s)</label>
+          <label>Website(s)</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -3416,7 +3388,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Type</label>
           <input-type value-pairs-name="orgunit_types">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>You must specify the organisation type</required>
           <hint />
         </field>
       </row>
@@ -3879,7 +3851,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>internalid</dc-element>
-          <label>Funding code</label>
+          <label>Internal Funding code</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -3911,10 +3883,22 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>fundingProgram</dc-element>
-          <label>Part Of</label>
+          <label>Owner (Persons)</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crisfund</dc-schema>
+          <dc-element>award</dc-element>
+          <dc-qualifier>url</dc-qualifier>
+          <label>Award Url</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>The url preferably on the funder website of the award notice</required>
           <hint />
         </field>
       </row>
@@ -3935,7 +3919,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>OA Policy URL</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>The Open Access policy that applies to the project</required>
+          <required />
           <hint />
         </field>
       </row>
@@ -3943,9 +3927,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>amount</dc-element>
-          <dc-qualifier>currency</dc-qualifier>
-          <label>Currency</label>
-          <input-type value-pairs-name="currency">dropdown</input-type>
+          <label>Amount</label>
+          <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -3953,8 +3936,9 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>amount</dc-element>
-          <label>Amount</label>
-          <input-type>onebox</input-type>
+          <dc-qualifier>currency</dc-qualifier>
+          <label>Currency</label>
+          <input-type value-pairs-name="currency">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />

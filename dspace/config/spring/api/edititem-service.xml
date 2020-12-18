@@ -28,6 +28,11 @@
                                 </value>
                             </property>
                             <property name="submissionDefinition" value="publication-edit" />
+                            <property name="groups">
+                                <list>
+                                    <value>cris.policy.group</value>
+                                </list>
+                            </property>
                         </bean>
 <!--                        <bean class="org.dspace.content.edit.EditItemMode">-->
 <!--                            <property name="name" value="MODE2" />-->
@@ -59,36 +64,12 @@
                                 </value>
                             </property>
                             <property name="submissionDefinition" value="person-edit" />
+                            <property name="groups">
+                                <list>
+                                    <value>cris.policy.group</value>
+                                </list>
+                            </property>
                         </bean>
-<!--                        <bean class="org.dspace.content.edit.EditItemMode">-->
-<!--                            <property name="name" value="full" />-->
-<!--                            <property name="label" value="edititem.mode.test2" />-->
-<!--                            <property name="security">-->
-<!--                              <value type="org.dspace.content.edit.EditItemModeSecurity">-->
-<!--                                OWNER-->
-<!--                              </value>-->
-<!--                            </property>-->
-<!--                            <property name="submissionDefinition" value="person" />-->
-<!--                        </bean>-->
-<!--                        <bean class="org.dspace.content.edit.EditItemMode">-->
-<!--                            <property name="name" value="UPLOAD" />-->
-<!--                            <property name="security">-->
-<!--                              <value type="org.dspace.content.edit.EditItemModeSecurity">-->
-<!--                                CUSTOM-->
-<!--                              </value>-->
-<!--                            </property>-->
-<!--                            <property name="submissionDefinition" value="person_upload" />-->
-<!--                            <property name="groups">-->
-<!--                                <list>-->
-<!--                                    <value>cris.policy.group</value>-->
-<!--                                </list>-->
-<!--                            </property>-->
-<!--                            <property name="users">-->
-<!--                                <list>-->
-<!--                                    <value>cris.policy.eperson</value>-->
-<!--                                </list>-->
-<!--                            </property>-->
-<!--                        </bean>-->
                     </list>
                 </entry>
                 <entry key="equipment">
@@ -110,6 +91,11 @@
                                 </value>
                             </property>
                             <property name="submissionDefinition" value="equipment-edit" />
+                            <property name="groups">
+                                <list>
+                                    <value>cris.policy.group</value>
+                                </list>
+                            </property>
                         </bean>
                     </list>
                 </entry>
@@ -132,6 +118,11 @@
                                 </value>
                             </property>
                             <property name="submissionDefinition" value="funding-edit" />
+                            <property name="groups">
+                                <list>
+                                    <value>cris.policy.group</value>
+                                </list>
+                            </property>
                         </bean>
                     </list>
                 </entry>
@@ -154,6 +145,11 @@
                                 </value>
                             </property>
                             <property name="submissionDefinition" value="orgunit-edit" />
+                            <property name="groups">
+                                <list>
+                                    <value>cris.policy.group</value>
+                                </list>
+                            </property>
                         </bean>
                     </list>
                 </entry>
@@ -176,6 +172,11 @@
                                 </value>
                             </property>
                             <property name="submissionDefinition" value="patent-edit" />
+                            <property name="groups">
+                                <list>
+                                    <value>cris.policy.group</value>
+                                </list>
+                            </property>
                         </bean>
                     </list>
                 </entry>
@@ -198,6 +199,11 @@
                                 </value>
                             </property>
                             <property name="submissionDefinition" value="project-edit" />
+                            <property name="groups">
+                                <list>
+                                    <value>cris.policy.group</value>
+                                </list>
+                            </property>
                         </bean>
                     </list>
                 </entry>

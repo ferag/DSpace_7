@@ -59,6 +59,7 @@ import org.dspace.versioning.service.VersionHistoryService;
 import org.dspace.xmlworkflow.factory.XmlWorkflowServiceFactory;
 import org.dspace.xmlworkflow.service.XmlWorkflowService;
 import org.dspace.xmlworkflow.storedcomponents.service.ClaimedTaskService;
+import org.dspace.xmlworkflow.storedcomponents.service.CollectionRoleService;
 import org.dspace.xmlworkflow.storedcomponents.service.InProgressUserService;
 import org.dspace.xmlworkflow.storedcomponents.service.PoolTaskService;
 import org.dspace.xmlworkflow.storedcomponents.service.WorkflowItemRoleService;
@@ -108,6 +109,7 @@ public abstract class AbstractBuilder<T, S> {
     static OrcidHistoryService orcidHistoryService;
     static AuditService auditService;
     static HarvestedCollectionService harvestedCollectionService;
+    static CollectionRoleService collectionRoleService;
 
     protected Context context;
 
@@ -169,6 +171,8 @@ public abstract class AbstractBuilder<T, S> {
         orcidHistoryService = OrcidHistoryServiceFactory.getInstance().getOrcidHistoryService();
         auditService = new DSpace().getSingletonService(AuditService.class);
         harvestedCollectionService = HarvestServiceFactory.getInstance().getHarvestedCollectionService();
+
+        collectionRoleService = XmlWorkflowServiceFactory.getInstance().getCollectionRoleService();
 
     }
 

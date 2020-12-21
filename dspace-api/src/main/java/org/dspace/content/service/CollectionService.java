@@ -145,6 +145,23 @@ public interface CollectionService
         AuthorizeException;
 
     /**
+     * Create a workflow group for the given role if one does not already exist.
+     * Returns either the newly created group or the previously existing one. Note
+     * that while the new group is created in the database, the association between
+     * the group and the collection is not written until <code>update</code> is
+     * called.
+     *
+     * @param context    DSpace Context
+     * @param collection Collection
+     * @param roleId     the role id to create or get the group for
+     * @return the workflow group associated with this collection
+     * @throws SQLException       if database error
+     * @throws AuthorizeException if authorization error
+     */
+    public Group createWorkflowGroup(Context context, Collection collection, String roleId) throws SQLException,
+        AuthorizeException;
+
+    /**
      * Set the workflow group corresponding to a particular workflow step.
      * <code>null</code> can be passed in if there should be no associated
      * group for that workflow step; any existing group is NOT deleted.
@@ -154,6 +171,18 @@ public interface CollectionService
      * @param group      the new workflow group, or <code>null</code>
      */
     public void setWorkflowGroup(Context context, Collection collection, int step, Group group)
+        throws SQLException, AuthorizeException;
+
+    /**
+     * Set the workflow group corresponding to a particular role.
+     * <code>null</code> can be passed in if there should be no associated
+     * group for that workflow step; any existing group is NOT deleted.
+     *
+     * @param collection Collection
+     * @param roleId     the role id
+     * @param group      the new workflow group, or <code>null</code>
+     */
+    public void setWorkflowGroup(Context context, Collection collection, String roleId, Group group)
         throws SQLException, AuthorizeException;
 
     /**
@@ -167,6 +196,18 @@ public interface CollectionService
      * @return the group of reviewers or <code>null</code>
      */
     public Group getWorkflowGroup(Context context, Collection collection, int step);
+
+    /**
+     * Get the the workflow group corresponding to a particular role. This returns
+     * <code>null</code> if there is no group associated with this collection for
+     * the given step.
+     *
+     * @param context    DSpace Context
+     * @param collection Collection
+     * @param roleId     the role id
+     * @return the group of reviewers or <code>null</code>
+     */
+    public Group getWorkflowGroup(Context context, Collection collection, String roleId);
 
     /**
      * Create a default submitters group if one does not already exist. Returns

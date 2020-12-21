@@ -26,6 +26,29 @@
             </util:list>
         </property>
     </bean>
+    
+    <!-- Institution workflow -->
+    <bean name="institutionWorkflow" class="org.dspace.xmlworkflow.state.Workflow">
+        <property name="firstStep" ref="shadowCopyStep"/>
+        <property name="steps">
+            <util:list>
+                <ref bean="shadowCopyStep"/>
+                <ref bean="waitForConcytecStep"/>
+            </util:list>
+        </property>
+    </bean>
+    
+    <bean name="directorioWorkflow" class="org.dspace.xmlworkflow.state.Workflow">
+        <property name="firstStep" ref="directorioReviewStep"/>
+        <property name="steps">
+            <util:list>
+                <ref bean="directorioReviewStep"/>
+                <ref bean="directorioEditStep"/>
+                <ref bean="directorioFinalEditStep"/>
+                <ref bean="unlockInstitutionStep"/>
+            </util:list>
+        </property>
+    </bean>
 
     <bean name="reviewstep" class="org.dspace.xmlworkflow.state.Step">
         <property name="userSelectionMethod" ref="claimaction"/>
@@ -187,4 +210,93 @@
         <property name="scope" value="#{ T(org.dspace.xmlworkflow.Role.Scope).COLLECTION}"/>
         <property name="name" value="ScoreReviewers"/>
     </bean>
+    
+    <bean name="shadowCopyStep" class="org.dspace.xmlworkflow.state.Step">
+        <property name="userSelectionMethod" ref="noUserSelectionAction"/>
+        <property name="outcomes">
+            <util:map>
+                <entry key="#{ T(org.dspace.xmlworkflow.state.actions.ActionResult).OUTCOME_COMPLETE}"
+                       value-ref="waitForConcytecStep"/>
+            </util:map>
+        </property>
+        <property name="actions">
+            <list>
+                <ref bean="shadowCopyAction"/>
+            </list>
+        </property>
+    </bean>
+    
+    <bean name="waitForConcytecStep" class="org.dspace.xmlworkflow.state.Step">
+        <property name="userSelectionMethod" ref="autoassignAction"/>
+        <property name="role" ref="reviewer"/>
+        <property name="actions">
+            <list>
+                <ref bean="waitForConcytecAction"/>
+            </list>
+        </property>
+    </bean>
+    
+    <!-- DIRECTORIO'S STEPS -->
+    
+    <bean name="directorioReviewStep" class="org.dspace.xmlworkflow.state.Step">
+        <property name="userSelectionMethod" ref="claimaction"/>
+        <property name="role" ref="reviewer"/>
+        <property name="outcomes">
+            <util:map>
+                <entry key="#{ T(org.dspace.xmlworkflow.state.actions.ActionResult).OUTCOME_COMPLETE}"
+                       value-ref="directorioEditStep"/>
+                <entry key="#{ T(org.dspace.xmlworkflow.state.actions.processingaction.ReviewDirectorioAction).OUTCOME_REJECT}"
+                       value-ref="unlockInstitutionStep"/>
+            </util:map>
+        </property>
+        <property name="actions">
+            <util:list>
+                <ref bean="reviewDirectorioAction"/>
+            </util:list>
+        </property>
+    </bean>
+
+    <bean name="directorioEditStep" class="org.dspace.xmlworkflow.state.Step">
+        <property name="userSelectionMethod" ref="claimaction"/>
+        <property name="role" ref="editor" />
+        <property name="outcomes">
+            <util:map>
+                <entry key="#{ T(org.dspace.xmlworkflow.state.actions.ActionResult).OUTCOME_COMPLETE}"
+                       value-ref="directorioFinalEditStep"/>
+                <entry key="#{ T(org.dspace.xmlworkflow.state.actions.processingaction.AcceptEditRejectDirectorioAction).OUTCOME_REJECT}"
+                       value-ref="unlockInstitutionStep"/>
+            </util:map>
+        </property>
+        <property name="actions">
+            <list>
+                <ref bean="editDirectorioAction"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean name="directorioFinalEditStep" class="org.dspace.xmlworkflow.state.Step">
+        <property name="userSelectionMethod" ref="claimaction"/>
+        <property name="role" ref="finaleditor" />
+        <property name="outcomes">
+            <util:map>
+                <entry key="#{ T(org.dspace.xmlworkflow.state.actions.ActionResult).OUTCOME_COMPLETE}"
+                       value-ref="unlockInstitutionStep"/>
+            </util:map>
+        </property>
+        <property name="actions">
+            <list>
+                <ref bean="finalEditDirectorioAction"/>
+            </list>
+        </property>
+    </bean>
+    
+    <bean name="unlockInstitutionStep" class="org.dspace.xmlworkflow.state.Step">
+        <property name="userSelectionMethod" ref="noUserSelectionAction"/>
+        <property name="actions">
+            <list>
+                <ref bean="unlockInstitutionAction"/>
+            </list>
+        </property>
+    </bean>
+    
 </beans>

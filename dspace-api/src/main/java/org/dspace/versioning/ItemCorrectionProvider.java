@@ -45,6 +45,7 @@ public class ItemCorrectionProvider extends AbstractVersionProvider {
 
         WorkspaceItem workspaceItem = workspaceItemService.create(context, collection, false);
         Item itemNew = workspaceItem.getItem();
+        itemService.clearMetadata(context, itemNew, Item.ANY, Item.ANY, Item.ANY, Item.ANY);
         // copy metadata from native item to corrected item
         copyMetadata(context, itemNew, nativeItem);
         context.turnOffAuthorisationSystem();

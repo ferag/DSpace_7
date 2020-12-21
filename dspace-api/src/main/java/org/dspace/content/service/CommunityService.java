@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.MissingResourceException;
+import java.util.function.Predicate;
 
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Bitstream;
@@ -196,6 +197,19 @@ public interface CommunityService extends DSpaceObjectService<Community>, DSpace
 
     public List<Collection> getAllCollections(Context context, Community community) throws SQLException;
 
+    /**
+     * Return an array of collections of this community and its subcommunities that
+     * matches the given predicate.
+     *
+     * @param context   context
+     * @param community community
+     * @param predicate a predicate on the collections to evaluate
+     * @return an array of collections
+     * @throws SQLException if database error
+     */
+
+    public List<Collection> getCollections(Context context, Community community, Predicate<Collection> predicate)
+        throws SQLException;
 
     /**
      * Add an exisiting collection to the community

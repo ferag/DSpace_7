@@ -385,6 +385,26 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
     }
 
     @Override
+    public Group createWorkflowGroup(Context context, Collection collection, String roleId)
+        throws SQLException, AuthorizeException {
+        // Check authorisation - Must be an Admin to create Workflow Group
+        AuthorizeUtil.authorizeManageWorkflowsGroup(context, collection);
+
+        if (getWorkflowGroup(context, collection, roleId) == null) {
+            // turn off authorization so that Collection Admins can create Collection
+            // Workflow Groups
+            context.turnOffAuthorisationSystem();
+            Group g = groupService.create(context);
+            groupService.setName(g, "COLLECTION_" + collection.getID() + "_WORKFLOW_ROLE_" + roleId);
+            groupService.update(context, g);
+            context.restoreAuthSystemState();
+            setWorkflowGroup(context, collection, roleId, g);
+        }
+
+        return getWorkflowGroup(context, collection, roleId);
+    }
+
+    @Override
     public void setWorkflowGroup(Context context, Collection collection, int step, Group group)
         throws SQLException {
         Workflow workflow = null;
@@ -416,6 +436,12 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
                 throw new IllegalArgumentException("Illegal step count: " + step);
         }
 
+        setWorkflowGroup(context, collection, roleId, group);
+    }
+
+    @Override
+    public void setWorkflowGroup(Context context, Collection collection, String roleId, Group group)
+        throws SQLException {
         CollectionRole colRole = collectionRoleService.find(context, collection, roleId);
         if (colRole == null) {
             if (group != null) {
@@ -450,6 +476,11 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
                 throw new IllegalArgumentException("Illegal step count: " + step);
         }
 
+        return getWorkflowGroup(context, collection, roleId);
+    }
+
+    @Override
+    public Group getWorkflowGroup(Context context, Collection collection, String roleId) {
         CollectionRole colRole;
         try {
             colRole = collectionRoleService.find(context, collection, roleId);

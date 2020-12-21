@@ -539,6 +539,20 @@
         <scope_note></scope_note>
     </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>concytec</element>
+        <qualifier>feedback</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>concytec</element>
+        <qualifier>comment</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
     <!-- funding amount executed -->
 
     <dc-type>

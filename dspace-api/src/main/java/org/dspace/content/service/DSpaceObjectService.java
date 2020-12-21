@@ -374,6 +374,9 @@ public interface DSpaceObjectService<T extends DSpaceObject> {
     public void clearMetadata(Context context, T dso, String schema, String element, String qualifier, String lang)
         throws SQLException;
 
+    public void removeMetadataValues(Context context, T dSpaceObject, String schema, String element, String qualifier,
+        String lang) throws SQLException;
+
     public void removeMetadataValues(Context context, T dso, List<MetadataValue> values) throws SQLException;
 
     public String getMetadataFirstValue(T dso, String schema, String element, String qualifier, String language);

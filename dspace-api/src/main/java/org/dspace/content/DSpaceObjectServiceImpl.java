@@ -378,6 +378,12 @@ public abstract class DSpaceObjectServiceImpl<T extends DSpaceObject> implements
     }
 
     @Override
+    public void removeMetadataValues(Context context, T dSpaceObject, String schema, String element, String qualifier,
+        String lang) throws SQLException {
+        removeMetadataValues(context, dSpaceObject, getMetadata(dSpaceObject, schema, element, qualifier, lang));
+    }
+
+    @Override
     public void removeMetadataValues(Context context, T dso, List<MetadataValue> values) throws SQLException {
         Iterator<MetadataValue> metadata = dso.getMetadata().iterator();
         while (metadata.hasNext()) {

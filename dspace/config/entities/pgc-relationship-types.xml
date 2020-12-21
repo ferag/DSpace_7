@@ -164,4 +164,18 @@
             <max>1</max>
         </rightCardinality>
     </type>
+    <type>
+        <leftType>PersonCv</leftType>
+        <rightType>Person</rightType>
+        <leftwardType>isPersonOwner</leftwardType>
+        <rightwardType>isOwnedByPersonCv</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+        </rightCardinality>
+        <copyToLeft>true</copyToLeft>
+        <copyToRight>true</copyToRight>
+    </type>
 </relationships>

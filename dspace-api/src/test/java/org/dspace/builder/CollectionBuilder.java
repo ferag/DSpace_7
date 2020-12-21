@@ -212,9 +212,6 @@ public class CollectionBuilder extends AbstractDSpaceObjectBuilder<Collection> {
         return this;
     }
 
-    public CollectionBuilder withRoleGroup(String roleId) throws SQLException, AuthorizeException {
-        return withRoleGroup(roleId);
-    }
 
     public CollectionBuilder withRoleGroup(String roleId, Group... members) throws SQLException, AuthorizeException {
 

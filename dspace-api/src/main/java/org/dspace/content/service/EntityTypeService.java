@@ -63,7 +63,7 @@ public interface EntityTypeService extends DSpaceCRUDService<EntityType> {
      *
      * @param context The relevant DSpace context
      * @param item    the Item instance
-     * @return the entity type
+     * @return the entity type, if any
      */
     public EntityType findByItem(Context context, Item item) throws SQLException;
 }

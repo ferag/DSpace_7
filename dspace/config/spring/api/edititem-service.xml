@@ -14,7 +14,7 @@
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
                             <property name="security">
-                              <value type="org.dspace.content.edit.EditItemModeSecurity">
+                              <value type="org.dspace.content.security.CrisSecurity">
                                 ADMIN
                               </value>
                             </property>
@@ -23,7 +23,7 @@
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="CUSTOM" />
                             <property name="security">
-                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                <value type="org.dspace.content.security.CrisSecurity">
                                     CUSTOM
                                 </value>
                             </property>
@@ -37,7 +37,7 @@
 <!--                        <bean class="org.dspace.content.edit.EditItemMode">-->
 <!--                            <property name="name" value="MODE2" />-->
 <!--                            <property name="security">-->
-<!--                              <value type="org.dspace.content.edit.EditItemModeSecurity">-->
+<!--                              <value type="org.dspace.content.security.CrisSecurity">-->
 <!--                                OWNER-->
 <!--                              </value>-->
 <!--                            </property>-->
@@ -50,7 +50,7 @@
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
                             <property name="security">
-                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                <value type="org.dspace.content.security.CrisSecurity">
                                     ADMIN
                                 </value>
                             </property>
@@ -59,7 +59,7 @@
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="CUSTOM" />
                             <property name="security">
-                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                <value type="org.dspace.content.security.CrisSecurity">
                                     CUSTOM
                                 </value>
                             </property>
@@ -77,7 +77,7 @@
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
                             <property name="security">
-                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                <value type="org.dspace.content.security.CrisSecurity">
                                     ADMIN
                                 </value>
                             </property>
@@ -86,7 +86,7 @@
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="CUSTOM" />
                             <property name="security">
-                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                <value type="org.dspace.content.security.CrisSecurity">
                                     CUSTOM
                                 </value>
                             </property>
@@ -104,7 +104,7 @@
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
                             <property name="security">
-                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                <value type="org.dspace.content.security.CrisSecurity">
                                     ADMIN
                                 </value>
                             </property>
@@ -113,7 +113,7 @@
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="CUSTOM" />
                             <property name="security">
-                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                <value type="org.dspace.content.security.CrisSecurity">
                                     CUSTOM
                                 </value>
                             </property>
@@ -131,7 +131,7 @@
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
                             <property name="security">
-                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                <value type="org.dspace.content.security.CrisSecurity">
                                     ADMIN
                                 </value>
                             </property>
@@ -140,7 +140,7 @@
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="CUSTOM" />
                             <property name="security">
-                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                <value type="org.dspace.content.security.CrisSecurity">
                                     CUSTOM
                                 </value>
                             </property>
@@ -158,7 +158,7 @@
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
                             <property name="security">
-                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                <value type="org.dspace.content.security.CrisSecurity">
                                     ADMIN
                                 </value>
                             </property>
@@ -167,7 +167,7 @@
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="CUSTOM" />
                             <property name="security">
-                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                <value type="org.dspace.content.security.CrisSecurity">
                                     CUSTOM
                                 </value>
                             </property>
@@ -185,7 +185,7 @@
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
                             <property name="security">
-                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                <value type="org.dspace.content.security.CrisSecurity">
                                     ADMIN
                                 </value>
                             </property>
@@ -194,7 +194,7 @@
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="CUSTOM" />
                             <property name="security">
-                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                <value type="org.dspace.content.security.CrisSecurity">
                                     CUSTOM
                                 </value>
                             </property>
@@ -212,7 +212,7 @@
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
                             <property name="security">
-                                <value type="org.dspace.content.edit.EditItemModeSecurity">
+                                <value type="org.dspace.content.security.CrisSecurity">
                                     ADMIN_OWNER
                                 </value>
                             </property>

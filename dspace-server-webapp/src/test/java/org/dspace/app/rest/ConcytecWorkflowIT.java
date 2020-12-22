@@ -7,6 +7,7 @@
  */
 package org.dspace.app.rest;
 
+import static com.jayway.jsonpath.JsonPath.read;
 import static org.dspace.content.Item.ANY;
 import static org.dspace.xmlworkflow.ConcytecFeedback.APPROVE;
 import static org.dspace.xmlworkflow.ConcytecFeedback.REJECT;
@@ -27,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
 import org.dspace.authorize.AuthorizeException;
@@ -46,6 +48,7 @@ import org.dspace.content.WorkspaceItem;
 import org.dspace.content.service.ItemService;
 import org.dspace.content.service.RelationshipService;
 import org.dspace.content.service.WorkspaceItemService;
+import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.services.ConfigurationService;
@@ -130,6 +133,8 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         EntityType publicationType = EntityTypeBuilder.createEntityTypeBuilder(context, "Publication").build();
         RelationshipTypeBuilder.createRelationshipTypeBuilder(context, publicationType, publicationType,
             HAS_SHADOW_COPY_RELATIONSHIP, IS_SHADOW_COPY_RELATIONSHIP, 0, 1, 0, 1);
+        RelationshipTypeBuilder.createRelationshipTypeBuilder(context, publicationType, publicationType,
+            "isCorrectionOfItem", "isCorrectedByItem", 0, 1, 0, 1);
 
         submitter = createEPerson("submitter@example.com");
         firstDirectorioUser = createEPerson("firstDirectorioUser@example.com");
@@ -489,6 +494,39 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
     }
 
+    @Test
+    public void testItemCorrectionApproved() throws Exception {
+
+        WorkspaceItem workspaceItem = createWorkspaceItem();
+
+        workflowService.start(context, workspaceItem);
+
+        Item item = workspaceItem.getItem();
+        assertThat(getWorkspaceItem(item), nullValue());
+
+        List<Relationship> relationships = relationshipService.findByItem(context, item);
+        assertThat(relationships, hasSize(1));
+
+        Item shadowItemCopy = relationships.get(0).getRightItem();
+        XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
+
+        claimTaskAndApprove(shadowWorkflowItemCopy, secondDirectorioUser, directorioReviewGroup);
+        claimTaskAndApprove(shadowWorkflowItemCopy, firstDirectorioUser, directorioEditorGroup);
+        claimTaskAndApprove(shadowWorkflowItemCopy, firstDirectorioUser, directorioEditorGroup);
+
+        item = reloadItem(item);
+        assertThat(item.isArchived(), is(true));
+
+        WorkspaceItem correctionWorkspaceItem = requestForItemCorrection(admin, item);
+        assertThat(correctionWorkspaceItem, notNullValue());
+
+        context.turnOffAuthorisationSystem();
+        replaceTitle(context, correctionWorkspaceItem.getItem(), "Item submission new title");
+        workflowService.start(context, correctionWorkspaceItem);
+        context.restoreAuthSystemState();
+
+    }
+
     private void assertThatIsShadowRelationship(Relationship relationship, Item leftItem) {
         assertThat(relationship.getLeftItem(), equalTo(leftItem));
         assertThat(relationship.getRelationshipType().getLeftwardType(), equalTo(HAS_SHADOW_COPY_RELATIONSHIP));
@@ -577,6 +615,21 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .andExpect(status().isNoContent());
     }
 
+    private WorkspaceItem requestForItemCorrection(EPerson user, Item item) throws Exception {
+        AtomicInteger idRef = new AtomicInteger();
+
+        getClient(getAuthToken(user.getEmail(), password))
+            .perform(post("/api/submission/workspaceitems")
+            .param("owningCollection", collection.getID().toString())
+            .param("relationship", "isCorrectionOfItem")
+            .param("item", item.getID().toString())
+            .contentType(org.springframework.http.MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(), "$.id")));
+
+        return workspaceItemService.find(context, idRef.get());
+    }
+
     private String getConcytecCommentMetadataValue(Item item) {
         return itemService.getMetadataFirstValue(item, "perucris", "concytec", "comment", ANY);
     }
@@ -587,6 +640,11 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
     private String getTitle(Item item) {
         return itemService.getMetadataFirstValue(item, "dc", "title", null, Item.ANY);
+    }
+
+    private void replaceTitle(Context context, Item item, String newTitle) throws SQLException, AuthorizeException {
+        itemService.replaceMetadata(context, item, "dc", "title", null, null, newTitle, null, -1, 0);
+        itemService.update(context, item);
     }
 
     private void performActionOnClaimedTaskViaRest(EPerson user, ClaimedTask task, MultiValueMap<String, String> params)

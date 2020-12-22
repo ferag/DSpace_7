@@ -7,30 +7,42 @@
  */
 package org.dspace.versioning;
 
+import static java.util.stream.Collectors.groupingBy;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.content.EntityType;
 import org.dspace.content.Item;
+import org.dspace.content.MetadataField;
+import org.dspace.content.MetadataValue;
 import org.dspace.content.Relationship;
 import org.dspace.content.RelationshipType;
 import org.dspace.content.WorkspaceItem;
+import org.dspace.content.dto.MetadataValueDTO;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.EntityTypeService;
 import org.dspace.content.service.ItemService;
+import org.dspace.content.service.MetadataFieldService;
 import org.dspace.content.service.RelationshipService;
 import org.dspace.content.service.RelationshipTypeService;
 import org.dspace.content.service.WorkspaceItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.services.ConfigurationService;
+import org.dspace.versioning.model.BitstreamCorrection;
+import org.dspace.versioning.model.CorrectionType;
+import org.dspace.versioning.model.ItemCorrection;
+import org.dspace.versioning.model.MetadataCorrection;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -66,6 +78,9 @@ public class ItemCorrectionService {
     @Autowired
     protected EntityTypeService entityTypeService;
 
+    @Autowired
+    protected MetadataFieldService metadataFieldService;
+
     private final String correctionRelationshipName;
 
     public ItemCorrectionService(String correctionRelationshipName) {
@@ -75,16 +90,17 @@ public class ItemCorrectionService {
     /**
      * Create a workspaceitem by an existing Item
      * 
-     * @param context
-     *            the dspace context
-     * @param request
-     *            the request containing the details about the workspace to create
-     * @param itemUUID
-     *            the item UUID to use for creating the workspaceitem
-     * @return    the created workspaceitem
-     * @throws Exception
+     * @param context  the dspace context
+     * @param request  the request containing the details about the workspace to
+     *                 create
+     * @param itemUUID the item UUID to use for creating the workspaceitem
+     * @return the created workspaceitem
+     * @throws SQLException       if a SQL error occurs
+     * @throws AuthorizeException if an authorization error occurs
      */
-    public WorkspaceItem createWorkspaceItemByItem(Context context, UUID itemUUID) throws Exception {
+    public WorkspaceItem createWorkspaceItemByItem(Context context, UUID itemUUID)
+        throws SQLException, AuthorizeException {
+
         WorkspaceItem wsi = null;
         Collection collection = null;
 
@@ -110,7 +126,7 @@ public class ItemCorrectionService {
                 throw new RuntimeException(e.getMessage(), e);
             }
         } else {
-            throw new Exception("Item " + itemUUID + " is not found");
+            throw new IllegalArgumentException("Item " + itemUUID + " is not found");
         }
 
         return wsi;
@@ -119,17 +135,16 @@ public class ItemCorrectionService {
     /**
      * Create a workspaceitem by an existing Item
      * 
-     * @param context
-     *            the dspace context
-     * @param request
-     *            the request containing the details about the workspace to create
-     * @param itemUUID
-     *            the item UUID to use for creating the workspaceitem
-     * @return    the created workspaceitem
-     * @throws Exception
+     * @param context  the dspace context
+     * @param request  the request containing the details about the workspace to
+     *                 create
+     * @param itemUUID the item UUID to use for creating the workspaceitem
+     * @return the created workspaceitem
+     * @throws SQLException       if a SQL error occurs
+     * @throws AuthorizeException if an authorization error occurs
      */
     public WorkspaceItem createWorkspaceItemAndRelationshipByItem(Context context, UUID itemUUID, String relationship)
-        throws Exception {
+        throws SQLException, AuthorizeException {
 
         if (StringUtils.isBlank(relationship)) {
             throw new IllegalArgumentException("Relationship cannot be undefined");
@@ -185,6 +200,19 @@ public class ItemCorrectionService {
 
     }
 
+    public ItemCorrection getAppliedCorrectionsOnItem(Context context, Item originalItem, Item correctionItem) {
+        List<BitstreamCorrection> bitstream = checkBitstreamCorrections(context, originalItem, correctionItem);
+        List<MetadataCorrection> metadata = checkMetadataCorrections(context, originalItem, correctionItem);
+        return new ItemCorrection(bitstream, metadata);
+    }
+
+    public void applyCorrectionsOnItem(Context context, Item item, ItemCorrection correction)
+        throws SQLException, AuthorizeException {
+        applyMetadataCorrectionsOnItem(context, item, correction.getMetadataCorrections());
+        applyBitstreamCorrectionsOnItem(context, item, correction.getBitstreamCorrections());
+        itemService.update(context, item);
+    }
+
     private RelationshipType findRelationshipType(Context context, Item item, String relationship) throws SQLException {
 
         EntityType type = entityTypeService.findByItem(context, item);
@@ -195,6 +223,111 @@ public class ItemCorrectionService {
         return relationshipTypeService.findByLeftwardOrRightwardTypeName(context, relationship).stream()
             .filter(relationshipType -> type.equals(relationshipType.getLeftType())).findFirst()
             .orElseThrow(() -> new IllegalArgumentException("Relationship type " + relationship + " does not exist"));
+    }
+
+    private List<MetadataCorrection> checkMetadataCorrections(Context context, Item originalItem, Item correctionItem) {
+
+        List<MetadataCorrection> metadataCorrections = new ArrayList<>();
+
+        Map<String, List<MetadataValue>> originalItemMetadata = getItemMetadata(originalItem);
+        Map<String, List<MetadataValue>> correctionItemMetadata = getItemMetadata(correctionItem);
+
+        for (String metadataField : originalItemMetadata.keySet()) {
+
+            if (!correctionItemMetadata.containsKey(metadataField)) {
+                metadataCorrections.add(MetadataCorrection.metadataRemoval(metadataField));
+                continue;
+            }
+
+            List<MetadataValue> newMetadataValues = correctionItemMetadata.get(metadataField);
+            List<String> newValues = getValues(newMetadataValues);
+            List<String> oldValues = getValues(originalItemMetadata.get(metadataField));
+
+            if (!oldValues.equals(newValues)) {
+                List<MetadataValueDTO> metadataValueDtos = getMetadataValueDtos(newMetadataValues);
+                metadataCorrections.add(MetadataCorrection.metadataModification(metadataField, metadataValueDtos));
+            }
+
+        }
+
+        for (String metadataField : correctionItemMetadata.keySet()) {
+            if (!originalItemMetadata.containsKey(metadataField)) {
+                List<MetadataValue> metadataValues = correctionItemMetadata.get(metadataField);
+                List<MetadataValueDTO> metadataValueDtos = getMetadataValueDtos(metadataValues);
+                metadataCorrections.add(MetadataCorrection.metadataAddition(metadataField, metadataValueDtos));
+            }
+        }
+
+        return metadataCorrections;
+    }
+
+    private Map<String, List<MetadataValue>> getItemMetadata(Item item) {
+        return item.getMetadata().stream().collect(groupingBy(value -> value.getMetadataField().toString('.')));
+    }
+
+    private List<String> getValues(List<MetadataValue> metadataValues) {
+        return metadataValues.stream().map(MetadataValue::getValue).collect(Collectors.toList());
+    }
+
+    private List<MetadataValueDTO> getMetadataValueDtos(List<MetadataValue> metadataValues) {
+        return metadataValues.stream().map(value -> new MetadataValueDTO(value)).collect(Collectors.toList());
+    }
+
+    private List<BitstreamCorrection> checkBitstreamCorrections(Context context, Item originalItem,
+        Item correctionItem) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    private void applyMetadataCorrectionsOnItem(Context context, Item item,
+        List<MetadataCorrection> metadataCorrections) throws SQLException {
+
+        for (MetadataCorrection correction : metadataCorrections) {
+            CorrectionType correctionType = correction.getCorrectionType();
+            switch (correctionType) {
+                case ADD:
+                    addMetadataValues(context, item, correction.getMetadataField(), correction.getNewValues());
+                    break;
+                case MODIFY:
+                    removeMetadataValues(context, item, correction.getMetadataField());
+                    addMetadataValues(context, item, correction.getMetadataField(), correction.getNewValues());
+                    break;
+                case REMOVE:
+                    removeMetadataValues(context, item, correction.getMetadataField());
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unkown metadata correction type: " + correctionType);
+            }
+        }
+
+    }
+
+    private void applyBitstreamCorrectionsOnItem(Context context, Item item,
+        List<BitstreamCorrection> bitstreamCorrections) {
+        // TODO Auto-generated method stub
+
+    }
+
+    private void addMetadataValues(Context context, Item item, String metadataFieldAsString,
+        List<MetadataValueDTO> values) throws SQLException {
+
+        MetadataField metadataField = metadataFieldService.findByString(context, metadataFieldAsString, '.');
+        if (metadataField == null) {
+            throw new IllegalArgumentException("Unknown metadata field: " + metadataFieldAsString);
+        }
+
+        for (MetadataValueDTO metadataValue : values) {
+            String language = metadataValue.getLanguage();
+            String value = metadataValue.getValue();
+            String authority = metadataValue.getAuthority();
+            int confidence = metadataValue.getConfidence();
+            itemService.addMetadata(context, item, metadataField, language, value, authority, confidence);
+        }
+    }
+
+    private void removeMetadataValues(Context context, Item item, String metadataField) throws SQLException {
+        List<MetadataValue> valuesToRemove = itemService.getMetadataByMetadataString(item, metadataField);
+        itemService.removeMetadataValues(context, item, valuesToRemove);
     }
 
     public String getCorrectionRelationshipName() {

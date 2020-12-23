@@ -39,7 +39,6 @@ import org.dspace.content.service.WorkspaceItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.services.ConfigurationService;
-import org.dspace.versioning.model.BitstreamCorrection;
 import org.dspace.versioning.model.CorrectionType;
 import org.dspace.versioning.model.ItemCorrection;
 import org.dspace.versioning.model.MetadataCorrection;
@@ -200,16 +199,18 @@ public class ItemCorrectionService {
 
     }
 
-    public ItemCorrection getAppliedCorrectionsOnItem(Context context, Item originalItem, Item correctionItem) {
-        List<BitstreamCorrection> bitstream = checkBitstreamCorrections(context, originalItem, correctionItem);
-        List<MetadataCorrection> metadata = checkMetadataCorrections(context, originalItem, correctionItem);
-        return new ItemCorrection(bitstream, metadata);
+    public Item getCorrectedItem(Context context, Item correctionItem) throws SQLException {
+        Relationship relationship = getCorrectionItemRelationship(context, correctionItem);
+        return relationship != null ? relationship.getRightItem() : null;
+    }
+
+    public ItemCorrection getAppliedCorrections(Context context, Item originalItem, Item correctionItem) {
+        return new ItemCorrection(checkMetadataCorrections(context, originalItem, correctionItem));
     }
 
     public void applyCorrectionsOnItem(Context context, Item item, ItemCorrection correction)
         throws SQLException, AuthorizeException {
         applyMetadataCorrectionsOnItem(context, item, correction.getMetadataCorrections());
-        applyBitstreamCorrectionsOnItem(context, item, correction.getBitstreamCorrections());
         itemService.update(context, item);
     }
 
@@ -273,12 +274,6 @@ public class ItemCorrectionService {
         return metadataValues.stream().map(value -> new MetadataValueDTO(value)).collect(Collectors.toList());
     }
 
-    private List<BitstreamCorrection> checkBitstreamCorrections(Context context, Item originalItem,
-        Item correctionItem) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
     private void applyMetadataCorrectionsOnItem(Context context, Item item,
         List<MetadataCorrection> metadataCorrections) throws SQLException {
 
@@ -299,12 +294,6 @@ public class ItemCorrectionService {
                     throw new IllegalArgumentException("Unkown metadata correction type: " + correctionType);
             }
         }
-
-    }
-
-    private void applyBitstreamCorrectionsOnItem(Context context, Item item,
-        List<BitstreamCorrection> bitstreamCorrections) {
-        // TODO Auto-generated method stub
 
     }
 

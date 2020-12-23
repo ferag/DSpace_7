@@ -23,7 +23,6 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.Item;
-import org.dspace.content.Relationship;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
@@ -81,16 +80,16 @@ public class ShadowCopyAction extends ProcessingAction {
 
         Item item = workflowItem.getItem();
 
-        WorkspaceItem directorioWorkspaceItem;
+        WorkspaceItem workspaceItemShadowCopy;
 
-        Item itemToCorrect = getCorrectedItem(context, item);
+        Item itemToCorrect = itemCorrectionService.getCorrectedItem(context, item);
         if (itemToCorrect != null) {
-            directorioWorkspaceItem = createShadowCopyForCorrection(context, item, itemToCorrect);
+            workspaceItemShadowCopy = createShadowCopyForCorrection(context, item, itemToCorrect);
         } else {
-            directorioWorkspaceItem = createShadowCopyForCreation(context, item);
+            workspaceItemShadowCopy = createShadowCopyForCreation(context, item);
         }
 
-        workflowService.start(context, directorioWorkspaceItem);
+        workflowService.start(context, workspaceItemShadowCopy);
 
         return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, ActionResult.OUTCOME_COMPLETE);
     }
@@ -111,11 +110,13 @@ public class ShadowCopyAction extends ProcessingAction {
             throw new WorkflowException("The item to correct has no shadow copy in the directorio");
         }
 
-        WorkspaceItem correctionCopyWorkspaceItem = createItemCopyCorrection(ctx, itemToCorrectCopy.getID());
-        concytecWorkflowService.createShadowRelationship(ctx, itemToCorrectCopy, correctionCopyWorkspaceItem.getItem());
-        applyCorrectionsOnItem(ctx, correctionItem, itemToCorrect, correctionCopyWorkspaceItem.getItem());
+        WorkspaceItem correctionWorkspaceItemCopy = createItemCopyCorrection(ctx, itemToCorrectCopy.getID());
+        concytecWorkflowService.createShadowRelationship(ctx, correctionItem, correctionWorkspaceItemCopy.getItem());
 
-        return correctionCopyWorkspaceItem;
+        ItemCorrection itemCorrection = itemCorrectionService.getAppliedCorrections(ctx, itemToCorrect, correctionItem);
+        itemCorrectionService.applyCorrectionsOnItem(ctx, correctionWorkspaceItemCopy.getItem(), itemCorrection);
+
+        return correctionWorkspaceItemCopy;
 
     }
 
@@ -147,25 +148,10 @@ public class ShadowCopyAction extends ProcessingAction {
         return Objects.equals(collectionType, itemType);
     }
 
-    private void applyCorrectionsOnItem(Context ctx, Item correctionItem, Item itemToCorrect,
-        Item correctionItemShadowCopy) throws SQLException, AuthorizeException {
-
-        ItemCorrection itemCorrection = itemCorrectionService.getAppliedCorrectionsOnItem(ctx,
-            itemToCorrect, correctionItem);
-
-        itemCorrectionService.applyCorrectionsOnItem(ctx, correctionItemShadowCopy, itemCorrection);
-
-    }
-
     private WorkspaceItem createItemCopyCorrection(Context context, UUID itemCopyId)
         throws SQLException, AuthorizeException {
         String relationshipName = itemCorrectionService.getCorrectionRelationshipName();
         return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context, itemCopyId, relationshipName);
-    }
-
-    private Item getCorrectedItem(Context context, Item correctionItem) throws SQLException {
-        Relationship relationship = itemCorrectionService.getCorrectionItemRelationship(context, correctionItem);
-        return relationship != null ? relationship.getRightItem() : null;
     }
 
     @Override

@@ -74,12 +74,6 @@
         <property name="processingAction" ref="finalEditDirectorioActionAPI"/>
         <property name="requiresUI" value="true"/>
     </bean>
-    
-    <bean id="checkcorrectionaction" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
-        <constructor-arg type="java.lang.String" value="checkcorrectionaction"/>
-        <property name="processingAction" ref="checkcorrectionactionAPI"/>
-        <property name="requiresUI" value="false"/>
-    </bean>
 
 
     <!--Action for the select single reviewer workflow -->

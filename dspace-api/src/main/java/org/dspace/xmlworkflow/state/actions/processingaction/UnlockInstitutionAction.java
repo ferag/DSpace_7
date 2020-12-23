@@ -18,6 +18,7 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.core.Context;
+import org.dspace.versioning.ItemCorrectionService;
 import org.dspace.workflow.WorkflowException;
 import org.dspace.xmlworkflow.ConcytecFeedback;
 import org.dspace.xmlworkflow.WorkflowConfigurationException;
@@ -54,6 +55,9 @@ public class UnlockInstitutionAction extends ProcessingAction {
     @Autowired
     private InstallItemService installItemService;
 
+    @Autowired
+    private ItemCorrectionService itemCorrectionService;
+
     @Override
     public void activate(Context c, XmlWorkflowItem wf) {
     }
@@ -63,6 +67,8 @@ public class UnlockInstitutionAction extends ProcessingAction {
         throws SQLException, AuthorizeException, IOException, WorkflowException {
 
         Item item = workflowItem.getItem();
+        Item itemToCorrect = itemCorrectionService.getCorrectedItem(context, item);
+        boolean isCorrectionItem = itemToCorrect != null;
 
         ConcytecFeedback concytecFeedback = concytecWorkflowService.getConcytecFeedback(context, item);
 
@@ -73,9 +79,13 @@ public class UnlockInstitutionAction extends ProcessingAction {
         }
 
         if (concytecFeedback == ConcytecFeedback.REJECT) {
-            item = installItemService.installItem(context, workflowItem);
-            itemService.withdraw(context, item);
-            return new ActionResult(ActionResult.TYPE.TYPE_CANCEL);
+            handleConcytecRejection(context, workflowItem, isCorrectionItem);
+            return getCancelActionResult();
+        }
+
+        if (isCorrectionItem) {
+            itemCorrectionService.replaceCorrectionItemWithNative(context, workflowItem);
+            return getCompleteActionResult();
         }
 
         return getCompleteActionResult();
@@ -105,8 +115,24 @@ public class UnlockInstitutionAction extends ProcessingAction {
 
     }
 
+    private void handleConcytecRejection(Context context, XmlWorkflowItem workflowItem, boolean isCorrectionItem)
+        throws SQLException, AuthorizeException, IOException {
+
+        if (isCorrectionItem) {
+            workflowService.deleteWorkflowByWorkflowItem(context, workflowItem, context.getCurrentUser());
+        } else {
+            Item item = installItemService.installItem(context, workflowItem);
+            itemService.withdraw(context, item);
+        }
+
+    }
+
     private ActionResult getCompleteActionResult() {
         return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, ActionResult.OUTCOME_COMPLETE);
+    }
+
+    private ActionResult getCancelActionResult() {
+        return new ActionResult(ActionResult.TYPE.TYPE_CANCEL);
     }
 
     @Override

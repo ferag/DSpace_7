@@ -8,6 +8,7 @@
 package org.dspace.app.rest;
 
 import static com.jayway.jsonpath.JsonPath.read;
+import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
 import static org.dspace.content.Item.ANY;
 import static org.dspace.xmlworkflow.ConcytecFeedback.APPROVE;
 import static org.dspace.xmlworkflow.ConcytecFeedback.REJECT;
@@ -37,13 +38,13 @@ import org.dspace.builder.CommunityBuilder;
 import org.dspace.builder.EPersonBuilder;
 import org.dspace.builder.EntityTypeBuilder;
 import org.dspace.builder.GroupBuilder;
-import org.dspace.builder.RelationshipTypeBuilder;
 import org.dspace.builder.WorkspaceItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.EntityType;
 import org.dspace.content.Item;
 import org.dspace.content.Relationship;
+import org.dspace.content.RelationshipType;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.content.service.ItemService;
 import org.dspace.content.service.RelationshipService;
@@ -124,6 +125,10 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
     private Group directorioReviewGroup;
 
+    private RelationshipType hasShadowCopyRelationshipType;
+
+    private RelationshipType isCorrectionOfRelationshipType;
+
     @Before
     public void before() throws Exception {
         super.setUp();
@@ -131,10 +136,12 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         context.turnOffAuthorisationSystem();
 
         EntityType publicationType = EntityTypeBuilder.createEntityTypeBuilder(context, "Publication").build();
-        RelationshipTypeBuilder.createRelationshipTypeBuilder(context, publicationType, publicationType,
-            HAS_SHADOW_COPY_RELATIONSHIP, IS_SHADOW_COPY_RELATIONSHIP, 0, 1, 0, 1);
-        RelationshipTypeBuilder.createRelationshipTypeBuilder(context, publicationType, publicationType,
-            "isCorrectionOfItem", "isCorrectedByItem", 0, 1, 0, 1);
+
+        hasShadowCopyRelationshipType = createRelationshipTypeBuilder(context, publicationType, publicationType,
+            HAS_SHADOW_COPY_RELATIONSHIP, IS_SHADOW_COPY_RELATIONSHIP, 0, 1, 0, 1).build();
+
+        isCorrectionOfRelationshipType = createRelationshipTypeBuilder(context, publicationType, publicationType,
+            "isCorrectionOfItem", "isCorrectedByItem", 0, 1, 0, 1).build();
 
         submitter = createEPerson("submitter@example.com");
         firstDirectorioUser = createEPerson("firstDirectorioUser@example.com");
@@ -219,7 +226,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Item item = workspaceItem.getItem();
         assertThat(getWorkspaceItem(item), nullValue());
 
-        List<Relationship> relationships = relationshipService.findByItem(context, item);
+        List<Relationship> relationships = findShadowCopyRelations(item);
         assertThat(relationships, hasSize(1));
 
         Relationship relationship = relationships.get(0);
@@ -261,7 +268,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Item item = workspaceItem.getItem();
         assertThat(getWorkspaceItem(item), nullValue());
 
-        List<Relationship> relationships = relationshipService.findByItem(context, item);
+        List<Relationship> relationships = findShadowCopyRelations(item);
         assertThat(relationships, hasSize(1));
 
         Relationship relationship = relationships.get(0);
@@ -309,7 +316,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Item item = workspaceItem.getItem();
         assertThat(getWorkspaceItem(item), nullValue());
 
-        List<Relationship> relationships = relationshipService.findByItem(context, item);
+        List<Relationship> relationships = findShadowCopyRelations(item);
         assertThat(relationships, hasSize(1));
 
         Relationship relationship = relationships.get(0);
@@ -356,7 +363,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Item item = workspaceItem.getItem();
         assertThat(getWorkspaceItem(item), nullValue());
 
-        List<Relationship> relationships = relationshipService.findByItem(context, item);
+        List<Relationship> relationships = findShadowCopyRelations(item);
         assertThat(relationships, hasSize(1));
 
         Relationship relationship = relationships.get(0);
@@ -400,7 +407,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Item item = workspaceItem.getItem();
         assertThat(getWorkspaceItem(item), nullValue());
 
-        List<Relationship> relationships = relationshipService.findByItem(context, item);
+        List<Relationship> relationships = findShadowCopyRelations(item);
         assertThat(relationships, hasSize(1));
 
         Relationship relationship = relationships.get(0);
@@ -449,7 +456,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Item item = workspaceItem.getItem();
         assertThat(getWorkspaceItem(item), nullValue());
 
-        List<Relationship> relationships = relationshipService.findByItem(context, item);
+        List<Relationship> relationships = findShadowCopyRelations(item);
         assertThat(relationships, hasSize(1));
 
         Relationship relationship = relationships.get(0);
@@ -495,7 +502,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
-    public void testItemCorrectionApproved() throws Exception {
+    public void testItemCorrectionWithConcytecApproval() throws Exception {
 
         WorkspaceItem workspaceItem = createWorkspaceItem();
 
@@ -504,7 +511,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Item item = workspaceItem.getItem();
         assertThat(getWorkspaceItem(item), nullValue());
 
-        List<Relationship> relationships = relationshipService.findByItem(context, item);
+        List<Relationship> relationships = findShadowCopyRelations(item);
         assertThat(relationships, hasSize(1));
 
         Item shadowItemCopy = relationships.get(0).getRightItem();
@@ -520,10 +527,185 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         WorkspaceItem correctionWorkspaceItem = requestForItemCorrection(admin, item);
         assertThat(correctionWorkspaceItem, notNullValue());
 
+        Item correctionItem = correctionWorkspaceItem.getItem();
+
+        List<Relationship> correctionRelations = findIsCorrectionOfRelations(item);
+        assertThat(correctionRelations, hasSize(1));
+        assertThat(correctionRelations.get(0).getLeftItem(), equalTo(correctionWorkspaceItem.getItem()));
+
         context.turnOffAuthorisationSystem();
-        replaceTitle(context, correctionWorkspaceItem.getItem(), "Item submission new title");
+        replaceTitle(context, correctionWorkspaceItem.getItem(), "Submission Item new title");
+        removeEditor(context, correctionWorkspaceItem.getItem());
         workflowService.start(context, correctionWorkspaceItem);
         context.restoreAuthSystemState();
+
+        assertThat(getWorkflowItem(correctionItem), notNullValue());
+
+        List<Relationship> correctionItemShadowCopyRelations = findShadowCopyRelations(correctionItem);
+        assertThat(correctionItemShadowCopyRelations, hasSize(1));
+
+        Item correctionItemShadowCopy = correctionItemShadowCopyRelations.get(0).getRightItem();
+
+        XmlWorkflowItem correctionWorkflowItemShadowCopy = getWorkflowItem(correctionItemShadowCopy);
+        assertThat(correctionWorkflowItemShadowCopy, notNullValue());
+
+        claimTaskAndApprove(correctionWorkflowItemShadowCopy, secondDirectorioUser, directorioReviewGroup);
+        claimTaskAndApprove(correctionWorkflowItemShadowCopy, firstDirectorioUser, directorioEditorGroup);
+        claimTaskAndApprove(correctionWorkflowItemShadowCopy, firstDirectorioUser, directorioEditorGroup);
+
+        assertThat(reloadItem(correctionItem), nullValue());
+        assertThat(reloadItem(correctionItemShadowCopy), nullValue());
+
+        item = reloadItem(item);
+        assertThat(item, notNullValue());
+        assertThat(getTitle(item), equalTo("Submission Item new title"));
+        assertThat(getEditor(item), nullValue());
+
+        shadowItemCopy = reloadItem(shadowItemCopy);
+        assertThat(shadowItemCopy, notNullValue());
+        assertThat(getTitle(shadowItemCopy), equalTo("Submission Item new title"));
+        assertThat(getEditor(shadowItemCopy), nullValue());
+
+    }
+
+    @Test
+    public void testItemCorrectionWithConcytecRejection() throws Exception {
+
+        WorkspaceItem workspaceItem = createWorkspaceItem();
+
+        workflowService.start(context, workspaceItem);
+
+        Item item = workspaceItem.getItem();
+        assertThat(getWorkspaceItem(item), nullValue());
+
+        List<Relationship> relationships = findShadowCopyRelations(item);
+        assertThat(relationships, hasSize(1));
+
+        Item shadowItemCopy = relationships.get(0).getRightItem();
+        XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
+
+        claimTaskAndApprove(shadowWorkflowItemCopy, secondDirectorioUser, directorioReviewGroup);
+        claimTaskAndApprove(shadowWorkflowItemCopy, firstDirectorioUser, directorioEditorGroup);
+        claimTaskAndApprove(shadowWorkflowItemCopy, firstDirectorioUser, directorioEditorGroup);
+
+        item = reloadItem(item);
+        assertThat(item.isArchived(), is(true));
+
+        WorkspaceItem correctionWorkspaceItem = requestForItemCorrection(admin, item);
+        assertThat(correctionWorkspaceItem, notNullValue());
+
+        Item correctionItem = correctionWorkspaceItem.getItem();
+
+        List<Relationship> correctionRelations = findIsCorrectionOfRelations(item);
+        assertThat(correctionRelations, hasSize(1));
+        assertThat(correctionRelations.get(0).getLeftItem(), equalTo(correctionWorkspaceItem.getItem()));
+
+        context.turnOffAuthorisationSystem();
+        replaceTitle(context, correctionWorkspaceItem.getItem(), "Submission Item new title");
+        removeEditor(context, correctionWorkspaceItem.getItem());
+        workflowService.start(context, correctionWorkspaceItem);
+        context.restoreAuthSystemState();
+
+        assertThat(getWorkflowItem(correctionItem), notNullValue());
+
+        List<Relationship> correctionItemShadowCopyRelations = findShadowCopyRelations(correctionItem);
+        assertThat(correctionItemShadowCopyRelations, hasSize(1));
+
+        Item correctionItemShadowCopy = correctionItemShadowCopyRelations.get(0).getRightItem();
+
+        XmlWorkflowItem correctionWorkflowItemShadowCopy = getWorkflowItem(correctionItemShadowCopy);
+        assertThat(correctionWorkflowItemShadowCopy, notNullValue());
+
+        claimTaskAndApprove(correctionWorkflowItemShadowCopy, secondDirectorioUser, directorioReviewGroup);
+        claimTaskAndReject(correctionWorkflowItemShadowCopy, firstDirectorioUser, directorioEditorGroup, "Wrong title");
+
+        assertThat(reloadItem(correctionItem), nullValue());
+        assertThat(reloadItem(correctionItemShadowCopy), nullValue());
+
+        item = reloadItem(item);
+        assertThat(item, notNullValue());
+        assertThat(getTitle(item), equalTo("Submission Item new title"));
+        assertThat(getEditor(item), nullValue());
+
+        shadowItemCopy = reloadItem(shadowItemCopy);
+        assertThat(shadowItemCopy, notNullValue());
+        assertThat(getTitle(shadowItemCopy), equalTo("Submission Item"));
+        assertThat(getEditor(shadowItemCopy), equalTo("Mario Rossi"));
+
+    }
+
+    @Test
+    public void testItemCorrectionWithInstitutionRejection() throws Exception {
+
+        WorkspaceItem workspaceItem = createWorkspaceItem();
+
+        workflowService.start(context, workspaceItem);
+
+        Item item = workspaceItem.getItem();
+        assertThat(getWorkspaceItem(item), nullValue());
+
+        List<Relationship> relationships = findShadowCopyRelations(item);
+        assertThat(relationships, hasSize(1));
+
+        Item shadowItemCopy = relationships.get(0).getRightItem();
+        XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
+
+        claimTaskAndApprove(shadowWorkflowItemCopy, secondDirectorioUser, directorioReviewGroup);
+        claimTaskAndApprove(shadowWorkflowItemCopy, firstDirectorioUser, directorioEditorGroup);
+        claimTaskAndApprove(shadowWorkflowItemCopy, firstDirectorioUser, directorioEditorGroup);
+
+        item = reloadItem(item);
+        assertThat(item.isArchived(), is(true));
+
+        WorkspaceItem correctionWorkspaceItem = requestForItemCorrection(admin, item);
+        assertThat(correctionWorkspaceItem, notNullValue());
+
+        Item correctionItem = correctionWorkspaceItem.getItem();
+
+        List<Relationship> correctionRelations = findIsCorrectionOfRelations(item);
+        assertThat(correctionRelations, hasSize(1));
+        assertThat(correctionRelations.get(0).getLeftItem(), equalTo(correctionWorkspaceItem.getItem()));
+
+        context.turnOffAuthorisationSystem();
+        replaceTitle(context, correctionWorkspaceItem.getItem(), "Submission Item new title");
+        removeEditor(context, correctionWorkspaceItem.getItem());
+        workflowService.start(context, correctionWorkspaceItem);
+        context.restoreAuthSystemState();
+
+        List<Relationship> correctionItemShadowCopyRelations = findShadowCopyRelations(correctionItem);
+        assertThat(correctionItemShadowCopyRelations, hasSize(1));
+
+        Item correctionItemShadowCopy = correctionItemShadowCopyRelations.get(0).getRightItem();
+        assertThat(correctionItemShadowCopy, notNullValue());
+
+        XmlWorkflowItem correctionWorkflowItem = getWorkflowItem(correctionItem);
+        assertThat(correctionWorkflowItem, notNullValue());
+
+        List<ClaimedTask> tasks = claimedTaskService.findByWorkflowItem(context, correctionWorkflowItem);
+        assertThat(tasks, hasSize(1));
+
+        ClaimedTask task = tasks.get(0);
+        assertThat(task.getOwner(), equalTo(institutionUser));
+
+        rejectClaimedTaskViaRest(institutionUser, task, "wrong title");
+
+        item = reloadItem(item);
+        assertThat(getTitle(item), equalTo("Submission Item"));
+        assertThat(getEditor(item), equalTo("Mario Rossi"));
+        assertThat(getWorkspaceItem(item), nullValue());
+
+        shadowItemCopy = reloadItem(shadowItemCopy);
+        assertThat(shadowItemCopy, notNullValue());
+        assertThat(getTitle(shadowItemCopy), equalTo("Submission Item"));
+        assertThat(getEditor(shadowItemCopy), equalTo("Mario Rossi"));
+
+        correctionItem = reloadItem(correctionItem);
+        assertThat(correctionItem, notNullValue());
+        assertThat(getWorkspaceItem(correctionItem), notNullValue());
+        assertThat(getWorkflowItem(correctionItem), nullValue());
+
+        correctionItemShadowCopy = reloadItem(correctionItemShadowCopy);
+        assertThat(correctionItemShadowCopy, nullValue());
 
     }
 
@@ -642,9 +824,17 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         return itemService.getMetadataFirstValue(item, "dc", "title", null, Item.ANY);
     }
 
+    private String getEditor(Item item) {
+        return itemService.getMetadataFirstValue(item, "dc", "contributor", "editor", Item.ANY);
+    }
+
     private void replaceTitle(Context context, Item item, String newTitle) throws SQLException, AuthorizeException {
         itemService.replaceMetadata(context, item, "dc", "title", null, null, newTitle, null, -1, 0);
         itemService.update(context, item);
+    }
+
+    private void removeEditor(Context context, Item item) throws SQLException {
+        itemService.removeMetadataValues(context, item, "dc", "contributor", "editor", Item.ANY);
     }
 
     private void performActionOnClaimedTaskViaRest(EPerson user, ClaimedTask task, MultiValueMap<String, String> params)
@@ -662,6 +852,14 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .withEmail(email)
             .withPassword(password)
             .build();
+    }
+
+    private List<Relationship> findShadowCopyRelations(Item item) throws SQLException {
+        return relationshipService.findByItemAndRelationshipType(context, item, hasShadowCopyRelationshipType);
+    }
+
+    private List<Relationship> findIsCorrectionOfRelations(Item item) throws SQLException {
+        return relationshipService.findByItemAndRelationshipType(context, item, isCorrectionOfRelationshipType);
     }
 
     private Item reloadItem(Item item) throws SQLException {

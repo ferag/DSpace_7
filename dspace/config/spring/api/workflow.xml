@@ -35,6 +35,7 @@
             <util:list>
                 <ref bean="shadowCopyStep"/>
                 <ref bean="waitForConcytecStep"/>
+                <ref bean="checkcorrectionstep"/>
             </util:list>
         </property>
     </bean>
@@ -245,6 +246,12 @@
     <bean name="waitForConcytecStep" class="org.dspace.xmlworkflow.state.Step">
         <property name="userSelectionMethod" ref="autoassignAction"/>
         <property name="role" ref="reviewer"/>
+        <property name="outcomes">
+            <util:map>
+                <entry key="#{ T(org.dspace.xmlworkflow.state.actions.ActionResult).OUTCOME_COMPLETE}"
+                       value-ref="checkcorrectionstep"/>
+            </util:map>
+        </property>
         <property name="actions">
             <list>
                 <ref bean="waitForConcytecAction"/>

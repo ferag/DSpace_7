@@ -17,29 +17,18 @@ import java.util.List;
  */
 public class ItemCorrection {
 
-    private final List<BitstreamCorrection> bitstreamCorrections;
     private final List<MetadataCorrection> metadataCorrections;
 
-    public ItemCorrection(List<BitstreamCorrection> bitstream, List<MetadataCorrection> metadata) {
-        this.bitstreamCorrections = bitstream;
+    public ItemCorrection(List<MetadataCorrection> metadata) {
         this.metadataCorrections = metadata;
     }
 
     public ItemCorrection() {
-        bitstreamCorrections = new ArrayList<>();
         metadataCorrections = new ArrayList<>();
-    }
-
-    public void addBitStreamCorrection(BitstreamCorrection correction) {
-        bitstreamCorrections.add(correction);
     }
 
     public void addMetadataCorrection(MetadataCorrection correction) {
         metadataCorrections.add(correction);
-    }
-
-    public List<BitstreamCorrection> getBitstreamCorrections() {
-        return bitstreamCorrections;
     }
 
     public List<MetadataCorrection> getMetadataCorrections() {

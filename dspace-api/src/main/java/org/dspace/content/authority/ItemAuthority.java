@@ -91,6 +91,7 @@ public class ItemAuthority implements ChoiceAuthority, LinkableEntityAuthority {
         solrQuery.setStart(start);
         solrQuery.setRows(limit);
         solrQuery.addFilterQuery("search.resourcetype:" + Item.class.getSimpleName());
+        new PeruItemAutorityFilter(dspace).addCustomFilters(solrQuery);
 
         if (StringUtils.isNotBlank(relationshipType)) {
             solrQuery.addFilterQuery("relationship.type:" + relationshipType);

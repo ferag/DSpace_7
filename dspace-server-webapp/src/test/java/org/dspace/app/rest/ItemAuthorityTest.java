@@ -19,6 +19,7 @@ import org.dspace.builder.EPersonBuilder;
 import org.dspace.builder.GroupBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
+import org.dspace.content.Community;
 import org.dspace.content.Item;
 import org.dspace.content.authority.Choices;
 import org.dspace.content.authority.service.ChoiceAuthorityService;
@@ -107,6 +108,54 @@ public class ItemAuthorityTest extends AbstractControllerIntegrationTest {
                     "Author 3", "Author 3", "vocabularyEntry")
                              )))
                         .andExpect(jsonPath("$.page.totalElements", Matchers.is(3)));
+    }
+
+    @Test
+    public void onlySameCommunityItems() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        parentCommunity = CommunityBuilder.createCommunity(context).build();
+
+        Community institutionCommunity = CommunityBuilder.createSubCommunity(context, parentCommunity).build();
+        Community otherInstitutionCommunity = CommunityBuilder.createSubCommunity(context, parentCommunity).build();
+
+        Collection collection = CollectionBuilder.createCollection(context, institutionCommunity)
+            .withName("Test collection")
+            .build();
+
+        Collection otherInstitutionCollection = CollectionBuilder.createCollection(context, otherInstitutionCommunity)
+            .withName("Test collection")
+            .build();
+
+
+        Item author_1 = ItemBuilder.createItem(context, collection)
+            .withTitle("Author 1")
+            .withRelationshipType("person")
+            .build();
+
+        Item author_2 = ItemBuilder.createItem(context, collection)
+            .withTitle("Author 2")
+            .withRelationshipType("person")
+            .build();
+
+        Item author_3 = ItemBuilder.createItem(context, otherInstitutionCollection)
+            .withTitle("Author 3")
+            .withRelationshipType("person")
+            .build();
+
+        String token = getAuthToken(eperson.getEmail(), password);
+        getClient(token).perform(get("/api/submission/vocabularies/AuthorAuthority/entries")
+            .param("metadata", "dc.contributor.author")
+            .param("collection", collection.getID().toString())
+            .param("filter", "author"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.entries", Matchers.containsInAnyOrder(
+                ItemAuthorityMatcher.matchItemAuthorityProperties(author_1.getID().toString(),
+                    "Author 1", "Author 1", "vocabularyEntry"),
+                ItemAuthorityMatcher.matchItemAuthorityProperties(author_2.getID().toString(),
+                    "Author 2", "Author 2", "vocabularyEntry")
+            )))
+            .andExpect(jsonPath("$.page.totalElements", Matchers.is(2)));
     }
 
     @Test

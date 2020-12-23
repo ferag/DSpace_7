@@ -45,7 +45,8 @@ public class PeruItemAutorityFilter {
     private final CommunityService communityService;
     private final String institutionParentCommunity;
 
-    public PeruItemAutorityFilter(DSpace dspace) {
+    public PeruItemAutorityFilter() {
+        DSpace dspace = new DSpace();
         requestService = dspace.getServiceManager()
             .getServiceByName(RequestService.class.getName(),
                 RequestService.class);

@@ -31,6 +31,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.builder.CollectionBuilder;
@@ -43,6 +44,7 @@ import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.EntityType;
 import org.dspace.content.Item;
+import org.dspace.content.MetadataValue;
 import org.dspace.content.Relationship;
 import org.dspace.content.RelationshipType;
 import org.dspace.content.WorkspaceItem;
@@ -240,6 +242,8 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(shadowItemCopy, not(equalTo(item)));
         assertThat(item.getMetadata(), hasSize(shadowItemCopy.getMetadata().size() - 1));
         assertThat(getWorkflowItem(shadowItemCopy), notNullValue());
+        assertThat(getFirstMetadataValue(shadowItemCopy, "dc.contributor.author").getAuthority(),
+            equalTo("will be referenced::SHADOW::9bab4959-c210-4b6d-9d94-ff75cade84c3"));
 
         XmlWorkflowItem workflowItem = getWorkflowItem(item);
         assertThat(workflowItem, notNullValue());
@@ -282,6 +286,8 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         assertThat(shadowItemCopy, not(equalTo(item)));
         assertThat(item.getMetadata(), hasSize(shadowItemCopy.getMetadata().size() - 1));
+        assertThat(getFirstMetadataValue(shadowItemCopy, "dc.contributor.author").getAuthority(),
+            equalTo("will be referenced::SHADOW::9bab4959-c210-4b6d-9d94-ff75cade84c3"));
         assertThat(shadowWorkflowItemCopy, notNullValue());
 
         XmlWorkflowItem workflowItem = getWorkflowItem(item);
@@ -309,7 +315,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     @Test
     public void testItemSubmissionWithConcytecApprove() throws Exception {
 
-        WorkspaceItem workspaceItem = createWorkspaceItem();
+        WorkspaceItem workspaceItem = createWorkspaceItemWithFulltext();
 
         workflowService.start(context, workspaceItem);
 
@@ -329,6 +335,8 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         assertThat(shadowItemCopy, not(equalTo(item)));
         assertThat(item.getMetadata(), hasSize(shadowItemCopy.getMetadata().size() - 1));
+        assertThat(getFirstMetadataValue(shadowItemCopy, "dc.contributor.author").getAuthority(),
+            equalTo("will be referenced::SHADOW::9bab4959-c210-4b6d-9d94-ff75cade84c3"));
         assertThat(getWorkflowItem(shadowItemCopy), notNullValue());
 
         XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
@@ -376,6 +384,8 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         assertThat(shadowItemCopy, not(equalTo(item)));
         assertThat(item.getMetadata(), hasSize(shadowItemCopy.getMetadata().size() - 1));
+        assertThat(getFirstMetadataValue(shadowItemCopy, "dc.contributor.author").getAuthority(),
+            equalTo("will be referenced::SHADOW::9bab4959-c210-4b6d-9d94-ff75cade84c3"));
         assertThat(getWorkflowItem(shadowItemCopy), notNullValue());
 
         XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
@@ -420,6 +430,8 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         assertThat(shadowItemCopy, not(equalTo(item)));
         assertThat(item.getMetadata(), hasSize(shadowItemCopy.getMetadata().size() - 1));
+        assertThat(getFirstMetadataValue(shadowItemCopy, "dc.contributor.author").getAuthority(),
+            equalTo("will be referenced::SHADOW::9bab4959-c210-4b6d-9d94-ff75cade84c3"));
         assertThat(getWorkflowItem(shadowItemCopy), notNullValue());
 
         XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
@@ -469,6 +481,8 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         assertThat(shadowItemCopy, not(equalTo(item)));
         assertThat(item.getMetadata(), hasSize(shadowItemCopy.getMetadata().size() - 1));
+        assertThat(getFirstMetadataValue(shadowItemCopy, "dc.contributor.author").getAuthority(),
+            equalTo("will be referenced::SHADOW::9bab4959-c210-4b6d-9d94-ff75cade84c3"));
         assertThat(getWorkflowItem(shadowItemCopy), notNullValue());
 
         XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
@@ -515,6 +529,8 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(relationships, hasSize(1));
 
         Item shadowItemCopy = relationships.get(0).getRightItem();
+        assertThat(getFirstMetadataValue(shadowItemCopy, "dc.contributor.author").getAuthority(),
+            equalTo("will be referenced::SHADOW::9bab4959-c210-4b6d-9d94-ff75cade84c3"));
         XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
 
         claimTaskAndApprove(shadowWorkflowItemCopy, secondDirectorioUser, directorioReviewGroup);
@@ -545,6 +561,8 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(correctionItemShadowCopyRelations, hasSize(1));
 
         Item correctionItemShadowCopy = correctionItemShadowCopyRelations.get(0).getRightItem();
+        assertThat(getFirstMetadataValue(correctionItemShadowCopy, "dc.contributor.author").getAuthority(),
+            equalTo("will be referenced::SHADOW::9bab4959-c210-4b6d-9d94-ff75cade84c3"));
 
         XmlWorkflowItem correctionWorkflowItemShadowCopy = getWorkflowItem(correctionItemShadowCopy);
         assertThat(correctionWorkflowItemShadowCopy, notNullValue());
@@ -571,7 +589,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     @Test
     public void testItemCorrectionWithConcytecRejection() throws Exception {
 
-        WorkspaceItem workspaceItem = createWorkspaceItem();
+        WorkspaceItem workspaceItem = createWorkspaceItemWithFulltext();
 
         workflowService.start(context, workspaceItem);
 
@@ -612,6 +630,8 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(correctionItemShadowCopyRelations, hasSize(1));
 
         Item correctionItemShadowCopy = correctionItemShadowCopyRelations.get(0).getRightItem();
+        assertThat(getFirstMetadataValue(correctionItemShadowCopy, "dc.contributor.author").getAuthority(),
+            equalTo("will be referenced::SHADOW::9bab4959-c210-4b6d-9d94-ff75cade84c3"));
 
         XmlWorkflowItem correctionWorkflowItemShadowCopy = getWorkflowItem(correctionItemShadowCopy);
         assertThat(correctionWorkflowItemShadowCopy, notNullValue());
@@ -677,6 +697,8 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         Item correctionItemShadowCopy = correctionItemShadowCopyRelations.get(0).getRightItem();
         assertThat(correctionItemShadowCopy, notNullValue());
+        assertThat(getFirstMetadataValue(correctionItemShadowCopy, "dc.contributor.author").getAuthority(),
+            equalTo("will be referenced::SHADOW::9bab4959-c210-4b6d-9d94-ff75cade84c3"));
 
         XmlWorkflowItem correctionWorkflowItem = getWorkflowItem(correctionItem);
         assertThat(correctionWorkflowItem, notNullValue());
@@ -747,13 +769,24 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     }
 
     private WorkspaceItem createWorkspaceItem() throws IOException {
+        return WorkspaceItemBuilder.createWorkspaceItem(context, collection)
+            .withTitle("Submission Item")
+            .withIssueDate("2017-10-17")
+            .withAuthor("Mario Rossi", "9bab4959-c210-4b6d-9d94-ff75cade84c3")
+            .withAuthorAffilitation("4Science")
+            .withEditor("Mario Rossi")
+            .grantLicense()
+            .build();
+    }
+
+    private WorkspaceItem createWorkspaceItemWithFulltext() throws IOException {
         InputStream pdf = simpleArticle.getInputStream();
 
         WorkspaceItem workspaceItem = WorkspaceItemBuilder.createWorkspaceItem(context, collection)
             .withTitle("Submission Item")
             .withIssueDate("2017-10-17")
             .withFulltext("simple-article.pdf", "/local/path/simple-article.pdf", pdf)
-            .withAuthor("Mario Rossi")
+            .withAuthor("Mario Rossi", "9bab4959-c210-4b6d-9d94-ff75cade84c3")
             .withAuthorAffilitation("4Science")
             .withEditor("Mario Rossi")
             .grantLicense()
@@ -826,6 +859,11 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
     private String getEditor(Item item) {
         return itemService.getMetadataFirstValue(item, "dc", "contributor", "editor", Item.ANY);
+    }
+
+    private MetadataValue getFirstMetadataValue(Item item, String metadataField) {
+        List<MetadataValue> values = itemService.getMetadataByMetadataString(item, metadataField);
+        return CollectionUtils.isNotEmpty(values) ? values.get(0) : null;
     }
 
     private void replaceTitle(Context context, Item item, String newTitle) throws SQLException, AuthorizeException {

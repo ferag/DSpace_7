@@ -112,6 +112,9 @@
 						<constructor-arg value="dc.identifier.doi"></constructor-arg>
 					</bean>
 				</entry>
+                <entry key="SHADOW">
+                    <bean class="org.dspace.authority.service.impl.ItemSearchByShadowCopyRelation" />
+                </entry>
 			</map>
 		</constructor-arg>
 		<constructor-arg index="1">

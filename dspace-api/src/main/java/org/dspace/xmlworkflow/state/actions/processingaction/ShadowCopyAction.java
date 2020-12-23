@@ -7,6 +7,9 @@
  */
 package org.dspace.xmlworkflow.state.actions.processingaction;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.dspace.authority.service.AuthorityValueService.GENERATE;
+import static org.dspace.authority.service.AuthorityValueService.REFERENCE;
 import static org.dspace.content.Item.ANY;
 
 import java.io.IOException;
@@ -19,10 +22,12 @@ import java.util.function.Predicate;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.dspace.authority.service.AuthorityValueService;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.Item;
+import org.dspace.content.MetadataValue;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
@@ -89,6 +94,7 @@ public class ShadowCopyAction extends ProcessingAction {
             workspaceItemShadowCopy = createShadowCopyForCreation(context, item);
         }
 
+        replaceMetadataAuthorities(context, workspaceItemShadowCopy.getItem());
         workflowService.start(context, workspaceItemShadowCopy);
 
         return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, ActionResult.OUTCOME_COMPLETE);
@@ -152,6 +158,16 @@ public class ShadowCopyAction extends ProcessingAction {
         throws SQLException, AuthorizeException {
         String relationshipName = itemCorrectionService.getCorrectionRelationshipName();
         return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context, itemCopyId, relationshipName);
+    }
+
+    private void replaceMetadataAuthorities(Context context, Item item) throws SQLException, AuthorizeException {
+        for (MetadataValue metadataValue : item.getMetadata()) {
+            String authority = metadataValue.getAuthority();
+            if (isNotBlank(authority) && !authority.startsWith(REFERENCE) && !authority.startsWith(GENERATE)) {
+                metadataValue.setAuthority(AuthorityValueService.REFERENCE + "SHADOW::" + authority);
+            }
+        }
+        itemService.update(context, item);
     }
 
     @Override

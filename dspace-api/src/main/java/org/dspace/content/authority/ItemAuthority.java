@@ -11,6 +11,7 @@ package org.dspace.content.authority;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -58,6 +59,9 @@ public class ItemAuthority implements ChoiceAuthority, LinkableEntityAuthority {
 
     private ConfigurationService configurationService = DSpaceServicesFactory.getInstance().getConfigurationService();
 
+    private List<CustomAuthorityFilter> customAuthorityFilters = dspace.getServiceManager()
+        .getServicesByType(CustomAuthorityFilter.class);
+
     // punt!  this is a poor implementation..
     @Override
     public Choices getBestMatch(String text, String locale) {
@@ -87,15 +91,17 @@ public class ItemAuthority implements ChoiceAuthority, LinkableEntityAuthority {
 
         SolrQuery solrQuery = new SolrQuery();
         solrQuery.setQuery(luceneQuery);
-        solrQuery.setFields("dc.title", "search.resourceid");
         solrQuery.setStart(start);
         solrQuery.setRows(limit);
         solrQuery.addFilterQuery("search.resourcetype:" + Item.class.getSimpleName());
-        //new PeruItemAutorityFilter().addCustomFilters(solrQuery);
 
         if (StringUtils.isNotBlank(relationshipType)) {
             solrQuery.addFilterQuery("relationship.type:" + relationshipType);
         }
+
+        customAuthorityFilters.stream()
+            .flatMap(caf -> caf.getFilterQueries(relationshipType).stream())
+            .forEach(solrQuery::addFilterQuery);
 
         try {
             QueryResponse queryResponse = solr.query(solrQuery);
@@ -103,9 +109,10 @@ public class ItemAuthority implements ChoiceAuthority, LinkableEntityAuthority {
                 .stream()
                 .map(doc ->  {
                     String title = ((ArrayList<String>) doc.getFieldValue("dc.title")).get(0);
+                    Map<String, String> extras = ItemAuthorityUtils.buildExtra(getPluginInstanceName(), doc);
                     return new Choice((String) doc.getFieldValue("search.resourceid"),
                         title,
-                        title);
+                        title, extras);
                 }).collect(Collectors.toList());
 
             Choice[] results = new Choice[choiceList.size()];

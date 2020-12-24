@@ -10,6 +10,7 @@ package org.dspace.builder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
@@ -23,6 +24,7 @@ import org.dspace.core.Context;
 import org.dspace.discovery.SearchServiceException;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.dspace.xmlworkflow.storedcomponents.CollectionRole;
 
 /**
  * Builder to construct Collection objects
@@ -210,6 +212,28 @@ public class CollectionBuilder extends AbstractDSpaceObjectBuilder<Collection> {
         return this;
     }
 
+
+    public CollectionBuilder withRoleGroup(String roleId, Group... members) throws SQLException, AuthorizeException {
+
+        Group group = GroupBuilder.createGroup(context)
+            .withName("COLLECTION_" + collection.getID() + "_" + roleId)
+            .build();
+
+        CollectionRole colRole = collectionRoleService.find(context, collection, roleId);
+        if (colRole == null) {
+            colRole = collectionRoleService.create(context, collection, roleId, group);
+        }
+
+        for (Group member : members) {
+            groupService.addMember(context, group, member);
+        }
+        groupService.update(context, group);
+
+        colRole.setGroup(group);
+        collectionRoleService.update(context, colRole);
+        return this;
+    }
+
     @Override
     public Collection build() {
         try {
@@ -255,13 +279,12 @@ public class CollectionBuilder extends AbstractDSpaceObjectBuilder<Collection> {
     }
 
     public void deleteWorkflowGroups(Context c, Collection collection) throws Exception {
-       for (int i = 1; i <= 3; i++) {
-            Group group = collectionService.getWorkflowGroup(c, collection, i);
-            if (group != null) {
-                collectionService.setWorkflowGroup(c, collection, i, null);
-                groupService.delete(c, group);
-            }
-       }
+        List<CollectionRole> collectionRoles = collectionRoleService.findByCollection(c, collection);
+        for (CollectionRole collectionRole : collectionRoles) {
+            Group group = collectionRole.getGroup();
+            collectionRoleService.delete(c, collectionRole);
+            groupService.delete(c, group);
+        }
     }
 
     public void deleteDefaultReadGroups(Context c, Collection collection) throws Exception {

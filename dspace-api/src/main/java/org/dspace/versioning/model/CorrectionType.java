@@ -5,18 +5,15 @@
  *
  * http://www.dspace.org/license/
  */
-package org.dspace.content.edit;
+package org.dspace.versioning.model;
 
 /**
- * @author Danilo Di Nuzzo (danilo.dinuzzo at 4science.it)
+ * Model the type of a single item data correction.
  *
+ * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  */
-public enum EditItemModeSecurity {
-
-    NONE,
-    ADMIN,
-    OWNER,
-    ADMIN_OWNER,
-    CUSTOM
-
+public enum CorrectionType {
+    ADD,
+    REMOVE,
+    MODIFY;
 }

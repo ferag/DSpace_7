@@ -67,9 +67,19 @@
         <property name="description" value="Mocking a script for testing purposes" />
         <property name="dspaceRunnableClass" value="org.dspace.scripts.impl.MockDSpaceRunnableScript"/>
     </bean>
-    
+
     <bean id="update-from-supplier" class="org.dspace.perucris.externalservices.UpdateItemWithExternalSourceCliScriptConfiguration">
         <property name="description" value="Perform the items update using external source"/>
         <property name="dspaceRunnableClass" value="org.dspace.perucris.externalservices.UpdateItemWithExternalSourceCli"/>
+    </bean>
+
+    <bean id="update-metrics" class="org.dspace.externalservices.UpdateCrisMetricsWithExternalSourceCliScriptConfiguration">
+        <property name="description" value="Perform the metrics update using external source"/>
+        <property name="dspaceRunnableClass" value="org.dspace.externalservices.UpdateCrisMetricsWithExternalSourceCli"/>
+    </bean>
+
+    <bean id="update-metrics-in-solr" class="org.dspace.metrics.updateSolrDocScript.UpdateCrisMetricsInSolrDocCliScriptConfiguration">
+        <property name="description" value="Perform the metrics update in SOLR documents"/>
+        <property name="dspaceRunnableClass" value="org.dspace.metrics.updateSolrDocScript.UpdateCrisMetricsInSolrDocCli"/>
     </bean>
 </beans>

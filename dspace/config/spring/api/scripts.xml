@@ -67,4 +67,5 @@
         <property name="description" value="Perform the metrics update in SOLR documents"/>
         <property name="dspaceRunnableClass" value="org.dspace.metrics.updateSolrDocScript.UpdateCrisMetricsInSolrDocCli"/>
     </bean>
+
 </beans>

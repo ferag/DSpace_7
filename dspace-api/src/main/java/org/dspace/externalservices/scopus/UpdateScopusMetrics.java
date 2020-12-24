@@ -20,7 +20,6 @@ import org.dspace.content.Item;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.externalservices.MetricsExternalServices;
-import org.dspace.utils.DSpace;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -31,10 +30,10 @@ public class UpdateScopusMetrics implements MetricsExternalServices {
 
     private static Logger log = LogManager.getLogger(UpdateScopusMetrics.class);
 
-    public static final String SCOPUS_CITATION = "ScopusCitation";
+    public static final String SCOPUS_CITATION = "scopusCitation";
 
-    protected ScopusProvider scopusProvider = new DSpace().getServiceManager().getServiceByName(
-                                                  ScopusProvider.class.getName(), ScopusProvider.class);
+    @Autowired
+    private ScopusProvider scopusProvider;
 
     @Autowired
     private ItemService itemService;
@@ -43,9 +42,9 @@ public class UpdateScopusMetrics implements MetricsExternalServices {
     private CrisMetricsService crisMetricsService;
 
     @Override
-    public boolean updateMetric(Context context, Item item) {
+    public boolean updateMetric(Context context, Item item, String param) {
         String id = buildQuery(item);
-        ScopusMetricsDTO scopusMetric = scopusProvider.getScopusObject(id);
+        CrisMetricDTO scopusMetric = scopusProvider.getScopusObject(id);
         if (Objects.isNull(scopusMetric)) {
             return false;
         }
@@ -78,7 +77,7 @@ public class UpdateScopusMetrics implements MetricsExternalServices {
         return query.toString();
     }
 
-    private boolean updateScopusMetrics(Context context, Item currentItem, ScopusMetricsDTO scopusMetric) {
+    private boolean updateScopusMetrics(Context context, Item currentItem, CrisMetricDTO scopusMetric) {
         try {
             if (scopusMetric == null) {
                 return false;
@@ -87,7 +86,6 @@ public class UpdateScopusMetrics implements MetricsExternalServices {
                                         SCOPUS_CITATION, currentItem.getID());
             if (!Objects.isNull(scopusMetrics)) {
                 scopusMetrics.setLast(false);
-                context.commit();
             }
             createNewScopusMetrics(context,currentItem, scopusMetric);
         } catch (SQLException | AuthorizeException e) {
@@ -96,7 +94,7 @@ public class UpdateScopusMetrics implements MetricsExternalServices {
         return true;
     }
 
-    private void createNewScopusMetrics(Context context, Item item, ScopusMetricsDTO scopusMetric)
+    private void createNewScopusMetrics(Context context, Item item, CrisMetricDTO scopusMetric)
             throws SQLException, AuthorizeException {
         CrisMetrics newScopusMetrics = crisMetricsService.create(context, item);
         newScopusMetrics.setMetricType(SCOPUS_CITATION);

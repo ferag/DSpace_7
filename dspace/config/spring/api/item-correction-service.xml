@@ -23,6 +23,7 @@
                 <value>relationship.type</value>
             </set>
         </property>
+        
     </bean>
     
 	<util:map id="correctItemModesMap" map-class="java.util.HashMap" key-type="java.lang.String" value-type="java.util.List"> 

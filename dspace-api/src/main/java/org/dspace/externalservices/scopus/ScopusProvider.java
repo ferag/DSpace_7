@@ -17,7 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.util.XMLUtils;
-import org.dspace.utils.DSpace;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -32,10 +32,10 @@ public class ScopusProvider {
 
     private static Logger log = LogManager.getLogger(ScopusProvider.class);
 
-    protected ScopusRestConnector scopusRestConnector = new DSpace().getServiceManager().getServiceByName(
-            ScopusRestConnector.class.getName(), ScopusRestConnector.class);
+    @Autowired
+    private ScopusRestConnector scopusRestConnector;
 
-    public ScopusMetricsDTO getScopusObject(String id) {
+    public CrisMetricDTO getScopusObject(String id) {
         InputStream is = getRecords(id);
         if (is != null) {
             return convertToScopusDTO(is);
@@ -45,13 +45,13 @@ public class ScopusProvider {
     }
 
     private InputStream getRecords(String id) {
-        if (!StringUtils.isNotBlank(id)) {
+        if (StringUtils.isBlank(id)) {
             return null;
         }
         return scopusRestConnector.get(id);
     }
 
-    private ScopusMetricsDTO convertToScopusDTO(InputStream inputStream) {
+    private CrisMetricDTO convertToScopusDTO(InputStream inputStream) {
         Document doc = null;
         DocumentBuilder docBuilder = null;
         try {
@@ -64,14 +64,14 @@ public class ScopusProvider {
         return loadScopusMetrics(doc);
     }
 
-    private ScopusMetricsDTO loadScopusMetrics(Document doc) {
-        ScopusMetricsDTO scopusCitation = null;
+    private CrisMetricDTO loadScopusMetrics(Document doc) {
+        CrisMetricDTO scopusCitation = null;
         try {
             Element xmlRoot = doc.getDocumentElement();
             Element dataRoot = XMLUtils.getSingleElement(xmlRoot, "entry");
             Element errorScopusResp = XMLUtils.getSingleElement(dataRoot, "error");
             if (dataRoot != null && errorScopusResp == null) {
-                scopusCitation = new ScopusMetricsDTO();
+                scopusCitation = new CrisMetricDTO();
                 String eid = XMLUtils.getElementValue(dataRoot, "eid");
                 String doi = XMLUtils.getElementValue(dataRoot, "prism:doi");
                 String pmid = XMLUtils.getElementValue(dataRoot, "pubmed-id");
@@ -97,7 +97,7 @@ public class ScopusProvider {
                 try {
                     scopusCitation.setMetricCount(Double.parseDouble(numCitations));
                 } catch (NullPointerException ex) {
-                    log.error("try to parse numCitations:" + numCitations);
+                    log.error("Error while trying to parse numCitations:" + numCitations);
                     throw new Exception(ex);
                 }
                 scopusCitation.setRemark(scopusCitation.buildMetricsRemark());

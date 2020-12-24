@@ -137,7 +137,6 @@ public class DefaultWorkflowIT extends AbstractControllerIntegrationTest {
         String authToken = getAuthToken(admin.getEmail(), password);
 
         getClient(authToken).perform(post("/api/submission/workspaceitems")
-            .param("owningCollection", collection.getID().toString())
             .param("relationship", "isCorrectionOfItem")
             .param("item", itemToBeCorrected.getID().toString())
             .contentType(org.springframework.http.MediaType.APPLICATION_JSON))
@@ -204,7 +203,6 @@ public class DefaultWorkflowIT extends AbstractControllerIntegrationTest {
         String authToken = getAuthToken(admin.getEmail(), password);
 
         getClient(authToken).perform(post("/api/submission/workspaceitems")
-            .param("owningCollection", collection.getID().toString())
             .param("relationship", "isCorrectionOfItem")
             .param("item", itemToBeCorrected.getID().toString())
             .contentType(org.springframework.http.MediaType.APPLICATION_JSON))
@@ -271,7 +269,6 @@ public class DefaultWorkflowIT extends AbstractControllerIntegrationTest {
         String authToken = getAuthToken(admin.getEmail(), password);
 
         getClient(authToken).perform(post("/api/submission/workspaceitems")
-            .param("owningCollection", collection.getID().toString())
             .param("relationship", "isCorrectionOfItem")
             .param("item", itemToBeCorrected.getID().toString())
             .contentType(org.springframework.http.MediaType.APPLICATION_JSON))

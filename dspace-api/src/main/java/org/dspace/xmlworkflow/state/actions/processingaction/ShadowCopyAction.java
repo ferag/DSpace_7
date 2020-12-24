@@ -22,6 +22,7 @@ import java.util.function.Predicate;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.dspace.authority.service.AuthorityValueService;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
@@ -29,9 +30,12 @@ import org.dspace.content.Community;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.WorkspaceItem;
+import org.dspace.content.authority.service.ChoiceAuthorityService;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
 import org.dspace.core.Context;
+import org.dspace.eperson.Group;
+import org.dspace.eperson.service.GroupService;
 import org.dspace.services.ConfigurationService;
 import org.dspace.util.UUIDUtils;
 import org.dspace.versioning.ItemCorrectionProvider;
@@ -43,6 +47,8 @@ import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
 import org.dspace.xmlworkflow.state.Step;
 import org.dspace.xmlworkflow.state.actions.ActionResult;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -52,6 +58,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  */
 public class ShadowCopyAction extends ProcessingAction {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShadowCopyAction.class);
 
     @Autowired
     private CollectionService collectionService;
@@ -74,6 +82,12 @@ public class ShadowCopyAction extends ProcessingAction {
     @Autowired
     private ItemCorrectionService itemCorrectionService;
 
+    @Autowired
+    private GroupService groupService;
+
+    @Autowired
+    private ChoiceAuthorityService choiceAuthorityService;
+
     @Override
     public void activate(Context context, XmlWorkflowItem workflowItem) {
 
@@ -95,6 +109,7 @@ public class ShadowCopyAction extends ProcessingAction {
         }
 
         replaceMetadataAuthorities(context, workspaceItemShadowCopy.getItem());
+        setCrisPolicyGroupMetadata(context, workspaceItemShadowCopy.getItem());
         workflowService.start(context, workspaceItemShadowCopy);
 
         return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, ActionResult.OUTCOME_COMPLETE);
@@ -163,11 +178,47 @@ public class ShadowCopyAction extends ProcessingAction {
     private void replaceMetadataAuthorities(Context context, Item item) throws SQLException, AuthorizeException {
         for (MetadataValue metadataValue : item.getMetadata()) {
             String authority = metadataValue.getAuthority();
-            if (isNotBlank(authority) && !authority.startsWith(REFERENCE) && !authority.startsWith(GENERATE)) {
+            if (isNotBlank(authority) && notStartsWithWillBePrefix(authority) && isItemAuthority(metadataValue)) {
                 metadataValue.setAuthority(AuthorityValueService.REFERENCE + "SHADOW::" + authority);
             }
         }
         itemService.update(context, item);
+    }
+
+    private boolean notStartsWithWillBePrefix(String authority) {
+        return !authority.startsWith(REFERENCE) && !authority.startsWith(GENERATE);
+    }
+
+    private boolean isItemAuthority(MetadataValue value) {
+        return choiceAuthorityService.isItemAuthority(value.getMetadataField().toString('_'));
+    }
+
+    private void setCrisPolicyGroupMetadata(Context context, Item item) throws SQLException {
+
+        itemService.clearMetadata(context, item, "cris", "policy", "group", Item.ANY);
+
+        String[] policyGroups = configurationService.getArrayProperty("directorio.security.policy-groups");
+        if (ArrayUtils.isEmpty(policyGroups)) {
+            return;
+        }
+
+        for (String policyGroup : policyGroups) {
+            UUID groupId = UUIDUtils.fromString(policyGroup);
+            if (groupId == null) {
+                LOGGER.warn("Invalid directorio.security.policy-groups property set: " + policyGroup);
+                continue;
+            }
+
+            Group group = groupService.find(context, groupId);
+            if (group == null) {
+                LOGGER.warn("Policy group not found by directorio.security.policy-groups value " + policyGroup);
+                continue;
+            }
+
+            itemService.addMetadata(context, item, "cris", "policy", "group", null,
+                group.getNameWithoutTypePrefix(), policyGroup, 600);
+        }
+
     }
 
     @Override

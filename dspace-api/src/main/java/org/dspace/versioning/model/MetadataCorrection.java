@@ -37,8 +37,7 @@ public class MetadataCorrection {
         return new MetadataCorrection(metadataField, CorrectionType.REMOVE, new ArrayList<MetadataValueDTO>());
     }
 
-    public MetadataCorrection(String metadataField, CorrectionType correctionType, List<MetadataValueDTO> newValues) {
-        super();
+    private MetadataCorrection(String metadataField, CorrectionType correctionType, List<MetadataValueDTO> newValues) {
         this.metadataField = metadataField;
         this.correctionType = correctionType;
         this.newValues = newValues;

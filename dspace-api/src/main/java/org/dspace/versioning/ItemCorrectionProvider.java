@@ -46,7 +46,7 @@ public class ItemCorrectionProvider extends AbstractVersionProvider {
 
         WorkspaceItem workspaceItem = workspaceItemService.create(context, collection, false);
         Item itemNew = workspaceItem.getItem();
-        itemService.clearMetadata(context, itemNew, Item.ANY, Item.ANY, Item.ANY, Item.ANY);
+        itemService.clearMetadata(context, itemNew, this::isNotRelationshipType);
         // copy metadata from native item to corrected item
         copyMetadata(context, itemNew, nativeItem);
         context.turnOffAuthorisationSystem();
@@ -67,7 +67,7 @@ public class ItemCorrectionProvider extends AbstractVersionProvider {
             Item correctionItem, Item nativeItem) throws AuthorizeException, IOException, SQLException {
 
         // clear all metadata entries from native item
-        itemService.clearMetadata(context, nativeItem, Item.ANY, Item.ANY, Item.ANY, Item.ANY);
+        itemService.clearMetadata(context, nativeItem, this::isNotRelationshipType);
         // copy metadata from corrected item to native item
         copyMetadata(context, nativeItem, correctionItem);
         context.turnOffAuthorisationSystem();
@@ -93,6 +93,10 @@ public class ItemCorrectionProvider extends AbstractVersionProvider {
 
 
         return workflowItem;
+    }
+
+    protected boolean isNotRelationshipType(MetadataValue metadataValue) {
+        return !metadataValue.getMetadataField().toString('.').equals("relationship.type");
     }
 
     protected void updateBundlesAndBitstreams(Context c, Item itemNew, Item nativeItem)

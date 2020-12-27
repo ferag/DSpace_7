@@ -30,6 +30,7 @@ import org.dspace.core.Context;
 import org.dspace.discovery.SearchService;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
+import org.dspace.util.ItemAuthorityUtils;
 import org.dspace.util.UUIDUtils;
 import org.dspace.utils.DSpace;
 

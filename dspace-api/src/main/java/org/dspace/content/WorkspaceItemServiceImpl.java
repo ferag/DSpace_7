@@ -12,8 +12,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.util.DCInputsReaderException;
 import org.dspace.app.util.Util;
@@ -138,12 +140,17 @@ public class WorkspaceItemServiceImpl implements WorkspaceItemService {
                 MetadataField metadataField = aMd.getMetadataField();
                 MetadataSchema metadataSchema = metadataField.getMetadataSchema();
 
+                //FIXME: check if it is correct that template item might not have collection reference
+                if (Objects.isNull(templateItem.getTemplateItemOf())) {
+                    templateItem.setTemplateItemOf(collection);
+                }
                 final String valueFromTemplate = templateItemValueService.value(context, item,
                                                                                        templateItem, aMd);
-
-                itemService.addMetadata(context, item, metadataSchema.getName(), metadataField.getElement(),
-                                        metadataField.getQualifier(), aMd.getLanguage(),
-                                        valueFromTemplate);
+                if (StringUtils.isNotBlank(valueFromTemplate)) {
+                    itemService.addMetadata(context, item, metadataSchema.getName(), metadataField.getElement(),
+                        metadataField.getQualifier(), aMd.getLanguage(),
+                        valueFromTemplate);
+                }
             }
         }
 

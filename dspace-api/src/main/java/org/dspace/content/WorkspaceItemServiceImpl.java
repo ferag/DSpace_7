@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -140,10 +139,7 @@ public class WorkspaceItemServiceImpl implements WorkspaceItemService {
                 MetadataField metadataField = aMd.getMetadataField();
                 MetadataSchema metadataSchema = metadataField.getMetadataSchema();
 
-                //FIXME: check if it is correct that template item might not have collection reference
-                if (Objects.isNull(templateItem.getTemplateItemOf())) {
-                    templateItem.setTemplateItemOf(collection);
-                }
+
                 final String valueFromTemplate = templateItemValueService.value(context, item,
                                                                                        templateItem, aMd);
                 if (StringUtils.isNotBlank(valueFromTemplate)) {

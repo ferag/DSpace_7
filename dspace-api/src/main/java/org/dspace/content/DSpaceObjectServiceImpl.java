@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.function.Predicate;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -365,11 +366,21 @@ public abstract class DSpaceObjectServiceImpl<T extends DSpaceObject> implements
     @Override
     public void clearMetadata(Context context, T dso, String schema, String element, String qualifier, String lang)
         throws SQLException {
+        clearMetadata(context, dso, (metadataValue) -> match(schema, element, qualifier, lang, metadataValue));
+    }
+
+    @Override
+    public void clearMetadata(Context context, T dso) throws SQLException {
+        clearMetadata(context, dso, (metadataValue) -> true);
+    }
+
+    @Override
+    public void clearMetadata(Context context, T dso, Predicate<MetadataValue> predicate) throws SQLException {
         Iterator<MetadataValue> metadata = dso.getMetadata().iterator();
         while (metadata.hasNext()) {
             MetadataValue metadataValue = metadata.next();
             // If this value matches, delete it
-            if (match(schema, element, qualifier, lang, metadataValue)) {
+            if (predicate.test(metadataValue)) {
                 metadata.remove();
                 metadataValueService.delete(context, metadataValue);
             }

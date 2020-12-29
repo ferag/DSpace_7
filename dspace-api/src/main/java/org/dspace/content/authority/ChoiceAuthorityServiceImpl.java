@@ -566,4 +566,9 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
         HierarchicalAuthority ma = (HierarchicalAuthority) getChoiceAuthorityByAuthorityName(authorityName);
         return ma.getParentChoice(authorityName, vocabularyId, locale);
     }
+
+    @Override
+    public boolean isItemAuthority(String fieldKey) {
+        return controller.containsKey(fieldKey) && controller.get(fieldKey) instanceof ItemAuthority;
+    }
 }

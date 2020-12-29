@@ -136,6 +136,17 @@ public class WorkspaceItemBuilder extends AbstractBuilder<WorkspaceItem, Workspa
         return this;
     }
 
+    protected WorkspaceItemBuilder addMetadataValue(final String schema,
+        final String element, final String qualifier, final String value, final String authority) {
+        try {
+            itemService.addMetadata(context, workspaceItem.getItem(), schema, element, qualifier, null,
+                value, authority, 600);
+        } catch (Exception e) {
+            return handleException(e);
+        }
+        return this;
+    }
+
     public WorkspaceItemBuilder withSubmitter(EPerson ePerson) {
         workspaceItem.getItem().setSubmitter(ePerson);
         return this;
@@ -163,6 +174,10 @@ public class WorkspaceItemBuilder extends AbstractBuilder<WorkspaceItem, Workspa
 
     public WorkspaceItemBuilder withAuthor(final String authorName) {
         return addMetadataValue(MetadataSchemaEnum.DC.getName(), "contributor", "author", authorName);
+    }
+
+    public WorkspaceItemBuilder withAuthor(final String authorName, final String authority) {
+        return addMetadataValue(MetadataSchemaEnum.DC.getName(), "contributor", "author", authorName, authority);
     }
 
     public WorkspaceItemBuilder withAuthorAffilitation(final String affilation) {

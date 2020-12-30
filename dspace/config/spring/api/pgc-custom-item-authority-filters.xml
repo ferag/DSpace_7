@@ -18,18 +18,31 @@
             </list>
         </constructor-arg>
         <!-- FIXME: uncomment and set with standard entities -->
-<!--        <property name="supportedEntities">-->
-<!--            <list>-->
-<!--                <value>Person</value>-->
-<!--                <value>Publication</value>-->
-<!--            </list>-->
-<!--        </property>-->
+        <property name="supportedEntities">
+            <list>
+                <value>Person</value>
+                <value>Project</value>
+                <value>Funding</value>
+                <value>OrgUnit</value>
+                <value>Publication</value>
+                <value>Patent</value>
+                <value>Equipment</value>
+            </list>
+        </property>
     </bean>
 
     <bean id="peruInstitutionItemsFilter" class="org.dspace.content.authority.PeruItemAutorityFilter">
         <!--FIXME: temporarily disabled, set with PGC institutional entities -->
         <property name="supportedEntities">
-            <list/>
+            <list>
+                <value>InstitutionPerson</value>
+                <value>InstitutionProject</value>
+                <value>InstitutionFunding</value>
+                <value>InstitutionOrgUnit</value>
+                <value>InstitutionPublication</value>
+                <value>InstitutionPatent</value>
+                <value>InstitutionEquipment</value>
+            </list>
         </property>
     </bean>
 </beans>

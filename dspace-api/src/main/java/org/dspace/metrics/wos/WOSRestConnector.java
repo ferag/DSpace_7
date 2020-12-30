@@ -9,6 +9,8 @@ package org.dspace.metrics.wos;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import javax.annotation.PostConstruct;
 
 import org.apache.http.HttpResponse;
@@ -44,22 +46,29 @@ public class WOSRestConnector {
         try {
             return sendRequestToWOS(id);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            log.warn(e.getMessage(), e);
+            return null;
         }
     }
 
     private InputStream sendRequestToWOS(String id)
             throws UnsupportedEncodingException, IOException, ClientProtocolException {
-        HttpGet httpPost = new HttpGet(wosUrl.concat("DO=(").concat(id).concat(")&count=10&firstRecord=1"));
-        httpPost.setHeader("Accept-Encoding", "gzip, deflate, br");
-        httpPost.setHeader("Connection", "keep-alive");
-        httpPost.setHeader("X-ApiKey", apiKey);
-        httpPost.setHeader("Accept", "application/json");
+        String url = wosUrl.concat("DO=(").concat(URLEncoder.encode(id, StandardCharsets.UTF_8))
+            .concat(")&count=10&firstRecord=1");
+        log.info("sending request to wos: " + url);
+        HttpGet httpGet = new HttpGet(url);
+        httpGet.setHeader("Accept-Encoding", "gzip, deflate, br");
+        httpGet.setHeader("Connection", "keep-alive");
+        httpGet.setHeader("X-ApiKey", apiKey);
+        httpGet.setHeader("Accept", "application/json");
 
-        HttpResponse response = httpClient.execute(httpPost);
+        HttpResponse response = httpClient.execute(httpGet);
+
+        log.info("got response from wos");
+
         int statusCode = response.getStatusLine().getStatusCode();
         if (statusCode != HttpStatus.SC_OK) {
+            log.warn("wrong status code: " + statusCode);
             return null;
         }
         return response.getEntity().getContent();

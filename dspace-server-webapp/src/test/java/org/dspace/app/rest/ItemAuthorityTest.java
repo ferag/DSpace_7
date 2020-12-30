@@ -11,6 +11,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+import javax.annotation.Resource;
+
 import org.dspace.app.rest.matcher.ItemAuthorityMatcher;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
 import org.dspace.builder.CollectionBuilder;
@@ -19,8 +24,11 @@ import org.dspace.builder.EPersonBuilder;
 import org.dspace.builder.GroupBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
+import org.dspace.content.Community;
 import org.dspace.content.Item;
 import org.dspace.content.authority.Choices;
+import org.dspace.content.authority.PeruItemAutorityFilter;
+import org.dspace.content.authority.SimpleQueryCustomAuthorityFilter;
 import org.dspace.content.authority.service.ChoiceAuthorityService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.service.PluginService;
@@ -50,11 +58,18 @@ public class ItemAuthorityTest extends AbstractControllerIntegrationTest {
     @Autowired
     private ChoiceAuthorityService cas;
 
+    @Resource(name = "directorioCommunityFilter")
+    private SimpleQueryCustomAuthorityFilter directorioCommunityFilter;
+
+    @Resource(name = "peruInstitutionItemsFilter")
+    private PeruItemAutorityFilter peruItemAutorityFilter;
+
     @Test
     public void singleItemAuthorityTest() throws Exception {
        context.turnOffAuthorisationSystem();
 
        parentCommunity = CommunityBuilder.createCommunity(context).build();
+       setCommunityIdInQuery(parentCommunity.getID(), "person");
        Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
                                           .withName("Test collection")
                                           .build();
@@ -116,6 +131,87 @@ public class ItemAuthorityTest extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    public void onlySameCommunityItems() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        parentCommunity = CommunityBuilder.createCommunity(context).build();
+
+        Community institutionCommunity = CommunityBuilder.createSubCommunity(context, parentCommunity).build();
+        Community otherInstitutionCommunity = CommunityBuilder.createSubCommunity(context, parentCommunity).build();
+
+        Collection collection = CollectionBuilder.createCollection(context, institutionCommunity)
+            .withName("Test collection")
+            .build();
+
+        Collection otherInstitutionCollection = CollectionBuilder.createCollection(context, otherInstitutionCommunity)
+            .withName("Test collection")
+            .build();
+
+
+        Item author_1 = ItemBuilder.createItem(context, collection)
+            .withTitle("Author 1")
+            .withRelationshipType("person")
+            .build();
+
+        Item author_2 = ItemBuilder.createItem(context, collection)
+            .withTitle("Author 2")
+            .withRelationshipType("person")
+            .build();
+
+        Item author_3 = ItemBuilder.createItem(context, otherInstitutionCollection)
+            .withTitle("Author 3")
+            .withRelationshipType("person")
+            .build();
+
+        Item orgUnit_1 = ItemBuilder.createItem(context, collection)
+            .withTitle("OrgUnit_1")
+            .withRelationshipType("orgunit")
+            .build();
+
+        Item orgUnit_2 = ItemBuilder.createItem(context, collection)
+            .withTitle("OrgUnit_2")
+            .withRelationshipType("orgunit")
+            .build();
+
+        itemService.addMetadata(context, author_1, "person", "affiliation", "name", null, "OrgUnit_1",
+            orgUnit_1.getID().toString(), Choices.CF_ACCEPTED);
+        itemService.addMetadata(context, author_2, "person", "affiliation", "name", null, "OrgUnit_1",
+            orgUnit_1.getID().toString(), Choices.CF_ACCEPTED);
+        itemService.addMetadata(context, author_3, "person", "affiliation", "name", null, "OrgUnit_2",
+            orgUnit_2.getID().toString(), Choices.CF_ACCEPTED);
+
+        setCommunityIdInQuery(parentCommunity.getID(), "person");
+
+        //FIXME: review this part once entity distinction between directorio and institution will be developed
+        // disable directorio filter
+        directorioCommunityFilter.setSupportedEntities(Collections.emptyList());
+        peruItemAutorityFilter.setSupportedEntities(Collections.singletonList("Person"));
+
+        context.restoreAuthSystemState();
+
+        String token = getAuthToken(eperson.getEmail(), password);
+        getClient(token).perform(get("/api/submission/vocabularies/AuthorAuthority/entries")
+            .param("metadata", "dc.contributor.author")
+            .param("collection", collection.getID().toString())
+            .param("filter", "author"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.entries", Matchers.containsInAnyOrder(
+                ItemAuthorityMatcher.matchItemAuthorityWithOtherInformations(author_1.getID().toString(),
+                    "Author 1", "Author 1", "vocabularyEntry",
+                    "oairecerif_author_affiliation", "OrgUnit_1::"
+                        + orgUnit_1.getID()),
+                ItemAuthorityMatcher.matchItemAuthorityWithOtherInformations(author_2.getID().toString(),
+                    "Author 2", "Author 2", "vocabularyEntry",
+                    "oairecerif_author_affiliation", "OrgUnit_1::"
+                        + orgUnit_1.getID())
+            )))
+            .andExpect(jsonPath("$.page.totalElements", Matchers.is(2)));
+
+        // enable directorio filter
+        directorioCommunityFilter.setSupportedEntities(null);
+    }
+
+    @Test
     public void multiItemAuthorityTest() throws Exception {
        context.turnOffAuthorisationSystem();
 
@@ -161,6 +257,8 @@ public class ItemAuthorityTest extends AbstractControllerIntegrationTest {
                                                    orgUnit_2.getID().toString(), Choices.CF_ACCEPTED);
        itemService.addMetadata(context, author_2, "person", "affiliation", "name", null, "OrgUnit_2",
                                                    orgUnit_2.getID().toString(), Choices.CF_ACCEPTED);
+
+       setCommunityIdInQuery(parentCommunity.getID(), "person");
        context.restoreAuthSystemState();
 
        String token = getAuthToken(eperson.getEmail(), password);
@@ -202,6 +300,8 @@ public class ItemAuthorityTest extends AbstractControllerIntegrationTest {
                                   .withTitle("Author 1")
                                   .withRelationshipType("person")
                                   .build();
+
+        setCommunityIdInQuery(parentCommunity.getID(), "person");
 
        context.restoreAuthSystemState();
 
@@ -383,5 +483,15 @@ public class ItemAuthorityTest extends AbstractControllerIntegrationTest {
         super.destroy();
         pluginService.clearNamedPluginClasses();
         cas.clearCache();
+    }
+
+    private void setCommunityIdInQuery(UUID directorioCommunityId, String relationshipType) {
+        List<String> filterQueries = directorioCommunityFilter.getFilterQueries(relationshipType);
+        for (int i = 0; i < filterQueries.size(); i++) {
+            String s = filterQueries.get(i);
+            if (s.contains("location.comm")) {
+                filterQueries.set(i, "location.comm:" + directorioCommunityId.toString());
+            }
+        }
     }
 }

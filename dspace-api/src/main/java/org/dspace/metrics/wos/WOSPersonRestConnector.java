@@ -8,7 +8,9 @@
 package org.dspace.metrics.wos;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import javax.annotation.PostConstruct;
 
@@ -56,7 +58,7 @@ public class WOSPersonRestConnector {
         JSONArray records = null;
         CrisMetricDTO metricDTO = new CrisMetricDTO();
         while (recordsFound > record) {
-            HttpGet httpPost = new HttpGet(wosUrl.concat("AI=(").concat(id)
+            HttpGet httpPost = new HttpGet(wosUrl.concat("AI=(").concat(URLEncoder.encode(id, StandardCharsets.UTF_8))
                                                  .concat(")&count=").concat(String.valueOf(count))
                                                  .concat("&firstRecord=").concat(String.valueOf(record)));
             httpPost.setHeader("Accept-Encoding", "gzip, deflate, br");

@@ -41,6 +41,7 @@ public class WOSProvider {
         CrisMetricDTO metricDTO = new CrisMetricDTO();
         final String path = "$.Data.Records.records.REC[0].dynamic_data.citation_related.tc_list.silo_tc.local_count";
         try {
+            log.info("trying to read path");
             metricCount = JsonPath.read(is, path);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
@@ -48,10 +49,12 @@ public class WOSProvider {
             log.error("The path : " + path + " does not exist!");
         }
         if (Objects.isNull(metricCount)) {
+            log.info("returning null metric");
             return null;
         }
         metricDTO.setMetricCount(metricCount.doubleValue());
         metricDTO.setMetricType(UpdateWOSMetrics.WOS_METRIC_TYPE);
+        log.info("returning metric dto:" + metricDTO);
         return metricDTO;
     }
 }

@@ -53,6 +53,7 @@ public class UpdateWOSMetrics implements MetricsExternalServices {
         if (StringUtils.isBlank(param)) {
             String doi = itemService.getMetadataFirstValue(item, "dc", "identifier", "doi", Item.ANY);
             if (StringUtils.isNotBlank(doi)) {
+                log.info("querying wos with doi: " + doi);
                 metricDTO = wosProvider.getWOSObject(doi);
             }
         }
@@ -61,7 +62,7 @@ public class UpdateWOSMetrics implements MetricsExternalServices {
             if (StringUtils.isNotBlank(orcidId)) {
                 try {
                     metricDTO = wosPersonRestConnector.sendRequestToWOS(orcidId);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     log.error(e.getMessage(), e);
                 }
             }

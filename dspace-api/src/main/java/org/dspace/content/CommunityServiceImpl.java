@@ -765,13 +765,13 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
         return clone;
     }
 
-    private void cloneTemplateItem(Context context, Collection col, Collection collection)
+    private void cloneTemplateItem(Context context, Collection newCollection, Collection collection)
         throws SQLException, AuthorizeException {
         Item item = collection.getTemplateItem();
         if (item != null) {
-            collectionService.createTemplateItem(context, col);
-            Item clonecommunityToClone = col.getTemplateItem();
-            cloneMetadata(context, itemService, clonecommunityToClone, item);
+            collectionService.createTemplateItem(context, newCollection);
+            Item newItemTemplate = newCollection.getTemplateItem();
+            cloneMetadata(context, itemService, newItemTemplate, item);
         }
     }
 
@@ -842,6 +842,8 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
         for (Group subGroup : group.getMemberGroups()) {
             if (scopedRoles.containsKey(subGroup.getID())) {
                 groupService.addMember(context, newGroup, scopedRoles.get(subGroup.getID()));
+            } else {
+                groupService.addMember(context, newGroup, subGroup);
             }
         }
         scopedRoles.put(group.getID(), newGroup);

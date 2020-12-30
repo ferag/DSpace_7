@@ -58,6 +58,46 @@
 				<entry key="funding-pdf" value-ref="pdfCrosswalkFunding"></entry>
 				<entry key="funding-csv" value-ref="csvCrosswalkFunding"></entry>
 				<entry key="funding-xls" value-ref="xlsCrosswalkFunding"></entry>
+
+				<entry key="institutionpublication-xml" value-ref="referCrosswalkPublicationXml"></entry>
+				<entry key="institutionpublication-json" value-ref="cslItemDataCrosswalkJson"></entry>
+				<entry key="institutionpublication-pdf" value-ref="pdfCrosswalkPublication"></entry>
+				<entry key="institutionpublication-csv" value-ref="csvCrosswalkPublication"></entry>
+				<entry key="institutionpublication-xls" value-ref="xlsCrosswalkPublication"></entry>
+				<entry key="institutionpublication-apa" value-ref="cslItemDataCrosswalkApa"></entry>
+				<entry key="institutionpublication-chicago" value-ref="cslItemDataCrosswalkChicago"></entry>
+
+				<entry key="institutionperson-xml" value-ref="referCrosswalkPersonXml"></entry>
+				<entry key="institutionperson-xml-cerif" value-ref="referCrosswalkPersonXmlCerif"></entry>
+				<entry key="institutionperson-json" value-ref="referCrosswalkPersonJson"></entry>
+				<entry key="institutionperson-pdf" value-ref="pdfCrosswalkPerson"></entry>
+				<entry key="institutionperson-rtf" value-ref="rtfCrosswalkPerson"></entry>
+				<entry key="institutionperson-csv" value-ref="csvCrosswalkPerson"></entry>
+				<entry key="institutionperson-xls" value-ref="xlsCrosswalkPerson"></entry>
+
+				<entry key="institutionproject-xml" value-ref="referCrosswalkProjectXml"></entry>
+				<entry key="institutionproject-json" value-ref="referCrosswalkProjectJson"></entry>
+				<entry key="institutionproject-pdf" value-ref="pdfCrosswalkProject"></entry>
+				<entry key="institutionproject-csv" value-ref="csvCrosswalkProject"></entry>
+				<entry key="institutionproject-xls" value-ref="xlsCrosswalkProject"></entry>
+
+				<entry key="institutionorgUnit-xml" value-ref="referCrosswalkOrgUnitXml"></entry>
+				<entry key="institutionorgUnit-json" value-ref="referCrosswalkOrgUnitJson"></entry>
+				<entry key="institutionorgUnit-pdf" value-ref="pdfCrosswalkOrgUnit"></entry>
+				<entry key="institutionorgUnit-csv" value-ref="csvCrosswalkOrgUnit"></entry>
+				<entry key="institutionorgUnit-xls" value-ref="xlsCrosswalkOrgUnit"></entry>
+
+				<entry key="institutionequipment-xml" value-ref="referCrosswalkEquipmentXml"></entry>
+				<entry key="institutionequipment-json" value-ref="referCrosswalkEquipmentJson"></entry>
+				<entry key="institutionequipment-pdf" value-ref="pdfCrosswalkEquipment"></entry>
+				<entry key="institutionequipment-csv" value-ref="csvCrosswalkEquipment"></entry>
+				<entry key="institutionequipment-xls" value-ref="xlsCrosswalkEquipment"></entry>
+
+				<entry key="institutionfunding-xml" value-ref="referCrosswalkFundingXml"></entry>
+				<entry key="institutionfunding-json" value-ref="referCrosswalkFundingJson"></entry>
+				<entry key="institutionfunding-pdf" value-ref="pdfCrosswalkFunding"></entry>
+				<entry key="institutionfunding-csv" value-ref="csvCrosswalkFunding"></entry>
+				<entry key="institutionfunding-xls" value-ref="xlsCrosswalkFunding"></entry>
 				
 				<entry key="collection-xls" value-ref="xlsCrosswalkCollection"></entry>
 			</map>

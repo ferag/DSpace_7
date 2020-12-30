@@ -8,12 +8,12 @@
 package org.dspace.metrics.scopus;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import javax.annotation.PostConstruct;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -42,18 +42,19 @@ public class ScopusRestConnector {
             .build();
     }
 
-    public InputStream get(String id) {
+    public InputStream get(String query) {
         try {
-            return sendRequestToSunedu(id);
+            return sendRequestToScopus(query);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            log.warn("Error while calling scopus with query " + query + ": " +
+                e.getMessage(), e);
+            return null;
         }
     }
 
-    private InputStream sendRequestToSunedu(String id)
-            throws UnsupportedEncodingException, IOException, ClientProtocolException {
-        HttpPost httpPost = new HttpPost(scopusUrl.concat(id));
+    private InputStream sendRequestToScopus(String query)
+            throws IOException {
+        HttpPost httpPost = new HttpPost(scopusUrl + URLEncoder.encode(query, StandardCharsets.UTF_8));
         httpPost.setHeader("Accept-Encoding", "gzip, deflate, br");
         httpPost.setHeader("Connection", "keep-alive");
         httpPost.setHeader("X-ELS-APIKey", apiKey);

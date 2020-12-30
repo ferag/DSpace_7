@@ -27,7 +27,45 @@
     </bean>
     
 	<util:map id="correctItemModesMap" map-class="java.util.HashMap" key-type="java.lang.String" value-type="java.util.List"> 
-		<entry key="Publication">
+		<entry key="InstitutionPublication">
+			<list>
+				<bean class="org.dspace.content.edit.CorrectItemMode">
+					<property name="security">
+						<value type="org.dspace.content.security.CrisSecurity">ADMIN</value>
+					</property>
+				</bean>
+					<bean class="org.dspace.content.edit.CorrectItemMode">
+						<property name="security">
+							<value type="org.dspace.content.security.CrisSecurity">CUSTOM</value>
+						</property>
+						<property name="groups">
+							<list>
+								<value>cris.policy.group</value>
+							</list>
+						</property>
+					</bean>
+			</list>
+		</entry> 
+		<entry key="InstitutionPerson">
+			<list>
+				<bean class="org.dspace.content.edit.CorrectItemMode">
+					<property name="security">
+						<value type="org.dspace.content.security.CrisSecurity">ADMIN</value>
+					</property>
+				</bean>
+				<bean class="org.dspace.content.edit.CorrectItemMode">
+					<property name="security">
+						<value type="org.dspace.content.security.CrisSecurity">CUSTOM</value>
+					</property>
+					<property name="groups">
+						<list>
+							<value>cris.policy.group</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</entry> 
+		<entry key="InstitutionEquipment">
 			<list>
 				<bean class="org.dspace.content.edit.CorrectItemMode">
 					<property name="security">
@@ -36,7 +74,7 @@
 				</bean>
 			</list>
 		</entry> 
-		<entry key="Person">
+		<entry key="InstitutionFunding">
 			<list>
 				<bean class="org.dspace.content.edit.CorrectItemMode">
 					<property name="security">
@@ -45,7 +83,7 @@
 				</bean>
 			</list>
 		</entry> 
-		<entry key="Equipment">
+		<entry key="InstitutionOrgunit">
 			<list>
 				<bean class="org.dspace.content.edit.CorrectItemMode">
 					<property name="security">
@@ -54,34 +92,16 @@
 				</bean>
 			</list>
 		</entry> 
-		<entry key="Funding">
-			<list>
-				<bean class="org.dspace.content.edit.CorrectItemMode">
-					<property name="security">
-						<value type="org.dspace.content.security.CrisSecurity">ADMIN</value>
-					</property>
-				</bean>
-			</list>
-		</entry> 
-		<entry key="Orgunit">
-			<list>
-				<bean class="org.dspace.content.edit.CorrectItemMode">
-					<property name="security">
-						<value type="org.dspace.content.security.CrisSecurity">ADMIN</value>
-					</property>
-				</bean>
-			</list>
-		</entry> 
-		<entry key="Journal">
-			<list>
-				<bean class="org.dspace.content.edit.CorrectItemMode">
-					<property name="security">
-						<value type="org.dspace.content.security.CrisSecurity">ADMIN</value>
-					</property>
-				</bean>
-			</list>
-		</entry> 
-		<entry key="Patent">
+<!--		<entry key="Journal">-->
+<!--			<list>-->
+<!--				<bean class="org.dspace.content.edit.CorrectItemMode">-->
+<!--					<property name="security">-->
+<!--						<value type="org.dspace.content.security.CrisSecurity">ADMIN</value>-->
+<!--					</property>-->
+<!--				</bean>-->
+<!--			</list>-->
+<!--		</entry> -->
+		<entry key="InstitutionPatent">
 			<list>
 				<bean class="org.dspace.content.edit.CorrectItemMode">
 					<property name="security">
@@ -90,7 +110,7 @@
 				</bean>
 			</list>
 		</entry>
-		<entry key="Project">
+		<entry key="InstitutionProject">
 			<list>
 				<bean class="org.dspace.content.edit.CorrectItemMode">
 					<property name="security">
@@ -99,15 +119,15 @@
 				</bean>
 			</list>
 		</entry>
-		<entry key="Event">
-			<list>
-				<bean class="org.dspace.content.edit.CorrectItemMode">
-					<property name="security">
-						<value type="org.dspace.content.security.CrisSecurity">ADMIN</value>
-					</property>
-				</bean>
-			</list>
-		</entry>
+<!--		<entry key="Event">-->
+<!--			<list>-->
+<!--				<bean class="org.dspace.content.edit.CorrectItemMode">-->
+<!--					<property name="security">-->
+<!--						<value type="org.dspace.content.security.CrisSecurity">ADMIN</value>-->
+<!--					</property>-->
+<!--				</bean>-->
+<!--			</list>-->
+<!--		</entry>-->
 	</util:map>
            
 </beans>

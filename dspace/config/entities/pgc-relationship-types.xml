@@ -11,7 +11,7 @@
 
 <relationships>
      <type>
-        <leftType>Person</leftType>
+        <leftType>InstitutionPerson</leftType>
         <rightType>Person</rightType>
         <leftwardType>hasShadowCopy</leftwardType>
         <rightwardType>isShadowCopy</rightwardType>
@@ -25,7 +25,7 @@
         </rightCardinality>
     </type>
      <type>
-        <leftType>Project</leftType>
+        <leftType>InstitutionProject</leftType>
         <rightType>Project</rightType>
         <leftwardType>hasShadowCopy</leftwardType>
         <rightwardType>isShadowCopy</rightwardType>
@@ -39,7 +39,7 @@
         </rightCardinality>
     </type>
      <type>
-        <leftType>Funding</leftType>
+        <leftType>InstitutionFunding</leftType>
         <rightType>Funding</rightType>
         <leftwardType>hasShadowCopy</leftwardType>
         <rightwardType>isShadowCopy</rightwardType>
@@ -53,7 +53,7 @@
         </rightCardinality>
     </type>
      <type>
-        <leftType>OrgUnit</leftType>
+        <leftType>InstitutionOrgUnit</leftType>
         <rightType>OrgUnit</rightType>
         <leftwardType>hasShadowCopy</leftwardType>
         <rightwardType>isShadowCopy</rightwardType>
@@ -81,7 +81,7 @@
         </rightCardinality>
     </type>
      <type>
-        <leftType>Publication</leftType>
+        <leftType>InstitutionPublication</leftType>
         <rightType>Publication</rightType>
         <leftwardType>hasShadowCopy</leftwardType>
         <rightwardType>isShadowCopy</rightwardType>
@@ -109,7 +109,7 @@
         </rightCardinality>
     </type>
      <type>
-        <leftType>Patent</leftType>
+        <leftType>InstitutionPatent</leftType>
         <rightType>Patent</rightType>
         <leftwardType>hasShadowCopy</leftwardType>
         <rightwardType>isShadowCopy</rightwardType>
@@ -137,7 +137,7 @@
         </rightCardinality>
     </type>
      <type>
-        <leftType>Equipment</leftType>
+        <leftType>InstitutionEquipment</leftType>
         <rightType>Equipment</rightType>
         <leftwardType>hasShadowCopy</leftwardType>
         <rightwardType>isShadowCopy</rightwardType>

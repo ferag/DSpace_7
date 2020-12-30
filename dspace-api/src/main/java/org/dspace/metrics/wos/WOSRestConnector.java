@@ -9,6 +9,8 @@ package org.dspace.metrics.wos;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import javax.annotation.PostConstruct;
 
 import org.apache.http.HttpResponse;
@@ -44,14 +46,15 @@ public class WOSRestConnector {
         try {
             return sendRequestToWOS(id);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            log.warn(e.getMessage(), e);
+            return null;
         }
     }
 
     private InputStream sendRequestToWOS(String id)
             throws UnsupportedEncodingException, IOException, ClientProtocolException {
-        HttpGet httpPost = new HttpGet(wosUrl.concat("DO=(").concat(id).concat(")&count=10&firstRecord=1"));
+        HttpGet httpPost = new HttpGet(wosUrl.concat("DO=(").concat(URLEncoder.encode(id, StandardCharsets.UTF_8))
+            .concat(")&count=10&firstRecord=1"));
         httpPost.setHeader("Accept-Encoding", "gzip, deflate, br");
         httpPost.setHeader("Connection", "keep-alive");
         httpPost.setHeader("X-ApiKey", apiKey);

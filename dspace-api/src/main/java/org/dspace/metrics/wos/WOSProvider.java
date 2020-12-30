@@ -30,13 +30,13 @@ public class WOSProvider {
     public CrisMetricDTO getWOSObject(String id) {
         InputStream is = wosRestConnector.get(id);
         if (is != null) {
-            return exstractMetricCount(is);
+            return extractMetricCount(is);
         }
         log.error("The DOI : " + id + " is wrong!");
         return null;
     }
 
-    private CrisMetricDTO exstractMetricCount(InputStream is) {
+    private CrisMetricDTO extractMetricCount(InputStream is) {
         Integer metricCount = null;
         CrisMetricDTO metricDTO = new CrisMetricDTO();
         final String path = "$.Data.Records.records.REC[0].dynamic_data.citation_related.tc_list.silo_tc.local_count";

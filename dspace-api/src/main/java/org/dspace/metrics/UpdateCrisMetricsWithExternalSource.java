@@ -77,9 +77,9 @@ public class UpdateCrisMetricsWithExternalSource extends
         if (service == null) {
             throw new IllegalArgumentException("The name of service must be provided");
         }
-//        if (this.service.toLowerCase().equals("hindex") && StringUtils.isBlank(this.param)) {
-//            throw new IllegalArgumentException("The param is mandatory for " + this.service + " service");
-//        }
+        if (this.service.toLowerCase().equals("hindex") && StringUtils.isBlank(this.param)) {
+            throw new IllegalArgumentException("The param is mandatory for " + this.service + " service");
+        }
         MetricsExternalServices externalService = crisMetricsExternalServices.get(this.service.toLowerCase());
         if (externalService == null) {
             throw new IllegalArgumentException("The name of service must be provided");

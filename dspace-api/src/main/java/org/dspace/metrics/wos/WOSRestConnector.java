@@ -53,16 +53,22 @@ public class WOSRestConnector {
 
     private InputStream sendRequestToWOS(String id)
             throws UnsupportedEncodingException, IOException, ClientProtocolException {
-        HttpGet httpPost = new HttpGet(wosUrl.concat("DO=(").concat(URLEncoder.encode(id, StandardCharsets.UTF_8))
-            .concat(")&count=10&firstRecord=1"));
-        httpPost.setHeader("Accept-Encoding", "gzip, deflate, br");
-        httpPost.setHeader("Connection", "keep-alive");
-        httpPost.setHeader("X-ApiKey", apiKey);
-        httpPost.setHeader("Accept", "application/json");
+        String url = wosUrl.concat("DO=(").concat(URLEncoder.encode(id, StandardCharsets.UTF_8))
+            .concat(")&count=10&firstRecord=1");
+        log.info("sending request to wos: " + url);
+        HttpGet httpGet = new HttpGet(url);
+        httpGet.setHeader("Accept-Encoding", "gzip, deflate, br");
+        httpGet.setHeader("Connection", "keep-alive");
+        httpGet.setHeader("X-ApiKey", apiKey);
+        httpGet.setHeader("Accept", "application/json");
 
-        HttpResponse response = httpClient.execute(httpPost);
+        HttpResponse response = httpClient.execute(httpGet);
+
+        log.info("got response from wos");
+
         int statusCode = response.getStatusLine().getStatusCode();
         if (statusCode != HttpStatus.SC_OK) {
+            log.warn("wrong status code: " + statusCode);
             return null;
         }
         return response.getEntity().getContent();

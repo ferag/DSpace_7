@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -25,11 +27,14 @@ import org.dspace.content.Item;
 import org.dspace.content.authority.factory.ItemAuthorityServiceFactory;
 import org.dspace.content.authority.service.ItemAuthorityService;
 import org.dspace.content.factory.ContentServiceFactory;
+import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.discovery.SearchService;
 import org.dspace.services.ConfigurationService;
+import org.dspace.services.RequestService;
 import org.dspace.services.factory.DSpaceServicesFactory;
+import org.dspace.services.model.Request;
 import org.dspace.util.ItemAuthorityUtils;
 import org.dspace.util.UUIDUtils;
 import org.dspace.utils.DSpace;
@@ -62,6 +67,11 @@ public class ItemAuthority implements ChoiceAuthority, LinkableEntityAuthority {
 
     private List<CustomAuthorityFilter> customAuthorityFilters = dspace.getServiceManager()
         .getServicesByType(CustomAuthorityFilter.class);
+
+    private RequestService requestService = dspace.getServiceManager().getServiceByName(RequestService.class.getName(),
+        RequestService.class);
+
+    private CollectionService collectionService = ContentServiceFactory.getInstance().getCollectionService();
 
     // punt!  this is a poor implementation..
     @Override
@@ -150,7 +160,30 @@ public class ItemAuthority implements ChoiceAuthority, LinkableEntityAuthority {
 
     @Override
     public String getLinkedEntityType() {
-        return configurationService.getProperty("cris.ItemAuthority." + authorityName + ".relationshipType");
+        StringBuilder stringBuilder = new StringBuilder();
+        // FIXME: temporary solution to distinguish between institution entities and normal entities
+        // move this logic to authority.
+        if (isInstitution()) {
+            stringBuilder.append("Institution");
+        }
+        return stringBuilder.append(
+            configurationService.getProperty("cris.ItemAuthority." + authorityName + ".relationshipType")).toString();
+    }
+
+    private boolean isInstitution() {
+        Request currentRequest = requestService.getCurrentRequest();
+        String collection = currentRequest.getHttpServletRequest().getParameter("collection");
+        if (StringUtils.isBlank(collection)) {
+            return false;
+        }
+        Context context = Optional.ofNullable(currentRequest.getServletRequest())
+            .map(rq -> (Context) rq.getAttribute("dspace.context")).orElseGet(Context::new);
+        try {
+            return collectionService
+                .find(context, UUID.fromString(collection)).getRelationshipType().startsWith("Institution");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void setPluginInstanceName(String name) {

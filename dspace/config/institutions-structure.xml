@@ -14,8 +14,9 @@
 	        <sidebar />
 	        <collection>
 	            <name>People</name>
-	            <entity-type>Person</entity-type>
+	            <entity-type>InstitutionPerson</entity-type>
 	            <submission-type>person</submission-type>
+				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />
 	            <copyright />
@@ -25,8 +26,9 @@
 	        </collection>
 	        <collection>
 	            <name>OrgUnits</name>
-	            <entity-type>OrgUnit</entity-type>
+	            <entity-type>InstitutionOrgUnit</entity-type>
 	            <submission-type>orgunit</submission-type>
+				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />
 	            <copyright />
@@ -36,8 +38,9 @@
 	        </collection>
 	        <collection>
 	            <name>Publications</name>
-	            <entity-type>Publication</entity-type>
+	            <entity-type>InstitutionPublication</entity-type>
 	            <submission-type>publication</submission-type>
+				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />
 	            <copyright />
@@ -47,8 +50,9 @@
 	        </collection>
 	        <collection>
 	            <name>Patents</name>
-	            <entity-type>Patent</entity-type>
+	            <entity-type>InstitutionPatent</entity-type>
 	            <submission-type>patent</submission-type>
+				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />
 	            <copyright />
@@ -58,8 +62,9 @@
 	        </collection>
 	        <collection>
 	            <name>Projects</name>
-	            <entity-type>Project</entity-type>
+	            <entity-type>InstitutionProject</entity-type>
 	            <submission-type>project</submission-type>
+				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />
 	            <copyright />
@@ -69,8 +74,9 @@
 	        </collection>
 	        <collection>
 	            <name>Fundings</name>
-	            <entity-type>Funding</entity-type>
+	            <entity-type>InstitutionFunding</entity-type>
 	            <submission-type>funding</submission-type>
+				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />
 	            <copyright />
@@ -80,8 +86,9 @@
 	        </collection>
 	        <collection>
 	            <name>Equipments</name>
-	            <entity-type>Equipment</entity-type>
+	            <entity-type>InstitutionEquipment</entity-type>
 	            <submission-type>equipment</submission-type>
+				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />
 	            <copyright />

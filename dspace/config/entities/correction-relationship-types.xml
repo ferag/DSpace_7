@@ -3,8 +3,8 @@
 
 <relationships>
     <type>
-        <leftType>Person</leftType>
-        <rightType>Person</rightType>
+        <leftType>InstitutionPerson</leftType>
+        <rightType>InstitutionPerson</rightType>
         <leftwardType>isCorrectionOfItem</leftwardType>
         <rightwardType>isCorrectedByItem</rightwardType>
         <leftCardinality>
@@ -17,8 +17,8 @@
         </rightCardinality>
     </type>
     <type>
-        <leftType>Project</leftType>
-        <rightType>Project</rightType>
+        <leftType>InstitutionProject</leftType>
+        <rightType>InstitutionProject</rightType>
         <leftwardType>isCorrectionOfItem</leftwardType>
         <rightwardType>isCorrectedByItem</rightwardType>
         <leftCardinality>
@@ -31,8 +31,8 @@
         </rightCardinality>
     </type>
     <type>
-        <leftType>Funding</leftType>
-        <rightType>Funding</rightType>
+        <leftType>InstitutionFunding</leftType>
+        <rightType>InstitutionFunding</rightType>
         <leftwardType>isCorrectionOfItem</leftwardType>
         <rightwardType>isCorrectedByItem</rightwardType>
         <leftCardinality>
@@ -45,8 +45,8 @@
         </rightCardinality>
     </type>
     <type>
-        <leftType>OrgUnit</leftType>
-        <rightType>OrgUnit</rightType>
+        <leftType>InstitutionOrgUnit</leftType>
+        <rightType>InstitutionOrgUnit</rightType>
         <leftwardType>isCorrectionOfItem</leftwardType>
         <rightwardType>isCorrectedByItem</rightwardType>
         <leftCardinality>
@@ -73,8 +73,8 @@
         </rightCardinality>
     </type>
     <type>
-        <leftType>Publication</leftType>
-        <rightType>Publication</rightType>
+        <leftType>InstitutionPublication</leftType>
+        <rightType>InstitutionPublication</rightType>
         <leftwardType>isCorrectionOfItem</leftwardType>
         <rightwardType>isCorrectedByItem</rightwardType>
         <leftCardinality>
@@ -87,8 +87,8 @@
         </rightCardinality>
     </type>
     <type>
-        <leftType>Patent</leftType>
-        <rightType>Patent</rightType>
+        <leftType>InstitutionPatent</leftType>
+        <rightType>InstitutionPatent</rightType>
         <leftwardType>isCorrectionOfItem</leftwardType>
         <rightwardType>isCorrectedByItem</rightwardType>
         <leftCardinality>
@@ -129,8 +129,8 @@
         </rightCardinality>
     </type>
     <type>
-        <leftType>Equipment</leftType>
-        <rightType>Equipment</rightType>
+        <leftType>InstitutionEquipment</leftType>
+        <rightType>InstitutionEquipment</rightType>
         <leftwardType>isCorrectionOfItem</leftwardType>
         <rightwardType>isCorrectedByItem</rightwardType>
         <leftCardinality>

@@ -166,7 +166,7 @@ public class ShadowCopyAction extends ProcessingAction {
     private boolean hasSameRelatioshipType(Collection collection, Item item) {
         String collectionType = collectionService.getMetadataFirstValue(collection, "relationship", "type", null, ANY);
         String itemType = itemService.getMetadataFirstValue(item, "relationship", "type", null, ANY);
-        return Objects.equals(collectionType, itemType);
+        return Objects.equals(collectionType, itemType) || Objects.equals("Institution" + collectionType, itemType);
     }
 
     private WorkspaceItem createItemCopyCorrection(Context context, UUID itemCopyId)

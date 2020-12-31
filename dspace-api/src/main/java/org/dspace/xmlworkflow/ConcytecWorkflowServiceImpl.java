@@ -48,7 +48,7 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
     @Override
     public Relationship createShadowRelationship(Context context, Item item, Item shadowItemCopy)
         throws AuthorizeException, SQLException {
-        RelationshipType shadowRelationshipType = findShadowRelationshipType(context, item);
+        RelationshipType shadowRelationshipType = findShadowRelationshipType(context, item, shadowItemCopy);
         return relationshipService.create(context, item, shadowItemCopy, shadowRelationshipType, true);
     }
 
@@ -110,10 +110,17 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
     }
 
     private RelationshipType findShadowRelationshipType(Context context, Item item) throws SQLException {
-        return findRelationshipType(context, item, HAS_SHADOW_COPY_RELATIONSHIP, IS_SHADOW_COPY_RELATIONSHIP);
+        return findShadowRelationshipType(context, item, item);
     }
 
-    private RelationshipType findRelationshipType(Context context, Item item, String leftwardType, String rightwardType)
+    private RelationshipType findShadowRelationshipType(Context context, Item item, Item shadowItem)
+        throws SQLException {
+        return findRelationshipType(context, item,
+            shadowItem, HAS_SHADOW_COPY_RELATIONSHIP, IS_SHADOW_COPY_RELATIONSHIP);
+    }
+
+    private RelationshipType findRelationshipType(Context context, Item item, Item shadowItem,
+                                                  String leftwardType, String rightwardType)
         throws SQLException {
 
         EntityType entityType = entityTypeService.findByItem(context, item);
@@ -121,8 +128,22 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
             throw new IllegalArgumentException("No entity type found for the item " + item.getID());
         }
 
+        // FIXME: refactor this step since entities are different. This is a temporary workaround
+        EntityType shadowEntityType = item.equals(shadowItem) ? entityTypeService.findByEntityType(context,
+            "Institution" + entityType.getLabel()) : entityTypeService.findByItem(context, shadowItem);
+
+        if (shadowEntityType == null) {
+            throw new IllegalArgumentException("No entity type found for the item " + shadowItem.getID());
+        }
+
         RelationshipType relationshipType = relationshipTypeService.findbyTypesAndTypeName(context, entityType,
-            entityType, leftwardType, rightwardType);
+            shadowEntityType, leftwardType, rightwardType);
+
+        // FIXME: refactor this step since entities are different. This is a temporary workaround
+        if (relationshipType == null) {
+            relationshipType = relationshipTypeService.findbyTypesAndTypeName(context, shadowEntityType,
+                entityType, leftwardType, rightwardType);
+        }
 
         if (relationshipType == null) {
             throw new IllegalStateException("No " + leftwardType + " relationship type found for type " + entityType);

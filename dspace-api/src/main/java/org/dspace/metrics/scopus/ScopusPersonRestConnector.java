@@ -9,6 +9,8 @@ package org.dspace.metrics.scopus;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import javax.annotation.PostConstruct;
 
@@ -55,8 +57,9 @@ public class ScopusPersonRestConnector {
 
     private InputStream sendRequest(String id)
             throws UnsupportedEncodingException, IOException, ClientProtocolException {
+        log.info("Scopus person query start: " + id);
         StringBuilder requestUrl = new StringBuilder(url);
-        requestUrl.append(id);
+        requestUrl.append(URLEncoder.encode(id, StandardCharsets.UTF_8));
         if (!Objects.isNull(enhanced) && enhanced == true) {
             requestUrl.append("?view=ENHANCED");
         } else {
@@ -72,6 +75,7 @@ public class ScopusPersonRestConnector {
 
         HttpResponse response = httpClient.execute(httpGet);
         int statusCode = response.getStatusLine().getStatusCode();
+        log.info("scopus status code: " + statusCode);
         if (statusCode != HttpStatus.SC_OK) {
             return null;
         }

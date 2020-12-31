@@ -211,6 +211,7 @@ public class WorkspaceItemRestRepository extends DSpaceRestRepository<WorkspaceI
             } catch (AuthorizeException e) {
                 throw new RESTAuthorizationException(e);
             } catch (Exception e) {
+                log.error(e.getMessage(), e);
                 throw new UnprocessableEntityException(e.getMessage());
             }
 

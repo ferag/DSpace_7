@@ -21,8 +21,6 @@ import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.service.GroupService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -32,8 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  */
 public class CrisSecurityServiceImpl implements CrisSecurityService {
-
-    private static final Logger log = LoggerFactory.getLogger(CrisSecurityServiceImpl.class);
 
     @Autowired
     private ItemService itemService;
@@ -101,24 +97,18 @@ public class CrisSecurityServiceImpl implements CrisSecurityService {
         }
 
 //        List<Group> userGroups = user.getGroups();
-        log.info("looking up user groups");
         Set<Group> userGroups = groupService.allMemberGroupsSet(context, user);
-        log.info("found {} user groups", userGroups.size());
-        userGroups.forEach(ug -> log.info("Group: {} - {}", ug.getName(), ug.getID().toString()));
         if (CollectionUtils.isEmpty(userGroups)) {
-            log.info("User groups empty");
             return false;
         }
 
         for (Group group : userGroups) {
             for (String metadataGroup : groups) {
                 if (check(context, item, metadataGroup, group.getID())) {
-                    log.info("Found matching group");
                     return true;
                 }
             }
         }
-        log.info("Matching group not found");
         return false;
     }
 

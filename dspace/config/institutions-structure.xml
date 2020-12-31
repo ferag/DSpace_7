@@ -16,6 +16,7 @@
 	            <name>People</name>
 	            <entity-type>InstitutionPerson</entity-type>
 	            <submission-type>person</submission-type>
+				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />
 	            <copyright />
@@ -27,6 +28,7 @@
 	            <name>OrgUnits</name>
 	            <entity-type>InstitutionOrgUnit</entity-type>
 	            <submission-type>orgunit</submission-type>
+				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />
 	            <copyright />
@@ -38,6 +40,7 @@
 	            <name>Publications</name>
 	            <entity-type>InstitutionPublication</entity-type>
 	            <submission-type>publication</submission-type>
+				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />
 	            <copyright />
@@ -49,6 +52,7 @@
 	            <name>Patents</name>
 	            <entity-type>InstitutionPatent</entity-type>
 	            <submission-type>patent</submission-type>
+				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />
 	            <copyright />
@@ -60,6 +64,7 @@
 	            <name>Projects</name>
 	            <entity-type>InstitutionProject</entity-type>
 	            <submission-type>project</submission-type>
+				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />
 	            <copyright />
@@ -71,6 +76,7 @@
 	            <name>Fundings</name>
 	            <entity-type>InstitutionFunding</entity-type>
 	            <submission-type>funding</submission-type>
+				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />
 	            <copyright />
@@ -82,6 +88,7 @@
 	            <name>Equipments</name>
 	            <entity-type>InstitutionEquipment</entity-type>
 	            <submission-type>equipment</submission-type>
+				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />
 	            <copyright />

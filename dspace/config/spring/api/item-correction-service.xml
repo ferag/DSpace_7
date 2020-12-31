@@ -104,7 +104,7 @@
 				</bean>
 			</list>
 		</entry> 
-		<entry key="InstitutionOrgunit">
+		<entry key="InstitutionOrgUnit">
 			<list>
 				<bean class="org.dspace.content.edit.CorrectItemMode">
 					<property name="security">

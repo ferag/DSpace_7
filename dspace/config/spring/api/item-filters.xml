@@ -429,27 +429,5 @@
         </property>
     </bean>
 
-    <bean id="institution_person-has-at-least-one-id_filter" class="org.dspace.content.logic.DefaultFilter">
-        <property name="statement">
-            <bean class="org.dspace.content.logic.operator.Or">
-                <property name="statements">
-                    <list>
-                        <bean class="org.dspace.content.logic.operator.Not">
-                            <property name="statements">
-                                <ref bean="relationship-type-equals-institution_person_condition"/>
-                            </property>
-                        </bean>
-                        <ref bean="has-orcid-set_condition" />
-                        <ref bean="has-dni-set_condition" />
-                        <ref bean="has-dina-set_condition" />
-                        <ref bean="has-renacyt-set_condition" />
-                        <ref bean="has-scopus-author-id-set_condition" />
-                        <ref bean="has-researcher-id-set_condition" />
-                    </list>
-                </property>
-            </bean>
-        </property>
-    </bean>
-
 
 </beans>

@@ -237,6 +237,76 @@ public class LogicalStatementValidatorIT extends AbstractIntegrationTestWithData
 
     }
 
+    @Test
+    public void testInstitutionPersonWithoutIdsValidation() throws Exception {
+
+        LogicalStatementValidator validator = getValidatorByName("personHasAtLeastOneIdValidation");
+
+        context.turnOffAuthorisationSystem();
+
+        Collection personCollection = createCollection(context, community)
+            .withRelationshipType("InstitutionPerson")
+            .withSubmissionDefinition("traditional")
+            .withAdminGroup(eperson)
+            .build();
+
+        WorkspaceItem itemWithOrcid = WorkspaceItemBuilder
+            .createWorkspaceItem(context, personCollection)
+            .withOrcidIdentifier("0000-0002-9079-593X")
+            .build();
+
+        WorkspaceItem itemWithDni = WorkspaceItemBuilder
+            .createWorkspaceItem(context, personCollection)
+            .withDniIdentifier("DNI-01")
+            .build();
+
+        WorkspaceItem itemWithDina = WorkspaceItemBuilder
+            .createWorkspaceItem(context, personCollection)
+            .withDinaIdentifier("DINA-01")
+            .build();
+
+        WorkspaceItem itemWithRenacyt = WorkspaceItemBuilder
+            .createWorkspaceItem(context, personCollection)
+            .withRenacytIdentifier("Renacyt-01")
+            .build();
+
+        WorkspaceItem itemWithScopusAuthor = WorkspaceItemBuilder
+            .createWorkspaceItem(context, personCollection)
+            .withScopusAuthorIdentifier("Scopus-01")
+            .build();
+
+        WorkspaceItem itemWithResearcherId = WorkspaceItemBuilder
+            .createWorkspaceItem(context, personCollection)
+            .withResearcherIdentifier("R-01")
+            .build();
+
+        WorkspaceItem itemWithoutIds = WorkspaceItemBuilder
+            .createWorkspaceItem(context, personCollection)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        SubmissionConfig submissionConfig = getSubmissionConfig(personCollection);
+        assertThat(validator.validate(context, itemWithOrcid, submissionConfig), empty());
+        assertThat(validator.validate(context, itemWithDni, submissionConfig), empty());
+        assertThat(validator.validate(context, itemWithDina, submissionConfig), empty());
+        assertThat(validator.validate(context, itemWithRenacyt, submissionConfig), empty());
+        assertThat(validator.validate(context, itemWithScopusAuthor, submissionConfig), empty());
+        assertThat(validator.validate(context, itemWithResearcherId, submissionConfig), empty());
+
+        List<ValidationError> errors = validator.validate(context, itemWithoutIds, submissionConfig);
+        assertThat(errors, hasSize(1));
+        assertThat(errors.get(0).getMessage(), equalTo("error.validation.personIdRequired"));
+        assertThat(errors.get(0).getPaths(),
+            contains("/section/person/person.identifier.orcid",
+                "/section/person/perucris.identifier.dni",
+                "/section/person/perucris.identifier.dina",
+                "/section/person/perucris.identifier.renacyt",
+                "/section/person/person.identifier.scopus-author-id",
+                "/section/person/person.identifier.rid"));
+
+    }
+
     private LogicalStatementValidator getValidatorByName(String name) {
         return new DSpace().getServiceManager().getServiceByName(name, LogicalStatementValidator.class);
     }

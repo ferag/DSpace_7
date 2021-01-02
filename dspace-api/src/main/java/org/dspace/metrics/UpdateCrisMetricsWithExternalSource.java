@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import org.apache.commons.cli.ParseException;
@@ -104,6 +105,8 @@ public class UpdateCrisMetricsWithExternalSource extends
             while (itemIterator.hasNext()) {
                 Item item = itemIterator.next();
                 countFoundItems++;
+                long sleep = Math.abs(new Random().nextLong()) % 1500;
+                Thread.sleep(sleep);
                 final boolean updated = metricsExternalServices.updateMetric(context, item, param);
                 if (updated) {
                     countUpdatedItems++;
@@ -118,7 +121,7 @@ public class UpdateCrisMetricsWithExternalSource extends
             handler.logInfo("Found " + countFoundItems + " items");
             handler.logInfo("Updated " + countUpdatedItems + " metrics");
             handler.logInfo("Update end");
-        } catch (SQLException | SearchServiceException e) {
+        } catch (SQLException | SearchServiceException | InterruptedException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);
         }

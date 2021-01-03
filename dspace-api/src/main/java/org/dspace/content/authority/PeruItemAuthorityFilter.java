@@ -31,16 +31,16 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Corrado Lombardi (corrado.lombardi at 4science.it)
  *
  */
-public class PeruItemAutorityFilter extends CustomAuthorityFilter {
+public class PeruItemAuthorityFilter extends CustomAuthorityFilter {
 
-    private static final Logger log = LoggerFactory.getLogger(PeruItemAutorityFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(PeruItemAuthorityFilter.class);
 
     private final RequestService requestService;
     private final CollectionService collectionService;
 
     @Autowired
-    public PeruItemAutorityFilter(RequestService requestService,
-                                  CollectionService collectionService) {
+    public PeruItemAuthorityFilter(RequestService requestService,
+                                   CollectionService collectionService) {
         this.requestService = requestService;
         this.collectionService = collectionService;
     }

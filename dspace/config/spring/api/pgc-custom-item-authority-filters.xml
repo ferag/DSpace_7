@@ -31,7 +31,7 @@
         </property>
     </bean>
 
-    <bean id="peruInstitutionItemsFilter" class="org.dspace.content.authority.PeruItemAutorityFilter">
+    <bean id="peruInstitutionItemsFilter" class="org.dspace.content.authority.PeruItemAuthorityFilter">
         <!--FIXME: temporarily disabled, set with PGC institutional entities -->
         <property name="supportedEntities">
             <list>

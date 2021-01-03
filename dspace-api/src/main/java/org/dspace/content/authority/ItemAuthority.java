@@ -163,15 +163,18 @@ public class ItemAuthority implements ChoiceAuthority, LinkableEntityAuthority {
         StringBuilder stringBuilder = new StringBuilder();
         // FIXME: temporary solution to distinguish between institution entities and normal entities
         // move this logic to authority.
-        if (isInstitution()) {
+        if (isInstitutionEntity()) {
             stringBuilder.append("Institution");
         }
         return stringBuilder.append(
             configurationService.getProperty("cris.ItemAuthority." + authorityName + ".relationshipType")).toString();
     }
 
-    private boolean isInstitution() {
+    private boolean isInstitutionEntity() {
         Request currentRequest = requestService.getCurrentRequest();
+        if (Objects.isNull(currentRequest)) {
+            return false;
+        }
         String collection = currentRequest.getHttpServletRequest().getParameter("collection");
         if (StringUtils.isBlank(collection)) {
             return false;

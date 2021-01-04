@@ -618,42 +618,4 @@
         <qualifier>birthdate</qualifier>
     </dc-type>
 
-
-    <!-- custom PeruCRIS relations metadata -->
-    <dc-type>
-        <schema>relation</schema>
-        <element>isPersonOwner</element>
-        <scope_note></scope_note>
-    </dc-type>
-
-    <dc-type>
-        <schema>relation</schema>
-        <element>isOwnedByPersonCv</element>
-        <scope_note></scope_note>
-    </dc-type>
-
-    <dc-type>
-        <schema>relation</schema>
-        <element>hasShadowCopy</element>
-        <scope_note></scope_note>
-    </dc-type>
-
-    <dc-type>
-        <schema>relation</schema>
-        <element>isShadowCopy</element>
-        <scope_note></scope_note>
-    </dc-type>
-
-    <dc-type>
-        <schema>relation</schema>
-        <element>isCorrectionOfItem</element>
-        <scope_note></scope_note>
-    </dc-type>
-
-    <dc-type>
-        <schema>relation</schema>
-        <element>isCorrectedByItem</element>
-        <scope_note></scope_note>
-    </dc-type>
-
 </dspace-dc-types>

@@ -10,6 +10,7 @@ package org.dspace.app.rest;
 import static com.jayway.jsonpath.JsonPath.read;
 import static java.util.List.of;
 import static org.dspace.app.matcher.MetadataValueMatcher.with;
+import static org.dspace.builder.CollectionBuilder.createCollection;
 import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
 import static org.dspace.content.Item.ANY;
 import static org.dspace.xmlworkflow.ConcytecFeedback.APPROVE;
@@ -29,7 +30,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -109,7 +109,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     @Autowired
     private ItemService itemService;
 
-    private Collection collection;
+    private Collection institutionCollection;
 
     @Value("classpath:org/dspace/app/rest/simple-article.pdf")
     private Resource simpleArticle;
@@ -130,9 +130,11 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
     private Group directorioReviewGroup;
 
-    private RelationshipType hasShadowCopyRelationshipType;
+    private RelationshipType hasShadowCopy;
 
-    private RelationshipType isCorrectionOfRelationshipType;
+    private RelationshipType isCorrectionOf;
+
+    private RelationshipType institutionIsCorrectionOf;
 
     @Before
     public void before() throws Exception {
@@ -140,13 +142,18 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         context.turnOffAuthorisationSystem();
 
-        EntityType publicationType = EntityTypeBuilder.createEntityTypeBuilder(context, "Publication").build();
+        EntityType institutionPublicationType = createEntityType("InstitutionPublication");
 
-        hasShadowCopyRelationshipType = createRelationshipTypeBuilder(context, publicationType, publicationType,
-            HAS_SHADOW_COPY_RELATIONSHIP, IS_SHADOW_COPY_RELATIONSHIP, 0, 1, 0, 1).build();
+        EntityType publicationType = createEntityType("Publication");
 
-        isCorrectionOfRelationshipType = createRelationshipTypeBuilder(context, publicationType, publicationType,
-            "isCorrectionOfItem", "isCorrectedByItem", 0, 1, 0, 1).build();
+        hasShadowCopy = createRelationshipTypeBuilder(context, institutionPublicationType,
+            publicationType, HAS_SHADOW_COPY_RELATIONSHIP, IS_SHADOW_COPY_RELATIONSHIP, 0, 1, 0, 1).build();
+
+        isCorrectionOf = createRelationshipTypeBuilder(context, publicationType,
+            publicationType, "isCorrectionOfItem", "isCorrectedByItem", 0, 1, 0, 1).build();
+
+        institutionIsCorrectionOf = createRelationshipTypeBuilder(context, institutionPublicationType,
+            institutionPublicationType, "isCorrectionOfItem", "isCorrectedByItem", 0, 1, 0, 1).build();
 
         submitter = createEPerson("submitter@example.com");
         firstDirectorioUser = createEPerson("firstDirectorioUser@example.com");
@@ -173,7 +180,8 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .build();
 
         directorioPublications = CollectionBuilder
-            .createCollection(context, directorioSubCommunity, "123456789/directorio-workflow-test")
+            .createCollection(context, directorioSubCommunity)
+            .withWorkflow("directorioWorkflow")
             .withName("Publications")
             .withRelationshipType("Publication")
             .withSubmitterGroup(submitter)
@@ -191,9 +199,9 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .addMember(institutionUser)
             .build();
 
-        collection = CollectionBuilder.createCollection(context, parentCommunity, "123456789/institution-workflow-test")
+        institutionCollection = createCollection(context, parentCommunity, "123456789/institution-workflow-test")
             .withName("Institution collection")
-            .withRelationshipType("Publication")
+            .withRelationshipType("InstitutionPublication")
             .withSubmissionDefinition("traditional")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", reviewGroup)
@@ -214,9 +222,9 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     public void destroy() throws Exception {
 
         context.turnOffAuthorisationSystem();
-        collectionRoleService.deleteByCollection(context, collection);
+        collectionRoleService.deleteByCollection(context, institutionCollection);
         collectionRoleService.deleteByCollection(context, directorioPublications);
-        workflowItemService.deleteByCollection(context, collection);
+        workflowItemService.deleteByCollection(context, institutionCollection);
         workflowItemService.deleteByCollection(context, directorioPublications);
         workspaceItemService.findAll(context).forEach(this::deleteWorkspaceItem);
         context.restoreAuthSystemState();
@@ -227,7 +235,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     @Test
     public void testItemSubmissionWithInstitutionReject() throws Exception {
 
-        WorkspaceItem workspaceItem = createWorkspaceItem();
+        WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
 
         workflowService.start(context, workspaceItem);
 
@@ -237,7 +245,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         item = reloadItem(item);
         assertThat(item.isArchived(), is(false));
 
-        Relationship relationship = findShadowCopyRelation(item);
+        Relationship relationship = findRelation(item, hasShadowCopy);
         Item shadowItemCopy = relationship.getRightItem();
 
         assertThat(shadowItemCopy, not(equalTo(item)));
@@ -278,7 +286,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     @Test
     public void testItemSubmissionWithInstitutionRejectAfterDirectorioReviewerApprovement() throws Exception {
 
-        WorkspaceItem workspaceItem = createWorkspaceItem();
+        WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
 
         workflowService.start(context, workspaceItem);
 
@@ -288,7 +296,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         item = reloadItem(item);
         assertThat(item.isArchived(), is(false));
 
-        Relationship relationship = findShadowCopyRelation(item);
+        Relationship relationship = findRelation(item, hasShadowCopy);
         Item shadowItemCopy = relationship.getRightItem();
 
         XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
@@ -336,7 +344,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     @Test
     public void testItemSubmissionWithConcytecApprove() throws Exception {
 
-        WorkspaceItem workspaceItem = createWorkspaceItemWithFulltext();
+        WorkspaceItem workspaceItem = createWorkspaceItemWithFulltext(institutionCollection);
 
         workflowService.start(context, workspaceItem);
 
@@ -346,7 +354,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         item = reloadItem(item);
         assertThat(item.isArchived(), is(false));
 
-        Relationship relationship = findShadowCopyRelation(item);
+        Relationship relationship = findRelation(item, hasShadowCopy);
         Item shadowItemCopy = relationship.getRightItem();
 
         assertThat(shadowItemCopy, not(equalTo(item)));
@@ -391,7 +399,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     @Test
     public void testItemSubmissionWithConcytecReviewerReject() throws Exception {
 
-        WorkspaceItem workspaceItem = createWorkspaceItem();
+        WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
 
         workflowService.start(context, workspaceItem);
 
@@ -401,7 +409,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         item = reloadItem(item);
         assertThat(item.isArchived(), is(false));
 
-        Relationship relationship = findShadowCopyRelation(item);
+        Relationship relationship = findRelation(item, hasShadowCopy);
         Item shadowItemCopy = relationship.getRightItem();
 
         assertThat(shadowItemCopy, not(equalTo(item)));
@@ -443,7 +451,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     @Test
     public void testItemSubmissionWithConcytecEditorReject() throws Exception {
 
-        WorkspaceItem workspaceItem = createWorkspaceItem();
+        WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
 
         workflowService.start(context, workspaceItem);
 
@@ -453,7 +461,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         item = reloadItem(item);
         assertThat(item.isArchived(), is(false));
 
-        Relationship relationship = findShadowCopyRelation(item);
+        Relationship relationship = findRelation(item, hasShadowCopy);
         Item shadowItemCopy = relationship.getRightItem();
 
         assertThat(shadowItemCopy, not(equalTo(item)));
@@ -500,7 +508,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     @Test
     public void testItemSubmissionWithConcytecEdit() throws Exception {
 
-        WorkspaceItem workspaceItem = createWorkspaceItem();
+        WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
 
         workflowService.start(context, workspaceItem);
 
@@ -510,7 +518,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         item = reloadItem(item);
         assertThat(item.isArchived(), is(false));
 
-        Relationship relationship = findShadowCopyRelation(item);
+        Relationship relationship = findRelation(item, hasShadowCopy);
         Item shadowItemCopy = relationship.getRightItem();
 
         assertThat(shadowItemCopy, not(equalTo(item)));
@@ -563,14 +571,14 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     @Test
     public void testItemCorrectionWithConcytecApproval() throws Exception {
 
-        WorkspaceItem workspaceItem = createWorkspaceItem();
+        WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
 
         workflowService.start(context, workspaceItem);
 
         Item item = workspaceItem.getItem();
         assertThat(getWorkspaceItem(item), nullValue());
 
-        Relationship relationship = findShadowCopyRelation(item);
+        Relationship relationship = findRelation(item, hasShadowCopy);
         Item shadowItemCopy = relationship.getRightItem();
 
         assertThat(getFirstMetadata(shadowItemCopy, "dc.contributor.author").getAuthority(),
@@ -589,7 +597,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         Item correctionItem = correctionWorkspaceItem.getItem();
 
-        Relationship correctionRelation = findIsCorrectionOfRelation(item);
+        Relationship correctionRelation = findRelation(item, institutionIsCorrectionOf);
         assertThat(correctionRelation.getLeftItem(), equalTo(correctionWorkspaceItem.getItem()));
 
         context.turnOffAuthorisationSystem();
@@ -600,8 +608,13 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         assertThat(getWorkflowItem(correctionItem), notNullValue());
 
-        Relationship correctionItemShadowCopyRelation = findShadowCopyRelation(correctionItem);
+        Relationship correctionItemShadowCopyRelation = findRelation(correctionItem, hasShadowCopy);
         Item correctionItemShadowCopy = correctionItemShadowCopyRelation.getRightItem();
+
+        Relationship correctedItemShadowCopyRelation = findRelation(correctionItemShadowCopy, isCorrectionOf);
+        assertThat(correctedItemShadowCopyRelation, notNullValue());
+        assertThat(correctionItemShadowCopy, equalTo(correctedItemShadowCopyRelation.getLeftItem()));
+        assertThat(shadowItemCopy, equalTo(correctedItemShadowCopyRelation.getRightItem()));
 
         List<MetadataValue> correctionShadowItemMetadata = correctionItemShadowCopy.getMetadata();
         assertThat(correctionItem.getMetadata(), hasSize(correctionShadowItemMetadata.size() - 3));
@@ -644,14 +657,14 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     @Test
     public void testItemCorrectionWithConcytecRejection() throws Exception {
 
-        WorkspaceItem workspaceItem = createWorkspaceItemWithFulltext();
+        WorkspaceItem workspaceItem = createWorkspaceItemWithFulltext(institutionCollection);
 
         workflowService.start(context, workspaceItem);
 
         Item item = workspaceItem.getItem();
         assertThat(getWorkspaceItem(item), nullValue());
 
-        Relationship relationship = findShadowCopyRelation(item);
+        Relationship relationship = findRelation(item, hasShadowCopy);
         Item shadowItemCopy = relationship.getRightItem();
 
         XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
@@ -668,7 +681,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         Item correctionItem = correctionWorkspaceItem.getItem();
 
-        Relationship correctionRelation = findIsCorrectionOfRelation(item);
+        Relationship correctionRelation = findRelation(item, institutionIsCorrectionOf);
         assertThat(correctionRelation.getLeftItem(), equalTo(correctionWorkspaceItem.getItem()));
 
         context.turnOffAuthorisationSystem();
@@ -679,8 +692,13 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         assertThat(getWorkflowItem(correctionItem), notNullValue());
 
-        Relationship correctionItemShadowCopyRelation = findShadowCopyRelation(correctionItem);
+        Relationship correctionItemShadowCopyRelation = findRelation(correctionItem, hasShadowCopy);
         Item correctionItemShadowCopy = correctionItemShadowCopyRelation.getRightItem();
+
+        Relationship correctedItemShadowCopyRelation = findRelation(correctionItemShadowCopy, isCorrectionOf);
+        assertThat(correctedItemShadowCopyRelation, notNullValue());
+        assertThat(correctionItemShadowCopy, equalTo(correctedItemShadowCopyRelation.getLeftItem()));
+        assertThat(shadowItemCopy, equalTo(correctedItemShadowCopyRelation.getRightItem()));
 
         List<MetadataValue> correctionShadowItemMetadata = correctionItemShadowCopy.getMetadata();
         assertThat(getFirstMetadata(correctionItemShadowCopy, "dc.contributor.editor"), nullValue());
@@ -720,14 +738,14 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     @Test
     public void testItemCorrectionWithInstitutionRejection() throws Exception {
 
-        WorkspaceItem workspaceItem = createWorkspaceItem();
+        WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
 
         workflowService.start(context, workspaceItem);
 
         Item item = workspaceItem.getItem();
         assertThat(getWorkspaceItem(item), nullValue());
 
-        Relationship relationship = findShadowCopyRelation(item);
+        Relationship relationship = findRelation(item, hasShadowCopy);
         Item shadowItemCopy = relationship.getRightItem();
 
         XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
@@ -744,7 +762,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         Item correctionItem = correctionWorkspaceItem.getItem();
 
-        Relationship correctionRelation = findIsCorrectionOfRelation(item);
+        Relationship correctionRelation = findRelation(item, institutionIsCorrectionOf);
         assertThat(correctionRelation.getLeftItem(), equalTo(correctionWorkspaceItem.getItem()));
 
         context.turnOffAuthorisationSystem();
@@ -753,8 +771,13 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         workflowService.start(context, correctionWorkspaceItem);
         context.restoreAuthSystemState();
 
-        Relationship correctionItemShadowCopyRelation = findShadowCopyRelation(correctionItem);
+        Relationship correctionItemShadowCopyRelation = findRelation(correctionItem, hasShadowCopy);
         Item correctionItemShadowCopy = correctionItemShadowCopyRelation.getRightItem();
+
+        Relationship correctedItemShadowCopyRelation = findRelation(correctionItemShadowCopy, isCorrectionOf);
+        assertThat(correctedItemShadowCopyRelation, notNullValue());
+        assertThat(correctionItemShadowCopy, equalTo(correctedItemShadowCopyRelation.getLeftItem()));
+        assertThat(shadowItemCopy, equalTo(correctedItemShadowCopyRelation.getRightItem()));
 
         List<MetadataValue> correctionShadowItemMetadata = correctionItemShadowCopy.getMetadata();
         assertThat(getFirstMetadata(correctionItemShadowCopy, "dc.contributor.editor"), nullValue());
@@ -804,12 +827,12 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     @Test
     public void testItemSubmissionWithConcytecEditAndFollowingCorrection() throws Exception {
 
-        WorkspaceItem workspaceItem = createWorkspaceItem();
+        WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
 
         workflowService.start(context, workspaceItem);
 
         Item item = workspaceItem.getItem();
-        Relationship relationship = findShadowCopyRelation(item);
+        Relationship relationship = findRelation(item, hasShadowCopy);
         Item shadowItemCopy = relationship.getRightItem();
 
         XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
@@ -839,7 +862,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Item correctionItem = correctionWorkspaceItem.getItem();
         assertThat(correctionItem.getMetadata(), hasItem(with("dc.date.issued", "2017-10-17")));
 
-        Relationship correctionRelation = findIsCorrectionOfRelation(item);
+        Relationship correctionRelation = findRelation(item, institutionIsCorrectionOf);
         assertThat(correctionRelation.getLeftItem(), equalTo(correctionWorkspaceItem.getItem()));
 
         context.turnOffAuthorisationSystem();
@@ -848,8 +871,13 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         workflowService.start(context, correctionWorkspaceItem);
         context.restoreAuthSystemState();
 
-        Relationship correctionItemShadowCopyRelation = findShadowCopyRelation(correctionItem);
+        Relationship correctionItemShadowCopyRelation = findRelation(correctionItem, hasShadowCopy);
         Item correctionItemShadowCopy = correctionItemShadowCopyRelation.getRightItem();
+
+        Relationship correctedItemShadowCopyRelation = findRelation(correctionItemShadowCopy, isCorrectionOf);
+        assertThat(correctedItemShadowCopyRelation, notNullValue());
+        assertThat(correctionItemShadowCopy, equalTo(correctedItemShadowCopyRelation.getLeftItem()));
+        assertThat(shadowItemCopy, equalTo(correctedItemShadowCopyRelation.getRightItem()));
 
         List<MetadataValue> correctionShadowItemMetadata = correctionItemShadowCopy.getMetadata();
         assertThat(getFirstMetadata(correctionItemShadowCopy, "dc.contributor.editor"), nullValue());
@@ -917,7 +945,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         rejectClaimedTaskViaRest(user, claimedTask, reason);
     }
 
-    private WorkspaceItem createWorkspaceItem() throws IOException {
+    private WorkspaceItem createWorkspaceItem(Collection collection) throws IOException {
         return WorkspaceItemBuilder.createWorkspaceItem(context, collection)
             .withTitle("Submission Item")
             .withIssueDate("2017-10-17")
@@ -928,19 +956,16 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .build();
     }
 
-    private WorkspaceItem createWorkspaceItemWithFulltext() throws IOException {
-        InputStream pdf = simpleArticle.getInputStream();
-
-        WorkspaceItem workspaceItem = WorkspaceItemBuilder.createWorkspaceItem(context, collection)
+    private WorkspaceItem createWorkspaceItemWithFulltext(Collection collection) throws IOException {
+        return WorkspaceItemBuilder.createWorkspaceItem(context, collection)
             .withTitle("Submission Item")
             .withIssueDate("2017-10-17")
-            .withFulltext("simple-article.pdf", "/local/path/simple-article.pdf", pdf)
+            .withFulltext("simple-article.pdf", "/local/path/simple-article.pdf", simpleArticle.getInputStream())
             .withAuthor("Mario Rossi", "9bab4959-c210-4b6d-9d94-ff75cade84c3")
             .withAuthorAffilitation("4Science")
             .withEditor("Test editor")
             .grantLicense()
             .build();
-        return workspaceItem;
     }
 
     private void deleteWorkspaceItem(WorkspaceItem workspaceItem) {
@@ -1032,21 +1057,17 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .build();
     }
 
-    private Relationship findShadowCopyRelation(Item item) throws SQLException {
-        List<Relationship> relationships = relationshipService.findByItemAndRelationshipType(context, item,
-            hasShadowCopyRelationshipType);
-        assertThat(relationships, hasSize(1));
-        return relationships.get(0);
-    }
-
-    private Relationship findIsCorrectionOfRelation(Item item) throws SQLException {
-        List<Relationship> relationships = relationshipService.findByItemAndRelationshipType(context, item,
-            isCorrectionOfRelationshipType);
+    private Relationship findRelation(Item item, RelationshipType type) throws SQLException {
+        List<Relationship> relationships = relationshipService.findByItemAndRelationshipType(context, item, type);
         assertThat(relationships, hasSize(1));
         return relationships.get(0);
     }
 
     private Item reloadItem(Item item) throws SQLException {
         return context.reloadEntity(item);
+    }
+
+    private EntityType createEntityType(String entityType) {
+        return EntityTypeBuilder.createEntityTypeBuilder(context, entityType).build();
     }
 }

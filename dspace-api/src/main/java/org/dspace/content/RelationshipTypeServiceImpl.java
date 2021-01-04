@@ -53,6 +53,12 @@ public class RelationshipTypeServiceImpl implements RelationshipTypeService {
     }
 
     @Override
+    public List<RelationshipType> findByTypeAndTypeNames(Context context, EntityType type, boolean isLeftType,
+        String leftwardType, String rightwardType) throws SQLException {
+        return relationshipTypeDAO.findByTypeAndTypeNames(context, type, isLeftType, leftwardType, rightwardType);
+    }
+
+    @Override
     public List<RelationshipType> findAll(Context context) throws SQLException {
         return findAll(context, -1, -1);
     }

@@ -41,9 +41,7 @@ public class UpdateWOSPersonMetrics extends AbstractUpdateWOSMetrics {
         String orcidId = itemService.getMetadataFirstValue(item, "person", "identifier", "orcid", Item.ANY);
         if (isValidId(orcidId)) {
             try {
-                log.info("Updating wos person metric");
                 metricDTO = wosPersonRestConnector.sendRequestToWOS(orcidId);
-                log.info("updated wos person metric");
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }

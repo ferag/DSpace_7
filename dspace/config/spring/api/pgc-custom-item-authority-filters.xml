@@ -17,7 +17,6 @@
                 <value>location.comm:${directorios.community-id}</value>
             </list>
         </constructor-arg>
-        <!-- FIXME: uncomment and set with standard entities -->
         <property name="supportedEntities">
             <list>
                 <value>Person</value>
@@ -32,7 +31,6 @@
     </bean>
 
     <bean id="peruInstitutionItemsFilter" class="org.dspace.content.authority.PeruItemAuthorityFilter">
-        <!--FIXME: temporarily disabled, set with PGC institutional entities -->
         <property name="supportedEntities">
             <list>
                 <value>InstitutionPerson</value>

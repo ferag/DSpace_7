@@ -73,7 +73,12 @@ public class UnlockInstitutionAction extends ProcessingAction {
         ConcytecFeedback concytecFeedback = concytecWorkflowService.getConcytecFeedback(context, item);
 
         try {
-            unlockInstitutionWorkflow(context, item, concytecFeedback);
+
+            Item institutionItem = concytecWorkflowService.findCopiedItem(context, item);
+            if (institutionItem != null) {
+                unlockInstitutionWorkflow(context, item, institutionItem, concytecFeedback);
+            }
+
         } catch (WorkflowConfigurationException e) {
             throw new WorkflowException(e);
         }
@@ -92,10 +97,10 @@ public class UnlockInstitutionAction extends ProcessingAction {
 
     }
 
-    private void unlockInstitutionWorkflow(Context context, Item directorioItem, ConcytecFeedback concytecFeedback)
-        throws IOException, AuthorizeException, SQLException, WorkflowException, WorkflowConfigurationException {
+    private void unlockInstitutionWorkflow(Context context, Item directorioItem, Item institutionItem,
+        ConcytecFeedback concytecFeedback) throws IOException, AuthorizeException, SQLException, WorkflowException,
+        WorkflowConfigurationException {
 
-        Item institutionItem = concytecWorkflowService.findCopiedItem(context, directorioItem);
         XmlWorkflowItem institutionWorkflowItem = workflowItemService.findByItem(context, institutionItem);
 
         if (concytecFeedback != ConcytecFeedback.NONE) {

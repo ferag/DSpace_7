@@ -914,6 +914,26 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
     }
 
+    @Test
+    public void testItemDirectSubmissionInTheDirectorio() throws Exception {
+
+        WorkspaceItem workspaceItem = createWorkspaceItem(directorioPublications);
+
+        Item item = workspaceItem.getItem();
+        assertThat(item.isArchived(), is(false));
+
+        XmlWorkflowItem workflowItem = workflowService.start(context, workspaceItem);
+
+        claimTaskAndApprove(workflowItem, secondDirectorioUser, directorioReviewGroup);
+        claimTaskAndApprove(workflowItem, firstDirectorioUser, directorioEditorGroup);
+        claimTaskAndApprove(workflowItem, firstDirectorioUser, directorioEditorGroup);
+
+        item = reloadItem(item);
+        assertThat(item.isArchived(), is(true));
+        assertThat(getConcytecFeedbackMetadataValue(item), equalTo(APPROVE.name()));
+
+    }
+
     private void claimTaskAndApprove(XmlWorkflowItem workflowItem, EPerson user, Group expectedGroup) throws Exception {
         List<PoolTask> poolTasks = poolTaskService.find(context, workflowItem);
         assertThat(poolTasks, hasSize(1));

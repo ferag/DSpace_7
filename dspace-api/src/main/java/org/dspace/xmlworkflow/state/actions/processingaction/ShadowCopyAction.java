@@ -33,6 +33,7 @@ import org.dspace.content.WorkspaceItem;
 import org.dspace.content.authority.service.ChoiceAuthorityService;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
+import org.dspace.content.service.InstallItemService;
 import org.dspace.core.Context;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.service.GroupService;
@@ -88,6 +89,9 @@ public class ShadowCopyAction extends ProcessingAction {
     @Autowired
     private ChoiceAuthorityService choiceAuthorityService;
 
+    @Autowired
+    private InstallItemService installItemService;
+
     @Override
     public void activate(Context context, XmlWorkflowItem workflowItem) {
 
@@ -128,7 +132,9 @@ public class ShadowCopyAction extends ProcessingAction {
 
         Item itemToCorrectCopy = concytecWorkflowService.findShadowItemCopy(ctx, itemToCorrect);
         if (itemToCorrectCopy == null) {
-            throw new WorkflowException("The item to correct has no shadow copy in the directorio");
+            WorkspaceItem workspaceItemShadowCopy = createShadowCopyForCreation(ctx, itemToCorrect);
+            itemToCorrectCopy = installItemService.installItem(ctx, workspaceItemShadowCopy);
+            itemService.withdraw(ctx, itemToCorrectCopy);
         }
 
         WorkspaceItem correctionWorkspaceItemCopy = createItemCopyCorrection(ctx, itemToCorrectCopy.getID());

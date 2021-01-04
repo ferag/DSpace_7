@@ -11,6 +11,12 @@
           class="org.dspace.versioning.ItemCorrectionService"
           scope="singleton">
        <constructor-arg name="correctionRelationshipName" value="isCorrectionOfItem" />
+       <constructor-arg name="ignoredMetadataFields" >
+            <set>
+                <value>dc.date.accessioned</value>
+                <value>dc.description.provenance</value>
+            </set>
+        </constructor-arg>
     </bean>
 
     <!-- Correction Item Provider, defines behavior for replicating

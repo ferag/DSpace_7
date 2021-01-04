@@ -42,6 +42,7 @@ import org.dspace.builder.CommunityBuilder;
 import org.dspace.builder.EPersonBuilder;
 import org.dspace.builder.EntityTypeBuilder;
 import org.dspace.builder.GroupBuilder;
+import org.dspace.builder.ItemBuilder;
 import org.dspace.builder.WorkspaceItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
@@ -252,7 +253,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(getWorkflowItem(shadowItemCopy), notNullValue());
 
         List<MetadataValue> shadowItemMetadata = shadowItemCopy.getMetadata();
-        assertThat(item.getMetadata(), hasSize(shadowItemMetadata.size() - 3));
+        assertThat(shadowItemMetadata, hasSize(10));
         assertThat(shadowItemMetadata, hasItem(with("dc.title", "Submission Item")));
         assertThat(shadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
         assertThat(shadowItemMetadata, hasItem(with("relationship.type", "Publication")));
@@ -305,7 +306,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(shadowWorkflowItemCopy, notNullValue());
 
         List<MetadataValue> shadowItemMetadata = shadowItemCopy.getMetadata();
-        assertThat(item.getMetadata(), hasSize(shadowItemMetadata.size() - 3));
+        assertThat(shadowItemMetadata, hasSize(10));
         assertThat(shadowItemMetadata, hasItem(with("dc.title", "Submission Item")));
         assertThat(shadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
         assertThat(shadowItemMetadata, hasItem(with("relationship.type", "Publication")));
@@ -360,7 +361,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(shadowItemCopy, not(equalTo(item)));
 
         List<MetadataValue> shadowItemMetadata = shadowItemCopy.getMetadata();
-        assertThat(item.getMetadata(), hasSize(shadowItemMetadata.size() - 3));
+        assertThat(shadowItemMetadata, hasSize(10));
         assertThat(shadowItemMetadata, hasItem(with("dc.title", "Submission Item")));
         assertThat(shadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
         assertThat(shadowItemMetadata, hasItem(with("relationship.type", "Publication")));
@@ -415,7 +416,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(shadowItemCopy, not(equalTo(item)));
 
         List<MetadataValue> shadowItemMetadata = shadowItemCopy.getMetadata();
-        assertThat(item.getMetadata(), hasSize(shadowItemMetadata.size() - 3));
+        assertThat(shadowItemMetadata, hasSize(10));
         assertThat(shadowItemMetadata, hasItem(with("dc.title", "Submission Item")));
         assertThat(shadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
         assertThat(shadowItemMetadata, hasItem(with("relationship.type", "Publication")));
@@ -467,7 +468,8 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(shadowItemCopy, not(equalTo(item)));
 
         List<MetadataValue> shadowItemMetadata = shadowItemCopy.getMetadata();
-        assertThat(item.getMetadata(), hasSize(shadowItemMetadata.size() - 3));
+        assertThat(shadowItemCopy.getMetadata(), hasSize(10));
+
         assertThat(shadowItemMetadata, hasItem(with("dc.title", "Submission Item")));
         assertThat(shadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
         assertThat(shadowItemMetadata, hasItem(with("relationship.type", "Publication")));
@@ -524,7 +526,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(shadowItemCopy, not(equalTo(item)));
 
         List<MetadataValue> shadowItemMetadata = shadowItemCopy.getMetadata();
-        assertThat(item.getMetadata(), hasSize(shadowItemMetadata.size() - 3));
+        assertThat(shadowItemCopy.getMetadata(), hasSize(10));
         assertThat(shadowItemMetadata, hasItem(with("dc.title", "Submission Item")));
         assertThat(shadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
         assertThat(shadowItemMetadata, hasItem(with("relationship.type", "Publication")));
@@ -617,8 +619,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(shadowItemCopy, equalTo(correctedItemShadowCopyRelation.getRightItem()));
 
         List<MetadataValue> correctionShadowItemMetadata = correctionItemShadowCopy.getMetadata();
-        assertThat(correctionItem.getMetadata(), hasSize(correctionShadowItemMetadata.size() - 3));
-
+        assertThat(correctionShadowItemMetadata, hasSize(16));
         assertThat(getFirstMetadata(correctionItemShadowCopy, "dc.contributor.editor"), nullValue());
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.title", "Submission Item new title")));
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
@@ -932,6 +933,80 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(item.isArchived(), is(true));
         assertThat(getConcytecFeedbackMetadataValue(item), equalTo(APPROVE.name()));
 
+    }
+
+    @Test
+    public void testItemCorrectionWithoutShadowCopyInTheDirectorio() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+        Item item = ItemBuilder.createItem(context, institutionCollection)
+            .withTitle("Test publication")
+            .withEditor("Test editor")
+            .withIssueDate("2021-01-04")
+            .build();
+        context.restoreAuthSystemState();
+
+        WorkspaceItem correctionWorkspaceItem = requestForItemCorrection(admin, item);
+        assertThat(correctionWorkspaceItem, notNullValue());
+
+        Item correctionItem = correctionWorkspaceItem.getItem();
+
+        Relationship correctionRelation = findRelation(item, institutionIsCorrectionOf);
+        assertThat(correctionRelation.getLeftItem(), equalTo(correctionWorkspaceItem.getItem()));
+
+        context.turnOffAuthorisationSystem();
+        replaceTitle(context, correctionWorkspaceItem.getItem(), "Test publication new title");
+        removeEditor(context, correctionWorkspaceItem.getItem());
+        workflowService.start(context, correctionWorkspaceItem);
+        context.restoreAuthSystemState();
+
+        Relationship itemShadowCopyRelation = findRelation(item, hasShadowCopy);
+        Item shadowItemCopy = itemShadowCopyRelation.getRightItem();
+        assertThat(shadowItemCopy.isArchived(), is(false));
+        assertThat(shadowItemCopy.isWithdrawn(), is(true));
+
+        assertThat(getWorkflowItem(correctionItem), notNullValue());
+
+        Relationship correctionItemShadowCopyRelation = findRelation(correctionItem, hasShadowCopy);
+        Item correctionItemShadowCopy = correctionItemShadowCopyRelation.getRightItem();
+
+        Relationship correctedItemShadowCopyRelation = findRelation(correctionItemShadowCopy, isCorrectionOf);
+        assertThat(correctedItemShadowCopyRelation, notNullValue());
+        assertThat(correctionItemShadowCopy, equalTo(correctedItemShadowCopyRelation.getLeftItem()));
+        assertThat(shadowItemCopy, equalTo(correctedItemShadowCopyRelation.getRightItem()));
+
+        List<MetadataValue> correctionShadowItemMetadata = correctionItemShadowCopy.getMetadata();
+        assertThat(correctionItem.getMetadata(), hasSize(6));
+
+        assertThat(getFirstMetadata(correctionItemShadowCopy, "dc.contributor.editor"), nullValue());
+        assertThat(correctionShadowItemMetadata, hasItem(with("dc.title", "Test publication new title")));
+        assertThat(correctionShadowItemMetadata, hasItem(with("dc.date.issued", "2021-01-04")));
+        assertThat(correctionShadowItemMetadata, hasItem(with("relationship.type", "Publication")));
+
+        assertThat(correctionShadowItemMetadata, hasItem(with("cris.policy.group", directorioReviewGroup.getName(),
+            null, directorioReviewGroup.getID().toString(), 0, 600)));
+        assertThat(correctionShadowItemMetadata, hasItem(with("cris.policy.group", directorioEditorGroup.getName(),
+            null, directorioEditorGroup.getID().toString(), 1, 600)));
+
+        XmlWorkflowItem correctionWorkflowItemShadowCopy = getWorkflowItem(correctionItemShadowCopy);
+        assertThat(correctionWorkflowItemShadowCopy, notNullValue());
+
+        claimTaskAndApprove(correctionWorkflowItemShadowCopy, secondDirectorioUser, directorioReviewGroup);
+        claimTaskAndApprove(correctionWorkflowItemShadowCopy, firstDirectorioUser, directorioEditorGroup);
+        claimTaskAndApprove(correctionWorkflowItemShadowCopy, firstDirectorioUser, directorioEditorGroup);
+
+        assertThat(reloadItem(correctionItem), nullValue());
+        assertThat(reloadItem(correctionItemShadowCopy), nullValue());
+
+        item = reloadItem(item);
+        assertThat(item, notNullValue());
+        assertThat(item.getMetadata(), hasItem(with("dc.title", "Test publication new title")));
+        assertThat(getFirstMetadata(item, "dc.contributor.editor"), nullValue());
+
+        shadowItemCopy = reloadItem(shadowItemCopy);
+        assertThat(shadowItemCopy, notNullValue());
+        assertThat(shadowItemCopy.getMetadata(), hasItem(with("dc.title", "Test publication new title")));
+        assertThat(getFirstMetadata(item, "dc.contributor.editor"), nullValue());
     }
 
     private void claimTaskAndApprove(XmlWorkflowItem workflowItem, EPerson user, Group expectedGroup) throws Exception {

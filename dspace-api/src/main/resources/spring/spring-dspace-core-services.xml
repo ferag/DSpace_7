@@ -72,6 +72,9 @@
                 <entry key="eperson">
                     <bean class="org.dspace.content.template.generator.EPersonValueGenerator" />
                 </entry>
+                <entry key="respolicy">
+                    <bean class="org.dspace.content.template.generator.CollectionPolicyGenerator" />
+                </entry>
             </map>
         </constructor-arg>
     </bean>

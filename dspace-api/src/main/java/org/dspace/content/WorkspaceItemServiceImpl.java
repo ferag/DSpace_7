@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.util.DCInputsReaderException;
 import org.dspace.app.util.Util;
@@ -138,12 +139,14 @@ public class WorkspaceItemServiceImpl implements WorkspaceItemService {
                 MetadataField metadataField = aMd.getMetadataField();
                 MetadataSchema metadataSchema = metadataField.getMetadataSchema();
 
+
                 final String valueFromTemplate = templateItemValueService.value(context, item,
                                                                                        templateItem, aMd);
-
-                itemService.addMetadata(context, item, metadataSchema.getName(), metadataField.getElement(),
-                                        metadataField.getQualifier(), aMd.getLanguage(),
-                                        valueFromTemplate);
+                if (StringUtils.isNotBlank(valueFromTemplate)) {
+                    itemService.addMetadata(context, item, metadataSchema.getName(), metadataField.getElement(),
+                        metadataField.getQualifier(), aMd.getLanguage(),
+                        valueFromTemplate);
+                }
             }
         }
 

@@ -62,14 +62,24 @@
         <property name="dspaceRunnableClass" value="org.dspace.app.bulkedit.CollectionExportCli"/>
     </bean>
 
+    <bean id="update-metrics" class="org.dspace.metrics.UpdateCrisMetricsWithExternalSourceCliScriptConfiguration">
+        <property name="description" value="Perform the metrics update using external source"/>
+        <property name="dspaceRunnableClass" value="org.dspace.metrics.UpdateCrisMetricsWithExternalSourceCli"/>
+    </bean>
+
+    <bean id="update-metrics-in-solr" class="org.dspace.metrics.UpdateCrisMetricsInSolrDocCliScriptConfiguration">
+        <property name="description" value="Perform the metrics update in SOLR documents"/>
+        <property name="dspaceRunnableClass" value="org.dspace.metrics.UpdateCrisMetricsInSolrDocCli"/>
+    </bean>
+
+    <bean id="update-from-supplier" class="org.dspace.perucris.externalservices.UpdateItemWithExternalSourceCliScriptConfiguration">
+        <property name="description" value="Perform the items update using external source"/>
+        <property name="dspaceRunnableClass" value="org.dspace.perucris.externalservices.UpdateItemWithExternalSourceCli"/>
+    </bean>
+
     <!-- Keep as last script; for test ScriptRestRepository#findOneScriptByNameTest -->
     <bean id="mock-script" class="org.dspace.scripts.MockDSpaceRunnableScriptConfiguration" scope="prototype">
         <property name="description" value="Mocking a script for testing purposes" />
         <property name="dspaceRunnableClass" value="org.dspace.scripts.impl.MockDSpaceRunnableScript"/>
-    </bean>
-    
-    <bean id="update-from-supplier" class="org.dspace.perucris.externalservices.UpdateItemWithExternalSourceCliScriptConfiguration">
-        <property name="description" value="Perform the items update using external source"/>
-        <property name="dspaceRunnableClass" value="org.dspace.perucris.externalservices.UpdateItemWithExternalSourceCli"/>
     </bean>
 </beans>

@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.DSpaceObject;
@@ -373,6 +374,29 @@ public interface DSpaceObjectService<T extends DSpaceObject> {
      */
     public void clearMetadata(Context context, T dso, String schema, String element, String qualifier, String lang)
         throws SQLException;
+
+    /**
+     * Clear all the metadata values that match the given predicate.
+     *
+     * @param context   DSpace context
+     * @param dso       DSpaceObject
+     * @param predicate the predicate to test
+     * @throws SQLException if database error
+     */
+    public void clearMetadata(Context context, T dso, Predicate<MetadataValue> predicate) throws SQLException;
+
+    /**
+     * Clear all the metadata values of the given dspace object.
+     *
+     * @param context   DSpace context
+     * @param dso       DSpaceObject
+     * @param predicate the predicate to test
+     * @throws SQLException if database error
+     */
+    public void clearMetadata(Context context, T dso) throws SQLException;
+
+    public void removeMetadataValues(Context context, T dSpaceObject, String schema, String element, String qualifier,
+        String lang) throws SQLException;
 
     public void removeMetadataValues(Context context, T dso, List<MetadataValue> values) throws SQLException;
 

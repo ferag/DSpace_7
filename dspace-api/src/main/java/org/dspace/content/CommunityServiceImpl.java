@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.UUID;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -40,12 +42,20 @@ import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.core.I18nUtil;
 import org.dspace.core.LogManager;
+import org.dspace.core.exception.SQLRuntimeException;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.GroupType;
 import org.dspace.eperson.service.GroupService;
 import org.dspace.event.Event;
 import org.dspace.identifier.IdentifierException;
 import org.dspace.identifier.service.IdentifierService;
+import org.dspace.xmlworkflow.Role.Scope;
+import org.dspace.xmlworkflow.WorkflowConfigurationException;
+import org.dspace.xmlworkflow.factory.XmlWorkflowFactory;
+import org.dspace.xmlworkflow.state.Step;
+import org.dspace.xmlworkflow.state.Workflow;
+import org.dspace.xmlworkflow.storedcomponents.CollectionRole;
+import org.dspace.xmlworkflow.storedcomponents.service.CollectionRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
@@ -88,6 +98,12 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
 
     @Autowired
     protected ResourcePolicyService resourcePolicyService;
+
+    @Autowired
+    protected XmlWorkflowFactory workflowFactory;
+
+    @Autowired
+    protected CollectionRoleService collectionRoleService;
 
     protected CommunityServiceImpl() {
         super();
@@ -350,15 +366,22 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
 
     @Override
     public List<Collection> getAllCollections(Context context, Community community) throws SQLException {
+        return getCollections(context, community, (collection) -> true);
+    }
+
+    @Override
+    public List<Collection> getCollections(Context context, Community community, Predicate<Collection> predicate) {
         List<Collection> collectionList = new ArrayList<Collection>();
         List<Community> subCommunities = community.getSubcommunities();
         for (Community subCommunity : subCommunities) {
-            addCollectionList(subCommunity, collectionList);
+            addCollectionList(subCommunity, collectionList, predicate);
         }
 
         List<Collection> collections = community.getCollections();
         for (Collection collection : collections) {
-            collectionList.add(collection);
+            if (predicate.test(collection)) {
+                collectionList.add(collection);
+            }
         }
         return collectionList;
     }
@@ -369,15 +392,18 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
      *
      * @param community      community
      * @param collectionList list of collections
-     * @throws SQLException if database error
+     * @param predicate      the predicate to evaluate
      */
-    protected void addCollectionList(Community community, List<Collection> collectionList) throws SQLException {
+    protected void addCollectionList(Community community, List<Collection> collectionList,
+        Predicate<Collection> predicate) {
         for (Community subcommunity : community.getSubcommunities()) {
-            addCollectionList(subcommunity, collectionList);
+            addCollectionList(subcommunity, collectionList, predicate);
         }
 
         for (Collection collection : community.getCollections()) {
-            collectionList.add(collection);
+            if (predicate.test(collection)) {
+                collectionList.add(collection);
+            }
         }
     }
 
@@ -739,13 +765,13 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
         return clone;
     }
 
-    private void cloneTemplateItem(Context context, Collection col, Collection collection)
+    private void cloneTemplateItem(Context context, Collection newCollection, Collection collection)
         throws SQLException, AuthorizeException {
         Item item = collection.getTemplateItem();
         if (item != null) {
-            collectionService.createTemplateItem(context, col);
-            Item clonecommunityToClone = col.getTemplateItem();
-            cloneMetadata(context, itemService, clonecommunityToClone, item);
+            collectionService.createTemplateItem(context, newCollection);
+            Item newItemTemplate = newCollection.getTemplateItem();
+            cloneMetadata(context, itemService, newItemTemplate, item);
         }
     }
 
@@ -800,9 +826,11 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
             addInstitutionalScopedRoleMembers(context, submitter, newSubmitter, scopedRoles);
         }
 
-        cloneWorkflowGroup(context, collection.getWorkflowStep1(context), newCollection, 1, scopedRoles);
-        cloneWorkflowGroup(context, collection.getWorkflowStep2(context), newCollection, 2, scopedRoles);
-        cloneWorkflowGroup(context, collection.getWorkflowStep3(context), newCollection, 3, scopedRoles);
+        try {
+            cloneWorkflowGroups(context, collection, newCollection, scopedRoles);
+        } catch (WorkflowConfigurationException ex) {
+            throw new RuntimeException(ex);
+        }
 
         clonePolicies(context, newCollection, collection, scopedRoles);
 
@@ -814,6 +842,8 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
         for (Group subGroup : group.getMemberGroups()) {
             if (scopedRoles.containsKey(subGroup.getID())) {
                 groupService.addMember(context, newGroup, scopedRoles.get(subGroup.getID()));
+            } else {
+                groupService.addMember(context, newGroup, subGroup);
             }
         }
         scopedRoles.put(group.getID(), newGroup);
@@ -836,15 +866,48 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
         }
     }
 
-    private void cloneWorkflowGroup(Context context, Group workflowGroup, Collection newCollection, int step,
-        Map<UUID, Group> scopedRoles) throws SQLException, AuthorizeException {
+    private void cloneWorkflowGroups(Context context, Collection collection, Collection newCollection,
+        Map<UUID, Group> scopedRoles) throws WorkflowConfigurationException, SQLException, AuthorizeException {
 
-        if (workflowGroup == null) {
-            return;
+        List<CollectionRole> collectionRoles = getCollectionRole(context, collection);
+        for (CollectionRole collectionRole : collectionRoles) {
+            cloneWorkflowGroup(context, newCollection, collectionRole, scopedRoles);
         }
 
-        Group newWorkflowGroup = collectionService.createWorkflowGroup(context, newCollection, step);
-        addInstitutionalScopedRoleMembers(context, workflowGroup, newWorkflowGroup, scopedRoles);
+    }
+
+    private List<CollectionRole> getCollectionRole(Context context, Collection collection)
+        throws WorkflowConfigurationException {
+
+        Workflow workflow = workflowFactory.getWorkflow(collection);
+        List<Step> steps = workflow.getSteps();
+        if (CollectionUtils.isEmpty(steps)) {
+            return new ArrayList<>();
+        }
+
+        return steps.stream()
+            .map(step -> step.getRole())
+            .filter(role -> role != null && role.getScope() == Scope.COLLECTION)
+            .map(role -> findCollectionRole(context, collection, role.getId()))
+            .filter(collectionRole -> collectionRole != null)
+            .collect(Collectors.toList());
+
+    }
+
+    private CollectionRole findCollectionRole(Context context, Collection collection, String roleId) {
+        try {
+            return collectionRoleService.find(context, collection, roleId);
+        } catch (SQLException e) {
+            throw new SQLRuntimeException(e);
+        }
+    }
+
+    private void cloneWorkflowGroup(Context context, Collection newCollection, CollectionRole collectionRole,
+        Map<UUID, Group> scopedRoles) throws SQLException, AuthorizeException {
+
+        String roleId = collectionRole.getRoleId();
+        Group newWorkflowGroup = collectionService.createWorkflowGroup(context, newCollection, roleId);
+        addInstitutionalScopedRoleMembers(context, collectionRole.getGroup(), newWorkflowGroup, scopedRoles);
 
     }
 

@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import org.dspace.app.profile.service.AfterProfileDeleteAction;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
-import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 

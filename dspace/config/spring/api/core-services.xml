@@ -123,6 +123,7 @@
     <bean class="org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItemServiceImpl"/>
     <bean class="org.dspace.xmlworkflow.XmlWorkflowServiceImpl"/>
     <bean class="org.dspace.xmlworkflow.WorkflowRequirementsServiceImpl"/>
+    <bean class="org.dspace.xmlworkflow.ConcytecWorkflowServiceImpl"/>
 
     <!-- Discovery indexable object services -->
     <bean class="org.dspace.discovery.indexobject.ClaimedTaskIndexFactoryImpl" autowire-candidate="true"/>
@@ -145,6 +146,7 @@
     <bean class="org.dspace.layout.service.impl.CrisLayoutTabServiceImpl"/>
     <bean class="org.dspace.layout.service.impl.CrisLayoutBoxServiceImpl"/>
     <bean class="org.dspace.layout.service.impl.CrisLayoutFieldServiceImpl"/>
+    <bean class="org.dspace.layout.service.impl.CrisLayoutMetric2BoxServiceImpl"/>
 
     <bean class="org.dspace.layout.service.impl.LayoutSecurityServiceImpl"/>
     <bean class="org.dspace.layout.service.impl.CrisLayoutBoxAccessServiceImpl"/>
@@ -152,7 +154,10 @@
 
     <bean class="org.dspace.app.orcid.service.impl.OrcidQueueServiceImpl" />
     <bean class="org.dspace.app.orcid.service.impl.OrcidHistoryServiceImpl" />
+    
+    <bean class="org.dspace.content.security.CrisSecurityServiceImpl" />
 
+    <bean class="org.dspace.app.metrics.service.CrisMetricsServiceImpl" />
 
 </beans>
 

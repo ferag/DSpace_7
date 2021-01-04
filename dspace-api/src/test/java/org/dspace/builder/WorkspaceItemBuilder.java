@@ -136,6 +136,17 @@ public class WorkspaceItemBuilder extends AbstractBuilder<WorkspaceItem, Workspa
         return this;
     }
 
+    protected WorkspaceItemBuilder addMetadataValue(final String schema,
+        final String element, final String qualifier, final String value, final String authority) {
+        try {
+            itemService.addMetadata(context, workspaceItem.getItem(), schema, element, qualifier, null,
+                value, authority, 600);
+        } catch (Exception e) {
+            return handleException(e);
+        }
+        return this;
+    }
+
     public WorkspaceItemBuilder withSubmitter(EPerson ePerson) {
         workspaceItem.getItem().setSubmitter(ePerson);
         return this;
@@ -165,6 +176,10 @@ public class WorkspaceItemBuilder extends AbstractBuilder<WorkspaceItem, Workspa
         return addMetadataValue(MetadataSchemaEnum.DC.getName(), "contributor", "author", authorName);
     }
 
+    public WorkspaceItemBuilder withAuthor(final String authorName, final String authority) {
+        return addMetadataValue(MetadataSchemaEnum.DC.getName(), "contributor", "author", authorName, authority);
+    }
+
     public WorkspaceItemBuilder withAuthorAffilitation(final String affilation) {
         return addMetadataValue(MetadataSchemaEnum.OAIRECERIF.getName(), "author", "affiliation", affilation);
     }
@@ -191,6 +206,34 @@ public class WorkspaceItemBuilder extends AbstractBuilder<WorkspaceItem, Workspa
 
     public WorkspaceItemBuilder withCrisSourceId(String sourceId) {
         return addMetadataValue("cris", "sourceId", null, sourceId);
+    }
+
+    public WorkspaceItemBuilder withDoiIdentifier(String doi) {
+        return addMetadataValue("dc", "identifier", "doi", doi);
+    }
+
+    public WorkspaceItemBuilder withOrcidIdentifier(String orcid) {
+        return addMetadataValue("person", "identifier", "orcid", orcid);
+    }
+
+    public WorkspaceItemBuilder withDniIdentifier(String dni) {
+        return addMetadataValue("perucris", "identifier", "dni", dni);
+    }
+
+    public WorkspaceItemBuilder withDinaIdentifier(String dina) {
+        return addMetadataValue("perucris", "identifier", "dina", dina);
+    }
+
+    public WorkspaceItemBuilder withRenacytIdentifier(String renacyt) {
+        return addMetadataValue("perucris", "identifier", "renacyt", renacyt);
+    }
+
+    public WorkspaceItemBuilder withScopusAuthorIdentifier(String scopus) {
+        return addMetadataValue("person","identifier","scopus-author-id", scopus);
+    }
+
+    public WorkspaceItemBuilder withResearcherIdentifier(String rid) {
+        return addMetadataValue("person", "identifier", "rid", rid);
     }
 
     public WorkspaceItemBuilder grantLicense() {

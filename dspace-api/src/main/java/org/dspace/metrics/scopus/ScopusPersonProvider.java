@@ -73,7 +73,6 @@ public class ScopusPersonProvider {
 
     private List<CrisMetricDTO> convertToCrisMetricDTOs(InputStream inputStream, String param) {
         JSONObject jsonObject = null;
-        log.info("adapting cris metric");
         try {
             jsonObject = new JSONObject(IOUtils.toString(inputStream, Charset.defaultCharset()))
                                      .getJSONArray("author-retrieval-response").getJSONObject(0);

@@ -437,4 +437,13 @@ public interface CollectionService
      */
     public int countCollectionsWithSubmit(String q, Context context, Community community, String entityType)
         throws SQLException, SearchServiceException;
+
+    /**
+     * Returns true if the given collection is in the directorio.
+     *
+     * @param collection the collection to test
+     * @return true if the collection is in the directorio, false otherwise
+     * @throws SQLException if something goes wrong
+     */
+    public boolean isDirectorioCollection(Context context, Collection collection) throws SQLException;
 }

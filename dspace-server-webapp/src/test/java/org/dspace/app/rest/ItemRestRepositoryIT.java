@@ -9,9 +9,16 @@ package org.dspace.app.rest;
 
 import static com.jayway.jsonpath.JsonPath.read;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
+import static org.dspace.app.matcher.MetadataValueMatcher.with;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadata;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadataDoesNotExist;
+import static org.dspace.builder.RelationshipBuilder.createRelationshipBuilder;
+import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
 import static org.dspace.core.Constants.WRITE;
+import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.HAS_SHADOW_COPY_RELATIONSHIP;
+import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_SHADOW_COPY_RELATIONSHIP;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -49,6 +56,7 @@ import org.dspace.builder.BitstreamBuilder;
 import org.dspace.builder.CollectionBuilder;
 import org.dspace.builder.CommunityBuilder;
 import org.dspace.builder.EPersonBuilder;
+import org.dspace.builder.EntityTypeBuilder;
 import org.dspace.builder.GroupBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.builder.ResourcePolicyBuilder;
@@ -56,11 +64,14 @@ import org.dspace.builder.WorkspaceItemBuilder;
 import org.dspace.content.Bitstream;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
+import org.dspace.content.EntityType;
 import org.dspace.content.Item;
+import org.dspace.content.RelationshipType;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.content.service.CollectionService;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.dspace.services.ConfigurationService;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -71,6 +82,9 @@ public class ItemRestRepositoryIT extends AbstractControllerIntegrationTest {
 
     @Autowired
     private CollectionService collectionService;
+
+    @Autowired
+    private ConfigurationService configurationService;
 
     @Test
     public void findAllTest() throws Exception {
@@ -1328,6 +1342,73 @@ public class ItemRestRepositoryIT extends AbstractControllerIntegrationTest {
         //Check workspaceItem is available after failed deletion
         getClient(token).perform(get("/api/core/items/" + workspaceItem.getItem().getID()))
                     .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteOneReferencedDirectorioItemTest() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        parentCommunity = CommunityBuilder.createCommunity(context)
+            .withName("Parent Community")
+            .build();
+
+        EntityType institutionPersonType = EntityTypeBuilder
+            .createEntityTypeBuilder(context, "InstitutionPerson")
+            .build();
+
+        EntityType personType = EntityTypeBuilder
+            .createEntityTypeBuilder(context, "Person")
+            .build();
+
+        RelationshipType hasShadowCopyRelation = createRelationshipTypeBuilder(context, institutionPersonType,
+            personType, HAS_SHADOW_COPY_RELATIONSHIP, IS_SHADOW_COPY_RELATIONSHIP, 0, 1, 0, 1).build();
+
+        Community directorioCommunity = CommunityBuilder.createCommunity(context)
+            .withName("Directorio Community")
+            .build();
+
+        configurationService.setProperty("directorios.community-id", directorioCommunity.getID().toString());
+
+        Collection directorioCollection = CollectionBuilder
+            .createCollection(context, directorioCommunity)
+            .withName("Directorio Collection")
+            .build();
+
+        Collection institutionCollection = CollectionBuilder
+            .createCollection(context, parentCommunity)
+            .withName("Collection 1")
+            .build();
+
+        Item directorioPersonItem = ItemBuilder.createItem(context, directorioCollection)
+            .withTitle("White, Walter")
+            .withRelationshipType("Person")
+            .build();
+
+        Item institutionPersonItem = ItemBuilder.createItem(context, institutionCollection)
+            .withTitle("White, Walter")
+            .withRelationshipType("InstitutionPerson")
+            .build();
+
+        Item directorioPublication = ItemBuilder.createItem(context, directorioCollection)
+            .withTitle("Test publication")
+            .withRelationshipType("Publication")
+            .withAuthor("White, Walter", directorioPersonItem.getID().toString())
+            .build();
+
+        createRelationshipBuilder(context, institutionPersonItem, directorioPersonItem, hasShadowCopyRelation);
+
+        context.restoreAuthSystemState();
+
+        String token = getAuthToken(admin.getEmail(), password);
+
+        // Delete the person in the directorio
+        getClient(token).perform(delete("/api/core/items/" + directorioPersonItem.getID()))
+            .andExpect(status().is(204));
+
+        directorioPublication = context.reloadEntity(directorioPublication);
+        assertThat(directorioPublication.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", null,
+            "will be referenced::SHADOW::" + institutionPersonItem.getID(), 0, 600)));
     }
 
     @Test

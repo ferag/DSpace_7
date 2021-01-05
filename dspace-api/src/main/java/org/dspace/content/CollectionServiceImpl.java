@@ -57,6 +57,8 @@ import org.dspace.harvest.HarvestedCollection;
 import org.dspace.harvest.service.HarvestedCollectionService;
 import org.dspace.identifier.IdentifierException;
 import org.dspace.identifier.service.IdentifierService;
+import org.dspace.services.ConfigurationService;
+import org.dspace.util.UUIDUtils;
 import org.dspace.workflow.factory.WorkflowServiceFactory;
 import org.dspace.xmlworkflow.WorkflowConfigurationException;
 import org.dspace.xmlworkflow.factory.XmlWorkflowFactory;
@@ -114,6 +116,9 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
 
     @Autowired(required = true)
     protected SearchService searchService;
+
+    @Autowired(required = true)
+    protected ConfigurationService configurationService;
 
     protected CollectionServiceImpl() {
         super();
@@ -1041,5 +1046,16 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
         discoverQuery.addFilterQueries(buildFilter.toString());
         DiscoverResult resp = searchService.search(context, discoverQuery);
         return resp;
+    }
+
+    @Override
+    public boolean isDirectorioCollection(Context context, Collection collection) throws SQLException {
+        UUID directorioId = UUIDUtils.fromString(configurationService.getProperty("directorios.community-id"));
+        if (directorioId == null) {
+            return false;
+        }
+
+        return communityService.getAllParents(context, collection).stream()
+            .anyMatch(community -> community.getID().equals(directorioId));
     }
 }

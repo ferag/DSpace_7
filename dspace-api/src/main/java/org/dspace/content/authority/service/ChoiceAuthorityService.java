@@ -239,4 +239,13 @@ public interface ChoiceAuthorityService {
      * @return true if is related to an item authority, false otherwise
      */
     public boolean isItemAuthority(String fieldKey);
+
+    /**
+     * Returns all the configured metadata field that are authority controlled
+     * related to the given relationship type.
+     *
+     * @param relationshipType the relationship type
+     * @return the metadata fields
+     */
+    public List<String> getAuthorityControlledFieldsByRelationshipType(String relationshipType);
 }

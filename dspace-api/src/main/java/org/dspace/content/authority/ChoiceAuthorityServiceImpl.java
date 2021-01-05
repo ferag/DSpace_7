@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
@@ -570,5 +571,17 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
     @Override
     public boolean isItemAuthority(String fieldKey) {
         return controller.containsKey(fieldKey) && controller.get(fieldKey) instanceof ItemAuthority;
+    }
+
+    @Override
+    public List<String> getAuthorityControlledFieldsByRelationshipType(String relationshipType) {
+        return controller.keySet().stream()
+            .filter(field -> isLinkableToAnEntityWithRelationshipType(controller.get(field), relationshipType))
+            .collect(Collectors.toList());
+    }
+
+    private boolean isLinkableToAnEntityWithRelationshipType(ChoiceAuthority choiceAuthority, String relationshipType) {
+        return choiceAuthority instanceof LinkableEntityAuthority
+            && relationshipType.equals(((LinkableEntityAuthority) choiceAuthority).getLinkedEntityType());
     }
 }

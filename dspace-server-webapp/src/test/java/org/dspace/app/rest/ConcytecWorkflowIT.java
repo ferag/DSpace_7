@@ -127,6 +127,8 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
     private Collection directorioPublications;
 
+    private Group reviewGroup;
+
     private Group directorioEditorGroup;
 
     private Group directorioReviewGroup;
@@ -195,7 +197,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .withName("Parent Community")
             .build();
 
-        Group reviewGroup = GroupBuilder.createGroup(context)
+        reviewGroup = GroupBuilder.createGroup(context)
             .withName("Reviewer group")
             .addMember(institutionUser)
             .build();
@@ -1007,6 +1009,105 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(shadowItemCopy, notNullValue());
         assertThat(shadowItemCopy.getMetadata(), hasItem(with("dc.title", "Test publication new title")));
         assertThat(getFirstMetadata(item, "dc.contributor.editor"), nullValue());
+    }
+
+    @Test
+    public void testPublicationAndAuthorSubmission() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EntityType institutionPersonType = createEntityType("InstitutionPerson");
+
+        EntityType personType = createEntityType("Person");
+
+        RelationshipType personHasShadowCopy = createRelationshipTypeBuilder(context, institutionPersonType,
+            personType, HAS_SHADOW_COPY_RELATIONSHIP, IS_SHADOW_COPY_RELATIONSHIP, 0, 1, 0, 1).build();
+
+        createRelationshipTypeBuilder(context, personType,
+            personType, "isCorrectionOfItem", "isCorrectedByItem", 0, 1, 0, 1).build();
+
+        createRelationshipTypeBuilder(context, institutionPersonType,
+            institutionPersonType, "isCorrectionOfItem", "isCorrectedByItem", 0, 1, 0, 1).build();
+
+        Collection directorioPersons = CollectionBuilder
+            .createCollection(context, directorioCommunity)
+            .withWorkflow("directorioWorkflow")
+            .withName("Persons")
+            .withRelationshipType("Person")
+            .withSubmitterGroup(submitter)
+            .withRoleGroup("reviewer", directorioReviewGroup)
+            .build();
+
+        Collection institutionPersons = createCollection(context, parentCommunity)
+            .withWorkflow("institutionWorkflow")
+            .withName("Institution person collection")
+            .withRelationshipType("InstitutionPerson")
+            .withSubmissionDefinition("traditional")
+            .withSubmitterGroup(submitter)
+            .withRoleGroup("reviewer", reviewGroup)
+            .build();
+
+        WorkspaceItem personWorkspaceItem = WorkspaceItemBuilder
+            .createWorkspaceItem(context, institutionPersons)
+            .withTitle("White, Walter")
+            .build();
+
+        Item personItem = personWorkspaceItem.getItem();
+        String personItemId = personItem.getID().toString();
+
+        WorkspaceItem publicationWorkspaceItem = WorkspaceItemBuilder
+            .createWorkspaceItem(context, institutionCollection)
+            .withTitle("Test publication")
+            .withAuthor("White, Walter", personItemId)
+            .build();
+
+        Item publicationItem = publicationWorkspaceItem.getItem();
+
+        context.restoreAuthSystemState();
+
+        workflowService.start(context, publicationWorkspaceItem);
+
+        Relationship publicationRelationship = findRelation(publicationItem, hasShadowCopy);
+        Item publicationItemCopy = publicationRelationship.getRightItem();
+
+        XmlWorkflowItem publicationWorkflowItemCopy = getWorkflowItem(publicationItemCopy);
+
+        claimTaskAndApprove(publicationWorkflowItemCopy, secondDirectorioUser, directorioReviewGroup);
+        claimTaskAndApprove(publicationWorkflowItemCopy, firstDirectorioUser, directorioEditorGroup);
+        claimTaskAndApprove(publicationWorkflowItemCopy, firstDirectorioUser, directorioEditorGroup);
+
+        publicationItem = reloadItem(publicationItem);
+        assertThat(publicationItem.isArchived(), is(true));
+
+        assertThat(publicationItem.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", null,
+            personItemId, 0, 600)));
+
+        publicationItemCopy = reloadItem(publicationItemCopy);
+        assertThat(publicationItemCopy.isArchived(), is(true));
+
+        assertThat(publicationItemCopy.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", null,
+            "will be referenced::SHADOW::" + personItemId, 0, 600)));
+
+        personWorkspaceItem = context.reloadEntity(personWorkspaceItem);
+        workflowService.start(context, personWorkspaceItem);
+
+        Relationship personRelationship = findRelation(personItem, personHasShadowCopy);
+        Item personItemCopy = personRelationship.getRightItem();
+
+        XmlWorkflowItem personWorkflowItemCopy = getWorkflowItem(personItemCopy);
+
+        claimTaskAndApprove(personWorkflowItemCopy, secondDirectorioUser, directorioReviewGroup);
+
+        personItem = reloadItem(personItem);
+        assertThat(personItem.isArchived(), is(true));
+
+        personItemCopy = reloadItem(personItemCopy);
+        assertThat(personItemCopy.isArchived(), is(true));
+        assertThat(personItemCopy.getOwningCollection(), is(directorioPersons));
+
+        publicationItemCopy = reloadItem(publicationItemCopy);
+        assertThat(publicationItemCopy.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", null,
+            personItemCopy.getID().toString(), 0, 600)));
     }
 
     private void claimTaskAndApprove(XmlWorkflowItem workflowItem, EPerson user, Group expectedGroup) throws Exception {

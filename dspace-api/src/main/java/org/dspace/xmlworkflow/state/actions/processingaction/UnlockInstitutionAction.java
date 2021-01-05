@@ -12,28 +12,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dspace.authority.service.AuthorityValueService;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.content.EntityType;
 import org.dspace.content.Item;
-import org.dspace.content.MetadataValue;
-import org.dspace.content.authority.service.ChoiceAuthorityService;
-import org.dspace.content.service.EntityService;
-import org.dspace.content.service.EntityTypeService;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.core.Context;
 import org.dspace.core.Context.Mode;
-import org.dspace.discovery.DiscoverQuery;
-import org.dspace.discovery.DiscoverResult;
-import org.dspace.discovery.DiscoverResultIterator;
-import org.dspace.discovery.SearchService;
-import org.dspace.discovery.SearchServiceException;
-import org.dspace.discovery.indexobject.IndexableItem;
 import org.dspace.versioning.ItemCorrectionService;
 import org.dspace.workflow.WorkflowException;
 import org.dspace.xmlworkflow.ConcytecFeedback;
@@ -73,9 +60,6 @@ public class UnlockInstitutionAction extends ProcessingAction {
 
     @Autowired
     private ItemCorrectionService itemCorrectionService;
-
-    @Autowired
-    private ChoiceAuthorityService choiceAuthorityService;
 
     @Override
     public void activate(Context c, XmlWorkflowItem wf) {
@@ -157,8 +141,6 @@ public class UnlockInstitutionAction extends ProcessingAction {
             try {
                 context.setMode(Mode.BATCH_EDIT);
                 replaceWillBeReferencedWithItemId(context, workflowItem.getItem(), institutionItem);
-            } catch (SearchServiceException e) {
-                throw new WorkflowException(e);
             } finally {
                 context.setMode(originalMode);
             }
@@ -175,39 +157,30 @@ public class UnlockInstitutionAction extends ProcessingAction {
     }
 
     private void replaceWillBeReferencedWithItemId(Context context, Item item, Item institutionItem)
-        throws SQLException, AuthorizeException, SearchServiceException {
+        throws SQLException, AuthorizeException {
 
         String authority = AuthorityValueService.REFERENCE + "SHADOW::" + institutionItem.getID();
         Iterator<Item> itemIterator = findItemWithWillBeReferencedShadowAuthority(context, authority, item);
 
         while (itemIterator.hasNext()) {
             Item itemToUpdate = itemIterator.next();
-            for (MetadataValue metadataValue : itemToUpdate.getMetadata()) {
-                if (authority.equals(metadataValue.getAuthority())) {
-                    metadataValue.setAuthority(item.getID().toString());
-                }
-            }
+
+            itemToUpdate.getMetadata().stream()
+                .filter(metadataValue -> authority.equals(metadataValue.getAuthority()))
+                .forEach(metadataValue -> metadataValue.setAuthority(item.getID().toString()));
 
             itemService.update(context, itemToUpdate);
         }
 
     }
 
-    private Iterator<Item> findItemWithWillBeReferencedShadowAuthority(Context context, String authority, Item item)
-        throws SearchServiceException {
-
+    private Iterator<Item> findItemWithWillBeReferencedShadowAuthority(Context context, String authority, Item item) {
         String relationshipType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
         if (relationshipType == null) {
             throw new IllegalArgumentException("The given item has no relationship.type: " + item.getID());
         }
 
-        String query = ""; // TODO search by metadata authority
-
-        DiscoverQuery discoverQuery = new DiscoverQuery();
-        discoverQuery.setDSpaceObjectFilter(IndexableItem.TYPE);
-        discoverQuery.addFilterQueries(query);
-
-        return new DiscoverResultIterator<Item, UUID>(context, discoverQuery);
+        return itemService.findByAuthorityControlledMetadataFields(context, authority, relationshipType);
     }
 
     private ActionResult getCompleteActionResult() {

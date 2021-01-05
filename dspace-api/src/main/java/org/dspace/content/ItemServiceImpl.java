@@ -7,10 +7,14 @@
  */
 package org.dspace.content;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.HAS_SHADOW_COPY_RELATIONSHIP;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
@@ -24,6 +28,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.util.AuthorizeUtil;
+import org.dspace.authority.service.AuthorityValueService;
 import org.dspace.authorize.AuthorizeConfiguration;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.ResourcePolicy;
@@ -41,12 +46,16 @@ import org.dspace.content.service.InstallItemService;
 import org.dspace.content.service.ItemService;
 import org.dspace.content.service.MetadataSchemaService;
 import org.dspace.content.service.RelationshipService;
+import org.dspace.content.service.RelationshipTypeService;
 import org.dspace.content.service.WorkspaceItemService;
 import org.dspace.content.virtual.VirtualMetadataPopulator;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.core.I18nUtil;
 import org.dspace.core.LogManager;
+import org.dspace.discovery.DiscoverQuery;
+import org.dspace.discovery.DiscoverResultIterator;
+import org.dspace.discovery.indexobject.IndexableItem;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.event.Event;
@@ -111,6 +120,9 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
 
     @Autowired(required = true)
     protected RelationshipService relationshipService;
+
+    @Autowired(required = true)
+    protected RelationshipTypeService relationshipTypeService;
 
     @Autowired(required = true)
     protected VirtualMetadataPopulator virtualMetadataPopulator;
@@ -683,6 +695,10 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
 
         log.info(LogManager.getHeader(context, "delete_item", "item_id="
             + item.getID()));
+
+        if (collectionService.isDirectorioCollection(context, item.getOwningCollection())) {
+            resetWillBeReferencedAuthorities(context, item);
+        }
 
         // Remove relationships
         for (Relationship relationship : relationshipService.findByItem(context, item)) {
@@ -1434,5 +1450,74 @@ prevent the generation of resource policy entry values with null dspace_object a
         return listToReturn;
     }
 
+    @Override
+    public Iterator<Item> findByAuthorityControlledMetadataFields(Context context, String authority,
+        String relationshipType) {
+
+        String query = choiceAuthorityService.getAuthorityControlledFieldsByRelationshipType(relationshipType).stream()
+            .map(field -> field.replaceAll("_", ".") + "_authority: \"" + authority + "\"")
+            .collect(Collectors.joining(" OR "));
+
+        if (isEmpty(query)) {
+            return Collections.emptyIterator();
+        }
+
+        DiscoverQuery discoverQuery = new DiscoverQuery();
+        discoverQuery.setDSpaceObjectFilter(IndexableItem.TYPE);
+        discoverQuery.addFilterQueries(query);
+
+        return new DiscoverResultIterator<Item, UUID>(context, discoverQuery);
+    }
+
+    private void resetWillBeReferencedAuthorities(Context context, Item item) throws SQLException, AuthorizeException {
+
+        String itemId = item.getID().toString();
+
+        String relationshipType = getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
+        if (relationshipType == null) {
+            return;
+        }
+
+        Item institutionItem = findCopiedItem(context, item);
+        if (institutionItem == null) {
+            return;
+        }
+
+        Iterator<Item> items = findByAuthorityControlledMetadataFields(context, itemId, relationshipType);
+        String authorityToSet = AuthorityValueService.REFERENCE + "SHADOW::" + institutionItem.getID();
+
+        while (items.hasNext()) {
+            Item itemToUpdate = items.next();
+
+            itemToUpdate.getMetadata().stream()
+                .filter(metadataValue -> itemId.equals(metadataValue.getAuthority()))
+                .forEach(metadataValue -> metadataValue.setAuthority(authorityToSet));
+
+            update(context, itemToUpdate);
+        }
+    }
+
+    private Item findCopiedItem(Context context, Item item) throws SQLException {
+
+        List<RelationshipType> relationshipTypes = relationshipTypeService.findByLeftwardOrRightwardTypeName(context,
+            HAS_SHADOW_COPY_RELATIONSHIP);
+
+        if (CollectionUtils.isEmpty(relationshipTypes) || relationshipTypes.size() > 1) {
+            return null;
+        }
+
+        RelationshipType type = relationshipTypes.get(0);
+
+        List<Relationship> relations = relationshipService.findByItemAndRelationshipType(context, item, type);
+        if (CollectionUtils.isEmpty(relations)) {
+            return null;
+        }
+
+        if (relations.size() > 1) {
+            return null;
+        }
+
+        return relations.get(0).getLeftItem();
+    }
 
 }

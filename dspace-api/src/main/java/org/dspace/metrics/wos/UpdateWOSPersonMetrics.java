@@ -39,15 +39,21 @@ public class UpdateWOSPersonMetrics extends AbstractUpdateWOSMetrics {
     public boolean updateMetric(Context context, Item item, String param) {
         CrisMetricDTO metricDTO = new CrisMetricDTO();
         String orcidId = itemService.getMetadataFirstValue(item, "person", "identifier", "orcid", Item.ANY);
-        if (StringUtils.isNotBlank(orcidId)) {
+        if (isValidId(orcidId)) {
             try {
-                log.info("Updating wos person metric");
                 metricDTO = wosPersonRestConnector.sendRequestToWOS(orcidId);
-                log.info("updated wos person metric");
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }
         }
         return updateWosMetric(context, item, metricDTO);
+    }
+
+    private boolean isValidId(String orcidId) {
+        if (StringUtils.isBlank(orcidId) || orcidId.length() != 19) {
+            return false;
+        }
+        String[] split = orcidId.split("-");
+        return split.length == 4 && Arrays.stream(split).noneMatch(s -> s.length() != 4);
     }
 }

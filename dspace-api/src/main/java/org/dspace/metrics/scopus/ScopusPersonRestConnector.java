@@ -57,7 +57,6 @@ public class ScopusPersonRestConnector {
 
     private InputStream sendRequest(String id)
             throws UnsupportedEncodingException, IOException, ClientProtocolException {
-        log.info("Scopus person query start: " + id);
         StringBuilder requestUrl = new StringBuilder(url);
         requestUrl.append(URLEncoder.encode(id, StandardCharsets.UTF_8));
         if (!Objects.isNull(enhanced) && enhanced == true) {
@@ -75,7 +74,6 @@ public class ScopusPersonRestConnector {
 
         HttpResponse response = httpClient.execute(httpGet);
         int statusCode = response.getStatusLine().getStatusCode();
-        log.info("scopus status code: " + statusCode);
         if (statusCode != HttpStatus.SC_OK) {
             return null;
         }

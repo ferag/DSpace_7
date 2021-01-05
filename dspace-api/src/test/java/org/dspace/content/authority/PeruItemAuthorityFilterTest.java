@@ -33,14 +33,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Unit tests for {@link PeruItemAutorityFilter}
+ * Unit tests for {@link PeruItemAuthorityFilter}
  *
  * @author Corrado Lombardi (corrado.lombardi at 4science.it)
  */
 
-public class PeruItemAutorityFilterTest {
+public class PeruItemAuthorityFilterTest {
 
-    private PeruItemAutorityFilter peruItemAutorityFilter;
+    private PeruItemAuthorityFilter peruItemAuthorityFilter;
     private RequestService requestService = mock(RequestService.class);
     private CollectionService collectionService = mock(CollectionService.class);
     private HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
@@ -48,7 +48,7 @@ public class PeruItemAutorityFilterTest {
 
     @Before
     public void setUp() throws Exception {
-        peruItemAutorityFilter = new PeruItemAutorityFilter(requestService, collectionService);
+        peruItemAuthorityFilter = new PeruItemAuthorityFilter(requestService, collectionService);
         Request currentRequest = mock(Request.class);
         when(requestService.getCurrentRequest()).thenReturn(currentRequest);
         when(currentRequest.getHttpServletRequest()).thenReturn(httpServletRequest);
@@ -62,7 +62,7 @@ public class PeruItemAutorityFilterTest {
     public void noCollectionIdPassed() {
         when(httpServletRequest.getParameter("collection")).thenReturn(null);
 
-        List<String> filterQueries = peruItemAutorityFilter.createFilterQueries();
+        List<String> filterQueries = peruItemAuthorityFilter.createFilterQueries();
         assertThat(filterQueries, is(Collections.emptyList()));
     }
 
@@ -70,7 +70,7 @@ public class PeruItemAutorityFilterTest {
     public void blankCollectionIdPassed() {
         when(httpServletRequest.getParameter("collection")).thenReturn("   ");
 
-        List<String> filterQueries = peruItemAutorityFilter.createFilterQueries();
+        List<String> filterQueries = peruItemAuthorityFilter.createFilterQueries();
         assertThat(filterQueries, is(Collections.emptyList()));
     }
 
@@ -83,7 +83,7 @@ public class PeruItemAutorityFilterTest {
         doThrow(new SQLException("SqlException"))
             .when(collectionService).find(context, collectionId);
 
-        List<String> filterQueries = peruItemAutorityFilter.createFilterQueries();
+        List<String> filterQueries = peruItemAuthorityFilter.createFilterQueries();
 
         assertThat(filterQueries, is(Collections.emptyList()));
     }
@@ -102,7 +102,7 @@ public class PeruItemAutorityFilterTest {
         doThrow(new SQLException("SqlException"))
             .when(collection).getCommunities();
 
-        List<String> filterQueries = peruItemAutorityFilter.createFilterQueries();
+        List<String> filterQueries = peruItemAuthorityFilter.createFilterQueries();
 
         assertThat(filterQueries, is(Collections.emptyList()));
     }
@@ -119,7 +119,7 @@ public class PeruItemAutorityFilterTest {
         when(collectionService.find(context, collectionId))
             .thenReturn(collection);
 
-        List<String> filterQueries = peruItemAutorityFilter.createFilterQueries();
+        List<String> filterQueries = peruItemAuthorityFilter.createFilterQueries();
 
         assertThat(filterQueries, is(Collections.emptyList()));
     }
@@ -135,7 +135,7 @@ public class PeruItemAutorityFilterTest {
         when(collectionService.find(context, collectionId))
             .thenReturn(collection);
 
-        List<String> filterQueries = peruItemAutorityFilter.createFilterQueries();
+        List<String> filterQueries = peruItemAuthorityFilter.createFilterQueries();
 
         assertThat(filterQueries, is(Collections.emptyList()));
     }
@@ -153,7 +153,7 @@ public class PeruItemAutorityFilterTest {
         when(collectionService.find(context, collectionId))
             .thenReturn(collection);
 
-        List<String> filterQueries = peruItemAutorityFilter.createFilterQueries();
+        List<String> filterQueries = peruItemAuthorityFilter.createFilterQueries();
 
         assertThat(filterQueries, is(Collections.emptyList()));
     }
@@ -171,7 +171,7 @@ public class PeruItemAutorityFilterTest {
         when(collectionService.find(context, collectionId))
             .thenReturn(collection);
 
-        List<String> filterQueries = peruItemAutorityFilter.createFilterQueries();
+        List<String> filterQueries = peruItemAuthorityFilter.createFilterQueries();
 
         assertThat(filterQueries, is(Collections.singletonList("location.comm:" + communityId)));
     }

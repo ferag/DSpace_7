@@ -914,6 +914,43 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
     }
 
+    @Test
+    public void testItemSubmissionWithConcytecAssign() throws Exception {
+
+        WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
+
+        workflowService.start(context, workspaceItem);
+
+        Item item = workspaceItem.getItem();
+        assertThat(getWorkspaceItem(item), nullValue());
+
+        Relationship relationship = findRelation(item, hasShadowCopy);
+        Item shadowItemCopy = relationship.getRightItem();
+
+        XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
+
+        claimTaskAndAssignTo(shadowWorkflowItemCopy, secondDirectorioUser, directorioReviewGroup, firstDirectorioUser);
+
+        assertThat(reloadItem(item).isArchived(), is(false));
+        assertThat(reloadItem(shadowItemCopy).isArchived(), is(false));
+
+        approve(shadowWorkflowItemCopy, firstDirectorioUser);
+
+        assertThat(reloadItem(item).isArchived(), is(false));
+        assertThat(reloadItem(shadowItemCopy).isArchived(), is(false));
+
+        claimTaskAndApprove(shadowWorkflowItemCopy, firstDirectorioUser, directorioEditorGroup);
+
+        assertThat(reloadItem(item).isArchived(), is(false));
+        assertThat(reloadItem(shadowItemCopy).isArchived(), is(false));
+
+        claimTaskAndApprove(shadowWorkflowItemCopy, firstDirectorioUser, directorioEditorGroup);
+
+        assertThat(reloadItem(item).isArchived(), is(true));
+        assertThat(reloadItem(shadowItemCopy).isArchived(), is(true));
+
+    }
+
     private void claimTaskAndApprove(XmlWorkflowItem workflowItem, EPerson user, Group expectedGroup) throws Exception {
         List<PoolTask> poolTasks = poolTaskService.find(context, workflowItem);
         assertThat(poolTasks, hasSize(1));
@@ -923,10 +960,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         performActionOnPoolTaskViaRest(user, poolTask);
 
-        ClaimedTask claimedTask = claimedTaskService.findByWorkflowIdAndEPerson(context, workflowItem, user);
-        assertThat(claimedTask, notNullValue());
-
-        approveClaimedTaskViaRest(user, claimedTask);
+        approve(workflowItem, user);
     }
 
     private void claimTaskAndReject(XmlWorkflowItem workflowItem, EPerson user, Group expectedGroup, String reason)
@@ -943,6 +977,28 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(claimedTask, notNullValue());
 
         rejectClaimedTaskViaRest(user, claimedTask, reason);
+    }
+
+    private void claimTaskAndAssignTo(XmlWorkflowItem workflowItem, EPerson user, Group expectedGroup,
+        EPerson userToAssign) throws Exception {
+        List<PoolTask> poolTasks = poolTaskService.find(context, workflowItem);
+        assertThat(poolTasks, hasSize(1));
+
+        PoolTask poolTask = poolTasks.get(0);
+        assertThat(poolTask.getGroup().getMemberGroups(), contains(expectedGroup));
+
+        performActionOnPoolTaskViaRest(user, poolTask);
+
+        ClaimedTask claimedTask = claimedTaskService.findByWorkflowIdAndEPerson(context, workflowItem, user);
+        assertThat(claimedTask, notNullValue());
+
+        assignClaimedTaskViaRest(user, claimedTask, userToAssign);
+    }
+
+    private void approve(XmlWorkflowItem workflowItem, EPerson user) throws Exception {
+        ClaimedTask claimedTask = claimedTaskService.findByWorkflowIdAndEPerson(context, workflowItem, user);
+        assertThat(claimedTask, notNullValue());
+        approveClaimedTaskViaRest(user, claimedTask);
     }
 
     private WorkspaceItem createWorkspaceItem(Collection collection) throws IOException {
@@ -994,6 +1050,13 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     private void approveClaimedTaskViaRest(EPerson user, ClaimedTask task) throws Exception {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
         params.add("submit_approve", "submit_approve");
+        performActionOnClaimedTaskViaRest(user, task, params);
+    }
+
+    private void assignClaimedTaskViaRest(EPerson user, ClaimedTask task, EPerson userToAssign) throws Exception {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+        params.add("submit_assign", "submit_assign");
+        params.add("user_to_assign", userToAssign.getID().toString());
         performActionOnClaimedTaskViaRest(user, task, params);
     }
 

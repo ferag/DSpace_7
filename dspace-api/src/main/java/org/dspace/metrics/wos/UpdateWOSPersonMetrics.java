@@ -48,12 +48,4 @@ public class UpdateWOSPersonMetrics extends AbstractUpdateWOSMetrics {
         }
         return updateWosMetric(context, item, metricDTO);
     }
-
-    private boolean isValidId(String orcidId) {
-        if (StringUtils.isBlank(orcidId) || orcidId.length() != 19) {
-            return false;
-        }
-        String[] split = orcidId.split("-");
-        return split.length == 4 && Arrays.stream(split).noneMatch(s -> s.length() != 4);
-    }
 }

@@ -8,7 +8,6 @@
 package org.dspace.content;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.HAS_SHADOW_COPY_RELATIONSHIP;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,6 +66,7 @@ import org.dspace.services.ConfigurationService;
 import org.dspace.versioning.service.VersioningService;
 import org.dspace.workflow.WorkflowItemService;
 import org.dspace.workflow.factory.WorkflowServiceFactory;
+import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -129,6 +129,9 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
 
     @Autowired(required = true)
     private RelationshipMetadataService relationshipMetadataService;
+
+    @Autowired(required = true)
+    private ConcytecWorkflowService concytecWorkflowService;
 
     protected ItemServiceImpl() {
         super();
@@ -1478,7 +1481,7 @@ prevent the generation of resource policy entry values with null dspace_object a
             return;
         }
 
-        Item institutionItem = findCopiedItem(context, item);
+        Item institutionItem = findInstitutionItem(context, item);
         if (institutionItem == null) {
             return;
         }
@@ -1497,27 +1500,12 @@ prevent the generation of resource policy entry values with null dspace_object a
         }
     }
 
-    private Item findCopiedItem(Context context, Item item) throws SQLException {
-
-        List<RelationshipType> relationshipTypes = relationshipTypeService.findByLeftwardOrRightwardTypeName(context,
-            HAS_SHADOW_COPY_RELATIONSHIP);
-
-        if (CollectionUtils.isEmpty(relationshipTypes) || relationshipTypes.size() > 1) {
+    private Item findInstitutionItem(Context context, Item item) throws SQLException {
+        try {
+            return concytecWorkflowService.findCopiedItem(context, item);
+        } catch (IllegalArgumentException | IllegalStateException e) {
             return null;
         }
-
-        RelationshipType type = relationshipTypes.get(0);
-
-        List<Relationship> relations = relationshipService.findByItemAndRelationshipType(context, item, type);
-        if (CollectionUtils.isEmpty(relations)) {
-            return null;
-        }
-
-        if (relations.size() > 1) {
-            return null;
-        }
-
-        return relations.get(0).getLeftItem();
     }
 
 }

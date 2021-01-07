@@ -10,14 +10,17 @@ package org.dspace.xmlworkflow.state.actions.processingaction;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.dspace.authority.service.AuthorityValueService;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.core.Context;
+import org.dspace.core.Context.Mode;
 import org.dspace.versioning.ItemCorrectionService;
 import org.dspace.workflow.WorkflowException;
 import org.dspace.xmlworkflow.ConcytecFeedback;
@@ -67,35 +70,36 @@ public class UnlockInstitutionAction extends ProcessingAction {
         throws SQLException, AuthorizeException, IOException, WorkflowException {
 
         Item item = workflowItem.getItem();
+
+        Item institutionItem = concytecWorkflowService.findCopiedItem(context, item);
+
         Item itemToCorrect = itemCorrectionService.getCorrectedItem(context, item);
         boolean isCorrectionItem = itemToCorrect != null;
 
         ConcytecFeedback concytecFeedback = concytecWorkflowService.getConcytecFeedback(context, item);
 
         try {
-            unlockInstitutionWorkflow(context, item, concytecFeedback);
+
+            if (institutionItem != null) {
+                unlockInstitutionWorkflow(context, item, institutionItem, concytecFeedback);
+            }
+
         } catch (WorkflowConfigurationException e) {
             throw new WorkflowException(e);
         }
 
-        if (concytecFeedback == ConcytecFeedback.REJECT) {
-            handleConcytecRejection(context, workflowItem, isCorrectionItem);
-            return getCancelActionResult();
-        }
-
         if (isCorrectionItem) {
-            itemCorrectionService.replaceCorrectionItemWithNative(context, workflowItem);
-            return getCompleteActionResult();
+            return finalizeItemCorrection(context, workflowItem, concytecFeedback);
+        } else {
+            return finalizeItemCreation(context, workflowItem, institutionItem, concytecFeedback);
         }
-
-        return getCompleteActionResult();
 
     }
 
-    private void unlockInstitutionWorkflow(Context context, Item directorioItem, ConcytecFeedback concytecFeedback)
-        throws IOException, AuthorizeException, SQLException, WorkflowException, WorkflowConfigurationException {
+    private void unlockInstitutionWorkflow(Context context, Item directorioItem, Item institutionItem,
+        ConcytecFeedback concytecFeedback) throws IOException, AuthorizeException, SQLException, WorkflowException,
+        WorkflowConfigurationException {
 
-        Item institutionItem = concytecWorkflowService.findCopiedItem(context, directorioItem);
         XmlWorkflowItem institutionWorkflowItem = workflowItemService.findByItem(context, institutionItem);
 
         if (concytecFeedback != ConcytecFeedback.NONE) {
@@ -115,16 +119,68 @@ public class UnlockInstitutionAction extends ProcessingAction {
 
     }
 
-    private void handleConcytecRejection(Context context, XmlWorkflowItem workflowItem, boolean isCorrectionItem)
-        throws SQLException, AuthorizeException, IOException {
+    private ActionResult finalizeItemCorrection(Context context, XmlWorkflowItem workflowItem,
+        ConcytecFeedback concytecFeedback) throws SQLException, AuthorizeException, IOException {
 
-        if (isCorrectionItem) {
+        if (concytecFeedback == ConcytecFeedback.REJECT) {
             workflowService.deleteWorkflowByWorkflowItem(context, workflowItem, context.getCurrentUser());
+            return getCancelActionResult();
         } else {
-            Item item = installItemService.installItem(context, workflowItem);
-            itemService.withdraw(context, item);
+            itemCorrectionService.replaceCorrectionItemWithNative(context, workflowItem);
+            return getCompleteActionResult();
         }
 
+    }
+
+    private ActionResult finalizeItemCreation(Context context, XmlWorkflowItem workflowItem, Item institutionItem,
+        ConcytecFeedback concytecFeedback) throws SQLException, AuthorizeException, WorkflowException {
+
+        if (institutionItem != null) {
+
+            Mode originalMode = context.getCurrentMode();
+            try {
+                context.setMode(Mode.BATCH_EDIT);
+                replaceWillBeReferencedWithItemId(context, workflowItem.getItem(), institutionItem);
+            } finally {
+                context.setMode(originalMode);
+            }
+
+        }
+
+        if (concytecFeedback == ConcytecFeedback.REJECT) {
+            Item item = installItemService.installItem(context, workflowItem);
+            itemService.withdraw(context, item);
+            return getCancelActionResult();
+        }
+
+        return getCompleteActionResult();
+    }
+
+    private void replaceWillBeReferencedWithItemId(Context context, Item item, Item institutionItem)
+        throws SQLException, AuthorizeException {
+
+        String authority = AuthorityValueService.REFERENCE + "SHADOW::" + institutionItem.getID();
+        Iterator<Item> itemIterator = findItemWithWillBeReferencedShadowAuthority(context, authority, item);
+
+        while (itemIterator.hasNext()) {
+            Item itemToUpdate = itemIterator.next();
+
+            itemToUpdate.getMetadata().stream()
+                .filter(metadataValue -> authority.equals(metadataValue.getAuthority()))
+                .forEach(metadataValue -> metadataValue.setAuthority(item.getID().toString()));
+
+            itemService.update(context, itemToUpdate);
+        }
+
+    }
+
+    private Iterator<Item> findItemWithWillBeReferencedShadowAuthority(Context context, String authority, Item item) {
+        String relationshipType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
+        if (relationshipType == null) {
+            throw new IllegalArgumentException("The given item has no relationship.type: " + item.getID());
+        }
+
+        return itemService.findByAuthorityControlledMetadataFields(context, authority, relationshipType);
     }
 
     private ActionResult getCompleteActionResult() {

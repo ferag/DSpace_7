@@ -741,5 +741,16 @@ public interface ItemService
     public List<MetadataValue> getMetadata(Item item, String schema, String element, String qualifier,
                                            String lang, boolean enableVirtualMetadata);
 
+    /**
+     * Search all the items that have an authority controller metadata fields
+     * related to the given relationship.type with the given authority value.
+     * 
+     * @param context          the DSpace context
+     * @param authority        the authority value to match
+     * @param relationshipType the relationship type related to the metadata fields
+     * @return an iterator over the founded items
+     */
+    public Iterator<Item> findByAuthorityControlledMetadataFields(Context context, String authority,
+        String relationshipType);
 
 }

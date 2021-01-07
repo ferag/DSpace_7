@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -82,8 +83,11 @@ public class ItemCorrectionService {
 
     private final String correctionRelationshipName;
 
-    public ItemCorrectionService(String correctionRelationshipName) {
+    private final Set<String> ignoredMetadataFields;
+
+    public ItemCorrectionService(String correctionRelationshipName, Set<String> ignoredMetadataFields) {
         this.correctionRelationshipName = correctionRelationshipName;
+        this.ignoredMetadataFields = ignoredMetadataFields;
     }
 
     /**
@@ -278,21 +282,28 @@ public class ItemCorrectionService {
         List<MetadataCorrection> metadataCorrections) throws SQLException {
 
         for (MetadataCorrection correction : metadataCorrections) {
+
+            String metadataField = correction.getMetadataField();
+            if (ignoredMetadataFields.contains(metadataField)) {
+                continue;
+            }
+
             CorrectionType correctionType = correction.getCorrectionType();
             switch (correctionType) {
                 case ADD:
-                    addMetadataValues(context, item, correction.getMetadataField(), correction.getNewValues());
+                    addMetadataValues(context, item, metadataField, correction.getNewValues());
                     break;
                 case MODIFY:
-                    removeMetadataValues(context, item, correction.getMetadataField());
-                    addMetadataValues(context, item, correction.getMetadataField(), correction.getNewValues());
+                    removeMetadataValues(context, item, metadataField);
+                    addMetadataValues(context, item, metadataField, correction.getNewValues());
                     break;
                 case REMOVE:
-                    removeMetadataValues(context, item, correction.getMetadataField());
+                    removeMetadataValues(context, item, metadataField);
                     break;
                 default:
                     throw new IllegalArgumentException("Unkown metadata correction type: " + correctionType);
             }
+
         }
 
     }

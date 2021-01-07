@@ -31,6 +31,7 @@ import org.dspace.xmlworkflow.service.WorkflowRequirementsService;
 import org.dspace.xmlworkflow.service.XmlWorkflowService;
 import org.dspace.xmlworkflow.state.Step;
 import org.dspace.xmlworkflow.state.actions.ActionResult;
+import org.dspace.xmlworkflow.storedcomponents.ClaimedTask;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,24 +79,25 @@ public abstract class AbstractDirectorioAction extends ProcessingAction {
     protected ActionResult processAssign(Context context, XmlWorkflowItem workflowItem, Step step,
         HttpServletRequest request) throws SQLException, AuthorizeException, IOException, WorkflowException {
 
-        UUID userToAssignId = UUIDUtils.fromString(request.getParameter("user_to_assign"));
+        request.getParameterMap();
+        UUID userToAssignId = UUIDUtils.fromString(request.getParameter("user"));
         if (userToAssignId == null) {
-            LOGGER.warn("A parameter 'user_to_assign' with the uuid of the user to assign the task must be provided");
-            addErrorField(request, "user_to_assign");
+            LOGGER.warn("A parameter 'user' with the uuid of the user to assign the task must be provided");
+            addErrorField(request, "user");
             return new ActionResult(ActionResult.TYPE.TYPE_ERROR);
         }
 
         EPerson user = ePersonService.find(context, userToAssignId);
         if (user == null) {
-            LOGGER.warn("The given 'user_to_assign' uuid does not match any user in the system");
-            addErrorField(request, "user_to_assign");
+            LOGGER.warn("The given user uuid does not match any user in the system");
+            addErrorField(request, "user");
             return new ActionResult(ActionResult.TYPE.TYPE_ERROR);
         }
 
         List<EPerson> members = step.getRole().getMembers(context, workflowItem).getAllUniqueMembers(context);
         if (!members.contains(user)) {
-            LOGGER.warn("The given 'user_to_assign' is not member of the current step role");
-            addErrorField(request, "user_to_assign");
+            LOGGER.warn("The given user is not member of the current step role");
+            addErrorField(request, "user");
             return new ActionResult(ActionResult.TYPE.TYPE_ERROR);
         }
 
@@ -141,8 +143,18 @@ public abstract class AbstractDirectorioAction extends ProcessingAction {
         throws SQLException, AuthorizeException, IOException, WorkflowConfigurationException {
 
         context.turnOffAuthorisationSystem();
+
+        EPerson currentUser = context.getCurrentUser();
+
+        ClaimedTask task = claimedTaskService.findByWorkflowIdAndEPerson(context, workflowItem, currentUser);
+        if (task != null) {
+            xmlWorkflowService.deleteClaimedTask(context, workflowItem, task);
+            workflowRequirementsService.removeClaimedUser(context, workflowItem, task.getOwner(), task.getStepID());
+        }
+
         workflowRequirementsService.addClaimedUser(context, workflowItem, step, user);
         xmlWorkflowService.createOwnedTask(context, workflowItem, step, getParent(), user);
+
         context.restoreAuthSystemState();
 
     }

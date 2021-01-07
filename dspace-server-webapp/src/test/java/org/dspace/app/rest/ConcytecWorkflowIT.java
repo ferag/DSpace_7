@@ -931,6 +931,10 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         claimTaskAndAssignTo(shadowWorkflowItemCopy, secondDirectorioUser, directorioReviewGroup, firstDirectorioUser);
 
+        List<ClaimedTask> tasks = claimedTaskService.findByWorkflowItem(context, shadowWorkflowItemCopy);
+        assertThat(tasks, hasSize(1));
+        assertThat(tasks.get(0).getOwner(), equalTo(firstDirectorioUser));
+
         assertThat(reloadItem(item).isArchived(), is(false));
         assertThat(reloadItem(shadowItemCopy).isArchived(), is(false));
 
@@ -1056,7 +1060,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     private void assignClaimedTaskViaRest(EPerson user, ClaimedTask task, EPerson userToAssign) throws Exception {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
         params.add("submit_assign", "submit_assign");
-        params.add("user_to_assign", userToAssign.getID().toString());
+        params.add("user", userToAssign.getID().toString());
         performActionOnClaimedTaskViaRest(user, task, params);
     }
 

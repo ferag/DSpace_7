@@ -590,7 +590,7 @@
         <property name="sidebarFacets">
             <list>
                 <ref bean="searchFilterType" />
-                <ref bean="graphEntityByType" />
+                <ref bean="graphPublicationByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
@@ -605,7 +605,7 @@
         <property name="searchFilters">
             <list>
                 <ref bean="searchFilterType" />
-                <ref bean="graphEntityByType" />
+                <ref bean="graphPublicationByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterTitle" />
                 <ref bean="searchFilterAuthor" />

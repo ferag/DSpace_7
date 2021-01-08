@@ -298,7 +298,7 @@
                                     ADMIN_OWNER
                                 </value>
                             </property>
-                            <property name="submissionDefinition" value="person-cv-edit" />
+                            <property name="submissionDefinition" value="personcv-edit" />
                         </bean>
                     </list>
                 </entry>

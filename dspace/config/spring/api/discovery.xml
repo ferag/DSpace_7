@@ -160,10 +160,7 @@
         <property name="id" value="defaultConfiguration"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
-		<list>
-
-<!--                <ref bean="graphPublicationByType" />-->
-<!--                <ref bean="graphPublicationByDate" />-->
+            <list>
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
                 <ref bean="searchFilterIssued" />
@@ -176,8 +173,6 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-<!--                <ref bean="graphPublicationByType" />-->
-<!--                <ref bean="graphPublicationByDate" />-->
                 <ref bean="searchFilterTitle" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
@@ -1999,7 +1994,6 @@
             <list>
                 <!--Only find items of type Person-->
                 <value>search.resourcetype:Item AND entityType_keyword:Person</value>
-                <value>location.comm:${directorios.community-id}</value>
             </list>
         </property>
         <!--Default result per page  -->
@@ -2129,7 +2123,6 @@
             <list>
                 <!--Only find items of type Project or Funding-->
                 <value>search.resourcetype:Item AND (entityType_keyword:Project OR entityType_keyword:Funding)</value>
-                <value>location.comm:${directorios.community-id}</value>
             </list>
         </property>
         <!--Default result per page  -->
@@ -2260,7 +2253,6 @@
             <list>
                 <!--Only find items of type OrgUnit-->
                 <value>search.resourcetype:Item AND entityType_keyword:OrgUnit</value>
-                <value>location.comm:${directorios.community-id}</value>
             </list>
         </property>
         <!--The configuration for the recent submissions-->
@@ -2334,7 +2326,6 @@
             <list>
                 <!--Only find items of type Equipment-->
                 <value>search.resourcetype:Item AND entityType_keyword:Equipment</value>
-                <value>location.comm:${directorios.community-id}</value>
             </list>
         </property>
         <!--        &lt;!&ndash;The configuration for the recent submissions&ndash;&gt;-->
@@ -3032,7 +3023,7 @@
     </bean>
 
     <bean id="searchFilterProjectInvestigator"
-          class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
         <property name="indexFieldName" value="projectinvestigators" />
         <property name="metadataFields">
             <list>
@@ -3049,7 +3040,7 @@
     </bean>
 
     <bean id="searchFilterProjectOrganisation"
-          class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
         <property name="indexFieldName" value="involvedorganisation" />
         <property name="metadataFields">
             <list>
@@ -3101,7 +3092,7 @@
     </bean>
 
     <bean id="searchFilterObjectType"
-          class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
         <property name="indexFieldName" value="resourcetype" />
         <property name="metadataFields">
             <list>
@@ -3111,7 +3102,7 @@
     </bean>
 
     <bean id="searchFilterObjectNamedType"
-          class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
         <property name="indexFieldName" value="namedresourcetype" />
         <property name="type" value="authority" />
         <property name="metadataFields">
@@ -3463,7 +3454,7 @@
 
     <!-- Used only to READ "submitter" facets (managed programmatically at SolrServiceImpl) -->
     <bean id="searchFilterSubmitter"
-          class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
         <property name="indexFieldName" value="submitter" />
         <property name="type" value="authority" />
         <property name="metadataFields">
@@ -3740,22 +3731,39 @@
 
     <!-- Configurations for GraphDiscoverSearchFilterFacet -->
     <bean id="graphPublicationByDate" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
-        <property name="facetLimit" value="100"/>
+    	<property name="facetLimit" value="10"/>
         <property name="sortOrderSidebar" value="VALUE"/>
-        <property name="dataFacet" ref="searchFilterIssued" />
+        <property name="indexFieldName" value="graphpubldate" />
+        <!-- isDate cannot be true if the splitter is set -->
+        <property name="isDate" value="true" />
+        <property name="metadataFields">
+            <list>
+                <value>dc.date.issued</value>
+            </list>
+        </property>
         <property name="graphType" value="bar" />
+        <property name="exposeMissing" value="true" />
+        <property name="exposeMore" value="true" />
+        <property name="exposeTotalElements" value="true" />
     </bean>
 
     <bean id="graphPublicationByType" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
-        <property name="facetLimit" value="100"/>
-        <property name="dataFacet" ref="searchFilterType" />
+    	<property name="facetLimit" value="10"/>
+        <property name="indexFieldName" value="graphitemtype" />
+        <!-- the splitter needs to be a not empty string -->
+        <property name="splitter" value="::" />
+        <property name="onlyLastNodeRelevant" value="true" />
+        <!-- isDate cannot be true if the splitter is set -->
+        <property name="isDate" value="false" />
+        <property name="metadataFields">
+            <list>
+                <value>dc.type</value>
+            </list>
+        </property>
         <property name="graphType" value="pie" />
-    </bean>
-
-    <bean id="graphEntityByType" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
-        <property name="facetLimit" value="100"/>
-        <property name="dataFacet" ref="searchFilterEntityType" />
-        <property name="graphType" value="pie" />
+        <property name="exposeMissing" value="true" />
+        <property name="exposeMore" value="true" />
+        <property name="exposeTotalElements" value="true" />
     </bean>
 
     <!--Sort properties-->
@@ -3772,9 +3780,9 @@
         <property name="type" value="date"/>
     </bean>
     <bean id="sortLastModified" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
-        <property name="metadataField" value="lastModified" />
-        <property name="type" value="date" />
-    </bean>
+		<property name="metadataField" value="lastModified" />
+		<property name="type" value="date" />
+	</bean>
 
     <bean id="sortFamilyName" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
         <property name="metadataField" value="person.familyName"/>

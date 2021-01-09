@@ -94,7 +94,7 @@
         <property name="parameters">
             <map>
                 <entry key="field" value="relationship.type" />
-                <entry key="pattern" value="^Person$" />
+                <entry key="pattern" value="^Person$|^InstitutionPerson$" />
             </map>
         </property>
     </bean>
@@ -103,7 +103,7 @@
         <property name="parameters">
             <map>
                 <entry key="field" value="relationship.type" />
-                <entry key="pattern" value="^Publication$" />
+                <entry key="pattern" value="^Publication$|^InstitutionPublication$" />
             </map>
         </property>
     </bean>

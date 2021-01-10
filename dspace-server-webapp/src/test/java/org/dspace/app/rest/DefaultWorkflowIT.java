@@ -94,7 +94,7 @@ public class DefaultWorkflowIT extends AbstractControllerIntegrationTest {
             .withName("Parent Community")
             .build();
 
-        publicationType = EntityTypeBuilder.createEntityTypeBuilder(context, "Publication").build();
+        publicationType = EntityTypeBuilder.createEntityTypeBuilder(context, "InstitutionPublication").build();
 
         RelationshipTypeBuilder.createRelationshipTypeBuilder(context, publicationType, publicationType,
             "isCorrectionOfItem", "isCorrectedByItem", 0, 1, 0, 1);
@@ -119,7 +119,7 @@ public class DefaultWorkflowIT extends AbstractControllerIntegrationTest {
 
         Collection collection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Collection")
-            .withRelationshipType("Publication")
+            .withRelationshipType("InstitutionPublication")
             .withWorkflowGroup(2, eperson)
             .withSubmitterGroup(eperson)
             .build();
@@ -185,7 +185,7 @@ public class DefaultWorkflowIT extends AbstractControllerIntegrationTest {
 
         Collection collection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Collection")
-            .withRelationshipType("Publication")
+            .withRelationshipType("InstitutionPublication")
             .withWorkflowGroup(2, eperson)
             .withSubmitterGroup(eperson)
             .build();
@@ -252,7 +252,7 @@ public class DefaultWorkflowIT extends AbstractControllerIntegrationTest {
 
         Collection collection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Collection")
-            .withRelationshipType("Publication")
+            .withRelationshipType("InstitutionPublication")
             .withSubmitterGroup(eperson)
             .build();
 

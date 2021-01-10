@@ -62,9 +62,9 @@ public class WorkspaceItemFromTemplateGeneratorIT extends AbstractControllerInte
 
         itemService.addMetadata(context, col1.getTemplateItem(), "dc", "title", null, null, "SimpleTitle");
         itemService.addMetadata(context, col1.getTemplateItem(), "dc", "date", "issued", null, "###DATE.yyyy-MM-dd###");
-        itemService.addMetadata(context, col1.getTemplateItem(), "cris", "policy", "group", null,
+        itemService.addMetadata(context, col1.getTemplateItem(), "dc", "contributor", "author", null,
             "###RESPOLICY.admin.epersongroup###");
-        itemService.addMetadata(context, col1.getTemplateItem(), "cris", "policy", "eperson", null,
+        itemService.addMetadata(context, col1.getTemplateItem(), "dc", "contributor", "editor", null,
             "###RESPOLICY.default_item_read.invalid###");
 
         String authToken = getAuthToken(eperson.getEmail(), password);
@@ -80,11 +80,9 @@ public class WorkspaceItemFromTemplateGeneratorIT extends AbstractControllerInte
             .andExpect(jsonPath("$._embedded.item.metadata['dc.title'][0].value", is("SimpleTitle")))
             .andExpect(jsonPath("$._embedded.item.metadata['dc.date.issued'][0].value",
                 is(today)))
-            .andExpect(jsonPath("$._embedded.item.metadata['cris.policy.group'][0].value",
+            .andExpect(jsonPath("$._embedded.item.metadata['dc.contributor.author'][0].value",
                 is(eperson.getGroups().get(0).getName())))
-            .andExpect(jsonPath("$._embedded.item.metadata['cris.policy.group'][0].authority",
-                is(eperson.getGroups().get(0).getID().toString())))
-            .andExpect(jsonPath("$", hasNoJsonPath("$._embedded.item.metadata['cris.policy.eperson']")))
+            .andExpect(jsonPath("$", hasNoJsonPath("$._embedded.item.metadata['dc.contributor.editor']")))
             .andExpect(jsonPath("$._embedded.collection.id", is(col1.getID().toString())));
     }
 }

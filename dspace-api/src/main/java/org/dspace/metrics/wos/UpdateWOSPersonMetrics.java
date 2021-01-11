@@ -49,7 +49,7 @@ public class UpdateWOSPersonMetrics extends AbstractUpdateWOSMetrics {
         return updateWosMetric(context, item, metricDTO);
     }
 
-    private boolean isValidId(String orcidId) {
+    private static boolean isValidId(String orcidId) {
         if (StringUtils.isBlank(orcidId) || orcidId.length() != 19) {
             return false;
         }

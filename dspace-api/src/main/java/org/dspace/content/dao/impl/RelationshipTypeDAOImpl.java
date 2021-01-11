@@ -7,6 +7,9 @@
  */
 package org.dspace.content.dao.impl;
 
+import static org.dspace.content.RelationshipType_.leftType;
+import static org.dspace.content.RelationshipType_.rightType;
+
 import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -37,6 +40,25 @@ public class RelationshipTypeDAOImpl extends AbstractHibernateDAO<RelationshipTy
                 criteriaBuilder.equal(relationshipTypeRoot.get(RelationshipType_.leftwardType), leftwardType),
                 criteriaBuilder.equal(relationshipTypeRoot.get(RelationshipType_.rightwardType), rightwardType)));
         return uniqueResult(context, criteriaQuery, false, RelationshipType.class, -1, -1);
+    }
+
+    @Override
+    public List<RelationshipType> findByTypeAndTypeNames(Context context, EntityType type, boolean isLeftType,
+        String leftwardType, String rightwardType) throws SQLException {
+
+        CriteriaBuilder criteriaBuilder = getCriteriaBuilder(context);
+        CriteriaQuery<RelationshipType> criteriaQuery = getCriteriaQuery(criteriaBuilder, RelationshipType.class);
+        Root<RelationshipType> relationshipTypeRoot = criteriaQuery.from(RelationshipType.class);
+
+        criteriaQuery.select(relationshipTypeRoot);
+        criteriaQuery.where(
+            criteriaBuilder.and(
+                criteriaBuilder.equal(relationshipTypeRoot.get(isLeftType ? leftType : rightType), type),
+                criteriaBuilder.equal(relationshipTypeRoot.get(RelationshipType_.leftwardType), leftwardType),
+                criteriaBuilder.equal(relationshipTypeRoot.get(RelationshipType_.rightwardType), rightwardType)));
+
+        return list(context, criteriaQuery, false, RelationshipType.class, -1, -1);
+
     }
 
     @Override

@@ -259,6 +259,8 @@ public class WorkspaceItemServiceImpl implements WorkspaceItemService {
         workspaceItemDAO.delete(context, workspaceItem);
 
         // Delete item
+        //FIXME: temporary workaround to deal with directorio collection check
+        item.setOwningCollection(workspaceItem.getCollection());
         itemService.delete(context, item);
     }
 

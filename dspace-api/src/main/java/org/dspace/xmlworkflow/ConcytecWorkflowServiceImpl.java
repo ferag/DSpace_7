@@ -11,10 +11,8 @@ import static org.dspace.xmlworkflow.ConcytecFeedback.fromString;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.function.Function;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.EntityType;
 import org.dspace.content.Item;
@@ -50,7 +48,7 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
     @Override
     public Relationship createShadowRelationship(Context context, Item item, Item shadowItemCopy)
         throws AuthorizeException, SQLException {
-        RelationshipType shadowRelationshipType = findShadowRelationshipType(context, item, shadowItemCopy);
+        RelationshipType shadowRelationshipType = findShadowRelationshipType(context, item, true);
         return relationshipService.create(context, item, shadowItemCopy, shadowRelationshipType, true);
     }
 
@@ -107,78 +105,35 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
 
     private List<Relationship> findItemShadowRelationships(Context context, Item item, boolean isLeft)
         throws SQLException {
-        RelationshipType shadowRelationshipType = findShadowRelationshipType(context, item);
+        RelationshipType shadowRelationshipType = findShadowRelationshipType(context, item, isLeft);
         return relationshipService.findByItemAndRelationshipType(context, item, shadowRelationshipType, isLeft);
     }
 
-    private RelationshipType findShadowRelationshipType(Context context, Item item) throws SQLException {
-        return findShadowRelationshipType(context, item, item);
+    private RelationshipType findShadowRelationshipType(Context context, Item item, boolean isLeft)
+        throws SQLException {
+        return findRelationshipType(context, item, isLeft, HAS_SHADOW_COPY_RELATIONSHIP, IS_SHADOW_COPY_RELATIONSHIP);
     }
 
-    private RelationshipType findShadowRelationshipType(Context context, Item item, Item shadowItem)
-        throws SQLException {
-        return findRelationshipType(context, item,
-            shadowItem, HAS_SHADOW_COPY_RELATIONSHIP, IS_SHADOW_COPY_RELATIONSHIP);
-    }
+    private RelationshipType findRelationshipType(Context context, Item item, boolean isLeft, String leftwardType,
+        String rightwardType) throws SQLException {
 
-    private RelationshipType findRelationshipType(Context context, Item item, Item shadowItem,
-                                                  String leftwardType, String rightwardType)
-        throws SQLException {
-
-        // FIXME: refactor this step since entities are different. This is a temporary workaround
-//        EntityType entityType = entityTypeService.findByItem(context, item);
-//        if (entityType == null) {
-//            throw new IllegalArgumentException("No entity type found for the item " + item.getID());
-//        }
-
-
-//        EntityType shadowEntityType = item.equals(shadowItem) ?
-//            findByName(context, entityType.getLabel()) : entityTypeService.findByItem(context, shadowItem);
-//
-//        if (shadowEntityType == null) {
-//            throw new IllegalArgumentException("No entity type found for the item " + shadowItem.getID());
-//        }
-        // FIXME: temporary workaround start
-
-        EntityType entityType = getEntityType(context, item, rn -> {
-            if (!rn.startsWith("Institution")) {
-                return "Institution" + rn;
-            }
-            return rn;
-        });
-        if (entityType == null) {
-            throw new IllegalArgumentException("No entity type found for the item " + item.getID());
-        }
-        EntityType shadowEntityType = getEntityType(context, shadowItem, rn -> {
-            if (rn.startsWith("Institution")) {
-                return rn.replaceAll("Institution", "");
-            }
-            return rn;
-        });
-
-        if (shadowEntityType == null) {
-            throw new IllegalArgumentException("No entity type found for the item " + shadowItem.getID());
+        EntityType type = entityTypeService.findByItem(context, item);
+        if (type == null) {
+            throw new IllegalArgumentException("No entity type found for the item with id: " + type);
         }
 
-        // FIXME: temporary workaround end
+        List<RelationshipType> relationshipTypes = relationshipTypeService.findByTypeAndTypeNames(context, type, isLeft,
+            leftwardType, rightwardType);
 
-        RelationshipType relationshipType = relationshipTypeService.findbyTypesAndTypeName(context, entityType,
-            shadowEntityType, leftwardType, rightwardType);
-
-        if (relationshipType == null) {
-            throw new IllegalStateException("No " + leftwardType + " relationship type found for type " + entityType);
+        if (CollectionUtils.isEmpty(relationshipTypes)) {
+            throw new IllegalStateException("No " + leftwardType + " relationship type found for type " + type);
         }
 
-        return relationshipType;
-    }
-
-    private EntityType getEntityType(Context context, Item item, Function<String, String> relationNameFix)
-        throws SQLException {
-        String relationship = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
-        if (StringUtils.isBlank(relationship)) {
-            return null;
+        if (relationshipTypes.size() > 1) {
+            throw new IllegalStateException("Multiple " + leftwardType + " relationship type found for type " + type);
         }
-        return entityTypeService.findByEntityType(context, relationNameFix.apply(relationship));
+
+        return relationshipTypes.get(0);
     }
 
     private void replaceMetadata(Context context, Item item, String schema, String element, String qualifier,

@@ -125,8 +125,6 @@ public class DiscoveryRelatedBoxComponentIT extends AbstractControllerIntegratio
                 .andExpect(jsonPath("$.type", is("discover")))
                 //The name has to be author as that's the facet that we've asked
                 .andExpect(jsonPath("$.name", is("subject")))
-                //The facetType needs to be 'text' as that's the default configuration for the given facet
-//                .andExpect(jsonPath("$.facetType", is("hierarchical")))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("api/discover/facets/subject")))
                 //The self link needs to contain the query that was specified in the parameters, this is how it
@@ -137,12 +135,6 @@ public class DiscoveryRelatedBoxComponentIT extends AbstractControllerIntegratio
                 //This is how the page object must look like because it's the default
                 .andExpect(jsonPath("$.page",
                         is(PageMatcher.pageEntry(0, 20))));
-                //These subject need to be present in the result
-//                .andExpect(jsonPath("$._embedded.values", Matchers.hasSize(2)))
-//                .andExpect(jsonPath("$._embedded.values", containsInAnyOrder(
-//                        FacetValueMatcher.entryText("subject", "ExtraEntry", 2),
-//                        FacetValueMatcher.entryText("subject", "Multiple", 1)
-//                )));
         // verify that filter are used
         getClient().perform(get("/api/discover/facets/subject")
                 .param("configuration", "RELATION.Person.researchoutputs")
@@ -155,8 +147,6 @@ public class DiscoveryRelatedBoxComponentIT extends AbstractControllerIntegratio
                 .andExpect(jsonPath("$.type", is("discover")))
                 //The name has to be author as that's the facet that we've asked
                 .andExpect(jsonPath("$.name", is("subject")))
-                //The facetType needs to be 'text' as that's the default configuration for the given facet
-//                .andExpect(jsonPath("$.facetType", is("hierarchical")))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("api/discover/facets/subject")))
                 //The self link needs to contain the query that was specified in the parameters, this is how it
@@ -183,8 +173,6 @@ public class DiscoveryRelatedBoxComponentIT extends AbstractControllerIntegratio
                 .andExpect(jsonPath("$.type", is("discover")))
                 //The name has to be author as that's the facet that we've asked
                 .andExpect(jsonPath("$.name", is("subject")))
-                //The facetType needs to be 'text' as that's the default configuration for the given facet
-//                .andExpect(jsonPath("$.facetType", is("hierarchical")))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("api/discover/facets/subject")))
                 //The self link needs to contain the query that was specified in the parameters, this is how it
@@ -226,13 +214,15 @@ public class DiscoveryRelatedBoxComponentIT extends AbstractControllerIntegratio
                 //These facets have to show up in the embedded.facets section as well with the given hasMore
                 // property because we don't exceed their default limit for a hasMore true (the default is 10)
                 .andExpect(jsonPath("$._embedded.facets", Matchers.containsInAnyOrder(
-                        FacetEntryMatcher.anyFacet("chart.pie.itemtype_filter", "chart.pie"),
-                        FacetEntryMatcher.anyFacet("chart.bar.dateIssued.year", "chart.bar"),
-                        FacetEntryMatcher.typeFacet(false),
+                        FacetEntryMatcher.anyFacet("graphitemtype", "chart.pie"),
+                        FacetEntryMatcher.anyFacet("graphpubldate", "chart.bar"),
+//                        FacetEntryMatcher.typeFacet(false),
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.anyFacet("editor", "text"),
                         FacetEntryMatcher.anyFacet("organization", "text"),
                         FacetEntryMatcher.anyFacet("funding", "text"),
+                        FacetEntryMatcher.anyFacet("itemtype", "hierarchical"),
+//                        FacetEntryMatcher.anyFacet("subject", "hierarchical"),
                         FacetEntryMatcher.subjectFacet(false),
 //                        FacetEntryMatcher.dateIssuedFacet(false),
                         FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
@@ -266,15 +256,15 @@ public class DiscoveryRelatedBoxComponentIT extends AbstractControllerIntegratio
                 //These facets have to show up in the embedded.facets section as well with the given hasMore
                 // property because we don't exceed their default limit for a hasMore true (the default is 10)
                 .andExpect(jsonPath("$._embedded.facets", Matchers.containsInAnyOrder(
-                        FacetEntryMatcher.anyFacet("chart.pie.itemtype_filter", "chart.pie"),
-                        FacetEntryMatcher.anyFacet("chart.bar.dateIssued.year", "chart.bar"),
-                        FacetEntryMatcher.typeFacet(false),
+                        FacetEntryMatcher.anyFacet("graphitemtype", "chart.pie"),
+                        FacetEntryMatcher.anyFacet("graphpubldate", "chart.bar"),
+//                        FacetEntryMatcher.typeFacet(false),
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.anyFacet("editor", "text"),
                         FacetEntryMatcher.anyFacet("organization", "text"),
                         FacetEntryMatcher.anyFacet("funding", "text"),
+                        FacetEntryMatcher.anyFacet("itemtype", "hierarchical"),
                         FacetEntryMatcher.subjectFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
                         FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
                 )))
                 //There always needs to be a self link available
@@ -308,14 +298,15 @@ public class DiscoveryRelatedBoxComponentIT extends AbstractControllerIntegratio
                 //These facets have to show up in the embedded.facets section as well with the given hasMore
                 // property because we don't exceed their default limit for a hasMore true (the default is 10)
                 .andExpect(jsonPath("$._embedded.facets", Matchers.containsInAnyOrder(
-                        FacetEntryMatcher.anyFacet("chart.pie.itemtype_filter", "chart.pie"),
-                        FacetEntryMatcher.anyFacet("chart.bar.dateIssued.year", "chart.bar"),
-                        FacetEntryMatcher.typeFacet(false),
+                        FacetEntryMatcher.anyFacet("graphitemtype", "chart.pie"),
+                        FacetEntryMatcher.anyFacet("graphpubldate", "chart.bar"),
+//                        FacetEntryMatcher.typeFacet(false),
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.anyFacet("editor", "text"),
                         FacetEntryMatcher.anyFacet("organization", "text"),
                         FacetEntryMatcher.anyFacet("funding", "text"),
                         FacetEntryMatcher.subjectFacet(false),
+                        FacetEntryMatcher.anyFacet("itemtype", "hierarchical"),
 //                        FacetEntryMatcher.dateIssuedFacet(false),
                         FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
                 )))

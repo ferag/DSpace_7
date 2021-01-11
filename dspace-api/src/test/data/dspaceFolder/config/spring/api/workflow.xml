@@ -10,7 +10,6 @@
                 <entry key="defaultWorkflow" value-ref="defaultWorkflow"/>
                 <entry key="123456789/workflow-test-1" value-ref="selectSingleReviewer"/>
                 <entry key="123456789/institution-workflow-test" value-ref="institutionWorkflow"/>
-                <entry key="123456789/directorio-workflow-test" value-ref="directorioWorkflow"/>
 <!--                <entry key="123456789/5" value-ref="scoreReview"/>-->
             </util:map>
         </property>

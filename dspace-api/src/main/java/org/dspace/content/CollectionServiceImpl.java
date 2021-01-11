@@ -1050,6 +1050,11 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
 
     @Override
     public boolean isDirectorioCollection(Context context, Collection collection) throws SQLException {
+
+        if (collection == null) {
+            throw new IllegalArgumentException("Is directorio collection check can not be done without a collection");
+        }
+
         UUID directorioId = UUIDUtils.fromString(configurationService.getProperty("directorios.community-id"));
         if (directorioId == null) {
             return false;

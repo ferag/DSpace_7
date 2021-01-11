@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.apache.commons.lang.StringUtils;
 import org.dspace.content.Item;
 import org.dspace.content.logic.Filter;
 import org.dspace.content.logic.LogicalStatementException;
@@ -56,14 +55,11 @@ public abstract class AbstractEmbeddableMetricProvider implements EmbeddableMetr
         if (!this.hasMetric(context, item)) {
             return Optional.empty();
         }
-        String innerHtml = this.innerHtml(context, item);
-        if (StringUtils.isBlank(innerHtml)) {
-            return Optional.empty();
-        }
+
         EmbeddableCrisMetrics metric = new EmbeddableCrisMetrics();
         metric.setEmbeddableId(this.getId(context, item));
         metric.setMetricType(this.getMetricType());
-        metric.setRemark(innerHtml);
+        metric.setRemark(this.innerHtml(context, item));
         return Optional.of(metric);
     }
 

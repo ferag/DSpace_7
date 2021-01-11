@@ -11,6 +11,7 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
 import org.dspace.core.Context;
@@ -51,6 +52,10 @@ public class EmbeddableGoogleScholarProvider extends AbstractEmbeddableMetricPro
 
         String searchText = calculateSearchText(item);
 
+        if (StringUtils.isBlank(searchText)) {
+            return "";
+        }
+
         String innerHtml = this.getTemplate(relationshipType).replace("{{searchText}}",
             URLEncoder.encode(searchText, Charset.defaultCharset()));
 
@@ -69,6 +74,9 @@ public class EmbeddableGoogleScholarProvider extends AbstractEmbeddableMetricPro
             if (!values.isEmpty()) {
                 return values.get(0).getValue();
             }
+        }
+        if (field != null || fallbackField != null) {
+            return "";
         }
         log.error("Can't calculate googleScholar searchText for item: " + item.getHandle());
         throw new IllegalStateException();

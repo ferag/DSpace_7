@@ -43,4 +43,45 @@
         <property name="filter" ref="person-has-at-least-one-id_filter"/>
     </bean>
 
+    <bean name="testValidation" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.test"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.title</value>
+                <value>dc.identifier.doi</value>
+            </list>
+        </property>
+        <property name="filter" ref="test_filter"/>
+    </bean>
+
+    <bean id="test_filter" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <bean class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+                                    <property name="parameters">
+                                        <map>
+                                            <entry key="field" value="dc.title" />
+                                            <entry key="pattern" value="^Test publication with mandatory DOI" />
+                                        </map>
+                                    </property>
+                                </bean>
+                            </property>
+                        </bean>
+                        <bean class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+                            <property name="parameters">
+                                <map>
+                                    <entry key="field" value="dc.identifier.doi" />
+                                </map>
+                            </property>
+                        </bean>
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
 </beans>

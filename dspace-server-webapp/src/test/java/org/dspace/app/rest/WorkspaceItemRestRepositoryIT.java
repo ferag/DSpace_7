@@ -1971,6 +1971,7 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
      * @throws Exception
      */
     @Test
+    @Ignore
     public void stepAndGlobalValidationErrorsTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
@@ -2024,6 +2025,7 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
      *
      * @throws Exception
      */
+    @Ignore
     public void lookupDOIMetadataTest() throws Exception {
         context.turnOffAuthorisationSystem();
 

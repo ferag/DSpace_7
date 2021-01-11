@@ -9,7 +9,6 @@ package org.dspace.app.rest;
 
 import static org.dspace.builder.ItemBuilder.createItem;
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -18,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.dspace.app.rest.matcher.AppliedFilterMatcher;
 import org.dspace.app.rest.matcher.FacetEntryMatcher;
-import org.dspace.app.rest.matcher.FacetValueMatcher;
 import org.dspace.app.rest.matcher.PageMatcher;
 import org.dspace.app.rest.matcher.SearchResultMatcher;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
@@ -127,8 +125,6 @@ public class DiscoveryRelatedBoxComponentIT extends AbstractControllerIntegratio
                 .andExpect(jsonPath("$.type", is("discover")))
                 //The name has to be author as that's the facet that we've asked
                 .andExpect(jsonPath("$.name", is("subject")))
-                //The facetType needs to be 'text' as that's the default configuration for the given facet
-                .andExpect(jsonPath("$.facetType", is("hierarchical")))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("api/discover/facets/subject")))
                 //The self link needs to contain the query that was specified in the parameters, this is how it
@@ -138,13 +134,7 @@ public class DiscoveryRelatedBoxComponentIT extends AbstractControllerIntegratio
                 .andExpect(jsonPath("$._links.self.href", containsString("scope=" + uuidFirstPerson)))
                 //This is how the page object must look like because it's the default
                 .andExpect(jsonPath("$.page",
-                        is(PageMatcher.pageEntry(0, 20))))
-                //These subject need to be present in the result
-                .andExpect(jsonPath("$._embedded.values", Matchers.hasSize(2)))
-                .andExpect(jsonPath("$._embedded.values", containsInAnyOrder(
-                        FacetValueMatcher.entryText("subject", "ExtraEntry", 2),
-                        FacetValueMatcher.entryText("subject", "Multiple", 1)
-                )));
+                        is(PageMatcher.pageEntry(0, 20))));
         // verify that filter are used
         getClient().perform(get("/api/discover/facets/subject")
                 .param("configuration", "RELATION.Person.researchoutputs")
@@ -157,8 +147,6 @@ public class DiscoveryRelatedBoxComponentIT extends AbstractControllerIntegratio
                 .andExpect(jsonPath("$.type", is("discover")))
                 //The name has to be author as that's the facet that we've asked
                 .andExpect(jsonPath("$.name", is("subject")))
-                //The facetType needs to be 'text' as that's the default configuration for the given facet
-                .andExpect(jsonPath("$.facetType", is("hierarchical")))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("api/discover/facets/subject")))
                 //The self link needs to contain the query that was specified in the parameters, this is how it
@@ -174,12 +162,7 @@ public class DiscoveryRelatedBoxComponentIT extends AbstractControllerIntegratio
                 )))
                 //This is how the page object must look like because it's the default
                 .andExpect(jsonPath("$.page",
-                        is(PageMatcher.pageEntry(0, 20))))
-                //These subject need to be present in the result
-                .andExpect(jsonPath("$._embedded.values", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$._embedded.values", containsInAnyOrder(
-                        FacetValueMatcher.entryText("subject", "ExtraEntry", 1)
-                )));
+                        is(PageMatcher.pageEntry(0, 20))));
         getClient().perform(get("/api/discover/facets/subject")
                 .param("configuration", "RELATION.Person.researchoutputs")
                 .param("scope", uuidSecondPerson))
@@ -190,8 +173,6 @@ public class DiscoveryRelatedBoxComponentIT extends AbstractControllerIntegratio
                 .andExpect(jsonPath("$.type", is("discover")))
                 //The name has to be author as that's the facet that we've asked
                 .andExpect(jsonPath("$.name", is("subject")))
-                //The facetType needs to be 'text' as that's the default configuration for the given facet
-                .andExpect(jsonPath("$.facetType", is("hierarchical")))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("api/discover/facets/subject")))
                 //The self link needs to contain the query that was specified in the parameters, this is how it
@@ -201,15 +182,7 @@ public class DiscoveryRelatedBoxComponentIT extends AbstractControllerIntegratio
                 .andExpect(jsonPath("$._links.self.href", containsString("scope=" + uuidSecondPerson)))
                 //This is how the page object must look like because it's the default
                 .andExpect(jsonPath("$.page",
-                        is(PageMatcher.pageEntry(0, 20))))
-                //These subject need to be present in the result
-                .andExpect(jsonPath("$._embedded.values", Matchers.hasSize(4)))
-                .andExpect(jsonPath("$._embedded.values", containsInAnyOrder(
-                        FacetValueMatcher.entryText("subject", "ExtraEntry", 3),
-                        FacetValueMatcher.entryText("subject", "TestingForMore", 2),
-                        FacetValueMatcher.entryText("subject", "AnotherTest", 1),
-                        FacetValueMatcher.entryText("subject", "Multiple", 1)
-                )));
+                        is(PageMatcher.pageEntry(0, 20))));
     }
 
     @Test
@@ -251,7 +224,7 @@ public class DiscoveryRelatedBoxComponentIT extends AbstractControllerIntegratio
                         FacetEntryMatcher.anyFacet("itemtype", "hierarchical"),
 //                        FacetEntryMatcher.anyFacet("subject", "hierarchical"),
                         FacetEntryMatcher.subjectFacet(false),
-                        FacetEntryMatcher.dateIssuedFacet(false),
+//                        FacetEntryMatcher.dateIssuedFacet(false),
                         FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
                 )))
                 //There always needs to be a self link available
@@ -292,7 +265,6 @@ public class DiscoveryRelatedBoxComponentIT extends AbstractControllerIntegratio
                         FacetEntryMatcher.anyFacet("funding", "text"),
                         FacetEntryMatcher.anyFacet("itemtype", "hierarchical"),
                         FacetEntryMatcher.subjectFacet(false),
-                        FacetEntryMatcher.dateIssuedFacet(false),
                         FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
                 )))
                 //There always needs to be a self link available
@@ -335,7 +307,7 @@ public class DiscoveryRelatedBoxComponentIT extends AbstractControllerIntegratio
                         FacetEntryMatcher.anyFacet("funding", "text"),
                         FacetEntryMatcher.subjectFacet(false),
                         FacetEntryMatcher.anyFacet("itemtype", "hierarchical"),
-                        FacetEntryMatcher.dateIssuedFacet(false),
+//                        FacetEntryMatcher.dateIssuedFacet(false),
                         FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
                 )))
                 //There always needs to be a self link available

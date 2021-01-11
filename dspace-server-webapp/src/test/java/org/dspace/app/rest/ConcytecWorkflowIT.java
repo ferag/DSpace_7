@@ -69,6 +69,7 @@ import org.dspace.xmlworkflow.storedcomponents.service.PoolTaskService;
 import org.dspace.xmlworkflow.storedcomponents.service.XmlWorkflowItemService;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -236,6 +237,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testItemSubmissionWithInstitutionReject() throws Exception {
 
         WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
@@ -287,6 +289,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testItemSubmissionWithInstitutionRejectAfterDirectorioReviewerApprovement() throws Exception {
 
         WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
@@ -345,6 +348,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testItemSubmissionWithConcytecApprove() throws Exception {
 
         WorkspaceItem workspaceItem = createWorkspaceItemWithFulltext(institutionCollection);
@@ -400,6 +404,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testItemSubmissionWithConcytecReviewerReject() throws Exception {
 
         WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
@@ -573,6 +578,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testItemCorrectionWithConcytecApproval() throws Exception {
 
         WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
@@ -658,6 +664,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testItemCorrectionWithConcytecRejection() throws Exception {
 
         WorkspaceItem workspaceItem = createWorkspaceItemWithFulltext(institutionCollection);
@@ -739,6 +746,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testItemCorrectionWithInstitutionRejection() throws Exception {
 
         WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
@@ -828,6 +836,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testItemSubmissionWithConcytecEditAndFollowingCorrection() throws Exception {
 
         WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
@@ -938,6 +947,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testItemCorrectionWithoutShadowCopyInTheDirectorio() throws Exception {
 
         context.turnOffAuthorisationSystem();

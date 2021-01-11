@@ -257,6 +257,17 @@
 	      <step id="license" />
 	    </submission-process>
 
+        <submission-process name="institutionpublication">
+            <step id="collection" />
+            <step id="extraction" />
+            <step id="publication" />
+            <step id="publication_indexing" />
+            <step id="publication_bibliographic_details" />
+            <step id="publication_references" />
+            <step id="upload" />
+            <step id="license" />
+        </submission-process>
+
         <!-- patent, used by some collection like 123456789/1001 -->
         <submission-process name="patent">
             <step id="collection" />

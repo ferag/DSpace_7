@@ -29,6 +29,8 @@
     <bean id="editDirectorioActionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.AcceptEditRejectDirectorioAction" scope="prototype"/>
     <bean id="finalEditDirectorioActionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.FinalEditDirectorioAction" scope="prototype"/>
 
+    <bean id="institutionRejectActionAPI" class="org.dspace.xmlworkflow.state.actions.userassignment.InstitutionRejectAction" scope="prototype"/>
+
     <bean id="autoassignactionAPI" class="org.dspace.xmlworkflow.state.actions.userassignment.AutoAssignAction" scope="prototype"/>
     <bean id="noUserSelectionActionAPI" class="org.dspace.xmlworkflow.state.actions.userassignment.NoUserSelectionAction" scope="prototype"/>
     <bean id="assignoriginalsubmitteractionAPI" class="org.dspace.xmlworkflow.state.actions.userassignment.AssignOriginalSubmitterAction" scope="prototype"/>
@@ -111,7 +113,7 @@
     <bean id="waitForConcytecAction" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
         <constructor-arg type="java.lang.String" value="waitForConcytecAction"/>
         <property name="processingAction" ref="waitForConcytecActionAPI" />
-        <property name="requiresUI" value="true"/>
+        <property name="requiresUI" value="false"/>
     </bean>
 
     <bean id="unlockInstitutionAction" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
@@ -143,6 +145,12 @@
         <constructor-arg type="java.lang.String" value=""/>
         <property name="processingAction"  ref="assignoriginalsubmitteractionAPI"/>
         <property name="requiresUI" value="false"/>
+    </bean> 
+    
+    <bean id="institutionRejectAction" class="org.dspace.xmlworkflow.state.actions.UserSelectionActionConfig" scope="prototype">
+        <constructor-arg type="java.lang.String" value="institutionRejectAction"/>
+        <property name="processingAction" ref="institutionRejectActionAPI"/>
+        <property name="requiresUI" value="true"/>
     </bean>
 
 </beans>

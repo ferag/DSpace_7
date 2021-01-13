@@ -272,13 +272,13 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         XmlWorkflowItem workflowItem = getWorkflowItem(item);
         assertThat(workflowItem, notNullValue());
 
-        List<ClaimedTask> tasks = claimedTaskService.findByWorkflowItem(context, workflowItem);
-        assertThat(tasks, hasSize(1));
+        List<PoolTask> poolTasks = poolTaskService.find(context, workflowItem);
+        assertThat(poolTasks, hasSize(1));
 
-        ClaimedTask task = tasks.get(0);
-        assertThat(task.getOwner(), equalTo(institutionUser));
+        PoolTask poolTask = poolTasks.get(0);
+        assertThat(poolTask.getGroup().getMemberGroups(), contains(reviewGroup));
 
-        rejectClaimedTaskViaRest(institutionUser, task, "wrong title");
+        performActionOnPoolTaskViaRest(institutionUser, poolTask);
 
         assertThat(reloadItem(item).isArchived(), is(false));
         assertThat(getWorkspaceItem(item), notNullValue());
@@ -330,13 +330,13 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(reloadItem(item).isArchived(), is(false));
         assertThat(reloadItem(shadowItemCopy).isArchived(), is(false));
 
-        List<ClaimedTask> tasks = claimedTaskService.findByWorkflowItem(context, workflowItem);
-        assertThat(tasks, hasSize(1));
+        List<PoolTask> poolTasks = poolTaskService.find(context, workflowItem);
+        assertThat(poolTasks, hasSize(1));
 
-        ClaimedTask task = tasks.get(0);
-        assertThat(task.getOwner(), equalTo(institutionUser));
+        PoolTask poolTask = poolTasks.get(0);
+        assertThat(poolTask.getGroup().getMemberGroups(), contains(reviewGroup));
 
-        rejectClaimedTaskViaRest(institutionUser, task, "wrong title");
+        performActionOnPoolTaskViaRest(institutionUser, poolTask);
 
         assertThat(reloadItem(item).isArchived(), is(false));
         assertThat(getWorkspaceItem(item), notNullValue());
@@ -799,13 +799,13 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         XmlWorkflowItem correctionWorkflowItem = getWorkflowItem(correctionItem);
         assertThat(correctionWorkflowItem, notNullValue());
 
-        List<ClaimedTask> tasks = claimedTaskService.findByWorkflowItem(context, correctionWorkflowItem);
-        assertThat(tasks, hasSize(1));
+        List<PoolTask> poolTasks = poolTaskService.find(context, correctionWorkflowItem);
+        assertThat(poolTasks, hasSize(1));
 
-        ClaimedTask task = tasks.get(0);
-        assertThat(task.getOwner(), equalTo(institutionUser));
+        PoolTask poolTask = poolTasks.get(0);
+        assertThat(poolTask.getGroup().getMemberGroups(), contains(reviewGroup));
 
-        rejectClaimedTaskViaRest(institutionUser, task, "wrong title");
+        performActionOnPoolTaskViaRest(institutionUser, poolTask);
 
         item = reloadItem(item);
         assertThat(item.getMetadata(), hasItem(with("dc.title", "Submission Item")));

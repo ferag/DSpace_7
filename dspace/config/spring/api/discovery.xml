@@ -1928,7 +1928,6 @@
             <list>
                 <!--Only find items of type Publication, Patent or Dataset-->
                 <value>search.resourcetype:Item AND (entityType_keyword:Publication OR entityType_keyword:Patent OR entityType_keyword:Dataset)</value>
-                <value>location.comm:${directorios.community-id}</value>
             </list>
         </property>
         <!--The configuration for the recent submissions-->

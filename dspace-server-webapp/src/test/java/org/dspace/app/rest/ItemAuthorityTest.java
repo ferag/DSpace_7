@@ -25,7 +25,6 @@ import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.Item;
-import org.dspace.content.authority.Choices;
 import org.dspace.content.authority.SimpleQueryCustomAuthorityFilter;
 import org.dspace.content.authority.service.ChoiceAuthorityService;
 import org.dspace.content.service.ItemService;
@@ -152,19 +151,6 @@ public class ItemAuthorityTest extends AbstractControllerIntegrationTest {
             .withRelationshipType("InstitutionOrgUnit")
             .build();
 
-
-        Item author_1 = ItemBuilder.createItem(context, collection)
-            .withTitle("Author 1")
-            .build();
-
-        Item author_2 = ItemBuilder.createItem(context, collection)
-            .withTitle("Author 2")
-            .build();
-
-        Item author_3 = ItemBuilder.createItem(context, otherInstitutionCollection)
-            .withTitle("Author 3")
-            .build();
-
         Item orgUnit_1 = ItemBuilder.createItem(context, orgUnits)
             .withTitle("OrgUnit_1")
             .build();
@@ -173,12 +159,20 @@ public class ItemAuthorityTest extends AbstractControllerIntegrationTest {
             .withTitle("OrgUnit_2")
             .build();
 
-        itemService.addMetadata(context, author_1, "person", "affiliation", "name", null, "OrgUnit_1",
-            orgUnit_1.getID().toString(), Choices.CF_ACCEPTED);
-        itemService.addMetadata(context, author_2, "person", "affiliation", "name", null, "OrgUnit_1",
-            orgUnit_1.getID().toString(), Choices.CF_ACCEPTED);
-        itemService.addMetadata(context, author_3, "person", "affiliation", "name", null, "OrgUnit_2",
-            orgUnit_2.getID().toString(), Choices.CF_ACCEPTED);
+        Item author_1 = ItemBuilder.createItem(context, collection)
+            .withTitle("Author 1")
+            .withPersonMainAffiliation("OrgUnit_1")
+            .build();
+
+        Item author_2 = ItemBuilder.createItem(context, collection)
+            .withTitle("Author 2")
+            .withPersonMainAffiliation("OrgUnit_1")
+            .build();
+
+        Item author_3 = ItemBuilder.createItem(context, otherInstitutionCollection)
+            .withTitle("Author 3")
+            .withPersonMainAffiliation("OrgUnit_2")
+            .build();
 
         setCommunityIdInQuery(parentCommunity.getID(), "Person");
 

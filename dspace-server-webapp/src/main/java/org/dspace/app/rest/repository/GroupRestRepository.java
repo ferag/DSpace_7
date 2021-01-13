@@ -22,6 +22,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.dspace.app.rest.Parameter;
 import org.dspace.app.rest.SearchRestMethod;
 import org.dspace.app.rest.converter.MetadataConverter;
+import org.dspace.app.rest.exception.RESTAuthorizationException;
 import org.dspace.app.rest.exception.RepositoryMethodNotImplementedException;
 import org.dspace.app.rest.exception.UnprocessableEntityException;
 import org.dspace.app.rest.model.GroupRest;
@@ -29,11 +30,16 @@ import org.dspace.app.rest.model.MetadataRest;
 import org.dspace.app.rest.model.MetadataValueRest;
 import org.dspace.app.rest.model.patch.Patch;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.authorize.service.AuthorizeService;
+import org.dspace.content.Collection;
 import org.dspace.content.DSpaceObject;
+import org.dspace.content.service.CollectionService;
 import org.dspace.core.Context;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.GroupType;
 import org.dspace.eperson.service.GroupService;
+import org.dspace.util.UUIDUtils;
+import org.dspace.xmlworkflow.service.XmlWorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -60,6 +66,15 @@ public class GroupRestRepository extends DSpaceObjectRestRepository<Group, Group
 
     @Autowired
     MetadataConverter metadataConverter;
+
+    @Autowired
+    private CollectionService collectionService;
+
+    @Autowired
+    private XmlWorkflowService workflowService;
+
+    @Autowired
+    private AuthorizeService authorizeService;
 
     @Override
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -150,6 +165,37 @@ public class GroupRestRepository extends DSpaceObjectRestRepository<Group, Group
                                                            Math.toIntExact(pageable.getPageSize()));
             return converter.toRestPage(groups, pageable, total, utils.obtainProjection());
         } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @SearchRestMethod(name = "byWorkflowRole")
+    @PreAuthorize("hasAuthority('AUTHENTICATED')")
+    public Page<GroupRest> findWorkflowGroup(@Parameter(value = "collection", required = true) String collectionId,
+        @Parameter(value = "workflowRole", required = true) String workflowRole, Pageable pageable) {
+
+        try {
+
+            Context context = obtainContext();
+            Collection collection = collectionService.find(context, UUIDUtils.fromString(collectionId));
+            if (collection == null) {
+                return null;
+            }
+
+            Group group = workflowService.getWorkflowRoleGroup(context, collection, workflowRole, null);
+            if (group == null) {
+                return null;
+            }
+
+            if (!authorizeService.isAdmin(context) && !gs.isMember(context, group)) {
+                throw new RESTAuthorizationException("User not allowed to retrieve workflow group data");
+            }
+
+            return converter.toRestPage(List.of(group), pageable, utils.obtainProjection());
+
+        } catch (RESTAuthorizationException e) {
+            throw e;
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
     }

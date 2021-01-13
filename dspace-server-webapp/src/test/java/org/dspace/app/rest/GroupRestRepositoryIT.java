@@ -11,9 +11,13 @@ import static com.jayway.jsonpath.JsonPath.read;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
 import static java.util.Arrays.asList;
 import static java.util.UUID.fromString;
+import static org.dspace.app.rest.matcher.EPersonMatcher.matchEPersonOnEmail;
+import static org.dspace.app.rest.matcher.GroupMatcher.matchGroupEntry;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadata;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -3204,6 +3208,226 @@ public class GroupRestRepositoryIT extends AbstractControllerIntegrationTest {
             .contentType(parseMediaType(TEXT_URI_LIST_VALUE))
             .content(REST_SERVER_URL + "eperson/groups/" + member.getID()))
             .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    public void testGetAllMembersLink() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Group group = createGroup("group");
+        Group firstSubGroup = createGroup("firstSubGroup", group);
+        Group secondSubGroup = createGroup("secondSubGroup", group);
+        Group thirdSubGroup = createGroup("thirdSubGroup", secondSubGroup);
+        Group anotherGroup = createGroup("anotherGroup");
+
+        createEPerson("first@user.it", group);
+        createEPerson("second@user.it", firstSubGroup);
+        createEPerson("third@user.it", thirdSubGroup);
+        createEPerson("another@user.it", anotherGroup);
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        getClient(authToken).perform(get("/api/eperson/groups/" + group.getID()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$._links.allMembers.href", containsString("groups/" + group.getID() + "/allMembers")));
+
+        getClient(authToken).perform(get("/api/eperson/groups/" + group.getID() + "/allMembers"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.allMembers", hasSize(3)))
+            .andExpect(jsonPath("$._embedded.allMembers", hasItem(matchEPersonOnEmail("first@user.it"))))
+            .andExpect(jsonPath("$._embedded.allMembers", hasItem(matchEPersonOnEmail("second@user.it"))))
+            .andExpect(jsonPath("$._embedded.allMembers", hasItem(matchEPersonOnEmail("third@user.it"))));
+    }
+
+    @Test
+    public void testFindWorkflowGroupWithAdmin() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Group reviewerGroup = createGroup("reviewer");
+
+        collection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Workflow group")
+            .withRoleGroup("reviewer", reviewerGroup)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        AtomicReference<String> idRef = new AtomicReference<String>();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        getClient(authToken).perform(get("/api/eperson/groups/search/byWorkflowRole")
+            .param("collection", collection.getID().toString())
+            .param("workflowRole", "reviewer"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.groups", hasSize(1)))
+            .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(), "$._embedded.groups[0].id")));
+
+        getClient(authToken).perform(get("/api/eperson/groups/" + idRef.get() + "/subgroups"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.subgroups", hasSize(1)))
+            .andExpect(jsonPath("$._embedded.subgroups[0]", matchGroupEntry(reviewerGroup.getID(), "reviewer")));
+
+    }
+
+    @Test
+    public void testFindWorkflowGroupWithMemberUser() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Group reviewerGroup = GroupBuilder.createGroup(context)
+            .withName("reviewer")
+            .addMember(eperson)
+            .build();
+
+        collection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Workflow group")
+            .withRoleGroup("reviewer", reviewerGroup)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(eperson.getEmail(), password);
+        AtomicReference<String> idRef = new AtomicReference<String>();
+
+        getClient(authToken).perform(get("/api/eperson/groups/search/byWorkflowRole")
+            .param("collection", collection.getID().toString())
+            .param("workflowRole", "reviewer"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.groups", hasSize(1)))
+            .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(), "$._embedded.groups[0].id")));
+
+        getClient(authToken).perform(get("/api/eperson/groups/" + idRef.get() + "/subgroups"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.subgroups", hasSize(1)))
+            .andExpect(jsonPath("$._embedded.subgroups[0]", matchGroupEntry(reviewerGroup.getID(), "reviewer")));
+
+    }
+
+    @Test
+    public void testFindWorkflowGroupWithNoLoggedUser() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Group reviewerGroup = createGroup("reviewer");
+
+        collection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Test collection")
+            .withRoleGroup("reviewer", reviewerGroup)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        getClient().perform(get("/api/eperson/groups/search/byWorkflowRole")
+            .param("collection", collection.getID().toString())
+            .param("workflowRole", "reviewer"))
+            .andExpect(status().isUnauthorized());
+
+    }
+
+    @Test
+    public void testFindWorkflowGroupWithNoMemberUser() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Group reviewerGroup = createGroup("reviewer");
+
+        collection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Test collection")
+            .withRoleGroup("reviewer", reviewerGroup)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(eperson.getEmail(), password);
+        getClient(authToken).perform(get("/api/eperson/groups/search/byWorkflowRole")
+            .param("collection", collection.getID().toString())
+            .param("workflowRole", "reviewer"))
+            .andExpect(status().isForbidden());
+
+    }
+
+    @Test
+    public void testFindWorkflowGroupWithoutRequiredParameters() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Group reviewerGroup = createGroup("reviewer");
+
+        collection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Test collection")
+            .withRoleGroup("reviewer", reviewerGroup)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(eperson.getEmail(), password);
+        getClient(authToken).perform(get("/api/eperson/groups/search/byWorkflowRole")
+            .param("workflowRole", "reviewer"))
+            .andExpect(status().isBadRequest());
+
+        getClient(authToken).perform(get("/api/eperson/groups/search/byWorkflowRole")
+            .param("collection", collection.getID().toString()))
+            .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    public void testFindWorkflowGroupWithCollectionNotFound() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Group reviewerGroup = createGroup("reviewer");
+
+        collection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Test collection")
+            .withRoleGroup("reviewer", reviewerGroup)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(eperson.getEmail(), password);
+        getClient(authToken).perform(get("/api/eperson/groups/search/byWorkflowRole")
+            .param("collection", UUID.randomUUID().toString())
+            .param("workflowRole", "reviewer"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.page.totalElements", is(0)));
+
+    }
+
+    @Test
+    public void testFindWorkflowGroupWithWorkflowRole() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        collection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Test collection")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(eperson.getEmail(), password);
+        getClient(authToken).perform(get("/api/eperson/groups/search/byWorkflowRole")
+            .param("collection", collection.getID().toString())
+            .param("workflowRole", "reviewer"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.page.totalElements", is(0)));
+
+    }
+
+    private Group createGroup(String name) {
+        return GroupBuilder.createGroup(context).withName(name).build();
+    }
+
+    private Group createGroup(String name, Group parent) {
+        return GroupBuilder.createGroup(context).withName(name).withParent(parent).build();
+    }
+
+    private EPerson createEPerson(String email, Group group) {
+        return EPersonBuilder.createEPerson(context).withEmail(email).withGroupMembership(group).build();
     }
 
 }

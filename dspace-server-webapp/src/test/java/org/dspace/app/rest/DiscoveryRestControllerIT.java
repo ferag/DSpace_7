@@ -64,7 +64,6 @@ import org.dspace.discovery.indexobject.ItemIndexFactoryImpl;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.services.ConfigurationService;
-import org.dspace.services.ConfigurationService;
 import org.dspace.utils.DSpace;
 import org.dspace.xmlworkflow.storedcomponents.ClaimedTask;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;

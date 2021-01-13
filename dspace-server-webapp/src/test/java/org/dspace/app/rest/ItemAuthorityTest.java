@@ -161,17 +161,17 @@ public class ItemAuthorityTest extends AbstractControllerIntegrationTest {
 
         Item author_1 = ItemBuilder.createItem(context, collection)
             .withTitle("Author 1")
-            .withPersonMainAffiliation("OrgUnit_1")
+            .withPersonMainAffiliation(orgUnit_1.getName(), orgUnit_1.getID().toString())
             .build();
 
         Item author_2 = ItemBuilder.createItem(context, collection)
             .withTitle("Author 2")
-            .withPersonMainAffiliation("OrgUnit_1")
+            .withPersonMainAffiliation(orgUnit_1.getName(), orgUnit_1.getID().toString())
             .build();
 
         Item author_3 = ItemBuilder.createItem(context, otherInstitutionCollection)
             .withTitle("Author 3")
-            .withPersonMainAffiliation("OrgUnit_2")
+            .withPersonMainAffiliation(orgUnit_2.getName(), orgUnit_2.getID().toString())
             .build();
 
         setCommunityIdInQuery(parentCommunity.getID(), "Person");

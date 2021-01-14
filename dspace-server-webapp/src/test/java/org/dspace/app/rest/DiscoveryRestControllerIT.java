@@ -8,6 +8,7 @@
 package org.dspace.app.rest;
 
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
+import static org.dspace.app.rest.matcher.PageMatcher.pageEntryWithTotalPagesAndElements;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -63,8 +64,10 @@ import org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet;
 import org.dspace.discovery.indexobject.ItemIndexFactoryImpl;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.GroupType;
 import org.dspace.services.ConfigurationService;
 import org.dspace.utils.DSpace;
+import org.dspace.workflow.WorkflowItem;
 import org.dspace.xmlworkflow.storedcomponents.ClaimedTask;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.hamcrest.Matchers;
@@ -3522,7 +3525,7 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                 // property because we don't exceed their default limit for a hasMore true (the default is 10)
                 .andExpect(jsonPath("$._embedded.facets", Matchers.containsInAnyOrder(
                         FacetEntryMatcher.resourceTypeFacet(false),
-                        FacetEntryMatcher.typeFacet(false)
+                        FacetEntryMatcher.entityTypeFacet(false)
 //                        FacetEntryMatcher.dateIssuedFacet(false)
                 )))
                 //There always needs to be a self link
@@ -3568,7 +3571,7 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                 // property because we don't exceed their default limit for a hasMore true (the default is 10)
                 .andExpect(jsonPath("$._embedded.facets", Matchers.containsInAnyOrder(
                         FacetEntryMatcher.resourceTypeFacet(false),
-                        FacetEntryMatcher.typeFacet(false)
+                        FacetEntryMatcher.entityTypeFacet(false)
 //                        FacetEntryMatcher.dateIssuedFacet(false)
                 )))
                 //There always needs to be a self link
@@ -4918,6 +4921,105 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         StringUtils.join(new String[] { "4Science", "null", "null", "null", "null" },
                                 ItemIndexFactoryImpl.STORE_SEPARATOR)
                         ));
+    }
+
+    @Test
+    public void testDiscoverSearchObjectsWithInstitutionUser() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EPerson firstSubmitter = createEPerson("submitter1@example.com");
+        EPerson secondSubmitter = createEPerson("submitter2@example.com");
+        EPerson thirdSubmitter = createEPerson("submitter3@example.com");
+
+        parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
+        configurationService.setProperty("institution.parent-community-id", parentCommunity.getID().toString());
+
+        Group firstScopedRole = createScopedRole("Scoped Role - First institution");
+        Group secondScopedRole = createScopedRole("Scoped Role - Second institution");
+
+        Community firstInstitution = createInstitution("First institution", parentCommunity, firstScopedRole);
+        Community secondInstitution = createInstitution("Second institution", parentCommunity, secondScopedRole);
+
+        Collection firstCollection = createCollection("First collection", firstInstitution);
+        Collection secondCollection = createCollection("Second collection", firstInstitution);
+        Collection thirdCollection = createCollection("Third collection", secondInstitution);
+
+        context.setCurrentUser(firstSubmitter);
+        createWorkspaceItem("Item 1", firstCollection);
+
+        context.setCurrentUser(secondSubmitter);
+        createWorkflowItem("Item 2", firstCollection);
+        createItem("Item 3", secondCollection);
+
+        context.setCurrentUser(thirdSubmitter);
+        createItem("Item 4", thirdCollection);
+        createWorkspaceItem("Item 5", thirdCollection);
+
+        context.restoreAuthSystemState();
+
+        configurationService.setProperty("authentication-password.login.specialgroup", null);
+
+        // without scoped role group
+        getClient(getAuthToken(firstSubmitter.getEmail(), password)).perform(get("/api/discover/search/objects")
+            .param("configuration", "workspace"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.searchResult.page", is(pageEntryWithTotalPagesAndElements(0, 20, 1, 1))));
+
+        configurationService.setProperty("authentication-password.login.specialgroup", firstScopedRole.getName());
+
+        // with first scoped role group
+        getClient(getAuthToken(firstSubmitter.getEmail(), password)).perform(get("/api/discover/search/objects")
+            .param("configuration", "workspace"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.searchResult.page", is(pageEntryWithTotalPagesAndElements(0, 20, 1, 3))));
+
+        configurationService.setProperty("authentication-password.login.specialgroup", null);
+
+        // without scoped role group
+        getClient(getAuthToken(secondSubmitter.getEmail(), password)).perform(get("/api/discover/search/objects")
+            .param("configuration", "workspace"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.searchResult.page", is(pageEntryWithTotalPagesAndElements(0, 20, 1, 2))));
+
+        configurationService.setProperty("authentication-password.login.specialgroup", firstScopedRole.getName());
+
+        // with scoped role group
+        getClient(getAuthToken(secondSubmitter.getEmail(), password)).perform(get("/api/discover/search/objects")
+            .param("configuration", "workspace"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.searchResult.page", is(pageEntryWithTotalPagesAndElements(0, 20, 1, 3))));
+    }
+
+    private EPerson createEPerson(String email) {
+        return EPersonBuilder.createEPerson(context).withEmail(email).withPassword(password).build();
+    }
+
+    private Group createScopedRole(String name) {
+        return GroupBuilder.createGroup(context).withName(name).withType(GroupType.SCOPED).build();
+    }
+
+    private Community createInstitution(String name, Community parentCommunity, Group scopedRole) {
+        return CommunityBuilder.createSubCommunity(context, parentCommunity)
+            .withName(name)
+            .withInstitutionalScopedRole(scopedRole)
+            .build();
+    }
+
+    private Collection createCollection(String name, Community community) {
+        return CollectionBuilder.createCollection(context, community).withName(name).build();
+    }
+
+    private Item createItem(String title, Collection collection) {
+        return ItemBuilder.createItem(context, collection).withTitle(title).build();
+    }
+
+    private WorkspaceItem createWorkspaceItem(String title, Collection col) {
+        return WorkspaceItemBuilder.createWorkspaceItem(context, col).withTitle(title).build();
+    }
+
+    private WorkflowItem createWorkflowItem(String title, Collection col) {
+        return WorkflowItemBuilder.createWorkflowItem(context, col).withTitle(title).build();
     }
 
 }

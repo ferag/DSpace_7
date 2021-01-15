@@ -238,6 +238,10 @@ public class CollectionBuilder extends AbstractDSpaceObjectBuilder<Collection> {
         return this;
     }
 
+    public CollectionBuilder withSharedWorkspace() {
+        return setMetadataSingleValue(collection, "cris", "workspace", "shared", "true");
+    }
+
     @Override
     public Collection build() {
         try {

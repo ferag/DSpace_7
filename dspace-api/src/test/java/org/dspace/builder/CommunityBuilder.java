@@ -110,6 +110,12 @@ public class CommunityBuilder extends AbstractDSpaceObjectBuilder<Community> {
         return this;
     }
 
+    public CommunityBuilder withInstitutionalScopedRole(Group group) {
+        addMetadataValue(community, "perucris", "community", "institutional-scoped-role", null,
+            group.getName(), group.getID().toString(), 600);
+        return this;
+    }
+
     public CommunityBuilder addParentCommunity(final Context context, final Community parent)
         throws SQLException, AuthorizeException {
         communityService.addSubcommunity(context, parent, community);

@@ -720,7 +720,7 @@
         <property name="sidebarFacets">
             <list>
                 <ref bean="searchFilterObjectNamedType" />
-                <ref bean="searchFilterType" />
+                <ref bean="searchFilterEntityType" />
 <!--                <ref bean="searchFilterIssued" />-->
             </list>
         </property>
@@ -728,7 +728,7 @@
         <property name="searchFilters">
             <list>
                 <ref bean="searchFilterObjectNamedType" />
-                <ref bean="searchFilterType" />
+                <ref bean="searchFilterEntityType" />
 <!--                <ref bean="searchFilterIssued" />-->
             </list>
         </property>

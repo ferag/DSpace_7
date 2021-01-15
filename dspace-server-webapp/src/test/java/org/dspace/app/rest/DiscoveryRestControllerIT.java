@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -43,6 +44,7 @@ import org.dspace.app.rest.matcher.SortOptionMatcher;
 import org.dspace.app.rest.matcher.WorkflowItemMatcher;
 import org.dspace.app.rest.matcher.WorkspaceItemMatcher;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
+import org.dspace.authorize.AuthorizeException;
 import org.dspace.builder.BitstreamBuilder;
 import org.dspace.builder.ClaimedTaskBuilder;
 import org.dspace.builder.CollectionBuilder;
@@ -67,7 +69,6 @@ import org.dspace.eperson.Group;
 import org.dspace.eperson.GroupType;
 import org.dspace.services.ConfigurationService;
 import org.dspace.utils.DSpace;
-import org.dspace.workflow.WorkflowItem;
 import org.dspace.xmlworkflow.storedcomponents.ClaimedTask;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.hamcrest.Matchers;
@@ -4941,20 +4942,20 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
         Community firstInstitution = createInstitution("First institution", parentCommunity, firstScopedRole);
         Community secondInstitution = createInstitution("Second institution", parentCommunity, secondScopedRole);
 
-        Collection firstCollection = createCollection("First collection", firstInstitution);
-        Collection secondCollection = createCollection("Second collection", firstInstitution);
-        Collection thirdCollection = createCollection("Third collection", secondInstitution);
+        Collection firstCollection = createCollection("Collection1", firstInstitution, firstSubmitter, secondSubmitter);
+        Collection secondCollection = createCollection("Collection2", firstInstitution, secondSubmitter);
+        Collection thirdCollection = createCollection("Collection3", secondInstitution, thirdSubmitter);
 
         context.setCurrentUser(firstSubmitter);
-        createWorkspaceItem("Item 1", firstCollection);
+        WorkspaceItem wsItem = createWorkspaceItem("WorkspaceItem 1", firstCollection);
 
         context.setCurrentUser(secondSubmitter);
-        createWorkflowItem("Item 2", firstCollection);
-        createItem("Item 3", secondCollection);
+        XmlWorkflowItem wfItem = createWorkflowItem("WorkflowItem 1", firstCollection);
+        Item item = createItem("Item 1", secondCollection);
 
         context.setCurrentUser(thirdSubmitter);
-        createItem("Item 4", thirdCollection);
-        createWorkspaceItem("Item 5", thirdCollection);
+        createItem("Item 2", thirdCollection);
+        createWorkspaceItem("WorkspaceItem 2", thirdCollection);
 
         context.restoreAuthSystemState();
 
@@ -4964,7 +4965,12 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
         getClient(getAuthToken(firstSubmitter.getEmail(), password)).perform(get("/api/discover/search/objects")
             .param("configuration", "workspace"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$._embedded.searchResult.page", is(pageEntryWithTotalPagesAndElements(0, 20, 1, 1))));
+            .andExpect(jsonPath("$._embedded.searchResult.page", is(pageEntryWithTotalPagesAndElements(0, 20, 1, 1))))
+            .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.containsInAnyOrder(
+                Matchers.allOf(
+                    SearchResultMatcher.match("submission", "workspaceitem", "workspaceitems"),
+                    JsonPathMatchers.hasJsonPath("$._embedded.indexableObject",
+                        is(WorkspaceItemMatcher.matchProperties(wsItem)))))));
 
         configurationService.setProperty("authentication-password.login.specialgroup", firstScopedRole.getName());
 
@@ -4972,7 +4978,20 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
         getClient(getAuthToken(firstSubmitter.getEmail(), password)).perform(get("/api/discover/search/objects")
             .param("configuration", "workspace"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$._embedded.searchResult.page", is(pageEntryWithTotalPagesAndElements(0, 20, 1, 3))));
+            .andExpect(jsonPath("$._embedded.searchResult.page", is(pageEntryWithTotalPagesAndElements(0, 20, 1, 3))))
+            .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.containsInAnyOrder(
+                Matchers.allOf(
+                    SearchResultMatcher.match("core", "item", "items"),
+                    JsonPathMatchers.hasJsonPath("$._embedded.indexableObject",
+                        is(ItemMatcher.matchItemProperties(item)))),
+                Matchers.allOf(
+                    SearchResultMatcher.match("submission", "workspaceitem", "workspaceitems"),
+                    JsonPathMatchers.hasJsonPath("$._embedded.indexableObject",
+                        is(WorkspaceItemMatcher.matchProperties(wsItem)))),
+                Matchers.allOf(
+                    SearchResultMatcher.match("workflow", "workflowitem", "workflowitems"),
+                    JsonPathMatchers.hasJsonPath("$._embedded.indexableObject",
+                        is(WorkflowItemMatcher.matchProperties(wfItem)))))));
 
         configurationService.setProperty("authentication-password.login.specialgroup", null);
 
@@ -4980,7 +4999,16 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
         getClient(getAuthToken(secondSubmitter.getEmail(), password)).perform(get("/api/discover/search/objects")
             .param("configuration", "workspace"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$._embedded.searchResult.page", is(pageEntryWithTotalPagesAndElements(0, 20, 1, 2))));
+            .andExpect(jsonPath("$._embedded.searchResult.page", is(pageEntryWithTotalPagesAndElements(0, 20, 1, 2))))
+            .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.containsInAnyOrder(
+                Matchers.allOf(
+                    SearchResultMatcher.match("core", "item", "items"),
+                    JsonPathMatchers.hasJsonPath("$._embedded.indexableObject",
+                        is(ItemMatcher.matchItemProperties(item)))),
+                Matchers.allOf(
+                    SearchResultMatcher.match("workflow", "workflowitem", "workflowitems"),
+                    JsonPathMatchers.hasJsonPath("$._embedded.indexableObject",
+                        is(WorkflowItemMatcher.matchProperties(wfItem)))))));
 
         configurationService.setProperty("authentication-password.login.specialgroup", firstScopedRole.getName());
 
@@ -4988,7 +5016,20 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
         getClient(getAuthToken(secondSubmitter.getEmail(), password)).perform(get("/api/discover/search/objects")
             .param("configuration", "workspace"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$._embedded.searchResult.page", is(pageEntryWithTotalPagesAndElements(0, 20, 1, 3))));
+            .andExpect(jsonPath("$._embedded.searchResult.page", is(pageEntryWithTotalPagesAndElements(0, 20, 1, 3))))
+            .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.containsInAnyOrder(
+                Matchers.allOf(
+                    SearchResultMatcher.match("core", "item", "items"),
+                    JsonPathMatchers.hasJsonPath("$._embedded.indexableObject",
+                        is(ItemMatcher.matchItemProperties(item)))),
+                Matchers.allOf(
+                    SearchResultMatcher.match("submission", "workspaceitem", "workspaceitems"),
+                    JsonPathMatchers.hasJsonPath("$._embedded.indexableObject",
+                        is(WorkspaceItemMatcher.matchProperties(wsItem)))),
+                Matchers.allOf(
+                    SearchResultMatcher.match("workflow", "workflowitem", "workflowitems"),
+                    JsonPathMatchers.hasJsonPath("$._embedded.indexableObject",
+                        is(WorkflowItemMatcher.matchProperties(wfItem)))))));
     }
 
     private EPerson createEPerson(String email) {
@@ -5006,8 +5047,14 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
             .build();
     }
 
-    private Collection createCollection(String name, Community community) {
-        return CollectionBuilder.createCollection(context, community).withName(name).build();
+    private Collection createCollection(String name, Community community, EPerson... submitters)
+        throws SQLException, AuthorizeException {
+        return CollectionBuilder.createCollection(context, community)
+            .withWorkflowGroup(1, admin)
+            .withSubmitterGroup(submitters)
+            .withName(name)
+            .withSharedWorkspace()
+            .build();
     }
 
     private Item createItem(String title, Collection collection) {
@@ -5018,7 +5065,7 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
         return WorkspaceItemBuilder.createWorkspaceItem(context, col).withTitle(title).build();
     }
 
-    private WorkflowItem createWorkflowItem(String title, Collection col) {
+    private XmlWorkflowItem createWorkflowItem(String title, Collection col) {
         return WorkflowItemBuilder.createWorkflowItem(context, col).withTitle(title).build();
     }
 

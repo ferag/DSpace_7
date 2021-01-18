@@ -73,9 +73,6 @@ public class UnlockInstitutionAction extends ProcessingAction {
 
         Item institutionItem = concytecWorkflowService.findCopiedItem(context, item);
 
-        Item itemToCorrect = itemCorrectionService.getCorrectedItem(context, item);
-        boolean isCorrectionItem = itemToCorrect != null;
-
         ConcytecFeedback concytecFeedback = concytecWorkflowService.getConcytecFeedback(context, item);
 
         try {
@@ -88,11 +85,7 @@ public class UnlockInstitutionAction extends ProcessingAction {
             throw new WorkflowException(e);
         }
 
-        if (isCorrectionItem) {
-            return finalizeItemCorrection(context, workflowItem, concytecFeedback);
-        } else {
-            return finalizeItemCreation(context, workflowItem, institutionItem, concytecFeedback);
-        }
+        return finalizeItem(context, workflowItem, institutionItem, concytecFeedback);
 
     }
 
@@ -119,8 +112,28 @@ public class UnlockInstitutionAction extends ProcessingAction {
 
     }
 
-    private ActionResult finalizeItemCorrection(Context context, XmlWorkflowItem workflowItem,
+    private ActionResult finalizeItem(Context context, XmlWorkflowItem workflowItem, Item institutionItem,
+        ConcytecFeedback concytecFeedback) throws SQLException, AuthorizeException, IOException, WorkflowException {
+
+        Item itemToCorrect = itemCorrectionService.getCorrectedItem(context, workflowItem.getItem());
+        if (itemToCorrect != null) {
+            return finalizeItemCorrection(context, workflowItem, institutionItem, concytecFeedback);
+        }
+
+        Item itemToWithdraw = concytecWorkflowService.findWithdrawnItem(context, workflowItem.getItem());
+        if (itemToWithdraw != null) {
+            return finalizeItemWithdraw(context, workflowItem, itemToWithdraw, concytecFeedback);
+        }
+
+        return finalizeItemCreation(context, workflowItem, institutionItem, concytecFeedback);
+    }
+
+    private ActionResult finalizeItemCorrection(Context context, XmlWorkflowItem workflowItem, Item institutionItem,
         ConcytecFeedback concytecFeedback) throws SQLException, AuthorizeException, IOException {
+
+        if (institutionItem != null) {
+            replaceWillBeReferencedWithItemId(context, workflowItem, institutionItem);
+        }
 
         if (concytecFeedback == ConcytecFeedback.REJECT) {
             workflowService.deleteWorkflowByWorkflowItem(context, workflowItem, context.getCurrentUser());
@@ -136,15 +149,7 @@ public class UnlockInstitutionAction extends ProcessingAction {
         ConcytecFeedback concytecFeedback) throws SQLException, AuthorizeException, WorkflowException {
 
         if (institutionItem != null) {
-
-            Mode originalMode = context.getCurrentMode();
-            try {
-                context.setMode(Mode.BATCH_EDIT);
-                replaceWillBeReferencedWithItemId(context, workflowItem.getItem(), institutionItem);
-            } finally {
-                context.setMode(originalMode);
-            }
-
+            replaceWillBeReferencedWithItemId(context, workflowItem, institutionItem);
         }
 
         if (concytecFeedback == ConcytecFeedback.REJECT) {
@@ -154,6 +159,28 @@ public class UnlockInstitutionAction extends ProcessingAction {
         }
 
         return getCompleteActionResult();
+    }
+
+    private ActionResult finalizeItemWithdraw(Context context, XmlWorkflowItem workflowItem, Item itemToWithdraw,
+        ConcytecFeedback feedback) throws SQLException, AuthorizeException, IOException {
+
+        if (feedback != ConcytecFeedback.REJECT) {
+            itemService.withdraw(context, itemToWithdraw);
+        }
+
+        workflowService.deleteWorkflowByWorkflowItem(context, workflowItem, context.getCurrentUser());
+        return getCancelActionResult();
+    }
+
+    private void replaceWillBeReferencedWithItemId(Context context, XmlWorkflowItem workflowItem, Item institutionItem)
+        throws SQLException, AuthorizeException {
+        Mode originalMode = context.getCurrentMode();
+        try {
+            context.setMode(Mode.BATCH_EDIT);
+            replaceWillBeReferencedWithItemId(context, workflowItem.getItem(), institutionItem);
+        } finally {
+            context.setMode(originalMode);
+        }
     }
 
     private void replaceWillBeReferencedWithItemId(Context context, Item item, Item institutionItem)

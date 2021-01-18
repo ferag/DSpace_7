@@ -23,9 +23,25 @@ import org.dspace.xmlworkflow.ConcytecFeedback;
  */
 public interface ConcytecWorkflowService {
 
+    /**
+     * Left type of the shadow copy relationship.
+     */
     public static final String HAS_SHADOW_COPY_RELATIONSHIP = "hasShadowCopy";
 
+    /**
+     * Right type of the shadow copy relationship.
+     */
     public static final String IS_SHADOW_COPY_RELATIONSHIP = "isShadowCopy";
+
+    /**
+     * Left type of the withdrawn relationship.
+     */
+    public static final String IS_WITHDRAW_OF_ITEM_RELATIONSHIP = "isWithdrawOfItem";
+
+    /**
+     * Right type of the withdrawn relationship.
+     */
+    public static final String IS_WITHDRAWN_BY_ITEM_RELATIONSHIP = "isWithdrawnByItem";
 
     /**
      * Create a shadow copy relationship between the two given items
@@ -100,5 +116,15 @@ public interface ConcytecWorkflowService {
      * @throws SQLException if an SQL error occurs
      */
     String getConcytecComment(Context context, Item item) throws SQLException;
+
+    /**
+     * Find the item to be withdraw related to the given item.
+     *
+     * @param context the DSpace context
+     * @param item    the item that represents the withdraw request
+     * @return the withdrawn item, if any
+     * @throws SQLException if an SQL error occurs
+     */
+    Item findWithdrawnItem(Context context, Item item) throws SQLException;
 
 }

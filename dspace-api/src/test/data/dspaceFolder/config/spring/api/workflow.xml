@@ -23,7 +23,7 @@
                 <ref bean="reviewstep"/>
                 <ref bean="editstep"/>
                 <ref bean="finaleditstep"/>
-                <ref bean="checkcorrectionstep"/>
+                <ref bean="finalizeInstitutionItemStep"/>
             </util:list>
         </property>
     </bean>
@@ -35,7 +35,7 @@
             <util:list>
                 <ref bean="shadowCopyStep"/>
                 <ref bean="waitForConcytecStep"/>
-                <ref bean="checkcorrectionstep"/>
+                <ref bean="finalizeInstitutionItemStep"/>
             </util:list>
         </property>
     </bean>
@@ -104,7 +104,7 @@
         <property name="outcomes">
             <util:map>
                 <entry key="#{ T(org.dspace.xmlworkflow.state.actions.ActionResult).OUTCOME_COMPLETE}"
-                       value-ref="checkcorrectionstep"/>
+                       value-ref="finalizeInstitutionItemStep"/>
             </util:map>
         </property>
         <property name="actions">
@@ -121,7 +121,7 @@
                   value="The people responsible for this step are able to edit the metadata of incoming submissions, but will not be able to reject them."/>
     </bean>
     
-    <bean name="checkcorrectionstep" class="org.dspace.xmlworkflow.state.Step">
+    <bean name="finalizeInstitutionItemStep" class="org.dspace.xmlworkflow.state.Step">
         <property name="userSelectionMethod" ref="noUserSelectionAction"/>
         <property name="actions">
             <list>
@@ -232,8 +232,8 @@
         <property name="userSelectionMethod" ref="noUserSelectionAction"/>
         <property name="outcomes">
             <util:map>
-                <entry key="#{ T(org.dspace.xmlworkflow.state.actions.ActionResult).OUTCOME_COMPLETE}"
-                       value-ref="waitForConcytecStep"/>
+                <entry key="#{ T(org.dspace.xmlworkflow.state.actions.ActionResult).OUTCOME_COMPLETE}" value-ref="waitForConcytecStep"/>
+                <entry key="#{ T(org.dspace.xmlworkflow.state.actions.processingaction.ShadowCopyAction).OUTCOME_FINALIZE_ITEM}" value-ref="finalizeInstitutionItemStep"/>
             </util:map>
         </property>
         <property name="actions">
@@ -249,7 +249,7 @@
         <property name="outcomes">
             <util:map>
                 <entry key="#{ T(org.dspace.xmlworkflow.state.actions.ActionResult).OUTCOME_COMPLETE}"
-                       value-ref="checkcorrectionstep"/>
+                       value-ref="finalizeInstitutionItemStep"/>
             </util:map>
         </property>
         <property name="actions">

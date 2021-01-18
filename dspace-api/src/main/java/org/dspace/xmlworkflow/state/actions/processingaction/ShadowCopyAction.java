@@ -60,6 +60,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class ShadowCopyAction extends ProcessingAction {
 
+    public static final int OUTCOME_FINALIZE_ITEM = 1;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ShadowCopyAction.class);
 
     @Autowired
@@ -102,12 +104,13 @@ public class ShadowCopyAction extends ProcessingAction {
         throws SQLException, WorkflowException, AuthorizeException, IOException {
 
         WorkspaceItem workspaceItemShadowCopy = createShadowCopy(context, workflowItem.getItem());
-
-        if (workspaceItemShadowCopy != null) {
-            replaceMetadataAuthorities(context, workspaceItemShadowCopy.getItem());
-            setCrisPolicyGroupMetadata(context, workspaceItemShadowCopy.getItem());
-            workflowService.start(context, workspaceItemShadowCopy);
+        if (workspaceItemShadowCopy == null) {
+            return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, OUTCOME_FINALIZE_ITEM);
         }
+
+        replaceMetadataAuthorities(context, workspaceItemShadowCopy.getItem());
+        setCrisPolicyGroupMetadata(context, workspaceItemShadowCopy.getItem());
+        workflowService.start(context, workspaceItemShadowCopy);
 
         return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, ActionResult.OUTCOME_COMPLETE);
     }

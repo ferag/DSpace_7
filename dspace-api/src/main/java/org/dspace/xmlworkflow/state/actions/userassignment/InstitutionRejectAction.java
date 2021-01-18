@@ -79,9 +79,15 @@ public class InstitutionRejectAction extends UserSelectionAction {
             xmlWorkflowService.deleteWorkflowByWorkflowItem(context, workflowShadowItemCopy, currentUser);
         }
 
-        xmlWorkflowService.sendWorkflowItemBackSubmission(context, workflowItem, currentUser, startId, "");
+        Item itemToWithdraw = concytecWorkflowService.findWithdrawnItem(context, workflowItem.getItem());
+        if (itemToWithdraw == null) {
+            xmlWorkflowService.sendWorkflowItemBackSubmission(context, workflowItem, currentUser, startId, "");
+        } else {
+            xmlWorkflowService.deleteWorkflowByWorkflowItem(context, workflowItem, currentUser);
+        }
 
         return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, ActionResult.OUTCOME_COMPLETE);
+
     }
 
     @Override

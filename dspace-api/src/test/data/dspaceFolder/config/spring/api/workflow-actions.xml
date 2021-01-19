@@ -10,7 +10,7 @@
     <bean id="reviewactionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.ReviewAction" scope="prototype"/>
     <bean id="editactionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.AcceptEditRejectAction" scope="prototype"/>
     <bean id="finaleditactionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.FinalEditAction" scope="prototype"/>
-    <bean id="finalizeInstitutionItemActionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.FinalizeInstitutionItemAction" scope="prototype"/>
+    <bean id="finalizeItemActionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.FinalizeItemAction" scope="prototype"/>
     <bean id="singleuserreviewactionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.SingleUserReviewAction" scope="prototype"/>
 
     <bean id="selectrevieweractionAPI" class="org.dspace.xmlworkflow.state.actions.processingaction.SelectReviewerAction" scope="prototype">
@@ -52,9 +52,9 @@
         <property name="requiresUI" value="true"/>
     </bean>
         
-    <bean id="finalizeInstitutionItemAction" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
+    <bean id="finalizeItemAction" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
         <constructor-arg type="java.lang.String" value="checkcorrectionaction"/>
-        <property name="processingAction" ref="finalizeInstitutionItemActionAPI"/>
+        <property name="processingAction" ref="finalizeItemActionAPI"/>
         <property name="requiresUI" value="false"/>
     </bean>
 

@@ -32,7 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  *
  */
-public class FinalizeInstitutionItemAction extends ProcessingAction {
+public class FinalizeItemAction extends ProcessingAction {
 
     @Autowired
     private ItemCorrectionService itemCorrectionService;

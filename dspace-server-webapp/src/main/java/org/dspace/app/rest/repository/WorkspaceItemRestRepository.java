@@ -202,7 +202,7 @@ public class WorkspaceItemRestRepository extends DSpaceRestRepository<WorkspaceI
 
             UUID itemId = UUIDUtils.fromString(itemUUID);
 
-            if (itemId != null && !isAuthorizedToCorrect(context, itemId)) {
+            if (itemId != null && !isAuthorizedToCorrect(context, itemId, relationship)) {
                 throw new RESTAuthorizationException("The user is not allowed to correct the given item");
             }
 
@@ -548,7 +548,11 @@ public class WorkspaceItemRestRepository extends DSpaceRestRepository<WorkspaceI
         return Integer.class;
     }
 
-    private boolean isAuthorizedToCorrect(Context context, UUID itemId) throws SQLException {
+    private boolean isAuthorizedToCorrect(Context context, UUID itemId, String relationship) throws SQLException {
+
+        if (!relationship.equals(itemCorrectionService.getCorrectionRelationshipName())) {
+            return true;
+        }
 
         AuthorizationFeature itemCorrectionFeature = authorizationFeatureService.find(ItemCorrectionFeature.NAME);
         if (itemCorrectionFeature == null) {

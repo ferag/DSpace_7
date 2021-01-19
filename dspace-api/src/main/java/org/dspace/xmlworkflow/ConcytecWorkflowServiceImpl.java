@@ -146,7 +146,7 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
 
         EntityType type = entityTypeService.findByItem(context, item);
         if (type == null) {
-            throw new IllegalArgumentException("No entity type found for the item with id: " + type);
+            throw new IllegalArgumentException("No entity type found for the item with id: " + item.getID());
         }
 
         List<RelationshipType> relationshipTypes = relationshipTypeService.findByTypeAndTypeNames(context, type, isLeft,

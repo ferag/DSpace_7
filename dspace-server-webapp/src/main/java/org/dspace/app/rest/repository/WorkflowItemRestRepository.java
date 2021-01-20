@@ -171,6 +171,7 @@ public class WorkflowItemRestRepository extends DSpaceRestRepository<WorkflowIte
         }
         try {
             source = submissionService.createWorkflowItem(context, stringList.get(0));
+            source = context.reloadEntity(source);
         } catch (AuthorizeException e) {
             throw new RESTAuthorizationException(e);
         } catch (WorkflowException e) {
@@ -181,7 +182,7 @@ public class WorkflowItemRestRepository extends DSpaceRestRepository<WorkflowIte
                 "a workflow and adding it to db.", e);
         }
         //if the item go directly in published status we have to manage a status code 204 with no content
-        if (source.getItem().isArchived()) {
+        if (source == null || source.getItem().isArchived() || source.getItem().isWithdrawn()) {
             return null;
         }
         return converter.toRest(source, utils.obtainProjection());

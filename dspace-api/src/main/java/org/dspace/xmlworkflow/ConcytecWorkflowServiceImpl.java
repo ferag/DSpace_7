@@ -10,6 +10,7 @@ package org.dspace.xmlworkflow;
 import static org.dspace.xmlworkflow.ConcytecFeedback.fromString;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -121,6 +122,9 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
     private List<Relationship> findItemShadowRelationships(Context context, Item item, boolean isLeft)
         throws SQLException {
         RelationshipType shadowRelationshipType = findShadowRelationshipType(context, item, isLeft);
+        if (shadowRelationshipType == null) {
+            return Collections.emptyList();
+        }
         return relationshipService.findByItemAndRelationshipType(context, item, shadowRelationshipType, isLeft);
     }
 
@@ -131,8 +135,11 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
 
     private List<Relationship> findItemWithdrawnRelationships(Context context, Item item, boolean isLeft)
         throws SQLException {
-        RelationshipType shadowRelationshipType = findWithdrawnRelationshipType(context, item, isLeft);
-        return relationshipService.findByItemAndRelationshipType(context, item, shadowRelationshipType, isLeft);
+        RelationshipType withdrawRelationshipType = findWithdrawnRelationshipType(context, item, isLeft);
+        if (withdrawRelationshipType == null) {
+            return Collections.emptyList();
+        }
+        return relationshipService.findByItemAndRelationshipType(context, item, withdrawRelationshipType, isLeft);
     }
 
     private RelationshipType findWithdrawnRelationshipType(Context context, Item item, boolean isLeft)
@@ -146,14 +153,14 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
 
         EntityType type = entityTypeService.findByItem(context, item);
         if (type == null) {
-            throw new IllegalArgumentException("No entity type found for the item with id: " + item.getID());
+            return null;
         }
 
         List<RelationshipType> relationshipTypes = relationshipTypeService.findByTypeAndTypeNames(context, type, isLeft,
             leftwardType, rightwardType);
 
         if (CollectionUtils.isEmpty(relationshipTypes)) {
-            throw new IllegalStateException("No " + leftwardType + " relationship type found for type " + type);
+            return null;
         }
 
         if (relationshipTypes.size() > 1) {

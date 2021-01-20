@@ -53,7 +53,7 @@
     </bean>
         
     <bean id="finalizeItemAction" class="org.dspace.xmlworkflow.state.actions.WorkflowActionConfig" scope="prototype">
-        <constructor-arg type="java.lang.String" value="checkcorrectionaction"/>
+        <constructor-arg type="java.lang.String" value="finalizeItemAction"/>
         <property name="processingAction" ref="finalizeItemActionAPI"/>
         <property name="requiresUI" value="false"/>
     </bean>

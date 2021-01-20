@@ -60,16 +60,16 @@ public class StepTest extends AbstractUnitTest {
         assertEquals("Final Editor", step.getRole().getName());
         List<WorkflowActionConfig> actions = step.getActions();
         assertTrue(this.containsActionNamed(actions, "finaleditaction"));
-        assertEquals("checkcorrectionstep", step.getNextStep(0).getId());
+        assertEquals("finalizeItemStep", step.getNextStep(0).getId());
     }
 
     @Test
-    public void defaultWorkflow_CheckCorrectionStep() throws WorkflowConfigurationException {
-        Step step = defaultWorkflow.getStep("checkcorrectionstep");
+    public void defaultWorkflow_FinalizeItemStep() throws WorkflowConfigurationException {
+        Step step = defaultWorkflow.getStep("finalizeItemStep");
         assertEquals("noUserSelectionAction", step.getUserSelectionMethod().getId());
         assertNull(step.getRole());
         List<WorkflowActionConfig> actions = step.getActions();
-        assertTrue(this.containsActionNamed(actions, "checkcorrectionaction"));
+        assertTrue(this.containsActionNamed(actions, "finalizeItemAction"));
         assertNull(step.getNextStep(0));
     }
 

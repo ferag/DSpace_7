@@ -296,7 +296,7 @@
         <property name="outcomes">
             <util:map>
                 <entry key="#{ T(org.dspace.xmlworkflow.state.actions.processingaction.DirectorioSwitchAction).OUTCOME_SUBMISSION_OR_CORRECTION}" value-ref="directorioEditStep"/>
-                <entry key="#{ T(org.dspace.xmlworkflow.state.actions.processingaction.DirectorioSwitchAction).OUTCOME_WITHDRAWN}" value-ref="directorioReviewStep"/>
+                <entry key="#{ T(org.dspace.xmlworkflow.state.actions.processingaction.DirectorioSwitchAction).OUTCOME_WITHDRAWN_OR_REINSTATE}" value-ref="directorioReviewStep"/>
             </util:map>
         </property>
         <property name="actions">

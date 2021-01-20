@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.dspace.app.rest.authorization.impl.ItemWithdrawFeature;
+import org.dspace.app.rest.authorization.impl.ItemWithdrawRequestFeature;
 import org.dspace.app.rest.converter.ItemConverter;
 import org.dspace.app.rest.model.ItemRest;
 import org.dspace.app.rest.projection.Projection;
@@ -31,12 +31,12 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Integration test via REST for {@link ItemWithdrawFeature}.
+ * Integration test via REST for {@link ItemWithdrawRequestFeature}.
  *
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  *
  */
-public class ItemWithdrawFeatureRestIT extends AbstractControllerIntegrationTest {
+public class ItemWithdrawRequestFeatureRestIT extends AbstractControllerIntegrationTest {
 
     @Autowired
     private ItemConverter itemConverter;
@@ -58,7 +58,7 @@ public class ItemWithdrawFeatureRestIT extends AbstractControllerIntegrationTest
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        canWithdrawItem = authorizationFeatureService.find(ItemWithdrawFeature.NAME);
+        canWithdrawItem = authorizationFeatureService.find(ItemWithdrawRequestFeature.NAME);
 
         context.turnOffAuthorisationSystem();
 
@@ -96,7 +96,7 @@ public class ItemWithdrawFeatureRestIT extends AbstractControllerIntegrationTest
         getClient(token).perform(get("/api/authz/authorizations/search/object")
             .param("uri", getItemUri(itemRest))
             .param("eperson", String.valueOf(admin.getID()))
-            .param("feature", ItemWithdrawFeature.NAME))
+            .param("feature", ItemWithdrawRequestFeature.NAME))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$._embedded.authorizations").doesNotExist());
 
@@ -125,7 +125,7 @@ public class ItemWithdrawFeatureRestIT extends AbstractControllerIntegrationTest
         getClient(token).perform(get("/api/authz/authorizations/search/object")
             .param("uri", getItemUri(itemRest))
             .param("eperson", String.valueOf(admin.getID()))
-            .param("feature", ItemWithdrawFeature.NAME))
+            .param("feature", ItemWithdrawRequestFeature.NAME))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$._embedded.authorizations", hasItem(matchAuthorization(expectedAuthorization))));
 
@@ -151,7 +151,7 @@ public class ItemWithdrawFeatureRestIT extends AbstractControllerIntegrationTest
         getClient(token).perform(get("/api/authz/authorizations/search/object")
             .param("uri", getItemUri(itemRest))
             .param("eperson", String.valueOf(eperson.getID()))
-            .param("feature", ItemWithdrawFeature.NAME))
+            .param("feature", ItemWithdrawRequestFeature.NAME))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$._embedded.authorizations").doesNotExist());
 
@@ -180,7 +180,7 @@ public class ItemWithdrawFeatureRestIT extends AbstractControllerIntegrationTest
         getClient(token).perform(get("/api/authz/authorizations/search/object")
             .param("uri", getItemUri(itemRest))
             .param("eperson", String.valueOf(eperson.getID()))
-            .param("feature", ItemWithdrawFeature.NAME))
+            .param("feature", ItemWithdrawRequestFeature.NAME))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$._embedded.authorizations", hasItem(matchAuthorization(expectedAuthorization))));
 
@@ -213,7 +213,7 @@ public class ItemWithdrawFeatureRestIT extends AbstractControllerIntegrationTest
         getClient(token).perform(get("/api/authz/authorizations/search/object")
             .param("uri", getItemUri(itemRest))
             .param("eperson", String.valueOf(eperson.getID()))
-            .param("feature", ItemWithdrawFeature.NAME))
+            .param("feature", ItemWithdrawRequestFeature.NAME))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$._embedded.authorizations").doesNotExist());
 

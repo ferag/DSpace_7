@@ -125,6 +125,11 @@ public class UnlockInstitutionAction extends ProcessingAction {
             return finalizeItemWithdraw(context, workflowItem, itemToWithdraw, concytecFeedback);
         }
 
+        Item itemToReinstate = concytecWorkflowService.findReinstateItem(context, workflowItem.getItem());
+        if (itemToReinstate != null) {
+            return finalizeItemReinstate(context, workflowItem, itemToReinstate, concytecFeedback);
+        }
+
         return finalizeItemCreation(context, workflowItem, institutionItem, concytecFeedback);
     }
 
@@ -166,6 +171,17 @@ public class UnlockInstitutionAction extends ProcessingAction {
 
         if (feedback != ConcytecFeedback.REJECT) {
             itemService.withdraw(context, itemToWithdraw);
+        }
+
+        workflowService.deleteWorkflowByWorkflowItem(context, workflowItem, context.getCurrentUser());
+        return getCancelActionResult();
+    }
+
+    private ActionResult finalizeItemReinstate(Context context, XmlWorkflowItem workflowItem, Item itemToReinstate,
+        ConcytecFeedback concytecFeedback) throws SQLException, AuthorizeException, IOException {
+
+        if (concytecFeedback != ConcytecFeedback.REJECT) {
+            itemService.reinstate(context, itemToReinstate);
         }
 
         workflowService.deleteWorkflowByWorkflowItem(context, workflowItem, context.getCurrentUser());

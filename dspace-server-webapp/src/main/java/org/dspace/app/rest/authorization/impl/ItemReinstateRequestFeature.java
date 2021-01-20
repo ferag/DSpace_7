@@ -17,7 +17,7 @@ import org.dspace.app.rest.authorization.AuthorizationFeatureDocumentation;
 import org.dspace.app.rest.model.BaseObjectRest;
 import org.dspace.app.rest.model.ItemRest;
 import org.dspace.content.Item;
-import org.dspace.content.edit.WithdrawItemMode;
+import org.dspace.content.edit.ReinstateItemMode;
 import org.dspace.content.security.service.CrisSecurityService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
@@ -28,17 +28,17 @@ import org.springframework.stereotype.Component;
 
 /**
  * Implementation of {@link AuthorizationFeature} to evaluate if the current
- * user is allowed to request a withdraw of the given item.
+ * user is allowed to request a reinstate of the given item.
  *
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  *
  */
 @Component
-@AuthorizationFeatureDocumentation(name = ItemWithdrawFeature.NAME,
-    description = "It can be used for verify that an user is enabled to request a withdraw of the given item")
-public class ItemWithdrawFeature implements AuthorizationFeature {
+@AuthorizationFeatureDocumentation(name = ItemReinstateRequestFeature.NAME,
+    description = "It can be used for verify that an user is enabled to request a reinstate of the given item")
+public class ItemReinstateRequestFeature implements AuthorizationFeature {
 
-    public static final String NAME = "canWithdrawItem";
+    public static final String NAME = "canReinstateItem";
 
     @Autowired
     private ConfigurationService configurationService;
@@ -50,8 +50,8 @@ public class ItemWithdrawFeature implements AuthorizationFeature {
     private CrisSecurityService crisSecurityService;
 
     @Autowired
-    @Qualifier("withdrawItemModesMap")
-    private Map<String, List<WithdrawItemMode>> withdrawItemModesMap;
+    @Qualifier("reinstateItemModesMap")
+    private Map<String, List<ReinstateItemMode>> reinstateItemModesMap;
 
     @Override
     @SuppressWarnings("rawtypes")
@@ -60,11 +60,11 @@ public class ItemWithdrawFeature implements AuthorizationFeature {
             return false;
         }
 
-        if (!configurationService.getBooleanProperty("item-withdrawn.enabled", true)) {
+        if (!configurationService.getBooleanProperty("item-reinstate.enabled", true)) {
             return false;
         }
 
-        if (configurationService.getBooleanProperty("item-withdrawn.permit-all", false)) {
+        if (configurationService.getBooleanProperty("item-reinstate.permit-all", false)) {
             return true;
         }
 
@@ -84,13 +84,13 @@ public class ItemWithdrawFeature implements AuthorizationFeature {
         }
 
         String entityType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
-        if (!withdrawItemModesMap.containsKey(entityType)) {
+        if (!reinstateItemModesMap.containsKey(entityType)) {
             return false;
         }
 
-        List<WithdrawItemMode> withdrawItemModes = withdrawItemModesMap.get(entityType);
-        for (WithdrawItemMode correctItemMode : withdrawItemModes) {
-            if (crisSecurityService.hasAccess(context, item, context.getCurrentUser(), correctItemMode)) {
+        List<ReinstateItemMode> reinstateItemModes = reinstateItemModesMap.get(entityType);
+        for (ReinstateItemMode reinstateItemMode : reinstateItemModes) {
+            if (crisSecurityService.hasAccess(context, item, context.getCurrentUser(), reinstateItemMode)) {
                 return true;
             }
         }

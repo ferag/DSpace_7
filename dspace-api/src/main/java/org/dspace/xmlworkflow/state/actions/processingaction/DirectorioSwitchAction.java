@@ -32,7 +32,7 @@ public class DirectorioSwitchAction extends ProcessingAction {
 
     public static final int OUTCOME_SUBMISSION_OR_CORRECTION = 1;
 
-    public static final int OUTCOME_WITHDRAWN = 2;
+    public static final int OUTCOME_WITHDRAWN_OR_REINSTATE = 2;
 
     @Autowired
     private ItemCorrectionService itemCorrectionService;
@@ -53,7 +53,12 @@ public class DirectorioSwitchAction extends ProcessingAction {
 
         Item itemToWithdraw = concytecWorkflowService.findWithdrawnItem(context, item);
         if (itemToWithdraw != null) {
-            return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, OUTCOME_WITHDRAWN);
+            return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, OUTCOME_WITHDRAWN_OR_REINSTATE);
+        }
+
+        Item itemToReinstate = concytecWorkflowService.findReinstateItem(context, item);
+        if (itemToReinstate != null) {
+            return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, OUTCOME_WITHDRAWN_OR_REINSTATE);
         }
 
         return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, OUTCOME_SUBMISSION_OR_CORRECTION);

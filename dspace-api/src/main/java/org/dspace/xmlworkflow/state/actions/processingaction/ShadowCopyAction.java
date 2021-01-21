@@ -226,14 +226,14 @@ public class ShadowCopyAction extends ProcessingAction {
 
     private WorkspaceItem createItemCopyWithdraw(Context context, UUID itemCopyId)
         throws SQLException, AuthorizeException {
-        String relationshipName = ConcytecWorkflowService.IS_WITHDRAW_OF_ITEM_RELATIONSHIP;
-        return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context, itemCopyId, relationshipName);
+        return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context, itemCopyId,
+            ConcytecWorkflowService.IS_WITHDRAW_OF_ITEM_RELATIONSHIP);
     }
 
     private WorkspaceItem createItemCopyReinstate(Context context, UUID itemCopyId)
         throws SQLException, AuthorizeException {
-        String relationshipName = ConcytecWorkflowService.IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP;
-        return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context, itemCopyId, relationshipName);
+        return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context, itemCopyId,
+            ConcytecWorkflowService.IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP);
     }
 
     private void replaceMetadataAuthorities(Context context, Item item) throws SQLException, AuthorizeException {

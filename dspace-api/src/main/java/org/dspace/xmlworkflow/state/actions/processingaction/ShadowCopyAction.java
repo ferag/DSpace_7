@@ -60,6 +60,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class ShadowCopyAction extends ProcessingAction {
 
+    public static final int OUTCOME_FINALIZE_ITEM = 1;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ShadowCopyAction.class);
 
     @Autowired
@@ -101,15 +103,9 @@ public class ShadowCopyAction extends ProcessingAction {
     public ActionResult execute(Context context, XmlWorkflowItem workflowItem, Step step, HttpServletRequest request)
         throws SQLException, WorkflowException, AuthorizeException, IOException {
 
-        Item item = workflowItem.getItem();
-
-        WorkspaceItem workspaceItemShadowCopy;
-
-        Item itemToCorrect = itemCorrectionService.getCorrectedItem(context, item);
-        if (itemToCorrect != null) {
-            workspaceItemShadowCopy = createShadowCopyForCorrection(context, item, itemToCorrect);
-        } else {
-            workspaceItemShadowCopy = createShadowCopyForCreation(context, item);
+        WorkspaceItem workspaceItemShadowCopy = createShadowCopy(context, workflowItem.getItem());
+        if (workspaceItemShadowCopy == null) {
+            return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, OUTCOME_FINALIZE_ITEM);
         }
 
         replaceMetadataAuthorities(context, workspaceItemShadowCopy.getItem());
@@ -117,6 +113,22 @@ public class ShadowCopyAction extends ProcessingAction {
         workflowService.start(context, workspaceItemShadowCopy);
 
         return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, ActionResult.OUTCOME_COMPLETE);
+    }
+
+    private WorkspaceItem createShadowCopy(Context context, Item item)
+        throws SQLException, WorkflowException, AuthorizeException, IOException {
+
+        Item itemToCorrect = itemCorrectionService.getCorrectedItem(context, item);
+        if (itemToCorrect != null) {
+            return createShadowCopyForCorrection(context, item, itemToCorrect);
+        }
+
+        Item itemToWithdraw = concytecWorkflowService.findWithdrawnItem(context, item);
+        if (itemToWithdraw != null) {
+            return createShadowCopyForWithdraw(context, item, itemToWithdraw);
+        }
+
+        return createShadowCopyForCreation(context, item);
     }
 
     private WorkspaceItem createShadowCopyForCreation(Context ctx, Item item)
@@ -145,6 +157,19 @@ public class ShadowCopyAction extends ProcessingAction {
 
         return correctionWorkspaceItemCopy;
 
+    }
+
+    private WorkspaceItem createShadowCopyForWithdraw(Context ctx, Item withdrawItem, Item itemToWithdraw)
+        throws SQLException, AuthorizeException {
+
+        Item itemToWithdrawCopy = concytecWorkflowService.findShadowItemCopy(ctx, itemToWithdraw);
+        if (itemToWithdrawCopy == null || itemToWithdrawCopy.isWithdrawn()) {
+            return null;
+        }
+
+        WorkspaceItem withdrawnWorkspaceItemCopy = createItemCopyWithDraw(ctx, itemToWithdrawCopy.getID());
+        concytecWorkflowService.createShadowRelationship(ctx, withdrawItem, withdrawnWorkspaceItemCopy.getItem());
+        return withdrawnWorkspaceItemCopy;
     }
 
     private Collection findDirectorioCollectionByRelationshipType(Context context, Item item)
@@ -178,6 +203,12 @@ public class ShadowCopyAction extends ProcessingAction {
     private WorkspaceItem createItemCopyCorrection(Context context, UUID itemCopyId)
         throws SQLException, AuthorizeException {
         String relationshipName = itemCorrectionService.getCorrectionRelationshipName();
+        return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context, itemCopyId, relationshipName);
+    }
+
+    private WorkspaceItem createItemCopyWithDraw(Context context, UUID itemCopyId)
+        throws SQLException, AuthorizeException {
+        String relationshipName = ConcytecWorkflowService.IS_WITHDRAW_OF_ITEM_RELATIONSHIP;
         return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context, itemCopyId, relationshipName);
     }
 

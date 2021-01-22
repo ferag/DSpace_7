@@ -44,6 +44,16 @@ public interface ConcytecWorkflowService {
     public static final String IS_WITHDRAWN_BY_ITEM_RELATIONSHIP = "isWithdrawnByItem";
 
     /**
+     * Left type of the reinstate relationship.
+     */
+    public static final String IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP = "isReinstatementOfItem";
+
+    /**
+     * Right type of the reinstate relationship.
+     */
+    public static final String IS_REINSTATED_BY_ITEM_RELATIONSHIP = "isReinstatedByItem";
+
+    /**
      * Create a shadow copy relationship between the two given items
      * 
      * @param context        the DSpace context
@@ -126,5 +136,15 @@ public interface ConcytecWorkflowService {
      * @throws SQLException if an SQL error occurs
      */
     Item findWithdrawnItem(Context context, Item item) throws SQLException;
+
+    /**
+     * Find the item to be reinstate related to the given item.
+     *
+     * @param context the DSpace context
+     * @param item    the item that represents the reinstate request
+     * @return the withdrawn item, if any
+     * @throws SQLException if an SQL error occurs
+     */
+    Item findReinstateItem(Context context, Item item) throws SQLException;
 
 }

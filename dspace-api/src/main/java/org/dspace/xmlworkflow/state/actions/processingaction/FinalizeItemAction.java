@@ -63,6 +63,11 @@ public class FinalizeItemAction extends ProcessingAction {
             return withdrawItem(context, workflowItem, itemToWithdraw);
         }
 
+        Item itemToReinstate = concytecWorkflowService.findReinstateItem(context, workflowItem.getItem());
+        if (itemToReinstate != null) {
+            return reinstateItem(context, workflowItem, itemToReinstate);
+        }
+
         return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, ActionResult.OUTCOME_COMPLETE);
     }
 
@@ -74,6 +79,13 @@ public class FinalizeItemAction extends ProcessingAction {
     private ActionResult withdrawItem(Context context, XmlWorkflowItem workflowItem, Item itemToWithdraw)
         throws SQLException, AuthorizeException, IOException {
         itemService.withdraw(context, itemToWithdraw);
+        workflowService.deleteWorkflowByWorkflowItem(context, workflowItem, context.getCurrentUser());
+        return new ActionResult(ActionResult.TYPE.TYPE_CANCEL);
+    }
+
+    private ActionResult reinstateItem(Context context, XmlWorkflowItem workflowItem, Item itemToReinstate)
+        throws SQLException, AuthorizeException, IOException {
+        itemService.reinstate(context, itemToReinstate);
         workflowService.deleteWorkflowByWorkflowItem(context, workflowItem, context.getCurrentUser());
         return new ActionResult(ActionResult.TYPE.TYPE_CANCEL);
     }

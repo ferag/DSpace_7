@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.dspace.content.Item;
 import org.dspace.core.Context;
-import org.dspace.versioning.ItemCorrectionService;
 import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
 import org.dspace.xmlworkflow.state.Step;
 import org.dspace.xmlworkflow.state.actions.ActionResult;
@@ -32,10 +31,7 @@ public class DirectorioSwitchAction extends ProcessingAction {
 
     public static final int OUTCOME_SUBMISSION_OR_CORRECTION = 1;
 
-    public static final int OUTCOME_WITHDRAWN = 2;
-
-    @Autowired
-    private ItemCorrectionService itemCorrectionService;
+    public static final int OUTCOME_WITHDRAWN_OR_REINSTATE = 2;
 
     @Autowired
     private ConcytecWorkflowService concytecWorkflowService;
@@ -46,14 +42,14 @@ public class DirectorioSwitchAction extends ProcessingAction {
 
         Item item = workflowItem.getItem();
 
-        Item itemToCorrect = itemCorrectionService.getCorrectedItem(context, item);
-        if (itemToCorrect != null) {
-            return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, OUTCOME_SUBMISSION_OR_CORRECTION);
-        }
-
         Item itemToWithdraw = concytecWorkflowService.findWithdrawnItem(context, item);
         if (itemToWithdraw != null) {
-            return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, OUTCOME_WITHDRAWN);
+            return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, OUTCOME_WITHDRAWN_OR_REINSTATE);
+        }
+
+        Item itemToReinstate = concytecWorkflowService.findReinstateItem(context, item);
+        if (itemToReinstate != null) {
+            return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, OUTCOME_WITHDRAWN_OR_REINSTATE);
         }
 
         return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, OUTCOME_SUBMISSION_OR_CORRECTION);

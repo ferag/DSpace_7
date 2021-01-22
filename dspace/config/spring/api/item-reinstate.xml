@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util" 
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+    
+	<util:map id="reinstateItemModesMap" map-class="java.util.HashMap" key-type="java.lang.String" value-type="java.util.List"> 
+		<entry key="InstitutionPublication">
+			<list>
+				<bean class="org.dspace.content.edit.ReinstateItemMode">
+					<property name="security">
+						<value type="org.dspace.content.security.CrisSecurity">ADMIN</value>
+					</property>
+				</bean>
+				<bean class="org.dspace.content.edit.ReinstateItemMode">
+					<property name="security">
+						<value type="org.dspace.content.security.CrisSecurity">CUSTOM</value>
+					</property>
+					<property name="groups">
+						<list>
+							<value>cris.policy.group</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</entry> 
+		<entry key="InstitutionPerson">
+			<list>
+				<bean class="org.dspace.content.edit.ReinstateItemMode">
+					<property name="security">
+						<value type="org.dspace.content.security.CrisSecurity">ADMIN</value>
+					</property>
+				</bean>
+				<bean class="org.dspace.content.edit.ReinstateItemMode">
+					<property name="security">
+						<value type="org.dspace.content.security.CrisSecurity">CUSTOM</value>
+					</property>
+					<property name="groups">
+						<list>
+							<value>cris.policy.group</value>
+						</list>
+					</property>
+				</bean>
+
+			</list>
+		</entry> 
+		<entry key="InstitutionEquipment">
+			<list>
+				<bean class="org.dspace.content.edit.ReinstateItemMode">
+					<property name="security">
+						<value type="org.dspace.content.security.CrisSecurity">ADMIN</value>
+					</property>
+				</bean>
+				<bean class="org.dspace.content.edit.ReinstateItemMode">
+					<property name="security">
+						<value type="org.dspace.content.security.CrisSecurity">CUSTOM</value>
+					</property>
+					<property name="groups">
+						<list>
+							<value>cris.policy.group</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</entry> 
+		<entry key="InstitutionFunding">
+			<list>
+				<bean class="org.dspace.content.edit.ReinstateItemMode">
+					<property name="security">
+						<value type="org.dspace.content.security.CrisSecurity">ADMIN</value>
+					</property>
+				</bean>
+				<bean class="org.dspace.content.edit.ReinstateItemMode">
+					<property name="security">
+						<value type="org.dspace.content.security.CrisSecurity">CUSTOM</value>
+					</property>
+					<property name="groups">
+						<list>
+							<value>cris.policy.group</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</entry> 
+		<entry key="InstitutionOrgUnit">
+			<list>
+				<bean class="org.dspace.content.edit.ReinstateItemMode">
+					<property name="security">
+						<value type="org.dspace.content.security.CrisSecurity">ADMIN</value>
+					</property>
+				</bean>
+				<bean class="org.dspace.content.edit.ReinstateItemMode">
+					<property name="security">
+						<value type="org.dspace.content.security.CrisSecurity">CUSTOM</value>
+					</property>
+					<property name="groups">
+						<list>
+							<value>cris.policy.group</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</entry> 
+<!--		<entry key="Journal">-->
+<!--			<list>-->
+<!--				<bean class="org.dspace.content.edit.ReinstateItemMode">-->
+<!--					<property name="security">-->
+<!--						<value type="org.dspace.content.security.CrisSecurity">ADMIN</value>-->
+<!--					</property>-->
+<!--				</bean>-->
+<!--			</list>-->
+<!--		</entry> -->
+		<entry key="InstitutionPatent">
+			<list>
+				<bean class="org.dspace.content.edit.ReinstateItemMode">
+					<property name="security">
+						<value type="org.dspace.content.security.CrisSecurity">ADMIN</value>
+					</property>
+				</bean>
+				<bean class="org.dspace.content.edit.ReinstateItemMode">
+					<property name="security">
+						<value type="org.dspace.content.security.CrisSecurity">CUSTOM</value>
+					</property>
+					<property name="groups">
+						<list>
+							<value>cris.policy.group</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</entry>
+		<entry key="InstitutionProject">
+			<list>
+				<bean class="org.dspace.content.edit.ReinstateItemMode">
+					<property name="security">
+						<value type="org.dspace.content.security.CrisSecurity">ADMIN</value>
+					</property>
+				</bean>
+				<bean class="org.dspace.content.edit.ReinstateItemMode">
+					<property name="security">
+						<value type="org.dspace.content.security.CrisSecurity">CUSTOM</value>
+					</property>
+					<property name="groups">
+						<list>
+							<value>cris.policy.group</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</entry>
+<!--		<entry key="Event">-->
+<!--			<list>-->
+<!--				<bean class="org.dspace.content.edit.ReinstateItemMode">-->
+<!--					<property name="security">-->
+<!--						<value type="org.dspace.content.security.CrisSecurity">ADMIN</value>-->
+<!--					</property>-->
+<!--				</bean>-->
+<!--			</list>-->
+<!--		</entry>-->
+	</util:map>
+           
+</beans>

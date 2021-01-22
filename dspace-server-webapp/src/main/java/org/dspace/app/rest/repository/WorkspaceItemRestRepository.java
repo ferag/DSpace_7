@@ -24,7 +24,8 @@ import org.dspace.app.rest.authorization.AuthorizationFeature;
 import org.dspace.app.rest.authorization.AuthorizationFeatureService;
 import org.dspace.app.rest.authorization.AuthorizationRestUtil;
 import org.dspace.app.rest.authorization.impl.ItemCorrectionFeature;
-import org.dspace.app.rest.authorization.impl.ItemWithdrawFeature;
+import org.dspace.app.rest.authorization.impl.ItemReinstateRequestFeature;
+import org.dspace.app.rest.authorization.impl.ItemWithdrawRequestFeature;
 import org.dspace.app.rest.converter.WorkspaceItemConverter;
 import org.dspace.app.rest.exception.DSpaceBadRequestException;
 import org.dspace.app.rest.exception.RESTAuthorizationException;
@@ -572,7 +573,11 @@ public class WorkspaceItemRestRepository extends DSpaceRestRepository<WorkspaceI
         }
 
         if (relationship.equals(ConcytecWorkflowService.IS_WITHDRAW_OF_ITEM_RELATIONSHIP)) {
-            return ItemWithdrawFeature.NAME;
+            return ItemWithdrawRequestFeature.NAME;
+        }
+
+        if (relationship.equals(ConcytecWorkflowService.IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP)) {
+            return ItemReinstateRequestFeature.NAME;
         }
 
         return null;

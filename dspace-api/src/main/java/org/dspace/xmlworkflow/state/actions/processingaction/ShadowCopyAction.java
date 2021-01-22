@@ -128,6 +128,11 @@ public class ShadowCopyAction extends ProcessingAction {
             return createShadowCopyForWithdraw(context, item, itemToWithdraw);
         }
 
+        Item itemToReinstate = concytecWorkflowService.findReinstateItem(context, item);
+        if (itemToReinstate != null) {
+            return createShadowCopyForReinstate(context, item, itemToReinstate);
+        }
+
         return createShadowCopyForCreation(context, item);
     }
 
@@ -167,9 +172,22 @@ public class ShadowCopyAction extends ProcessingAction {
             return null;
         }
 
-        WorkspaceItem withdrawnWorkspaceItemCopy = createItemCopyWithDraw(ctx, itemToWithdrawCopy.getID());
+        WorkspaceItem withdrawnWorkspaceItemCopy = createItemCopyWithdraw(ctx, itemToWithdrawCopy.getID());
         concytecWorkflowService.createShadowRelationship(ctx, withdrawItem, withdrawnWorkspaceItemCopy.getItem());
         return withdrawnWorkspaceItemCopy;
+    }
+
+    private WorkspaceItem createShadowCopyForReinstate(Context context, Item reinstateItem, Item itemToReinstate)
+        throws SQLException, AuthorizeException {
+
+        Item itemToReinstateCopy = concytecWorkflowService.findShadowItemCopy(context, itemToReinstate);
+        if (itemToReinstateCopy == null || !itemToReinstateCopy.isWithdrawn()) {
+            return null;
+        }
+
+        WorkspaceItem reinstateWorkspaceItemCopy = createItemCopyReinstate(context, itemToReinstateCopy.getID());
+        concytecWorkflowService.createShadowRelationship(context, reinstateItem, reinstateWorkspaceItemCopy.getItem());
+        return reinstateWorkspaceItemCopy;
     }
 
     private Collection findDirectorioCollectionByRelationshipType(Context context, Item item)
@@ -206,10 +224,16 @@ public class ShadowCopyAction extends ProcessingAction {
         return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context, itemCopyId, relationshipName);
     }
 
-    private WorkspaceItem createItemCopyWithDraw(Context context, UUID itemCopyId)
+    private WorkspaceItem createItemCopyWithdraw(Context context, UUID itemCopyId)
         throws SQLException, AuthorizeException {
-        String relationshipName = ConcytecWorkflowService.IS_WITHDRAW_OF_ITEM_RELATIONSHIP;
-        return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context, itemCopyId, relationshipName);
+        return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context, itemCopyId,
+            ConcytecWorkflowService.IS_WITHDRAW_OF_ITEM_RELATIONSHIP);
+    }
+
+    private WorkspaceItem createItemCopyReinstate(Context context, UUID itemCopyId)
+        throws SQLException, AuthorizeException {
+        return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context, itemCopyId,
+            ConcytecWorkflowService.IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP);
     }
 
     private void replaceMetadataAuthorities(Context context, Item item) throws SQLException, AuthorizeException {

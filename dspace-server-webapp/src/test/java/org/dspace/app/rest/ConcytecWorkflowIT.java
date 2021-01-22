@@ -143,6 +143,10 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
     private RelationshipType institutionIsWithdrawOf;
 
+    private RelationshipType isReinstateOf;
+
+    private RelationshipType institutionIsReinstateOf;
+
     @Before
     public void before() throws Exception {
         super.setUp();
@@ -160,6 +164,8 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         isWithdrawOf = createIsWithdrawOfRelationship(publicationType);
         institutionIsWithdrawOf = createIsWithdrawOfRelationship(institutionPublicationType);
+        isReinstateOf = createIsReinstatementOfRelationship(publicationType);
+        institutionIsReinstateOf = createIsReinstatementOfRelationship(institutionPublicationType);
 
         submitter = createEPerson("submitter@example.com");
         firstDirectorioUser = createEPerson("firstDirectorioUser@example.com");
@@ -906,6 +912,8 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         createIsCorrectionOfRelationship(institutionPersonType);
         createIsWithdrawOfRelationship(personType);
         createIsWithdrawOfRelationship(institutionPersonType);
+        createIsReinstatementOfRelationship(personType);
+        createIsReinstatementOfRelationship(institutionPersonType);
 
         Collection directorioPersons = CollectionBuilder
             .createCollection(context, directorioCommunity)
@@ -1283,6 +1291,322 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
     }
 
+    @Test
+    public void testItemReinstateWithConcytecApprove() throws Exception {
+
+        WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
+
+        workflowService.start(context, workspaceItem);
+
+        Item item = workspaceItem.getItem();
+        assertThat(getWorkspaceItem(item), nullValue());
+
+        Relationship relationship = findRelation(item, hasShadowCopy);
+        Item shadowItemCopy = relationship.getRightItem();
+
+        XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
+
+        claimTaskAndApprove(shadowWorkflowItemCopy, secondDirectorioUser, directorioEditorGroup);
+
+        withdrawItems(item, shadowItemCopy);
+
+        item = reloadItem(item);
+        assertThat(item.isArchived(), is(false));
+        assertThat(item.isWithdrawn(), is(true));
+
+        shadowItemCopy = reloadItem(shadowItemCopy);
+        assertThat(shadowItemCopy.isArchived(), is(false));
+        assertThat(shadowItemCopy.isWithdrawn(), is(true));
+
+        WorkspaceItem reinstateWorkspaceItem = requestForItemReinstate(admin, item);
+        assertThat(reinstateWorkspaceItem, notNullValue());
+
+        Item reinstateItem = reinstateWorkspaceItem.getItem();
+
+        Relationship reinstateRelation = findRelation(item, institutionIsReinstateOf);
+        assertThat(reinstateRelation.getLeftItem(), equalTo(reinstateWorkspaceItem.getItem()));
+
+        context.turnOffAuthorisationSystem();
+        workflowService.start(context, reinstateWorkspaceItem);
+        context.restoreAuthSystemState();
+
+        assertThat(getWorkflowItem(reinstateItem), notNullValue());
+
+        Relationship reinstateItemShadowCopyRelation = findRelation(reinstateItem, hasShadowCopy);
+        Item reinstateItemShadowCopy = reinstateItemShadowCopyRelation.getRightItem();
+
+        Relationship itemShadowCopyToBeWithdrawRelation = findRelation(reinstateItemShadowCopy, isReinstateOf);
+        assertThat(itemShadowCopyToBeWithdrawRelation, notNullValue());
+        assertThat(reinstateItemShadowCopy, equalTo(itemShadowCopyToBeWithdrawRelation.getLeftItem()));
+        assertThat(shadowItemCopy, equalTo(itemShadowCopyToBeWithdrawRelation.getRightItem()));
+
+        XmlWorkflowItem reinstateWorkflowItem = getWorkflowItem(reinstateItem);
+        assertThat(reinstateWorkflowItem, notNullValue());
+
+        XmlWorkflowItem reinstateWorkflowItemShadowCopy = getWorkflowItem(reinstateItemShadowCopy);
+        assertThat(reinstateWorkflowItemShadowCopy, notNullValue());
+
+        claimTaskAndApprove(reinstateWorkflowItemShadowCopy, secondDirectorioUser, directorioReviewGroup);
+
+        item = reloadItem(item);
+        assertThat(item, notNullValue());
+        assertThat(item.isArchived(), is(true));
+        assertThat(item.isWithdrawn(), is(false));
+
+        shadowItemCopy = reloadItem(shadowItemCopy);
+        assertThat(shadowItemCopy, notNullValue());
+        assertThat(shadowItemCopy.isArchived(), is(true));
+        assertThat(shadowItemCopy.isWithdrawn(), is(false));
+
+        reinstateItem = reloadItem(reinstateItem);
+        assertThat(reinstateItem, nullValue());
+
+        reinstateItemShadowCopy = reloadItem(reinstateItemShadowCopy);
+        assertThat(reinstateItemShadowCopy, nullValue());
+    }
+
+    @Test
+    public void testItemReinstateWithConcytecReject() throws Exception {
+
+        WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
+
+        workflowService.start(context, workspaceItem);
+
+        Item item = workspaceItem.getItem();
+        assertThat(getWorkspaceItem(item), nullValue());
+
+        Relationship relationship = findRelation(item, hasShadowCopy);
+        Item shadowItemCopy = relationship.getRightItem();
+
+        XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
+
+        claimTaskAndApprove(shadowWorkflowItemCopy, secondDirectorioUser, directorioEditorGroup);
+
+        withdrawItems(item, shadowItemCopy);
+
+        item = reloadItem(item);
+        assertThat(item.isArchived(), is(false));
+        assertThat(item.isWithdrawn(), is(true));
+
+        shadowItemCopy = reloadItem(shadowItemCopy);
+        assertThat(shadowItemCopy.isArchived(), is(false));
+        assertThat(shadowItemCopy.isWithdrawn(), is(true));
+
+        WorkspaceItem reinstateWorkspaceItem = requestForItemReinstate(admin, item);
+        assertThat(reinstateWorkspaceItem, notNullValue());
+
+        Item reinstateItem = reinstateWorkspaceItem.getItem();
+
+        Relationship reinstateRelation = findRelation(item, institutionIsReinstateOf);
+        assertThat(reinstateRelation.getLeftItem(), equalTo(reinstateWorkspaceItem.getItem()));
+
+        context.turnOffAuthorisationSystem();
+        workflowService.start(context, reinstateWorkspaceItem);
+        context.restoreAuthSystemState();
+
+        assertThat(getWorkflowItem(reinstateItem), notNullValue());
+
+        Relationship reinstateItemShadowCopyRelation = findRelation(reinstateItem, hasShadowCopy);
+        Item reinstateItemShadowCopy = reinstateItemShadowCopyRelation.getRightItem();
+
+        Relationship itemShadowCopyToBeWithdrawRelation = findRelation(reinstateItemShadowCopy, isReinstateOf);
+        assertThat(itemShadowCopyToBeWithdrawRelation, notNullValue());
+        assertThat(reinstateItemShadowCopy, equalTo(itemShadowCopyToBeWithdrawRelation.getLeftItem()));
+        assertThat(shadowItemCopy, equalTo(itemShadowCopyToBeWithdrawRelation.getRightItem()));
+
+        XmlWorkflowItem reinstateWorkflowItem = getWorkflowItem(reinstateItem);
+        assertThat(reinstateWorkflowItem, notNullValue());
+
+        XmlWorkflowItem reinstateWorkflowItemShadowCopy = getWorkflowItem(reinstateItemShadowCopy);
+        assertThat(reinstateWorkflowItemShadowCopy, notNullValue());
+
+        claimTaskAndReject(reinstateWorkflowItemShadowCopy, secondDirectorioUser, directorioReviewGroup, "to remove");
+
+        item = reloadItem(item);
+        assertThat(item, notNullValue());
+        assertThat(item.isArchived(), is(true));
+        assertThat(item.isWithdrawn(), is(false));
+
+        shadowItemCopy = reloadItem(shadowItemCopy);
+        assertThat(shadowItemCopy, notNullValue());
+        assertThat(shadowItemCopy.isArchived(), is(false));
+        assertThat(shadowItemCopy.isWithdrawn(), is(true));
+
+        reinstateItem = reloadItem(reinstateItem);
+        assertThat(reinstateItem, nullValue());
+
+        reinstateItemShadowCopy = reloadItem(reinstateItemShadowCopy);
+        assertThat(reinstateItemShadowCopy, nullValue());
+    }
+
+    @Test
+    public void testItemReinstateWithInstitutionReject() throws Exception {
+
+        WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
+
+        workflowService.start(context, workspaceItem);
+
+        Item item = workspaceItem.getItem();
+        assertThat(getWorkspaceItem(item), nullValue());
+
+        Relationship relationship = findRelation(item, hasShadowCopy);
+        Item shadowItemCopy = relationship.getRightItem();
+
+        XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
+
+        claimTaskAndApprove(shadowWorkflowItemCopy, secondDirectorioUser, directorioEditorGroup);
+
+        withdrawItems(item, shadowItemCopy);
+
+        item = reloadItem(item);
+        assertThat(item.isArchived(), is(false));
+        assertThat(item.isWithdrawn(), is(true));
+
+        shadowItemCopy = reloadItem(shadowItemCopy);
+        assertThat(shadowItemCopy.isArchived(), is(false));
+        assertThat(shadowItemCopy.isWithdrawn(), is(true));
+
+        WorkspaceItem reinstateWorkspaceItem = requestForItemReinstate(admin, item);
+        assertThat(reinstateWorkspaceItem, notNullValue());
+
+        Item reinstateItem = reinstateWorkspaceItem.getItem();
+
+        Relationship reinstateRelation = findRelation(item, institutionIsReinstateOf);
+        assertThat(reinstateRelation.getLeftItem(), equalTo(reinstateWorkspaceItem.getItem()));
+
+        context.turnOffAuthorisationSystem();
+        workflowService.start(context, reinstateWorkspaceItem);
+        context.restoreAuthSystemState();
+
+        assertThat(getWorkflowItem(reinstateItem), notNullValue());
+
+        Relationship reinstateItemShadowCopyRelation = findRelation(reinstateItem, hasShadowCopy);
+        Item reinstateItemShadowCopy = reinstateItemShadowCopyRelation.getRightItem();
+
+        Relationship itemShadowCopyToBeWithdrawRelation = findRelation(reinstateItemShadowCopy, isReinstateOf);
+        assertThat(itemShadowCopyToBeWithdrawRelation, notNullValue());
+        assertThat(reinstateItemShadowCopy, equalTo(itemShadowCopyToBeWithdrawRelation.getLeftItem()));
+        assertThat(shadowItemCopy, equalTo(itemShadowCopyToBeWithdrawRelation.getRightItem()));
+
+        XmlWorkflowItem reinstateWorkflowItem = getWorkflowItem(reinstateItem);
+        assertThat(reinstateWorkflowItem, notNullValue());
+
+        XmlWorkflowItem reinstateWorkflowItemShadowCopy = getWorkflowItem(reinstateItemShadowCopy);
+        assertThat(reinstateWorkflowItemShadowCopy, notNullValue());
+
+        List<PoolTask> poolTasks = poolTaskService.find(context, reinstateWorkflowItem);
+        assertThat(poolTasks, hasSize(1));
+
+        PoolTask poolTask = poolTasks.get(0);
+        assertThat(poolTask.getGroup().getMemberGroups(), contains(reviewGroup));
+
+        performActionOnPoolTaskViaRest(institutionUser, poolTask);
+
+        item = reloadItem(item);
+        assertThat(item, notNullValue());
+        assertThat(item.isArchived(), is(false));
+        assertThat(item.isWithdrawn(), is(true));
+
+        shadowItemCopy = reloadItem(shadowItemCopy);
+        assertThat(shadowItemCopy, notNullValue());
+        assertThat(shadowItemCopy.isArchived(), is(false));
+        assertThat(shadowItemCopy.isWithdrawn(), is(true));
+
+        reinstateItem = reloadItem(reinstateItem);
+        assertThat(reinstateItem, nullValue());
+
+        reinstateItemShadowCopy = reloadItem(reinstateItemShadowCopy);
+        assertThat(reinstateItemShadowCopy, nullValue());
+    }
+
+    @Test
+    public void testItemReinstateWithoutItemInDirectorio() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+        Item item = ItemBuilder.createItem(context, institutionCollection)
+            .withTitle("Test publication")
+            .withEditor("Test editor")
+            .withIssueDate("2021-01-04")
+            .withdrawn()
+            .build();
+        context.restoreAuthSystemState();
+
+        WorkspaceItem reinstateWorkspaceItem = requestForItemWithdraw(admin, item);
+        assertThat(reinstateWorkspaceItem, notNullValue());
+
+        Item reinstateItem = reinstateWorkspaceItem.getItem();
+
+        Relationship reinstateRelation = findRelation(item, institutionIsWithdrawOf);
+        assertThat(reinstateRelation.getLeftItem(), equalTo(reinstateWorkspaceItem.getItem()));
+
+        context.turnOffAuthorisationSystem();
+        workflowService.start(context, reinstateWorkspaceItem);
+        context.restoreAuthSystemState();
+
+        item = reloadItem(item);
+        assertThat(item, notNullValue());
+        assertThat(item.isArchived(), is(false));
+        assertThat(item.isWithdrawn(), is(true));
+
+        reinstateItem = reloadItem(reinstateItem);
+        assertThat(reinstateItem, nullValue());
+
+    }
+
+    @Test
+    public void testItemReinstateWithNoWithdrawnItemInDirectorio() throws Exception {
+
+        WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
+
+        workflowService.start(context, workspaceItem);
+
+        Item item = workspaceItem.getItem();
+        assertThat(getWorkspaceItem(item), nullValue());
+
+        Relationship relationship = findRelation(item, hasShadowCopy);
+        Item shadowItemCopy = relationship.getRightItem();
+
+        XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
+
+        claimTaskAndApprove(shadowWorkflowItemCopy, secondDirectorioUser, directorioEditorGroup);
+
+        withdrawItems(item);
+
+        item = reloadItem(item);
+        assertThat(item.isArchived(), is(false));
+        assertThat(item.isWithdrawn(), is(true));
+
+        shadowItemCopy = reloadItem(shadowItemCopy);
+        assertThat(shadowItemCopy.isArchived(), is(true));
+        assertThat(shadowItemCopy.isWithdrawn(), is(false));
+
+        WorkspaceItem reinstateWorkspaceItem = requestForItemReinstate(admin, item);
+        assertThat(reinstateWorkspaceItem, notNullValue());
+
+        Item reinstateItem = reinstateWorkspaceItem.getItem();
+
+        Relationship reinstateRelation = findRelation(item, institutionIsReinstateOf);
+        assertThat(reinstateRelation.getLeftItem(), equalTo(reinstateWorkspaceItem.getItem()));
+
+        context.turnOffAuthorisationSystem();
+        workflowService.start(context, reinstateWorkspaceItem);
+        context.restoreAuthSystemState();
+
+        item = reloadItem(item);
+        assertThat(item, notNullValue());
+        assertThat(item.isArchived(), is(true));
+        assertThat(item.isWithdrawn(), is(false));
+
+        shadowItemCopy = reloadItem(shadowItemCopy);
+        assertThat(shadowItemCopy, notNullValue());
+        assertThat(shadowItemCopy.isArchived(), is(true));
+        assertThat(shadowItemCopy.isWithdrawn(), is(false));
+
+        reinstateItem = reloadItem(reinstateItem);
+        assertThat(reinstateItem, nullValue());
+
+    }
+
     private RelationshipType createHasShadowCopyRelationshop(EntityType institutionType, EntityType directorioType) {
         return createRelationshipTypeBuilder(context, institutionType, directorioType, HAS_SHADOW_COPY_RELATIONSHIP,
             IS_SHADOW_COPY_RELATIONSHIP, 0, 1, 0, 1).build();
@@ -1291,6 +1615,11 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     private RelationshipType createIsWithdrawOfRelationship(EntityType entityType) {
         return createRelationshipTypeBuilder(context, entityType,
             entityType, "isWithdrawOfItem", "isWithdrawnByItem", 0, 1, 0, 1).build();
+    }
+
+    private RelationshipType createIsReinstatementOfRelationship(EntityType entityType) {
+        return createRelationshipTypeBuilder(context, entityType,
+            entityType, "isReinstatementOfItem", "isReinstatedByItem", 0, 1, 0, 1).build();
     }
 
     private RelationshipType createIsCorrectionOfRelationship(EntityType entityType) {
@@ -1422,6 +1751,10 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         return requestForItemCopy(user, item, "isWithdrawOfItem");
     }
 
+    private WorkspaceItem requestForItemReinstate(EPerson user, Item item) throws Exception {
+        return requestForItemCopy(user, item, "isReinstatementOfItem");
+    }
+
     private WorkspaceItem requestForItemCopy(EPerson user, Item item, String relationship) throws Exception {
         AtomicInteger idRef = new AtomicInteger();
 
@@ -1487,5 +1820,13 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
     private EntityType createEntityType(String entityType) {
         return EntityTypeBuilder.createEntityTypeBuilder(context, entityType).build();
+    }
+
+    private void withdrawItems(Item... items) throws SQLException, AuthorizeException {
+        context.turnOffAuthorisationSystem();
+        for (Item item : items) {
+            itemService.withdraw(context, reloadItem(item));
+        }
+        context.restoreAuthSystemState();
     }
 }

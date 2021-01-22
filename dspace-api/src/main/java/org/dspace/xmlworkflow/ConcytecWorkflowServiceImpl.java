@@ -119,6 +119,21 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
         return relationships.get(0).getRightItem();
     }
 
+    @Override
+    public Item findReinstateItem(Context context, Item item) throws SQLException {
+        List<Relationship> relationships = findItemReinstateRelationships(context, item, true);
+
+        if (CollectionUtils.isEmpty(relationships)) {
+            return null;
+        }
+
+        if (relationships.size() > 1) {
+            throw new IllegalStateException("The item " + item.getID() + " is a reinstate of more than one item");
+        }
+
+        return relationships.get(0).getRightItem();
+    }
+
     private List<Relationship> findItemShadowRelationships(Context context, Item item, boolean isLeft)
         throws SQLException {
         RelationshipType shadowRelationshipType = findShadowRelationshipType(context, item, isLeft);
@@ -146,6 +161,21 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
         throws SQLException {
         return findRelationshipType(context, item, isLeft, IS_WITHDRAW_OF_ITEM_RELATIONSHIP,
             IS_WITHDRAWN_BY_ITEM_RELATIONSHIP);
+    }
+
+    private List<Relationship> findItemReinstateRelationships(Context context, Item item, boolean isLeft)
+        throws SQLException {
+        RelationshipType reinstateRelationshipType = findReinstateRelationshipType(context, item, isLeft);
+        if (reinstateRelationshipType == null) {
+            return Collections.emptyList();
+        }
+        return relationshipService.findByItemAndRelationshipType(context, item, reinstateRelationshipType, isLeft);
+    }
+
+    private RelationshipType findReinstateRelationshipType(Context context, Item item, boolean isLeft)
+        throws SQLException {
+        return findRelationshipType(context, item, isLeft, IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP,
+            IS_REINSTATED_BY_ITEM_RELATIONSHIP);
     }
 
     private RelationshipType findRelationshipType(Context context, Item item, boolean isLeft, String leftwardType,

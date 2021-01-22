@@ -10,6 +10,8 @@ package org.dspace.content.authority;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -31,6 +33,9 @@ import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.discovery.SearchService;
+import org.dspace.external.factory.ExternalServiceFactory;
+import org.dspace.external.provider.ExternalDataProvider;
+import org.dspace.external.service.ExternalDataService;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.RequestService;
 import org.dspace.services.factory.DSpaceServicesFactory;
@@ -49,6 +54,7 @@ import org.dspace.utils.DSpace;
  */
 public class ItemAuthority implements ChoiceAuthority, LinkableEntityAuthority {
     private static final Logger log = Logger.getLogger(ItemAuthority.class);
+    final static String CHOICES_EXTERNALSOURCE_PREFIX = "choises.externalsource.";
 
     /** the name assigned to the specific instance by the PluginService, @see {@link NameAwarePlugin} **/
     private String authorityName;
@@ -72,6 +78,11 @@ public class ItemAuthority implements ChoiceAuthority, LinkableEntityAuthority {
         RequestService.class);
 
     private CollectionService collectionService = ContentServiceFactory.getInstance().getCollectionService();
+
+    private ExternalDataService externalDataService = ExternalServiceFactory.getInstance().getExternalDataService();
+
+    // map of field key to presentation type
+    protected Map<String, String> externalSource = new HashMap<String, String>();
 
     // punt!  this is a poor implementation..
     @Override
@@ -196,5 +207,48 @@ public class ItemAuthority implements ChoiceAuthority, LinkableEntityAuthority {
     @Override
     public String getPluginInstanceName() {
         return authorityName;
+    }
+
+    /**
+     * Return map of key to presentation
+     *
+     * @return
+     */
+    @Override
+    public Map<String, String> getExternalSource() {
+        // If empty, load from configuration
+        if (externalSource.isEmpty()) {
+            // Get all configuration keys starting with a given prefix
+            List<String> propKeys = configurationService.getPropertyKeys(CHOICES_EXTERNALSOURCE_PREFIX);
+            Iterator<String> keyIterator = propKeys.iterator();
+            while (keyIterator.hasNext()) {
+                String key = keyIterator.next();
+
+                String metadata = key.substring(CHOICES_EXTERNALSOURCE_PREFIX.length());
+                if (metadata == null) {
+                    log.warn("Skipping invalid external source authority configuration property: " + key +
+                        ": does not have schema.element.qualifier");
+                    continue;
+                }
+                String sourceIdentifier = configurationService.getProperty(key);
+                if (hasValidExternalSource(sourceIdentifier)) {
+                    externalSource.put(metadata, sourceIdentifier);
+                } else {
+                    log.warn("Skipping invalid external source authority configuration property: " + sourceIdentifier +
+                            " does not exist");
+                    continue;
+                }
+            }
+        }
+
+        return externalSource;
+    }
+
+    private boolean hasValidExternalSource(String sourceIdentifier) {
+        if (StringUtils.isNotBlank(sourceIdentifier)) {
+            ExternalDataProvider externalsource = externalDataService.getExternalDataProvider(sourceIdentifier);
+            return (externalsource != null);
+        }
+        return false;
     }
 }

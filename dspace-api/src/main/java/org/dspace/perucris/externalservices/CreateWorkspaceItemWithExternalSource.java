@@ -106,7 +106,7 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
             throw new RuntimeException("The UUID of directorios.community-id is NULL.");
         }
 
-        UUID collectionUUID = UUID.fromString(configurationService.getProperty("importworkspaceitem.collection-id"));
+        UUID collectionUUID = getCollectionUUID();
         if (Objects.isNull(collectionUUID)) {
             throw new RuntimeException("The UUID of Collection is null.");
         }
@@ -127,6 +127,17 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
         } finally {
             context.restoreAuthSystemState();
         }
+    }
+
+    private UUID getCollectionUUID() {
+        switch (this.service) {
+            case "scopus":
+                return UUID.fromString(configurationService.getProperty("scopus.importworkspaceitem.collection-id"));
+            case "wos":
+                return UUID.fromString(configurationService.getProperty("wos.importworkspaceitem.collection-id"));
+            default:
+        }
+        return null;
     }
 
     private void assignCurrentUserInContext() throws SQLException {
@@ -295,8 +306,8 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
         }
         if ("wos".equals(service)) {
             discoverQuery.addFilterQueries("relationship.type:Person");
-            discoverQuery.addFilterQueries("person.identifier.orcid:*");
-            discoverQuery.addFilterQueries("person.identifier.rid:*");
+            discoverQuery.addFilterQueries("person.identifier.orcid:* OR person.identifier.rid:*");
+           // discoverQuery.addFilterQueries("person.identifier.rid:*");
         }
     }
 
@@ -331,5 +342,13 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
         getScriptConfiguration() {
         return new DSpace().getServiceManager().getServiceByName("create-wsi",
                                                 CreateWorkspaceItemWithExternalSourceScriptConfiguration.class);
+    }
+
+    public Map<String, LiveImportDataProvider> getNameToProvider() {
+        return nameToProvider;
+    }
+
+    public void setNameToProvider(Map<String, LiveImportDataProvider> nameToProvider) {
+        this.nameToProvider = nameToProvider;
     }
 }

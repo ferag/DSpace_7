@@ -7,13 +7,10 @@
  */
 package org.dspace.perucris.externalservices;
 import java.sql.SQLException;
-import java.util.Map;
 
 import org.apache.commons.cli.Options;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.core.Context;
-import org.dspace.external.provider.impl.LiveImportDataProvider;
-import org.dspace.external.service.ExternalDataService;
 import org.dspace.scripts.configuration.ScriptConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +28,6 @@ public class CreateWorkspaceItemWithExternalSourceScriptConfiguration<T extends 
                                 .getLogger(CreateWorkspaceItemWithExternalSourceScriptConfiguration.class);
 
     private Class<T> dspaceRunnableClass;
-
-    protected Map<String, LiveImportDataProvider> nameToPrider;
-
-    protected ExternalDataService externalDataService;
 
     @Autowired
     private AuthorizeService authorizeService;
@@ -69,22 +62,6 @@ public class CreateWorkspaceItemWithExternalSourceScriptConfiguration<T extends 
     @Override
     public void setDspaceRunnableClass(Class<T> dspaceRunnableClass) {
         this.dspaceRunnableClass = dspaceRunnableClass;
-    }
-
-    public Map<String, LiveImportDataProvider> getNameToPrider() {
-        return nameToPrider;
-    }
-
-    public void setNameToPrider(Map<String, LiveImportDataProvider> nameToPrider) {
-        this.nameToPrider = nameToPrider;
-    }
-
-    public ExternalDataService getExternalDataService() {
-        return externalDataService;
-    }
-
-    public void setExternalDataService(ExternalDataService externalDataService) {
-        this.externalDataService = externalDataService;
     }
 
 }

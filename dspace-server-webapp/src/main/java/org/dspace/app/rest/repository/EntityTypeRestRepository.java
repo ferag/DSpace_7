@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,7 @@ import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.service.GroupService;
 import org.dspace.external.service.ExternalDataService;
+import org.dspace.services.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,6 +61,8 @@ public class EntityTypeRestRepository extends DSpaceRestRepository<EntityTypeRes
     protected GroupService groupService;
     @Autowired(required = true)
     protected SearchService searchService;
+    @Autowired
+    private ConfigurationService configurationService;
 
     @Override
     @PreAuthorize("permitAll()")
@@ -155,6 +159,10 @@ public class EntityTypeRestRepository extends DSpaceRestRepository<EntityTypeRes
 
         SolrQuery sQuery = new SolrQuery(query.toString());
         sQuery.addFilterQuery("search.resourcetype:" + IndexableCollection.TYPE);
+        Optional.ofNullable(configurationService.getProperty("researcher-profile.collection.uuid"))
+            .filter(StringUtils::isNotBlank)
+            .ifPresent(id -> sQuery.addFilterQuery(String.format("NOT(search.resourceid:%s)",
+                id)));
         sQuery.setRows(0);
         sQuery.addFacetField("search.entitytype");
         sQuery.setFacetLimit((int) (pageable.getPageSize() + pageable.getOffset()));
@@ -168,7 +176,9 @@ public class EntityTypeRestRepository extends DSpaceRestRepository<EntityTypeRes
                     skipped++;
                     continue;
                 }
-                types.add(c.getName());
+                if (c.getCount() > 0) {
+                    types.add(c.getName());
+                }
             }
         }
         return types;

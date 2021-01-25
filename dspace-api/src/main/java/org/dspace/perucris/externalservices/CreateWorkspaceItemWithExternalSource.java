@@ -307,7 +307,6 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
         if ("wos".equals(service)) {
             discoverQuery.addFilterQueries("relationship.type:Person");
             discoverQuery.addFilterQueries("person.identifier.orcid:* OR person.identifier.rid:*");
-           // discoverQuery.addFilterQueries("person.identifier.rid:*");
         }
     }
 

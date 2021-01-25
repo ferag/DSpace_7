@@ -38,7 +38,7 @@ public class WorkflowTest extends AbstractUnitTest {
         assertTrue(this.containsStepNamed(steps, "reviewstep"));
         assertTrue(this.containsStepNamed(steps, "editstep"));
         assertTrue(this.containsStepNamed(steps, "finaleditstep"));
-        assertTrue(this.containsStepNamed(steps, "checkcorrectionstep"));
+        assertTrue(this.containsStepNamed(steps, "finalizeItemStep"));
     }
 
     @Test

@@ -47,8 +47,6 @@ public abstract class AbstractDirectorioAction extends ProcessingAction {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDirectorioAction.class);
 
-    public static final int OUTCOME_REJECT = 1;
-
     protected static final String SUBMIT_APPROVE = "submit_approve";
     protected static final String SUBMIT_ASSIGN = "submit_assign";
     protected static final String SUBMIT_REJECT = "submit_reject";
@@ -121,7 +119,7 @@ public abstract class AbstractDirectorioAction extends ProcessingAction {
 
         concytecWorkflowService.setConcytecFeedback(context, item, ConcytecFeedback.REJECT);
         concytecWorkflowService.setConcytecComment(context, item, reason);
-        return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, OUTCOME_REJECT);
+        return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, ActionResult.OUTCOME_COMPLETE);
     }
 
     private void addApprovedProvenance(Context context, Item item) throws SQLException, AuthorizeException {

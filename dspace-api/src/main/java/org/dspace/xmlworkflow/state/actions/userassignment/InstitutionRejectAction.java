@@ -79,9 +79,14 @@ public class InstitutionRejectAction extends UserSelectionAction {
             xmlWorkflowService.deleteWorkflowByWorkflowItem(context, workflowShadowItemCopy, currentUser);
         }
 
-        xmlWorkflowService.sendWorkflowItemBackSubmission(context, workflowItem, currentUser, startId, "");
+        if (isNotWithdrawRequest(context, workflowItem) && isNotReinstateRequest(context, workflowItem)) {
+            xmlWorkflowService.sendWorkflowItemBackSubmission(context, workflowItem, currentUser, startId, "");
+        } else {
+            xmlWorkflowService.deleteWorkflowByWorkflowItem(context, workflowItem, currentUser);
+        }
 
         return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, ActionResult.OUTCOME_COMPLETE);
+
     }
 
     @Override
@@ -155,6 +160,14 @@ public class InstitutionRejectAction extends UserSelectionAction {
     private XmlWorkflowItem findWorkflowShadowItemCopy(Context context, Item item) throws SQLException {
         Item shadowItemCopy = concytecWorkflowService.findShadowItemCopy(context, item);
         return shadowItemCopy != null ? workflowItemService.findByItem(context, shadowItemCopy) : null;
+    }
+
+    private boolean isNotWithdrawRequest(Context context, XmlWorkflowItem workflowItem) throws SQLException {
+        return concytecWorkflowService.findWithdrawnItem(context, workflowItem.getItem()) == null;
+    }
+
+    private boolean isNotReinstateRequest(Context context, XmlWorkflowItem workflowItem) throws SQLException {
+        return concytecWorkflowService.findReinstateItem(context, workflowItem.getItem()) == null;
     }
 
 }

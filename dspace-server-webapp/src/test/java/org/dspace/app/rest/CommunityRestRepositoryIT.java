@@ -14,9 +14,9 @@ import static org.dspace.app.rest.matcher.CommunityMatcher.matchCommunity;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadata;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadataNotEmpty;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadataStringEndsWith;
-import static org.dspace.builder.CollectionBuilder.createCollection;
 import static org.dspace.builder.CommunityBuilder.createCommunity;
 import static org.dspace.builder.CommunityBuilder.createSubCommunity;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
@@ -72,6 +72,7 @@ import org.dspace.core.Constants;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.GroupType;
+import org.dspace.eperson.dao.Group2GroupCacheDAO;
 import org.dspace.services.ConfigurationService;
 import org.hamcrest.Matchers;
 import org.json.JSONArray;
@@ -103,6 +104,9 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
 
     @Autowired
     private CollectionService collectionService;
+
+    @Autowired
+    private Group2GroupCacheDAO group2GroupCacheDAO;
 
     @Test
     public void createTest() throws Exception {
@@ -1862,26 +1866,31 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
             assertNotNull(newCollectionAdmin);
             assertEquals(1, newCollectionAdmin.getMemberGroups().size());
             assertEquals(expectedScopedRoleB, newCollectionAdmin.getMemberGroups().get(0).getName());
+            assertThat(group2GroupCacheDAO.findByParent(context, newCollectionAdmin), hasSize(1));
 
             Group newCollectionSubmitter = newCollection.getSubmitters();
             assertNotNull(newCollectionSubmitter);
             assertEquals(1, newCollectionSubmitter.getMemberGroups().size());
             assertEquals(expectedScopedRoleB, newCollectionSubmitter.getMemberGroups().get(0).getName());
+            assertThat(group2GroupCacheDAO.findByParent(context, newCollectionSubmitter), hasSize(1));
 
             Group workflowStep1 = newCollection.getWorkflowStep1(context);
             assertNotNull(workflowStep1);
             assertEquals(1, workflowStep1.getMemberGroups().size());
             assertEquals(expectedScopedRoleA, workflowStep1.getMemberGroups().get(0).getName());
+            assertThat(group2GroupCacheDAO.findByParent(context, workflowStep1), hasSize(1));
 
             Group workflowStep2 = newCollection.getWorkflowStep2(context);
             assertNotNull(workflowStep2);
             assertEquals(1, workflowStep2.getMemberGroups().size());
             assertEquals(expectedScopedRoleB, workflowStep2.getMemberGroups().get(0).getName());
+            assertThat(group2GroupCacheDAO.findByParent(context, workflowStep2), hasSize(1));
 
             Group workflowStep3 = newCollection.getWorkflowStep3(context);
             assertNotNull(workflowStep3);
             assertEquals(1, workflowStep3.getMemberGroups().size());
             assertEquals(expectedScopedRoleC, workflowStep3.getMemberGroups().get(0).getName());
+            assertThat(group2GroupCacheDAO.findByParent(context, workflowStep3), hasSize(1));
 
             List<Community> communities = newCommunity.getSubcommunities();
             assertEquals(2, communities.size());

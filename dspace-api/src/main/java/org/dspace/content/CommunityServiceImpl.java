@@ -818,12 +818,14 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
         if (administrators != null) {
             Group newAdministrators = collectionService.createAdministrators(context, newCollection);
             addInstitutionalScopedRoleMembers(context, administrators, newAdministrators, scopedRoles);
+            groupService.update(context, newAdministrators);
         }
 
         Group submitter = collection.getSubmitters();
         if (submitter != null) {
             Group newSubmitter = collectionService.createSubmitters(context, newCollection);
             addInstitutionalScopedRoleMembers(context, submitter, newSubmitter, scopedRoles);
+            groupService.update(context, newSubmitter);
         }
 
         try {
@@ -908,6 +910,7 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
         String roleId = collectionRole.getRoleId();
         Group newWorkflowGroup = collectionService.createWorkflowGroup(context, newCollection, roleId);
         addInstitutionalScopedRoleMembers(context, collectionRole.getGroup(), newWorkflowGroup, scopedRoles);
+        groupService.update(context, newWorkflowGroup);
 
     }
 

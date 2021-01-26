@@ -56,6 +56,7 @@ import org.dspace.content.service.ItemService;
 import org.dspace.content.service.RelationshipService;
 import org.dspace.content.service.WorkspaceItemService;
 import org.dspace.core.Context;
+import org.dspace.core.CrisConstants;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.services.ConfigurationService;
@@ -1605,6 +1606,76 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         reinstateItem = reloadItem(reinstateItem);
         assertThat(reinstateItem, nullValue());
 
+    }
+
+    @Test
+    public void testItemSubmissionWithEntityLookup() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Collection directorioPersons = CollectionBuilder
+            .createCollection(context, directorioCommunity)
+            .withWorkflow("directorioWorkflow")
+            .withName("Persons")
+            .withRelationshipType("Person")
+            .withSubmitterGroup(submitter)
+            .withRoleGroup("editor", directorioEditorGroup)
+            .build();
+
+        Item firstPerson = ItemBuilder.createItem(context, directorioPersons)
+            .withTitle("Mario Rossi")
+            .withOrcidIdentifier("0000-0002-1825-0097")
+            .build();
+
+        Item secondPerson = ItemBuilder.createItem(context, directorioPersons)
+            .withTitle("Walter White")
+            .withScopusAuthorIdentifier("SC-01")
+            .build();
+
+        Item thirdPerson = ItemBuilder.createItem(context, directorioPersons)
+            .withTitle("Jesse Pinkman")
+            .withResearcherIdentifier("R-01")
+            .build();
+
+        WorkspaceItem workspaceItem = WorkspaceItemBuilder.createWorkspaceItem(context, institutionCollection)
+            .withTitle("Test item")
+            .withIssueDate("2017-10-17")
+            .withAuthor("Mario Rossi")
+            .withAuthorAffilitation("4Science")
+            .withAuthorOrcid("0000-0002-1825-0097")
+            .withAuthorScopusIdentifier(CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withAuthorResearcherId(CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withAuthor("Walter White")
+            .withAuthorOrcid(CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withAuthorScopusIdentifier("SC-01")
+            .withAuthorResearcherId(CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withAuthor("Jesse Pinkman")
+            .withAuthorOrcid(CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withAuthorScopusIdentifier(CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withAuthorResearcherId("R-01")
+            .withEditor("Test editor")
+            .grantLicense()
+            .build();
+
+        context.restoreAuthSystemState();
+
+        workflowService.start(context, workspaceItem);
+
+        Item item = workspaceItem.getItem();
+        assertThat(getWorkspaceItem(item), nullValue());
+
+        Relationship relationship = findRelation(item, hasShadowCopy);
+        Item shadowItemCopy = relationship.getRightItem();
+
+        List<MetadataValue> metadata = shadowItemCopy.getMetadata();
+        String firstPersonId = firstPerson.getID().toString();
+        String secondPersonId = secondPerson.getID().toString();
+        String thirdPersonId = thirdPerson.getID().toString();
+
+        assertThat(metadata, hasItem(with("dc.title", "Test item")));
+        assertThat(metadata, hasItem(with("dc.contributor.author", "Mario Rossi", null, firstPersonId, 0, 600)));
+        assertThat(metadata, hasItem(with("dc.contributor.author", "Walter White", null, secondPersonId, 1, 600)));
+        assertThat(metadata, hasItem(with("dc.contributor.author", "Jesse Pinkman", null, thirdPersonId, 2, 600)));
     }
 
     private RelationshipType createHasShadowCopyRelationshop(EntityType institutionType, EntityType directorioType) {

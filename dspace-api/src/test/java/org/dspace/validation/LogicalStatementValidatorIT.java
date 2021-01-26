@@ -202,7 +202,7 @@ public class LogicalStatementValidatorIT extends AbstractIntegrationTestWithData
 
         WorkspaceItem itemWithScopusAuthor = WorkspaceItemBuilder
             .createWorkspaceItem(context, personCollection)
-            .withScopusAuthorIdentifier("Scopus-01")
+            .withScopusIdentifier("Scopus-01")
             .build();
 
         WorkspaceItem itemWithResearcherId = WorkspaceItemBuilder
@@ -272,7 +272,7 @@ public class LogicalStatementValidatorIT extends AbstractIntegrationTestWithData
 
         WorkspaceItem itemWithScopusAuthor = WorkspaceItemBuilder
             .createWorkspaceItem(context, personCollection)
-            .withScopusAuthorIdentifier("Scopus-01")
+            .withScopusIdentifier("Scopus-01")
             .build();
 
         WorkspaceItem itemWithResearcherId = WorkspaceItemBuilder

@@ -103,7 +103,21 @@
     <dc-type>
         <schema>perucris</schema>
         <element>author</element>
+        <qualifier>rid</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>author</element>
         <qualifier>dni</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>author</element>
+        <qualifier>scopus-author-id</qualifier>
         <scope_note></scope_note>
     </dc-type>
 

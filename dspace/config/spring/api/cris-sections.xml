@@ -154,6 +154,63 @@
                         </list>
                     </list>
                 </entry>
+                <entry key="directorios">
+                    <list>
+                        <list>
+                            <bean class="org.dspace.layout.CrisLayoutTextBoxComponent">
+                                <constructor-arg name="textRows">
+                                    <list>
+                                        <bean class="org.dspace.layout.CrisLayoutTextRowComponent">
+                                            <constructor-arg name="order" value="0"/>
+                                            <constructor-arg name="contentType" value="image"/>
+                                            <constructor-arg name="content" value="https://perucris.dev.4science.cloud/assets/images/perucris-home.png"/>
+                                            <constructor-arg name="style" value="col-md-12 center"/>
+                                        </bean>
+                                        <bean class="org.dspace.layout.CrisLayoutTextRowComponent">
+                                            <constructor-arg name="order" value="1"/>
+                                            <constructor-arg name="contentType" value="text-key"/>
+                                            <constructor-arg name="content" value="directorios.title"/>
+                                            <constructor-arg name="style" value="col-md-12 d-flex justify-content-center py-3"/>
+                                        </bean>
+                                        <bean class="org.dspace.layout.CrisLayoutTextRowComponent">
+                                            <constructor-arg name="order" value="2"/>
+                                            <constructor-arg name="contentType" value="text-key"/>
+                                            <constructor-arg name="content" value="directorios.description"/>
+                                            <constructor-arg name="style" value="col-md-12 d-flex justify-content-center py-2"/>
+                                        </bean>
+                                    </list>
+                                </constructor-arg>
+                                <constructor-arg name="style" value="col-md-12"/>
+                            </bean>
+                        </list>
+                        <list>
+                            <bean class="org.dspace.layout.CrisLayoutSearchComponent">
+                                <property name="discoveryConfigurationName" value="site" />
+                                <property name="style" value="col-md-12"/>
+                            </bean>
+                        </list>
+<!--                        <list>-->
+<!--                            <bean class="org.dspace.layout.CrisLayoutFacetComponent">-->
+<!--                                <property name="discoveryConfigurationName" value="researchoutputs" />-->
+<!--                                <property name="style" value="col-md-12"/>-->
+<!--                            </bean>-->
+<!--                        </list>-->
+                        <list>
+                            <bean class="org.dspace.layout.CrisLayoutTopComponent">
+                                <property name="discoveryConfigurationName" value="researchoutputs" />
+                                <property name="sortField" value="dc.date.accessioned" />
+                                <property name="order" value="desc" />
+                                <property name="style" value="col-md-6"/>
+                            </bean>
+                            <bean class="org.dspace.layout.CrisLayoutTopComponent">
+                                <property name="discoveryConfigurationName" value="researchoutputs" />
+                                <property name="sortField" value="dc.title" />
+                                <property name="order" value="asc" />
+                                <property name="style" value="col-md-6"/>
+                            </bean>
+                        </list>
+                    </list>
+                </entry>
             </map>
         </property>
     </bean>

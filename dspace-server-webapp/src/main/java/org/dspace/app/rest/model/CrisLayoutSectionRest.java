@@ -225,4 +225,70 @@ public class CrisLayoutSectionRest extends BaseObjectRest<String> {
 
     }
 
+    public static class CrisLayoutTextRowComponentRest implements CrisLayoutSectionComponentRest,
+        Comparable<CrisLayoutTextRowComponentRest> {
+
+        private final Integer order;
+        private final String style;
+        private final String content;
+        private final String contentType;
+
+        public CrisLayoutTextRowComponentRest(Integer order, String style, String content, String contentType) {
+            this.order = order;
+            this.style = style;
+            this.content = content;
+            this.contentType = contentType;
+        }
+
+        @Override
+        public String getComponentType() {
+            return "text-row";
+        }
+
+        @Override
+        public String getStyle() {
+            return style;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public String getContentType() {
+            return contentType;
+        }
+
+        @Override
+        public int compareTo(CrisLayoutTextRowComponentRest other) {
+            return this.order.compareTo(other.order);
+        }
+    }
+
+    public static class CrisLayoutTextBoxComponentRest implements CrisLayoutSectionComponentRest {
+
+        private final List<CrisLayoutTextRowComponentRest> textRows;
+        private final String style;
+
+        public CrisLayoutTextBoxComponentRest(
+            List<CrisLayoutTextRowComponentRest> textRows, String style) {
+            this.textRows = textRows;
+            this.style = style;
+        }
+
+
+        @Override
+        public String getComponentType() {
+            return "text-box";
+        }
+
+        @Override
+        public String getStyle() {
+            return style;
+        }
+
+        public List<CrisLayoutTextRowComponentRest> getTextRows() {
+            return textRows;
+        }
+    }
+
 }

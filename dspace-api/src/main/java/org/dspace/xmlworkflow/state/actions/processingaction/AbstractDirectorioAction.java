@@ -77,7 +77,6 @@ public abstract class AbstractDirectorioAction extends ProcessingAction {
     protected ActionResult processAssign(Context context, XmlWorkflowItem workflowItem, Step step,
         HttpServletRequest request) throws SQLException, AuthorizeException, IOException, WorkflowException {
 
-        request.getParameterMap();
         UUID userToAssignId = UUIDUtils.fromString(request.getParameter("user"));
         if (userToAssignId == null) {
             LOGGER.warn("A parameter 'user' with the uuid of the user to assign the task must be provided");

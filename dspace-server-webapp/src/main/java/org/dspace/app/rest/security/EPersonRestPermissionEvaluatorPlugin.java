@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.rest.model.patch.Operation;
 import org.dspace.app.rest.model.patch.Patch;
@@ -25,8 +26,12 @@ import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
+import org.dspace.eperson.Group;
+import org.dspace.eperson.service.EPersonService;
+import org.dspace.eperson.service.GroupService;
 import org.dspace.services.RequestService;
 import org.dspace.services.model.Request;
+import org.dspace.xmlworkflow.storedcomponents.service.CollectionRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +52,15 @@ public class EPersonRestPermissionEvaluatorPlugin extends RestObjectPermissionEv
 
     @Autowired
     private RequestService requestService;
+
+    @Autowired
+    private CollectionRoleService collectionRoleService;
+
+    @Autowired
+    private GroupService groupService;
+
+    @Autowired
+    private EPersonService ePersonService;
 
     @Override
     public boolean hasDSpacePermission(Authentication authentication, Serializable targetId,
@@ -81,6 +95,8 @@ public class EPersonRestPermissionEvaluatorPlugin extends RestObjectPermissionEv
                 return true;
             } else if (authorizeService.isCollectionAdmin(context, ePerson)
                 && AuthorizeUtil.canCollectionAdminManageAccounts()) {
+                return true;
+            } else if (isBothUsersMemberOfTheSameWorkflowGroup(context, ePerson, dsoId)) {
                 return true;
             }
         } catch (SQLException e) {
@@ -129,6 +145,25 @@ public class EPersonRestPermissionEvaluatorPlugin extends RestObjectPermissionEv
         }
 
         return true;
+    }
+
+    private boolean isBothUsersMemberOfTheSameWorkflowGroup(Context context, EPerson currentUser, UUID targetId)
+        throws SQLException {
+
+        EPerson targetEPerson = ePersonService.find(context, targetId);
+
+        List<Group> groups = groupService.allMemberGroups(context, currentUser);
+        for (Group group : groups) {
+            if (isWorkflowGroup(context, group) && groupService.isMember(context, targetEPerson, group)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isWorkflowGroup(Context context, Group group) throws SQLException {
+        return CollectionUtils.isNotEmpty(collectionRoleService.findByGroup(context, group));
     }
 
 }

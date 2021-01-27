@@ -9,9 +9,11 @@ package org.dspace.app.rest.model;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import org.dspace.app.rest.RestResourceController;
+import org.dspace.layout.CrisLayoutCountersComponent;
 
 /**
  * The Layout section REST resource related to the explore functionality.
@@ -289,6 +291,80 @@ public class CrisLayoutSectionRest extends BaseObjectRest<String> {
         public List<CrisLayoutTextRowComponentRest> getTextRows() {
             return textRows;
         }
+    }
+
+    public static class CrisLayoutCountersComponentRest implements CrisLayoutSectionComponentRest {
+
+        private final String style;
+        private final List<CounterSettingsRest> counterSettingsList;
+
+        public static CrisLayoutCountersComponentRest from (CrisLayoutCountersComponent source) {
+            return new CrisLayoutCountersComponentRest(source.getStyle(),
+                source.getCounterSettingsList().stream()
+                .map(CounterSettingsRest::from)
+                .collect(Collectors.toList())
+                );
+        }
+
+        @Override
+        public String getComponentType() {
+            return "counters";
+        }
+
+        public String getStyle() {
+            return style;
+        }
+
+        public List<CounterSettingsRest> getCounterSettingsList() {
+            return counterSettingsList;
+        }
+
+        private CrisLayoutCountersComponentRest(String style,
+                                                List<CounterSettingsRest> counterSettingsList) {
+            this.style = style;
+            this.counterSettingsList = counterSettingsList;
+        }
+
+        static class CounterSettingsRest {
+
+            private final String discoveryConfigurationName;
+            private final String icon;
+            private final String entityName;
+            private final String link;
+
+            static CounterSettingsRest from (CrisLayoutCountersComponent.CounterSettings source) {
+
+                return new CounterSettingsRest(source.getDiscoveryConfigurationName(),
+                    source.getIcon(),
+                    source.getLabel(),
+                    source.getLink());
+            }
+
+            private CounterSettingsRest(String discoveryConfigurationName, String icon, String entityName,
+                                        String link) {
+                this.discoveryConfigurationName = discoveryConfigurationName;
+                this.icon = icon;
+                this.entityName = entityName;
+                this.link = link;
+            }
+
+            public String getDiscoveryConfigurationName() {
+                return discoveryConfigurationName;
+            }
+
+            public String getIcon() {
+                return icon;
+            }
+
+            public String getEntityName() {
+                return entityName;
+            }
+
+            public String getLink() {
+                return link;
+            }
+        }
+
     }
 
 }

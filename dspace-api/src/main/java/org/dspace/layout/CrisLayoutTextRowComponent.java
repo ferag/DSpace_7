@@ -15,23 +15,11 @@ package org.dspace.layout;
  */
 public class CrisLayoutTextRowComponent implements CrisLayoutSectionComponent {
 
-    private final Integer order;
-    private final String contentType;
-    private final String content;
-    private final String style;
+    private Integer order = 0;
+    private String contentType;
+    private String content;
+    private String style;
 
-
-    public CrisLayoutTextRowComponent(String contentType, String content, String style) {
-        this(0, contentType,
-            content, style);
-    }
-
-    public CrisLayoutTextRowComponent(Integer order, String contentType, String content, String style) {
-        this.order = order;
-        this.content = content;
-        this.style = style;
-        this.contentType = contentType;
-    }
 
     @Override
     public String getStyle() {
@@ -48,5 +36,21 @@ public class CrisLayoutTextRowComponent implements CrisLayoutSectionComponent {
 
     public Integer getOrder() {
         return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
     }
 }

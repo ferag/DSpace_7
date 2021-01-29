@@ -243,7 +243,7 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
 
         context.restoreAuthSystemState();
 
-        String[] args = new String[] {"create-wsi", "-s", "scopus"};
+        String[] args = new String[] {"import-publications", "-s", "scopus"};
         TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
         nameToProvider.put("scopus", mockScopusProvider);
         createWorkspaceItemService.initialize(args, handler, admin);
@@ -336,7 +336,7 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
 
         context.restoreAuthSystemState();
 
-        String[] args = new String[] {"create-wsi", "-s", "scopus"};
+        String[] args = new String[] {"import-publications", "-s", "scopus"};
         TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
         nameToProvider.put("scopus", mockScopusProvider);
         createWorkspaceItemService.initialize(args, handler, admin);
@@ -368,7 +368,7 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
 
         context.restoreAuthSystemState();
 
-        String[] args = new String[] {"create-wsi", "-s", "scopus"};
+        String[] args = new String[] {"import-publications", "-s", "scopus"};
         TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
         nameToProvider.put("scopus", mockScopusProvider);
         createWorkspaceItemService.initialize(args, handler, admin);
@@ -436,7 +436,7 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
 
         context.restoreAuthSystemState();
 
-        String[] args = new String[] {"create-wsi", "-s", "wos"};
+        String[] args = new String[] {"import-publications", "-s", "wos"};
         TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
         nameToProvider.put("wos", mockWosProvider);
         createWorkspaceItemService.initialize(args, handler, admin);
@@ -531,7 +531,7 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
 
         context.restoreAuthSystemState();
 
-        String[] args = new String[] {"create-wsi", "-s", "wos"};
+        String[] args = new String[] {"import-publications", "-s", "wos"};
         TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
         nameToProvider.put("wos", mockWosProvider);
         createWorkspaceItemService.initialize(args, handler, admin);

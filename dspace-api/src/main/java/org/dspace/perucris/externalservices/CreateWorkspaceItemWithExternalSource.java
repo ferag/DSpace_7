@@ -118,7 +118,7 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
 
         UUID collectionUUID = getCollectionUUID();
         if (Objects.isNull(collectionUUID)) {
-            throw new RuntimeException("The UUID of Collection is null.");
+            throw new RuntimeException("The UUID of target Collection is null.");
         }
 
         this.collection = collectionService.find(context, collectionUUID);
@@ -350,7 +350,7 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
     @SuppressWarnings("unchecked")
     public CreateWorkspaceItemWithExternalSourceScriptConfiguration<CreateWorkspaceItemWithExternalSource>
         getScriptConfiguration() {
-        return new DSpace().getServiceManager().getServiceByName("create-wsi",
+        return new DSpace().getServiceManager().getServiceByName("import-publications",
                                                 CreateWorkspaceItemWithExternalSourceScriptConfiguration.class);
     }
 

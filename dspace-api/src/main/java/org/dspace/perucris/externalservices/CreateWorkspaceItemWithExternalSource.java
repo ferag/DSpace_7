@@ -6,6 +6,7 @@
  * http://www.dspace.org/license/
  */
 package org.dspace.perucris.externalservices;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,10 +38,14 @@ import org.dspace.external.model.ExternalDataObject;
 import org.dspace.external.provider.impl.LiveImportDataProvider;
 import org.dspace.external.service.ExternalDataService;
 import org.dspace.external.service.impl.ExternalDataServiceImpl;
+import org.dspace.kernel.ServiceManager;
 import org.dspace.scripts.DSpaceRunnable;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 import org.dspace.utils.DSpace;
+import org.dspace.workflow.WorkflowException;
+import org.dspace.workflow.WorkflowService;
+import org.dspace.workflow.factory.WorkflowServiceFactory;
 
 /**
  * Implementation of {@link DSpaceRunnable}
@@ -72,19 +77,24 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
 
     private Map<String, LiveImportDataProvider> nameToProvider = new HashMap<String, LiveImportDataProvider>();
 
+    private WorkflowService workflowService;
+
     @Override
     public void setup() throws ParseException {
         configurationService = DSpaceServicesFactory.getInstance().getConfigurationService();
-        itemService = new DSpace().getServiceManager()
+        ServiceManager serviceManager = new DSpace().getServiceManager();
+        itemService = serviceManager
                                   .getServiceByName(ItemServiceImpl.class.getName(), ItemServiceImpl.class);
-        collectionService = new DSpace().getServiceManager()
+        collectionService = serviceManager
                             .getServiceByName(CollectionServiceImpl.class.getName(),CollectionServiceImpl.class);
-        externalDataService = new DSpace().getServiceManager()
+        externalDataService = serviceManager
                              .getServiceByName(ExternalDataServiceImpl.class.getName(), ExternalDataServiceImpl.class);
-        nameToProvider.put("scopus", new DSpace().getServiceManager().getServiceByName("scopusLiveImportDataProvider",
+        nameToProvider.put("scopus", serviceManager.getServiceByName("scopusLiveImportDataProvider",
                                          LiveImportDataProvider.class));
-        nameToProvider.put("wos", new DSpace().getServiceManager().getServiceByName("wosLiveImportDataProvider",
+        nameToProvider.put("wos", serviceManager.getServiceByName("wosLiveImportDataProvider",
                                       LiveImportDataProvider.class));
+        workflowService = WorkflowServiceFactory.getInstance()
+            .getWorkflowService();
         this.service = commandLine.getOptionValue('s');
     }
 
@@ -218,10 +228,11 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
                         itemService.addMetadata(context, wsItem.getItem(), mv.getSchema(), mv.getElement(),
                                                 mv.getQualifier(), null, mv.getValue());
                     }
+                    workflowService.start(context, wsItem);
                 }
                 countDataObjects++;
             }
-        } catch (AuthorizeException e) {
+        } catch (AuthorizeException | IOException | WorkflowException e) {
             log.error(e.getMessage(), e);
         }
         return countDataObjects;

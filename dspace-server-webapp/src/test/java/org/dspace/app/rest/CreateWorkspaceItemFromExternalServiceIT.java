@@ -6,12 +6,18 @@
  * http://www.dspace.org/license/
  */
 package org.dspace.app.rest;
+import static org.dspace.builder.CollectionBuilder.createCollection;
+import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
+import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.HAS_SHADOW_COPY_RELATIONSHIP;
+import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_SHADOW_COPY_RELATIONSHIP;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,16 +25,30 @@ import java.util.Map;
 
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
 import org.dspace.app.scripts.handler.impl.TestDSpaceRunnableHandler;
+import org.dspace.authorize.AuthorizeException;
 import org.dspace.builder.CollectionBuilder;
 import org.dspace.builder.CommunityBuilder;
+import org.dspace.builder.EPersonBuilder;
+import org.dspace.builder.EntityTypeBuilder;
+import org.dspace.builder.GroupBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
+import org.dspace.content.Community;
+import org.dspace.content.EntityType;
 import org.dspace.content.Item;
+import org.dspace.content.RelationshipType;
+import org.dspace.content.WorkspaceItem;
 import org.dspace.content.dto.MetadataValueDTO;
+import org.dspace.content.service.WorkspaceItemService;
+import org.dspace.eperson.EPerson;
+import org.dspace.eperson.Group;
 import org.dspace.external.model.ExternalDataObject;
 import org.dspace.external.provider.impl.LiveImportDataProvider;
 import org.dspace.perucris.externalservices.CreateWorkspaceItemWithExternalSource;
 import org.dspace.services.ConfigurationService;
+import org.dspace.xmlworkflow.storedcomponents.service.CollectionRoleService;
+import org.dspace.xmlworkflow.storedcomponents.service.XmlWorkflowItemService;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
@@ -43,6 +63,15 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
 
     @Autowired
     private ConfigurationService configurationService;
+
+    @Autowired
+    private CollectionRoleService collectionRoleService;
+
+    @Autowired
+    private XmlWorkflowItemService workflowItemService;
+
+    @Autowired
+    private WorkspaceItemService workspaceItemService;
 
     @SuppressWarnings("unused")
     private Item itemPersonA;
@@ -64,27 +93,92 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
     public void setUp() throws Exception {
         super.setUp();
         context.turnOffAuthorisationSystem();
+
+        EntityType institutionPublicationType = createEntityType("InstitutionPublication");
+
+        EntityType publicationType = createEntityType("Publication");
+
+        createHasShadowCopyRelationship(institutionPublicationType, publicationType);
+        createIsCorrectionOfRelationship(institutionPublicationType);
+        createIsCorrectionOfRelationship(publicationType);
+
+        EPerson submitter = createEPerson("submitter@example.com");
+        EPerson firstDirectorioUser = createEPerson("firstDirectorioUser@example.com");
+        EPerson secondDirectorioUser = createEPerson("secondDirectorioUser@example.com");
+        EPerson institutionUser = createEPerson("user@example.com");
+
+        Community directorioCommunity = CommunityBuilder.createCommunity(context)
+            .withName("Directorio Community")
+            .build();
+
+        Community directorioSubCommunity = CommunityBuilder.createSubCommunity(context, directorioCommunity)
+            .withName("Directorio de Produccion Cientifica")
+            .build();
+
+        Group directorioReviewGroup = GroupBuilder.createGroup(context)
+            .withName("review group")
+            .addMember(firstDirectorioUser)
+            .addMember(secondDirectorioUser)
+            .build();
+
+        Group directorioEditorGroup = GroupBuilder.createGroup(context)
+            .withName("editor group")
+            .addMember(firstDirectorioUser)
+            .addMember(secondDirectorioUser)
+            .build();
+
+        parentCommunity = CommunityBuilder.createCommunity(context)
+            .withName("Parent Community")
+            .build();
+
+        Group reviewGroup = GroupBuilder.createGroup(context)
+            .withName("Reviewer group")
+            .addMember(institutionUser)
+            .build();
+
         parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
 
-        this.col1 = CollectionBuilder.createCollection(context, parentCommunity)
+        this.col1 = CollectionBuilder.createCollection(context, directorioCommunity)
                                      .withRelationshipType("Person")
                                      .withName("Collection 1").build();
 
-        this.col2Scopus = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withName("Collection for new WorkspaceItems imported from Scopus")
-                                           .build();
+        this.col2Scopus = createCollection(context, parentCommunity)
+            .withName("Collection for new WorkspaceItems imported from Scopus")
+            .withRelationshipType("InstitutionPublication")
+            .withSubmissionDefinition("traditional")
+            .withSubmitterGroup(submitter)
+            .withRoleGroup("reviewer", reviewGroup)
+            .build();
 
-        this.col2WOS = CollectionBuilder.createCollection(context, parentCommunity)
-                                        .withName("Collection for new WorkspaceItems imported from WOS")
-                                        .build();
+        this.col2WOS = createCollection(context, parentCommunity)
+            .withName("Collection for new WorkspaceItems imported from WOS")
+            .withRelationshipType("InstitutionPublication")
+            .withSubmissionDefinition("traditional")
+            .withSubmitterGroup(submitter)
+            .withRoleGroup("reviewer", reviewGroup)
+            .build();
 
-        configurationService.setProperty("directorios.community-id", parentCommunity.getID());
+        configurationService.setProperty("directorios.community-id", directorioCommunity.getID());
         configurationService.setProperty("scopus.importworkspaceitem.collection-id", this.col2Scopus.getID());
         configurationService.setProperty("wos.importworkspaceitem.collection-id", this.col2WOS.getID());
         createWorkspaceItemService = new CreateWorkspaceItemWithExternalSource();
         nameToProvider = new HashMap<String, LiveImportDataProvider>();
         mockScopusProvider = Mockito.mock(LiveImportDataProvider.class);
         mockWosProvider = Mockito.mock(LiveImportDataProvider.class);
+    }
+
+    @After
+    public void destroy() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+        collectionRoleService.deleteByCollection(context, col2Scopus);
+        collectionRoleService.deleteByCollection(context, col2WOS);
+        workflowItemService.deleteByCollection(context, col2Scopus);
+        workflowItemService.deleteByCollection(context, col2WOS);
+        workspaceItemService.findAll(context).forEach(this::deleteWorkspaceItem);
+        context.restoreAuthSystemState();
+
+        super.destroy();
     }
 
     @Test
@@ -158,19 +252,19 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
 
         String tokenAdmin = getAuthToken(admin.getEmail(), password);
 
-        getClient(tokenAdmin).perform(get("/api/submission/workspaceitems"))
+        getClient(tokenAdmin).perform(get("/api/workflow/workflowitems"))
                  .andExpect(status().isOk())
-                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone.['dc.title'][0].value",
+                 .andExpect(jsonPath("$._embedded.workflowitems[0].sections.traditionalpageone.['dc.title'][0].value",
                                   is(title.getValue())))
-                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections"
+                 .andExpect(jsonPath("$._embedded.workflowitems[0].sections"
                                    + ".traditionalpageone['dc.identifier.scopus'][0].value", is(scopus.getValue())))
-                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections"
+                 .andExpect(jsonPath("$._embedded.workflowitems[0].sections"
                                    + ".traditionalpageone['dc.identifier.doi'][0].value", is(doi.getValue())))
-                 .andExpect(jsonPath("$._embedded.workspaceitems[1].sections.traditionalpageone['dc.title'][0].value",
+                 .andExpect(jsonPath("$._embedded.workflowitems[1].sections.traditionalpageone['dc.title'][0].value",
                                      is(title2R.getValue())))
-                 .andExpect(jsonPath("$._embedded.workspaceitems[1].sections"
+                 .andExpect(jsonPath("$._embedded.workflowitems[1].sections"
                                    + ".traditionalpageone['dc.identifier.scopus'][0].value", is(scopus2R.getValue())))
-                 .andExpect(jsonPath("$._embedded.workspaceitems[1].sections"
+                 .andExpect(jsonPath("$._embedded.workflowitems[1].sections"
                                    + ".traditionalpageone['dc.identifier.doi'][0].value", is(doi2R.getValue())))
                  .andExpect(jsonPath("$.page.totalElements", is(2)));
     }
@@ -250,13 +344,13 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
         createWorkspaceItemService.run();
 
         String tokenAdmin = getAuthToken(admin.getEmail(), password);
-        getClient(tokenAdmin).perform(get("/api/submission/workspaceitems"))
+        getClient(tokenAdmin).perform(get("/api/workflow/workflowitems"))
                  .andExpect(status().isOk())
-                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone['dc.title'][0].value",
+                 .andExpect(jsonPath("$._embedded.workflowitems[0].sections.traditionalpageone['dc.title'][0].value",
                                      is(title2R.getValue())))
-                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections"
+                 .andExpect(jsonPath("$._embedded.workflowitems[0].sections"
                                    + ".traditionalpageone['dc.identifier.scopus'][0].value", is(scopus2R.getValue())))
-                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections"
+                 .andExpect(jsonPath("$._embedded.workflowitems[0].sections"
                                    + ".traditionalpageone['dc.identifier.doi'][0].value", is(doi2R.getValue())))
                  .andExpect(jsonPath("$.page.totalElements", is(1)));
     }
@@ -351,23 +445,23 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
 
         String tokenAdmin = getAuthToken(admin.getEmail(), password);
 
-        getClient(tokenAdmin).perform(get("/api/submission/workspaceitems"))
+        getClient(tokenAdmin).perform(get("/api/workflow/workflowitems"))
                  .andExpect(status().isOk())
-                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone.['dc.title'][0].value",
+                 .andExpect(jsonPath("$._embedded.workflowitems[0].sections.traditionalpageone.['dc.title'][0].value",
                                   is(title.getValue())))
-                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections"
+                 .andExpect(jsonPath("$._embedded.workflowitems[0].sections"
                                    + ".traditionalpageone['dc.identifier.other'][0].value", is(identifier.getValue())))
-                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections"
+                 .andExpect(jsonPath("$._embedded.workflowitems[0].sections"
                                    + ".traditionalpageone['dc.date.issued'][0].value", is(date.getValue())))
-                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections"
+                 .andExpect(jsonPath("$._embedded.workflowitems[0].sections"
                                    + ".traditionalpageone['dc.type'][0].value", is(type.getValue())))
-                 .andExpect(jsonPath("$._embedded.workspaceitems[1].sections.traditionalpageone['dc.title'][0].value",
+                 .andExpect(jsonPath("$._embedded.workflowitems[1].sections.traditionalpageone['dc.title'][0].value",
                                   is(title2R.getValue())))
-                 .andExpect(jsonPath("$._embedded.workspaceitems[1].sections"
+                 .andExpect(jsonPath("$._embedded.workflowitems[1].sections"
                                    + ".traditionalpageone['dc.identifier.other'][0].value",is(identifier2R.getValue())))
-                 .andExpect(jsonPath("$._embedded.workspaceitems[1].sections"
+                 .andExpect(jsonPath("$._embedded.workflowitems[1].sections"
                                    + ".traditionalpageone['dc.date.issued'][0].value", is(date2R.getValue())))
-                 .andExpect(jsonPath("$._embedded.workspaceitems[1].sections"
+                 .andExpect(jsonPath("$._embedded.workflowitems[1].sections"
                                    + ".traditionalpageone['dc.type'][0].value", is(type2R.getValue())))
                  .andExpect(jsonPath("$.page.totalElements", is(2)));
     }
@@ -451,4 +545,34 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
                              .andExpect(jsonPath("$.page.totalElements", is(0)));
     }
 
+
+    private EntityType createEntityType(String entityType) {
+        return EntityTypeBuilder.createEntityTypeBuilder(context, entityType)
+            .build();
+    }
+
+    private RelationshipType createHasShadowCopyRelationship(EntityType institutionType, EntityType directorioType) {
+        return createRelationshipTypeBuilder(context, institutionType, directorioType, HAS_SHADOW_COPY_RELATIONSHIP,
+            IS_SHADOW_COPY_RELATIONSHIP, 0, 1, 0, 1).build();
+    }
+
+    private RelationshipType createIsCorrectionOfRelationship(EntityType entityType) {
+        return createRelationshipTypeBuilder(context, entityType,
+            entityType, "isCorrectionOfItem", "isCorrectedByItem", 0, 1, 0, 1).build();
+    }
+
+    private EPerson createEPerson(String email) {
+        return EPersonBuilder.createEPerson(context)
+            .withEmail(email)
+            .withPassword(password)
+            .build();
+    }
+
+    private void deleteWorkspaceItem(WorkspaceItem workspaceItem) {
+        try {
+            workspaceItemService.deleteAll(context, workspaceItem);
+        } catch (SQLException | AuthorizeException | IOException e) {
+            throw new RuntimeException();
+        }
+    }
 }

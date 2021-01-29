@@ -200,6 +200,10 @@ public class DedupUtils {
                             continue;
                         }
 
+                        if (!duplicateItem.isArchived()) {
+                            continue;
+                        }
+
                         info.setDuplicateItem(duplicateItem);
                         info.setDuplicateItemType(ItemUtils.getItemStatus(context, duplicateItem));
 

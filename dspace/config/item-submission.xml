@@ -123,6 +123,11 @@
       <type>utils</type>
       <scope visibility="hidden" visibilityOutside="hidden">submission</scope>
     </step>
+    <step id="detect-duplicate" mandatory="true">
+      <heading>submit.progressbar.detect-duplicate</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DetectPotentialDuplicateStep</processing-class>
+      <type>detect-duplicate</type>
+    </step>
   </step-definitions>
   <submission-definitions>
     <submission-process name="product">
@@ -130,6 +135,7 @@
       <step id="product" />
       <step id="product_indexing" />
       <step id="product_references" />
+      <step id="detect-duplicate" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
@@ -137,31 +143,37 @@
       <step id="product" />
       <step id="product_indexing" />
       <step id="product_references" />
+      <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="orgunit-edit">
       <step id="orgunit" />
+      <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="orgunit">
       <step id="collection" />
       <step id="orgunit" />
+      <step id="detect-duplicate" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="project-edit">
       <step id="project" />
+      <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="project">
       <step id="collection" />
       <step id="project" />
+      <step id="detect-duplicate" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="journal">
       <step id="collection" />
       <step id="journal" />
+      <step id="detect-duplicate" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
@@ -172,6 +184,7 @@
       <step id="publication_bibliographic_details" />
       <step id="publication_references" />
       <step id="publication_thesis" />
+      <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="publication">
@@ -182,40 +195,48 @@
       <step id="publication_bibliographic_details" />
       <step id="publication_references" />
       <step id="publication_thesis" />
+      <step id="detect-duplicate" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="person-edit">
       <step id="person" />
+      <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="person">
       <step id="collection" />
       <step id="person" />
+      <step id="detect-duplicate" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="personcv-edit">
       <step id="person-cv" />
+      <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="personcv">
       <step id="person-cv" />
+      <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="event">
       <step id="collection" />
       <step id="event" />
+      <step id="detect-duplicate" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="equipment-edit">
       <step id="equipment" />
+      <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="equipment">
       <step id="collection" />
       <step id="equipment" />
+      <step id="detect-duplicate" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
@@ -224,6 +245,7 @@
       <step id="patent" />
       <step id="patent_indexing" />
       <step id="patent_references" />
+      <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="patent">
@@ -231,17 +253,20 @@
       <step id="patent" />
       <step id="patent_indexing" />
       <step id="patent_references" />
+      <step id="detect-duplicate" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="funding-edit">
       <step id="collection" />
       <step id="funding" />
+      <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="funding">
       <step id="collection" />
       <step id="funding" />
+      <step id="detect-duplicate" />
       <step id="upload" />
       <step id="license" />
     </submission-process>

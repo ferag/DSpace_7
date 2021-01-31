@@ -260,17 +260,23 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
                                    + ".traditionalpageone['dc.identifier.scopus'][0].value", is(scopus.getValue())))
                  .andExpect(jsonPath("$._embedded.workflowitems[0].sections"
                                    + ".traditionalpageone['dc.identifier.doi'][0].value", is(doi.getValue())))
+                 .andExpect(jsonPath("$._embedded.workflowitems[0]._embedded"
+                                   + ".item.metadata['perucris.author.scopus-author-id'][0].value",
+                                     is(scopusAuthorId.getValue())))
                  .andExpect(jsonPath("$._embedded.workflowitems[1].sections.traditionalpageone['dc.title'][0].value",
                                      is(title2R.getValue())))
                  .andExpect(jsonPath("$._embedded.workflowitems[1].sections"
                                    + ".traditionalpageone['dc.identifier.scopus'][0].value", is(scopus2R.getValue())))
                  .andExpect(jsonPath("$._embedded.workflowitems[1].sections"
                                    + ".traditionalpageone['dc.identifier.doi'][0].value", is(doi2R.getValue())))
+                 .andExpect(jsonPath("$._embedded.workflowitems[1]._embedded"
+                                   + ".item.metadata['perucris.author.scopus-author-id'][0].value",
+                                     is(scopusAuthorId2R.getValue())))
                  .andExpect(jsonPath("$.page.totalElements", is(2)));
     }
 
     @Test
-    public void createOnlyOneWorkspaceItemImpoertedFromScopusTest() throws Exception {
+    public void createOnlyOneWorkspaceItemImportedFromScopusTest() throws Exception {
         context.turnOffAuthorisationSystem();
         //disable file upload mandatory
         configurationService.setProperty("webui.submit.upload.required", false);
@@ -391,6 +397,7 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
                                       .withPersonIdentifierFirstName("EDWIN")
                                       .withPersonIdentifierLastName("SAUCEDO")
                                       .withOrcidIdentifier("0000-0002-9029-1854")
+                                      .withResearcherIdentifier("123456789")
                                       .build();
 
         //define first record
@@ -398,12 +405,16 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
         MetadataValueDTO identifier = new MetadataValueDTO("dc", "identifier", "other", null, "WOS:000439929300064");
         MetadataValueDTO date = new MetadataValueDTO("dc", "date", "issued", null, "2017");
         MetadataValueDTO type = new MetadataValueDTO("dc", "type", null, null, "Book in series");
+        MetadataValueDTO rid = new MetadataValueDTO("person", "identifier", "rid", null, "123456789");
+        MetadataValueDTO orcid = new MetadataValueDTO("person", "identifier", "orcid", null, "0000-0002-9029-1854");
 
         List<MetadataValueDTO> metadataFirstRecord = new ArrayList<MetadataValueDTO>();
         metadataFirstRecord.add(type);
         metadataFirstRecord.add(title);
         metadataFirstRecord.add(date);
         metadataFirstRecord.add(identifier);
+        metadataFirstRecord.add(rid);
+        metadataFirstRecord.add(orcid);
 
         ExternalDataObject firstRecord = new ExternalDataObject();
         firstRecord.setMetadata(metadataFirstRecord);
@@ -415,6 +426,8 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
         MetadataValueDTO date2R = new MetadataValueDTO("dc", "date", "issued", null, "2017");
         MetadataValueDTO description2R = new MetadataValueDTO("dc", "description", "abstract", null,
                                                               "In 2013, Directory of Open Access Journals (DOAJ)");
+        MetadataValueDTO rid2R = new MetadataValueDTO("person", "identifier", "rid", null, "123456789");
+        MetadataValueDTO orcid2R = new MetadataValueDTO("person", "identifier", "orcid", null, "0000-0002-9029-1854");
 
         List<MetadataValueDTO> metadataSecondRecord = new ArrayList<MetadataValueDTO>();
         metadataSecondRecord.add(title2R);
@@ -422,6 +435,8 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
         metadataSecondRecord.add(type2R);
         metadataSecondRecord.add(date2R);
         metadataSecondRecord.add(description2R);
+        metadataSecondRecord.add(rid2R);
+        metadataSecondRecord.add(orcid2R);
 
         ExternalDataObject secondRecord = new ExternalDataObject();
         secondRecord.setMetadata(metadataSecondRecord);
@@ -455,6 +470,12 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
                                    + ".traditionalpageone['dc.date.issued'][0].value", is(date.getValue())))
                  .andExpect(jsonPath("$._embedded.workflowitems[0].sections"
                                    + ".traditionalpageone['dc.type'][0].value", is(type.getValue())))
+                 .andExpect(jsonPath("$._embedded.workflowitems[0]._embedded"
+                                   + ".item.metadata['perucris.author.orcid'][0].value",
+                                  is(orcid.getValue())))
+                 .andExpect(jsonPath("$._embedded.workflowitems[0]._embedded"
+                                   + ".item.metadata['perucris.author.rid'][0].value",
+                                  is(rid.getValue())))
                  .andExpect(jsonPath("$._embedded.workflowitems[1].sections.traditionalpageone['dc.title'][0].value",
                                   is(title2R.getValue())))
                  .andExpect(jsonPath("$._embedded.workflowitems[1].sections"
@@ -463,6 +484,12 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
                                    + ".traditionalpageone['dc.date.issued'][0].value", is(date2R.getValue())))
                  .andExpect(jsonPath("$._embedded.workflowitems[1].sections"
                                    + ".traditionalpageone['dc.type'][0].value", is(type2R.getValue())))
+                 .andExpect(jsonPath("$._embedded.workflowitems[1]._embedded"
+                                   + ".item.metadata['perucris.author.orcid'][0].value",
+                                     is(orcid2R.getValue())))
+                 .andExpect(jsonPath("$._embedded.workflowitems[1]._embedded"
+                                   + ".item.metadata['perucris.author.rid'][0].value",
+                                     is(rid2R.getValue())))
                  .andExpect(jsonPath("$.page.totalElements", is(2)));
     }
 

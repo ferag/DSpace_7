@@ -9,12 +9,16 @@ package org.dspace.perucris.externalservices;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +29,7 @@ import org.dspace.content.Collection;
 import org.dspace.content.CollectionServiceImpl;
 import org.dspace.content.Item;
 import org.dspace.content.ItemServiceImpl;
+import org.dspace.content.MetadataValue;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.content.dto.MetadataValueDTO;
 import org.dspace.core.Context;
@@ -224,9 +229,8 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
                 if (!exist(dataObject.getMetadata())) {
                     WorkspaceItem wsItem = externalDataService.createWorkspaceItemFromExternalDataObject(context,
                                                                dataObject, this.collection);
-                    for (MetadataValueDTO mv : metadataValueToAdd(item)) {
-                        itemService.addMetadata(context, wsItem.getItem(), mv.getSchema(), mv.getElement(),
-                                                mv.getQualifier(), null, mv.getValue());
+                    for (List<MetadataValueDTO> metadataList : metadataValueToAdd(wsItem.getItem())) {
+                        addMetadata(wsItem.getItem(), metadataList);
                     }
                     workflowService.start(context, wsItem);
                 }
@@ -236,6 +240,13 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
             log.error(e.getMessage(), e);
         }
         return countDataObjects;
+    }
+
+    private void addMetadata(Item item, List<MetadataValueDTO> metadataList) throws SQLException {
+        for (MetadataValueDTO metadataValue : metadataList) {
+            itemService.addMetadata(context, item, metadataValue.getSchema(), metadataValue.getElement(),
+                metadataValue.getQualifier(), null, metadataValue.getValue());
+        }
     }
 
     private boolean exist(List<MetadataValueDTO> metadatas) throws SQLException {
@@ -321,29 +332,28 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
         }
     }
 
-    private List<MetadataValueDTO> metadataValueToAdd(Item item) {
-        List<MetadataValueDTO> list = new ArrayList<MetadataValueDTO>();
+    private List<List<MetadataValueDTO>> metadataValueToAdd(Item item) {
+        List<List<MetadataValueDTO>> list = new ArrayList<>();
         switch (this.service) {
             case "scopus":
-                String scopusId = itemService.getMetadataFirstValue(item, "person", "identifier",
-                                          "scopus-author-id", Item.ANY);
-                if (StringUtils.isNotBlank(scopusId)) {
-                    list.add(new MetadataValueDTO("perucris", "author", "scopus-author-id", null, scopusId));
-                }
-                break;
+                return Collections.singletonList(metadataList(item, "scopus-author-id"));
             case "wos":
-                String orcid = itemService.getMetadataFirstValue(item, "person", "identifier", "orcid", Item.ANY);
-                String rid = itemService.getMetadataFirstValue(item, "person", "identifier", "rid", Item.ANY);
-                if (StringUtils.isNotBlank(orcid)) {
-                    list.add(new MetadataValueDTO("perucris", "author", "orcid", null, orcid));
-                }
-                if (StringUtils.isNotBlank(rid)) {
-                    list.add(new MetadataValueDTO("perucris", "author", "rid ", null, rid));
-                }
-                break;
+                return Arrays.asList(
+                    metadataList(item, "orcid"),
+                    metadataList(item, "rid")
+                );
             default:
+                return Collections.emptyList();
         }
-        return list;
+//        return new ArrayList<>();
+    }
+
+    private List<MetadataValueDTO> metadataList(Item item, String identifier) {
+        return itemService.getMetadata(item, "person", "identifier", identifier, Item.ANY)
+            .stream().sorted(Comparator.comparingInt(MetadataValue::getPlace))
+            .map(md -> new MetadataValueDTO("perucris", "author", identifier, null,
+                md.getValue()))
+            .collect(Collectors.toList());
     }
 
     @Override

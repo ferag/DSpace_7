@@ -41,6 +41,7 @@ import org.dspace.importer.external.datamodel.ImportRecord;
 import org.dspace.importer.external.datamodel.Query;
 import org.dspace.importer.external.exception.MetadataSourceException;
 import org.dspace.importer.external.service.AbstractImportMetadataSourceService;
+import org.dspace.importer.external.service.DoiCheck;
 import org.dspace.importer.external.service.components.QuerySource;
 import org.dspace.services.ConfigurationService;
 import org.jaxen.JaxenException;
@@ -319,6 +320,13 @@ public class WOSImportMetadataSourceServiceImpl extends AbstractImportMetadataSo
         Matcher risMatcher = risPattern.matcher(query.trim());
         if (risMatcher.matches()) {
             return query;
+        }
+        if (DoiCheck.isDoi(query)) {
+            // FIXME: workaround to be removed once fixed by the community the double post of query param
+            if (query.startsWith(",")) {
+                query = query.substring(1);
+            }
+            return "DO=(" + query + ")";
         }
         StringBuilder queryBuilder =  new StringBuilder("TS=(");
         queryBuilder.append(query).append(")");

@@ -2091,7 +2091,6 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
      *
      * @throws Exception
      */
-    @Ignore
     public void lookupDOIMetadataTest() throws Exception {
         context.turnOffAuthorisationSystem();
 

@@ -1577,8 +1577,11 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
         context.restoreAuthSystemState();
 
         String authToken = getAuthToken(eperson.getEmail(), password);
+        AtomicReference<List<Integer>> idRef = new AtomicReference<>();
+
         // create a workspaceitem from a single bibliographic entry file explicitly in the default collection (col1)
-        getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
+        try {
+            getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
                     .file(bibtexFile).file(pubmedFile))
                 // create should return 200, 201 (created) is better for single resource
                 .andExpect(status().isOk())
@@ -1599,10 +1602,20 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
                             is("/local/path/pubmed-test.xml")))
                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.upload.files[1]"
                         + ".metadata['dc.title'][0].value",
-                            is("pubmed-test.xml")));
+                            is("pubmed-test.xml")))
+                .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(),
+                        "$._embedded.workspaceitems[*].id")));
+        } finally {
+            if (idRef != null && idRef.get() != null) {
+                for (int i : idRef.get()) {
+                    WorkspaceItemBuilder.deleteWorkspaceItem(i);
+                }
+            }
+        }
 
         // create a workspaceitem from a single bibliographic entry file explicitly in the col2
-        getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
+        try {
+            getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
                     .file(bibtexFile).file(pubmedFile)
                     .param("owningCollection", col2.getID().toString()))
                 .andExpect(status().isOk())
@@ -1623,7 +1636,16 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
                          is("/local/path/pubmed-test.xml")))
                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.upload.files[1]"
                      + ".metadata['dc.title'][0].value",
-                         is("pubmed-test.xml")));
+                         is("pubmed-test.xml")))
+                .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(),
+                        "$._embedded.workspaceitems[*].id")));
+        } finally {
+            if (idRef != null && idRef.get() != null) {
+                for (int i : idRef.get()) {
+                    WorkspaceItemBuilder.deleteWorkspaceItem(i);
+                }
+            }
+        }
         bibtex.close();
         xmlIS.close();
     }
@@ -1708,10 +1730,12 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
 
         context.restoreAuthSystemState();
 
-//        String authToken = getAuthToken(eperson.getEmail(), password);
-        String authToken = getAuthToken(admin.getEmail(), password);
+        String authToken = getAuthToken(eperson.getEmail(), password);
+        AtomicReference<List<Integer>> idRef = new AtomicReference<>();
+
         // create a workspaceitem from a single bibliographic entry file explicitly in the default collection (col1)
-        getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
+        try {
+            getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
                     .file(pubmedFile))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.traditionalpageone['dc.title'][0].value",
@@ -1728,10 +1752,21 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
                         is("/local/path/pubmed-test.xml")))
                 .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.upload.files[0]"
                     + ".metadata['dc.title'][0].value",
-                        is("pubmed-test.xml")));
+                        is("pubmed-test.xml")))
+                .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(),
+                        "$._embedded.workspaceitems[*].id")));
+        } finally {
+            if (idRef != null && idRef.get() != null) {
+                for (int i : idRef.get()) {
+                    WorkspaceItemBuilder.deleteWorkspaceItem(i);
+                }
+            }
+        }
+
 
         // create a workspaceitem from a single bibliographic entry file explicitly in the col2
-        getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
+        try {
+            getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
                     .file(pubmedFile)
                     .param("owningCollection", col2.getID().toString()))
             .andExpect(status().isOk())
@@ -1747,8 +1782,16 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
             .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.upload.files[0].metadata['dc.source'][0].value",
                     is("/local/path/pubmed-test.xml")))
             .andExpect(jsonPath("$._embedded.workspaceitems[0].sections.upload.files[0].metadata['dc.title'][0].value",
-                    is("pubmed-test.xml")));
-
+                    is("pubmed-test.xml")))
+            .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(),
+                    "$._embedded.workspaceitems[*].id")));
+        } finally {
+            if (idRef != null && idRef.get() != null) {
+                for (int i : idRef.get()) {
+                    WorkspaceItemBuilder.deleteWorkspaceItem(i);
+                }
+            }
+        }
         xmlIS.close();
     }
 
@@ -1783,9 +1826,9 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
         MockMultipartFile pdfFile = new MockMultipartFile("file", "/local/path/myfile.pdf", "application/pdf", pdf);
 
         context.restoreAuthSystemState();
-
-        // bulk create a workspaceitem
-        getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
+        AtomicReference<List<Integer>> idRef = new AtomicReference<>();
+        try {
+            getClient(authToken).perform(fileUpload("/api/submission/workspaceitems")
                     .file(pdfFile))
                 // bulk create should return 200, 201 (created) is better for single resource
                 .andExpect(status().isOk())
@@ -1809,8 +1852,15 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
                 .andExpect(jsonPath(
                         "$._embedded.workspaceitems[0].sections.upload.files[0].metadata['dc.source'][0].value",
                         is("/local/path/myfile.pdf")))
-        ;
-
+            .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(),
+                    "$._embedded.workspaceitems[*].id")));
+        } finally {
+            if (idRef != null && idRef.get() != null) {
+                for (int i : idRef.get()) {
+                    WorkspaceItemBuilder.deleteWorkspaceItem(i);
+                }
+            }
+        }
         pdf.close();
     }
 
@@ -2035,6 +2085,7 @@ public class WorkspaceItemRestRepositoryIT extends AbstractControllerIntegration
     }
 
     @Test
+    @Ignore
     /**
      * Test the metadata lookup
      *

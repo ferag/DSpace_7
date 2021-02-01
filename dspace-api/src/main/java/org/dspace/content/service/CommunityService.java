@@ -30,7 +30,6 @@ import org.dspace.eperson.Group;
  */
 public interface CommunityService extends DSpaceObjectService<Community>, DSpaceObjectLegacySupportService<Community> {
 
-
     /**
      * Create a new top-level community, with a new ID.
      *
@@ -88,36 +87,6 @@ public interface CommunityService extends DSpaceObjectService<Community>, DSpace
      * @throws SQLException if database error
      */
     public List<Community> findAllTop(Context context) throws SQLException;
-
-    /**
-     * Get the value of a metadata field
-     *
-     * @param community community
-     * @param field     the name of the metadata field to get
-     * @return the value of the metadata field
-     * @throws IllegalArgumentException if the requested metadata field doesn't exist
-     * @deprecated
-     */
-    @Override
-    @Deprecated
-    public String getMetadata(Community community, String field);
-
-
-    /**
-     * Set a metadata value
-     *
-     * @param context   context
-     * @param community community
-     * @param field     the name of the metadata field to get
-     * @param value     value to set the field to
-     * @throws IllegalArgumentException if the requested metadata field doesn't exist
-     * @throws MissingResourceException if resource missing
-     * @throws SQLException             if database error
-     * @deprecated
-     */
-    @Deprecated
-    public void setMetadata(Context context, Community community, String field, String value)
-        throws MissingResourceException, SQLException;
 
     /**
      * Give the community a logo. Passing in <code>null</code> removes any

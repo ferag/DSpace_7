@@ -8,6 +8,7 @@
 package org.dspace.xmlworkflow.service;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
@@ -54,6 +55,26 @@ public interface ConcytecWorkflowService {
     public static final String IS_REINSTATED_BY_ITEM_RELATIONSHIP = "isReinstatedByItem";
 
     /**
+     * Left type of the merge relationship.
+     */
+    public static final String IS_MERGED_IN_RELATIONSHIP = "isMergedIn";
+
+    /**
+     * Right type of the merge relationship.
+     */
+    public static final String IS_ENRICHED_BY_RELATIONSHIP = "isEnrichedBy";
+
+    /**
+     * Left type of the originated from relationship.
+     */
+    public static final String IS_ORIGINATED_FROM_IN_RELATIONSHIP = "isOriginatedFrom";
+
+    /**
+     * Right type of the originated from relationship.
+     */
+    public static final String IS_ORIGIN_OF_RELATIONSHIP = "isOriginOf";
+
+    /**
      * Create a shadow copy relationship between the two given items
      * 
      * @param context        the DSpace context
@@ -64,6 +85,33 @@ public interface ConcytecWorkflowService {
      * @throws SQLException       if an SQL error occurs
      */
     Relationship createShadowRelationship(Context context, Item item, Item shadowItemCopy)
+        throws AuthorizeException, SQLException;
+
+    /**
+     * Create a merged in relationship between the two given items
+     * 
+     * @param context   the DSpace context
+     * @param leftItem  the item that is merged in
+     * @param rightItem the item that is enriched
+     * @return the created relationship
+     * @throws AuthorizeException if an authorization error occurs
+     * @throws SQLException       if an SQL error occurs
+     */
+    Relationship createMergedInRelationship(Context context, Item leftItem, Item rightItem)
+        throws AuthorizeException, SQLException;
+
+    /**
+     * Create an originated from relationship between the two given items
+     * 
+     * @param context   the DSpace context
+     * @param leftItem  the directorio's item that is originated from the
+     *                  institution item
+     * @param rightItem the institution's item that is the origin of the other item
+     * @return the created relationship
+     * @throws AuthorizeException if an authorization error occurs
+     * @throws SQLException       if an SQL error occurs
+     */
+    Relationship createOriginatedFromRelationship(Context context, Item leftItem, Item rightItem)
         throws AuthorizeException, SQLException;
 
     /**
@@ -85,6 +133,16 @@ public interface ConcytecWorkflowService {
      * @throws SQLException if an SQL error occurs
      */
     Item findCopiedItem(Context context, Item shadowItemCopy) throws SQLException;
+
+    /**
+     * Find the item that are origin of the given item.
+     *
+     * @param context the DSpace context
+     * @param item    the item to search for
+     * @return the copied item, if any
+     * @throws SQLException if an SQL error occurs
+     */
+    List<Item> findOriginatedFromItems(Context context, Item item) throws SQLException;
 
     /**
      * Add the Concytec feedback on the given item.

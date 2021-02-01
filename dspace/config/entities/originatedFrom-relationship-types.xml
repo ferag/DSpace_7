@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ The contents of this file are subject to the license and copyright
+  ~ detailed in the LICENSE and NOTICE files at the root of the source
+  ~ tree and available online at
+  ~
+  ~ http://www.dspace.org/license/
+  -->
+
+<!DOCTYPE relationships SYSTEM "relationship-types.dtd">
+
+<relationships>
+     <type>
+        <leftType>InstitutionPerson</leftType>
+        <rightType>Person</rightType>
+        <leftwardType>isOriginatedFrom</leftwardType>
+        <rightwardType>isOriginOf</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
+     <type>
+        <leftType>InstitutionProject</leftType>
+        <rightType>Project</rightType>
+        <leftwardType>isOriginatedFrom</leftwardType>
+        <rightwardType>isOriginOf</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
+     <type>
+        <leftType>InstitutionFunding</leftType>
+        <rightType>Funding</rightType>
+        <leftwardType>isOriginatedFrom</leftwardType>
+        <rightwardType>isOriginOf</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
+     <type>
+        <leftType>InstitutionOrgUnit</leftType>
+        <rightType>OrgUnit</rightType>
+        <leftwardType>isOriginatedFrom</leftwardType>
+        <rightwardType>isOriginOf</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
+     <type>
+        <leftType>InstitutionPublication</leftType>
+        <rightType>Publication</rightType>
+        <leftwardType>isOriginatedFrom</leftwardType>
+        <rightwardType>isOriginOf</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
+     <type>
+        <leftType>InstitutionPatent</leftType>
+        <rightType>Patent</rightType>
+        <leftwardType>isOriginatedFrom</leftwardType>
+        <rightwardType>isOriginOf</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
+     <type>
+        <leftType>InstitutionEquipment</leftType>
+        <rightType>Equipment</rightType>
+        <leftwardType>isOriginatedFrom</leftwardType>
+        <rightwardType>isOriginOf</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
+     <type>
+        <leftType>PersonCv</leftType>
+        <rightType>PersonCv</rightType>
+        <leftwardType>isOriginatedFrom</leftwardType>
+        <rightwardType>isOriginOf</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
+</relationships>

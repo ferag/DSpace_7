@@ -451,6 +451,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "dc", "relation", "ispartof", isPartOf);
     }
 
+    public ItemBuilder withIsPartOf(String isPartOf, String authority) {
+        return addMetadataValue(item, "dc", "relation", "ispartof", null, isPartOf, authority, 600);
+    }
+
     public ItemBuilder withCitationStartPage(String startPage) {
         return addMetadataValue(item, "oaire", "citation", "startPage", startPage);
     }

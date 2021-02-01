@@ -102,7 +102,7 @@ public class DedupEventConsumer implements Consumer {
 
         Item item = (Item) subject;
 
-        if (isInstitutionItem(ctx, item) || isWorkspaceItem(ctx, item)) {
+        if (item != null && (isInstitutionItem(ctx, item) || isWorkspaceItem(ctx, item))) {
             return;
         }
 

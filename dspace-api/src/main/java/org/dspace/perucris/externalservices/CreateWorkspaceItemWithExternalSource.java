@@ -39,6 +39,7 @@ import org.dspace.discovery.indexobject.IndexableItem;
 import org.dspace.discovery.indexobject.IndexableWorkflowItem;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.factory.EPersonServiceFactory;
+import org.dspace.eperson.service.EPersonService;
 import org.dspace.external.model.ExternalDataObject;
 import org.dspace.external.provider.impl.LiveImportDataProvider;
 import org.dspace.external.service.ExternalDataService;
@@ -156,11 +157,25 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
     }
 
     private void assignCurrentUserInContext() throws SQLException {
+
+        context.setCurrentUser(findEPerson());
+    }
+
+    private EPerson findEPerson() throws SQLException {
+        EPersonService ePersonService = EPersonServiceFactory.getInstance().getEPersonService();
+        String email = commandLine.getOptionValue('e');
+        if (StringUtils.isNotBlank(email)) {
+            log.info("looking up eperson with email: {}", email);
+            EPerson byEmail = ePersonService.findByEmail(context, email);
+            if (Objects.nonNull(byEmail)) {
+                return byEmail;
+            }
+        }
         UUID uuid = getEpersonIdentifier();
         if (uuid != null) {
-            EPerson ePerson = EPersonServiceFactory.getInstance().getEPersonService().find(context, uuid);
-            context.setCurrentUser(ePerson);
+            return ePersonService.find(context, uuid);
         }
+        return null;
     }
 
     private void performCreatingOfWorkspaceItems(Context context,LiveImportDataProvider dataProvider) {
@@ -227,12 +242,15 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
         try {
             for (ExternalDataObject dataObject : dataProvider.searchExternalDataObjects(id, record, LIMIT)) {
                 if (!exist(dataObject.getMetadata())) {
+                    log.info("item with id {} not yet in DSPace", id);
                     WorkspaceItem wsItem = externalDataService.createWorkspaceItemFromExternalDataObject(context,
                                                                dataObject, this.collection);
                     for (List<MetadataValueDTO> metadataList : metadataValueToAdd(wsItem.getItem())) {
                         addMetadata(wsItem.getItem(), metadataList);
                     }
                     workflowService.start(context, wsItem);
+                } else {
+                    log.info("item with id {} already in DSPace", id);
                 }
                 countDataObjects++;
             }
@@ -299,7 +317,7 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
             case "wos":
                 metadata.setSchema("dc");
                 metadata.setElement("identifier");
-                metadata.setQualifier("other");
+                metadata.setQualifier("isi");
                 break;
             default:
         }

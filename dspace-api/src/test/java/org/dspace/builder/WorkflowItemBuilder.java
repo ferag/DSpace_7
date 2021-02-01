@@ -195,6 +195,10 @@ public class WorkflowItemBuilder extends AbstractBuilder<XmlWorkflowItem, XmlWor
         return addMetadataValue(MetadataSchemaEnum.DC.getName(), "identifier", "other", identifierOther);
     }
 
+    public WorkflowItemBuilder withIdentifierIsi(String isi) {
+        return addMetadataValue(MetadataSchemaEnum.DC.getName(), "identifier", "isi", isi);
+    }
+
     public WorkflowItemBuilder withScopusIdentifier(String issn) {
         return addMetadataValue("dc", "identifier", "scopus", issn);
     }
@@ -252,5 +256,6 @@ public class WorkflowItemBuilder extends AbstractBuilder<XmlWorkflowItem, XmlWor
         }
         indexingService.commit();
     }
+
 
 }

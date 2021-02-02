@@ -81,9 +81,9 @@
     <bean id="aliciaImportService"
           class="org.dspace.importer.external.alicia.AliciaImportMetadataSourceServiceImpl" scope="singleton">
           <!-- Alicia search endpoint full address -->
-          <constructor-arg type="java.lang.String" value="http://34.206.108.87/vufind/api/v1/search"/>
+          <constructor-arg type="java.lang.String" value="https://alicia.concytec.gob.pe/vufind/api/v1/search"/>
           <!-- Alicia get by id endpoint full address dev = http://34.206.108.87-->
-          <constructor-arg type="java.lang.String" value="http://34.206.108.87/vufind/api/v1/record"/>
+          <constructor-arg type="java.lang.String" value="https://alicia.concytec.gob.pe/vufind/api/v1/record"/>
           <!-- Alicia  comma separated response fields list, empty or null force default values-->
           <!-- Set to empty to use the default set of fields  -->
           <constructor-arg type="java.lang.String" value=""/>
@@ -191,5 +191,19 @@
           class="org.dspace.importer.external.scopus.service.ScopusFieldMapping">
     </bean>
 
+    <bean id="ScieloImportService"
+          class="org.dspace.importer.external.scielo.service.ScieloImportMetadataSourceServiceImpl" scope="singleton">
+        <property name="metadataFieldMapping" ref="scieloMetadataFieldMapping"/>
+    </bean>
+    <bean id="scieloMetadataFieldMapping"
+          class="org.dspace.importer.external.scielo.service.ScieloFieldMapping">
+    </bean>
+    <bean id="WosImportService"
+          class="org.dspace.importer.external.wos.service.WOSImportMetadataSourceServiceImpl" scope="singleton">
+        <property name="metadataFieldMapping" ref="wosMetadataFieldMapping"/>
+    </bean>
+    <bean id="wosMetadataFieldMapping"
+          class="org.dspace.importer.external.wos.service.WOSFieldMapping">
+    </bean>
 
 </beans>

@@ -699,7 +699,8 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
         log.info(LogManager.getHeader(context, "delete_item", "item_id="
             + item.getID()));
 
-        if (collectionService.isDirectorioCollection(context, item.getOwningCollection())) {
+        Collection owningCollection = item.getOwningCollection();
+        if (owningCollection != null && collectionService.isDirectorioCollection(context, owningCollection)) {
             resetWillBeReferencedAuthorities(context, item);
         }
 

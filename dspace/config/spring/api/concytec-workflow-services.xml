@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean class="org.dspace.xmlworkflow.ConcytecWorkflowServiceImpl"/>
+    
+    <bean class="org.dspace.xmlworkflow.CrisPolicyGroupAddition"/>
+    
+    <bean class="org.dspace.xmlworkflow.ReplaceShadowCopyAuthorityAction"/>
+    
+    <bean id="shadowCopyLookupByOrcidAction" class="org.dspace.xmlworkflow.LookupEntityAction">
+        <constructor-arg name="shadowCopyMetadata" value="perucris.author.orcid" />
+        <constructor-arg name="metadataToSearch" value="person.identifier.orcid" />
+        <constructor-arg name="metadataToLink" value="dc.contributor.author" />
+        <constructor-arg name="relationshipTypeToSearch" value="Person" />
+    </bean>
+    
+    <bean id="shadowCopyLookupByResearcherIdAction" class="org.dspace.xmlworkflow.LookupEntityAction">
+        <constructor-arg name="shadowCopyMetadata" value="perucris.author.rid" />
+        <constructor-arg name="metadataToSearch" value="person.identifier.rid" />
+        <constructor-arg name="metadataToLink" value="dc.contributor.author" />
+        <constructor-arg name="relationshipTypeToSearch" value="Person" />
+    </bean>
+    
+    <bean id="shadowCopyLookupByScopusIdAction" class="org.dspace.xmlworkflow.LookupEntityAction">
+        <constructor-arg name="shadowCopyMetadata" value="perucris.author.scopus-author-id " />
+        <constructor-arg name="metadataToSearch" value="person.identifier.scopus-author-id" />
+        <constructor-arg name="metadataToLink" value="dc.contributor.author" />
+        <constructor-arg name="relationshipTypeToSearch" value="Person" />
+    </bean>
+    
+</beans>

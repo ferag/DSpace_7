@@ -7,6 +7,8 @@
  */
 package org.dspace.content;
 
+import static org.apache.commons.lang3.BooleanUtils.toBoolean;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -36,7 +38,6 @@ import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
 import org.dspace.content.service.ItemService;
 import org.dspace.content.service.WorkspaceItemService;
-import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.core.I18nUtil;
@@ -202,7 +203,7 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
 
     @Override
     public List<Collection> findAuthorizedOptimized(Context context, int actionID) throws SQLException {
-        if (!ConfigurationManager
+        if (!configurationService
             .getBooleanProperty("org.dspace.content.Collection.findAuthorizedPerformanceOptimize", false)) {
             // Fallback to legacy query if config says so. The rationale could be that a site found a bug.
             return findAuthorized(context, null, actionID);
@@ -303,9 +304,10 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
     }
 
     @Override
-    public void setMetadata(Context context, Collection collection, String field, String value)
-        throws MissingResourceException, SQLException {
-        if ((field.trim()).equals("name") && (value == null || value.trim().equals(""))) {
+    public void setMetadataSingleValue(Context context, Collection collection,
+            MetadataFieldName field, String language, String value)
+            throws MissingResourceException, SQLException {
+        if (field.equals(MD_NAME) && (value == null || value.trim().equals(""))) {
             try {
                 value = I18nUtil.getMessage("org.dspace.workflow.WorkflowManager.untitled");
             } catch (MissingResourceException e) {
@@ -313,21 +315,19 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
             }
         }
 
-        String[] MDValue = getMDValueByLegacyField(field);
-
         /*
          * Set metadata field to null if null
          * and trim strings to eliminate excess
          * whitespace.
          */
         if (value == null) {
-            clearMetadata(context, collection, MDValue[0], MDValue[1], MDValue[2], Item.ANY);
+            clearMetadata(context, collection, field.SCHEMA, field.ELEMENT, field.QUALIFIER, Item.ANY);
             collection.setMetadataModified();
         } else {
-            setMetadataSingleValue(context, collection, MDValue[0], MDValue[1], MDValue[2], null, value);
+            super.setMetadataSingleValue(context, collection, field, null, value);
         }
 
-        collection.addDetails(field);
+        collection.addDetails(field.toString());
     }
 
     @Override
@@ -498,22 +498,6 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
         }
     }
 
-    /**
-     * Get the value of a metadata field
-     *
-     * @param collection which collection to operate on
-     * @param field      the name of the metadata field to get
-     * @return the value of the metadata field
-     * @throws IllegalArgumentException if the requested metadata field doesn't exist
-     */
-    @Override
-    @Deprecated
-    public String getMetadata(Collection collection, String field) {
-        String[] MDValue = getMDValueByLegacyField(field);
-        String value = getMetadataFirstValue(collection, MDValue[0], MDValue[1], MDValue[2], Item.ANY);
-        return value == null ? "" : value;
-    }
-
     @Override
     public Group createSubmitters(Context context, Collection collection) throws SQLException, AuthorizeException {
         // Check authorisation - Must be an Admin to create Submitters Group
@@ -594,7 +578,7 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
 
     @Override
     public String getLicense(Collection collection) {
-        String license = getMetadata(collection, "license");
+        String license = getMetadataFirstValue(collection, CollectionService.MD_LICENSE, Item.ANY);
 
         if (license == null || license.trim().equals("")) {
             // Fallback to site-wide default
@@ -966,7 +950,7 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
     public List<Collection> findCollectionsWithSubmit(String q, Context context, Community community,
         String entityType, int offset, int limit) throws SQLException, SearchServiceException {
 
-        List<Collection> collections = new ArrayList<Collection>();
+        List<Collection> collections = new ArrayList<>();
         DiscoverQuery discoverQuery = new DiscoverQuery();
         discoverQuery.setDSpaceObjectFilter(IndexableCollection.TYPE);
         discoverQuery.setStart(offset);
@@ -989,6 +973,11 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
         discoverQuery.setDSpaceObjectFilter(IndexableCollection.TYPE);
         DiscoverResult resp = retrieveCollectionsWithSubmit(context, discoverQuery, entityType, community, q);
         return (int)resp.getTotalSearchResults();
+    }
+
+    @Override
+    public boolean isSharedWorkspace(Context context, Collection collection) {
+        return toBoolean(getMetadataFirstValue(collection, "cris", "workspace", "shared", Item.ANY));
     }
 
     /**
@@ -1050,6 +1039,11 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
 
     @Override
     public boolean isDirectorioCollection(Context context, Collection collection) throws SQLException {
+
+        if (collection == null) {
+            throw new IllegalArgumentException("Is directorio collection check can not be done without a collection");
+        }
+
         UUID directorioId = UUIDUtils.fromString(configurationService.getProperty("directorios.community-id"));
         if (directorioId == null) {
             return false;

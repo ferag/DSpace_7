@@ -9,12 +9,12 @@ package org.dspace.builder;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.CharEncoding;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
@@ -105,9 +105,21 @@ public class CollectionBuilder extends AbstractDSpaceObjectBuilder<Collection> {
         return addMetadataValue(collection, "cris", "harvesting", "postTransform", null, postTransform);
     }
 
+    public CollectionBuilder withHarvestingEmail(String email) {
+        return addMetadataValue(collection, "cris", "harvesting", "email", null, email);
+    }
+
+    public CollectionBuilder withHarvestingItemValidationEnabled() {
+        return addMetadataValue(collection, "cris", "harvesting", "itemValidationEnabled", null, "true");
+    }
+
+    public CollectionBuilder withHarvestingRecordValidationEnabled() {
+        return addMetadataValue(collection, "cris", "harvesting", "recordValidationEnabled", null, "true");
+    }
+
     public CollectionBuilder withLogo(final String content) throws AuthorizeException, IOException, SQLException {
 
-        InputStream is = IOUtils.toInputStream(content, CharEncoding.UTF_8);
+        InputStream is = IOUtils.toInputStream(content, StandardCharsets.UTF_8);
         try {
             collectionService.setLogo(context, collection, is);
             return this;
@@ -236,6 +248,10 @@ public class CollectionBuilder extends AbstractDSpaceObjectBuilder<Collection> {
         colRole.setGroup(group);
         collectionRoleService.update(context, colRole);
         return this;
+    }
+
+    public CollectionBuilder withSharedWorkspace() {
+        return setMetadataSingleValue(collection, "cris", "workspace", "shared", "true");
     }
 
     @Override

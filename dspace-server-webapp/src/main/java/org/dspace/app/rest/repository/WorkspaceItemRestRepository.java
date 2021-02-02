@@ -24,6 +24,8 @@ import org.dspace.app.rest.authorization.AuthorizationFeature;
 import org.dspace.app.rest.authorization.AuthorizationFeatureService;
 import org.dspace.app.rest.authorization.AuthorizationRestUtil;
 import org.dspace.app.rest.authorization.impl.ItemCorrectionFeature;
+import org.dspace.app.rest.authorization.impl.ItemReinstateRequestFeature;
+import org.dspace.app.rest.authorization.impl.ItemWithdrawRequestFeature;
 import org.dspace.app.rest.converter.WorkspaceItemConverter;
 import org.dspace.app.rest.exception.DSpaceBadRequestException;
 import org.dspace.app.rest.exception.RESTAuthorizationException;
@@ -69,6 +71,7 @@ import org.dspace.submit.AbstractProcessingStep;
 import org.dspace.util.UUIDUtils;
 import org.dspace.validation.service.ValidationService;
 import org.dspace.versioning.ItemCorrectionService;
+import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -202,7 +205,7 @@ public class WorkspaceItemRestRepository extends DSpaceRestRepository<WorkspaceI
 
             UUID itemId = UUIDUtils.fromString(itemUUID);
 
-            if (itemId != null && !isAuthorizedToCorrect(context, itemId)) {
+            if (itemId != null && !isAuthorizedToCreateFromItem(context, itemId, relationship)) {
                 throw new RESTAuthorizationException("The user is not allowed to correct the given item");
             }
 
@@ -548,15 +551,36 @@ public class WorkspaceItemRestRepository extends DSpaceRestRepository<WorkspaceI
         return Integer.class;
     }
 
-    private boolean isAuthorizedToCorrect(Context context, UUID itemId) throws SQLException {
+    private boolean isAuthorizedToCreateFromItem(Context ctx, UUID itemId, String relationship) throws SQLException {
 
-        AuthorizationFeature itemCorrectionFeature = authorizationFeatureService.find(ItemCorrectionFeature.NAME);
-        if (itemCorrectionFeature == null) {
-            throw new IllegalStateException(
-                "No AuthorizationFeature configured with name " + ItemCorrectionFeature.NAME);
+        String featureName = calculateItemFeatureName(relationship);
+
+        if (featureName == null) {
+            return true;
         }
 
-        return itemCorrectionFeature.isAuthorized(context, findItemRestById(context, itemId.toString()));
+        AuthorizationFeature feature = authorizationFeatureService.find(featureName);
+        if (feature == null) {
+            throw new IllegalStateException("No AuthorizationFeature configured with name " + featureName);
+        }
+
+        return feature.isAuthorized(ctx, findItemRestById(ctx, itemId.toString()));
+    }
+
+    private String calculateItemFeatureName(String relationship) {
+        if (relationship.equals(itemCorrectionService.getCorrectionRelationshipName())) {
+            return ItemCorrectionFeature.NAME;
+        }
+
+        if (relationship.equals(ConcytecWorkflowService.IS_WITHDRAW_OF_ITEM_RELATIONSHIP)) {
+            return ItemWithdrawRequestFeature.NAME;
+        }
+
+        if (relationship.equals(ConcytecWorkflowService.IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP)) {
+            return ItemReinstateRequestFeature.NAME;
+        }
+
+        return null;
     }
 
     private BaseObjectRest<?> findItemRestById(Context context, String itemId) throws SQLException {

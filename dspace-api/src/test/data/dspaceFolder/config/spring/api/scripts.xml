@@ -22,9 +22,12 @@
         <property name="dspaceRunnableClass" value="org.dspace.app.bulkedit.MetadataExportCli"/>
     </bean>
 
-    <bean id="curate" class="org.dspace.curate.CurationCliScriptConfiguration">
-        <property name="description" value="Curation tasks"/>
-        <property name="dspaceRunnableClass" value="org.dspace.curate.CurationCli"/>
+    <bean id="curate"
+          class="org.dspace.curate.CurationCliScriptConfiguration">
+        <property name="description"
+                  value="Curation tasks"/>
+        <property name="dspaceRunnableClass"
+                  value="org.dspace.curate.CurationCli"/>
     </bean>
 
     <bean id="retry-tracker" class="org.dspace.statistics.export.RetryFailedOpenUrlTrackerScriptConfiguration" scope="prototype">
@@ -77,9 +80,17 @@
         <property name="dspaceRunnableClass" value="org.dspace.perucris.externalservices.UpdateItemWithExternalSourceCli"/>
     </bean>
 
+    <bean id="import-publications" class="org.dspace.perucris.externalservices.CreateWorkspaceItemWithExternalSourceCliScriptConfiguration">
+        <property name="description" value="Perform the creating of workspace item using external source"/>
+        <property name="dspaceRunnableClass" value="org.dspace.perucris.externalservices.CreateWorkspaceItemWithExternalSourceCli"/>
+    </bean>
+
     <!-- Keep as last script; for test ScriptRestRepository#findOneScriptByNameTest -->
     <bean id="mock-script" class="org.dspace.scripts.MockDSpaceRunnableScriptConfiguration" scope="prototype">
         <property name="description" value="Mocking a script for testing purposes" />
         <property name="dspaceRunnableClass" value="org.dspace.scripts.impl.MockDSpaceRunnableScript"/>
     </bean>
+
+
+
 </beans>

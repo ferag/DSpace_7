@@ -11,6 +11,7 @@ import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import java.util.stream.Collectors;
 
@@ -32,6 +33,7 @@ public class WorkflowStepMatcher {
     public static Matcher<? super Object> matchWorkflowStepEntry(Step workflowStep) {
         return allOf(
             hasJsonPath("$.id", is(workflowStep.getId())),
+            hasJsonPath("$.roleId", workflowStep.getRole() != null ? is(workflowStep.getRole().getId()) : nullValue()),
             hasJsonPath("$._links.self.href", containsString(WORKFLOW_ACTIONS_ENDPOINT + workflowStep.getId())),
             hasJsonPath("$._embedded.workflowactions._embedded.workflowactions", Matchers.containsInAnyOrder(
                 workflowStep.getActions()

@@ -33,6 +33,8 @@ public class WorkflowStepRest extends BaseObjectRest {
 
     private List<WorkflowActionRest> workflowactions;
 
+    private String roleId;
+
     @Override
     public String getCategory() {
         return CATEGORY;
@@ -55,5 +57,19 @@ public class WorkflowStepRest extends BaseObjectRest {
 
     public void setWorkflowactions(List<WorkflowActionRest> actions) {
         this.workflowactions = actions;
+    }
+
+    /**
+     * @return the roleId
+     */
+    public String getRoleId() {
+        return roleId;
+    }
+
+    /**
+     * @param roleId the roleId to set
+     */
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
     }
 }

@@ -72,7 +72,7 @@ public interface ConcytecWorkflowService {
     /**
      * Right type of the merge relationship.
      */
-    public static final String IS_ENRICHED_BY_RELATIONSHIP = "isEnrichedBy";
+    public static final String IS_MERGE_OF_RELATIONSHIP = "isMergeOf";
 
     /**
      * Left type of the originated from relationship.
@@ -153,6 +153,16 @@ public interface ConcytecWorkflowService {
      * @throws SQLException if an SQL error occurs
      */
     List<Item> findOriginatedFromItems(Context context, Item item) throws SQLException;
+
+    /**
+     * Find the item where the given item is merged in.
+     *
+     * @param context the DSpace context
+     * @param item    the item to search for
+     * @return the item where the given item is merged in
+     * @throws SQLException
+     */
+    Item findMergeOfItem(Context context, Item item) throws SQLException;
 
     /**
      * Add the Concytec feedback on the given item.

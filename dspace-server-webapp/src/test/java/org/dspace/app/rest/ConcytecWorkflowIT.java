@@ -16,8 +16,8 @@ import static org.dspace.content.Item.ANY;
 import static org.dspace.xmlworkflow.ConcytecFeedback.APPROVE;
 import static org.dspace.xmlworkflow.ConcytecFeedback.REJECT;
 import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.HAS_SHADOW_COPY_RELATIONSHIP;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_ENRICHED_BY_RELATIONSHIP;
 import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_MERGED_IN_RELATIONSHIP;
+import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_MERGE_OF_RELATIONSHIP;
 import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_ORIGINATED_FROM_IN_RELATIONSHIP;
 import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_ORIGIN_OF_RELATIONSHIP;
 import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_REINSTATED_BY_ITEM_RELATIONSHIP;
@@ -1959,7 +1959,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         RelationshipType personHasShadowCopy = createHasShadowCopyRelationship(institutionPersonType, personType);
         createIsMergedInRelationship(personType);
-        createIsOriginatedFromRelationship(institutionPersonType, personType);
+        createIsOriginatedFromRelationship(personType, institutionPersonType);
 
         Collection directorioPersons = CollectionBuilder
             .createCollection(context, directorioCommunity)
@@ -2037,13 +2037,157 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             null, newPersonShadowItemCopy.getID().toString(), 0, 600)));
     }
 
+    @Test
+    public void testCorrectionOfItemMergedInAnotherItem() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item duplicationItem = ItemBuilder.createItem(context, directorioPublications)
+            .withTitle(ITEM_TITLE)
+            .build();
+
+        WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
+
+        context.restoreAuthSystemState();
+
+        workflowService.start(context, workspaceItem);
+
+        Item item = workspaceItem.getItem();
+        assertThat(getWorkspaceItem(item), nullValue());
+
+        Relationship relationship = findRelation(item, hasShadowCopy);
+        Item shadowItemCopy = relationship.getRightItem();
+
+        XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
+
+        String patchBody = patchDetectDuplication(duplicationItem.getID().toString(), "verify", "note");
+
+        ClaimedTask claimTask = claimTask(shadowWorkflowItemCopy, secondDirectorioUser, directorioEditorGroup);
+
+        getClient(getAuthToken(secondDirectorioUser.getEmail(), password))
+            .perform(patch("/api/workflow/workflowitems/" + shadowWorkflowItemCopy.getID())
+                .content(patchBody).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+
+        rejectClaimedTaskViaRest(secondDirectorioUser, claimTask, "Choose other item");
+
+        item = reloadItem(item);
+        assertThat(item, notNullValue());
+        assertThat(item.isArchived(), is(true));
+        assertThat(item.isWithdrawn(), is(false));
+
+        shadowItemCopy = reloadItem(shadowItemCopy);
+        assertThat(shadowItemCopy, notNullValue());
+        assertThat(shadowItemCopy.isArchived(), is(false));
+        assertThat(shadowItemCopy.isWithdrawn(), is(true));
+
+        WorkspaceItem correctionWorkspaceItem = requestForItemCorrection(admin, item);
+        assertThat(correctionWorkspaceItem, notNullValue());
+
+        Item correctionItem = correctionWorkspaceItem.getItem();
+
+        context.turnOffAuthorisationSystem();
+        workflowService.start(context, correctionWorkspaceItem);
+        context.restoreAuthSystemState();
+
+        assertThat(getWorkflowItem(correctionItem), notNullValue());
+
+        Relationship correctionItemShadowCopyRelation = findRelation(correctionItem, hasShadowCopy);
+        Item correctionItemShadowCopy = correctionItemShadowCopyRelation.getRightItem();
+
+        Relationship correctedItemShadowCopyRelation = findRelation(correctionItemShadowCopy, isCorrectionOf);
+        assertThat(correctedItemShadowCopyRelation, notNullValue());
+        assertThat(correctionItemShadowCopy, equalTo(correctedItemShadowCopyRelation.getLeftItem()));
+        assertThat(duplicationItem, equalTo(correctedItemShadowCopyRelation.getRightItem()));
+    }
+
+    @Test
+    public void testReinstateOfItemMergedInAnotherItem() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item duplicationItem = ItemBuilder.createItem(context, directorioPublications)
+            .withTitle(ITEM_TITLE)
+            .build();
+
+        WorkspaceItem workspaceItem = createWorkspaceItem(institutionCollection);
+
+        context.restoreAuthSystemState();
+
+        workflowService.start(context, workspaceItem);
+
+        Item item = workspaceItem.getItem();
+        assertThat(getWorkspaceItem(item), nullValue());
+
+        Relationship relationship = findRelation(item, hasShadowCopy);
+        Item shadowItemCopy = relationship.getRightItem();
+
+        XmlWorkflowItem shadowWorkflowItemCopy = getWorkflowItem(shadowItemCopy);
+
+        String patchBody = patchDetectDuplication(duplicationItem.getID().toString(), "verify", "note");
+
+        ClaimedTask claimTask = claimTask(shadowWorkflowItemCopy, secondDirectorioUser, directorioEditorGroup);
+
+        getClient(getAuthToken(secondDirectorioUser.getEmail(), password))
+            .perform(patch("/api/workflow/workflowitems/" + shadowWorkflowItemCopy.getID())
+                .content(patchBody).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+
+        rejectClaimedTaskViaRest(secondDirectorioUser, claimTask, "Choose other item");
+
+        item = reloadItem(item);
+        assertThat(item, notNullValue());
+        assertThat(item.isArchived(), is(true));
+        assertThat(item.isWithdrawn(), is(false));
+
+        shadowItemCopy = reloadItem(shadowItemCopy);
+        assertThat(shadowItemCopy, notNullValue());
+        assertThat(shadowItemCopy.isArchived(), is(false));
+        assertThat(shadowItemCopy.isWithdrawn(), is(true));
+
+        context.turnOffAuthorisationSystem();
+        itemService.withdraw(context, item);
+        context.restoreAuthSystemState();
+
+        item = reloadItem(item);
+        assertThat(item, notNullValue());
+        assertThat(item.isArchived(), is(false));
+        assertThat(item.isWithdrawn(), is(true));
+
+        WorkspaceItem reinstateWorkspaceItem = requestForItemReinstate(admin, item);
+        assertThat(reinstateWorkspaceItem, notNullValue());
+
+        Item reinstateItem = reinstateWorkspaceItem.getItem();
+
+        Relationship reinstateRelation = findRelation(item, institutionIsReinstateOf);
+        assertThat(reinstateRelation.getLeftItem(), equalTo(reinstateWorkspaceItem.getItem()));
+
+        context.turnOffAuthorisationSystem();
+        workflowService.start(context, reinstateWorkspaceItem);
+        context.restoreAuthSystemState();
+
+        item = reloadItem(item);
+        assertThat(item, notNullValue());
+        assertThat(item.isArchived(), is(true));
+        assertThat(item.isWithdrawn(), is(false));
+
+        shadowItemCopy = reloadItem(shadowItemCopy);
+        assertThat(shadowItemCopy, notNullValue());
+        assertThat(shadowItemCopy.isArchived(), is(false));
+        assertThat(shadowItemCopy.isWithdrawn(), is(true));
+
+        reinstateItem = reloadItem(reinstateItem);
+        assertThat(reinstateItem, nullValue());
+
+    }
+
     private RelationshipType createHasShadowCopyRelationship(EntityType institutionType, EntityType directorioType) {
         return createRelationshipTypeBuilder(context, institutionType, directorioType, HAS_SHADOW_COPY_RELATIONSHIP,
             IS_SHADOW_COPY_RELATIONSHIP, 0, 1, 0, 1).build();
     }
 
-    private RelationshipType createIsOriginatedFromRelationship(EntityType institutionType, EntityType directorioType) {
-        return createRelationshipTypeBuilder(context, institutionType, directorioType,
+    private RelationshipType createIsOriginatedFromRelationship(EntityType directorioType, EntityType institutionType) {
+        return createRelationshipTypeBuilder(context, directorioType, institutionType,
             IS_ORIGINATED_FROM_IN_RELATIONSHIP, IS_ORIGIN_OF_RELATIONSHIP, 0, null, 0, 1).build();
     }
 
@@ -2064,7 +2208,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
     private RelationshipType createIsMergedInRelationship(EntityType entityType) {
         return createRelationshipTypeBuilder(context, entityType,
-            entityType, IS_MERGED_IN_RELATIONSHIP, IS_ENRICHED_BY_RELATIONSHIP, 0, 1, 0, null).build();
+            entityType, IS_MERGED_IN_RELATIONSHIP, IS_MERGE_OF_RELATIONSHIP, 0, 1, 0, null).build();
     }
 
     private void claimTaskAndApprove(XmlWorkflowItem workflowItem, EPerson user, Group expectedGroup) throws Exception {

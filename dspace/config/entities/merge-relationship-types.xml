@@ -6,7 +6,7 @@
         <leftType>Person</leftType>
         <rightType>Person</rightType>
         <leftwardType>isMergedIn</leftwardType>
-        <rightwardType>isEnrichedBy</rightwardType>
+        <rightwardType>isMergeOf</rightwardType>
         <leftCardinality>
             <min>0</min>
             <max>1</max>
@@ -19,7 +19,7 @@
         <leftType>Project</leftType>
         <rightType>Project</rightType>
         <leftwardType>isMergedIn</leftwardType>
-        <rightwardType>isEnrichedBy</rightwardType>
+        <rightwardType>isMergeOf</rightwardType>
         <leftCardinality>
             <min>0</min>
             <max>1</max>
@@ -32,7 +32,7 @@
         <leftType>Funding</leftType>
         <rightType>Funding</rightType>
         <leftwardType>isMergedIn</leftwardType>
-        <rightwardType>isEnrichedBy</rightwardType>
+        <rightwardType>isMergeOf</rightwardType>
         <leftCardinality>
             <min>0</min>
             <max>1</max>
@@ -45,7 +45,7 @@
         <leftType>OrgUnit</leftType>
         <rightType>OrgUnit</rightType>
         <leftwardType>isMergedIn</leftwardType>
-        <rightwardType>isEnrichedBy</rightwardType>
+        <rightwardType>isMergeOf</rightwardType>
         <leftCardinality>
             <min>0</min>
             <max>1</max>
@@ -58,7 +58,7 @@
         <leftType>Journal</leftType>
         <rightType>Journal</rightType>
         <leftwardType>isMergedIn</leftwardType>
-        <rightwardType>isEnrichedBy</rightwardType>
+        <rightwardType>isMergeOf</rightwardType>
         <leftCardinality>
             <min>0</min>
             <max>1</max>
@@ -71,7 +71,7 @@
         <leftType>Publication</leftType>
         <rightType>Publication</rightType>
         <leftwardType>isMergedIn</leftwardType>
-        <rightwardType>isEnrichedBy</rightwardType>
+        <rightwardType>isMergeOf</rightwardType>
         <leftCardinality>
             <min>0</min>
             <max>1</max>
@@ -84,7 +84,7 @@
         <leftType>Patent</leftType>
         <rightType>Patent</rightType>
         <leftwardType>isMergedIn</leftwardType>
-        <rightwardType>isEnrichedBy</rightwardType>
+        <rightwardType>isMergeOf</rightwardType>
         <leftCardinality>
             <min>0</min>
             <max>1</max>
@@ -97,7 +97,7 @@
         <leftType>Dataset</leftType>
         <rightType>Dataset</rightType>
         <leftwardType>isMergedIn</leftwardType>
-        <rightwardType>isEnrichedBy</rightwardType>
+        <rightwardType>isMergeOf</rightwardType>
         <leftCardinality>
             <min>0</min>
             <max>1</max>
@@ -110,7 +110,7 @@
         <leftType>Event</leftType>
         <rightType>Event</rightType>
         <leftwardType>isMergedIn</leftwardType>
-        <rightwardType>isEnrichedBy</rightwardType>
+        <rightwardType>isMergeOf</rightwardType>
         <leftCardinality>
             <min>0</min>
             <max>1</max>
@@ -123,7 +123,7 @@
         <leftType>Equipment</leftType>
         <rightType>Equipment</rightType>
         <leftwardType>isMergedIn</leftwardType>
-        <rightwardType>isEnrichedBy</rightwardType>
+        <rightwardType>isMergeOf</rightwardType>
         <leftCardinality>
             <min>0</min>
             <max>1</max>
@@ -136,7 +136,7 @@
         <leftType>PersonCv</leftType>
         <rightType>PersonCv</rightType>
         <leftwardType>isMergedIn</leftwardType>
-        <rightwardType>isEnrichedBy</rightwardType>
+        <rightwardType>isMergeOf</rightwardType>
         <leftCardinality>
             <min>0</min>
             <max>1</max>

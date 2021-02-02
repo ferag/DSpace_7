@@ -11,8 +11,8 @@
 
 <relationships>
      <type>
-        <leftType>InstitutionPerson</leftType>
-        <rightType>Person</rightType>
+        <leftType>Person</leftType>
+        <rightType>InstitutionPerson</rightType>
         <leftwardType>isOriginatedFrom</leftwardType>
         <rightwardType>isOriginOf</rightwardType>
         <leftCardinality>
@@ -24,8 +24,8 @@
         </rightCardinality>
     </type>
      <type>
-        <leftType>InstitutionProject</leftType>
-        <rightType>Project</rightType>
+        <leftType>Project</leftType>
+        <rightType>InstitutionProject</rightType>
         <leftwardType>isOriginatedFrom</leftwardType>
         <rightwardType>isOriginOf</rightwardType>
         <leftCardinality>
@@ -37,8 +37,8 @@
         </rightCardinality>
     </type>
      <type>
-        <leftType>InstitutionFunding</leftType>
-        <rightType>Funding</rightType>
+        <leftType>Funding</leftType>
+        <rightType>InstitutionFunding</rightType>
         <leftwardType>isOriginatedFrom</leftwardType>
         <rightwardType>isOriginOf</rightwardType>
         <leftCardinality>
@@ -50,8 +50,8 @@
         </rightCardinality>
     </type>
      <type>
-        <leftType>InstitutionOrgUnit</leftType>
-        <rightType>OrgUnit</rightType>
+        <leftType>OrgUnit</leftType>
+        <rightType>InstitutionOrgUnit</rightType>
         <leftwardType>isOriginatedFrom</leftwardType>
         <rightwardType>isOriginOf</rightwardType>
         <leftCardinality>
@@ -63,8 +63,8 @@
         </rightCardinality>
     </type>
      <type>
-        <leftType>InstitutionPublication</leftType>
-        <rightType>Publication</rightType>
+        <leftType>Publication</leftType>
+        <rightType>InstitutionPublication</rightType>
         <leftwardType>isOriginatedFrom</leftwardType>
         <rightwardType>isOriginOf</rightwardType>
         <leftCardinality>
@@ -76,8 +76,8 @@
         </rightCardinality>
     </type>
      <type>
-        <leftType>InstitutionPatent</leftType>
-        <rightType>Patent</rightType>
+        <leftType>Patent</leftType>
+        <rightType>InstitutionPatent</rightType>
         <leftwardType>isOriginatedFrom</leftwardType>
         <rightwardType>isOriginOf</rightwardType>
         <leftCardinality>
@@ -89,8 +89,8 @@
         </rightCardinality>
     </type>
      <type>
-        <leftType>InstitutionEquipment</leftType>
-        <rightType>Equipment</rightType>
+        <leftType>Equipment</leftType>
+        <rightType>InstitutionEquipment</rightType>
         <leftwardType>isOriginatedFrom</leftwardType>
         <rightwardType>isOriginOf</rightwardType>
         <leftCardinality>

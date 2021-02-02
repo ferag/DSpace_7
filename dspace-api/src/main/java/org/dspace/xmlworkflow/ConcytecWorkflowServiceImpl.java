@@ -174,6 +174,21 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
             .collect(Collectors.toList());
     }
 
+    @Override
+    public Item findMergeOfItem(Context context, Item item) throws SQLException {
+        List<Relationship> relationships = findItemMergeRelationships(context, item, true);
+
+        if (CollectionUtils.isEmpty(relationships)) {
+            return null;
+        }
+
+        if (relationships.size() > 1) {
+            throw new IllegalStateException("The item " + item.getID() + " is a reinstate of more than one item");
+        }
+
+        return relationships.get(0).getRightItem();
+    }
+
     private List<Relationship> findItemShadowRelationships(Context context, Item item, boolean isLeft)
         throws SQLException {
         RelationshipType shadowRelationshipType = findShadowRelationshipType(context, item, isLeft);
@@ -190,7 +205,7 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
 
     private RelationshipType findMergedInRelationshipType(Context context, Item item, boolean isLeft)
         throws SQLException {
-        return findRelationshipType(context, item, isLeft, IS_MERGED_IN_RELATIONSHIP, IS_ENRICHED_BY_RELATIONSHIP);
+        return findRelationshipType(context, item, isLeft, IS_MERGED_IN_RELATIONSHIP, IS_MERGE_OF_RELATIONSHIP);
     }
 
     private RelationshipType findOriginatedFromRelationshipType(Context ctx, Item item, boolean isLeft)
@@ -220,6 +235,15 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
             return Collections.emptyList();
         }
         return relationshipService.findByItemAndRelationshipType(context, item, reinstateRelationshipType, isLeft);
+    }
+
+    private List<Relationship> findItemMergeRelationships(Context context, Item item, boolean isLeft)
+        throws SQLException {
+        RelationshipType mergeRelationshipType = findMergedInRelationshipType(context, item, isLeft);
+        if (mergeRelationshipType == null) {
+            return Collections.emptyList();
+        }
+        return relationshipService.findByItemAndRelationshipType(context, item, mergeRelationshipType, isLeft);
     }
 
     private RelationshipType findReinstateRelationshipType(Context context, Item item, boolean isLeft)

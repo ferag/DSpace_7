@@ -253,6 +253,9 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
                     log.info("item with id {} already in DSPace", id);
                 }
                 countDataObjects++;
+                if (countDataObjects % 20 == 0) {
+                    context.commit();
+                }
             }
         } catch (AuthorizeException | IOException | WorkflowException e) {
             log.error(e.getMessage(), e);

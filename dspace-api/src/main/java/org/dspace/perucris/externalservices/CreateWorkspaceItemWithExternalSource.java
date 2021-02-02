@@ -8,7 +8,6 @@
 package org.dspace.perucris.externalservices;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -37,6 +36,7 @@ import org.dspace.discovery.DiscoverQuery;
 import org.dspace.discovery.DiscoverResultIterator;
 import org.dspace.discovery.SearchServiceException;
 import org.dspace.discovery.indexobject.IndexableItem;
+import org.dspace.discovery.indexobject.IndexableWorkflowItem;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.external.model.ExternalDataObject;
@@ -270,8 +270,13 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
                     filter.append(":").append(value);
                 }
                 try {
-                    Iterator<Item> itemIterator = findItemsByCollection(context, filter.toString());
+                    Iterator<Item> itemIterator = findItemsByCollection(context, filter.toString(), IndexableItem.TYPE);
                     if (itemIterator.hasNext()) {
+                        return true;
+                    }
+                    Iterator<Item> wItemIterator = findItemsByCollection(context, filter.toString(),
+                            IndexableWorkflowItem.TYPE);
+                    if (wItemIterator.hasNext()) {
                         return true;
                     }
                 } catch (SearchServiceException e) {
@@ -301,10 +306,10 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
         return metadata;
     }
 
-    private Iterator<Item> findItemsByCollection(Context context, String filter)
+    private Iterator<Item> findItemsByCollection(Context context, String filter, String indexableObjType)
             throws SQLException, SearchServiceException {
         DiscoverQuery discoverQuery = new DiscoverQuery();
-        discoverQuery.setDSpaceObjectFilter(IndexableItem.TYPE);
+        discoverQuery.setDSpaceObjectFilter(indexableObjType);
         discoverQuery.setMaxResults(20);
         discoverQuery.addFilterQueries(filter);
         discoverQuery.addFilterQueries("location.coll:" + this.collection.getID());
@@ -333,7 +338,6 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
     }
 
     private List<List<MetadataValueDTO>> metadataValueToAdd(Item item) {
-        List<List<MetadataValueDTO>> list = new ArrayList<>();
         switch (this.service) {
             case "scopus":
                 return Collections.singletonList(metadataList(item, "scopus-author-id"));
@@ -345,7 +349,6 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
             default:
                 return Collections.emptyList();
         }
-//        return new ArrayList<>();
     }
 
     private List<MetadataValueDTO> metadataList(Item item, String identifier) {

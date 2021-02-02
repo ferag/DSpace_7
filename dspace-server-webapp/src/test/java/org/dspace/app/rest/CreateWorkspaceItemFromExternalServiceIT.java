@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.dspace.app.rest.matcher.WorkflowItemMatcher;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
 import org.dspace.app.scripts.handler.impl.TestDSpaceRunnableHandler;
 import org.dspace.authorize.AuthorizeException;
@@ -32,6 +33,7 @@ import org.dspace.builder.EPersonBuilder;
 import org.dspace.builder.EntityTypeBuilder;
 import org.dspace.builder.GroupBuilder;
 import org.dspace.builder.ItemBuilder;
+import org.dspace.builder.WorkflowItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.EntityType;
@@ -46,8 +48,10 @@ import org.dspace.external.model.ExternalDataObject;
 import org.dspace.external.provider.impl.LiveImportDataProvider;
 import org.dspace.perucris.externalservices.CreateWorkspaceItemWithExternalSource;
 import org.dspace.services.ConfigurationService;
+import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.dspace.xmlworkflow.storedcomponents.service.CollectionRoleService;
 import org.dspace.xmlworkflow.storedcomponents.service.XmlWorkflowItemService;
+import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -79,6 +83,10 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
     private Item itemPublication;
     @SuppressWarnings("unused")
     private Item itemPublication2;
+    @SuppressWarnings("unused")
+    private XmlWorkflowItem witem;
+    @SuppressWarnings("unused")
+    private XmlWorkflowItem witem2;
 
     private Collection col1;
     private Collection col2Scopus;
@@ -572,6 +580,182 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
                              .andExpect(jsonPath("$.page.totalElements", is(0)));
     }
 
+    @Test
+    public void oneWorkflowItemAlreadyExistImportFromWOSTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        //disable file upload mandatory
+        configurationService.setProperty("webui.submit.upload.required", false);
+
+        this.itemPersonA = ItemBuilder.createItem(context, this.col1)
+                                      .withPersonIdentifierFirstName("EDWIN")
+                                      .withPersonIdentifierLastName("SAUCEDO")
+                                      .withOrcidIdentifier("0000-0002-9029-1854")
+                                      .build();
+
+        //define first record
+        MetadataValueDTO title = new MetadataValueDTO("dc","title", null,null, "Putting Historical Data in Context");
+        MetadataValueDTO identifier = new MetadataValueDTO("dc", "identifier", "other", null, "WOS:000439929300064");
+        MetadataValueDTO date = new MetadataValueDTO("dc", "date", "issued", null, "2017");
+        MetadataValueDTO type = new MetadataValueDTO("dc", "type", null, null, "Book in series");
+
+        List<MetadataValueDTO> metadataFirstRecord = new ArrayList<MetadataValueDTO>();
+        metadataFirstRecord.add(type);
+        metadataFirstRecord.add(title);
+        metadataFirstRecord.add(date);
+        metadataFirstRecord.add(identifier);
+
+        ExternalDataObject firstRecord = new ExternalDataObject();
+        firstRecord.setMetadata(metadataFirstRecord);
+
+        //define second record
+        MetadataValueDTO title2R = new MetadataValueDTO("dc", "title", null, null, "Regional Portal FVG");
+        MetadataValueDTO identifier2R = new MetadataValueDTO("dc", "identifier", "other", null, "WOS:000348252500018");
+        MetadataValueDTO type2R = new MetadataValueDTO("dc", "type", null, null, "Journal");
+        MetadataValueDTO date2R = new MetadataValueDTO("dc", "date", "issued", null, "2017");
+        MetadataValueDTO description2R = new MetadataValueDTO("dc", "description", "abstract", null,
+                                                              "In 2013, Directory of Open Access Journals (DOAJ)");
+
+        List<MetadataValueDTO> metadataSecondRecord = new ArrayList<MetadataValueDTO>();
+        metadataSecondRecord.add(title2R);
+        metadataSecondRecord.add(identifier2R);
+        metadataSecondRecord.add(type2R);
+        metadataSecondRecord.add(date2R);
+        metadataSecondRecord.add(description2R);
+
+        ExternalDataObject secondRecord = new ExternalDataObject();
+        secondRecord.setMetadata(metadataSecondRecord);
+
+        List<ExternalDataObject> externalObjects = new ArrayList<ExternalDataObject>();
+        externalObjects.add(firstRecord);
+        externalObjects.add(secondRecord);
+
+        this.witem = WorkflowItemBuilder.createWorkflowItem(context, this.col2WOS)
+                .withTitle(title.getValue())
+                .withIssueDate(date.getValue())
+                .withIdentifierOther(identifier.getValue()).build();
+
+        when(mockWosProvider.getNumberOfResults(ArgumentMatchers.any())).thenReturn(2);
+        when(mockWosProvider.searchExternalDataObjects(ArgumentMatchers.any(), ArgumentMatchers.anyInt(),
+                                                       ArgumentMatchers.anyInt())).thenReturn(externalObjects);
+
+        context.restoreAuthSystemState();
+
+        String[] args = new String[] {"import-publications", "-s", "wos"};
+        TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
+        nameToProvider.put("wos", mockWosProvider);
+        createWorkspaceItemService.initialize(args, handler, admin);
+        createWorkspaceItemService.setNameToProvider(nameToProvider);
+        createWorkspaceItemService.run();
+
+        String tokenAdmin = getAuthToken(admin.getEmail(), password);
+
+        getClient(tokenAdmin).perform(get("/api/workflow/workflowitems"))
+                 .andExpect(status().isOk())
+                 .andExpect(jsonPath("$._embedded.workflowitems[0].sections.traditionalpageone.['dc.title'][0].value",
+                                  is(title.getValue())))
+                 .andExpect(jsonPath("$._embedded.workflowitems[0].sections"
+                                   + ".traditionalpageone['dc.identifier.other'][0].value", is(identifier.getValue())))
+                 .andExpect(jsonPath("$._embedded.workflowitems[0].sections"
+                                   + ".traditionalpageone['dc.date.issued'][0].value", is(date.getValue())))
+                 .andExpect(jsonPath("$._embedded.workflowitems[1].sections.traditionalpageone['dc.title'][0].value",
+                                  is(title2R.getValue())))
+                 .andExpect(jsonPath("$._embedded.workflowitems[1].sections"
+                                   + ".traditionalpageone['dc.identifier.other'][0].value",is(identifier2R.getValue())))
+                 .andExpect(jsonPath("$._embedded.workflowitems[1].sections"
+                                   + ".traditionalpageone['dc.date.issued'][0].value", is(date2R.getValue())))
+                 .andExpect(jsonPath("$._embedded.workflowitems[1].sections"
+                                   + ".traditionalpageone['dc.type'][0].value", is(type2R.getValue())))
+                 .andExpect(jsonPath("$.page.totalElements", is(2)));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void allWorkflowItemAlreadyExistImportFromScopusTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        //disable file upload mandatory
+        configurationService.setProperty("webui.submit.upload.required", false);
+
+        this.itemPersonA = ItemBuilder.createItem(context, this.col1)
+                                      .withPersonIdentifierFirstName("EDWIN")
+                                      .withPersonIdentifierLastName("SAUCEDO")
+                                      .withScopusAuthorIdentifier("55484808800").build();
+
+        //define first record
+        MetadataValueDTO title = new MetadataValueDTO("dc","title", null,null,
+                                                  "Improvement of editorial quality of journals");
+        MetadataValueDTO scopusAuthorId = new MetadataValueDTO("person", "identifier", "scopus-author-id", null,
+                                                               "55484808800");
+        MetadataValueDTO doi = new MetadataValueDTO("dc", "identifier","doi", null, "10.4403/jlis.it-12052");
+        MetadataValueDTO type = new MetadataValueDTO("dc", "type", null, null, "Journal");
+        MetadataValueDTO date = new MetadataValueDTO("dc", "date", "issued", null, "2017-01-01");
+        MetadataValueDTO scopus = new MetadataValueDTO("dc", "identifier", "scopus", null, "2-s2.0-85019960269");
+        List<MetadataValueDTO> metadataFirstRecord = new ArrayList<MetadataValueDTO>();
+        metadataFirstRecord.add(doi);
+        metadataFirstRecord.add(title);
+        metadataFirstRecord.add(date);
+        metadataFirstRecord.add(scopusAuthorId);
+        metadataFirstRecord.add(scopus);
+        metadataFirstRecord.add(type);
+
+        ExternalDataObject firstRecord = new ExternalDataObject();
+        firstRecord.setMetadata(metadataFirstRecord);
+
+        //define second record
+        MetadataValueDTO title2R = new MetadataValueDTO("dc", "title", null, null, "Regional Portal FVG");
+        MetadataValueDTO doi2R = new MetadataValueDTO("dc", "identifier", "doi", null, "10.1016/j.procs.38");
+        MetadataValueDTO scopusAuthorId2R = new MetadataValueDTO("person", "identifier", "scopus-author-id", null,
+                                                                 "55484808800");
+        MetadataValueDTO type2R = new MetadataValueDTO("dc", "type", null, null, "Journal");
+        MetadataValueDTO date2R = new MetadataValueDTO("dc", "date", "issued", null, "2017-01-01");
+        MetadataValueDTO scopus2R = new MetadataValueDTO("dc", "identifier", "scopus", null, "2-s2.0-85020703703");
+
+        List<MetadataValueDTO> metadataSecondRecord = new ArrayList<MetadataValueDTO>();
+        metadataSecondRecord.add(title2R);
+        metadataSecondRecord.add(doi2R);
+        metadataSecondRecord.add(scopusAuthorId2R);
+        metadataSecondRecord.add(type2R);
+        metadataSecondRecord.add(date2R);
+        metadataSecondRecord.add(scopus2R);
+
+        ExternalDataObject secondRecord = new ExternalDataObject();
+        secondRecord.setMetadata(metadataSecondRecord);
+
+        List<ExternalDataObject> externalObjects = new ArrayList<ExternalDataObject>();
+        externalObjects.add(firstRecord);
+        externalObjects.add(secondRecord);
+
+        when(mockScopusProvider.getNumberOfResults(ArgumentMatchers.any())).thenReturn(2);
+        when(mockScopusProvider.searchExternalDataObjects(ArgumentMatchers.any(),ArgumentMatchers.anyInt(),
+                                                          ArgumentMatchers.anyInt())).thenReturn(externalObjects);
+
+        this.witem = WorkflowItemBuilder.createWorkflowItem(context, this.col2Scopus)
+                                        .withTitle(title.getValue())
+                                        .withIssueDate(date.getValue())
+                                        .withScopusIdentifier(scopus.getValue()).build();
+
+        this.witem2 = WorkflowItemBuilder.createWorkflowItem(context, this.col2Scopus)
+                                         .withTitle(title2R.getValue())
+                                         .withIssueDate(date2R.getValue())
+                                         .withScopusIdentifier(scopus2R.getValue()).build();
+
+        context.restoreAuthSystemState();
+
+        String[] args = new String[] {"import-publications", "-s", "scopus"};
+        TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
+        nameToProvider.put("scopus", mockScopusProvider);
+        createWorkspaceItemService.initialize(args, handler, admin);
+        createWorkspaceItemService.setNameToProvider(nameToProvider);
+        createWorkspaceItemService.run();
+
+        String tokenAdmin = getAuthToken(admin.getEmail(), password);
+        getClient(tokenAdmin).perform(get("/api/workflow/workflowitems"))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$._embedded.workflowitems", Matchers.containsInAnyOrder(
+              WorkflowItemMatcher.matchItemWithTitleAndDateIssued(this.witem, title.getValue(), date.getValue()),
+              WorkflowItemMatcher.matchItemWithTitleAndDateIssued(this.witem2, title2R.getValue(),date2R.getValue())
+              )))
+          .andExpect(jsonPath("$.page.totalElements", is(2)));
+    }
 
     private EntityType createEntityType(String entityType) {
         return EntityTypeBuilder.createEntityTypeBuilder(context, entityType)

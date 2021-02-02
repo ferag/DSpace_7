@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.solr.common.SolrInputDocument;
+import org.dspace.content.Collection;
 import org.dspace.content.InProgressSubmission;
 import org.dspace.content.Item;
 import org.dspace.core.Context;
@@ -58,9 +59,11 @@ public abstract class InprogressSubmissionIndexFactoryImpl
 
         doc.addField("inprogress.item", new IndexableItem(inProgressSubmission.getItem()).getUniqueIndexID());
 
+        Collection collection = inProgressSubmission.getCollection();
         // get the location string (for searching by collection & community)
         List<String> locations = indexableCollectionService.
                 getCollectionLocations(context, inProgressSubmission.getCollection());
+        locations.add("l" + collection.getID().toString());
         indexableCollectionService.storeCommunityCollectionLocations(doc, locations);
     }
 }

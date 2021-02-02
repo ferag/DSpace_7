@@ -195,9 +195,9 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
                     int userPublicationsProcessed = 0;
                     while (recordsFound == -1 || userPublicationsProcessed < recordsFound) {
                         userPublicationsProcessed += fillWorkspaceItems(context, currentRecord, dataProvider, item, id);
-                        totalRecordWorked += userPublicationsProcessed;
-                        currentRecord += LIMIT;
+                        currentRecord += 2;
                     }
+                    totalRecordWorked += userPublicationsProcessed;
                 }
                 countItemsProcessed++;
                 if (countItemsProcessed == 20) {
@@ -244,7 +244,7 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
             Item item, String id) throws SQLException {
         int countDataObjects = 0;
         try {
-            for (ExternalDataObject dataObject : dataProvider.searchExternalDataObjects(id, record, LIMIT)) {
+            for (ExternalDataObject dataObject : dataProvider.searchExternalDataObjects(id, record, 2)) {
                 if (!exist(dataObject.getMetadata())) {
                     log.info("item with id {} not yet in DSPace", id);
                     WorkspaceItem wsItem = externalDataService.createWorkspaceItemFromExternalDataObject(context,

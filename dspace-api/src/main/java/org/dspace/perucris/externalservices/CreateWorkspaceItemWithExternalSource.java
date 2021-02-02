@@ -8,7 +8,6 @@
 package org.dspace.perucris.externalservices;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -37,8 +36,10 @@ import org.dspace.discovery.DiscoverQuery;
 import org.dspace.discovery.DiscoverResultIterator;
 import org.dspace.discovery.SearchServiceException;
 import org.dspace.discovery.indexobject.IndexableItem;
+import org.dspace.discovery.indexobject.IndexableWorkflowItem;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.factory.EPersonServiceFactory;
+import org.dspace.eperson.service.EPersonService;
 import org.dspace.external.model.ExternalDataObject;
 import org.dspace.external.provider.impl.LiveImportDataProvider;
 import org.dspace.external.service.ExternalDataService;
@@ -156,15 +157,28 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
     }
 
     private void assignCurrentUserInContext() throws SQLException {
+
+        context.setCurrentUser(findEPerson());
+    }
+
+    private EPerson findEPerson() throws SQLException {
+        EPersonService ePersonService = EPersonServiceFactory.getInstance().getEPersonService();
+        String email = commandLine.getOptionValue('e');
+        if (StringUtils.isNotBlank(email)) {
+            EPerson byEmail = ePersonService.findByEmail(context, email);
+            if (Objects.nonNull(byEmail)) {
+                return byEmail;
+            }
+        }
         UUID uuid = getEpersonIdentifier();
         if (uuid != null) {
-            EPerson ePerson = EPersonServiceFactory.getInstance().getEPersonService().find(context, uuid);
-            context.setCurrentUser(ePerson);
+            return ePersonService.find(context, uuid);
         }
+        return null;
     }
 
     private void performCreatingOfWorkspaceItems(Context context,LiveImportDataProvider dataProvider) {
-        int currentRecord = 0;
+
         int totalRecordWorked = 0;
         int countItemsProcessed = 0;
         try {
@@ -174,11 +188,14 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
                 Item item = itemIterator.next();
                 String id = buildID(item);
                 if (StringUtils.isNotBlank(id)) {
+                    int currentRecord = 0;
                     int recordsFound = dataProvider.getNumberOfResults(id);
-                    while (recordsFound == -1 || totalRecordWorked < recordsFound) {
-                        totalRecordWorked += fillWorkspaceItems(context, currentRecord, dataProvider, item, id);
+                    int userPublicationsProcessed = 0;
+                    while (recordsFound == -1 || userPublicationsProcessed < recordsFound) {
+                        userPublicationsProcessed += fillWorkspaceItems(context, currentRecord, dataProvider, item, id);
                         currentRecord += LIMIT;
                     }
+                    totalRecordWorked += userPublicationsProcessed;
                 }
                 countItemsProcessed++;
                 if (countItemsProcessed == 20) {
@@ -235,6 +252,9 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
                     workflowService.start(context, wsItem);
                 }
                 countDataObjects++;
+                if (countDataObjects % 20 == 0) {
+                    context.commit();
+                }
             }
         } catch (AuthorizeException | IOException | WorkflowException e) {
             log.error(e.getMessage(), e);
@@ -270,8 +290,13 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
                     filter.append(":").append(value);
                 }
                 try {
-                    Iterator<Item> itemIterator = findItemsByCollection(context, filter.toString());
+                    Iterator<Item> itemIterator = findItemsByCollection(context, filter.toString(), IndexableItem.TYPE);
                     if (itemIterator.hasNext()) {
+                        return true;
+                    }
+                    Iterator<Item> wItemIterator = findItemsByCollection(context, filter.toString(),
+                            IndexableWorkflowItem.TYPE);
+                    if (wItemIterator.hasNext()) {
                         return true;
                     }
                 } catch (SearchServiceException e) {
@@ -294,17 +319,17 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
             case "wos":
                 metadata.setSchema("dc");
                 metadata.setElement("identifier");
-                metadata.setQualifier("other");
+                metadata.setQualifier("isi");
                 break;
             default:
         }
         return metadata;
     }
 
-    private Iterator<Item> findItemsByCollection(Context context, String filter)
+    private Iterator<Item> findItemsByCollection(Context context, String filter, String indexableObjType)
             throws SQLException, SearchServiceException {
         DiscoverQuery discoverQuery = new DiscoverQuery();
-        discoverQuery.setDSpaceObjectFilter(IndexableItem.TYPE);
+        discoverQuery.setDSpaceObjectFilter(indexableObjType);
         discoverQuery.setMaxResults(20);
         discoverQuery.addFilterQueries(filter);
         discoverQuery.addFilterQueries("location.coll:" + this.collection.getID());
@@ -333,7 +358,6 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
     }
 
     private List<List<MetadataValueDTO>> metadataValueToAdd(Item item) {
-        List<List<MetadataValueDTO>> list = new ArrayList<>();
         switch (this.service) {
             case "scopus":
                 return Collections.singletonList(metadataList(item, "scopus-author-id"));
@@ -345,7 +369,6 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
             default:
                 return Collections.emptyList();
         }
-//        return new ArrayList<>();
     }
 
     private List<MetadataValueDTO> metadataList(Item item, String identifier) {

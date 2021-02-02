@@ -165,7 +165,6 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
         EPersonService ePersonService = EPersonServiceFactory.getInstance().getEPersonService();
         String email = commandLine.getOptionValue('e');
         if (StringUtils.isNotBlank(email)) {
-            log.info("looking up eperson with email: {}", email);
             EPerson byEmail = ePersonService.findByEmail(context, email);
             if (Objects.nonNull(byEmail)) {
                 return byEmail;
@@ -191,7 +190,6 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
                 if (StringUtils.isNotBlank(id)) {
                     int currentRecord = 0;
                     int recordsFound = dataProvider.getNumberOfResults(id);
-                    log.info("{} records found", recordsFound);
                     int userPublicationsProcessed = 0;
                     while (recordsFound == -1 || userPublicationsProcessed < recordsFound) {
                         userPublicationsProcessed += fillWorkspaceItems(context, currentRecord, dataProvider, item, id);
@@ -246,15 +244,12 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
         try {
             for (ExternalDataObject dataObject : dataProvider.searchExternalDataObjects(id, record, LIMIT)) {
                 if (!exist(dataObject.getMetadata())) {
-                    log.info("item with id {} not yet in DSPace", id);
                     WorkspaceItem wsItem = externalDataService.createWorkspaceItemFromExternalDataObject(context,
                                                                dataObject, this.collection);
                     for (List<MetadataValueDTO> metadataList : metadataValueToAdd(wsItem.getItem())) {
                         addMetadata(wsItem.getItem(), metadataList);
                     }
                     workflowService.start(context, wsItem);
-                } else {
-                    log.info("item with id {} already in DSPace", id);
                 }
                 countDataObjects++;
                 if (countDataObjects % 20 == 0) {

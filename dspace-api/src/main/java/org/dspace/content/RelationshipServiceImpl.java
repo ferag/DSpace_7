@@ -608,4 +608,9 @@ public class RelationshipServiceImpl implements RelationshipService {
             throws SQLException {
         return relationshipDAO.countByTypeName(context, typeName);
     }
+
+    @Override
+    public List<Relationship> findByItems(Context context, Item firstItem, Item secondItem) throws SQLException {
+        return relationshipDAO.findByItems(context, firstItem, secondItem);
+    }
 }

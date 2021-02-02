@@ -210,4 +210,14 @@ public interface RelationshipDAO extends GenericDAO<Relationship> {
      */
     int countByTypeName(Context context, String typeName)
             throws SQLException;
+
+    /**
+     * Find all the relationships between the two given items.
+     *
+     * @param context    The relevant DSpace context
+     * @param firstItem  the first item
+     * @param secondItem the second item
+     * @throws SQLException if database error
+     */
+    List<Relationship> findByItems(Context context, Item firstItem, Item secondItem) throws SQLException;
 }

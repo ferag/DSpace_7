@@ -37,6 +37,16 @@ public interface ConcytecWorkflowService {
     /**
      * Left type of the withdrawn relationship.
      */
+    public static final String IS_CORRECTION_OF_ITEM_RELATIONSHIP = "isCorrectionOfItem";
+
+    /**
+     * Right type of the withdrawn relationship.
+     */
+    public static final String IS_CORRECTED_BY_ITEM_RELATIONSHIP = "isCorrectedByItem";
+
+    /**
+     * Left type of the withdrawn relationship.
+     */
     public static final String IS_WITHDRAW_OF_ITEM_RELATIONSHIP = "isWithdrawOfItem";
 
     /**

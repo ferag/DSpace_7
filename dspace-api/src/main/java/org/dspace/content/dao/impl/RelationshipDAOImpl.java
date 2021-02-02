@@ -233,4 +233,20 @@ public class RelationshipDAOImpl extends AbstractHibernateDAO<Relationship> impl
         return count(context, criteriaQuery, criteriaBuilder, relationshipRoot);
     }
 
+    @Override
+    public List<Relationship> findByItems(Context context, Item firstItem, Item secondItem) throws SQLException {
+        CriteriaBuilder builder = getCriteriaBuilder(context);
+        CriteriaQuery<Relationship> criteriaQuery = getCriteriaQuery(builder, Relationship.class);
+        Root<Relationship> relationshipRoot = criteriaQuery.from(Relationship.class);
+        criteriaQuery.select(relationshipRoot);
+        criteriaQuery
+            .where(builder.or(
+                builder.or(builder.equal(relationshipRoot.get(Relationship_.leftItem), secondItem),
+                    builder.equal(relationshipRoot.get(Relationship_.rightItem), firstItem),
+                builder.or(builder.equal(relationshipRoot.get(Relationship_.leftItem), firstItem),
+                        builder.equal(relationshipRoot.get(Relationship_.rightItem), secondItem)))));
+
+        return list(context, criteriaQuery, true, Relationship.class, -1, -1);
+    }
+
 }

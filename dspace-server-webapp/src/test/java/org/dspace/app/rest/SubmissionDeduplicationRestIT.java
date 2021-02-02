@@ -7,6 +7,12 @@
  */
 package org.dspace.app.rest;
 
+import static com.jayway.jsonpath.JsonPath.read;
+import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
+import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_REINSTATED_BY_ITEM_RELATIONSHIP;
+import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP;
+import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_WITHDRAWN_BY_ITEM_RELATIONSHIP;
+import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_WITHDRAW_OF_ITEM_RELATIONSHIP;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.anEmptyMap;
 import static org.hamcrest.Matchers.is;
@@ -16,9 +22,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.dspace.app.rest.model.patch.AddOperation;
 import org.dspace.app.rest.model.patch.Operation;
@@ -27,17 +35,25 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.builder.CollectionBuilder;
 import org.dspace.builder.CommunityBuilder;
 import org.dspace.builder.EPersonBuilder;
+import org.dspace.builder.EntityTypeBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.builder.WorkflowItemBuilder;
 import org.dspace.builder.WorkspaceItemBuilder;
 import org.dspace.content.Collection;
+import org.dspace.content.EntityType;
 import org.dspace.content.Item;
+import org.dspace.content.RelationshipType;
 import org.dspace.content.WorkspaceItem;
+import org.dspace.content.service.WorkspaceItemService;
 import org.dspace.eperson.EPerson;
+import org.dspace.services.ConfigurationService;
 import org.dspace.workflow.WorkflowItem;
+import org.dspace.xmlworkflow.service.XmlWorkflowService;
 import org.dspace.xmlworkflow.storedcomponents.PoolTask;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.dspace.xmlworkflow.storedcomponents.service.PoolTaskService;
+import org.dspace.xmlworkflow.storedcomponents.service.XmlWorkflowItemService;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,11 +70,27 @@ public class SubmissionDeduplicationRestIT extends AbstractControllerIntegration
     @Autowired
     private PoolTaskService poolTaskService;
 
+    @Autowired
+    private WorkspaceItemService workspaceItemService;
+
+    @Autowired
+    private XmlWorkflowService xmlWorkflowService;
+
+    @Autowired
+    private XmlWorkflowItemService workflowItemService;
+
+    @Autowired
+    private ConfigurationService configurationService;
+
     private Collection collection;
+
+    private Collection institutionCollection;
 
     private EPerson submitter;
 
     private EPerson editor;
+
+    private EntityType publicationType;
 
     @Before
     public void setup() throws SQLException, AuthorizeException {
@@ -79,13 +111,39 @@ public class SubmissionDeduplicationRestIT extends AbstractControllerIntegration
             .withPassword(password)
             .build();
 
-        collection = CollectionBuilder.createCollection(context, parentCommunity)
-            .withName("Collection")
+        institutionCollection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Institution collection")
+            .withRelationshipType("InstitutionPublication")
             .withSubmitterGroup(submitter)
             .withWorkflowGroup(2, editor)
             .build();
 
+        collection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Collection")
+            .withRelationshipType("Publication")
+            .withSubmitterGroup(submitter)
+            .withWorkflowGroup(2, editor)
+            .build();
+
+        publicationType = EntityTypeBuilder.createEntityTypeBuilder(context, "Publication").build();
+
         context.restoreAuthSystemState();
+    }
+
+    @After
+    public void after() throws SQLException, IOException, AuthorizeException {
+        context.turnOffAuthorisationSystem();
+        workflowItemService.deleteByCollection(context, collection);
+        workspaceItemService.findAll(context).forEach(this::deleteWorkspaceItem);
+        context.restoreAuthSystemState();
+    }
+
+    private void deleteWorkspaceItem(WorkspaceItem workspaceItem) {
+        try {
+            workspaceItemService.deleteAll(context, workspaceItem);
+        } catch (SQLException | AuthorizeException | IOException e) {
+            throw new RuntimeException();
+        }
     }
 
     @Test
@@ -93,9 +151,9 @@ public class SubmissionDeduplicationRestIT extends AbstractControllerIntegration
 
         context.turnOffAuthorisationSystem();
 
-        createItem("Test publication", "Publication");
+        createItem("Test publication", collection);
 
-        WorkspaceItem workspaceItem = createWorkspaceItem("Test publication", "Publication");
+        WorkspaceItem workspaceItem = createWorkspaceItem("Test publication", collection);
 
         context.restoreAuthSystemState();
 
@@ -111,16 +169,16 @@ public class SubmissionDeduplicationRestIT extends AbstractControllerIntegration
 
         context.turnOffAuthorisationSystem();
 
-        createItem("Test publication", "InstitutionPublication");
+        createItem("Test publication", institutionCollection);
 
-        WorkspaceItem workspaceItem = createWorkspaceItem("Test publication", "InstitutionPublication");
+        WorkspaceItem workspaceItem = createWorkspaceItem("Test publication", institutionCollection);
 
         context.restoreAuthSystemState();
 
         String authToken = getAuthToken(submitter.getEmail(), password);
         getClient(authToken).perform(get("/api/submission/workspaceitems/" + workspaceItem.getID()))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.sections['detect-duplicate']", anEmptyMap()));
+            .andExpect(jsonPath("$.sections['detect-duplicate']").doesNotExist());
 
     }
 
@@ -129,16 +187,16 @@ public class SubmissionDeduplicationRestIT extends AbstractControllerIntegration
 
         context.turnOffAuthorisationSystem();
 
-        createItem("Test publication", "InstitutionPublication");
+        createItem("Test publication", institutionCollection);
 
-        WorkflowItem workflowItem = createWorkflowItem("Test publication", "InstitutionPublication");
+        WorkflowItem workflowItem = createWorkflowItem("Test publication", institutionCollection);
 
         context.restoreAuthSystemState();
 
         String authToken = getAuthToken(submitter.getEmail(), password);
         getClient(authToken).perform(get("/api/workflow/workflowitems/" + workflowItem.getID()))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.sections['detect-duplicate']", anEmptyMap()));
+            .andExpect(jsonPath("$.sections['detect-duplicate']").doesNotExist());
 
     }
 
@@ -147,10 +205,10 @@ public class SubmissionDeduplicationRestIT extends AbstractControllerIntegration
 
         context.turnOffAuthorisationSystem();
 
-        Item item = createItem("Test publication", "Publication");
+        Item item = createItem("Test publication", collection);
         String itemId = item.getID().toString();
 
-        WorkflowItem workflowItem = createWorkflowItem("Test publication", "Publication");
+        WorkflowItem workflowItem = createWorkflowItem("Test publication", collection);
 
         context.restoreAuthSystemState();
 
@@ -187,10 +245,10 @@ public class SubmissionDeduplicationRestIT extends AbstractControllerIntegration
 
         context.turnOffAuthorisationSystem();
 
-        Item item = createItem("Test publication", "Publication");
+        Item item = createItem("Test publication", collection);
         String itemId = item.getID().toString();
 
-        WorkflowItem workflowItem = createWorkflowItem("Test publication", "Publication");
+        WorkflowItem workflowItem = createWorkflowItem("Test publication", collection);
 
         context.restoreAuthSystemState();
 
@@ -234,16 +292,16 @@ public class SubmissionDeduplicationRestIT extends AbstractControllerIntegration
 
         context.turnOffAuthorisationSystem();
 
-        Item item = createItem("Test publication", "Publication");
+        Item item = createItem("Test publication", collection);
         String itemId = item.getID().toString();
 
-        WorkflowItem workflowItem = createWorkflowItem("Test publication", "Publication");
+        WorkflowItem workflowItem = createWorkflowItem("Test publication", collection);
 
-        createItem("Test publication", "InstitutionPublication");
+        createItem("Test publication", institutionCollection);
 
-        createWorkflowItem("Test publication", "Publication");
+        createWorkflowItem("Test publication", collection);
 
-        createWorkspaceItem("Test publication", "Publication");
+        createWorkspaceItem("Test publication", collection);
 
         context.restoreAuthSystemState();
 
@@ -258,25 +316,91 @@ public class SubmissionDeduplicationRestIT extends AbstractControllerIntegration
                 + ".workflowNote").doesNotExist());
     }
 
-    private Item createItem(String title, String relationshipType) {
+    @Test
+    public void testNoDuplicationOccursWithCorrection() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        configurationService.setProperty("item-correction.permit-all", true);
+        createIsCorrectionOfRelationship(publicationType);
+
+        Item item = createItem("Test publication", collection);
+
+        WorkspaceItem workspaceItemCorrection = requestForItemCorrection(submitter, item);
+
+        XmlWorkflowItem workflowItemCorrection = xmlWorkflowService.start(context, workspaceItemCorrection);
+
+        context.restoreAuthSystemState();
+
+        String submitterToken = getAuthToken(submitter.getEmail(), password);
+        getClient(submitterToken).perform(get("/api/workflow/workflowitems/" + workflowItemCorrection.getID()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.sections['detect-duplicate']", anEmptyMap()));
+
+    }
+
+    @Test
+    public void testNoDuplicationOccursWithWithdraw() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        configurationService.setProperty("item-withdrawn.permit-all", true);
+        createIsWithdrawOfRelationship(publicationType);
+
+        Item item = createItem("Test publication", collection);
+
+        WorkspaceItem workspaceItemWithdraw = requestForItemWithdraw(submitter, item);
+
+        XmlWorkflowItem workflowItemWithdraw = xmlWorkflowService.start(context, workspaceItemWithdraw);
+
+        context.restoreAuthSystemState();
+
+        String submitterToken = getAuthToken(submitter.getEmail(), password);
+        getClient(submitterToken).perform(get("/api/workflow/workflowitems/" + workflowItemWithdraw.getID()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.sections['detect-duplicate']", anEmptyMap()));
+
+    }
+
+    @Test
+    public void testNoDuplicationOccursWithReinstate() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        configurationService.setProperty("item-reinstate.permit-all", true);
+        createIsReinstatementOfRelationship(publicationType);
+
+        Item item = createItem("Test publication", collection);
+
+        WorkspaceItem workspaceItemReinstate = requestForItemReinstate(submitter, item);
+
+        XmlWorkflowItem workflowItemReinstate = xmlWorkflowService.start(context, workspaceItemReinstate);
+
+        context.restoreAuthSystemState();
+
+        String submitterToken = getAuthToken(submitter.getEmail(), password);
+        getClient(submitterToken).perform(get("/api/workflow/workflowitems/" + workflowItemReinstate.getID()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.sections['detect-duplicate']", anEmptyMap()));
+
+    }
+
+    private Item createItem(String title, Collection collection) {
         return ItemBuilder.createItem(context, collection)
             .withTitle(title)
-            .withRelationshipType(relationshipType)
             .build();
     }
 
-    private WorkspaceItem createWorkspaceItem(String title, String relationshipType) {
+    private WorkspaceItem createWorkspaceItem(String title, Collection collection) {
         return WorkspaceItemBuilder.createWorkspaceItem(context, collection)
             .withTitle(title)
-            .withRelationshipType(relationshipType)
             .withSubmitter(submitter)
             .build();
     }
 
-    private WorkflowItem createWorkflowItem(String title, String relationshipType) {
+    private WorkflowItem createWorkflowItem(String title, Collection collection) {
         return WorkflowItemBuilder.createWorkflowItem(context, collection)
             .withTitle(title)
-            .withRelationshipType(relationshipType)
             .withSubmitter(submitter)
             .build();
     }
@@ -298,6 +422,47 @@ public class SubmissionDeduplicationRestIT extends AbstractControllerIntegration
             .perform(post(BASE_REST_SERVER_URL + "/api/workflow/pooltasks/{id}", task.getID())
                 .contentType("application/x-www-form-urlencoded"))
             .andExpect(status().isNoContent());
+    }
+
+    private WorkspaceItem requestForItemCorrection(EPerson user, Item item) throws Exception {
+        return requestForItemCopy(user, item, "isCorrectionOfItem");
+    }
+
+    private WorkspaceItem requestForItemWithdraw(EPerson user, Item item) throws Exception {
+        return requestForItemCopy(user, item, "isWithdrawOfItem");
+    }
+
+    private WorkspaceItem requestForItemReinstate(EPerson user, Item item) throws Exception {
+        return requestForItemCopy(user, item, "isReinstatementOfItem");
+    }
+
+    private WorkspaceItem requestForItemCopy(EPerson user, Item item, String relationship) throws Exception {
+        AtomicInteger idRef = new AtomicInteger();
+
+        getClient(getAuthToken(user.getEmail(), password))
+            .perform(post("/api/submission/workspaceitems")
+                .param("relationship", relationship)
+                .param("item", item.getID().toString())
+                .contentType(org.springframework.http.MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(), "$.id")));
+
+        return workspaceItemService.find(context, idRef.get());
+    }
+
+    private RelationshipType createIsWithdrawOfRelationship(EntityType entityType) {
+        return createRelationshipTypeBuilder(context, entityType,
+            entityType, IS_WITHDRAW_OF_ITEM_RELATIONSHIP, IS_WITHDRAWN_BY_ITEM_RELATIONSHIP, 0, 1, 0, 1).build();
+    }
+
+    private RelationshipType createIsReinstatementOfRelationship(EntityType entityType) {
+        return createRelationshipTypeBuilder(context, entityType,
+            entityType, IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP, IS_REINSTATED_BY_ITEM_RELATIONSHIP, 0, 1, 0, 1).build();
+    }
+
+    private RelationshipType createIsCorrectionOfRelationship(EntityType entityType) {
+        return createRelationshipTypeBuilder(context, entityType,
+            entityType, "isCorrectionOfItem", "isCorrectedByItem", 0, 1, 0, 1).build();
     }
 
 }

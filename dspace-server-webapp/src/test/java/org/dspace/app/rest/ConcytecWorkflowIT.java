@@ -46,7 +46,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.dspace.app.deduplication.utils.DedupUtils;
 import org.dspace.app.rest.model.patch.AddOperation;
 import org.dspace.app.rest.model.patch.Operation;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
@@ -130,9 +129,6 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
     @Autowired
     private ItemService itemService;
-
-    @Autowired
-    private DedupUtils dedupUtils;
 
     private Collection institutionCollection;
 

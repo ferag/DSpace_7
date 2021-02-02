@@ -179,7 +179,7 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
     }
 
     private void performCreatingOfWorkspaceItems(Context context,LiveImportDataProvider dataProvider) {
-        int currentRecord = 0;
+
         int totalRecordWorked = 0;
         int countItemsProcessed = 0;
         try {
@@ -189,6 +189,7 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
                 Item item = itemIterator.next();
                 String id = buildID(item);
                 if (StringUtils.isNotBlank(id)) {
+                    int currentRecord = 0;
                     int recordsFound = dataProvider.getNumberOfResults(id);
                     log.info("{} records found", recordsFound);
                     int userPublicationsProcessed = 0;

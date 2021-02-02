@@ -190,8 +190,11 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
                 String id = buildID(item);
                 if (StringUtils.isNotBlank(id)) {
                     int recordsFound = dataProvider.getNumberOfResults(id);
-                    while (recordsFound == -1 || totalRecordWorked < recordsFound) {
-                        totalRecordWorked += fillWorkspaceItems(context, currentRecord, dataProvider, item, id);
+                    log.info("{} records found", recordsFound);
+                    int userPublicationsProcessed = 0;
+                    while (recordsFound == -1 || userPublicationsProcessed < recordsFound) {
+                        userPublicationsProcessed += fillWorkspaceItems(context, currentRecord, dataProvider, item, id);
+                        totalRecordWorked += userPublicationsProcessed;
                         currentRecord += LIMIT;
                     }
                 }

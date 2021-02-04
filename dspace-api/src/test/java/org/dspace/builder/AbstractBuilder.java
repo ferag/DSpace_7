@@ -14,10 +14,12 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.audit.AuditService;
 import org.dspace.app.metrics.service.CrisMetricsService;
+import org.dspace.app.nbevent.service.NBEventService;
 import org.dspace.app.orcid.factory.OrcidHistoryServiceFactory;
 import org.dspace.app.orcid.factory.OrcidQueueServiceFactory;
 import org.dspace.app.orcid.service.OrcidHistoryService;
 import org.dspace.app.orcid.service.OrcidQueueService;
+import org.dspace.app.suggestion.SolrSuggestionStorageService;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.factory.AuthorizeServiceFactory;
 import org.dspace.authorize.service.AuthorizeService;
@@ -114,6 +116,8 @@ public abstract class AbstractBuilder<T, S> {
     static CrisMetricsService crisMetricsService;
     static CrisLayoutMetric2BoxService crisLayoutMetric2BoxService;
     static HarvestedCollectionService harvestedCollectionService;
+    static NBEventService nbEventService;
+    static SolrSuggestionStorageService solrSuggestionService;
     static CollectionRoleService collectionRoleService;
 
     protected Context context;
@@ -181,6 +185,8 @@ public abstract class AbstractBuilder<T, S> {
         collectionRoleService = XmlWorkflowServiceFactory.getInstance().getCollectionRoleService();
 
         crisLayoutMetric2BoxService = CrisLayoutServiceFactory.getInstance().getMetric2BoxService();
+        nbEventService = new DSpace().getSingletonService(NBEventService.class);
+        solrSuggestionService = new DSpace().getSingletonService(SolrSuggestionStorageService.class);
     }
 
 
@@ -218,7 +224,7 @@ public abstract class AbstractBuilder<T, S> {
         orcidHistoryService = null;
         crisMetricsService = null;
         crisLayoutMetric2BoxService = null;
-
+        nbEventService = null;
         harvestedCollectionService = null;
     }
 

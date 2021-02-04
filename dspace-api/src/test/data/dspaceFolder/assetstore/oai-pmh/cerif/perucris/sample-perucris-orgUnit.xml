@@ -1,0 +1,16 @@
+<OrgUnit xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="OrgUnits/1cf5d730-60da-48fb-be56-aa4436cf1702">
+   <Type scheme="https://purl.org/pe-repo/ocde/sectorInstitucional">http://purl.org/pe-repo/concytec/institucion#administracionPublica</Type>
+   <Type scheme="https://purl.org/pe-repo/ocde/naturalezaInstitucion">PU</Type>
+   <Name xml:lang="es">Consejo Nacional de Ciencia, Tecnologia e Innovacion Tecnologica - Concytec</Name>
+   <Identifier type="https://purl.org/pe-repo/concytec/terminos#ruc">20135727394</Identifier>
+   <Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#ISNI">0000000121665691</Identifier>
+   <Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#ScopusAffiliationID">60089517</Identifier>
+   <Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#FundRefID">10.13039/501100010747</Identifier>
+   <ElectronicAddress>https://www.gob.pe/concytec</ElectronicAddress>
+   <ElectronicAddress>mailto:comunicacion@concytec.gob.pe</ElectronicAddress>
+   <PostAddress>
+      <StreetAddress>Calle Chinchon 867 - San Isidro</StreetAddress>
+      <AddressCountry>PE</AddressCountry>
+   </PostAddress>
+   <UbiGeo scheme="https://purl.org/pe-repo/inei/ubigeo">http://purl.org/pe-repo/inei/ubigeo/1501</UbiGeo>
+</OrgUnit>

@@ -1,0 +1,17 @@
+<Project xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="b6ed2663-cf02-4738-869f-ad3e781449da">
+   <Title xml:lang="en">Development of ecofriendly composite materials based on geopolymer matrix and reinforced with waste fibers</Title>
+   <StartDate>2016-11-29</StartDate>
+   <EndDate>2017-01-04</EndDate>
+   <Funded>
+      <By>
+         <DisplayName>Fondo Nacional de Desarrollo Cientifico y Tecnologico - Fondecyt</DisplayName>
+         <OrgUnit id="OrgUnits/3fb93c1e-e6c7-45e5-bdf7-e2cebde9e49d">
+            <Name xml:lang="es">Fondo Nacional de Desarrollo Cientifico y Tecnologico - Fondecyt</Name>
+            <PostAddress>
+               <AddressCountry>--</AddressCountry>
+            </PostAddress>
+            <UbiGeo scheme="https://purl.org/pe-repo/inei/ubigeo">---</UbiGeo>
+         </OrgUnit>
+      </By>
+   </Funded>
+</Project>

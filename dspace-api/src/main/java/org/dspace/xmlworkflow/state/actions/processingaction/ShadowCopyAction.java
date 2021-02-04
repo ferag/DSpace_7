@@ -146,6 +146,11 @@ public class ShadowCopyAction extends ProcessingAction {
             itemService.withdraw(ctx, itemToCorrectCopy);
         }
 
+        Item mergedInItem = concytecWorkflowService.findMergeOfItem(ctx, itemToCorrectCopy);
+        if (mergedInItem != null) {
+            itemToCorrectCopy = mergedInItem;
+        }
+
         WorkspaceItem correctionWorkspaceItemCopy = createItemCopyCorrection(ctx, itemToCorrectCopy.getID());
         concytecWorkflowService.createShadowRelationship(ctx, correctionItem, correctionWorkspaceItemCopy.getItem());
 
@@ -169,17 +174,21 @@ public class ShadowCopyAction extends ProcessingAction {
         return withdrawnWorkspaceItemCopy;
     }
 
-    private WorkspaceItem createShadowCopyForReinstate(Context context, Item reinstateItem, Item itemToReinstate)
+    private WorkspaceItem createShadowCopyForReinstate(Context ctx, Item reinstateItem, Item itemToReinstate)
         throws SQLException, AuthorizeException {
 
-        Item itemToReinstateCopy = concytecWorkflowService.findShadowItemCopy(context, itemToReinstate);
-        if (itemToReinstateCopy == null || !itemToReinstateCopy.isWithdrawn()) {
+        Item itemToReinstateCopy = concytecWorkflowService.findShadowItemCopy(ctx, itemToReinstate);
+        if (itemToReinstateCopy == null || !itemToReinstateCopy.isWithdrawn() || isMergedIn(ctx, itemToReinstateCopy)) {
             return null;
         }
 
-        WorkspaceItem reinstateWorkspaceItemCopy = createItemCopyReinstate(context, itemToReinstateCopy.getID());
-        concytecWorkflowService.createShadowRelationship(context, reinstateItem, reinstateWorkspaceItemCopy.getItem());
+        WorkspaceItem reinstateWorkspaceItemCopy = createItemCopyReinstate(ctx, itemToReinstateCopy.getID());
+        concytecWorkflowService.createShadowRelationship(ctx, reinstateItem, reinstateWorkspaceItemCopy.getItem());
         return reinstateWorkspaceItemCopy;
+    }
+
+    private boolean isMergedIn(Context context, Item itemToReinstateCopy) throws SQLException {
+        return concytecWorkflowService.findMergeOfItem(context, itemToReinstateCopy) != null;
     }
 
     private Collection findDirectorioCollectionByRelationshipType(Context context, Item item)

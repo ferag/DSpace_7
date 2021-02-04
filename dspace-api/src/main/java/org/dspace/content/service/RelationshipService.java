@@ -381,4 +381,14 @@ public interface RelationshipService extends DSpaceCRUDService<Relationship> {
     void delete(Context context, Relationship relationship, boolean copyToLeftItem, boolean copyToRightItem,
             boolean bypassValidation) throws SQLException, AuthorizeException;
 
+    /**
+     * Find all the relationships between the two given items.
+     *
+     * @param context    The relevant DSpace context
+     * @param firstItem  the first item
+     * @param secondItem the second item
+     * @throws SQLException if database error
+     */
+    public List<Relationship> findByItems(Context context, Item firstItem, Item secondItem) throws SQLException;
+
 }

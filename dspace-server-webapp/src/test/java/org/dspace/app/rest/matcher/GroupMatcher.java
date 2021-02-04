@@ -45,7 +45,8 @@ public class GroupMatcher {
         return matchEmbeds(
                 "subgroups[]",
                 "epersons[]",
-                "object"
+                "object",
+                "allMembers[]"
         );
     }
 

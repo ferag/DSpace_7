@@ -20,12 +20,20 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.rest.Parameter;
 import org.dspace.app.rest.SearchRestMethod;
+import org.dspace.app.rest.authorization.AuthorizationFeature;
+import org.dspace.app.rest.authorization.AuthorizationFeatureService;
+import org.dspace.app.rest.authorization.AuthorizationRestUtil;
+import org.dspace.app.rest.authorization.impl.ItemCorrectionFeature;
+import org.dspace.app.rest.authorization.impl.ItemReinstateRequestFeature;
+import org.dspace.app.rest.authorization.impl.ItemWithdrawRequestFeature;
 import org.dspace.app.rest.converter.WorkspaceItemConverter;
 import org.dspace.app.rest.exception.DSpaceBadRequestException;
 import org.dspace.app.rest.exception.RESTAuthorizationException;
 import org.dspace.app.rest.exception.RepositoryMethodNotImplementedException;
 import org.dspace.app.rest.exception.UnprocessableEntityException;
+import org.dspace.app.rest.model.BaseObjectRest;
 import org.dspace.app.rest.model.ErrorRest;
+import org.dspace.app.rest.model.ItemRest;
 import org.dspace.app.rest.model.WorkspaceItemRest;
 import org.dspace.app.rest.model.patch.Operation;
 import org.dspace.app.rest.model.patch.Patch;
@@ -63,6 +71,7 @@ import org.dspace.submit.AbstractProcessingStep;
 import org.dspace.util.UUIDUtils;
 import org.dspace.validation.service.ValidationService;
 import org.dspace.versioning.ItemCorrectionService;
+import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -124,6 +133,12 @@ public class WorkspaceItemRestRepository extends DSpaceRestRepository<WorkspaceI
     ImportService importService;
 
     @Autowired
+    AuthorizationFeatureService authorizationFeatureService;
+
+    @Autowired
+    AuthorizationRestUtil authorizationRestUtil;
+
+    @Autowired
     private UriListHandlerService uriListHandlerService;
 
     private SubmissionConfigReader submissionConfigReader;
@@ -178,25 +193,34 @@ public class WorkspaceItemRestRepository extends DSpaceRestRepository<WorkspaceI
 
     @Override
     protected WorkspaceItemRest createAndReturn(Context context) throws SQLException, AuthorizeException {
-        WorkspaceItem source;
-        String itemUUID = getRequestService().getCurrentRequest().getHttpServletRequest().getParameter("item");
-        String relationship = getRequestService().getCurrentRequest().getHttpServletRequest()
-                .getParameter("relationship");
 
-        if ((StringUtils.isNotBlank(itemUUID) && StringUtils.isNotBlank(relationship))
-                || StringUtils.isNotBlank(relationship)) {
+        HttpServletRequest httpServletRequest = getRequestService().getCurrentRequest().getHttpServletRequest();
+        String itemUUID = httpServletRequest.getParameter("item");
+        String relationship = httpServletRequest.getParameter("relationship");
+
+        WorkspaceItem source;
+
+
+        if ((StringUtils.isNotBlank(itemUUID) && StringUtils.isNotBlank(relationship))) {
+
+            UUID itemId = UUIDUtils.fromString(itemUUID);
+
+            if (itemId != null && !isAuthorizedToCreateFromItem(context, itemId, relationship)) {
+                throw new RESTAuthorizationException("The user is not allowed to correct the given item");
+            }
+
             try {
-                source = itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context,
-                        getRequestService().getCurrentRequest(), UUIDUtils.fromString(itemUUID), relationship);
+                source = itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context, itemId, relationship);
             } catch (AuthorizeException e) {
                 throw new RESTAuthorizationException(e);
             } catch (Exception e) {
+                log.error(e.getMessage(), e);
                 throw new UnprocessableEntityException(e.getMessage());
             }
+
         } else if (StringUtils.isNotBlank(itemUUID)) {
             try {
-                source = itemCorrectionService.createWorkspaceItemByItem(context,
-                        getRequestService().getCurrentRequest(), UUIDUtils.fromString(itemUUID));
+                source = itemCorrectionService.createWorkspaceItemByItem(context, UUIDUtils.fromString(itemUUID));
             } catch (Exception e) {
                 throw new UnprocessableEntityException(e.getMessage());
             }
@@ -525,6 +549,43 @@ public class WorkspaceItemRestRepository extends DSpaceRestRepository<WorkspaceI
     @Override
     public Class<Integer> getPKClass() {
         return Integer.class;
+    }
+
+    private boolean isAuthorizedToCreateFromItem(Context ctx, UUID itemId, String relationship) throws SQLException {
+
+        String featureName = calculateItemFeatureName(relationship);
+
+        if (featureName == null) {
+            return true;
+        }
+
+        AuthorizationFeature feature = authorizationFeatureService.find(featureName);
+        if (feature == null) {
+            throw new IllegalStateException("No AuthorizationFeature configured with name " + featureName);
+        }
+
+        return feature.isAuthorized(ctx, findItemRestById(ctx, itemId.toString()));
+    }
+
+    private String calculateItemFeatureName(String relationship) {
+        if (relationship.equals(itemCorrectionService.getCorrectionRelationshipName())) {
+            return ItemCorrectionFeature.NAME;
+        }
+
+        if (relationship.equals(ConcytecWorkflowService.IS_WITHDRAW_OF_ITEM_RELATIONSHIP)) {
+            return ItemWithdrawRequestFeature.NAME;
+        }
+
+        if (relationship.equals(ConcytecWorkflowService.IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP)) {
+            return ItemReinstateRequestFeature.NAME;
+        }
+
+        return null;
+    }
+
+    private BaseObjectRest<?> findItemRestById(Context context, String itemId) throws SQLException {
+        String objectId = ItemCorrectionFeature.NAME + "_" + ItemRest.CATEGORY + "." + ItemRest.NAME + "_" + itemId;
+        return authorizationRestUtil.getObject(context, objectId);
     }
 
     private void merge(Context context, List<ImportRecord> records, WorkspaceItem item) throws SQLException {

@@ -86,6 +86,78 @@
             </map>
         </property>
     </bean>
+    
+    <!-- relationship.type is exactly Person -->
+    <bean id="relationship-type-equals-person_condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="relationship.type" />
+                <entry key="pattern" value="^Person$|^InstitutionPerson$" />
+            </map>
+        </property>
+    </bean>
+    
+    <!-- has orcid identifier set -->
+    <bean id="has-orcid-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="person.identifier.orcid" />
+            </map>
+        </property>
+    </bean>
+    
+    <!-- has dni identifier set -->
+    <bean id="has-dni-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.identifier.dni" />
+            </map>
+        </property>
+    </bean>
+    
+    <!-- has dina identifier set -->
+    <bean id="has-dina-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.identifier.dina" />
+            </map>
+        </property>
+    </bean>
+    
+    <!-- has renacyt identifier set -->
+    <bean id="has-renacyt-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.identifier.renacyt" />
+            </map>
+        </property>
+    </bean>
+    
+    <!-- has scopus author identifier set -->
+    <bean id="has-scopus-author-id-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="person.identifier.scopus-author-id" />
+            </map>
+        </property>
+    </bean>
+    
+    <!-- has researcher identifier set -->
+    <bean id="has-researcher-id-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="person.identifier.rid" />
+            </map>
+        </property>
+    </bean>
+    
 
     <!--
          A filter that checks if any value of dc.identifier.uri contains "10.12345/".
@@ -329,6 +401,28 @@
                                 </map>
                             </property>
                         </bean>
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+    
+    <bean id="person-has-at-least-one-id_filter" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="relationship-type-equals-person_condition"/>
+                            </property>
+                        </bean>
+                        <ref bean="has-orcid-set_condition" />
+                        <ref bean="has-dni-set_condition" />
+                        <ref bean="has-dina-set_condition" />
+                        <ref bean="has-renacyt-set_condition" />
+                        <ref bean="has-scopus-author-id-set_condition" />
+                        <ref bean="has-researcher-id-set_condition" />
                     </list>
                 </property>
             </bean>

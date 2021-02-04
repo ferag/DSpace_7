@@ -10,6 +10,7 @@ package org.dspace.builder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.Objects;
 
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Bitstream;
@@ -22,6 +23,7 @@ import org.dspace.content.WorkspaceItem;
 import org.dspace.content.service.WorkspaceItemService;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
+import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 
 /**
  * Builder to construct WorkspaceItem objects
@@ -88,6 +90,9 @@ public class WorkspaceItemBuilder extends AbstractBuilder<WorkspaceItem, Workspa
      * @throws IOException
      */
     public static void deleteWorkspaceItem(Integer id) throws SQLException, IOException {
+        if (Objects.isNull(id)) {
+            return;
+        }
         try (Context c = new Context()) {
             c.turnOffAuthorisationSystem();
             WorkspaceItem workspaceItem = workspaceItemService.find(c, id);
@@ -110,6 +115,13 @@ public class WorkspaceItemBuilder extends AbstractBuilder<WorkspaceItem, Workspa
             workspaceItem = c.reloadEntity(workspaceItem);
             if (workspaceItem != null) {
                 delete(c, workspaceItem);
+            } else {
+                item = c.reloadEntity(item);
+                // check if the wsi has been pushed to the workflow
+                XmlWorkflowItem wfi = workflowItemService.findByItem(c, item);
+                if (wfi != null) {
+                    workflowItemService.delete(c, wfi);
+                }
             }
             item = c.reloadEntity(item);
             if (item != null) {
@@ -130,6 +142,17 @@ public class WorkspaceItemBuilder extends AbstractBuilder<WorkspaceItem, Workspa
         try {
             itemService.addMetadata(context, workspaceItem.getItem(), schema, element, qualifier, null,
                     value, null, -1);
+        } catch (Exception e) {
+            return handleException(e);
+        }
+        return this;
+    }
+
+    protected WorkspaceItemBuilder addMetadataValue(final String schema,
+        final String element, final String qualifier, final String value, final String authority) {
+        try {
+            itemService.addMetadata(context, workspaceItem.getItem(), schema, element, qualifier, null,
+                value, authority, 600);
         } catch (Exception e) {
             return handleException(e);
         }
@@ -161,8 +184,16 @@ public class WorkspaceItemBuilder extends AbstractBuilder<WorkspaceItem, Workspa
         return addMetadataValue(MetadataSchemaEnum.DC.getName(), "date", "issued", new DCDate(issueDate).toString());
     }
 
+    public WorkspaceItemBuilder withType(final String type) {
+        return addMetadataValue(MetadataSchemaEnum.DC.getName(), "type", null, type);
+    }
+
     public WorkspaceItemBuilder withAuthor(final String authorName) {
         return addMetadataValue(MetadataSchemaEnum.DC.getName(), "contributor", "author", authorName);
+    }
+
+    public WorkspaceItemBuilder withAuthor(final String authorName, final String authority) {
+        return addMetadataValue(MetadataSchemaEnum.DC.getName(), "contributor", "author", authorName, authority);
     }
 
     public WorkspaceItemBuilder withAuthorAffilitation(final String affilation) {
@@ -195,6 +226,42 @@ public class WorkspaceItemBuilder extends AbstractBuilder<WorkspaceItem, Workspa
 
     public WorkspaceItemBuilder withDoiIdentifier(String doi) {
         return addMetadataValue("dc", "identifier", "doi", doi);
+    }
+
+    public WorkspaceItemBuilder withOrcidIdentifier(String orcid) {
+        return addMetadataValue("person", "identifier", "orcid", orcid);
+    }
+
+    public WorkspaceItemBuilder withDniIdentifier(String dni) {
+        return addMetadataValue("perucris", "identifier", "dni", dni);
+    }
+
+    public WorkspaceItemBuilder withDinaIdentifier(String dina) {
+        return addMetadataValue("perucris", "identifier", "dina", dina);
+    }
+
+    public WorkspaceItemBuilder withRenacytIdentifier(String renacyt) {
+        return addMetadataValue("perucris", "identifier", "renacyt", renacyt);
+    }
+
+    public WorkspaceItemBuilder withScopusIdentifier(String scopus) {
+        return addMetadataValue("person","identifier","scopus-author-id", scopus);
+    }
+
+    public WorkspaceItemBuilder withResearcherIdentifier(String rid) {
+        return addMetadataValue("person", "identifier", "rid", rid);
+    }
+
+    public WorkspaceItemBuilder withAuthorOrcid(String orcid) {
+        return addMetadataValue("perucris", "author", "orcid", orcid);
+    }
+
+    public WorkspaceItemBuilder withAuthorResearcherId(String rid) {
+        return addMetadataValue("perucris", "author", "rid", rid);
+    }
+
+    public WorkspaceItemBuilder withAuthorScopusIdentifier(String scopus) {
+        return addMetadataValue("perucris", "author", "scopus-author-id", scopus);
     }
 
     public WorkspaceItemBuilder grantLicense() {

@@ -9,11 +9,11 @@ package org.dspace.builder;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.CharEncoding;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Community;
 import org.dspace.content.MetadataSchemaEnum;
@@ -70,7 +70,7 @@ public class CommunityBuilder extends AbstractDSpaceObjectBuilder<Community> {
     }
 
     public CommunityBuilder withLogo(String content) throws AuthorizeException, IOException, SQLException {
-        try (InputStream is = IOUtils.toInputStream(content, CharEncoding.UTF_8)) {
+        try (InputStream is = IOUtils.toInputStream(content, StandardCharsets.UTF_8)) {
             communityService.setLogo(context, community, is);
         }
         return this;
@@ -107,6 +107,12 @@ public class CommunityBuilder extends AbstractDSpaceObjectBuilder<Community> {
             groupService.addMember(context, g, m);
         }
         groupService.update(context, g);
+        return this;
+    }
+
+    public CommunityBuilder withInstitutionalScopedRole(Group group) {
+        addMetadataValue(community, "perucris", "community", "institutional-scoped-role", null,
+            group.getName(), group.getID().toString(), 600);
         return this;
     }
 

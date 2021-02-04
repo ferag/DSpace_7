@@ -7,16 +7,25 @@
  */
 package org.dspace.discovery;
 
+import static org.dspace.content.Item.ANY;
+
 import java.sql.SQLException;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.dspace.authorize.service.AuthorizeService;
+import org.dspace.content.Community;
+import org.dspace.content.service.CommunityService;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.GroupType;
 import org.dspace.eperson.service.GroupService;
+import org.dspace.services.ConfigurationService;
+import org.dspace.util.UUIDUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -24,6 +33,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * based on the discovery configuration used.
  */
 public class SolrServiceWorkspaceWorkflowRestrictionPlugin implements SolrServiceSearchPlugin {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SolrServiceWorkspaceWorkflowRestrictionPlugin.class);
 
     /**
      * The name of the discover configuration used to search for inprogress submission in the mydspace
@@ -45,6 +56,12 @@ public class SolrServiceWorkspaceWorkflowRestrictionPlugin implements SolrServic
 
     @Autowired(required = true)
     protected AuthorizeService authorizeService;
+
+    @Autowired(required = true)
+    protected ConfigurationService configurationService;
+
+    @Autowired(required = true)
+    protected CommunityService communityService;
 
     @Override
     public void additionalSearchParameters(
@@ -69,8 +86,7 @@ public class SolrServiceWorkspaceWorkflowRestrictionPlugin implements SolrServic
                     "An anonymous user cannot perform a workspace or workflow search");
         }
         if (isWorkspace) {
-            // insert filter by submitter
-            solrQuery.addFilterQuery("submitter_authority:(" + currentUser.getID() + ")");
+            addWorkspaceFilters(context, solrQuery);
         } else if (isWorkflow && !isWorkflowAdmin) {
             // Retrieve all the groups the current user is a member of !
             Set<Group> groups;
@@ -89,6 +105,67 @@ public class SolrServiceWorkspaceWorkflowRestrictionPlugin implements SolrServic
             controllerQuery.append(")");
             solrQuery.addFilterQuery(controllerQuery.toString());
         }
+    }
+
+    private void addWorkspaceFilters(Context context, SolrQuery solrQuery) throws SearchServiceException {
+
+        EPerson currentUser = context.getCurrentUser();
+
+        Group institutionalScopedRole = findInstitutionalScopedRole(context);
+        if (institutionalScopedRole == null) {
+            addSubmitterFilterQuery(solrQuery, currentUser);
+            return;
+        }
+
+        Community institution = findInstitutionByScopedRole(context, institutionalScopedRole);
+        if (institution == null) {
+            LOGGER.warn("No institution found for the scoped role with id " + institutionalScopedRole.getID());
+            addSubmitterFilterQuery(solrQuery, currentUser);
+        } else {
+            solrQuery.addFilterQuery("location.comm:(" + institution.getID() + ")");
+        }
+
+    }
+
+    private Group findInstitutionalScopedRole(Context context) throws SearchServiceException {
+        try {
+            return groupService.allMemberGroups(context, context.getCurrentUser()).stream()
+                .filter(group -> GroupType.SCOPED == groupService.getGroupType(group))
+                .findFirst().orElse(null);
+        } catch (SQLException e) {
+            throw new SearchServiceException(e.getMessage(), e);
+        }
+    }
+
+    private Community findInstitutionByScopedRole(Context context, Group institutionalScopedRole)
+        throws SearchServiceException {
+
+        String institutionRootId = configurationService.getProperty("institution.parent-community-id");
+
+        try {
+
+            Community institutionRoot = communityService.find(context, UUIDUtils.fromString(institutionRootId));
+            if (institutionRoot == null) {
+                throw new IllegalStateException("No institutions parent community found");
+            }
+
+            return institutionRoot.getSubcommunities().stream()
+                .filter(institution -> isRelatedToScopedRole(institution, institutionalScopedRole))
+                .findFirst().orElse(null);
+
+        } catch (SQLException e) {
+            throw new SearchServiceException(e.getMessage(), e);
+        }
+
+    }
+
+    private boolean isRelatedToScopedRole(Community institution, Group institutionalScopedRole) {
+        return communityService.getMetadata(institution, "perucris", "community", "institutional-scoped-role", ANY)
+            .stream().anyMatch(metadata -> institutionalScopedRole.getID().toString().equals(metadata.getAuthority()));
+    }
+
+    private void addSubmitterFilterQuery(SolrQuery solrQuery, EPerson submitter) {
+        solrQuery.addFilterQuery("submitter_authority:(" + submitter.getID() + ")");
     }
 
     private boolean isAdmin(Context context) throws SearchServiceException {

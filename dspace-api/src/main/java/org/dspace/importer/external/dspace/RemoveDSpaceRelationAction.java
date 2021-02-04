@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import org.dspace.app.profile.service.AfterProfileDeleteAction;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
-import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,13 +25,11 @@ public class RemoveDSpaceRelationAction implements AfterProfileDeleteAction {
 
 
     private final DSpaceItemRelationshipService dSpaceItemRelationshipService;
-    private final ItemService itemService;
 
     @Autowired
     public RemoveDSpaceRelationAction(
-        DSpaceItemRelationshipService dSpaceItemRelationshipService, ItemService itemService) {
+        DSpaceItemRelationshipService dSpaceItemRelationshipService) {
         this.dSpaceItemRelationshipService = dSpaceItemRelationshipService;
-        this.itemService = itemService;
     }
 
 

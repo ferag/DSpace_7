@@ -27,4 +27,20 @@
         <property name="itemService" ref="org.dspace.content.ItemServiceImpl"/>
         <property name="uploadConfigurationService" ref="uploadConfigurationService"/>
     </bean>
+    
+    <bean name="personHasAtLeastOneIdValidation" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.personIdRequired"/>
+        <property name="metadataFields">
+           <list>
+               <value>person.identifier.orcid</value>
+               <value>perucris.identifier.dni</value>
+               <value>perucris.identifier.dina</value>
+               <value>perucris.identifier.renacyt</value>
+               <value>person.identifier.scopus-author-id</value>
+               <value>person.identifier.rid</value>
+           </list>
+        </property>
+        <property name="filter" ref="person-has-at-least-one-id_filter"/>
+    </bean>
+
 </beans>

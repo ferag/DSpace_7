@@ -46,6 +46,25 @@ public interface RelationshipTypeService extends DSpaceCRUDService<RelationshipT
                                             throws SQLException;
 
     /**
+     * Retrieves the RelationshipTypes for which the given parameters all match the
+     * one in the returned RelationshipType.
+     *
+     * @param context       The relevant DSpace context
+     * @param type          The EntityType that needs to match for the returned
+     *                      relationship types
+     * @param isLeftType    true if the given type refers to the left type, false if
+     *                      it refers to the right type
+     * @param leftwardType  The leftwardType String that needs to match for the
+     *                      returned RelationshipType
+     * @param rightwardType The rightwardType String that needs to match for the
+     *                      returned RelationshipType
+     * @return the found relationship types
+     * @throws SQLException If something goes wrong
+     */
+    List<RelationshipType> findByTypeAndTypeNames(Context context, EntityType type, boolean isLeftType,
+        String leftwardType, String rightwardType) throws SQLException;
+
+    /**
      * Retrieves all RelationshipType objects currently in the system
      * @param context   The relevant DSpace context
      * @return          The list of all RelationshipType objects currently in the system

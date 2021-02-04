@@ -143,7 +143,7 @@ public class WorkflowItemBuilder extends AbstractBuilder<XmlWorkflowItem, XmlWor
     protected WorkflowItemBuilder addMetadataValue(final String schema,
             final String element, final String qualifier, final String value) {
         try {
-            itemService.addMetadata(context, workspaceItem.getItem(), schema, element, qualifier, Item.ANY, value);
+            itemService.addMetadata(context, workspaceItem.getItem(), schema, element, qualifier, null, value);
         } catch (Exception e) {
             return handleException(e);
         }
@@ -153,7 +153,7 @@ public class WorkflowItemBuilder extends AbstractBuilder<XmlWorkflowItem, XmlWor
     protected WorkflowItemBuilder setMetadataSingleValue(final String schema,
             final String element, final String qualifier, final String value) {
         try {
-            itemService.setMetadataSingleValue(context, workspaceItem.getItem(), schema, element, qualifier, Item.ANY,
+            itemService.setMetadataSingleValue(context, workspaceItem.getItem(), schema, element, qualifier, null,
                     value);
         } catch (Exception e) {
             return handleException(e);
@@ -179,8 +179,32 @@ public class WorkflowItemBuilder extends AbstractBuilder<XmlWorkflowItem, XmlWor
         return addMetadataValue(MetadataSchemaEnum.DC.getName(), "contributor", "author", authorName);
     }
 
+    public WorkflowItemBuilder withAuthorAffiliation(final String affilation) {
+        return addMetadataValue(MetadataSchemaEnum.OAIRECERIF.getName(), "author", "affiliation", affilation);
+    }
+
     public WorkflowItemBuilder withSubject(final String subject) {
         return addMetadataValue(MetadataSchemaEnum.DC.getName(), "subject", null, subject);
+    }
+
+    public WorkflowItemBuilder withDoiIdentifier(final String doi) {
+        return addMetadataValue(MetadataSchemaEnum.DC.getName(), "identifier", "doi", doi);
+    }
+
+    public WorkflowItemBuilder withRelationshipType(String relationshipType) {
+        return addMetadataValue("relationship", "type", null, relationshipType);
+    }
+
+    public WorkflowItemBuilder withIdentifierOther(final String identifierOther) {
+        return addMetadataValue(MetadataSchemaEnum.DC.getName(), "identifier", "other", identifierOther);
+    }
+
+    public WorkflowItemBuilder withIdentifierIsi(String isi) {
+        return addMetadataValue(MetadataSchemaEnum.DC.getName(), "identifier", "isi", isi);
+    }
+
+    public WorkflowItemBuilder withScopusIdentifier(String issn) {
+        return addMetadataValue("dc", "identifier", "scopus", issn);
     }
 
     public WorkflowItemBuilder grantLicense() {

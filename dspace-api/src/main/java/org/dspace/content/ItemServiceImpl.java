@@ -7,10 +7,13 @@
  */
 package org.dspace.content;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
@@ -24,6 +27,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.util.AuthorizeUtil;
+import org.dspace.authority.service.AuthorityValueService;
 import org.dspace.authorize.AuthorizeConfiguration;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.ResourcePolicy;
@@ -41,12 +45,16 @@ import org.dspace.content.service.InstallItemService;
 import org.dspace.content.service.ItemService;
 import org.dspace.content.service.MetadataSchemaService;
 import org.dspace.content.service.RelationshipService;
+import org.dspace.content.service.RelationshipTypeService;
 import org.dspace.content.service.WorkspaceItemService;
 import org.dspace.content.virtual.VirtualMetadataPopulator;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.core.I18nUtil;
 import org.dspace.core.LogManager;
+import org.dspace.discovery.DiscoverQuery;
+import org.dspace.discovery.DiscoverResultIterator;
+import org.dspace.discovery.indexobject.IndexableItem;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.event.Event;
@@ -58,6 +66,7 @@ import org.dspace.services.ConfigurationService;
 import org.dspace.versioning.service.VersioningService;
 import org.dspace.workflow.WorkflowItemService;
 import org.dspace.workflow.factory.WorkflowServiceFactory;
+import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -113,10 +122,16 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
     protected RelationshipService relationshipService;
 
     @Autowired(required = true)
+    protected RelationshipTypeService relationshipTypeService;
+
+    @Autowired(required = true)
     protected VirtualMetadataPopulator virtualMetadataPopulator;
 
     @Autowired(required = true)
     private RelationshipMetadataService relationshipMetadataService;
+
+    @Autowired(required = true)
+    private ConcytecWorkflowService concytecWorkflowService;
 
     protected ItemServiceImpl() {
         super();
@@ -683,6 +698,11 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
 
         log.info(LogManager.getHeader(context, "delete_item", "item_id="
             + item.getID()));
+
+        Collection owningCollection = item.getOwningCollection();
+        if (owningCollection != null && collectionService.isDirectorioCollection(context, owningCollection)) {
+            resetWillBeReferencedAuthorities(context, item);
+        }
 
         // Remove relationships
         for (Relationship relationship : relationshipService.findByItem(context, item)) {
@@ -1434,5 +1454,64 @@ prevent the generation of resource policy entry values with null dspace_object a
         return listToReturn;
     }
 
+    @Override
+    public Iterator<Item> findByAuthorityControlledMetadataFields(Context context, String authority,
+        String relationshipType) {
+
+        String query = choiceAuthorityService.getAuthorityControlledFieldsByRelationshipType(relationshipType).stream()
+            .map(field -> field.replaceAll("_", ".") + "_authority: \"" + authority + "\"")
+            .collect(Collectors.joining(" OR "));
+
+        if (isEmpty(query)) {
+            return Collections.emptyIterator();
+        }
+
+        DiscoverQuery discoverQuery = new DiscoverQuery();
+        discoverQuery.setDSpaceObjectFilter(IndexableItem.TYPE);
+        discoverQuery.addFilterQueries(query);
+
+        return new DiscoverResultIterator<Item, UUID>(context, discoverQuery);
+    }
+
+    private void resetWillBeReferencedAuthorities(Context context, Item item) throws SQLException, AuthorizeException {
+
+        String itemId = item.getID().toString();
+
+        String relationshipType = getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
+        if (relationshipType == null) {
+            return;
+        }
+
+        Item institutionItem = findInstitutionItem(context, item);
+        if (institutionItem == null) {
+            return;
+        }
+
+        Iterator<Item> items = findByAuthorityControlledMetadataFields(context, itemId, relationshipType);
+        String authorityToSet = AuthorityValueService.REFERENCE + "SHADOW::" + institutionItem.getID();
+
+        while (items.hasNext()) {
+            Item itemToUpdate = items.next();
+
+            itemToUpdate.getMetadata().stream()
+                .filter(metadataValue -> itemId.equals(metadataValue.getAuthority()))
+                .forEach(metadataValue -> metadataValue.setAuthority(authorityToSet));
+
+            update(context, itemToUpdate);
+        }
+    }
+
+    private Item findInstitutionItem(Context context, Item item) throws SQLException {
+        try {
+            return concytecWorkflowService.findCopiedItem(context, item);
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Item getReference(Context context, UUID id) throws SQLException {
+        return itemDAO.getReference(context, id);
+    }
 
 }

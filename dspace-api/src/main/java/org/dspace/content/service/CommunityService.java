@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.MissingResourceException;
+import java.util.function.Predicate;
 
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Bitstream;
@@ -28,7 +28,6 @@ import org.dspace.eperson.Group;
  * @author kevinvandevelde at atmire.com
  */
 public interface CommunityService extends DSpaceObjectService<Community>, DSpaceObjectLegacySupportService<Community> {
-
 
     /**
      * Create a new top-level community, with a new ID.
@@ -87,36 +86,6 @@ public interface CommunityService extends DSpaceObjectService<Community>, DSpace
      * @throws SQLException if database error
      */
     public List<Community> findAllTop(Context context) throws SQLException;
-
-    /**
-     * Get the value of a metadata field
-     *
-     * @param community community
-     * @param field     the name of the metadata field to get
-     * @return the value of the metadata field
-     * @throws IllegalArgumentException if the requested metadata field doesn't exist
-     * @deprecated
-     */
-    @Override
-    @Deprecated
-    public String getMetadata(Community community, String field);
-
-
-    /**
-     * Set a metadata value
-     *
-     * @param context   context
-     * @param community community
-     * @param field     the name of the metadata field to get
-     * @param value     value to set the field to
-     * @throws IllegalArgumentException if the requested metadata field doesn't exist
-     * @throws MissingResourceException if resource missing
-     * @throws SQLException             if database error
-     * @deprecated
-     */
-    @Deprecated
-    public void setMetadata(Context context, Community community, String field, String value)
-        throws MissingResourceException, SQLException;
 
     /**
      * Give the community a logo. Passing in <code>null</code> removes any
@@ -196,6 +165,19 @@ public interface CommunityService extends DSpaceObjectService<Community>, DSpace
 
     public List<Collection> getAllCollections(Context context, Community community) throws SQLException;
 
+    /**
+     * Return an array of collections of this community and its subcommunities that
+     * matches the given predicate.
+     *
+     * @param context   context
+     * @param community community
+     * @param predicate a predicate on the collections to evaluate
+     * @return an array of collections
+     * @throws SQLException if database error
+     */
+
+    public List<Collection> getCollections(Context context, Community community, Predicate<Collection> predicate)
+        throws SQLException;
 
     /**
      * Add an exisiting collection to the community

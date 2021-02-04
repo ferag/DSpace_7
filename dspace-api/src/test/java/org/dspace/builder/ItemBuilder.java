@@ -7,22 +7,27 @@
  */
 package org.dspace.builder;
 
+import static org.dspace.content.LicenseUtils.getLicenseText;
 import static org.dspace.content.MetadataSchemaEnum.CRIS;
 import static org.dspace.content.MetadataSchemaEnum.DC;
 import static org.dspace.content.authority.Choices.CF_ACCEPTED;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.UUID;
 
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.content.Bitstream;
 import org.dspace.content.Collection;
 import org.dspace.content.DCDate;
 import org.dspace.content.Item;
+import org.dspace.content.LicenseUtils;
 import org.dspace.content.MetadataSchemaEnum;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.content.service.DSpaceObjectService;
 import org.dspace.core.Context;
+import org.dspace.core.CrisConstants;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 
@@ -95,8 +100,18 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "oairecerif", "author", "affiliation", affiliation);
     }
 
+    public ItemBuilder withAuthorAffiliationPlaceholder() {
+        return addMetadataValue(item, "oairecerif", "author", "affiliation",
+                CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE);
+    }
+
     public ItemBuilder withEditor(final String editorName) {
         return addMetadataValue(item, MetadataSchemaEnum.DC.getName(), "contributor", "editor", editorName);
+    }
+
+    public ItemBuilder withEditorAffiliationPlaceholder() {
+        return addMetadataValue(item, "oairecerif", "editor", "affiliation",
+                CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE);
     }
 
     public ItemBuilder withEditor(final String editorName, final String authority) {
@@ -221,7 +236,7 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
     }
 
     public ItemBuilder withPersonMainAffiliation(String affiliation) {
-        return setMetadataSingleValue(item, "person", "affiliation", "name", affiliation);
+        return addMetadataValue(item, "person", "affiliation", "name", affiliation);
     }
 
     public ItemBuilder withPersonMainAffiliation(final String affiliation, final String authority) {
@@ -586,6 +601,30 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return setAdminPermission(item, ePerson, null);
     }
 
+    public ItemBuilder grantLicense() {
+        String license;
+        try {
+            EPerson submitter = workspaceItem.getSubmitter();
+            submitter = context.reloadEntity(submitter);
+            license = getLicenseText(context.getCurrentLocale(), workspaceItem.getCollection(), item, submitter);
+            LicenseUtils.grantLicense(context, item, license, null);
+        } catch (Exception e) {
+            handleException(e);
+        }
+        return this;
+    }
+
+    public ItemBuilder withFulltext(String name, String source, InputStream is) {
+        try {
+            Bitstream b = itemService.createSingleBitstream(context, is, item);
+            b.setName(context, name);
+            b.setSource(context, source);
+        } catch (Exception e) {
+            handleException(e);
+        }
+        return this;
+    }
+
 
     @Override
     public Item build() {
@@ -649,4 +688,5 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
             c.complete();
         }
     }
+
 }

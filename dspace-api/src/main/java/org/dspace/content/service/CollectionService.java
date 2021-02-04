@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.MissingResourceException;
 
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Bitstream;
@@ -23,11 +22,10 @@ import org.dspace.core.Context;
 import org.dspace.discovery.SearchServiceException;
 import org.dspace.eperson.Group;
 
-
 /**
  * Service interface class for the Collection object.
- * The implementation of this class is responsible for all business logic calls for the Collection object and is
- * autowired by spring
+ * The implementation of this class is responsible for all business logic calls
+ * for the Collection object and is autowired by Spring.
  *
  * @author kevinvandevelde at atmire.com
  */
@@ -94,20 +92,6 @@ public interface CollectionService
     public List<Collection> findGroupMapped(Context context, int actionID) throws java.sql.SQLException;
 
     /**
-     * Set a metadata value
-     *
-     * @param context    DSpace Context
-     * @param collection Collection
-     * @param field      the name of the metadata field to get
-     * @param value      value to set the field to
-     * @throws MissingResourceException if resource missing
-     * @throws SQLException             if database error
-     */
-    @Deprecated
-    public void setMetadata(Context context, Collection collection, String field, String value)
-        throws MissingResourceException, SQLException;
-
-    /**
      * Give the collection a logo. Passing in <code>null</code> removes any
      * existing logo. You will need to set the format of the new logo bitstream
      * before it will work, for example to "JPEG". Note that
@@ -145,15 +129,47 @@ public interface CollectionService
         AuthorizeException;
 
     /**
+     * Create a workflow group for the given role if one does not already exist.
+     * Returns either the newly created group or the previously existing one. Note
+     * that while the new group is created in the database, the association between
+     * the group and the collection is not written until <code>update</code> is
+     * called.
+     *
+     * @param context    DSpace Context
+     * @param collection Collection
+     * @param roleId     the role id to create or get the group for
+     * @return the workflow group associated with this collection
+     * @throws SQLException       if database error
+     * @throws AuthorizeException if authorization error
+     */
+    public Group createWorkflowGroup(Context context, Collection collection, String roleId) throws SQLException,
+        AuthorizeException;
+
+    /**
      * Set the workflow group corresponding to a particular workflow step.
      * <code>null</code> can be passed in if there should be no associated
      * group for that workflow step; any existing group is NOT deleted.
      *
+     * @param context    current DSpace session.
      * @param collection Collection
      * @param step       the workflow step (1-3)
      * @param group      the new workflow group, or <code>null</code>
+     * @throws SQLException passed through.
+     * @throws AuthorizeException passed through.
      */
     public void setWorkflowGroup(Context context, Collection collection, int step, Group group)
+        throws SQLException, AuthorizeException;
+
+    /**
+     * Set the workflow group corresponding to a particular role.
+     * <code>null</code> can be passed in if there should be no associated
+     * group for that workflow step; any existing group is NOT deleted.
+     *
+     * @param collection Collection
+     * @param roleId     the role id
+     * @param group      the new workflow group, or <code>null</code>
+     */
+    public void setWorkflowGroup(Context context, Collection collection, String roleId, Group group)
         throws SQLException, AuthorizeException;
 
     /**
@@ -167,6 +183,18 @@ public interface CollectionService
      * @return the group of reviewers or <code>null</code>
      */
     public Group getWorkflowGroup(Context context, Collection collection, int step);
+
+    /**
+     * Get the the workflow group corresponding to a particular role. This returns
+     * <code>null</code> if there is no group associated with this collection for
+     * the given step.
+     *
+     * @param context    DSpace Context
+     * @param collection Collection
+     * @param roleId     the role id
+     * @return the group of reviewers or <code>null</code>
+     */
+    public Group getWorkflowGroup(Context context, Collection collection, String roleId);
 
     /**
      * Create a default submitters group if one does not already exist. Returns
@@ -396,4 +424,24 @@ public interface CollectionService
      */
     public int countCollectionsWithSubmit(String q, Context context, Community community, String entityType)
         throws SQLException, SearchServiceException;
+
+    /**
+     * Returns true if the given collection is configured so that all items are
+     * shared among all submitters of the collection itself.
+     *
+     * @param  context    the DSpace context
+     * @param  collection the collection to test
+     * @return            true if the given collection's workspace is shared, false
+     *                    otherwise
+     */
+    boolean isSharedWorkspace(Context context, Collection collection);
+
+    /**
+     * Returns true if the given collection is in the directorio.
+     *
+     * @param collection the collection to test
+     * @return true if the collection is in the directorio, false otherwise
+     * @throws SQLException if something goes wrong
+     */
+    public boolean isDirectorioCollection(Context context, Collection collection) throws SQLException;
 }

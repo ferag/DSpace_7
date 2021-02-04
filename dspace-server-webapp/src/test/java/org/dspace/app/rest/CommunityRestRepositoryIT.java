@@ -14,9 +14,9 @@ import static org.dspace.app.rest.matcher.CommunityMatcher.matchCommunity;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadata;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadataNotEmpty;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadataStringEndsWith;
-import static org.dspace.builder.CollectionBuilder.createCollection;
 import static org.dspace.builder.CommunityBuilder.createCommunity;
 import static org.dspace.builder.CommunityBuilder.createSubCommunity;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
@@ -66,11 +66,13 @@ import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
+import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
 import org.dspace.core.Constants;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.GroupType;
+import org.dspace.eperson.dao.Group2GroupCacheDAO;
 import org.dspace.services.ConfigurationService;
 import org.hamcrest.Matchers;
 import org.json.JSONArray;
@@ -99,6 +101,12 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
 
     @Autowired
     private ResourcePolicyService resourcePolicyService;
+
+    @Autowired
+    private CollectionService collectionService;
+
+    @Autowired
+    private Group2GroupCacheDAO group2GroupCacheDAO;
 
     @Test
     public void createTest() throws Exception {
@@ -1764,20 +1772,9 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
     public void cloneCommunityTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
-        Group institutionalRoleA = GroupBuilder.createGroup(context)
-            .withName("Institutional Role A")
-            .withType(GroupType.INSTITUTIONAL)
-            .build();
-
-        Group institutionalRoleB = GroupBuilder.createGroup(context)
-            .withName("Institutional Role B")
-            .withType(GroupType.INSTITUTIONAL)
-            .build();
-
-        Group institutionalRoleC = GroupBuilder.createGroup(context)
-            .withName("Institutional Role C")
-            .withType(GroupType.INSTITUTIONAL)
-            .build();
+        Group institutionalRoleA = createInstitutionalRole("Institutional Role A");
+        Group institutionalRoleB = createInstitutionalRole("Institutional Role B");
+        Group institutionalRoleC = createInstitutionalRole("Institutional Role C");
 
         parentCommunity = createCommunity(context)
             .withName("Parent Community")
@@ -1792,7 +1789,7 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
             .withName("Sub Community 2")
             .build();
 
-        Collection col = createCollection(context, parentCommunity)
+        Collection col = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Collection of parent Community")
             .withSubmitterGroup(institutionalRoleB)
             .withAdminGroup(institutionalRoleB)
@@ -1801,12 +1798,8 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
             .withWorkflowGroup(3, institutionalRoleC)
             .build();
 
-        Collection child1Col1 = createCollection(context, child1)
-            .withName("Child 1 Collection 1")
-            .build();
-        Collection child2Col1 = createCollection(context, child2)
-            .withName("Child 2 Collection 1")
-            .build();
+        Collection child1Col1 = createCollection("Child 1 Collection 1", child1);
+        Collection child2Col1 = createCollection("Child 2 Collection 1", child2);
 
         context.restoreAuthSystemState();
 
@@ -1873,26 +1866,31 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
             assertNotNull(newCollectionAdmin);
             assertEquals(1, newCollectionAdmin.getMemberGroups().size());
             assertEquals(expectedScopedRoleB, newCollectionAdmin.getMemberGroups().get(0).getName());
+            assertThat(group2GroupCacheDAO.findByParent(context, newCollectionAdmin), hasSize(1));
 
             Group newCollectionSubmitter = newCollection.getSubmitters();
             assertNotNull(newCollectionSubmitter);
             assertEquals(1, newCollectionSubmitter.getMemberGroups().size());
             assertEquals(expectedScopedRoleB, newCollectionSubmitter.getMemberGroups().get(0).getName());
+            assertThat(group2GroupCacheDAO.findByParent(context, newCollectionSubmitter), hasSize(1));
 
             Group workflowStep1 = newCollection.getWorkflowStep1(context);
             assertNotNull(workflowStep1);
             assertEquals(1, workflowStep1.getMemberGroups().size());
             assertEquals(expectedScopedRoleA, workflowStep1.getMemberGroups().get(0).getName());
+            assertThat(group2GroupCacheDAO.findByParent(context, workflowStep1), hasSize(1));
 
             Group workflowStep2 = newCollection.getWorkflowStep2(context);
             assertNotNull(workflowStep2);
             assertEquals(1, workflowStep2.getMemberGroups().size());
             assertEquals(expectedScopedRoleB, workflowStep2.getMemberGroups().get(0).getName());
+            assertThat(group2GroupCacheDAO.findByParent(context, workflowStep2), hasSize(1));
 
             Group workflowStep3 = newCollection.getWorkflowStep3(context);
             assertNotNull(workflowStep3);
             assertEquals(1, workflowStep3.getMemberGroups().size());
             assertEquals(expectedScopedRoleC, workflowStep3.getMemberGroups().get(0).getName());
+            assertThat(group2GroupCacheDAO.findByParent(context, workflowStep3), hasSize(1));
 
             List<Community> communities = newCommunity.getSubcommunities();
             assertEquals(2, communities.size());
@@ -2105,5 +2103,109 @@ public class CommunityRestRepositoryIT extends AbstractControllerIntegrationTest
         } finally {
             configurationService.setProperty("institution.template-id", originalTemplateId);
         }
+    }
+
+    @Test
+    public void cloneCommunityTestWithInstitutionWorkflow() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Group institutionalRoleA = createInstitutionalRole("Institutional Role A");
+        Group institutionalRoleB = createInstitutionalRole("Institutional Role B");
+
+        parentCommunity = createCommunity(context)
+            .withName("Template")
+            .withAdminGroup(institutionalRoleA)
+            .build();
+
+        String institutionWorkflowHandle = "123456789/institution-workflow-test";
+
+        Collection institution = CollectionBuilder.createCollection(context, parentCommunity, institutionWorkflowHandle)
+            .withName("Institution")
+            .withSubmitterGroup(institutionalRoleB)
+            .withAdminGroup(institutionalRoleB)
+            .withRoleGroup("reviewer", institutionalRoleA, institutionalRoleB)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        String tokenAdmin = getAuthToken(admin.getEmail(), password);
+        AtomicReference<UUID> idRef = new AtomicReference<>();
+
+        try {
+            getClient(tokenAdmin).perform(post("/api/core/communities")
+                .param("projection", "full")
+                .param("name", "Institution A")
+                .contentType(
+                    MediaType.parseMediaType(org.springframework.data.rest.webmvc.RestMediaTypes.TEXT_URI_LIST_VALUE))
+                .content("https://localhost:8080/server//api/core/communities/" + parentCommunity.getID()))
+                .andExpect(status()
+                    .isCreated())
+                .andDo(result -> idRef
+                    .set(UUID.fromString(read(result.getResponse().getContentAsString(), "$.id"))))
+                .andExpect(jsonPath("$", Matchers.allOf(
+                    hasJsonPath("$.name", is("Institution A")),
+                    hasJsonPath("$.id", is(idRef.get().toString())),
+                    hasJsonPath("$.id", not(parentCommunity.getID().toString())))))
+                .andExpect(jsonPath("$._embedded.collections._embedded.collections", Matchers.contains(
+                    CollectionMatcher.matchClone(institution))));
+
+            String expectedScopedRoleA = "SCOPED:Institutional Role A: Institution A";
+            String expectedScopedRoleB = "SCOPED:Institutional Role B: Institution A";
+
+            Community newCommunity = communityService.find(context, idRef.get());
+            assertEquals("Institution A", newCommunity.getName());
+            assertNotEquals(parentCommunity.getID(), newCommunity.getID());
+
+            List<String> roles = communityService.getMetadata(newCommunity, "perucris",
+                "community", "institutional-scoped-role", Item.ANY).stream()
+                .map(MetadataValue::getValue)
+                .collect(Collectors.toList());
+
+            assertEquals(2, roles.size());
+            assertTrue(roles.contains("Institutional Role A: Institution A"));
+            assertTrue(roles.contains("Institutional Role B: Institution A"));
+
+            Group newCommunityAdmin = newCommunity.getAdministrators();
+            assertNotNull(newCommunityAdmin);
+            assertEquals(1, newCommunityAdmin.getMemberGroups().size());
+            assertEquals(expectedScopedRoleA, newCommunityAdmin.getMemberGroups().get(0).getName());
+
+            List<Collection> collections = newCommunity.getCollections();
+            assertEquals(1, collections.size());
+            Collection newCollection = collections.get(0);
+
+            Group newCollectionAdmin = newCollection.getAdministrators();
+            assertNotNull(newCollectionAdmin);
+            assertEquals(1, newCollectionAdmin.getMemberGroups().size());
+            assertEquals(expectedScopedRoleB, newCollectionAdmin.getMemberGroups().get(0).getName());
+
+            Group newCollectionSubmitter = newCollection.getSubmitters();
+            assertNotNull(newCollectionSubmitter);
+            assertEquals(1, newCollectionSubmitter.getMemberGroups().size());
+            assertEquals(expectedScopedRoleB, newCollectionSubmitter.getMemberGroups().get(0).getName());
+
+            Group workflowReviewerGroup = collectionService.getWorkflowGroup(context, newCollection, "reviewer");
+            assertNotNull(workflowReviewerGroup);
+            assertEquals(2, workflowReviewerGroup.getMemberGroups().size());
+            assertEquals(expectedScopedRoleA, workflowReviewerGroup.getMemberGroups().get(0).getName());
+            assertEquals(expectedScopedRoleB, workflowReviewerGroup.getMemberGroups().get(1).getName());
+
+        } finally {
+            CommunityBuilder.deleteCommunity(idRef.get());
+        }
+    }
+
+    private Group createInstitutionalRole(String name) {
+        return GroupBuilder.createGroup(context)
+            .withName(name)
+            .withType(GroupType.INSTITUTIONAL)
+            .build();
+    }
+
+    private Collection createCollection(String name, Community community) {
+        return CollectionBuilder.createCollection(context, community)
+            .withName(name)
+            .build();
     }
 }

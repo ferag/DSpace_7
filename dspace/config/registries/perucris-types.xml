@@ -103,7 +103,21 @@
     <dc-type>
         <schema>perucris</schema>
         <element>author</element>
+        <qualifier>rid</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>author</element>
         <qualifier>dni</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>author</element>
+        <qualifier>scopus-author-id</qualifier>
         <scope_note></scope_note>
     </dc-type>
 
@@ -342,6 +356,13 @@
         <scope_note></scope_note>
     </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>subject</element>
+        <qualifier>minam</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
 <!--    geolocations-->
 <!--Using Openaire datacite schema-->
 
@@ -532,6 +553,20 @@
         <scope_note></scope_note>
     </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>concytec</element>
+        <qualifier>feedback</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>concytec</element>
+        <qualifier>comment</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
     <!-- funding amount executed -->
 
     <dc-type>
@@ -597,17 +632,4 @@
         <qualifier>birthdate</qualifier>
     </dc-type>
 
-
-    <!-- custom PeruCRIS relations metadata -->
-    <dc-type>
-        <schema>relation</schema>
-        <element>isPersonOwner</element>
-        <scope_note></scope_note>
-    </dc-type>
-
-    <dc-type>
-        <schema>relation</schema>
-        <element>isOwnedByPersonCv</element>
-        <scope_note></scope_note>
-    </dc-type>
 </dspace-dc-types>

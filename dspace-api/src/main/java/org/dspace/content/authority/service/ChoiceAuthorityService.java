@@ -231,4 +231,21 @@ public interface ChoiceAuthorityService {
      * @return the parent Choice object if any
      */
     public Choice getParentChoice(String authorityName, String vocabularyId, String locale);
+
+    /**
+     * Returns true if the given metadata field is related to an Item authority.
+     *
+     * @param fieldKey the metadata field
+     * @return true if is related to an item authority, false otherwise
+     */
+    public boolean isItemAuthority(String fieldKey);
+
+    /**
+     * Returns all the configured metadata field that are authority controlled
+     * related to the given relationship type.
+     *
+     * @param relationshipType the relationship type
+     * @return the metadata fields
+     */
+    public List<String> getAuthorityControlledFieldsByRelationshipType(String relationshipType);
 }

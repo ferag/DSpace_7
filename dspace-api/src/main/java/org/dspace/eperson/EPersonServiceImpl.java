@@ -551,7 +551,7 @@ public class EPersonServiceImpl extends DSpaceObjectServiceImpl<EPerson> impleme
 
     @Override
     public List<String> getDeleteConstraints(Context context, EPerson ePerson) throws SQLException {
-        List<String> tableList = new ArrayList<String>();
+        List<String> tableList = new ArrayList<>();
 
         // check for eperson in item table
         Iterator<Item> itemsBySubmitter = itemService.findBySubmitter(context, ePerson, true);
@@ -603,12 +603,6 @@ public class EPersonServiceImpl extends DSpaceObjectServiceImpl<EPerson> impleme
     public String getMetadata(EPerson dso, String field) {
         String[] MDValue = getMDValueByLegacyField(field);
         return getMetadataFirstValue(dso, MDValue[0], MDValue[1], MDValue[2], Item.ANY);
-    }
-
-    @Override
-    public void setMetadata(Context context, EPerson ePerson, String field, String value) throws SQLException {
-        String[] MDValue = getMDValueByLegacyField(field);
-        setMetadataSingleValue(context, ePerson, MDValue[0], MDValue[1], MDValue[2], null, value);
     }
 
     @Override

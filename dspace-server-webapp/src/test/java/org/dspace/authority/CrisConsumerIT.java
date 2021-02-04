@@ -10,8 +10,12 @@ package org.dspace.authority;
 import static java.lang.String.join;
 import static java.util.Arrays.asList;
 import static java.util.UUID.fromString;
+import static org.dspace.builder.RelationshipBuilder.createRelationshipBuilder;
+import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
 import static org.dspace.content.authority.Choices.CF_ACCEPTED;
 import static org.dspace.content.authority.Choices.CF_UNSET;
+import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.HAS_SHADOW_COPY_RELATIONSHIP;
+import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_SHADOW_COPY_RELATIONSHIP;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -43,11 +47,14 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.builder.CollectionBuilder;
 import org.dspace.builder.CommunityBuilder;
 import org.dspace.builder.EPersonBuilder;
+import org.dspace.builder.EntityTypeBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.builder.WorkspaceItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
+import org.dspace.content.EntityType;
 import org.dspace.content.Item;
+import org.dspace.content.RelationshipType;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.eperson.EPerson;
 import org.dspace.event.factory.EventServiceFactory;
@@ -777,7 +784,68 @@ public class CrisConsumerIT extends AbstractControllerIntegrationTest {
         MetadataValueRest author = findSingleMetadata(item, "dc.contributor.author");
         String authorAuthority = author.getAuthority();
         assertThat(authorAuthority, equalTo("will be referenced::ORCID::0000-0002-9079-593X"));
-        assertThat("The author should have an ACCEPTED confidence", author.getConfidence(), equalTo(CF_UNSET));
+        assertThat("The author should have an UNSET confidence", author.getConfidence(), equalTo(CF_UNSET));
+
+    }
+
+    @Test
+    public void testItemWithWillBeReferencedShadow() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        EntityType publicationType = EntityTypeBuilder.createEntityTypeBuilder(context, "Person").build();
+
+        RelationshipType hasShadowCopyRelationshipType = createRelationshipTypeBuilder(context, publicationType,
+            publicationType, HAS_SHADOW_COPY_RELATIONSHIP, IS_SHADOW_COPY_RELATIONSHIP, 0, 1, 0, 1).build();
+
+        createCollection("Collection of persons", "Person", subCommunity);
+
+        Collection personCollection = createCollection("Collection of persons", "Person", subCommunity);
+
+        Item person = ItemBuilder.createItem(context, personCollection)
+            .withTitle("Walter white")
+            .build();
+
+        Item publication = ItemBuilder.createItem(context, publicationCollection)
+            .withRelationshipType("Publication")
+            .withAuthor("Walter White", AuthorityValueService.REFERENCE + "SHADOW::" + person.getID())
+            .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        ItemRest item = getItemViaRestByID(authToken, publication.getID());
+
+        MetadataValueRest author = findSingleMetadata(item, "dc.contributor.author");
+        String authorAuthority = author.getAuthority();
+        assertThat(authorAuthority, equalTo("will be referenced::SHADOW::" + person.getID()));
+        assertThat("The author should have an UNSET confidence", author.getConfidence(), equalTo(CF_UNSET));
+
+        context.turnOffAuthorisationSystem();
+
+        Item personCopy = ItemBuilder.createItem(context, personCollection)
+            .withTitle("Walter white")
+            .build();
+
+        createRelationshipBuilder(context, person, personCopy, hasShadowCopyRelationshipType).build();
+
+        context.restoreAuthSystemState();
+
+        // update publication to trigger cris consumer
+        MetadataValueRest valueToAdd = new MetadataValueRest("The Journal");
+        List<Operation> operations = asList(new AddOperation("/metadata/dc.relation.journal", valueToAdd));
+
+        getClient(authToken).perform(patch(BASE_REST_SERVER_URL + "/api/core/items/{id}", item.getId())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(getPatchContent(operations)))
+            .andExpect(status().isOk());
+
+        item = getItemViaRestByID(authToken, publication.getID());
+
+        author = findSingleMetadata(item, "dc.contributor.author");
+        authorAuthority = author.getAuthority();
+        assertThat(authorAuthority, equalTo(personCopy.getID().toString()));
+        assertThat("The author should have an ACCEPTED confidence", author.getConfidence(), equalTo(CF_ACCEPTED));
 
     }
 

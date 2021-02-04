@@ -16,6 +16,15 @@ import org.dspace.core.Context;
  * @author Corrado Lombardi (corrado.lombardi at 4science.it)
  */
 public interface TemplateValueGenerator {
+
+    /**
+     * Generate a dynamic value according to template item value syntax
+     * @param context DSpace current context
+     * @param targetItem item which metadata have to be set
+     * @param templateItem item source of metadata value
+     * @param extraParams custom params, related to the implementation
+     * @return
+     */
     String generator(Context context, Item targetItem, Item templateItem,
                      String extraParams);
 }

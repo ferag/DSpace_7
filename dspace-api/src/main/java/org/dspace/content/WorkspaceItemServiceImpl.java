@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.util.DCInputsReaderException;
 import org.dspace.app.util.Util;
@@ -31,6 +32,7 @@ import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.core.LogManager;
 import org.dspace.eperson.EPerson;
+import org.dspace.eperson.Group;
 import org.dspace.event.Event;
 import org.dspace.workflow.WorkflowItem;
 import org.dspace.workflow.WorkflowService;
@@ -101,20 +103,16 @@ public class WorkspaceItemServiceImpl implements WorkspaceItemService {
         Item item = itemService.create(context, workspaceItem);
         item.setSubmitter(context.getCurrentUser());
 
-        // Now create the policies for the submitter to modify item and contents
-        // contents = bitstreams, bundles
-        // read permission
-        authorizeService.addPolicy(context, item, Constants.READ, item.getSubmitter(), ResourcePolicy.TYPE_SUBMISSION);
-        // write permission
-        authorizeService.addPolicy(context, item, Constants.WRITE, item.getSubmitter(), ResourcePolicy.TYPE_SUBMISSION);
-        // add permission
-        authorizeService.addPolicy(context, item, Constants.ADD, item.getSubmitter(), ResourcePolicy.TYPE_SUBMISSION);
-        // remove contents permission
-        authorizeService
-            .addPolicy(context, item, Constants.REMOVE, item.getSubmitter(), ResourcePolicy.TYPE_SUBMISSION);
-        // delete permission
-        authorizeService
-            .addPolicy(context, item, Constants.DELETE, item.getSubmitter(), ResourcePolicy.TYPE_SUBMISSION);
+        // Now create the policies for the submitter to modify item and contents (bitstreams, bundles)
+        int[] actionIds = { Constants.READ, Constants.WRITE, Constants.ADD, Constants.REMOVE, Constants.DELETE };
+        for (int actionId : actionIds) {
+            authorizeService.addPolicy(context, item, actionId, item.getSubmitter(), ResourcePolicy.TYPE_SUBMISSION);
+        }
+
+        if (collectionService.isSharedWorkspace(context, collection)) {
+            addPoliciesToSubmitterGroup(context, item, collection, actionIds);
+        }
+
         Optional<MetadataValue> optionalType =
             collection.getMetadata().stream().filter(x -> x.getMetadataField().toString('.')
                 .equalsIgnoreCase(MetadataSchemaEnum.RELATIONSHIP.getName() + ".type")).findFirst();
@@ -138,12 +136,14 @@ public class WorkspaceItemServiceImpl implements WorkspaceItemService {
                 MetadataField metadataField = aMd.getMetadataField();
                 MetadataSchema metadataSchema = metadataField.getMetadataSchema();
 
+
                 final String valueFromTemplate = templateItemValueService.value(context, item,
                                                                                        templateItem, aMd);
-
-                itemService.addMetadata(context, item, metadataSchema.getName(), metadataField.getElement(),
-                                        metadataField.getQualifier(), aMd.getLanguage(),
-                                        valueFromTemplate);
+                if (StringUtils.isNotBlank(valueFromTemplate)) {
+                    itemService.addMetadata(context, item, metadataSchema.getName(), metadataField.getElement(),
+                        metadataField.getQualifier(), aMd.getLanguage(),
+                        valueFromTemplate);
+                }
             }
         }
 
@@ -228,19 +228,11 @@ public class WorkspaceItemServiceImpl implements WorkspaceItemService {
     @Override
     public void deleteAll(Context context, WorkspaceItem workspaceItem)
         throws SQLException, AuthorizeException, IOException {
-        /*
-         * Authorisation is a special case. The submitter won't have REMOVE
-         * permission on the collection, so our policy is this: Only the
-         * original submitter or an administrator can delete a workspace item.
 
-         */
         Item item = workspaceItem.getItem();
-        if (!authorizeService.isAdmin(context)
-            && (item.getSubmitter() == null || (context.getCurrentUser() == null)
-                || (context.getCurrentUser().getID() != item.getSubmitter().getID()))) {
+        if (isNotAuthorizedToDelete(context, item)) {
             // Not an admit, not the submitter
-            throw new AuthorizeException("Must be an administrator or the "
-                                             + "original submitter to delete a workspace item");
+            throw new AuthorizeException("Must be an administrator or the submitter to delete a workspace item");
         }
 
         log.info(LogManager.getHeader(context, "delete_workspace_item",
@@ -256,6 +248,8 @@ public class WorkspaceItemServiceImpl implements WorkspaceItemService {
         workspaceItemDAO.delete(context, workspaceItem);
 
         // Delete item
+        //FIXME: temporary workaround to deal with directorio collection check
+        item.setOwningCollection(workspaceItem.getCollection());
         itemService.delete(context, item);
     }
 
@@ -315,6 +309,28 @@ public class WorkspaceItemServiceImpl implements WorkspaceItemService {
 
         source.getItem().removeMetadata(remove);
 
+    }
+
+    private void addPoliciesToSubmitterGroup(Context context, Item item, Collection collection, int[] actionIds)
+        throws SQLException, AuthorizeException {
+
+        Group submitters = collection.getSubmitters();
+        if (submitters == null) {
+            return;
+        }
+
+        for (int actionId : actionIds) {
+            authorizeService.addPolicy(context, item, actionId, submitters, ResourcePolicy.TYPE_SUBMISSION);
+        }
+
+    }
+
+    private boolean isNotAuthorizedToDelete(Context context, Item item) throws SQLException {
+        EPerson submitter = item.getSubmitter();
+        EPerson currentUser = context.getCurrentUser();
+        return !authorizeService.isAdmin(context)
+            && (submitter == null || (currentUser == null) || (!submitter.getID().equals(currentUser.getID())))
+            && !authorizeService.authorizeActionBoolean(context, item, Constants.DELETE);
     }
 
 }

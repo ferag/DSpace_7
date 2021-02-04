@@ -7,6 +7,8 @@
  */
 package org.dspace.content.dto;
 
+import java.util.Objects;
+
 import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataSchema;
 import org.dspace.content.MetadataValue;
@@ -136,4 +138,35 @@ public class MetadataValueDTO {
     public void setConfidence(int confidence) {
         this.confidence = confidence;
     }
+
+    @Override
+    public String toString() {
+        return "MetadataValueDTO [schema=" + schema + ", element=" + element + ", qualifier=" + qualifier
+            + ", language=" + language + ", value=" + value + ", authority=" + authority + ", confidence=" + confidence
+            + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(authority, confidence, element, language, qualifier, schema, value);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        MetadataValueDTO other = (MetadataValueDTO) obj;
+        return Objects.equals(authority, other.authority) && confidence == other.confidence
+            && Objects.equals(element, other.element) && Objects.equals(language, other.language)
+            && Objects.equals(qualifier, other.qualifier) && Objects.equals(schema, other.schema)
+            && Objects.equals(value, other.value);
+    }
+
 }

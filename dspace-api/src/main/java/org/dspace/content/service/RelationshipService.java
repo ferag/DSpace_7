@@ -324,14 +324,16 @@ public interface RelationshipService extends DSpaceCRUDService<Relationship> {
     int countByItem(Context context, Item item) throws SQLException;
 
     /**
-     * Count total number of relationships (rows in relationship table) by a relationship type
+     * Count total number of relationships (rows in relationship table) by a relationship type and a boolean indicating
+     * whether the relationship should contain the item on the left side or not
      *
      * @param context context
      * @param relationshipType relationship type to filter by
-     * @return total count
+     * @param isLeft Indicating whether the counted Relationships should have the given Item on the left side or not
+     * @return total count with the given parameters
      * @throws SQLException if database error
      */
-    int countByItemAndRelationshipType(Context context, Item item, RelationshipType relationshipType)
+    int countByItemAndRelationshipType(Context context, Item item, RelationshipType relationshipType, boolean isLeft)
             throws SQLException;
 
     /**
@@ -378,5 +380,15 @@ public interface RelationshipService extends DSpaceCRUDService<Relationship> {
      */
     void delete(Context context, Relationship relationship, boolean copyToLeftItem, boolean copyToRightItem,
             boolean bypassValidation) throws SQLException, AuthorizeException;
+
+    /**
+     * Find all the relationships between the two given items.
+     *
+     * @param context    The relevant DSpace context
+     * @param firstItem  the first item
+     * @param secondItem the second item
+     * @throws SQLException if database error
+     */
+    public List<Relationship> findByItems(Context context, Item firstItem, Item secondItem) throws SQLException;
 
 }

@@ -9,6 +9,7 @@ package org.dspace.app.rest.repository;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -19,6 +20,10 @@ import org.dspace.app.rest.exception.UnprocessableEntityException;
 import org.dspace.app.rest.model.VocabularyRest;
 import org.dspace.app.rest.projection.Projection;
 import org.dspace.app.rest.utils.AuthorityUtils;
+import org.dspace.app.util.DCInputSet;
+import org.dspace.app.util.SubmissionConfigReader;
+import org.dspace.app.util.SubmissionConfigReaderException;
+import org.dspace.authority.service.FormNameLookup;
 import org.dspace.content.Collection;
 import org.dspace.content.MetadataField;
 import org.dspace.content.authority.ChoiceAuthority;
@@ -52,6 +57,12 @@ public class VocabularyRestRepository extends DSpaceRestRepository<VocabularyRes
 
     @Autowired
     private MetadataFieldService metadataFieldService;
+
+    private final SubmissionConfigReader submissionConfigReader;
+
+    public VocabularyRestRepository() throws SubmissionConfigReaderException {
+        submissionConfigReader = new SubmissionConfigReader();
+    }
 
     @PreAuthorize("hasAuthority('AUTHENTICATED')")
     @Override
@@ -99,9 +110,32 @@ public class VocabularyRestRepository extends DSpaceRestRepository<VocabularyRes
             throw new UnprocessableEntityException(collectionUuid + " is not a valid collection");
         }
 
-        String authorityName = cas.getChoiceAuthorityName(tokens[0], tokens[1], tokens[2], collection);
+        final MetadataField md = metadata;
+
+        String submissionName = submissionConfigReader.getSubmissionConfigByCollection(collection)
+            .getSubmissionName();
+        List<String> formNames = FormNameLookup.getInstance()
+            .formContainingField(submissionName, md.toString('_'));
+
+        if (formNames.size() > 1) {
+            throw new IllegalStateException(
+                String.format("%s defined multiple times in %s collection submission form", metadataField,
+                    collectionUuid));
+        }
+
+        String formNameDefinition = formNames.isEmpty() ? "" : formNames.get(0);
+        String authorityName =
+            cas.getChoiceAuthorityName(tokens[0], tokens[1], tokens[2], formNameDefinition);
+
         ChoiceAuthority source = cas.getChoiceAuthorityByAuthorityName(authorityName);
+
         return authorityUtils.convertAuthority(source, authorityName, utils.obtainProjection());
+    }
+
+    private boolean containsField(DCInputSet dcInputSet, MetadataField metadataField) {
+        return Arrays.stream(dcInputSet.getFields())
+            .anyMatch(input -> Arrays.stream(input).anyMatch(dc ->
+                metadataField.toString('.').equals(dc.getFieldName())));
     }
 
     @Override

@@ -74,43 +74,9 @@ public class SubmissionFormControllerCustomAuthoritiesIT extends AbstractControl
         configurationService.setProperty("choices.presentation.dc.contributor.author", "suggest");
         configurationService.setProperty("authority.controlled.dc.contributor.author", "true");
 
-        configurationService.setProperty("choices.plugin.dc.contributor.editor", "EditorAuthority");
-        configurationService.setProperty("choices.presentation.dc.contributor.editor", "suggest");
-        configurationService.setProperty("authority.controlled.dc.contributor.editor", "true");
-
-        configurationService.setProperty("choices.plugin.dc.contributor.advisor", "AdvisorAuthority");
-        configurationService.setProperty("choices.presentation.dc.contributor.advisor", "suggest");
-        configurationService.setProperty("authority.controlled.dc.contributor.advisor", "true");
-
         configurationService
-            .setProperty("choices.plugin.institution-publication-dc-contributor-author.dc.contributor.author",
+            .setProperty("choices.plugin.institution-publication-dc-contributor-author.override.dc.contributor.author",
                 "InstitutionAuthorAuthority");
-        configurationService
-            .setProperty("choices.presentation.institution-publication-dc-contributor-author.dc.contributor.author",
-                "suggest");
-        configurationService
-            .setProperty("authority.controlled.institution-publication-dc-contributor-author.dc.contributor.author",
-                "true");
-
-        configurationService
-            .setProperty("choices.plugin.institution-publication-dc-contributor-editor.dc.contributor.editor",
-                "InstitutionAuthorAuthority");
-        configurationService
-            .setProperty("choices.presentation.institution-publication-dc-contributor-editor.dc.contributor.editor",
-                "suggest");
-        configurationService
-            .setProperty("authority.controlled.institution-publication-dc-contributor-editor.dc.contributor.editor",
-                "true");
-
-        configurationService
-            .setProperty("choices.plugin.institution-publication-dc-contributor-advisor.dc.contributor.advisor",
-                "InstitutionAdvisorAuthority");
-        configurationService
-            .setProperty("choices.presentation.institution-publication-dc-contributor-advisor.dc.contributor.advisor",
-                "suggest");
-        configurationService
-            .setProperty("authority.controlled.institution-publication-dc-contributor-advisor.dc.contributor.advisor",
-                "true");
 
 
         configurationService.setProperty("choices.plugin.dc.contributor.editor", "EditorAuthority");

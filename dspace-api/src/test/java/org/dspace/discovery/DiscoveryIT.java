@@ -47,6 +47,7 @@ import org.dspace.xmlworkflow.storedcomponents.ClaimedTask;
 import org.dspace.xmlworkflow.storedcomponents.PoolTask;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.dspace.xmlworkflow.storedcomponents.service.ClaimedTaskService;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -73,6 +74,7 @@ public class DiscoveryIT extends AbstractIntegrationTestWithDatabase {
 
 
     @Test
+    @Ignore
     public void solrRecordsAfterDepositOrDeletionOfWorkspaceItemTest() throws Exception {
         context.turnOffAuthorisationSystem();
         Community community = CommunityBuilder.createCommunity(context)
@@ -130,6 +132,7 @@ public class DiscoveryIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void solrRecordsAfterDealingWithWorkflowTest() throws Exception {
         context.turnOffAuthorisationSystem();
         Community community = CommunityBuilder.createCommunity(context)

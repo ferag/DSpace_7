@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.DCDate;
 import org.dspace.content.Item;
@@ -80,21 +81,18 @@ public abstract class AbstractDirectorioAction extends ProcessingAction {
         UUID userToAssignId = UUIDUtils.fromString(request.getParameter("user"));
         if (userToAssignId == null) {
             LOGGER.warn("A parameter 'user' with the uuid of the user to assign the task must be provided");
-            addErrorField(request, "user");
             return new ActionResult(ActionResult.TYPE.TYPE_ERROR);
         }
 
         EPerson user = ePersonService.find(context, userToAssignId);
         if (user == null) {
             LOGGER.warn("The given user uuid does not match any user in the system");
-            addErrorField(request, "user");
             return new ActionResult(ActionResult.TYPE.TYPE_ERROR);
         }
 
         List<EPerson> members = step.getRole().getMembers(context, workflowItem).getAllUniqueMembers(context);
         if (!members.contains(user)) {
             LOGGER.warn("The given user is not member of the current step role");
-            addErrorField(request, "user");
             return new ActionResult(ActionResult.TYPE.TYPE_ERROR);
         }
 
@@ -111,13 +109,11 @@ public abstract class AbstractDirectorioAction extends ProcessingAction {
         throws SQLException, AuthorizeException, IOException {
 
         String reason = request.getParameter("reason");
-        if (reason == null || 0 == reason.trim().length()) {
-            addErrorField(request, "reason");
-            return new ActionResult(ActionResult.TYPE.TYPE_ERROR);
+        if (StringUtils.isNotEmpty(reason)) {
+            concytecWorkflowService.setConcytecComment(context, item, reason);
         }
 
         concytecWorkflowService.setConcytecFeedback(context, item, ConcytecFeedback.REJECT);
-        concytecWorkflowService.setConcytecComment(context, item, reason);
         return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, ActionResult.OUTCOME_COMPLETE);
     }
 

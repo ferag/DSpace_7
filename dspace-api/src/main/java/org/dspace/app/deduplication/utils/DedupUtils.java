@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -197,6 +198,10 @@ public class DedupUtils {
 
                         if (duplicateItem == null) {
                             // found a zombie reference in solr, ignore it
+                            continue;
+                        }
+
+                        if (!duplicateItem.isArchived()) {
                             continue;
                         }
 
@@ -771,5 +776,26 @@ public class DedupUtils {
         dil.setDsi(result);
         dil.setSize(solrDocumentList.getNumFound());
         return dil;
+    }
+
+    public boolean hasDuplicationNotSolved(Context context, Item item) throws SQLException, SearchServiceException {
+        return findDuplicatedItems(context, item).stream()
+            .collect(Collectors.groupingBy(info -> info.getDuplicateItem().getID()))
+            .values().stream()
+            .anyMatch(this::noDuplicationIsSolved);
+    }
+
+    public List<DuplicateItemInfo> findDuplicatedItems(Context context, Item item)
+        throws SQLException, SearchServiceException {
+        return getDuplicateByIDandType(context, item.getID(), Constants.ITEM, true);
+    }
+
+    private boolean noDuplicationIsSolved(List<DuplicateItemInfo> infos) {
+        return infos.stream().allMatch(this::isDuplicationNotSolved);
+    }
+
+    private boolean isDuplicationNotSolved(DuplicateItemInfo duplicatedItem) {
+        return duplicatedItem.getDecision(DuplicateDecisionType.WORKFLOW) == null
+            && duplicatedItem.getDecision(DuplicateDecisionType.ADMIN) == null;
     }
 }

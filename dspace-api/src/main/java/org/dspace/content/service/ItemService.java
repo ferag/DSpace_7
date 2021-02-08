@@ -753,4 +753,17 @@ public interface ItemService
     public Iterator<Item> findByAuthorityControlledMetadataFields(Context context, String authority,
         String relationshipType);
 
+    /**
+     * Get an item instance, whose state may be lazily fetched. If the requested
+     * instance does not exist in the database, the
+     * <code>EntityNotFoundException</code> is thrown when the instance state is
+     * first accessed.
+     * 
+     * @param context the DSpace context
+     * @param id      the item id
+     * @return the item proxy
+     * @throws SQLException if a SQL error occurs
+     */
+    public Item getReference(Context context, UUID id) throws SQLException;
+
 }

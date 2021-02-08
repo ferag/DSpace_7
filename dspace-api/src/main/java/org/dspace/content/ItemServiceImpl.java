@@ -1509,4 +1509,9 @@ prevent the generation of resource policy entry values with null dspace_object a
         }
     }
 
+    @Override
+    public Item getReference(Context context, UUID id) throws SQLException {
+        return itemDAO.getReference(context, id);
+    }
+
 }

@@ -185,7 +185,7 @@ public class ItemAuthorityTest extends AbstractControllerIntegrationTest {
         context.restoreAuthSystemState();
 
         String token = getAuthToken(eperson.getEmail(), password);
-        getClient(token).perform(get("/api/submission/vocabularies/AuthorAuthority/entries")
+        getClient(token).perform(get("/api/submission/vocabularies/InstitutionAuthorAuthority/entries")
             .param("metadata", "dc.contributor.author")
             .param("collection", collection.getID().toString())
             .param("filter", "author"))

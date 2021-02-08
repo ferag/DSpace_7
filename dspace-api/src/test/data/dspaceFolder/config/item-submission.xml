@@ -164,6 +164,27 @@
 	      <type>submission-form</type>
 	    </step-definition>
 
+        <step-definition id="institution-publication" mandatory="true">
+            <heading>submit.progressbar.describe.publication</heading>
+            <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+            <type>submission-form</type>
+        </step-definition>
+        <step-definition id="institution-publication_indexing" mandatory="false">
+            <heading>submit.progressbar.describe.publication_indexing</heading>
+            <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+            <type>submission-form</type>
+        </step-definition>
+        <step-definition id="institution-publication_bibliographic_details" mandatory="true">
+            <heading>submit.progressbar.describe.publication_bibliographic_details</heading>
+            <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+            <type>submission-form</type>
+        </step-definition>
+        <step-definition id="institution-publication_references" mandatory="false">
+            <heading>submit.progressbar.describe.publication_references</heading>
+            <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+            <type>submission-form</type>
+        </step-definition>
+
         <step-definition id="languagetest" mandatory="true">
             <heading>submit.progressbar.describe.stepone</heading>
             <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
@@ -258,13 +279,13 @@
 	      <step id="license" />
 	    </submission-process>
 
-        <submission-process name="institutionpublication">
+        <submission-process name="institution-publication">
             <step id="collection" />
             <step id="extraction" />
-            <step id="publication" />
-            <step id="publication_indexing" />
-            <step id="publication_bibliographic_details" />
-            <step id="publication_references" />
+            <step id="institution-publication" />
+            <step id="institution-publication_indexing" />
+            <step id="institution-publication_bibliographic_details" />
+            <step id="institution-publication_references" />
             <step id="upload" />
             <step id="license" />
         </submission-process>

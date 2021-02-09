@@ -191,11 +191,15 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
                     int currentRecord = 0;
                     int recordsFound = dataProvider.getNumberOfResults(id);
                     int userPublicationsProcessed = 0;
-                    while (recordsFound == -1 || userPublicationsProcessed < recordsFound) {
+                    int iterations = recordsFound <= 0 ? 0 : (recordsFound / LIMIT) + 1;
+                    for (int i = 1; i <= iterations; i++) {
                         userPublicationsProcessed += fillWorkspaceItems(context, currentRecord, dataProvider, item, id);
                         currentRecord += LIMIT;
                     }
                     totalRecordWorked += userPublicationsProcessed;
+                    if (userPublicationsProcessed >= 20) {
+                        context.commit();
+                    }
                 }
                 countItemsProcessed++;
                 if (countItemsProcessed == 20) {
@@ -252,9 +256,6 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
                     workflowService.start(context, wsItem);
                 }
                 countDataObjects++;
-                if (countDataObjects % 20 == 0) {
-                    context.commit();
-                }
             }
         } catch (AuthorizeException | IOException | WorkflowException e) {
             log.error(e.getMessage(), e);

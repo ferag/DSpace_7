@@ -363,6 +363,13 @@
         <scope_note></scope_note>
     </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>subject</element>
+        <qualifier>ins</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
 <!--    geolocations-->
 <!--Using Openaire datacite schema-->
 

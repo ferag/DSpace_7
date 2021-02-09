@@ -7,6 +7,10 @@
  */
 package org.dspace.app.deduplication.service.impl;
 
+import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_CORRECTION_OF_ITEM_RELATIONSHIP;
+import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP;
+import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_WITHDRAW_OF_ITEM_RELATIONSHIP;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
@@ -41,10 +45,13 @@ import org.dspace.app.deduplication.utils.Signature;
 import org.dspace.app.util.Util;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
+import org.dspace.content.Relationship;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
+import org.dspace.content.service.RelationshipService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
+import org.dspace.core.exception.SQLRuntimeException;
 import org.dspace.deduplication.Deduplication;
 import org.dspace.deduplication.service.DeduplicationService;
 import org.dspace.discovery.SearchServiceException;
@@ -158,6 +165,9 @@ public class SolrDedupServiceImpl implements DedupService {
 
     @Autowired(required = true)
     protected ConfigurationService configurationService;
+
+    @Autowired(required = true)
+    protected RelationshipService relationshipService;
 
     /***
      * Deduplication status
@@ -355,6 +365,10 @@ public class SolrDedupServiceImpl implements DedupService {
                 continue external;
             }
 
+            if (isCorrectionOrWithdrawOrReinstateRequest(ctx, iu.getID(), matchId)) {
+                continue external;
+            }
+
             Map<String, List<String>> tmp = new HashMap<String, List<String>>();
 
             for (String field : resultDoc.getFieldNames()) {
@@ -379,6 +393,28 @@ public class SolrDedupServiceImpl implements DedupService {
             build(ctx, iu.getID(), matchId, DeduplicationFlag.MATCH, tmp, searchSignature, null);
 
         }
+    }
+
+    private boolean isCorrectionOrWithdrawOrReinstateRequest(Context context, UUID id, UUID matchId) {
+
+        try {
+
+            Item firstItem = itemService.getReference(context, id);
+            Item secondItem = itemService.getReference(context, matchId);
+
+            return relationshipService.findByItems(context, firstItem, secondItem).stream()
+                .map(Relationship::getRelationshipType)
+                .anyMatch(type -> isCorrectionOrWithdrawOrReinstateRelationshipType(type.getLeftwardType()));
+
+        } catch (SQLException e) {
+            throw new SQLRuntimeException(e);
+        }
+
+    }
+
+    private boolean isCorrectionOrWithdrawOrReinstateRelationshipType(String type) {
+        return IS_WITHDRAW_OF_ITEM_RELATIONSHIP.equals(type) || IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP.equals(type)
+            || IS_CORRECTION_OF_ITEM_RELATIONSHIP.equals(type);
     }
 
     private void removeFake(String dedupID, Integer type) throws SearchServiceException {

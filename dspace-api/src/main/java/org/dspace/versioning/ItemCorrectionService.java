@@ -226,8 +226,8 @@ public class ItemCorrectionService {
         }
 
         return relationshipTypeService.findByLeftwardOrRightwardTypeName(context, relationship).stream()
-            .filter(relationshipType -> type.equals(relationshipType.getLeftType())).findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Relationship type " + relationship + " does not exist"));
+            .filter(relationshipType -> type.equals(relationshipType.getLeftType()))
+            .findFirst().orElse(null);
     }
 
     private List<MetadataCorrection> checkMetadataCorrections(Context context, Item originalItem, Item correctionItem) {

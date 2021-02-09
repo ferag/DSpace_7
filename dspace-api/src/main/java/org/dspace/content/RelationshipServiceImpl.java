@@ -742,4 +742,17 @@ public class RelationshipServiceImpl implements RelationshipService {
             throws SQLException {
         return relationshipDAO.countByTypeName(context, typeName);
     }
+
+    @Override
+    public boolean hasRelationshipType(DSpaceObject dsObject, String relationshipType) {
+        return dsObject.getMetadata().stream().anyMatch(metadataValue -> {
+            return "relationship.type".equals(metadataValue.getMetadataField().toString('.')) &&
+                    relationshipType.equals(metadataValue.getValue());
+        });
+    }
+
+    @Override
+    public List<Relationship> findByItems(Context context, Item firstItem, Item secondItem) throws SQLException {
+        return relationshipDAO.findByItems(context, firstItem, secondItem);
+    }
 }

@@ -430,4 +430,9 @@ public class ItemDAOImpl extends AbstractHibernateDSODAO<Item> implements ItemDA
         return count(query);
 
     }
+
+    @Override
+    public Item getReference(Context context, UUID id) throws SQLException {
+        return getHibernateSession(context).getReference(Item.class, id);
+    }
 }

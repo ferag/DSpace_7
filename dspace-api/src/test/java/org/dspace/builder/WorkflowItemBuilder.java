@@ -191,6 +191,10 @@ public class WorkflowItemBuilder extends AbstractBuilder<XmlWorkflowItem, XmlWor
         return addMetadataValue(MetadataSchemaEnum.DC.getName(), "identifier", "doi", doi);
     }
 
+    public WorkflowItemBuilder withRelationshipType(String relationshipType) {
+        return addMetadataValue("relationship", "type", null, relationshipType);
+    }
+
     public WorkflowItemBuilder withIdentifierOther(final String identifierOther) {
         return addMetadataValue(MetadataSchemaEnum.DC.getName(), "identifier", "other", identifierOther);
     }
@@ -256,6 +260,5 @@ public class WorkflowItemBuilder extends AbstractBuilder<XmlWorkflowItem, XmlWor
         }
         indexingService.commit();
     }
-
 
 }

@@ -253,6 +253,7 @@
 	      <step id="publication_indexing" />
 	      <step id="publication_bibliographic_details" />
 	      <step id="publication_references" />
+          <step id="detect-duplicate"/>
 	      <step id="upload" />
 	      <step id="license" />
 	    </submission-process>
@@ -289,6 +290,14 @@
         <submission-process name="modeB">
            <step id="onlyTitle"/>
         </submission-process>
+        
+	    <submission-process name="person">
+	      <step id="collection" />
+	      <step id="upload" />
+          <step id="detect-duplicate"/>
+	      <step id="license" />
+	    </submission-process>
+    
     </submission-definitions>
 
 </item-submission>

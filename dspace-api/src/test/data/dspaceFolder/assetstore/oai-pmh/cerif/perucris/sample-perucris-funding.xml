@@ -1,0 +1,19 @@
+<Funding xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="Fundings/a5cf36f3-dc0e-442e-abff-6cc39fc47d98">
+   <Type xmlns="https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types">https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types#FundingProgramme</Type>
+   <Acronym>E001</Acronym>
+   <Name xml:lang="es">PROCYT</Name>
+   <Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#AwardNumber">E001</Identifier>
+   <Keyword xml:lang="es">Investigacion Cientifica</Keyword>
+   <Keyword xml:lang="es">FONDECYT</Keyword>
+   <Funder>
+      <DisplayName>Fondo Nacional de Desarrollo Cientifico y Tecnologico - Fondecyt</DisplayName>
+      <OrgUnit id="OrgUnits/3fb93c1e-e6c7-45e5-bdf7-e2cebde9e49d">
+         <Name xml:lang="es">Fondo Nacional de Desarrollo Cientifico y Tecnologico - Fondecyt</Name>
+         <PostAddress>
+            <AddressCountry>--</AddressCountry>
+         </PostAddress>
+         <UbiGeo scheme="https://purl.org/pe-repo/inei/ubigeo">---</UbiGeo>
+      </OrgUnit>
+   </Funder>
+   <OAMandate mandated="true" uri="https://portal.concytec.gob.pe/images/stories/images2013/portal/areas-institucion/dsic/ley-30035.pdf" />
+</Funding>

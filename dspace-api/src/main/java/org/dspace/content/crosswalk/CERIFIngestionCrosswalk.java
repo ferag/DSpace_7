@@ -7,6 +7,8 @@
  */
 package org.dspace.content.crosswalk;
 
+import static java.lang.String.format;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -52,7 +54,7 @@ public class CERIFIngestionCrosswalk implements IngestionCrosswalk {
 
     private static final String CONVERTER_SEPARATOR = "@@";
 
-    private static final String CERIF_TO_DIM_XSL_PATH = "crosswalks/oai/metadataFormats/oai_cerif_to_dim_%s.xsl";
+    private static final String CERIF_TO_DIM_XSL_PATH = "crosswalks/oai/metadataFormats/%s/oai_cerif_to_dim_%s.xsl";
 
     private PluginService pluginService = CoreServiceFactory.getInstance().getPluginService();
 
@@ -67,6 +69,8 @@ public class CERIFIngestionCrosswalk implements IngestionCrosswalk {
     private String preTransformXsl;
 
     private String postTransformXsl;
+
+    private String metadataConfig;
 
     @Override
     public void ingest(Context context, DSpaceObject dso, List<Element> elements, boolean createMissingMetadataFields)
@@ -90,6 +94,10 @@ public class CERIFIngestionCrosswalk implements IngestionCrosswalk {
 
         if (dso.getType() != Constants.ITEM) {
             throw new IllegalArgumentException("Only items can be ingested by the CERIFIngestionCrosswalk");
+        }
+
+        if (metadataConfig == null) {
+            throw new IllegalStateException("The metadataConfig must be set");
         }
 
         Element preTrasformation = preTransform(cerifRootElement);
@@ -190,9 +198,13 @@ public class CERIFIngestionCrosswalk implements IngestionCrosswalk {
         }
     }
 
-    private StreamSource getCerifToDimXslt(Item item) {
+    private StreamSource getCerifToDimXslt(Item item) throws CrosswalkException {
         String parent = configurationService.getProperty("dspace.dir") + File.separator + "config" + File.separator;
-        return new StreamSource(new File(parent, String.format(CERIF_TO_DIM_XSL_PATH, getRelationshipType(item))));
+        File xsltFile = new File(parent, format(CERIF_TO_DIM_XSL_PATH, metadataConfig, getRelationshipType(item)));
+        if (!xsltFile.exists()) {
+            throw new CrosswalkException("The configured xslt does not exists: " + xsltFile.getPath());
+        }
+        return new StreamSource(xsltFile);
     }
 
     private IngestionCrosswalk getDIMIngestionCrosswalk() {
@@ -218,6 +230,10 @@ public class CERIFIngestionCrosswalk implements IngestionCrosswalk {
 
     public void setPostTransformXsl(String postTransformXsl) {
         this.postTransformXsl = postTransformXsl;
+    }
+
+    public void setMetadataConfig(String metadataConfig) {
+        this.metadataConfig = metadataConfig;
     }
 
 }

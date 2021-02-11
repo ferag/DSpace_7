@@ -1,0 +1,18 @@
+<Person xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="536cd538-dee2-4711-84ab-da86affb8490">
+   <PersonName>
+      <FamilyNames> Olivares Poggi</FamilyNames>
+      <FirstNames>Cesar Augusto</FirstNames>
+   </PersonName>
+   <Gender>m</Gender>
+   <ORCID>https://orcid.org/0000-0003-2678-3544</ORCID>
+   <ScopusAuthorID>56709412100</ScopusAuthorID>
+   <Affiliation>
+      <OrgUnit id="OrgUnits/1cf5d730-60da-48fb-be56-aa4436cf1702">
+         <Name xml:lang="es">Consejo Nacional de Ciencia, Tecnologia e Innovacion Tecnologica - Concytec</Name>
+         <PostAddress>
+            <AddressCountry>PE</AddressCountry>
+         </PostAddress>
+         <UbiGeo scheme="https://purl.org/pe-repo/inei/ubigeo">---</UbiGeo>
+      </OrgUnit>
+   </Affiliation>
+</Person>

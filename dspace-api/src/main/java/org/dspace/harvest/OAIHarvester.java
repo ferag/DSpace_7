@@ -84,6 +84,7 @@ import org.dspace.handle.service.HandleService;
 import org.dspace.harvest.model.OAIHarvesterAction;
 import org.dspace.harvest.model.OAIHarvesterOptions;
 import org.dspace.harvest.model.OAIHarvesterReport;
+import org.dspace.harvest.model.OAIHarvesterReport.ErrorDetails;
 import org.dspace.harvest.model.OAIHarvesterResponseDTO;
 import org.dspace.harvest.model.OAIHarvesterValidationResult;
 import org.dspace.harvest.service.HarvestedCollectionService;
@@ -330,7 +331,7 @@ public class OAIHarvester {
                 report.addError(getItemIdentifier(record), getRootMessage(ex), NONE.getAction());
                 report.incrementFailureCount();
                 harvestRow = rollbackAndReloadEntity(context, harvestRow);
-                logRecord(context, options, harvestRow, false, startTimestamp, getItemIdentifier(record), NONE);
+                logRecord(context, options, harvestRow, false, startTimestamp, getItemIdentifier(record), NONE, report);
             }
 
         }
@@ -360,14 +361,15 @@ public class OAIHarvester {
                 collectionService.removeItem(context, targetCollection, item);
             }
 
-            logRecord(context, options, harvestRow, true, startTime, itemOaiID, DELETION);
+            logRecord(context, options, harvestRow, true, startTime, itemOaiID, DELETION, report);
             return;
         }
 
         context.turnOffAuthorisationSystem();
 
         if (item != null) {
-            harvestedItem = updateItem(context, harvestedItem, harvestRow, record, repositoryId, options, startTime);
+            harvestedItem = updateItem(context, harvestedItem, harvestRow, record, repositoryId, options, startTime,
+                report);
         } else {
             harvestedItem = createItem(context, harvestRow, record, repositoryId, options, startTime, report);
             item = harvestedItem.getItem();
@@ -406,7 +408,7 @@ public class OAIHarvester {
 
     private HarvestedItem updateItem(Context context, HarvestedItem harvestedItem,
         HarvestedCollection harvestRow, Element record, String repositoryId, OAIHarvesterOptions options,
-        long startTimestamp) throws Exception {
+        long startTimestamp, OAIHarvesterReport report) throws Exception {
 
         Item item = harvestedItem.getItem();
         Collection collection = harvestRow.getCollection();
@@ -430,7 +432,7 @@ public class OAIHarvester {
             handleORE(context, harvestRow, repositoryId, itemOaiID, item);
         }
 
-        logRecord(context, options, harvestRow, true, startTimestamp, itemOaiID, UPDATE);
+        logRecord(context, options, harvestRow, true, startTimestamp, itemOaiID, UPDATE, report);
 
         return harvestedItem;
     }
@@ -484,7 +486,8 @@ public class OAIHarvester {
 
         context.uncacheEntity(workspaceItem);
 
-        logRecord(context, options, harvestRow, isItemValid && isRecordValid, startTimestamp, itemOaiID, ADDITION);
+        boolean isValid = isItemValid && isRecordValid;
+        logRecord(context, options, harvestRow, isValid, startTimestamp, itemOaiID, ADDITION, report);
 
         return harvestedItem;
     }
@@ -538,7 +541,6 @@ public class OAIHarvester {
         if (result.isNotValid()) {
             String recordIdentifier = getItemIdentifier(record);
             report.addError(recordIdentifier, result.getMessages(), ADDITION.getAction());
-            log.error("Record with id " + recordIdentifier + " invalid: " + result.getMessages());
         }
 
         return result.isValid();
@@ -832,6 +834,7 @@ public class OAIHarvester {
         String preTrasform = collectionService.getMetadataFirstValue(coll, "cris", "harvesting", "preTransform", ANY);
         String postTrasform = collectionService.getMetadataFirstValue(coll, "cris", "harvesting", "postTransform", ANY);
 
+        crosswalk.setMetadataConfig(harvestRow.getHarvestMetadataConfig());
         crosswalk.setIdPrefix(repositoryId + SPLIT);
         if (StringUtils.isNotBlank(preTrasform)) {
             crosswalk.setPreTransformXsl(new File(transformationDir, preTrasform).getAbsolutePath());
@@ -1027,7 +1030,8 @@ public class OAIHarvester {
     }
 
     private void logRecord(Context context, OAIHarvesterOptions options, HarvestedCollection harvestRow,
-        boolean isValid, Long startTimestamp, String itemIdentifier, OAIHarvesterAction action) {
+        boolean isValid, Long startTimestamp, String itemIdentifier, OAIHarvesterAction action,
+        OAIHarvesterReport report) {
 
         Collection collection = harvestRow.getCollection();
         long duration = System.currentTimeMillis() - startTimestamp;
@@ -1043,11 +1047,20 @@ public class OAIHarvester {
             .append(collectionService.getName(collection)).append(LOG_DELIMITER)
             .append(isValid).append(LOG_DELIMITER)
             .append(action).append(LOG_DELIMITER)
-            .append(duration)
+            .append(duration).append(LOG_DELIMITER)
+            .append(formatErrorMessages(isValid, report.getErrors().get(itemIdentifier)))
             .toString();
 
         log.trace(logMessage);
 
+    }
+
+    private String formatErrorMessages(boolean isValid, ErrorDetails errors) {
+        if (isValid || errors == null) {
+            return "";
+        }
+
+        return String.join(" - ", errors.getMessages()).replace(LOG_DELIMITER, "/");
     }
 
     private String getParentCommunityName(Context context, Collection collection) {

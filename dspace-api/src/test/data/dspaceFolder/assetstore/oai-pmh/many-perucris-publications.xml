@@ -1,0 +1,118 @@
+<?xml version='1.0' encoding='UTF-8'?><?xml-stylesheet href='static/style.xsl' type='text/xsl'?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+	<responseDate>2021-02-08T13:56:46Z</responseDate>
+	<request verb="ListRecords" metadataPrefix="cerif_perucris" set="perucris_publications">http://190.12.69.126:8080/oai/perucris</request>
+	<ListRecords>
+		<record>
+			<header>
+				<identifier>oai:test-harvest:Publications/20.500.12390/24</identifier>
+				<datestamp>2021-02-01T02:30:31Z</datestamp>
+				<setSpec>com_20.500.12390_22</setSpec>
+				<setSpec>col_123456789_389</setSpec>
+				<setSpec>perucris_publications</setSpec>
+			</header>
+			<metadata>
+				<Publication
+					xmlns="https://purl.org/pe-repo/cerif-profile/1.0/"
+					xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+					id="Publications/20.500.12390/24">
+					<Type
+						xmlns:oai_cerif="https://www.openaire.eu/cerif-profile/vocab/COAR_Publication_Types">http://purl.org/coar/resource_type/c_18cf</Type>
+					<Title xml:lang="es">La Implementacion de ORCID en la UASLP como parte de sus servicios de ciencia abierta</Title>
+					<PublicationDate>2018-10-03</PublicationDate>
+					<Handle>20.500.12390/24</Handle>
+					<URN>http://hdl.handle.net/20.500.12390/24</URN>
+					<Authors>
+						<Author>
+							<DisplayName>Vázquez Tapia, Rosalina</DisplayName>
+							<Person />
+						</Author>
+					</Authors>
+					<Publishers>
+						<Publisher>
+							<DisplayName>Consejo Nacional de Ciencia, Tecnología e Innovación
+								Tecnológica - Concytec</DisplayName>
+							<OrgUnit />
+						</Publisher>
+					</Publishers>
+					<Keyword xml:lang="en">Sistema de información científica
+					</Keyword>
+					<Keyword xml:lang="en">Información científica</Keyword>
+					<Keyword xml:lang="en">Terminología científica</Keyword>
+					<Keyword xml:lang="en">Software de código abierto</Keyword>
+					<Keyword xml:lang="en">Tecnología de la información</Keyword>
+					<Abstract xml:lang="en">Es el Repositorio Institucional de
+						Acceso Abierto de la UASLP, que almacena y organiza los acervos y
+						publicaciones universitarias para su consulta, visibilidad y
+						preservación digital, de manera libre y gratuita. Está
+						desarrollado bajo un modelo propio basado en los principios de un
+						CRIS (Current Research Information System). El objetivo de ORBIS
+						es brindar a los investigadores una plataforma institucional que
+						le permita gestionar su curriculum universitario y generar
+						indicadores de producción científica.</Abstract>
+					<ns4:Access
+						xmlns:ns4="http://purl.org/coar/access_right">http://purl.org/coar/access_right/c_abf2</ns4:Access>
+				</Publication>
+			</metadata>
+		</record>
+		<record>
+			<header>
+				<identifier>oai:test-harvest:Publications/20.500.12390/25</identifier>
+				<datestamp>2021-02-01T02:30:05Z</datestamp>
+				<setSpec>com_20.500.12390_22</setSpec>
+				<setSpec>col_123456789_389</setSpec>
+				<setSpec>perucris_publications</setSpec>
+			</header>
+			<metadata>
+				<Publication
+					xmlns="https://purl.org/pe-repo/cerif-profile/1.0/"
+					xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+					id="Publications/20.500.12390/25">
+					<Type
+						xmlns:oai_cerif="https://www.openaire.eu/cerif-profile/vocab/COAR_Publication_Types">http://purl.org/coar/resource_type/c_18cf</Type>
+					<Title xml:lang="es">Importancia y estado actual de la gestion de la informacion sobre investigacion (GII) en el Peru</Title>
+					<Handle>20.500.12390/25</Handle>
+					<URN>http://hdl.handle.net/20.500.12390/25</URN>
+					<Authors>
+						<Author>
+							<DisplayName>Melgar Sasieta, Andrés</DisplayName>
+							<Person id="5b361f23-a7bf-4de3-bc58-6ab9ebd36603">
+								<PersonName>
+									<FamilyNames>
+										Melgar Sasieta
+									</FamilyNames>
+									<FirstNames>Hector Andrés
+									</FirstNames>
+								</PersonName>
+								<Gender>m</Gender>
+								<ORCID>0000-0003-1110-123X</ORCID>
+								<ScopusAuthorID>57184005800</ScopusAuthorID>
+							</Person>
+						</Author>
+					</Authors>
+					<Publishers>
+						<Publisher>
+							<DisplayName>Consejo Nacional de Ciencia, Tecnología e Innovación
+								Tecnológica - Concytec</DisplayName>
+							<OrgUnit />
+						</Publisher>
+					</Publishers>
+					<Keyword xml:lang="en">Sistema de información científica
+					</Keyword>
+					<Keyword xml:lang="en">Información científica</Keyword>
+					<Keyword xml:lang="en">Gestión del conocimiento</Keyword>
+					<Abstract xml:lang="en">GII en el Perú: Diagnóstico de dos
+						etapas: 1. Gestión de las actividades de investigación a nivel
+						nacional (CONCYTEC) Auto-diagnóstico. 2. Gestión de las
+						actividades de investigación a nivel institucional: visita a
+						universidades e Institutos públicos de investigación,
+						participación en encuesta Global de OCLC-euroCRIS</Abstract>
+					<ns4:Access
+						xmlns:ns4="http://purl.org/coar/access_right">http://purl.org/coar/access_right/c_abf2</ns4:Access>
+				</Publication>
+			</metadata>
+		</record>
+	</ListRecords>
+</OAI-PMH>

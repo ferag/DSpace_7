@@ -40,8 +40,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class OAIHarvesterValidatorTest {
 
     private static final String OAI_PMH_CERIF_DIR_PATH = "./target/testing/dspace/assetstore/oai-pmh/cerif";
+    private static final String OAI_PMH_PERUCRIS_CERIF_DIR_PATH = OAI_PMH_CERIF_DIR_PATH + "/perucris";
+
     private static final String VALIDATION_DIR = OAI_PMH_CERIF_DIR_PATH + "/validation/";
-    private static final String CERIF_XSD_NAME = "openaire-cerif-profile.xsd";
+
+    private static final String CERIF_XSD_NAME = "openaire/openaire-cerif-profile.xsd";
+    private static final String PERUCRIS_CERIF_XSD_NAME = "perucris/perucris-cerif-profile.xsd";
 
     @Mock
     private ConfigurationService configurationService;
@@ -178,6 +182,66 @@ public class OAIHarvesterValidatorTest {
         OAIHarvesterValidationResult validationResult = validator.validate(record, harvestRow);
         assertThat(validationResult.isValid(), is(true));
         assertThat(validationResult.getMessages(), empty());
+    }
+
+    @Test
+    public void testPerucrisPersonValidationWithoutErrors() {
+
+        when(configurationService.getProperty("oai.harvester.validation-dir")).thenReturn(VALIDATION_DIR);
+        when(configurationService.getProperty("oai.harvester.validation.perucris-cerif.xsd"))
+            .thenReturn(PERUCRIS_CERIF_XSD_NAME);
+
+        Element record = readDocument(OAI_PMH_PERUCRIS_CERIF_DIR_PATH, "sample-perucris-person.xml");
+        HarvestedCollection harvestRow = buildHarvestedCollection("perucris-cerif");
+
+        OAIHarvesterValidationResult validationResult = validator.validate(record, harvestRow);
+        assertThat(validationResult.isValid(), is(true));
+        assertThat(validationResult.getMessages(), empty());
+    }
+
+    @Test
+    public void testPerucrisPersonValidationWithSingleError() {
+
+        when(configurationService.getProperty("oai.harvester.validation-dir")).thenReturn(VALIDATION_DIR);
+        when(configurationService.getProperty("oai.harvester.validation.perucris-cerif.xsd"))
+            .thenReturn(PERUCRIS_CERIF_XSD_NAME);
+
+        Element record = readDocument(OAI_PMH_PERUCRIS_CERIF_DIR_PATH, "perucris-person-with-wrong-order.xml");
+        HarvestedCollection harvestRow = buildHarvestedCollection("perucris-cerif");
+
+        OAIHarvesterValidationResult validationResult = validator.validate(record, harvestRow);
+        assertThat(validationResult.isValid(), is(false));
+        assertThat(validationResult.getMessages(), hasSize(1));
+
+        assertThat(validationResult.getMessages(), hasItem(containsString(
+            "Invalid content was found starting with element "
+                + "'{\"https://purl.org/pe-repo/cerif-profile/1.0/\":Gender}'")));
+    }
+
+    @Test
+    public void testPerucrisPersonValidationWithManyErrors() {
+
+        when(configurationService.getProperty("oai.harvester.validation-dir")).thenReturn(VALIDATION_DIR);
+        when(configurationService.getProperty("oai.harvester.validation.perucris-cerif.xsd"))
+            .thenReturn(PERUCRIS_CERIF_XSD_NAME);
+
+        Element record = readDocument(OAI_PMH_PERUCRIS_CERIF_DIR_PATH, "invalid-perucris-person.xml");
+        HarvestedCollection harvestRow = buildHarvestedCollection("perucris-cerif");
+
+        OAIHarvesterValidationResult validationResult = validator.validate(record, harvestRow);
+        assertThat(validationResult.isValid(), is(false));
+        assertThat(validationResult.getMessages(), hasSize(3));
+
+        assertThat(validationResult.getMessages(), hasItem(containsString(
+            "Element 'PostAddress' cannot have character [children], "
+                + "because the type's content type is element-only.")));
+
+        assertThat(validationResult.getMessages(), hasItem(containsString(
+            "Element 'ORCID' must have no element [children], and the value must be valid.")));
+
+        assertThat(validationResult.getMessages(), hasItem(containsString(
+            "Value '0000-0003-2678-3544' is not facet-valid with respect to pattern "
+                + "'https://orcid\\.org/0000-000(1-[5-9]|2-[0-9]|3-[0-4])[0-9]{3}-[0-9]{3}[0-9X]'")));
     }
 
     private HarvestedCollection buildHarvestedCollection(String metadataConfig) {

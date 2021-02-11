@@ -7,6 +7,7 @@
  */
 package org.dspace.builder;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -228,6 +229,14 @@ public class WorkspaceItemBuilder extends AbstractBuilder<WorkspaceItem, Workspa
         return addMetadataValue("dc", "identifier", "doi", doi);
     }
 
+    public WorkspaceItemBuilder withIsniIdentifier(String isni) {
+        return addMetadataValue("person", "identifier", "isni", isni);
+    }
+
+    public WorkspaceItemBuilder withPatentNo(String patentNo) {
+        return addMetadataValue("dc", "identifier", "patentno", patentNo);
+    }
+
     public WorkspaceItemBuilder withOrcidIdentifier(String orcid) {
         return addMetadataValue("person", "identifier", "orcid", orcid);
     }
@@ -277,6 +286,10 @@ public class WorkspaceItemBuilder extends AbstractBuilder<WorkspaceItem, Workspa
             handleException(e);
         }
         return this;
+    }
+
+    public WorkspaceItemBuilder withFulltext(String name, String source, byte[] content) {
+        return withFulltext(name, source, new ByteArrayInputStream(content));
     }
 
     public WorkspaceItemBuilder withFulltext(String name, String source, InputStream is) {

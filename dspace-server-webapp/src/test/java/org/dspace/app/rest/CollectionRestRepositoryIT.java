@@ -31,7 +31,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -49,6 +51,7 @@ import org.dspace.app.rest.model.MetadataValueRest;
 import org.dspace.app.rest.projection.Projection;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
 import org.dspace.app.rest.test.MetadataPatchSuite;
+import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.authorize.service.ResourcePolicyService;
 import org.dspace.builder.CollectionBuilder;
@@ -2607,33 +2610,12 @@ public class CollectionRestRepositoryIT extends AbstractControllerIntegrationTes
             .andExpect(status().isUnauthorized());
     }
 
-    private Community createCommunity(String name, Community parent, EPerson... admins) throws Exception {
-        return CommunityBuilder.createSubCommunity(context, parent)
-            .withName(name)
-            .withAdminGroup(admins)
-            .build();
-    }
-
-    private Community createCommunity(String name, EPerson... admins) throws Exception {
-        return CommunityBuilder.createCommunity(context)
-            .withName(name)
-            .withAdminGroup(admins)
-            .build();
-    }
-
-    private Collection createCollection(Community community, String name, EPerson... admins) throws Exception {
-        return CollectionBuilder.createCollection(context, community)
-            .withName(name)
-            .withAdminGroup(admins)
-            .build();
-    }
-
     @Test
     public void testFindSubmitAuthorizedAndMetadataWithInstitutionTemplateFilterPlugin() throws Exception {
         context.turnOffAuthorisationSystem();
         parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
-        createCollection(context, parentCommunity).withName("Collection").withRelationshipType("Publication").build();
-        createCollection(context, parentCommunity).withName("Collection 2").withRelationshipType("Publication").build();
+        createCollection(parentCommunity, "Collection", "Publication");
+        createCollection(parentCommunity, "Collection 2", "Publication");
         authorizeService.addPolicy(context, parentCommunity, Constants.ADD, eperson);
         context.restoreAuthSystemState();
 
@@ -2662,5 +2644,32 @@ public class CollectionRestRepositoryIT extends AbstractControllerIntegrationTes
         } finally {
             configurationService.setProperty("institution.template-id", originalTemplateId);
         }
+    }
+
+    private Community createCommunity(String name, Community parent, EPerson... admins) throws Exception {
+        return CommunityBuilder.createSubCommunity(context, parent)
+            .withName(name)
+            .withAdminGroup(admins)
+            .build();
+    }
+
+    private Community createCommunity(String name, EPerson... admins) throws Exception {
+        return CommunityBuilder.createCommunity(context)
+            .withName(name)
+            .withAdminGroup(admins)
+            .build();
+    }
+
+    private Collection createCollection(Community community, String name, EPerson... admins) throws Exception {
+        return createCollection(community, name, null, admins);
+    }
+
+    private Collection createCollection(Community community, String name, String relationshipType, EPerson... admins)
+        throws SQLException, AuthorizeException {
+        CollectionBuilder collectionBuilder = CollectionBuilder.createCollection(context, community)
+            .withName(name)
+            .withAdminGroup(admins);
+        Optional.ofNullable(relationshipType).ifPresent(collectionBuilder::withRelationshipType);
+        return collectionBuilder.build();
     }
 }

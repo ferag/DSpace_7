@@ -402,24 +402,28 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
         TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
 
         handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, eperson);
-        assertThat("Expected no errors", handler.getErrorMessages(), emptyCollectionOf(String.class));
-        assertThat("Expected no warnings", handler.getWarningMessages(), emptyCollectionOf(String.class));
+        assertThat("Expected no errors", handler.getErrorMessages(), empty());
+
+        List<String> warningMessages = handler.getWarningMessages();
+        assertThat("Expected 1 warning message", warningMessages, hasSize(1));
+        assertThat(warningMessages.get(0), containsString("Row 2 - Invalid item left in workspace"));
 
         List<String> infoMessages = handler.getInfoMessages();
-        assertThat("Expected 4 info messages", infoMessages, hasSize(4));
+        assertThat("Expected 3 info messages", infoMessages, hasSize(3));
         assertThat(infoMessages.get(0), containsString("Start reading all the metadata group rows"));
         assertThat(infoMessages.get(1), containsString("Found 2 metadata groups to process"));
         assertThat(infoMessages.get(2), containsString("Found 1 items to process"));
-        assertThat(infoMessages.get(3), containsString("Row 2 - Item created successfully"));
 
-        String id = getIdFromCreatedMessage(infoMessages.get(3), 2);
+        String id = getItemUuidFromMessage(warningMessages.get(0));
         Item createdItem = itemService.findByIdOrLegacyId(context, id);
         assertThat("Item expected to be created", createdItem, notNullValue());
+        assertThat(createdItem.isArchived(), is(false));
+        assertThat(findWorkspaceItem(createdItem), notNullValue());
 
         List<MetadataValue> metadata = createdItem.getMetadata();
         assertThat(metadata, hasItems(with("dc.contributor.author", "Author1", null, "authority1", 0, 600)));
-        assertThat(metadata, hasItems(with("dc.contributor.author", "Author2", null, null, 1, -1)));
-        assertThat(metadata, hasItems(with("oairecerif.author.affiliation", "OrgUnit1", null, null, 0, -1)));
+        assertThat(metadata, hasItems(with("dc.contributor.author", "Author2", 1)));
+        assertThat(metadata, hasItems(with("oairecerif.author.affiliation", "OrgUnit1")));
         assertThat(metadata, hasItems(with("oairecerif.author.affiliation", "OrgUnit2", null, "authority2", 1, 400)));
 
     }
@@ -530,56 +534,62 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
         context.commit();
         context.restoreAuthSystemState();
 
-        String fileLocation = getXlsFilePath("many-institution-publications.xls");
+        String fileLocation = getXlsFilePath("many-publications.xls");
         String[] args = new String[] { "bulk-import", "-c", publications.getID().toString(), "-f", fileLocation };
         TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
 
         handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, eperson);
-        assertThat("Expected no errors", handler.getErrorMessages(), emptyCollectionOf(String.class));
-        assertThat("Expected no warnings", handler.getWarningMessages(), emptyCollectionOf(String.class));
+        assertThat("Expected no errors", handler.getErrorMessages(), empty());
+
+        List<String> warningMessages = handler.getWarningMessages();
+        assertThat("Expected 1 warning message", warningMessages, hasSize(1));
+        assertThat(warningMessages.get(0), containsString("Row 2 - Invalid item left in workspace"));
 
         List<String> infoMessages = handler.getInfoMessages();
-        assertThat("Expected 6 info messages", infoMessages, hasSize(6));
+        assertThat("Expected 5 info messages", infoMessages, hasSize(5));
 
         assertThat(infoMessages.get(0), containsString("Start reading all the metadata group rows"));
         assertThat(infoMessages.get(1), containsString("Found 6 metadata groups to process"));
         assertThat(infoMessages.get(2), containsString("Found 3 items to process"));
-        assertThat(infoMessages.get(3), containsString("Row 2 - Item created successfully"));
-        assertThat(infoMessages.get(4), containsString("Row 3 - Item updated successfully"));
-        assertThat(infoMessages.get(5), containsString("Row 4 - Item deleted successfully"));
+        assertThat(infoMessages.get(3), containsString("Row 3 - Item updated successfully"));
+        assertThat(infoMessages.get(4), containsString("Row 4 - Item deleted successfully"));
 
         // verify created item (ROW 2)
-        String createdItemId = getIdFromCreatedMessage(infoMessages.get(3), 2);
+        String createdItemId = getItemUuidFromMessage(warningMessages.get(0));
         Item createdItem = itemService.findByIdOrLegacyId(context, createdItemId);
         assertThat("Item expected to be created", createdItem, notNullValue());
+        assertThat(createdItem.isArchived(), is(false));
+        assertThat(findWorkspaceItem(createdItem), notNullValue());
 
         List<MetadataValue> metadata = createdItem.getMetadata();
-        assertThat(metadata, hasItems(with("dc.title", "First publication", null, null, 0, -1)));
+        assertThat(metadata, hasItems(with("dc.title", "First publication")));
         assertThat(metadata, hasItems(with("dc.title", "First publication English", "en", null, 1, -1)));
-        assertThat(metadata, hasItems(with("dc.date.issued", "12/12/65", null, null, 0, -1)));
-        assertThat(metadata, hasItems(with("dc.contributor.author", "Thomas Edison", null, null, 0, -1)));
-        assertThat(metadata, hasItems(with("dc.contributor.author", "Morgan Pitt", null, null, 1, -1)));
-        assertThat(metadata, hasItems(with("oairecerif.author.affiliation", "Company", null, null, 0, -1)));
-        assertThat(metadata, hasItems(with("oairecerif.author.affiliation", PLACEHOLDER, null, null, 1, -1)));
-        assertThat(metadata, hasItems(with("dc.contributor.editor", "Editor", null, null, 0, -1)));
-        assertThat(metadata, hasItems(with("oairecerif.editor.affiliation", "EditorAffiliation", null, null, 0, -1)));
-        assertThat(metadata, hasItems(with("dc.identifier.doi", "10.1000/183", null, null, 0, -1)));
+        assertThat(metadata, hasItems(with("dc.date.issued", "12/12/65")));
+        assertThat(metadata, hasItems(with("dc.contributor.author", "Thomas Edison")));
+        assertThat(metadata, hasItems(with("dc.contributor.author", "Morgan Pitt", 1)));
+        assertThat(metadata, hasItems(with("oairecerif.author.affiliation", "Company")));
+        assertThat(metadata, hasItems(with("oairecerif.author.affiliation", PLACEHOLDER, 1)));
+        assertThat(metadata, hasItems(with("dc.contributor.editor", "Editor")));
+        assertThat(metadata, hasItems(with("oairecerif.editor.affiliation", "EditorAffiliation")));
+        assertThat(metadata, hasItems(with("dc.identifier.doi", "10.1000/183")));
+        assertThat(metadata, hasItems(with("dc.type", "Article")));
 
         // verify updated item (ROW 3)
         Item itemUpdated = itemService.find(context, itemToUpdateByRid.getID());
         metadata = itemUpdated.getMetadata();
 
-        assertThat(metadata, hasItems(with("dc.title", "Publication", null, null, 0, -1)));
+        assertThat(metadata, hasItems(with("dc.title", "Publication")));
         assertThat(metadata, hasItems(with("dc.title", "Publication English", "en", null, 1, -1)));
         assertThat(metadata, hasItems(with("dc.title", "English Publication", "en", null, 2, -1)));
-        assertThat(metadata, hasItems(with("dc.date.issued", "01/07/95", null, null, 0, -1)));
-        assertThat(metadata, hasItems(with("dc.contributor.author", "John Smith", null, null, 0, -1)));
-        assertThat(metadata, hasItems(with("oairecerif.author.affiliation", PLACEHOLDER, null, null, 0, -1)));
-        assertThat(metadata, hasItems(with("dc.identifier.doi", "10.1000/184", null, null, 0, -1)));
-        assertThat(metadata, hasItems(with("dc.relation.project", "Test Project", null, null, 0, -1)));
-        assertThat(metadata, hasItems(with("dc.relation.funding", "1", null, null, 0, -1)));
-        assertThat(metadata, hasItems(with("dc.relation.project", "Another Test Project", null, null, 1, -1)));
-        assertThat(metadata, hasItems(with("dc.relation.funding", PLACEHOLDER, null, null, 1, -1)));
+        assertThat(metadata, hasItems(with("dc.date.issued", "01/07/95")));
+        assertThat(metadata, hasItems(with("dc.contributor.author", "John Smith")));
+        assertThat(metadata, hasItems(with("oairecerif.author.affiliation", PLACEHOLDER)));
+        assertThat(metadata, hasItems(with("dc.identifier.doi", "10.1000/184")));
+        assertThat(metadata, hasItems(with("dc.relation.project", "Test Project")));
+        assertThat(metadata, hasItems(with("dc.relation.grantno", "1")));
+        assertThat(metadata, hasItems(with("dc.relation.project", "Another Test Project", 1)));
+        assertThat(metadata, hasItems(with("dc.relation.grantno", PLACEHOLDER, 1)));
+        assertThat(metadata, hasItems(with("dc.type", "Book")));
 
         // verify deleted item (ROW 4)
         assertThat("Item expected to be deleted", itemService.find(context, itemToDelete.getID()), nullValue());
@@ -869,9 +879,9 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
             String[] args = new String[] { "bulk-import", "-c", publicationCollectionId, "-f", fileLocation, "-e" };
             TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
 
-            handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, eperson);
-            assertThat("Expected no errors", handler.getErrorMessages(), emptyCollectionOf(String.class));
-            assertThat("Expected no warnings", handler.getWarningMessages(), emptyCollectionOf(String.class));
+            handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin);
+            assertThat("Expected no errors", handler.getErrorMessages(), empty());
+            assertThat("Expected no warnings", handler.getWarningMessages(), empty());
 
             List<String> infoMessages = handler.getInfoMessages();
             assertThat("Expected 4 info messages", infoMessages, hasSize(4));
@@ -879,10 +889,10 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
             assertThat(infoMessages.get(0), containsString("Start reading all the metadata group rows"));
             assertThat(infoMessages.get(1), containsString("Found 1 metadata groups to process"));
             assertThat(infoMessages.get(2), containsString("Found 1 items to process"));
-            assertThat(infoMessages.get(3), containsString("Row 2 - Item created successfully"));
+            assertThat(infoMessages.get(3), containsString("Row 2 - Item archived successfully"));
 
             // verify created item (ROW 2)
-            String createdItemId = getIdFromCreatedMessage(infoMessages.get(3), 2);
+            String createdItemId = getItemUuidFromMessage(infoMessages.get(3));
 
             Item createdItem = itemService.findByIdOrLegacyId(context, createdItemId);
             assertThat("Item expected to be created", createdItem, notNullValue());
@@ -891,7 +901,7 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
 
             List<MetadataValue> metadata = createdItem.getMetadata();
             assertThat(metadata, hasItems(with("dc.contributor.author", "Walter White", null, personId, 0, 600)));
-            assertThat(metadata, hasItems(with("dc.title", "Wonderful Publication", null, null, 0, -1)));
+            assertThat(metadata, hasItems(with("dc.title", "Wonderful Publication")));
 
         } finally {
             resetConsumers(defaultConsumers);
@@ -1040,9 +1050,9 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
             String[] args = new String[] { "bulk-import", "-c", publicationCollectionId, "-f", fileLocation, "-e" };
             TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
 
-            handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, eperson);
-            assertThat("Expected no errors", handler.getErrorMessages(), emptyCollectionOf(String.class));
-            assertThat("Expected no warnings", handler.getWarningMessages(), emptyCollectionOf(String.class));
+            handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin);
+            assertThat("Expected no errors", handler.getErrorMessages(), empty());
+            assertThat("Expected no warnings", handler.getWarningMessages(), empty());
 
             List<String> infoMessages = handler.getInfoMessages();
             assertThat("Expected 4 info messages", infoMessages, hasSize(4));
@@ -1050,10 +1060,10 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
             assertThat(infoMessages.get(0), containsString("Start reading all the metadata group rows"));
             assertThat(infoMessages.get(1), containsString("Found 1 metadata groups to process"));
             assertThat(infoMessages.get(2), containsString("Found 1 items to process"));
-            assertThat(infoMessages.get(3), containsString("Row 2 - Item created successfully"));
+            assertThat(infoMessages.get(3), containsString("Row 2 - Item archived successfully"));
 
             // verify created item (ROW 2)
-            String createdItemId = getIdFromCreatedMessage(infoMessages.get(3), 2);
+            String createdItemId = getItemUuidFromMessage(infoMessages.get(3));
 
             Item createdItem = itemService.findByIdOrLegacyId(context, createdItemId);
             assertThat("Item expected to be created", createdItem, notNullValue());
@@ -1062,7 +1072,7 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
 
             List<MetadataValue> metadata = createdItem.getMetadata();
             assertThat(metadata, hasItems(with("dc.contributor.author", "Walter White", null, personId, 0, 600)));
-            assertThat(metadata, hasItems(with("dc.title", "Wonderful Publication", null, null, 0, -1)));
+            assertThat(metadata, hasItems(with("dc.title", "Wonderful Publication")));
 
         } finally {
             resetConsumers(defaultConsumers);

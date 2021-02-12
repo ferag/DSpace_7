@@ -1539,9 +1539,9 @@
           <dc-qualifier>strength</dc-qualifier>
           <label>Renacyt Institution’s Strength(s)</label>
           <input-type>onebox</input-type>
-          <repeatable>true</repeatable>
+          <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Point(s) of strenght of this OrgUnit</hint>
         </field>
       </row>
     </form>
@@ -1626,9 +1626,9 @@
           <dc-qualifier>strength</dc-qualifier>
           <label>Renacyt Institution’s Strength(s)</label>
           <input-type>onebox</input-type>
-          <repeatable>true</repeatable>
+          <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Point(s) of strenght of this OrgUnit</hint>
         </field>
       </row>
     </form>
@@ -6976,12 +6976,12 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
         <field>
           <dc-schema>oairecerif</dc-schema>
-          <dc-element>fundingProgram</dc-element>
-          <label>Owner (Persons)</label>
+          <dc-element>fundingParent</dc-element>
+          <label>Program</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Link this funding with its upper level if applicable</hint>
         </field>
       </row>
       <row>
@@ -7193,12 +7193,12 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
         <field>
           <dc-schema>oairecerif</dc-schema>
-          <dc-element>fundingProgram</dc-element>
-          <label>Owner (Persons)</label>
+          <dc-element>fundingParent</dc-element>
+          <label>Program</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Link this funding with its upper level if applicable</hint>
         </field>
       </row>
       <row>

@@ -7,9 +7,6 @@
  */
 package org.dspace.xmlworkflow.state.actions.processingaction;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.dspace.authority.service.AuthorityValueService.GENERATE;
-import static org.dspace.authority.service.AuthorityValueService.REFERENCE;
 import static org.dspace.content.Item.ANY;
 
 import java.io.IOException;
@@ -22,21 +19,15 @@ import java.util.function.Predicate;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.dspace.authority.service.AuthorityValueService;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.Item;
-import org.dspace.content.MetadataValue;
 import org.dspace.content.WorkspaceItem;
-import org.dspace.content.authority.service.ChoiceAuthorityService;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.core.Context;
-import org.dspace.eperson.Group;
-import org.dspace.eperson.service.GroupService;
 import org.dspace.services.ConfigurationService;
 import org.dspace.util.UUIDUtils;
 import org.dspace.versioning.ItemCorrectionProvider;
@@ -45,11 +36,10 @@ import org.dspace.versioning.model.ItemCorrection;
 import org.dspace.workflow.WorkflowException;
 import org.dspace.workflow.WorkflowService;
 import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
+import org.dspace.xmlworkflow.service.PostShadowCopyCreationAction;
 import org.dspace.xmlworkflow.state.Step;
 import org.dspace.xmlworkflow.state.actions.ActionResult;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -61,8 +51,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ShadowCopyAction extends ProcessingAction {
 
     public static final int OUTCOME_FINALIZE_ITEM = 1;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ShadowCopyAction.class);
 
     @Autowired
     private CollectionService collectionService;
@@ -86,13 +74,10 @@ public class ShadowCopyAction extends ProcessingAction {
     private ItemCorrectionService itemCorrectionService;
 
     @Autowired
-    private GroupService groupService;
-
-    @Autowired
-    private ChoiceAuthorityService choiceAuthorityService;
-
-    @Autowired
     private InstallItemService installItemService;
+
+    @Autowired(required = false)
+    private List<PostShadowCopyCreationAction> postCreationActions;
 
     @Override
     public void activate(Context context, XmlWorkflowItem workflowItem) {
@@ -108,8 +93,15 @@ public class ShadowCopyAction extends ProcessingAction {
             return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, OUTCOME_FINALIZE_ITEM);
         }
 
-        replaceMetadataAuthorities(context, workspaceItemShadowCopy.getItem());
-        setCrisPolicyGroupMetadata(context, workspaceItemShadowCopy.getItem());
+        if (CollectionUtils.isNotEmpty(postCreationActions)) {
+
+            for (PostShadowCopyCreationAction postAction : postCreationActions) {
+                postAction.process(context, workspaceItemShadowCopy);
+            }
+
+            itemService.update(context, workspaceItemShadowCopy.getItem());
+        }
+
         workflowService.start(context, workspaceItemShadowCopy);
 
         return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, ActionResult.OUTCOME_COMPLETE);
@@ -154,6 +146,11 @@ public class ShadowCopyAction extends ProcessingAction {
             itemService.withdraw(ctx, itemToCorrectCopy);
         }
 
+        Item mergedInItem = concytecWorkflowService.findMergeOfItem(ctx, itemToCorrectCopy);
+        if (mergedInItem != null) {
+            itemToCorrectCopy = mergedInItem;
+        }
+
         WorkspaceItem correctionWorkspaceItemCopy = createItemCopyCorrection(ctx, itemToCorrectCopy.getID());
         concytecWorkflowService.createShadowRelationship(ctx, correctionItem, correctionWorkspaceItemCopy.getItem());
 
@@ -177,17 +174,21 @@ public class ShadowCopyAction extends ProcessingAction {
         return withdrawnWorkspaceItemCopy;
     }
 
-    private WorkspaceItem createShadowCopyForReinstate(Context context, Item reinstateItem, Item itemToReinstate)
+    private WorkspaceItem createShadowCopyForReinstate(Context ctx, Item reinstateItem, Item itemToReinstate)
         throws SQLException, AuthorizeException {
 
-        Item itemToReinstateCopy = concytecWorkflowService.findShadowItemCopy(context, itemToReinstate);
-        if (itemToReinstateCopy == null || !itemToReinstateCopy.isWithdrawn()) {
+        Item itemToReinstateCopy = concytecWorkflowService.findShadowItemCopy(ctx, itemToReinstate);
+        if (itemToReinstateCopy == null || !itemToReinstateCopy.isWithdrawn() || isMergedIn(ctx, itemToReinstateCopy)) {
             return null;
         }
 
-        WorkspaceItem reinstateWorkspaceItemCopy = createItemCopyReinstate(context, itemToReinstateCopy.getID());
-        concytecWorkflowService.createShadowRelationship(context, reinstateItem, reinstateWorkspaceItemCopy.getItem());
+        WorkspaceItem reinstateWorkspaceItemCopy = createItemCopyReinstate(ctx, itemToReinstateCopy.getID());
+        concytecWorkflowService.createShadowRelationship(ctx, reinstateItem, reinstateWorkspaceItemCopy.getItem());
         return reinstateWorkspaceItemCopy;
+    }
+
+    private boolean isMergedIn(Context context, Item itemToReinstateCopy) throws SQLException {
+        return concytecWorkflowService.findMergeOfItem(context, itemToReinstateCopy) != null;
     }
 
     private Collection findDirectorioCollectionByRelationshipType(Context context, Item item)
@@ -234,52 +235,6 @@ public class ShadowCopyAction extends ProcessingAction {
         throws SQLException, AuthorizeException {
         return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context, itemCopyId,
             ConcytecWorkflowService.IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP);
-    }
-
-    private void replaceMetadataAuthorities(Context context, Item item) throws SQLException, AuthorizeException {
-        for (MetadataValue metadataValue : item.getMetadata()) {
-            String authority = metadataValue.getAuthority();
-            if (isNotBlank(authority) && notStartsWithWillBePrefix(authority) && isItemAuthority(metadataValue)) {
-                metadataValue.setAuthority(AuthorityValueService.REFERENCE + "SHADOW::" + authority);
-            }
-        }
-        itemService.update(context, item);
-    }
-
-    private boolean notStartsWithWillBePrefix(String authority) {
-        return !authority.startsWith(REFERENCE) && !authority.startsWith(GENERATE);
-    }
-
-    private boolean isItemAuthority(MetadataValue value) {
-        return choiceAuthorityService.isItemAuthority(value.getMetadataField().toString('_'));
-    }
-
-    private void setCrisPolicyGroupMetadata(Context context, Item item) throws SQLException {
-
-        itemService.clearMetadata(context, item, "cris", "policy", "group", Item.ANY);
-
-        String[] policyGroups = configurationService.getArrayProperty("directorio.security.policy-groups");
-        if (ArrayUtils.isEmpty(policyGroups)) {
-            return;
-        }
-
-        for (String policyGroup : policyGroups) {
-            UUID groupId = UUIDUtils.fromString(policyGroup);
-            if (groupId == null) {
-                LOGGER.warn("Invalid directorio.security.policy-groups property set: " + policyGroup);
-                continue;
-            }
-
-            Group group = groupService.find(context, groupId);
-            if (group == null) {
-                LOGGER.warn("Policy group not found by directorio.security.policy-groups value " + policyGroup);
-                continue;
-            }
-
-            itemService.addMetadata(context, item, "cris", "policy", "group", null,
-                group.getNameWithoutTypePrefix(), policyGroup, 600);
-        }
-
     }
 
     @Override

@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -37,8 +38,8 @@ import org.dspace.content.service.BitstreamService;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
 import org.dspace.content.service.ItemService;
+import org.dspace.content.service.RelationshipService;
 import org.dspace.content.service.WorkspaceItemService;
-import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.core.I18nUtil;
@@ -122,6 +123,9 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
     @Autowired(required = true)
     protected ConfigurationService configurationService;
 
+    @Autowired(required = true)
+    protected RelationshipService relationshipService;
+
     protected CollectionServiceImpl() {
         super();
     }
@@ -204,7 +208,7 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
 
     @Override
     public List<Collection> findAuthorizedOptimized(Context context, int actionID) throws SQLException {
-        if (!ConfigurationManager
+        if (!configurationService
             .getBooleanProperty("org.dspace.content.Collection.findAuthorizedPerformanceOptimize", false)) {
             // Fallback to legacy query if config says so. The rationale could be that a site found a bug.
             return findAuthorized(context, null, actionID);
@@ -305,9 +309,10 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
     }
 
     @Override
-    public void setMetadata(Context context, Collection collection, String field, String value)
-        throws MissingResourceException, SQLException {
-        if ((field.trim()).equals("name") && (value == null || value.trim().equals(""))) {
+    public void setMetadataSingleValue(Context context, Collection collection,
+            MetadataFieldName field, String language, String value)
+            throws MissingResourceException, SQLException {
+        if (field.equals(MD_NAME) && (value == null || value.trim().equals(""))) {
             try {
                 value = I18nUtil.getMessage("org.dspace.workflow.WorkflowManager.untitled");
             } catch (MissingResourceException e) {
@@ -315,21 +320,19 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
             }
         }
 
-        String[] MDValue = getMDValueByLegacyField(field);
-
         /*
          * Set metadata field to null if null
          * and trim strings to eliminate excess
          * whitespace.
          */
         if (value == null) {
-            clearMetadata(context, collection, MDValue[0], MDValue[1], MDValue[2], Item.ANY);
+            clearMetadata(context, collection, field.SCHEMA, field.ELEMENT, field.QUALIFIER, Item.ANY);
             collection.setMetadataModified();
         } else {
-            setMetadataSingleValue(context, collection, MDValue[0], MDValue[1], MDValue[2], null, value);
+            super.setMetadataSingleValue(context, collection, field, null, value);
         }
 
-        collection.addDetails(field);
+        collection.addDetails(field.toString());
     }
 
     @Override
@@ -500,22 +503,6 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
         }
     }
 
-    /**
-     * Get the value of a metadata field
-     *
-     * @param collection which collection to operate on
-     * @param field      the name of the metadata field to get
-     * @return the value of the metadata field
-     * @throws IllegalArgumentException if the requested metadata field doesn't exist
-     */
-    @Override
-    @Deprecated
-    public String getMetadata(Collection collection, String field) {
-        String[] MDValue = getMDValueByLegacyField(field);
-        String value = getMetadataFirstValue(collection, MDValue[0], MDValue[1], MDValue[2], Item.ANY);
-        return value == null ? "" : value;
-    }
-
     @Override
     public Group createSubmitters(Context context, Collection collection) throws SQLException, AuthorizeException {
         // Check authorisation - Must be an Admin to create Submitters Group
@@ -596,7 +583,7 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
 
     @Override
     public String getLicense(Collection collection) {
-        String license = getMetadata(collection, "license");
+        String license = getMetadataFirstValue(collection, CollectionService.MD_LICENSE, Item.ANY);
 
         if (license == null || license.trim().equals("")) {
             // Fallback to site-wide default
@@ -968,7 +955,7 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
     public List<Collection> findCollectionsWithSubmit(String q, Context context, Community community,
         String entityType, int offset, int limit) throws SQLException, SearchServiceException {
 
-        List<Collection> collections = new ArrayList<Collection>();
+        List<Collection> collections = new ArrayList<>();
         DiscoverQuery discoverQuery = new DiscoverQuery();
         discoverQuery.setDSpaceObjectFilter(IndexableCollection.TYPE);
         discoverQuery.setStart(offset);
@@ -1070,4 +1057,102 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
         return communityService.getAllParents(context, collection).stream()
             .anyMatch(community -> community.getID().equals(directorioId));
     }
+
+    @Override
+    public Collection retrieveCollectionByRelationshipType(Context context, Item item, String relationshipType)
+            throws SQLException {
+        Collection ownCollection = item.getOwningCollection();
+        return retrieveCollectionByRelationshipType(context, ownCollection.getCommunities(), relationshipType);
+    }
+
+    private Collection retrieveCollectionByRelationshipType(Context context, List<Community> communities,
+            String relationshipType) {
+
+        for (Community community : communities) {
+            Collection collection = retriveCollectionByRelationshipType(context, community, relationshipType);
+            if (collection != null) {
+                return collection;
+            }
+        }
+
+        for (Community community : communities) {
+            List<Community> parentCommunities = community.getParentCommunities();
+            Collection collection = retrieveCollectionByRelationshipType(context, parentCommunities, relationshipType);
+            if (collection != null) {
+                return collection;
+            }
+        }
+
+        return retriveCollectionByRelationshipType(context, null, relationshipType);
+    }
+
+    @Override
+    public Collection retriveCollectionByRelationshipType(Context context, Community community,
+            String relationshipType) {
+        context.turnOffAuthorisationSystem();
+        List<Collection> collections;
+        try {
+            collections = findCollectionsWithSubmit(null, context, community, relationshipType, 0, 1);
+        } catch (SQLException | SearchServiceException e) {
+            throw new RuntimeException(e);
+        }
+        context.restoreAuthSystemState();
+        if (collections != null && collections.size() > 0) {
+            return collections.get(0);
+        }
+        if (community != null) {
+            for (Community subCommunity : community.getSubcommunities()) {
+                Collection collection = retriveCollectionByRelationshipType(context, subCommunity, relationshipType);
+                if (collection != null) {
+                    return collection;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<Collection> findCollectionsAdministered(String query, Context context, int offset, int limit)
+        throws SQLException, SearchServiceException {
+
+        DiscoverQuery discoverQuery = new DiscoverQuery();
+        discoverQuery.setDSpaceObjectFilter(IndexableCollection.TYPE);
+        discoverQuery.setStart(offset);
+        discoverQuery.setMaxResults(limit);
+
+        return retrieveCollectionsAdministered(context, discoverQuery, query).getIndexableObjects().stream()
+            .map(indexableObject -> ((IndexableCollection) indexableObject).getIndexedObject())
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public int countCollectionsAdministered(String query, Context context) throws SQLException, SearchServiceException {
+        DiscoverQuery discoverQuery = new DiscoverQuery();
+        discoverQuery.setMaxResults(0);
+        discoverQuery.setDSpaceObjectFilter(IndexableCollection.TYPE);
+        return (int) retrieveCollectionsAdministered(context, discoverQuery, query).getTotalSearchResults();
+    }
+
+    private DiscoverResult retrieveCollectionsAdministered(Context context, DiscoverQuery discoverQuery, String query)
+        throws SQLException, SearchServiceException {
+
+        if (!authorizeService.isAdmin(context)) {
+
+            String filterQuery = groupService.allMemberGroupsSet(context, context.getCurrentUser()).stream()
+                .map(group -> "g" + group.getID())
+                .collect(Collectors.joining(" OR ", "admin:(", ")"));
+
+            discoverQuery.addFilterQueries(filterQuery);
+        }
+
+        if (StringUtils.isNotBlank(query)) {
+            StringBuilder buildQuery = new StringBuilder();
+            String escapedQuery = ClientUtils.escapeQueryChars(query);
+            buildQuery.append(escapedQuery).append(" OR ").append(escapedQuery).append("*");
+            discoverQuery.setQuery(buildQuery.toString());
+        }
+
+        return searchService.search(context, discoverQuery);
+    }
+
 }

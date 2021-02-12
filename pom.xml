@@ -234,9 +234,9 @@
                             <id>verify-style</id>
                             <!-- Bind to verify so it runs after package & unit tests, but before install -->
                             <phase>verify</phase>
-                            <goals>
+                            <!-- <goals>
                                 <goal>check</goal>
-                            </goals>
+                            </goals> -->
                         </execution>
                     </executions>
                     <configuration>
@@ -413,6 +413,7 @@
                         <exclude>**/readme*</exclude>
                         <exclude>**/.gitignore</exclude>
                         <exclude>**/*.cfg</exclude>
+                        <exclude>**/*.conf</exclude>
                     </excludes>
                     <mapping>
                         <!-- Custom DSpace file extensions which are not recognized by license-maven-plugin:

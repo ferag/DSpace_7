@@ -1,0 +1,25 @@
+<Publication xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="Publications/20.500.12390/24">
+   <oai_cerif:Type xmlns:oai_cerif="https://www.openaire.eu/cerif-profile/vocab/COAR_Publication_Types">http://purl.org/coar/resource_type/c_18cf</oai_cerif:Type>
+   <Title xml:lang="es">La Implementacion de ORCID en la UASLP como parte de sus servicios de ciencia abierta</Title>
+   <PublicationDate>2018-10-03</PublicationDate>
+   <Handle>20.500.12390/24</Handle>
+   <URN>http://hdl.handle.net/20.500.12390/24</URN>
+   <Authors>
+      <Author>
+         <DisplayName>Vazquez Tapia, Rosalina</DisplayName>
+         <Person />
+      </Author>
+   </Authors>
+   <Publishers>
+      <Publisher>
+         <DisplayName>Consejo Nacional de Ciencia, Tecnologia e Innovacion Tecnologica - Concytec</DisplayName>
+         <OrgUnit />
+      </Publisher>
+   </Publishers>
+   <Keyword xml:lang="en">Sistema de informacion cientifica</Keyword>
+   <Keyword xml:lang="en">Informacion cientifica</Keyword>
+   <Keyword xml:lang="en">Terminologia cientifica</Keyword>
+   <Keyword xml:lang="en">Software de codigo abierto</Keyword>
+   <Keyword xml:lang="en">Tecnologia de la informacion</Keyword>
+   <Abstract xml:lang="en">Es el Repositorio Institucional de Acceso Abierto de la UASLP, que almacena y organiza los acervos y publicaciones universitarias para su consulta, visibilidad y preservacion digital, de manera libre y gratuita. Esta desarrollado bajo un modelo propio basado en los principios de un CRIS (Current Research Information System). El objetivo de ORBIS es brindar a los investigadores una plataforma institucional que le permita gestionar su curriculum universitario y generar indicadores de produccion cientifica.</Abstract>
+</Publication>

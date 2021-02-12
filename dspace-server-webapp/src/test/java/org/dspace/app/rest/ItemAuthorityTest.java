@@ -11,12 +11,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Resource;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import org.dspace.app.rest.matcher.ItemAuthorityMatcher;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;

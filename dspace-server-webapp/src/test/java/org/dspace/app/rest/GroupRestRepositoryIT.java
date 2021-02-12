@@ -3228,6 +3228,72 @@ public class GroupRestRepositoryIT extends AbstractControllerIntegrationTest {
 
         context.restoreAuthSystemState();
 
+        String authToken = getAuthToken("first@user.it", password);
+        getClient(authToken).perform(get("/api/eperson/groups/" + group.getID()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$._links.allMembers.href", containsString("groups/" + group.getID() + "/allMembers")));
+
+        getClient(authToken).perform(get("/api/eperson/groups/" + group.getID() + "/allMembers"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.allMembers", hasSize(1)))
+            .andExpect(jsonPath("$._embedded.allMembers", hasItem(matchEPersonOnEmail("first@user.it"))));
+    }
+
+    @Test
+    public void testGetAllMembersLinkWithWorkflowGroupMembers() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Group group = createGroup("group");
+        Group firstSubGroup = createGroup("firstSubGroup", group);
+        Group secondSubGroup = createGroup("secondSubGroup", group);
+        Group thirdSubGroup = createGroup("thirdSubGroup", secondSubGroup);
+        Group anotherGroup = createGroup("anotherGroup");
+
+        CollectionBuilder.createCollection(context, parentCommunity)
+            .withWorkflowGroup(1, group)
+            .build();
+
+        createEPerson("first@user.it", group);
+        createEPerson("second@user.it", firstSubGroup);
+        createEPerson("third@user.it", thirdSubGroup);
+        createEPerson("another@user.it", anotherGroup);
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken("first@user.it", password);
+        getClient(authToken).perform(get("/api/eperson/groups/" + group.getID()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$._links.allMembers.href", containsString("groups/" + group.getID() + "/allMembers")));
+
+        getClient(authToken).perform(get("/api/eperson/groups/" + group.getID() + "/allMembers"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.allMembers", hasSize(3)))
+            .andExpect(jsonPath("$._embedded.allMembers", hasItem(matchEPersonOnEmail("first@user.it"))))
+            .andExpect(jsonPath("$._embedded.allMembers", hasItem(matchEPersonOnEmail("second@user.it"))))
+            .andExpect(jsonPath("$._embedded.allMembers", hasItem(matchEPersonOnEmail("third@user.it"))));
+    }
+
+    @Test
+    public void testGetAllMembersLinkWithAdmin() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Group group = createGroup("group");
+        Group firstSubGroup = createGroup("firstSubGroup", group);
+        Group secondSubGroup = createGroup("secondSubGroup", group);
+        Group thirdSubGroup = createGroup("thirdSubGroup", secondSubGroup);
+        Group anotherGroup = createGroup("anotherGroup");
+
+        createEPerson("first@user.it", group);
+        createEPerson("second@user.it", firstSubGroup);
+        createEPerson("third@user.it", thirdSubGroup);
+        createEPerson("another@user.it", anotherGroup);
+
+        context.restoreAuthSystemState();
+
         String authToken = getAuthToken(admin.getEmail(), password);
         getClient(authToken).perform(get("/api/eperson/groups/" + group.getID()))
             .andExpect(status().isOk())
@@ -3427,7 +3493,11 @@ public class GroupRestRepositoryIT extends AbstractControllerIntegrationTest {
     }
 
     private EPerson createEPerson(String email, Group group) {
-        return EPersonBuilder.createEPerson(context).withEmail(email).withGroupMembership(group).build();
+        return EPersonBuilder.createEPerson(context)
+            .withEmail(email)
+            .withPassword(password)
+            .withGroupMembership(group)
+            .build();
     }
 
 }

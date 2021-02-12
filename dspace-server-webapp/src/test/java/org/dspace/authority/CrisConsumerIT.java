@@ -55,7 +55,9 @@ import org.dspace.content.Community;
 import org.dspace.content.EntityType;
 import org.dspace.content.Item;
 import org.dspace.content.RelationshipType;
+import org.dspace.content.MetadataValue;
 import org.dspace.content.WorkspaceItem;
+import org.dspace.content.service.ItemService;
 import org.dspace.eperson.EPerson;
 import org.dspace.event.factory.EventServiceFactory;
 import org.dspace.event.service.EventService;
@@ -102,6 +104,9 @@ public class CrisConsumerIT extends AbstractControllerIntegrationTest {
 
     @Autowired
     private PoolTaskService poolTaskService;
+
+    @Autowired
+    private ItemService itemService;
 
     /**
      * This method will be run before the first test as per @BeforeClass. It will
@@ -469,12 +474,7 @@ public class CrisConsumerIT extends AbstractControllerIntegrationTest {
                 .build();
 
         context.turnOffAuthorisationSystem();
-        // create a Person collection in a separate repository branch so that it is not eligible as target
-        Community unrelatedCommunity = CommunityBuilder.createCommunity(context)
-                .withName("Parent Community")
-                .build();
-        createCollection("Collection of persons", "Person", unrelatedCommunity);
-        context.restoreAuthSystemState();
+        // no person collection is created so it will be not possible to create a related person item
 
         String authToken = getAuthToken(submitter.getEmail(), password);
 
@@ -685,7 +685,7 @@ public class CrisConsumerIT extends AbstractControllerIntegrationTest {
         Collection personCollection = createCollection("Collection of persons", "Person", subCommunity);
 
         Item person = ItemBuilder.createItem(context, personCollection)
-            .withTitle("Walter White")
+            .withTitle("Walter White Original")
             .withOrcidIdentifier("0000-0002-9079-593X")
             .build();
 
@@ -704,7 +704,11 @@ public class CrisConsumerIT extends AbstractControllerIntegrationTest {
         String authorAuthority = author.getAuthority();
         assertThat("The author should have the authority set", authorAuthority, equalTo(person.getID().toString()));
         assertThat("The author should have an ACCEPTED confidence", author.getConfidence(), equalTo(CF_ACCEPTED));
-
+        person = context.reloadEntity(person);
+        List<MetadataValue> metadata = itemService.getMetadataByMetadataString(person, "dc.title");
+        assertThat("The person item still have a single dc.title", metadata.size(), equalTo(1));
+        assertThat("The person item still have the original dc.title", metadata.get(0).getValue(),
+                equalTo("Walter White Original"));
     }
 
     @Test
@@ -741,7 +745,7 @@ public class CrisConsumerIT extends AbstractControllerIntegrationTest {
         Collection personCollection = createCollection("Collection of persons", "Person", subCommunity);
 
         Item person = ItemBuilder.createItem(context, personCollection)
-            .withTitle("Walter White")
+            .withTitle("Walter White Original")
             .withOrcidIdentifier("0000-0002-9079-593X")
             .build();
 
@@ -760,7 +764,11 @@ public class CrisConsumerIT extends AbstractControllerIntegrationTest {
         String authorAuthority = author.getAuthority();
         assertThat("The author should have the authority set", authorAuthority, equalTo(person.getID().toString()));
         assertThat("The author should have an ACCEPTED confidence", author.getConfidence(), equalTo(CF_ACCEPTED));
-
+        person = context.reloadEntity(person);
+        List<MetadataValue> metadata = itemService.getMetadataByMetadataString(person, "dc.title");
+        assertThat("The person item still have a single dc.title", metadata.size(), equalTo(1));
+        assertThat("The person item still have the original dc.title", metadata.get(0).getValue(),
+                equalTo("Walter White Original"));
     }
 
     @Test

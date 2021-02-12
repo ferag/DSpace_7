@@ -154,7 +154,7 @@ public class WorkflowItemBuilder extends AbstractBuilder<XmlWorkflowItem, XmlWor
             final String element, final String qualifier, final String value) {
         try {
             itemService.setMetadataSingleValue(context, workspaceItem.getItem(), schema, element, qualifier, null,
-                    value);
+                value);
         } catch (Exception e) {
             return handleException(e);
         }
@@ -189,6 +189,30 @@ public class WorkflowItemBuilder extends AbstractBuilder<XmlWorkflowItem, XmlWor
 
     public WorkflowItemBuilder withDoiIdentifier(final String doi) {
         return addMetadataValue(MetadataSchemaEnum.DC.getName(), "identifier", "doi", doi);
+    }
+
+    public WorkflowItemBuilder withIsniIdentifier(String isni) {
+        return addMetadataValue("person", "identifier", "isni", isni);
+    }
+
+    public WorkflowItemBuilder withPatentNo(String patentNo) {
+        return addMetadataValue("dc", "identifier", "patentno", patentNo);
+    }
+
+    public WorkflowItemBuilder withRelationshipType(String relationshipType) {
+        return addMetadataValue("relationship", "type", null, relationshipType);
+    }
+
+    public WorkflowItemBuilder withIdentifierOther(final String identifierOther) {
+        return addMetadataValue(MetadataSchemaEnum.DC.getName(), "identifier", "other", identifierOther);
+    }
+
+    public WorkflowItemBuilder withIdentifierIsi(String isi) {
+        return addMetadataValue(MetadataSchemaEnum.DC.getName(), "identifier", "isi", isi);
+    }
+
+    public WorkflowItemBuilder withScopusIdentifier(String issn) {
+        return addMetadataValue("dc", "identifier", "scopus", issn);
     }
 
     public WorkflowItemBuilder grantLicense() {

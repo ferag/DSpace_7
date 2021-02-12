@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:util="http://www.springframework.org/schema/util"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
-    default-lazy-init="true">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-lazy-init="true">
 
     <bean class="org.dspace.external.service.impl.ExternalDataServiceImpl" primary="true"/>
 
@@ -58,7 +57,7 @@
     <bean id="wosLiveImportDataProvider" class="org.dspace.external.provider.impl.LiveImportDataProvider">
         <property name="metadataSource" ref="WosImportService"/>
         <property name="sourceIdentifier" value="wos"/>
-        <property name="recordIdMetadata" value="dc.identifier.other"/>
+        <property name="recordIdMetadata" value="dc.identifier.isi"/>
         <property name="supportedEntityTypes">
             <list>
                 <value>Publication</value>
@@ -74,7 +73,26 @@
         <property name="supportedEntityTypes">
             <list>
                 <value>Publication</value>
+                <value>InstitutionPublication</value>
             </list>
+        </property>
+    </bean>
+
+    <bean id="openaireLiveImportDataProviderByAuthor" class="org.dspace.external.provider.impl.LiveImportDataProvider">
+        <property name="metadataSource" ref="openaireImportServiceByAuthor"/>
+        <property name="sourceIdentifier" value="openaire"/>
+        <property name="recordIdMetadata" value="dc.identifier.other"/>
+        <property name="supportedEntityTypes">
+            <list/>
+        </property>
+    </bean>
+
+    <bean id="openaireLiveImportDataProviderByTitle" class="org.dspace.external.provider.impl.LiveImportDataProvider">
+        <property name="metadataSource" ref="openaireImportServiceByTitle"/>
+        <property name="sourceIdentifier" value="openaireTitle"/>
+        <property name="recordIdMetadata" value="dc.identifier.other"/>
+        <property name="supportedEntityTypes">
+            <list/>
         </property>
     </bean>
 

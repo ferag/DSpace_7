@@ -65,6 +65,7 @@ public class CERIFIngestionCrosswalkIT extends AbstractIntegrationTestWithDataba
         crosswalk = (CERIFIngestionCrosswalk) pluginService.getNamedPlugin(IngestionCrosswalk.class, "cerif");
         assertThat("A CERIF ingestion crosswalk should be configured", crosswalk, notNullValue());
         crosswalk.setIdPrefix("repository-id::");
+        crosswalk.setMetadataConfig("cerif");
 
         context.turnOffAuthorisationSystem();
         community = createCommunity(context).build();

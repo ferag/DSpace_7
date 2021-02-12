@@ -201,18 +201,24 @@ public class RelationshipDAOImpl extends AbstractHibernateDAO<Relationship> impl
     }
 
     @Override
-    public int countByItemAndRelationshipType(Context context, Item item, RelationshipType relationshipType)
-            throws SQLException {
+    public int countByItemAndRelationshipType(Context context, Item item, RelationshipType relationshipType,
+                                              boolean isLeft) throws SQLException {
 
         CriteriaBuilder criteriaBuilder = getCriteriaBuilder(context);
         CriteriaQuery criteriaQuery = getCriteriaQuery(criteriaBuilder, Relationship.class);
         Root<Relationship> relationshipRoot = criteriaQuery.from(Relationship.class);
         criteriaQuery.select(relationshipRoot);
-        criteriaQuery
+        if (isLeft) {
+            criteriaQuery
                 .where(criteriaBuilder.equal(relationshipRoot.get(Relationship_.relationshipType),
-                        relationshipType), criteriaBuilder.or
-                        (criteriaBuilder.equal(relationshipRoot.get(Relationship_.leftItem), item),
-                        criteriaBuilder.equal(relationshipRoot.get(Relationship_.rightItem), item)));
+                                             relationshipType),
+                       criteriaBuilder.equal(relationshipRoot.get(Relationship_.leftItem), item));
+        } else {
+            criteriaQuery
+                .where(criteriaBuilder.equal(relationshipRoot.get(Relationship_.relationshipType),
+                                             relationshipType),
+                     criteriaBuilder.equal(relationshipRoot.get(Relationship_.rightItem), item));
+        }
         return count(context, criteriaQuery, criteriaBuilder, relationshipRoot);
     }
 
@@ -231,6 +237,22 @@ public class RelationshipDAOImpl extends AbstractHibernateDAO<Relationship> impl
         Root<Relationship> relationshipRoot = criteriaQuery.from(Relationship.class);
         criteriaQuery.where(relationshipRoot.get(Relationship_.relationshipType).in(ids));
         return count(context, criteriaQuery, criteriaBuilder, relationshipRoot);
+    }
+
+    @Override
+    public List<Relationship> findByItems(Context context, Item firstItem, Item secondItem) throws SQLException {
+        CriteriaBuilder builder = getCriteriaBuilder(context);
+        CriteriaQuery<Relationship> criteriaQuery = getCriteriaQuery(builder, Relationship.class);
+        Root<Relationship> relationshipRoot = criteriaQuery.from(Relationship.class);
+        criteriaQuery.select(relationshipRoot);
+        criteriaQuery
+            .where(builder.or(
+                builder.or(builder.equal(relationshipRoot.get(Relationship_.leftItem), secondItem),
+                    builder.equal(relationshipRoot.get(Relationship_.rightItem), firstItem),
+                builder.or(builder.equal(relationshipRoot.get(Relationship_.leftItem), firstItem),
+                        builder.equal(relationshipRoot.get(Relationship_.rightItem), secondItem)))));
+
+        return list(context, criteriaQuery, true, Relationship.class, -1, -1);
     }
 
 }

@@ -7,6 +7,7 @@
  */
 package org.dspace.builder;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -23,6 +24,7 @@ import org.dspace.content.WorkspaceItem;
 import org.dspace.content.service.WorkspaceItemService;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
+import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 
 /**
  * Builder to construct WorkspaceItem objects
@@ -114,6 +116,13 @@ public class WorkspaceItemBuilder extends AbstractBuilder<WorkspaceItem, Workspa
             workspaceItem = c.reloadEntity(workspaceItem);
             if (workspaceItem != null) {
                 delete(c, workspaceItem);
+            } else {
+                item = c.reloadEntity(item);
+                // check if the wsi has been pushed to the workflow
+                XmlWorkflowItem wfi = workflowItemService.findByItem(c, item);
+                if (wfi != null) {
+                    workflowItemService.delete(c, wfi);
+                }
             }
             item = c.reloadEntity(item);
             if (item != null) {
@@ -220,6 +229,14 @@ public class WorkspaceItemBuilder extends AbstractBuilder<WorkspaceItem, Workspa
         return addMetadataValue("dc", "identifier", "doi", doi);
     }
 
+    public WorkspaceItemBuilder withIsniIdentifier(String isni) {
+        return addMetadataValue("person", "identifier", "isni", isni);
+    }
+
+    public WorkspaceItemBuilder withPatentNo(String patentNo) {
+        return addMetadataValue("dc", "identifier", "patentno", patentNo);
+    }
+
     public WorkspaceItemBuilder withOrcidIdentifier(String orcid) {
         return addMetadataValue("person", "identifier", "orcid", orcid);
     }
@@ -236,12 +253,24 @@ public class WorkspaceItemBuilder extends AbstractBuilder<WorkspaceItem, Workspa
         return addMetadataValue("perucris", "identifier", "renacyt", renacyt);
     }
 
-    public WorkspaceItemBuilder withScopusAuthorIdentifier(String scopus) {
+    public WorkspaceItemBuilder withScopusIdentifier(String scopus) {
         return addMetadataValue("person","identifier","scopus-author-id", scopus);
     }
 
     public WorkspaceItemBuilder withResearcherIdentifier(String rid) {
         return addMetadataValue("person", "identifier", "rid", rid);
+    }
+
+    public WorkspaceItemBuilder withAuthorOrcid(String orcid) {
+        return addMetadataValue("perucris", "author", "orcid", orcid);
+    }
+
+    public WorkspaceItemBuilder withAuthorResearcherId(String rid) {
+        return addMetadataValue("perucris", "author", "rid", rid);
+    }
+
+    public WorkspaceItemBuilder withAuthorScopusIdentifier(String scopus) {
+        return addMetadataValue("perucris", "author", "scopus-author-id", scopus);
     }
 
     public WorkspaceItemBuilder grantLicense() {
@@ -257,6 +286,10 @@ public class WorkspaceItemBuilder extends AbstractBuilder<WorkspaceItem, Workspa
             handleException(e);
         }
         return this;
+    }
+
+    public WorkspaceItemBuilder withFulltext(String name, String source, byte[] content) {
+        return withFulltext(name, source, new ByteArrayInputStream(content));
     }
 
     public WorkspaceItemBuilder withFulltext(String name, String source, InputStream is) {

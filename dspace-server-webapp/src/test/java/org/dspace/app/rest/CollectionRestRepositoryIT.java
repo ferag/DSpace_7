@@ -9,6 +9,7 @@ package org.dspace.app.rest;
 
 import static com.jayway.jsonpath.JsonPath.read;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
+import static org.dspace.app.rest.matcher.CollectionMatcher.matchCollection;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadata;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadataDoesNotExist;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadataNotEmpty;
@@ -19,6 +20,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -29,7 +31,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -47,6 +51,7 @@ import org.dspace.app.rest.model.MetadataValueRest;
 import org.dspace.app.rest.projection.Projection;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
 import org.dspace.app.rest.test.MetadataPatchSuite;
+import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.authorize.service.ResourcePolicyService;
 import org.dspace.builder.CollectionBuilder;
@@ -2459,11 +2464,158 @@ public class CollectionRestRepositoryIT extends AbstractControllerIntegrationTes
     }
 
     @Test
+    public void testFindAdministered() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EPerson user = EPersonBuilder.createEPerson(context)
+            .withEmail("user@test.it")
+            .withPassword(password)
+            .build();
+
+        Community community1 = createCommunity("Community 1");
+        Community community2 = createCommunity("Community 2", user);
+        Community community3 = createCommunity("Community 1", community1);
+
+        createCollection(community1, "First Community Collection 1");
+        Collection collection2_1 = createCollection(community1, "First Community Collection 2", user);
+        Collection collection3_1 = createCollection(community1, "First Community Collection 3", user);
+
+        Collection collection1_2 = createCollection(community2, "Second Community Collection 1", user);
+        Collection collection2_2 = createCollection(community2, "Second Community Collection 2");
+        Collection collection3_2 = createCollection(community2, "Second Community Collection 3");
+
+        Collection collection1_3 = createCollection(community3, "Third Community Collection 1", user);
+        createCollection(community3, "Third Community Collection 2");
+        createCollection(community3, "Third Community Collection 3");
+
+        context.restoreAuthSystemState();
+
+        String token = getAuthToken(user.getEmail(), password);
+        getClient(token).perform(get("/api/core/collections/search/findAdministered"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.page.totalElements", equalTo(6)))
+            .andExpect(jsonPath("$._embedded.collections", hasItem(matchCollection(collection2_1))))
+            .andExpect(jsonPath("$._embedded.collections", hasItem(matchCollection(collection3_1))))
+            .andExpect(jsonPath("$._embedded.collections", hasItem(matchCollection(collection1_2))))
+            .andExpect(jsonPath("$._embedded.collections", hasItem(matchCollection(collection2_2))))
+            .andExpect(jsonPath("$._embedded.collections", hasItem(matchCollection(collection3_2))))
+            .andExpect(jsonPath("$._embedded.collections", hasItem(matchCollection(collection1_3))));
+
+        getClient(token).perform(get("/api/core/collections/search/findAdministered")
+            .param("query", "First Community"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.page.totalElements", equalTo(2)))
+            .andExpect(jsonPath("$._embedded.collections", hasItem(matchCollection(collection2_1))))
+            .andExpect(jsonPath("$._embedded.collections", hasItem(matchCollection(collection3_1))));
+    }
+
+    @Test
+    public void testFindAdministeredWithAdmin() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EPerson user = EPersonBuilder.createEPerson(context)
+            .withEmail("user@test.it")
+            .withPassword(password)
+            .build();
+
+        Community community1 = createCommunity("Community 1");
+        Community community2 = createCommunity("Community 2", user);
+        Community community3 = createCommunity("Community 1", community1);
+
+        Collection collection1_1 = createCollection(community1, "First Community Collection 1");
+        Collection collection2_1 = createCollection(community1, "First Community Collection 2", user);
+        Collection collection3_1 = createCollection(community1, "First Community Collection 3", user);
+
+        Collection collection1_2 = createCollection(community2, "Second Community Collection 1", user);
+        Collection collection2_2 = createCollection(community2, "Second Community Collection 2");
+        Collection collection3_2 = createCollection(community2, "Second Community Collection 3");
+
+        Collection collection1_3 = createCollection(community3, "Third Community Collection 1", user);
+        Collection collection2_3 = createCollection(community3, "Third Community Collection 2");
+        Collection collection3_3 = createCollection(community3, "Third Community Collection 3");
+
+        context.restoreAuthSystemState();
+
+        String token = getAuthToken(admin.getEmail(), password);
+        getClient(token).perform(get("/api/core/collections/search/findAdministered"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.page.totalElements", equalTo(9)))
+            .andExpect(jsonPath("$._embedded.collections", hasItem(matchCollection(collection1_1))))
+            .andExpect(jsonPath("$._embedded.collections", hasItem(matchCollection(collection2_1))))
+            .andExpect(jsonPath("$._embedded.collections", hasItem(matchCollection(collection3_1))))
+            .andExpect(jsonPath("$._embedded.collections", hasItem(matchCollection(collection1_2))))
+            .andExpect(jsonPath("$._embedded.collections", hasItem(matchCollection(collection2_2))))
+            .andExpect(jsonPath("$._embedded.collections", hasItem(matchCollection(collection3_2))))
+            .andExpect(jsonPath("$._embedded.collections", hasItem(matchCollection(collection1_3))))
+            .andExpect(jsonPath("$._embedded.collections", hasItem(matchCollection(collection2_3))))
+            .andExpect(jsonPath("$._embedded.collections", hasItem(matchCollection(collection3_3))));
+
+        getClient(token).perform(get("/api/core/collections/search/findAdministered")
+            .param("query", "First Community"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.page.totalElements", equalTo(3)))
+            .andExpect(jsonPath("$._embedded.collections", hasItem(matchCollection(collection1_1))))
+            .andExpect(jsonPath("$._embedded.collections", hasItem(matchCollection(collection2_1))))
+            .andExpect(jsonPath("$._embedded.collections", hasItem(matchCollection(collection3_1))));
+    }
+
+    @Test
+    public void testFindAdministeredWithNoCollectionAdmin() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        EPerson user = EPersonBuilder.createEPerson(context)
+            .withEmail("user@test.it")
+            .withPassword(password)
+            .build();
+
+        Community community1 = createCommunity("Community 1");
+        Community community2 = createCommunity("Community 2");
+
+        createCollection(community1, "First Community Collection 1");
+        createCollection(community1, "First Community Collection 2");
+        createCollection(community1, "First Community Collection 3");
+
+        createCollection(community2, "Second Community Collection 1");
+        createCollection(community2, "Second Community Collection 2");
+        createCollection(community2, "Second Community Collection 3");
+
+        context.restoreAuthSystemState();
+
+        String token = getAuthToken(user.getEmail(), password);
+        getClient(token).perform(get("/api/core/collections/search/findAdministered"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.page.totalElements", equalTo(0)));
+    }
+
+    @Test
+    public void testFindAdministeredWithNoAuthenticatedUser() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Community community1 = createCommunity("Community 1");
+        Community community2 = createCommunity("Community 2");
+
+        createCollection(community1, "First Community Collection 1");
+        createCollection(community1, "First Community Collection 2");
+        createCollection(community1, "First Community Collection 3");
+
+        createCollection(community2, "Second Community Collection 1");
+        createCollection(community2, "Second Community Collection 2");
+        createCollection(community2, "Second Community Collection 3");
+
+        context.restoreAuthSystemState();
+
+        getClient().perform(get("/api/core/collections/search/findAdministered"))
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     public void testFindSubmitAuthorizedAndMetadataWithInstitutionTemplateFilterPlugin() throws Exception {
         context.turnOffAuthorisationSystem();
         parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
-        createCollection(context, parentCommunity).withName("Collection").withRelationshipType("Publication").build();
-        createCollection(context, parentCommunity).withName("Collection 2").withRelationshipType("Publication").build();
+        createCollection(parentCommunity, "Collection", "Publication");
+        createCollection(parentCommunity, "Collection 2", "Publication");
         authorizeService.addPolicy(context, parentCommunity, Constants.ADD, eperson);
         context.restoreAuthSystemState();
 
@@ -2492,5 +2644,32 @@ public class CollectionRestRepositoryIT extends AbstractControllerIntegrationTes
         } finally {
             configurationService.setProperty("institution.template-id", originalTemplateId);
         }
+    }
+
+    private Community createCommunity(String name, Community parent, EPerson... admins) throws Exception {
+        return CommunityBuilder.createSubCommunity(context, parent)
+            .withName(name)
+            .withAdminGroup(admins)
+            .build();
+    }
+
+    private Community createCommunity(String name, EPerson... admins) throws Exception {
+        return CommunityBuilder.createCommunity(context)
+            .withName(name)
+            .withAdminGroup(admins)
+            .build();
+    }
+
+    private Collection createCollection(Community community, String name, EPerson... admins) throws Exception {
+        return createCollection(community, name, null, admins);
+    }
+
+    private Collection createCollection(Community community, String name, String relationshipType, EPerson... admins)
+        throws SQLException, AuthorizeException {
+        CollectionBuilder collectionBuilder = CollectionBuilder.createCollection(context, community)
+            .withName(name)
+            .withAdminGroup(admins);
+        Optional.ofNullable(relationshipType).ifPresent(collectionBuilder::withRelationshipType);
+        return collectionBuilder.build();
     }
 }

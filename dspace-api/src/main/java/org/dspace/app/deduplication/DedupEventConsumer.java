@@ -7,6 +7,7 @@
  */
 package org.dspace.app.deduplication;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,7 +16,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dspace.app.deduplication.service.DedupService;
 import org.dspace.app.deduplication.utils.Signature;
 import org.dspace.content.Bundle;
@@ -23,10 +25,13 @@ import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.factory.ContentServiceFactory;
+import org.dspace.content.service.ItemService;
+import org.dspace.content.service.WorkspaceItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.event.Consumer;
 import org.dspace.event.Event;
+import org.dspace.kernel.ServiceManager;
 import org.dspace.utils.DSpace;
 
 public class DedupEventConsumer implements Consumer {
@@ -34,24 +39,31 @@ public class DedupEventConsumer implements Consumer {
     /**
      * log4j logger
      */
-    private static Logger log = Logger.getLogger(DedupEventConsumer.class);
+    private static Logger log = LogManager.getLogger(DedupEventConsumer.class);
 
     // collect Items, Collections, Communities that need indexing
     private Set<Item> objectsToUpdate = null;
 
     private Set<UUID> objectsToDelete = null;
 
-    DSpace dspace = new DSpace();
+    private DedupService indexer;
 
-    DedupService indexer = dspace.getServiceManager().getServiceByName(DedupService.class.getName(),
-            DedupService.class);
+    private WorkspaceItemService workspaceItemService;
 
-    Map<UUID, Map<String, List<String>>> cache = new HashMap<UUID, Map<String, List<String>>>();
+    private ItemService itemService;
 
-    Set<String> configuredMetadata = new HashSet<String>();
+    private Map<UUID, Map<String, List<String>>> cache = new HashMap<UUID, Map<String, List<String>>>();
+
+    private Set<String> configuredMetadata = new HashSet<String>();
 
     public void initialize() throws Exception {
-        List<Signature> signAlgo = dspace.getServiceManager().getServicesByType(Signature.class);
+
+        ServiceManager serviceManager = new DSpace().getServiceManager();
+        indexer = serviceManager.getServiceByName(DedupService.class.getName(), DedupService.class);
+        workspaceItemService = ContentServiceFactory.getInstance().getWorkspaceItemService();
+        itemService = ContentServiceFactory.getInstance().getItemService();
+
+        List<Signature> signAlgo = serviceManager.getServicesByType(Signature.class);
         for (Signature algo : signAlgo) {
             configuredMetadata.add(algo.getMetadata());
         }
@@ -74,7 +86,6 @@ public class DedupEventConsumer implements Consumer {
         int st = event.getSubjectType();
 
         DSpaceObject subject = event.getSubject(ctx);
-        DSpaceObject object = event.getObject(ctx);
 
         if (st != Constants.ITEM && st != Constants.BUNDLE) {
             log.warn("IndexConsumer should not have been given this kind of Subject in an event, skipping: "
@@ -90,6 +101,12 @@ public class DedupEventConsumer implements Consumer {
             subject = ((Bundle) subject).getItems().get(0);
         }
 
+        Item item = (Item) subject;
+
+        if (item != null && (isInstitutionItem(ctx, item) || isWorkspaceItem(ctx, item))) {
+            return;
+        }
+
         int et = event.getEventType();
 
         switch (et) {
@@ -102,7 +119,7 @@ public class DedupEventConsumer implements Consumer {
                             + ", perhaps it has been deleted.");
                 } else {
                     log.debug("consume() adding event to update queue: " + event.toString());
-                    fillObjectToUpdate((Item) subject);
+                    fillObjectToUpdate(item);
                 }
                 break;
 
@@ -114,7 +131,7 @@ public class DedupEventConsumer implements Consumer {
                             + ", perhaps it has been deleted.");
                 } else {
                     log.debug("consume() adding event to update queue: " + event.toString());
-                    fillObjectToUpdate((Item) subject);
+                    fillObjectToUpdate(item);
                 }
                 break;
 
@@ -246,6 +263,15 @@ public class DedupEventConsumer implements Consumer {
     public void finish(Context ctx) throws Exception {
         // No-op
 
+    }
+
+    private boolean isInstitutionItem(Context context, Item item) {
+        String entityType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
+        return entityType != null && entityType.startsWith("Institution");
+    }
+
+    private boolean isWorkspaceItem(Context context, Item item) throws SQLException {
+        return workspaceItemService.findByItem(context, item) != null;
     }
 
 }

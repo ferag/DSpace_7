@@ -118,6 +118,8 @@ public class CrisLayoutSectionRest extends BaseObjectRest<String> {
 
         private String style;
 
+        private String titleKey;
+
         public String getDiscoveryConfigurationName() {
             return discoveryConfigurationName;
         }
@@ -159,6 +161,13 @@ public class CrisLayoutSectionRest extends BaseObjectRest<String> {
             this.style = style;
         }
 
+        public String getTitleKey() {
+            return titleKey;
+        }
+
+        public void setTitleKey(String titleKey) {
+            this.titleKey = titleKey;
+        }
     }
 
     public static class CrisLayoutFacetComponentRest implements CrisLayoutSectionComponentRest {

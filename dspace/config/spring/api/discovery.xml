@@ -115,6 +115,10 @@
                 <entry key="RELATION.InstitutionProject.ipresearchoutputs" value-ref="relationInstitutionProjectPublicationConfiguration"/>
                 <entry key="RELATION.InstitutionProject.ippatents" value-ref="relationInstitutionProjectPatentConfiguration"/>
                 <entry key="RESUME.rprofiles" value-ref="person"/>
+                <entry key="RESUME.orgunits" value-ref="orgUnit"/>
+                <entry key="RESUME.researchoutputs" value-ref="researchoutputs"/>
+                <entry key="RESUME.project_funding" value-ref="project_funding"/>
+                <entry key="RESUME.infrastructure" value-ref="infrastructure"/>
             </map>
         </property>
         <property name="toIgnoreMetadataFields">
@@ -1996,6 +2000,7 @@
                 <property name="sortFields">
                     <list>
                         <ref bean="sortTitle"/>
+                        <ref bean="sortDateAccessioned"/>
                     </list>
                 </property>
             </bean>

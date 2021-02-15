@@ -467,11 +467,23 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item firstItem = ItemBuilder.createItem(context, collection)
             .withRelationshipType("Equipment")
             .withAcronym("FT-EQ")
+            .withType("Type")
             .withTitle("First Test Equipment")
             .withInternalId("ID-01")
             .withDescription("This is an equipment to test the export functionality")
             .withEquipmentOwnerOrgUnit("Test OrgUnit")
             .withEquipmentOwnerPerson("Walter White")
+            .withUsageType("Investigacion cientifica y desarrollo experimental")
+            .withSubjectOCDE("First subject")
+            .withSubjectOCDE("Second subject")
+            .withResearchLine("ResearchLine")
+            .withRelationFunding("Funding")
+            .withManufacturingCountry("IT")
+            .withManufacturingDate("2020-01-01")
+            .withAcquisitionDate("2021-01-01")
+            .withAmount("4000")
+            .withAmountCurrency("€")
+            .withInternalNote("Note")
             .build();
 
         Item secondItem = ItemBuilder.createItem(context, collection)
@@ -481,6 +493,12 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withInternalId("ID-02")
             .withDescription("This is another equipment to test the export functionality")
             .withEquipmentOwnerPerson("John Smith")
+            .withSubjectOCDE("Subject")
+            .withRelationFunding("First funding")
+            .withRelationFunding("Second funding")
+            .withAcquisitionDate("2021-02-01")
+            .withAmount("5000")
+            .withAmountCurrency("€")
             .build();
 
         Item thirdItem = ItemBuilder.createItem(context, collection)
@@ -505,16 +523,22 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Sheet sheet = workbook.getSheetAt(0);
         assertThat(sheet.getPhysicalNumberOfRows(), equalTo(4));
 
-        assertThat(getRowValues(sheet.getRow(0)), contains("Name", "Acronym", "Institution assigned identifier",
-            "Description", "Owner organization", "Owner person"));
+        assertThat(getRowValues(sheet.getRow(0)), contains("Name", "Acronym", "Type", "Institution assigned identifier",
+            "Description", "Owner organization", "Owner person", "Usage", "Subject(s)", "Research line", "Funding(s)",
+            "Manufacturing country", "Manufacturing date", "Acquisition date", "Amount", "Amount's currency",
+            "Internal note"));
 
-        assertThat(getRowValues(sheet.getRow(1)), contains("First Test Equipment", "FT-EQ", "ID-01",
-            "This is an equipment to test the export functionality", "Test OrgUnit", "Walter White"));
+        assertThat(getRowValues(sheet.getRow(1)), contains("First Test Equipment", "FT-EQ", "Type", "ID-01",
+            "This is an equipment to test the export functionality", "Test OrgUnit", "Walter White",
+            "Investigacion cientifica y desarrollo experimental", "First subject||Second subject", "ResearchLine",
+            "Funding", "IT", "2020-01-01", "2021-01-01", "4000", "€", "Note"));
 
-        assertThat(getRowValues(sheet.getRow(2)), contains("Second Test Equipment", "ST-EQ", "ID-02",
-            "This is another equipment to test the export functionality", "", "John Smith"));
+        assertThat(getRowValues(sheet.getRow(2)), contains("Second Test Equipment", "ST-EQ", "", "ID-02",
+            "This is another equipment to test the export functionality", "", "John Smith", "", "Subject", "",
+            "First funding||Second funding", "", "", "2021-02-01", "5000", "€", ""));
 
-        assertThat(getRowValues(sheet.getRow(3)), contains("Third Test Equipment", "TT-EQ", "ID-03", "", "", ""));
+        assertThat(getRowValues(sheet.getRow(3)), contains("Third Test Equipment", "TT-EQ", "", "ID-03", "", "", "", "",
+            "", "", "", "", "", "", "", "", ""));
     }
 
     @Test

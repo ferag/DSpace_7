@@ -1,4 +1,4 @@
-<person>
+<person id="@virtual.id@">
 	<names>
 		<preferred-name>@dc.title@</preferred-name>
 		<full-name>@crisrp.name@</full-name>

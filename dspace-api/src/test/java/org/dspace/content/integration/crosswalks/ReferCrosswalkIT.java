@@ -56,7 +56,6 @@ import org.junit.Test;
  * @author Corrado Lombardi (corrado.lombardi at 4science.it)
  *
  */
-@Ignore
 public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
     private static final String BASE_OUTPUT_DIR_PATH = "./target/testing/dspace/assetstore/crosswalk/";
@@ -202,7 +201,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         context.restoreAuthSystemState();
 
-        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("person-xml-cerif");
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("person-cerif-xml");
         assertThat(referCrossWalk, notNullValue());
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -256,7 +255,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         context.restoreAuthSystemState();
 
-        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("person-xml-cerif");
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("person-cerif-xml");
         assertThat(referCrossWalk, notNullValue());
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -596,7 +595,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withRelationDataset("DataSet")
             .withEmbargoEnd("2021-01-01")
             .withAccess("embargoed access")
-            .withSubjectOCDE("OCDE")
+            .withPerucrisSubjectOCDE("OCDE")
             .build();
 
         context.restoreAuthSystemState();
@@ -808,8 +807,8 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withRelationEquipment("Test equipment")
             .withSubject("project")
             .withSubject("test")
-            .withSubjectOCDE("First OCDE Subject")
-            .withSubjectOCDE("Second OCDE Subject")
+            .withPerucrisSubjectOCDE("First OCDE Subject")
+            .withPerucrisSubjectOCDE("Second OCDE Subject")
             .withDescriptionAbstract("This is a project to test the export")
             .withOAMandate("true")
             .withOAMandateURL("oamandate-url")
@@ -870,8 +869,8 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withRelationEquipment("Test equipment")
             .withSubject("project")
             .withSubject("test")
-            .withSubjectOCDE("First OCDE Subject")
-            .withSubjectOCDE("Second OCDE Subject")
+            .withPerucrisSubjectOCDE("First OCDE Subject")
+            .withPerucrisSubjectOCDE("Second OCDE Subject")
             .withDescriptionAbstract("This is a project to test the export")
             .withOAMandate("true")
             .withOAMandateURL("oamandate-url")
@@ -1226,9 +1225,22 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withAcronym("T-EQ")
             .withTitle("Test Equipment")
             .withInternalId("ID-01")
+            .withType("Type")
             .withDescription("This is an equipment to test the export functionality")
             .withEquipmentOwnerOrgUnit("Test OrgUnit")
             .withEquipmentOwnerPerson("Walter White")
+            .withUsageType("Investigacion cientifica y desarrollo experimental")
+            .withSubjectOCDE("First subject")
+            .withSubjectOCDE("Second subject")
+            .withResearchLine("ResearchLine")
+            .withRelationFunding("Funding")
+            .withRelationFunding("Another Funding")
+            .withManufacturingCountry("IT")
+            .withManufacturingDate("2020-01-01")
+            .withAcquisitionDate("2021-01-01")
+            .withAmount("4000")
+            .withAmountCurrency("€")
+            .withInternalNote("Note")
             .build();
 
         context.restoreAuthSystemState();
@@ -1247,7 +1259,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
-    public void testEquipmentXmlDisseminate() throws Exception {
+    public void testEquipmentCerifXmlDisseminate() throws Exception {
 
         context.turnOffAuthorisationSystem();
 
@@ -1264,13 +1276,55 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.restoreAuthSystemState();
         context.commit();
 
-        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("equipment-xml");
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("equipment-cerif-xml");
         assertThat(referCrossWalk, notNullValue());
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         referCrossWalk.disseminate(context, equipment, out);
 
-        try (FileInputStream fis = getFileInputStream("equipment.xml")) {
+        try (FileInputStream fis = getFileInputStream("equipment-cerif.xml")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+    }
+
+    @Test
+    public void testEquipmentPerucrisCerifXmlDisseminate() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item equipment = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Equipment")
+            .withAcronym("T-EQ")
+            .withTitle("Test Equipment")
+            .withInternalId("ID-01")
+            .withType("Type")
+            .withDescription("This is an equipment to test the export functionality")
+            .withEquipmentOwnerOrgUnit("Test OrgUnit")
+            .withEquipmentOwnerPerson("Walter White")
+            .withUsageType("Investigacion cientifica y desarrollo experimental")
+            .withSubjectOCDE("First subject")
+            .withSubjectOCDE("Second subject")
+            .withResearchLine("ResearchLine")
+            .withRelationFunding("Funding")
+            .withManufacturingCountry("IT")
+            .withManufacturingDate("2020-01-01")
+            .withAcquisitionDate("2021-01-01")
+            .withAmount("4000")
+            .withAmountCurrency("€")
+            .withInternalNote("Note")
+            .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("equipment-perucris-cerif-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, equipment, out);
+
+        try (FileInputStream fis = getFileInputStream("equipment-perucris-cerif.xml")) {
             String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
             compareEachLine(out.toString(), expectedContent);
         }
@@ -1342,7 +1396,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.restoreAuthSystemState();
         context.commit();
 
-        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("equipment-xml");
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("equipment-cerif-xml");
         assertThat(referCrossWalk, notNullValue());
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -1619,7 +1673,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         context.restoreAuthSystemState();
 
-        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("ctivitae-profile-xml-cerif");
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("ctivitae-profile-cerif-xml");
         assertThat(referCrossWalk, notNullValue());
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -1658,7 +1712,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item secondPerson = createItem(context, collection)
-            .withRelationshipType("Person")
+            .withRelationshipType("PersonCv")
             .withTitle("White, Walter")
             .withGender("M")
             .withPersonMainAffiliation("University")
@@ -1673,7 +1727,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         context.restoreAuthSystemState();
 
-        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("ctivitae-xml-cerif");
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("ctivitae-profile-cerif-xml");
         assertThat(referCrossWalk, notNullValue());
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -1914,7 +1968,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             resultLines.length, equalTo(expectedResultLines.length));
 
         for (int i = 0; i < resultLines.length; i++) {
-            assertThat(resultLines[i], equalTo(expectedResultLines[i]));
+            assertThat(removeTabs(resultLines[i]), equalTo(removeTabs(expectedResultLines[i])));
         }
     }
 
@@ -1923,6 +1977,10 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         String result = String.join("\n", resultLines);
         String expectedResult = String.join("\n", expectedResultLines);
         return message + "\nExpected:\n" + expectedResult + "\nActual:\n" + result;
+    }
+
+    private String removeTabs(String string) {
+        return string != null ? string.replace("\t", "").trim() : null;
     }
 
     private FileInputStream getFileInputStream(String name) throws FileNotFoundException {

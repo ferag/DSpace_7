@@ -50,6 +50,14 @@
 			<dim:field mdschema="oairecerif" element="amount" qualifier="currency">
 				<xsl:value-of select="cerif:Amount/@currency" />
 			</dim:field>
+            
+            <dim:field mdschema="perucris" element="executedAmount" >
+                <xsl:value-of select="cerif:ExecutedAmount" />
+            </dim:field>
+            
+            <dim:field mdschema="perucris" element="executedAmount" qualifier="currency">
+                <xsl:value-of select="cerif:ExecutedAmount/@currency" />
+            </dim:field>
 			
 			<dim:field mdschema="dc" element="description">
 				<xsl:value-of select="cerif:Description" />
@@ -61,6 +69,13 @@
 				</xsl:if>
 				<xsl:value-of select="cerif:Funder/cerif:OrgUnit/cerif:Name"/>
 			</dim:field>
+            
+            <dim:field mdschema="oairecerif" element="oairecerif.fundingParent">
+                <xsl:if test="cerif:PartOf/cerif:Funding/@id">
+                    <xsl:attribute name="authority"><xsl:value-of select="concat($idPrefix,cerif:PartOf/cerif:Funding/@id)"/></xsl:attribute>
+                </xsl:if>
+                <xsl:value-of select="cerif:PartOf/cerif:Funding/cerif:Name"/>
+            </dim:field>
 			
 			<dim:field mdschema="oairecerif" element="funding" qualifier="startDate">
 				<xsl:value-of select="cerif:Duration/@startDate" />

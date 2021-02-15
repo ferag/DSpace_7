@@ -1,0 +1,31 @@
+<OrgUnit xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="@virtual.id@">
+    <Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">@virtual.mapConverter.orgUnitTypes.dc-type@</Type>
+    <Acronym>@oairecerif.acronym@</Acronym>
+	<Name>@dc.title@</Name>
+	<Name>@organization.legalName@</Name>
+    <Identifier>@organization.identifier@</Identifier>
+    <Identifier type="URL">@oairecerif.identifier.url@</Identifier>
+    <Identifier type="https://purl.org/pe-repo/concytec/terminos#ruc">@organization.identifier.ruc@</Identifier>
+    <Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#ISNI">@organization.identifier.isni@</Identifier>
+    <Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#ScopusAffiliationID">@organization.identifier.scopusaffid@</Identifier>
+    <Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#FundRefID">@organization.identifier.crossrefid@</Identifier>
+	<PartOf>
+		@relation.organization-parentOrganization.start@
+		<OrgUnit id="@virtual.id@">
+			<Name>@dc.title@</Name>
+			<Acronym>@oairecerif.acronym@</Acronym>
+		</OrgUnit>
+		@relation.organization-parentOrganization.end@
+		@if.not.authority.organization-parentOrganization.start@
+		<OrgUnit> <Name>@organization.parentOrganization@</Name> </OrgUnit>
+		@if.not.authority.organization-parentOrganization.end@
+	</PartOf>
+	<Subject>@dc.subject.ocde@</Subject>
+    <Keyword>@dc.subject@</Keyword>
+    <PostAddress>
+        <AddressLocality>@organization.address.addressLocality@</AddressLocality>
+        <AddressCountry>@organization.address.addressCountry@</AddressCountry>
+    </PostAddress>
+    <UbiGeo scheme="https://purl.org/pe-repo/inei/ubigeo">@perucris.ubigeo@</UbiGeo>
+    <Description>@dc.description.abstract@</Description>
+</OrgUnit>

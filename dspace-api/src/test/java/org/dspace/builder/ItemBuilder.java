@@ -487,8 +487,12 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "oairecerif", "access", null, access);
     }
 
-    public ItemBuilder withSubjectOCDE(String ocde) {
+    public ItemBuilder withPerucrisSubjectOCDE(String ocde) {
         return addMetadataValue(item, "perucris", "subject", "ocde", ocde);
+    }
+
+    public ItemBuilder withSubjectOCDE(String ocde) {
+        return addMetadataValue(item, "dc", "subject", "ocde", ocde);
     }
 
     public ItemBuilder makeUnDiscoverable() {
@@ -562,6 +566,30 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withOrgUnitCountry(String country) {
         return addMetadataValue(item, "orgunit", "identifier", "country", country);
+    }
+
+    public ItemBuilder withUsageType(String usage) {
+        return addMetadataValue(item, "perucris", "type", "usage", usage);
+    }
+
+    public ItemBuilder withResearchLine(String researchLine) {
+        return addMetadataValue(item, "perucris", "researchLine", null, researchLine);
+    }
+
+    public ItemBuilder withManufacturingCountry(String manufacturingCountry) {
+        return addMetadataValue(item, "perucris", "manufacturingCountry", null, manufacturingCountry);
+    }
+
+    public ItemBuilder withManufacturingDate(String manufacturing) {
+        return addMetadataValue(item, "perucris", "date", "manufacturing", manufacturing);
+    }
+
+    public ItemBuilder withAcquisitionDate(String acquisitionDate) {
+        return addMetadataValue(item, "perucris", "date", "acquisition", acquisitionDate);
+    }
+
+    public ItemBuilder withInternalNote(String internalNote) {
+        return addMetadataValue(item, "perucris", "description", "internalNote", internalNote);
     }
 
     public ItemBuilder withHandle(String handle) {

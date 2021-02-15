@@ -8,7 +8,14 @@
 		"currency": "@oairecerif.amount.currency@",
 		"value": "@oairecerif.amount@"
 	},
+    "executedAmount": {
+        "currency": "@perucris.executedAmount.currency@",
+        "value": "@perucris.executedAmount@"
+    },
 	"description": "@dc.description@",
+	"keywords": [
+	   "@dc.subject@",
+	],
 	"funder": {
 		@relation.oairecerif-funder.start@
 		"name": "@dc.title@",
@@ -18,6 +25,15 @@
 		"name": "@oairecerif.funder@"
 		@if.not.authority.oairecerif-funder.end@
 	},
+    "partOf": {
+        @relation.oairecerif-fundingParent.start@
+        "name": "@dc.title@",
+        "acronym": "@oairecerif.acronym@"
+        @relation.oairecerif-fundingParent.end@
+        @if.not.authority.oairecerif-fundingParent.start@
+        "name": "@oairecerif.fundingParent@"
+        @if.not.authority.oairecerif-fundingParent.end@
+    },
 	"duration": {
 		"startDate": "@oairecerif.funding.startDate@",
 		"endDate": "@oairecerif.funding.endDate@"

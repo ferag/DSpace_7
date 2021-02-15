@@ -3,6 +3,11 @@
 	"legalName": "@organization.legalName@",
 	"acronym": "@oairecerif.acronym@",
 	"type": "@virtual.mapConverter.orgUnitTypes.dc-type@",
+	"director": "@crisou.director@",
+	"established": "@organization.foundingDate@",
+	"scientificBoards": [
+	   "@crisou.boards@"
+	],
 	"parentOrganization": {
 		@relation.organization-parentOrganization.start@
 		"name": "@dc.title@",
@@ -18,6 +23,36 @@
 	"url-identifiers": [
 		"@oairecerif.identifier.url@",
 	],
+    "ruc-identifiers": [
+        "@oairecerif.identifier.ruc@",
+    ],
+    "rin-identifiers": [
+        "@oairecerif.identifier.ruc@",
+    ],
+    "ror-identifiers": [
+        "@oairecerif.identifier.ruc@",
+    ],
+    "isni-identifiers": [
+        "@oairecerif.identifier.isni@",
+    ],
+    "scopusaff-identifiers": [
+        "@oairecerif.identifier.scopusaffid@",
+    ],
+    "crossref-identifiers": [
+        "@oairecerif.identifier.crossrefid@",
+    ],
+    "subjects": [
+        "@dc.subject.ocde@",
+    ],
+    "keywords": [
+        "@dc.subject@",
+    ],
+    "postAddress": {
+        "locality": "@organization.address.addressLocality@",
+        "country": "@organization.address.addressCountry@"
+    }
+    "ubiGeo": "@perucris.ubigeo@",
+    "description": "@dc.description.abstract@",
 	"People": [
 		@relation.people.start@
 		"@dc.title@",

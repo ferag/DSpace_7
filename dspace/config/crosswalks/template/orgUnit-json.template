@@ -6,7 +6,7 @@
 	"director": "@crisou.director@",
 	"established": "@organization.foundingDate@",
 	"scientificBoards": [
-	   "@crisou.boards@"
+	   "@crisou.boards@",
 	],
 	"parentOrganization": {
 		@relation.organization-parentOrganization.start@
@@ -21,25 +21,25 @@
 		"@organization.identifier@",
 	],
 	"url-identifiers": [
-		"@oairecerif.identifier.url@",
+		"@organization.identifier.url@",
 	],
     "ruc-identifiers": [
-        "@oairecerif.identifier.ruc@",
+        "@organization.identifier.ruc@",
     ],
     "rin-identifiers": [
-        "@oairecerif.identifier.ruc@",
+        "@organization.identifier.ruc@",
     ],
     "ror-identifiers": [
-        "@oairecerif.identifier.ruc@",
+        "@organization.identifier.ruc@",
     ],
     "isni-identifiers": [
-        "@oairecerif.identifier.isni@",
+        "@organization.identifier.isni@",
     ],
     "scopusaff-identifiers": [
-        "@oairecerif.identifier.scopusaffid@",
+        "@organization.identifier.scopusaffid@",
     ],
     "crossref-identifiers": [
-        "@oairecerif.identifier.crossrefid@",
+        "@organization.identifier.crossrefid@",
     ],
     "subjects": [
         "@dc.subject.ocde@",
@@ -50,7 +50,7 @@
     "postAddress": {
         "locality": "@organization.address.addressLocality@",
         "country": "@organization.address.addressCountry@"
-    }
+    },
     "ubiGeo": "@perucris.ubigeo@",
     "description": "@dc.description.abstract@",
 	"People": [

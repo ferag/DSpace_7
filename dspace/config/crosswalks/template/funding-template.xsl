@@ -3,7 +3,7 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:fo="http://www.w3.org/1999/XSL/Format"
 	xmlns:ft="https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types"
-	xmlns:cerif="https://www.openaire.eu/cerif-profile/1.1/"
+	xmlns:cerif="https://purl.org/pe-repo/cerif-profile/1.0/"
 	exclude-result-prefixes="fo">
 	
 	<xsl:param name="imageDir" />

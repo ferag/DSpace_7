@@ -142,6 +142,14 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withPersonQualification("Second Qualification")
             .withPersonQualificationStartDate("2016-01-02")
             .withPersonQualificationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPhone("0744112233")
+            .withMobilePhone("3201122333")
+            .withDinaIdentifier("DINA-01")
+            .withDniIdentifier("DNI-01")
+            .withPassport("PASS-01")
+            .withStreetAddress("Via 1 maggio")
+            .withCountryAddress("IT")
+            .withPostalCode("05100")
             .build();
 
         ItemBuilder.createItem(context, collection)
@@ -391,6 +399,14 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withPersonQualification("Second Qualification")
             .withPersonQualificationStartDate("2016-01-02")
             .withPersonQualificationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPhone("0744112233")
+            .withMobilePhone("3201122333")
+            .withDinaIdentifier("DINA-01")
+            .withDniIdentifier("DNI-01")
+            .withPassport("PASS-01")
+            .withStreetAddress("Via 1 maggio")
+            .withCountryAddress("IT")
+            .withPostalCode("05100")
             .build();
 
         ItemBuilder.createItem(context, collection)
@@ -614,7 +630,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
-    public void testPublicationXmlDisseminateWithAuthorityOnFunder() throws Exception {
+    public void testPublicationCerifXmlDisseminateWithAuthorityOnFunder() throws Exception {
 
         context.turnOffAuthorisationSystem();
 
@@ -675,7 +691,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.restoreAuthSystemState();
         context.commit();
 
-        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("publication-xml");
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("publication-cerif-xml");
         assertThat(referCrossWalk, notNullValue());
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -688,7 +704,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
-    public void testManyPublicationXmlDisseminate() throws Exception {
+    public void testManyPublicationCerifXmlDisseminate() throws Exception {
 
         context.turnOffAuthorisationSystem();
 
@@ -725,7 +741,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.restoreAuthSystemState();
         context.commit();
 
-        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("publication-xml");
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("publication-cerif-xml");
         assertThat(referCrossWalk, notNullValue());
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -779,7 +795,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
-    public void testProjectXmlDisseminate() throws Exception {
+    public void testProjectCerifXmlDisseminate() throws Exception {
 
         context.turnOffAuthorisationSystem();
 
@@ -825,7 +841,66 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.restoreAuthSystemState();
         context.commit();
 
-        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("project-xml");
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("project-cerif-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, project, out);
+
+        try (FileInputStream fis = getFileInputStream("project.xml")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+    }
+
+    @Test
+    public void testProjectPerucrisCerifXmlDisseminate() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item coordinator = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("OrgUnit")
+            .withTitle("Coordinator OrgUnit")
+            .withAcronym("COU")
+            .build();
+
+        Item project = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Project")
+            .withAcronym("TP")
+            .withTitle("Test Project")
+            .withOpenaireId("11-22-33")
+            .withUrlIdentifier("www.project.test")
+            .withProjectStartDate("2020-01-01")
+            .withProjectEndDate("2020-12-31")
+            .withProjectStatus("OPEN")
+            .withProjectCoordinator("Coordinator OrgUnit", coordinator.getID().toString())
+            .withProjectPartner("Partner OrgUnit")
+            .withProjectOrganization("Member OrgUnit")
+            .withProjectInvestigator("Investigator")
+            .withProjectCoinvestigators("First coinvestigator")
+            .withProjectCoinvestigators("Second coinvestigator")
+            .withRelationEquipment("Test equipment")
+            .withSubject("project")
+            .withSubject("test")
+            .withPerucrisSubjectOCDE("First OCDE Subject")
+            .withPerucrisSubjectOCDE("Second OCDE Subject")
+            .withDescriptionAbstract("This is a project to test the export")
+            .withOAMandate("true")
+            .withOAMandateURL("oamandate-url")
+            .build();
+
+        ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Funding")
+            .withTitle("Test funding")
+            .withType("Award")
+            .withFunder("OrgUnit Funder")
+            .withRelationProject("Test Project", project.getID().toString())
+            .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("project-perucris-cerif-xml");
         assertThat(referCrossWalk, notNullValue());
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -908,7 +983,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
-    public void testManyProjectsXmlDisseminate() throws Exception {
+    public void testManyProjectsCerifXmlDisseminate() throws Exception {
 
         context.turnOffAuthorisationSystem();
 
@@ -955,7 +1030,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.restoreAuthSystemState();
         context.commit();
 
-        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("project-xml");
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("project-cerif-xml");
         assertThat(referCrossWalk, notNullValue());
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -1051,6 +1126,18 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withOrgUnitIdentifier("ID-02")
             .withUrlIdentifier("www.orgUnit.com")
             .withUrlIdentifier("www.orgUnit.it")
+            .withOrgUnitDirector("OU Director")
+            .withOrgUnitFoundingDate("1990-05-12")
+            .withOrgUnitBoard("board1")
+            .withOrgUnitBoard("board2")
+            .withOrgUnitRucIdentifier("RUC-01")
+            .withOrgUnitRinIdentifier("RIN-01")
+            .withOrgUnitRorIdentifier("ROR-01")
+            .withOrgUnitScopusAffiliationIdentifier("SCOPUS-01")
+            .withOrgUnitCrossRefFunderIdentifier("CRF-01")
+            .withOrgUnitAddressLocality("via del canale")
+            .withOrgUnitAddressCountry("Italy")
+            .withUbigeo("010201")
             .build();
 
         ItemBuilder.createItem(context, collection)
@@ -1081,6 +1168,114 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    public void testOrgUnitCerifXmlDisseminate() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item parent = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("OrgUnit")
+            .withAcronym("POU")
+            .withTitle("Parent OrgUnit")
+            .build();
+
+        Item orgUnit = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("OrgUnit")
+            .withAcronym("TOU")
+            .withTitle("Test OrgUnit")
+            .withOrgUnitLegalName("Test OrgUnit LegalName")
+            .withType("Strategic Research Insitute")
+            .withParentOrganization("Parent OrgUnit", parent.getID().toString())
+            .withOrgUnitIdentifier("ID-01")
+            .withOrgUnitIdentifier("ID-02")
+            .withUrlIdentifier("www.orgUnit.com")
+            .withUrlIdentifier("www.orgUnit.it")
+            .build();
+
+        ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Person")
+            .withTitle("Walter White")
+            .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
+            .build();
+
+        ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Person")
+            .withTitle("Jesse Pinkman")
+            .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
+            .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("orgUnit-cerif-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, orgUnit, out);
+
+        try (FileInputStream fis = getFileInputStream("orgUnit-cerif.xml")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+    }
+
+    @Test
+    public void testOrgUnitPerucrisCerifXmlDisseminate() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item orgUnit = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("OrgUnit")
+            .withAcronym("TOU")
+            .withTitle("Test OrgUnit")
+            .withOrgUnitLegalName("Test OrgUnit LegalName")
+            .withType("Strategic Research Insitute")
+            .withParentOrganization("Parent OrgUnit")
+            .withOrgUnitIdentifier("ID-01")
+            .withOrgUnitIdentifier("ID-02")
+            .withUrlIdentifier("www.orgUnit.com")
+            .withUrlIdentifier("www.orgUnit.it")
+            .withOrgUnitRucIdentifier("RUC-01")
+            .withOrgUnitRinIdentifier("RIN-01")
+            .withOrgUnitRorIdentifier("ROR-01")
+            .withOrgUnitScopusAffiliationIdentifier("SCOPUS-01")
+            .withOrgUnitCrossRefFunderIdentifier("CRF-01")
+            .withOrgUnitAddressLocality("via del canale")
+            .withOrgUnitAddressCountry("Italy")
+            .withUbigeo("010201")
+            .withSubjectOCDE("Subject OCDE")
+            .withSubject("Keyword1")
+            .withSubject("Keyword2")
+            .withDescriptionAbstract("This is an org unit")
+            .build();
+
+        ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Person")
+            .withTitle("Walter White")
+            .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
+            .build();
+
+        ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Person")
+            .withTitle("Jesse Pinkman")
+            .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
+            .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("orgUnit-perucris-cerif-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, orgUnit, out);
+
+        try (FileInputStream fis = getFileInputStream("orgUnit-perucris-cerif.xml")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+    }
+
+    @Test
     public void testOrgUnitJsonDisseminate() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -1102,6 +1297,22 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withOrgUnitIdentifier("ID-02")
             .withUrlIdentifier("www.orgUnit.com")
             .withUrlIdentifier("www.orgUnit.it")
+            .withOrgUnitDirector("OU Director")
+            .withOrgUnitFoundingDate("1990-05-12")
+            .withOrgUnitBoard("board1")
+            .withOrgUnitBoard("board2")
+            .withOrgUnitIsniIdentifier("ISNI-01")
+            .withOrgUnitRucIdentifier("RUC-01")
+            .withOrgUnitRinIdentifier("RIN-01")
+            .withOrgUnitRorIdentifier("ROR-01")
+            .withOrgUnitScopusAffiliationIdentifier("SCOPUS-01")
+            .withOrgUnitCrossRefFunderIdentifier("CRF-01")
+            .withOrgUnitAddressLocality("via del canale")
+            .withOrgUnitAddressCountry("Italy")
+            .withUbigeo("010201")
+            .withSubjectOCDE("Subject OCDE")
+            .withSubject("Keyword1")
+            .withSubject("Keyword2")
             .build();
 
         ItemBuilder.createItem(context, collection)
@@ -1265,6 +1476,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         Item equipment = ItemBuilder.createItem(context, collection)
             .withRelationshipType("Equipment")
+            .withType("Type")
             .withAcronym("T-EQ")
             .withTitle("Test Equipment")
             .withInternalId("ID-01")
@@ -1377,6 +1589,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item firstEquipment = ItemBuilder.createItem(context, collection)
             .withRelationshipType("Equipment")
             .withAcronym("FT-EQ")
+            .withType("Type")
             .withTitle("First Test Equipment")
             .withInternalId("ID-01")
             .withDescription("This is an equipment to test the export functionality")
@@ -1387,6 +1600,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item secondEquipment = ItemBuilder.createItem(context, collection)
             .withRelationshipType("Equipment")
             .withAcronym("ST-EQ")
+            .withType("Type")
             .withTitle("Second Test Equipment")
             .withInternalId("ID-02")
             .withDescription("This is another equipment to test the export functionality")
@@ -1521,7 +1735,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.restoreAuthSystemState();
         context.commit();
 
-        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("funding-xml");
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("funding-cerif-xml");
         assertThat(referCrossWalk, notNullValue());
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();

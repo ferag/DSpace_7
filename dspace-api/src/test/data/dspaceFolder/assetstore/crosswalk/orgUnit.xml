@@ -1,20 +1,29 @@
-<OrgUnit xmlns="https://www.openaire.eu/cerif-profile/1.1/" id="mock-id">
-	<Name>Test OrgUnit</Name>
-	<Name>Test OrgUnit LegalName</Name>
-	<Acronym>TOU</Acronym>
-	<Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">https://w3id.org/cerif/vocab/OrganisationTypes#StrategicResearchInsitute</Type>
-	<PartOf>
-		<OrgUnit id="mock-id">
-			<Name>Parent OrgUnit</Name>
-			<Acronym>POU</Acronym>
-		</OrgUnit>
-	</PartOf>
-	<Identifier>ID-01</Identifier>
-	<Identifier>ID-02</Identifier>
-	<Identifier type="URL">www.orgUnit.com</Identifier>
-	<Identifier type="URL">www.orgUnit.it</Identifier>
-	<People>
-		<Person displayName="Walter White"/>
-		<Person displayName="Jesse Pinkman"/>
-	</People>
+<OrgUnit id="mock-id">
+    <Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">https://w3id.org/cerif/vocab/OrganisationTypes#StrategicResearchInsitute</Type>
+    <Acronym>TOU</Acronym>
+    <Name>Test OrgUnit</Name>
+    <Name>Test OrgUnit LegalName</Name>
+    <Director>OU Director</Director>
+    <Established>1990-05-12</Established>
+    <ScientificBoard>board1</ScientificBoard>
+    <ScientificBoard>board2</ScientificBoard>
+    <Identifier>ID-01</Identifier>
+    <Identifier>ID-02</Identifier>
+    <Url>www.orgUnit.com</Url>
+    <Url>www.orgUnit.it</Url>
+    <Identifier type="RUC">RUC-01</Identifier>
+    <Identifier type="Ringgold">RIN-01</Identifier>
+    <Identifier type="Research Organization Registry">ROR-01</Identifier>
+    <Identifier type="Scopus Affiliation">SCOPUS-01</Identifier>
+    <Identifier type="CrossRef Funder">CRF-01</Identifier>
+    <ParentOrganization>Parent OrgUnit</ParentOrganization>
+    <PostAddress>
+        <AddressLocality>via del canale</AddressLocality>
+        <AddressCountry>Italy</AddressCountry>
+    </PostAddress>
+    <UbiGeo scheme="https://purl.org/pe-repo/inei/ubigeo">010201</UbiGeo>
+    <People>
+        <Person displayName="Walter White"/>
+        <Person displayName="Jesse Pinkman"/>
+    </People>
 </OrgUnit>

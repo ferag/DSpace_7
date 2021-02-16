@@ -41,11 +41,19 @@
 				"project",
 				"test"
 			],
+            "subjects": [
+            ],
 			"abstract": "This is a project to test the export",
 			"OAMandate": {
 				"mandated": "true",
 				"URL": "oamandate-url" 
-			}
+			},
+            "geoLocations": [
+            ],
+            "technicians": [
+            ],
+            "supportingStaff": [
+            ]
 		},
 		{
 			"acronym":"STP",
@@ -84,9 +92,17 @@
 			],
 			"keywords": [
 			],
+            "subjects": [
+            ],
 			"OAMandate": {
 				"URL": "oamandate" 
-			}
+			},
+			"geoLocations": [
+            ],
+            "technicians": [
+            ],
+            "supportingStaff": [
+            ]
 		}
 	]
 }

@@ -592,6 +592,86 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "perucris", "description", "internalNote", internalNote);
     }
 
+    public ItemBuilder withPhone(String phone) {
+        return addMetadataValue(item, "perucris", "phone", null, phone);
+    }
+
+    public ItemBuilder withMobilePhone(String mobilePhone) {
+        return addMetadataValue(item, "perucris", "mobilePhone", null, mobilePhone);
+    }
+
+    public ItemBuilder withDinaIdentifier(String dina) {
+        return addMetadataValue(item, "perucris", "identifier", "dina", dina);
+    }
+
+    public ItemBuilder withDniIdentifier(String dni) {
+        return addMetadataValue(item, "perucris", "identifier", "dni", dni);
+    }
+
+    public ItemBuilder withPassport(String passport) {
+        return addMetadataValue(item, "perucris", "identifier", "passport", passport);
+    }
+
+    public ItemBuilder withStreetAddress(String street) {
+        return addMetadataValue(item, "perucris", "address", "streetAddress", street);
+    }
+
+    public ItemBuilder withCountryAddress(String country) {
+        return addMetadataValue(item, "perucris", "address", "postalCode", country);
+    }
+
+    public ItemBuilder withPostalCode(String postalCode) {
+        return addMetadataValue(item, "perucris", "address", "addressCountry", postalCode);
+    }
+
+    public ItemBuilder withOrgUnitDirector(String director) {
+        return addMetadataValue(item, "crisou", "director", null, director);
+    }
+
+    public ItemBuilder withOrgUnitFoundingDate(String foundingDate) {
+        return addMetadataValue(item, "organization", "foundingDate", null, foundingDate);
+    }
+
+    public ItemBuilder withOrgUnitBoard(String boards) {
+        return addMetadataValue(item, "crisou", "boards", null, boards);
+    }
+
+    public ItemBuilder withOrgUnitIsniIdentifier(String isni) {
+        return addMetadataValue(item, "organization", "identifier", "isni", isni);
+    }
+
+    public ItemBuilder withOrgUnitRucIdentifier(String ruc) {
+        return addMetadataValue(item, "organization", "identifier", "ruc", ruc);
+    }
+
+    public ItemBuilder withOrgUnitRinIdentifier(String rin) {
+        return addMetadataValue(item, "organization", "identifier", "rin", rin);
+    }
+
+    public ItemBuilder withOrgUnitRorIdentifier(String ror) {
+        return addMetadataValue(item, "organization", "identifier", "ror", ror);
+    }
+
+    public ItemBuilder withOrgUnitScopusAffiliationIdentifier(String scopusaffid) {
+        return addMetadataValue(item, "organization", "identifier", "scopusaffid", scopusaffid);
+    }
+
+    public ItemBuilder withOrgUnitCrossRefFunderIdentifier(String crossrefid) {
+        return addMetadataValue(item, "organization", "identifier", "crossrefid", crossrefid);
+    }
+
+    public ItemBuilder withOrgUnitAddressLocality(String addressLocality) {
+        return addMetadataValue(item, "organization", "address", "addressLocality", addressLocality);
+    }
+
+    public ItemBuilder withOrgUnitAddressCountry(String addressCountry) {
+        return addMetadataValue(item, "organization", "address", "addressCountry", addressCountry);
+    }
+
+    public ItemBuilder withUbigeo(String ubigeo) {
+        return addMetadataValue(item, "perucris", "ubigeo", null, ubigeo);
+    }
+
     public ItemBuilder withHandle(String handle) {
         this.handle = handle;
         return this;

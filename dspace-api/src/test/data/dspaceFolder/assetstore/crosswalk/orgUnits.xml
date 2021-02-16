@@ -1,27 +1,27 @@
 <OrgUnits>
-	<OrgUnit xmlns="https://www.openaire.eu/cerif-profile/1.1/" id="mock-id">
+	<OrgUnit id="mock-id">
+        <Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">https://w3id.org/cerif/vocab/OrganisationTypes#StrategicResearchInsitute</Type>
+        <Acronym>TOU</Acronym>
 		<Name>Test OrgUnit</Name>
 		<Name>Test OrgUnit LegalName</Name>
-		<Acronym>TOU</Acronym>
-		<Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">https://w3id.org/cerif/vocab/OrganisationTypes#StrategicResearchInsitute</Type>
-		<PartOf>
-			<OrgUnit> <Name>Parent OrgUnit</Name> </OrgUnit>
-		</PartOf>
-		<Identifier>ID-01</Identifier>
-		<Identifier>ID-02</Identifier>
-		<Identifier type="URL">www.orgUnit.com</Identifier>
-		<Identifier type="URL">www.orgUnit.it</Identifier>
+        <Identifier>ID-01</Identifier>
+        <Identifier>ID-02</Identifier>
+        <Url>www.orgUnit.com</Url>
+        <Url>www.orgUnit.it</Url>
+		<ParentOrganization>Parent OrgUnit</ParentOrganization>
+		<PostAddress>
+		</PostAddress>
 		<People>
 		</People>
 	</OrgUnit>
-	<OrgUnit xmlns="https://www.openaire.eu/cerif-profile/1.1/" id="mock-id">
+	<OrgUnit id="mock-id">
+        <Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">https://w3id.org/cerif/vocab/OrganisationTypes#Privatenonprofit</Type>
+        <Acronym>ATOU</Acronym>
 		<Name>Another Test OrgUnit</Name>
-		<Acronym>ATOU</Acronym>
-		<Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">https://w3id.org/cerif/vocab/OrganisationTypes#Privatenonprofit</Type>
-		<PartOf>
-			<OrgUnit> <Name>Parent OrgUnit</Name> </OrgUnit>
-		</PartOf>
-		<Identifier>ID-03</Identifier>
+        <Identifier>ID-03</Identifier>
+		<ParentOrganization>Parent OrgUnit</ParentOrganization>
+        <PostAddress>
+        </PostAddress>
 		<People>
 		</People>
 	</OrgUnit>

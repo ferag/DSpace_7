@@ -1,22 +1,56 @@
 {
-	"name": "Test OrgUnit",
-	"legalName": "Test OrgUnit LegalName",
-	"acronym": "TOU",
-	"type": "https:\/\/w3id.org\/cerif\/vocab\/OrganisationTypes#StrategicResearchInsitute",
-	"parentOrganization": {
-		"name": "Parent OrgUnit",
-		"acronym": "POU"
-	},
-	"identifiers": [
-		"ID-01",
-		"ID-02"
-	],
-	"url-identifiers": [
-		"www.orgUnit.com",
-		"www.orgUnit.it"
-	],
-	"People": [
-		"Walter White",
-		"Jesse Pinkman"
-	]
+    "name": "Test OrgUnit",
+    "legalName": "Test OrgUnit LegalName",
+    "acronym": "TOU",
+    "type": "https:\/\/w3id.org\/cerif\/vocab\/OrganisationTypes#StrategicResearchInsitute",
+    "director": "OU Director",
+    "established": "1990-05-12",
+    "scientificBoards": [
+       "board1",
+       "board2"
+    ],
+    "parentOrganization": {
+        "name": "Parent OrgUnit",
+        "acronym": "POU"
+    },
+    "identifiers": [
+        "ID-01",
+        "ID-02"
+    ],
+    "url-identifiers": [
+    ],
+    "ruc-identifiers": [
+        "RUC-01"
+    ],
+    "rin-identifiers": [
+        "RUC-01"
+    ],
+    "ror-identifiers": [
+        "RUC-01"
+    ],
+    "isni-identifiers": [
+        "ISNI-01"
+    ],
+    "scopusaff-identifiers": [
+        "SCOPUS-01"
+    ],
+    "crossref-identifiers": [
+        "CRF-01"
+    ],
+    "subjects": [
+        "Subject OCDE"
+    ],
+    "keywords": [
+        "Keyword1",
+        "Keyword2"
+    ],
+    "postAddress": {
+        "locality": "via del canale",
+        "country": "Italy"
+    },
+    "ubiGeo": "010201",
+    "People": [
+        "Walter White",
+        "Jesse Pinkman"
+    ]
 }

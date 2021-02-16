@@ -4731,30 +4731,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <hint />
         </field>
       </row>
-      <row>
-        <field>
-          <dc-schema>cris</dc-schema>
-          <dc-element>policy</dc-element>
-          <dc-qualifier>eperson</dc-qualifier>
-          <label>Eperson Policy</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>cris</dc-schema>
-          <dc-element>policy</dc-element>
-          <dc-qualifier>group</dc-qualifier>
-          <label>Group Policy</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint />
-        </field>
-      </row>
     </form>
     <form name="institution-person">
       <row>
@@ -5220,30 +5196,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-qualifier>internalNote</dc-qualifier>
           <label>Internal Note</label>
           <input-type>textarea</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>cris</dc-schema>
-          <dc-element>policy</dc-element>
-          <dc-qualifier>eperson</dc-qualifier>
-          <label>Eperson Policy</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>cris</dc-schema>
-          <dc-element>policy</dc-element>
-          <dc-qualifier>group</dc-qualifier>
-          <label>Group Policy</label>
-          <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />

@@ -101,7 +101,7 @@ public class LookupEntityAction implements PostShadowCopyCreationAction {
         DiscoverQuery discoverQuery = new DiscoverQuery();
         discoverQuery.setDSpaceObjectFilter(IndexableItem.TYPE);
         discoverQuery.addFilterQueries(metadataToSearch + ":" + metadataValue);
-        discoverQuery.addFilterQueries("entityType:" + relationshipTypeToSearch);
+        discoverQuery.addFilterQueries("search.entitytype:" + relationshipTypeToSearch);
 
         DiscoverResult discoverResult = searchService.search(context, discoverQuery);
         List<IndexableObject> indexableObjects = discoverResult.getIndexableObjects();

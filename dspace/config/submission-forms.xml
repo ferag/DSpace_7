@@ -3780,15 +3780,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
         </field>
-        <field>
-          <dc-schema>oairecerif</dc-schema>
-          <dc-element>fundingProgram</dc-element>
-          <label>Funded/As</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint />
-        </field>
       </row>
       <row>
         <field>

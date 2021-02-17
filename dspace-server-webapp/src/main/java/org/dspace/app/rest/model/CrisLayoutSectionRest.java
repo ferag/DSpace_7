@@ -209,6 +209,8 @@ public class CrisLayoutSectionRest extends BaseObjectRest<String> {
 
         private String style;
 
+        private String searchType;
+
         public String getDiscoveryConfigurationName() {
             return discoveryConfigurationName;
         }
@@ -232,6 +234,14 @@ public class CrisLayoutSectionRest extends BaseObjectRest<String> {
          */
         public void setStyle(String style) {
             this.style = style;
+        }
+
+        public String getSearchType() {
+            return searchType;
+        }
+
+        public void setSearchType(String searchType) {
+            this.searchType = searchType;
         }
 
     }

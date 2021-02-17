@@ -9,8 +9,8 @@
     <Identifier type="URL">www.orgUnit.it</Identifier>
     <PartOf>
         <OrgUnit id="mock-id">
-            <Name>Parent OrgUnit</Name>
             <Acronym>POU</Acronym>
+            <Name>Parent OrgUnit</Name>
         </OrgUnit>
     </PartOf>
 </OrgUnit>

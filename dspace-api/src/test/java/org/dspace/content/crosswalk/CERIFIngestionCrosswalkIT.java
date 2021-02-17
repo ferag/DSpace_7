@@ -225,7 +225,7 @@ public class CERIFIngestionCrosswalkIT extends AbstractIntegrationTestWithDataba
         Item item = ItemBuilder.createItem(context, collection).withRelationshipType("Publication").build();
         context.restoreAuthSystemState();
 
-        Document document = readDocument(CROSSWALK_DIR_PATH, "publication.xml");
+        Document document = readDocument(CROSSWALK_DIR_PATH, "publication-cerif.xml");
         crosswalk.ingest(context, item, document.getRootElement(), false);
 
         List<MetadataValue> values = item.getMetadata();
@@ -355,7 +355,7 @@ public class CERIFIngestionCrosswalkIT extends AbstractIntegrationTestWithDataba
         Item item = ItemBuilder.createItem(context, collection).withRelationshipType("Project").build();
         context.restoreAuthSystemState();
 
-        Document document = readDocument(CROSSWALK_DIR_PATH, "project.xml");
+        Document document = readDocument(CROSSWALK_DIR_PATH, "project-cerif.xml");
         crosswalk.ingest(context, item, document.getRootElement(), false);
 
         List<MetadataValue> values = item.getMetadata();
@@ -408,7 +408,7 @@ public class CERIFIngestionCrosswalkIT extends AbstractIntegrationTestWithDataba
         Item item = ItemBuilder.createItem(context, collection).withRelationshipType("OrgUnit").build();
         context.restoreAuthSystemState();
 
-        Document document = readDocument(CROSSWALK_DIR_PATH, "orgUnit.xml");
+        Document document = readDocument(CROSSWALK_DIR_PATH, "orgUnit-cerif.xml");
         crosswalk.ingest(context, item, document.getRootElement(), false);
 
         List<MetadataValue> values = item.getMetadata();
@@ -453,7 +453,7 @@ public class CERIFIngestionCrosswalkIT extends AbstractIntegrationTestWithDataba
         Item item = ItemBuilder.createItem(context, collection).withRelationshipType("Equipment").build();
         context.restoreAuthSystemState();
 
-        Document document = readDocument(CROSSWALK_DIR_PATH, "equipment.xml");
+        Document document = readDocument(CROSSWALK_DIR_PATH, "equipment-cerif.xml");
         crosswalk.ingest(context, item, document.getRootElement(), false);
 
         List<MetadataValue> values = item.getMetadata();
@@ -473,7 +473,7 @@ public class CERIFIngestionCrosswalkIT extends AbstractIntegrationTestWithDataba
         Item item = ItemBuilder.createItem(context, collection).withRelationshipType("Funding").build();
         context.restoreAuthSystemState();
 
-        Document document = readDocument(CROSSWALK_DIR_PATH, "funding.xml");
+        Document document = readDocument(CROSSWALK_DIR_PATH, "funding-cerif.xml");
         crosswalk.ingest(context, item, document.getRootElement(), false);
 
         List<MetadataValue> values = item.getMetadata();

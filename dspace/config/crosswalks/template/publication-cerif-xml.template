@@ -71,8 +71,8 @@
 				<By>
 					@relation.oairecerif-funder.start@
 					<OrgUnit id="@virtual.id@">
+                        <Acronym>@oairecerif.acronym@</Acronym>
 						<Name>@dc.title@</Name>
-						<Acronym>@oairecerif.acronym@</Acronym>
 					</OrgUnit>
 					@relation.oairecerif-funder.end@
 					@if.not.authority.oairecerif-funder.start@
@@ -114,9 +114,4 @@
     >
         @virtual.mapConverter.accessRight.oairecerif-access@
     </Access>
-    <Version>@oaire.version@</Version>
-    <Advisors>
-        <Advisor> <Person> <Name>@dc.contributor.advisor@</Name> </Person> </Advisor>
-    </Advisors>
-    <Discipline>@renati.discipline@</Discipline>
 </Publication>

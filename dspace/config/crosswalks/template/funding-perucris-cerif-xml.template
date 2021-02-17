@@ -17,8 +17,8 @@
 	<Funder>
 		@relation.oairecerif-funder.start@
 		<OrgUnit id="@virtual.id@">
+            <Acronym>@oairecerif.acronym@</Acronym>
 			<Name>@dc.title@</Name>
-			<Acronym>@oairecerif.acronym@</Acronym>
 		</OrgUnit>
 		@relation.oairecerif-funder.end@
 		@if.not.authority.oairecerif-funder.start@
@@ -29,15 +29,15 @@
 	</Funder>
 	<PartOf>
         @relation.oairecerif-fundingParent.start@
-        <OrgUnit id="@virtual.id@">
-            <Name>@dc.title@</Name>
+        <Funding id="@virtual.id@">
             <Acronym>@oairecerif.acronym@</Acronym>
-        </OrgUnit>
+            <Name>@dc.title@</Name>
+        </Funding>
         @relation.oairecerif-fundingParent.end@
         @if.not.authority.oairecerif-fundingParent.start@
-        <OrgUnit>
+        <Funding>
             <Name>@oairecerif.fundingParent@</Name>
-        </OrgUnit>
+        </Funding>
         @if.not.authority.oairecerif-fundingParent.end@
     </PartOf>
 	<Duration 
@@ -48,12 +48,12 @@
 		mandated="@oairecerif.oamandate@" 
 		URL="@oairecerif.oamandate.url@" 
 	/>
-    @if.metadata.perucris-executedAmoun-currency.start@
+    @if.metadata.perucris-executedAmount-currency.start@
     <ExecutedAmount currency="@perucris.executedAmount.currency@">
-    @if.metadata.perucris-executedAmoun-currency.end@
-    @if.not.metadata.perucris-executedAmoun-currency.start@
+    @if.metadata.perucris-executedAmount-currency.end@
+    @if.not.metadata.perucris-executedAmount-currency.start@
     <ExecutedAmount>
-    @if.not.metadata.perucris-executedAmoun-currency.end@
+    @if.not.metadata.perucris-executedAmount-currency.end@
         @perucris.executedAmount@
     </ExecutedAmount>
 </Funding>

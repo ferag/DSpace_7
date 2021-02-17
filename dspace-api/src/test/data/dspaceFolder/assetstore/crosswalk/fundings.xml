@@ -15,8 +15,8 @@
 			</OrgUnit>
 		</Funder>
 		<PartOf>
-            <OrgUnit>
-            </OrgUnit>
+            <Funding>
+            </Funding>
         </PartOf>
 		<Duration 
 			startDate="2015-01-01" 
@@ -42,8 +42,8 @@
 			</OrgUnit>
 		</Funder>
         <PartOf>
-            <OrgUnit>
-            </OrgUnit>
+            <Funding>
+            </Funding>
         </PartOf>
 		<Duration 
 			startDate="2020-01-01" 

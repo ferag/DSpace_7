@@ -10,8 +10,8 @@
 		<Coordinator>
 			@relation.crispj-coordinator.start@
 			<OrgUnit id="@virtual.id@">
+                <Acronym>@oairecerif.acronym@</Acronym>
 				<Name>@dc.title@</Name>
-				<Acronym>@oairecerif.acronym@</Acronym>
 			</OrgUnit>
 			@relation.crispj-coordinator.end@
 			@if.not.authority.crispj-coordinator.start@
@@ -21,8 +21,8 @@
 		<Partner>
 			@relation.crispj-partnerou.start@
 			<OrgUnit id="@virtual.id@">
+                <Acronym>@oairecerif.acronym@</Acronym>
 				<Name>@dc.title@</Name>
-				<Acronym>@oairecerif.acronym@</Acronym>
 			</OrgUnit>
 			@relation.crispj-partnerou.end@
 			@if.not.authority.crispj-partnerou.start@
@@ -32,8 +32,8 @@
 		<Member>
 			@relation.crispj-organization.start@
 			<OrgUnit id="@virtual.id@">
+                <Acronym>@oairecerif.acronym@</Acronym>
 				<Name>@dc.title@</Name>
-				<Acronym>@oairecerif.acronym@</Acronym>
 			</OrgUnit>
 			@relation.crispj-organization.end@
 			@if.not.authority.crispj-organization.start@
@@ -54,8 +54,8 @@
 		<By>
 			@relation.oairecerif-funder.start@
 			<OrgUnit id="@virtual.id@">
+                <Acronym>@oairecerif.acronym@</Acronym>
 				<Name>@dc.title@</Name>
-				<Acronym>@oairecerif.acronym@</Acronym>
 			</OrgUnit>
 			@relation.oairecerif-funder.end@
 			@if.not.authority.oairecerif-funder.start@

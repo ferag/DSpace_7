@@ -31,6 +31,7 @@
 
 				<entry key="ctivitae-profile-xml" value-ref="referCrosswalkPersonCvXml"></entry>
 				<entry key="ctivitae-profile-cerif-xml" value-ref="referCrosswalkPersonCvCerifXml"></entry>
+                <entry key="ctivitae-profile-perucris-cerif-xml" value-ref="referCrosswalkPersonCvPerucrisCerifXml"></entry>
 				<entry key="ctivitae-profile-json" value-ref="referCrosswalkPersonCvJson"></entry>
 				<entry key="ctivitae-profile-pdf" value-ref="pdfCrosswalkPersonCv"></entry>
 				<entry key="ctivitae-profile-rtf" value-ref="rtfCrosswalkPersonCv"></entry>
@@ -208,6 +209,16 @@
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-cerif-xml.template"/>
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
+
+    <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPersonCvPerucrisCerifXml">
+        <property name="templateFileName" value="crosswalks/template/person-perucris-cerif-xml.template"/>
+        <property name="mimeType" value="application/xml; charset=UTF-8"/>
+        <property name="fileName" value="profile.xml"/>
+        <property name="entityType" value="PersonCv"/>
+        <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+        <property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-cerif-xml.template"/>
+        <property name="converter" ref="xmlValueConverter" />
+    </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPersonCvJson">
 		<property name="templateFileName" value="crosswalks/template/person-json.template"/>
@@ -451,7 +462,7 @@
 		<property name="fileName" value="funding.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="Funding"/>
-		<property name="referCrosswalk" ref="referCrosswalkFundingCerifXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkFundingPerucrisCerifXml"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkPerson">
@@ -786,7 +797,7 @@
 		<property name="fileName" value="project.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="InstitutionProject"/>
-		<property name="referCrosswalk" ref="referCrosswalkInstitutionProjectCerifXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkInstitutionProjectPerucrisCerifXml"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkInstitutionProject">
@@ -897,7 +908,7 @@
 		<property name="fileName" value="funding.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="InstitutionFunding"/>
-		<property name="referCrosswalk" ref="referCrosswalkInstitutionFundingCerifXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkInstitutionFundingPerucrisCerifXml"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkInstitutionFunding">

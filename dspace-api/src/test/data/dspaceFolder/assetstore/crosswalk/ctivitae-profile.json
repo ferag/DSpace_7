@@ -79,6 +79,7 @@
 		"English",
 		"Italian"
 	],
+	"ubigeo": "12345",
     "address": {
         "street": "Via 1 maggio",
         "postal-code": "05100",

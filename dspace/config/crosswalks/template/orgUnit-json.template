@@ -21,7 +21,7 @@
 		"@organization.identifier@",
 	],
 	"url-identifiers": [
-		"@organization.identifier.url@",
+		"@oairecerif.identifier.url@",
 	],
     "ruc-identifiers": [
         "@organization.identifier.ruc@",

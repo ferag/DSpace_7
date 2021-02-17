@@ -10,8 +10,8 @@
     <Funder> 
         <As> 
             <Funding id="@virtual.id@">  
-                <Name>@dc.title@</Name>
                 <Acronym>@oairecerif.acronym@</Acronym>
+                <Name>@dc.title@</Name>
             <Funding>  
         </As> 
     </Funder>

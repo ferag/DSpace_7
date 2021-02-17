@@ -1,4 +1,4 @@
-<Publication xmlns="https://www.openaire.eu/cerif-profile/1.1/" id="@virtual.id@">
+<Publication xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="@virtual.id@">
 	<Type xmlns="https://www.openaire.eu/cerif-profile/vocab/COAR_Publication_Types">@virtual.mapConverter.coarTypes.dc-type@</Type>
 	<Language>@dc.language.iso@</Language>
    	<Title>@dc.title@</Title>
@@ -71,8 +71,8 @@
 				<By>
 					@relation.oairecerif-funder.start@
 					<OrgUnit id="@virtual.id@">
+                        <Acronym>@oairecerif.acronym@</Acronym>
 						<Name>@dc.title@</Name>
-						<Acronym>@oairecerif.acronym@</Acronym>
 					</OrgUnit>
 					@relation.oairecerif-funder.end@
 					@if.not.authority.oairecerif-funder.start@
@@ -114,4 +114,9 @@
     >
         @virtual.mapConverter.accessRight.oairecerif-access@
     </Access>
+    <Version>@oaire.version@</Version>
+    <Advisors>
+        <Advisor> <Person> <Name>@dc.contributor.advisor@</Name> </Person> </Advisor>
+    </Advisors>
+    <Discipline>@renati.discipline@</Discipline>
 </Publication>

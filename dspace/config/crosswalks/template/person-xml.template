@@ -35,11 +35,11 @@
 	</interests>
 	<identifiers>
 		<orcid>@person.identifier.orcid@</orcid>
-		<dina>@person.identifier.dina@<dina>
-        <dni>@perucris.identifier.dni@<dni>
-        <passport>@perucris.identifier.passport@<passport>
-        <immigration-card>@perucris.identifier.immigrationCard@<immigration-card>
-        <renacyt>@perucris.identifier.renacyt@<renacyt>
+		<dina>@person.identifier.dina@</dina>
+        <dni>@perucris.identifier.dni@</dni>
+        <passport>@perucris.identifier.passport@</passport>
+        <immigration-card>@perucris.identifier.immigrationCard@</immigration-card>
+        <renacyt>@perucris.identifier.renacyt@</renacyt>
 		<scopus-author-ids>
 			<scopus-author-id>@person.identifier.scopus-author-id@</scopus-author-id>
 		</scopus-author-ids>

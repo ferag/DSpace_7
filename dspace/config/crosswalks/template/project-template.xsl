@@ -103,7 +103,7 @@
 
                     <xsl:call-template name="print-values">
                         <xsl:with-param name="label" select="'OCDE Subject(s)'" />
-                        <xsl:with-param name="values" select="Subject" />
+                        <xsl:with-param name="values" select="cerif:Subject" />
                     </xsl:call-template>
 					<xsl:call-template name="print-values">
 				    	<xsl:with-param name="label" select="'Uses equipment(s)'" />

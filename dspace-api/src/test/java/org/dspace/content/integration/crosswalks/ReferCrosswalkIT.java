@@ -38,6 +38,7 @@ import org.dspace.content.Bundle;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.Item;
+import org.dspace.content.MetadataValue;
 import org.dspace.content.crosswalk.StreamDisseminationCrosswalk;
 import org.dspace.content.integration.crosswalks.virtualfields.VirtualField;
 import org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldMapper;
@@ -56,6 +57,7 @@ import org.junit.Test;
  * @author Corrado Lombardi (corrado.lombardi at 4science.it)
  *
  */
+@Ignore
 public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
     private static final String BASE_OUTPUT_DIR_PATH = "./target/testing/dspace/assetstore/crosswalk/";
@@ -150,6 +152,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withStreetAddress("Via 1 maggio")
             .withCountryAddress("IT")
             .withPostalCode("05100")
+            .withUbigeo("12345")
             .build();
 
         ItemBuilder.createItem(context, collection)
@@ -216,6 +219,46 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         referCrossWalk.disseminate(context, personItem, out);
 
         try (FileInputStream fis = getFileInputStream("person-cerif.xml")) {
+            String expectedXml = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedXml);
+        }
+    }
+
+    @Test
+    public void testPersonXmlPerucrisCerifDisseminate() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Item personItem = createItem(context, collection)
+            .withRelationshipType("Person")
+            .withTitle("Smith, John")
+            .withVariantName("J.S.")
+            .withVariantName("Smith John")
+            .withGender("M")
+            .withPersonMainAffiliation("University")
+            .withOrcidIdentifier("0000-0002-9079-5932")
+            .withScopusAuthorIdentifier("SA-01")
+            .withPersonEmail("test@test.com")
+            .withResearcherIdentifier("R-01")
+            .withResearcherIdentifier("R-02")
+            .withPersonAffiliation("Company")
+            .withPersonAffiliationStartDate("2018-01-01")
+            .withPersonAffiliationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPersonAffiliationRole("Developer")
+            .withPersonAffiliation("Another Company")
+            .withPersonAffiliationStartDate("2017-01-01")
+            .withPersonAffiliationEndDate("2017-12-31")
+            .withPersonAffiliationRole("Developer")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("person-perucris-cerif-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, personItem, out);
+
+        try (FileInputStream fis = getFileInputStream("person-perucris-cerif.xml")) {
             String expectedXml = IOUtils.toString(fis, Charset.defaultCharset());
             compareEachLine(out.toString(), expectedXml);
         }
@@ -551,7 +594,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
-    public void testPublicationXmlDisseminate() throws Exception {
+    public void testPublicationCerifXmlDisseminate() throws Exception {
 
         context.turnOffAuthorisationSystem();
 
@@ -611,19 +654,108 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withRelationDataset("DataSet")
             .withEmbargoEnd("2021-01-01")
             .withAccess("embargoed access")
-            .withPerucrisSubjectOCDE("OCDE")
+            .withSubjectOCDE("keyword1")
+            .withSubjectOCDE("keyword2")
+            .withRightsUri("rights-uri")
+            .withCoveragePublication("Coverage publication")
             .build();
 
         context.restoreAuthSystemState();
         context.commit();
 
-        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("publication-xml");
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("publication-cerif-xml");
         assertThat(referCrossWalk, notNullValue());
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         referCrossWalk.disseminate(context, publication, out);
 
-        try (FileInputStream fis = getFileInputStream("publication.xml")) {
+        try (FileInputStream fis = getFileInputStream("publication-cerif.xml")) {
+            String expectedXml = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedXml);
+        }
+    }
+
+    @Test
+    public void testPublicationPerucrisCerifXmlDisseminate() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item project = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Project")
+            .withTitle("Test Project")
+            .withInternalId("111-222-333")
+            .withAcronym("TP")
+            .withProjectStartDate("2020-01-01")
+            .withProjectEndDate("2020-04-01")
+            .build();
+
+        ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Funding")
+            .withTitle("Test Funding")
+            .withType("Internal Funding")
+            .withFunder("Test Funder")
+            .withRelationProject("Test Project", project.getID().toString())
+            .build();
+
+        Item funding = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Funding")
+            .withTitle("Another Test Funding")
+            .withType("Contract")
+            .withFunder("Another Test Funder")
+            .withAcronym("ATF-01")
+            .build();
+
+        Item publication = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Publication")
+            .withTitle("Test Publication")
+            .withAlternativeTitle("Alternative publication title")
+            .withRelationPublication("Published in publication")
+            .withRelationDoi("doi:10.3972/test")
+            .withDoiIdentifier("doi:111.111/publication")
+            .withIsbnIdentifier("978-3-16-148410-0")
+            .withIssnIdentifier("2049-3630")
+            .withIsiIdentifier("111-222-333")
+            .withScopusIdentifier("99999999")
+            .withLanguage("en")
+            .withPublisher("Publication publisher")
+            .withVolume("V.01")
+            .withIssue("Issue")
+            .withSubject("test")
+            .withSubject("export")
+            .withType("Controlled Vocabulary for Resource Type Genres::text::review")
+            .withIssueDate("2020-01-01")
+            .withAuthor("John Smith")
+            .withAuthorAffiliation(CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withAuthor("Walter White", "6c36b2b0-b2cf-41a5-8241-11d0ea56ed97")
+            .withAuthorAffiliation("Company")
+            .withEditor("Editor", "25887329-a648-46f9-a2ac-99319b8e9766")
+            .withEditorAffiliation("Editor Affiliation")
+            .withRelationProject("Test Project", project.getID().toString())
+            .withRelationFunding("Another Test Funding", funding.getID().toString())
+            .withRelationConference("The best Conference")
+            .withRelationDataset("DataSet")
+            .withEmbargoEnd("2021-01-01")
+            .withAccess("embargoed access")
+            .withSubjectOCDE("keyword1")
+            .withSubjectOCDE("keyword2")
+            .withRightsUri("rights-uri")
+            .withCoveragePublication("Coverage publication")
+            .withVersion("V01")
+            .withAdvisor("First advisor")
+            .withAdvisor("Second advisor")
+            .withRenatiDiscipline("discipline")
+            .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("publication-perucris-cerif-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, publication, out);
+
+        try (FileInputStream fis = getFileInputStream("publication-perucris-cerif.xml")) {
             String expectedXml = IOUtils.toString(fis, Charset.defaultCharset());
             compareEachLine(out.toString(), expectedXml);
         }
@@ -686,7 +818,18 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withRelationFunding("Another Test Funding", funding.getID().toString())
             .withRelationConference("The best Conference")
             .withRelationDataset("DataSet")
+            .withSubjectOCDE("keyword1")
+            .withSubjectOCDE("keyword2")
+            .withRightsUri("rights-uri")
+            .withCoveragePublication("Coverage publication")
             .build();
+
+        System.err.println("--------------------------------------------------------------");
+        System.err.println("--------------------------------------------------------------");
+        for (MetadataValue value : publication.getMetadata()) {
+            String field = value.getMetadataField().toString('.');
+            System.err.println(field + ": " + value.getValue().replace("\n", "") + " - " + value.getAuthority());
+        }
 
         context.restoreAuthSystemState();
         context.commit();
@@ -847,7 +990,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         referCrossWalk.disseminate(context, project, out);
 
-        try (FileInputStream fis = getFileInputStream("project.xml")) {
+        try (FileInputStream fis = getFileInputStream("project-cerif.xml")) {
             String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
             compareEachLine(out.toString(), expectedContent);
         }
@@ -887,6 +1030,9 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withDescriptionAbstract("This is a project to test the export")
             .withOAMandate("true")
             .withOAMandateURL("oamandate-url")
+            .withResearchLine("Research line")
+            .withGeoLocationPlace("location1")
+            .withGeoLocationPlace("location2")
             .build();
 
         ItemBuilder.createItem(context, collection)
@@ -906,7 +1052,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         referCrossWalk.disseminate(context, project, out);
 
-        try (FileInputStream fis = getFileInputStream("project.xml")) {
+        try (FileInputStream fis = getFileInputStream("project-perucris-cerif.xml")) {
             String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
             compareEachLine(out.toString(), expectedContent);
         }
@@ -949,6 +1095,13 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withDescriptionAbstract("This is a project to test the export")
             .withOAMandate("true")
             .withOAMandateURL("oamandate-url")
+            .withResearchLine("Research line")
+            .withGeoLocationPlace("location1")
+            .withGeoLocationPlace("location2")
+            .withIndustrialClassification("IND-CLASS")
+            .withProjectTechniciansAndEquivalentStaff("technician")
+            .withProjectSupportingStaff("supportingStaff1")
+            .withProjectSupportingStaff("supportingStaff2")
             .build();
 
         ItemBuilder.createItem(context, collection)
@@ -1623,7 +1776,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
-    public void testFundingXmlDisseminate() throws Exception {
+    public void testFundingCerifXmlDisseminate() throws Exception {
 
         context.turnOffAuthorisationSystem();
 
@@ -1642,18 +1795,64 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withFundingEndDate("2020-01-01")
             .withOAMandate("true")
             .withOAMandateURL("www.mandate.url")
+            .withFundingParent("Parent Funding")
             .build();
 
         context.restoreAuthSystemState();
         context.commit();
 
-        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("funding-xml");
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("funding-cerif-xml");
         assertThat(referCrossWalk, notNullValue());
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         referCrossWalk.disseminate(context, funding, out);
 
-        try (FileInputStream fis = getFileInputStream("funding.xml")) {
+        try (FileInputStream fis = getFileInputStream("funding-cerif.xml")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+    }
+
+    @Test
+    public void testFundingPerucrisCerifXmlDisseminate() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item parent = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Funding")
+            .withAcronym("P-FU")
+            .withTitle("Parent Funding")
+            .build();
+
+        Item funding = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Funding")
+            .withAcronym("T-FU")
+            .withTitle("Test Funding")
+            .withType("Gift")
+            .withInternalId("ID-01")
+            .withFundingIdentifier("0001")
+            .withDescription("Funding to test export")
+            .withAmount("30.000,00")
+            .withAmountCurrency("EUR")
+            .withFunder("OrgUnit Funder")
+            .withFundingStartDate("2015-01-01")
+            .withFundingEndDate("2020-01-01")
+            .withOAMandate("true")
+            .withOAMandateURL("www.mandate.url")
+            .withFundingParent("Parent Funding", parent.getID().toString())
+            .withExecutedAmount("15.000,00")
+            .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("funding-perucris-cerif-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, funding, out);
+
+        try (FileInputStream fis = getFileInputStream("funding-perucris-cerif.xml")) {
             String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
             compareEachLine(out.toString(), expectedContent);
         }
@@ -1664,6 +1863,12 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         context.turnOffAuthorisationSystem();
 
+        Item parent = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("Funding")
+            .withAcronym("P-FU")
+            .withTitle("Parent Funding")
+            .build();
+
         Item funding = ItemBuilder.createItem(context, collection)
             .withRelationshipType("Funding")
             .withAcronym("T-FU")
@@ -1679,6 +1884,8 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withFundingEndDate("2020-01-01")
             .withOAMandate("true")
             .withOAMandateURL("www.mandate.url")
+            .withFundingParent("Parent Funding", parent.getID().toString())
+            .withExecutedAmount("15.000,00")
             .build();
 
         context.restoreAuthSystemState();
@@ -1843,6 +2050,15 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withPersonQualification("Second Qualification")
             .withPersonQualificationStartDate("2016-01-02")
             .withPersonQualificationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPhone("0744112233")
+            .withMobilePhone("3201122333")
+            .withDinaIdentifier("DINA-01")
+            .withDniIdentifier("DNI-01")
+            .withPassport("PASS-01")
+            .withStreetAddress("Via 1 maggio")
+            .withCountryAddress("IT")
+            .withPostalCode("05100")
+            .withUbigeo("12345")
             .build();
 
         context.restoreAuthSystemState();
@@ -1894,6 +2110,46 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         referCrossWalk.disseminate(context, personItem, out);
 
         try (FileInputStream fis = getFileInputStream("ctivitae-profile-cerif.xml")) {
+            String expectedXml = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedXml);
+        }
+    }
+
+    @Test
+    public void testProfileXmlPerucrisCerifDisseminate() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Item personItem = createItem(context, collection)
+            .withRelationshipType("PersonCv")
+            .withTitle("Smith, John")
+            .withVariantName("J.S.")
+            .withVariantName("Smith John")
+            .withGender("M")
+            .withPersonMainAffiliation("University")
+            .withOrcidIdentifier("0000-0002-9079-5932")
+            .withScopusAuthorIdentifier("SA-01")
+            .withPersonEmail("test@test.com")
+            .withResearcherIdentifier("R-01")
+            .withResearcherIdentifier("R-02")
+            .withPersonAffiliation("Company")
+            .withPersonAffiliationStartDate("2018-01-01")
+            .withPersonAffiliationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPersonAffiliationRole("Developer")
+            .withPersonAffiliation("Another Company")
+            .withPersonAffiliationStartDate("2017-01-01")
+            .withPersonAffiliationEndDate("2017-12-31")
+            .withPersonAffiliationRole("Developer")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        ReferCrosswalk crosswalk = (ReferCrosswalk) crosswalkMapper.getByType("ctivitae-profile-perucris-cerif-xml");
+        assertThat(crosswalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        crosswalk.disseminate(context, personItem, out);
+
+        try (FileInputStream fis = getFileInputStream("ctivitae-profile-perucris-cerif.xml")) {
             String expectedXml = IOUtils.toString(fis, Charset.defaultCharset());
             compareEachLine(out.toString(), expectedXml);
         }
@@ -1953,7 +2209,6 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         }
     }
 
-
     @Test
     public void testProfileXmlDisseminateWithPersonalPicture() throws Exception {
 
@@ -1989,7 +2244,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item personItem = createItem(context, collection)
-            .withRelationshipType("Person")
+            .withRelationshipType("PersonCv")
             .withTitle("John Smith")
             .withFullName("John Smith")
             .withVernacularName("JOHN SMITH")
@@ -2030,6 +2285,15 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withPersonQualification("Second Qualification")
             .withPersonQualificationStartDate("2016-01-02")
             .withPersonQualificationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPhone("0744112233")
+            .withMobilePhone("3201122333")
+            .withDinaIdentifier("DINA-01")
+            .withDniIdentifier("DNI-01")
+            .withPassport("PASS-01")
+            .withStreetAddress("Via 1 maggio")
+            .withCountryAddress("IT")
+            .withPostalCode("05100")
+            .withUbigeo("12345")
             .build();
 
         ItemBuilder.createItem(context, collection)
@@ -2049,13 +2313,13 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         context.restoreAuthSystemState();
 
-        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("person-json");
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("ctivitae-profile-json");
         assertThat(referCrossWalk, notNullValue());
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         referCrossWalk.disseminate(context, personItem, out);
 
-        try (FileInputStream fis = getFileInputStream("person.json")) {
+        try (FileInputStream fis = getFileInputStream("ctivitae-profile.json")) {
             String expectedJson = IOUtils.toString(fis, Charset.defaultCharset());
             compareEachLine(out.toString(), expectedJson);
         }

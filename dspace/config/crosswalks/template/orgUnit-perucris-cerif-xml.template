@@ -12,8 +12,8 @@
 	<PartOf>
 		@relation.organization-parentOrganization.start@
 		<OrgUnit id="@virtual.id@">
+            <Acronym>@oairecerif.acronym@</Acronym>
 			<Name>@dc.title@</Name>
-			<Acronym>@oairecerif.acronym@</Acronym>
 		</OrgUnit>
 		@relation.organization-parentOrganization.end@
 		@if.not.authority.organization-parentOrganization.start@

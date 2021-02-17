@@ -399,6 +399,14 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "oairecerif", "funder", null, null, funder, authority, 600);
     }
 
+    public ItemBuilder withFundingParent(String parent) {
+        return addMetadataValue(item, "oairecerif", "fundingParent", null, parent);
+    }
+
+    public ItemBuilder withFundingParent(String parent, String authority) {
+        return addMetadataValue(item, "oairecerif", "fundingParent", null, null, parent, authority, 600);
+    }
+
     public ItemBuilder withPublisher(String publisher) {
         return addMetadataValue(item, "dc", "publisher", null, publisher);
     }
@@ -495,6 +503,26 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "dc", "subject", "ocde", ocde);
     }
 
+    public ItemBuilder withRightsUri(String uri) {
+        return addMetadataValue(item, "dc", "rights", "uri", uri);
+    }
+
+    public ItemBuilder withVersion(String version) {
+        return addMetadataValue(item, "oaire", "version", null, version);
+    }
+
+    public ItemBuilder withCoveragePublication(String coveragePublication) {
+        return addMetadataValue(item, "dc", "coverage", "publication", coveragePublication);
+    }
+
+    public ItemBuilder withAdvisor(String advisor) {
+        return addMetadataValue(item, "dc", "contributor", "advisor", advisor);
+    }
+
+    public ItemBuilder withRenatiDiscipline(String discipline) {
+        return addMetadataValue(item, "renati", "discipline", null, discipline);
+    }
+
     public ItemBuilder makeUnDiscoverable() {
         item.setDiscoverable(false);
         return this;
@@ -546,6 +574,14 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withAmountCurrency(String currency) {
         return addMetadataValue(item, "oairecerif", "amount", "currency", currency);
+    }
+
+    public ItemBuilder withExecutedAmount(String amount) {
+        return addMetadataValue(item, "perucris", "executedAmount", null, amount);
+    }
+
+    public ItemBuilder withExecutedAmountCurrency(String currency) {
+        return addMetadataValue(item, "perucris", "executedAmount", "currency", currency);
     }
 
     public ItemBuilder withFundingStartDate(String startDate) {
@@ -617,11 +653,11 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
     }
 
     public ItemBuilder withCountryAddress(String country) {
-        return addMetadataValue(item, "perucris", "address", "postalCode", country);
+        return addMetadataValue(item, "perucris", "address", "addressCountry", country);
     }
 
     public ItemBuilder withPostalCode(String postalCode) {
-        return addMetadataValue(item, "perucris", "address", "addressCountry", postalCode);
+        return addMetadataValue(item, "perucris", "address", "postalCode", postalCode);
     }
 
     public ItemBuilder withOrgUnitDirector(String director) {
@@ -670,6 +706,22 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withUbigeo(String ubigeo) {
         return addMetadataValue(item, "perucris", "ubigeo", null, ubigeo);
+    }
+
+    public ItemBuilder withGeoLocationPlace(String geoLocationPlace) {
+        return addMetadataValue(item, "datacite", "geoLocationPlace", null, geoLocationPlace);
+    }
+
+    public ItemBuilder withIndustrialClassification(String industrialClassification) {
+        return addMetadataValue(item, "perucris", "type", "ciiu", industrialClassification);
+    }
+
+    public ItemBuilder withProjectTechniciansAndEquivalentStaff(String techniciansAndEquivalentStaff) {
+        return addMetadataValue(item, "crispj", "techniciansAndEquivalentStaff", null, techniciansAndEquivalentStaff);
+    }
+
+    public ItemBuilder withProjectSupportingStaff(String supportingStaff) {
+        return addMetadataValue(item, "crispj", "supportingStaff", null, supportingStaff);
     }
 
     public ItemBuilder withHandle(String handle) {

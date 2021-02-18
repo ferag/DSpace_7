@@ -170,7 +170,8 @@ public class SolrServiceMetadataBrowseIndexingPlugin implements SolrServiceIndex
                                                                        .getInstance()
                                                                        .getConfigurationService()
                                                                        .getPropertyAsType(
-                                                                           "discovery.browse.authority.ignore-preferred",
+                                                                           "discovery.browse" +
+                                                                               ".authority.ignore-preferred",
                                                                            Boolean.FALSE),
                                                                    true);
                                         if (!ignorePrefered) {

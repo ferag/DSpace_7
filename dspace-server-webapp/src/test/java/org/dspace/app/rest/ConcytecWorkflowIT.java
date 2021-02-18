@@ -12,19 +12,14 @@ import static java.util.List.of;
 import static org.dspace.app.matcher.MetadataValueMatcher.with;
 import static org.dspace.builder.CollectionBuilder.createCollection;
 import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
-import static org.dspace.content.Item.ANY;
 import static org.dspace.xmlworkflow.ConcytecFeedback.APPROVE;
 import static org.dspace.xmlworkflow.ConcytecFeedback.REJECT;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.HAS_SHADOW_COPY_RELATIONSHIP;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_MERGED_IN_RELATIONSHIP;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_MERGE_OF_RELATIONSHIP;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_ORIGINATED_FROM_IN_RELATIONSHIP;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_ORIGIN_OF_RELATIONSHIP;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_REINSTATED_BY_ITEM_RELATIONSHIP;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_SHADOW_COPY_RELATIONSHIP;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_WITHDRAWN_BY_ITEM_RELATIONSHIP;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_WITHDRAW_OF_ITEM_RELATIONSHIP;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.CORRECTION;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.MERGED;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.ORIGINATED;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.REINSTATE;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.SHADOW_COPY;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.WITHDRAW;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
@@ -362,7 +357,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         item = reloadItem(item);
         assertThat(item.isArchived(), is(true));
-        assertThat(getConcytecFeedbackMetadataValue(item), equalTo(APPROVE.name()));
+        assertThat(item.getMetadata(), hasItem(with("perucris.concytec.feedback", APPROVE.name(), 0)));
         assertThat(reloadItem(shadowItemCopy).isArchived(), is(true));
 
     }
@@ -408,15 +403,15 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         item = reloadItem(item);
         assertThat(item.isArchived(), is(true));
-        assertThat(getConcytecFeedbackMetadataValue(item), equalTo(REJECT.name()));
-        assertThat(getConcytecCommentMetadataValue(item), equalTo("wrong publication"));
+        assertThat(item.getMetadata(), hasItem(with("perucris.concytec.feedback", REJECT.name(), 0)));
+        assertThat(item.getMetadata(), hasItem(with("perucris.concytec.comment", "wrong publication", 0)));
 
         shadowItemCopy = reloadItem(shadowItemCopy);
         assertThat(reloadItem(shadowItemCopy), notNullValue());
         assertThat(shadowItemCopy.isArchived(), is(false));
         assertThat(shadowItemCopy.isWithdrawn(), is(true));
-        assertThat(getConcytecFeedbackMetadataValue(shadowItemCopy), equalTo(REJECT.name()));
-        assertThat(getConcytecCommentMetadataValue(shadowItemCopy), equalTo("wrong publication"));
+        assertThat(shadowItemCopy.getMetadata(), hasItem(with("perucris.concytec.feedback", REJECT.name(), 0)));
+        assertThat(shadowItemCopy.getMetadata(), hasItem(with("perucris.concytec.comment", "wrong publication", 0)));
 
     }
 
@@ -463,11 +458,12 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         item = reloadItem(item);
         assertThat(item.isArchived(), is(true));
-        assertThat(getConcytecFeedbackMetadataValue(item), equalTo(APPROVE.name()));
+        assertThat(item.getMetadata(), hasItem(with("perucris.concytec.feedback", APPROVE.name(), 0)));
         assertThat(item.getMetadata(), hasItem(with("dc.title", ITEM_TITLE)));
 
         shadowItemCopy = reloadItem(shadowItemCopy);
         assertThat(shadowItemCopy.isArchived(), is(true));
+        assertThat(shadowItemCopy.getMetadata(), hasItem(with("perucris.concytec.feedback", APPROVE.name(), 0)));
         assertThat(shadowItemCopy.getMetadata(), hasItem(with("dc.title", directorioTitle)));
 
     }
@@ -545,11 +541,17 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(item, notNullValue());
         assertThat(item.getMetadata(), hasItem(with("dc.title", "Submission Item new title")));
         assertThat(getFirstMetadata(item, "dc.contributor.editor"), nullValue());
+        assertThat(item.getMetadata(), hasItem(with("perucris.concytec.feedback", APPROVE.name(), 0)));
+        assertThat(item.getMetadata(), hasItem(with("perucris.concytec.feedback", "CORRECTION::APPROVE", 1)));
+        assertThat(metadataCount(item, "perucris.concytec.feedback"), is(2));
 
         shadowItemCopy = reloadItem(shadowItemCopy);
         assertThat(shadowItemCopy, notNullValue());
         assertThat(shadowItemCopy.getMetadata(), hasItem(with("dc.title", "Submission Item new title")));
         assertThat(getFirstMetadata(item, "dc.contributor.editor"), nullValue());
+        assertThat(shadowItemCopy.getMetadata(), hasItem(with("perucris.concytec.feedback", APPROVE.name(), 0)));
+        assertThat(shadowItemCopy.getMetadata(), hasItem(with("perucris.concytec.feedback", "CORRECTION::APPROVE", 1)));
+        assertThat(metadataCount(shadowItemCopy, "perucris.concytec.feedback"), is(2));
 
     }
 
@@ -614,7 +616,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         XmlWorkflowItem correctionWorkflowItemShadowCopy = getWorkflowItem(correctionItemShadowCopy);
         assertThat(correctionWorkflowItemShadowCopy, notNullValue());
 
-        claimTaskAndReject(correctionWorkflowItemShadowCopy, firstDirectorioUser, directorioEditorGroup, "Wrong title");
+        claimTaskAndReject(correctionWorkflowItemShadowCopy, firstDirectorioUser, directorioEditorGroup, "wrong");
 
         assertThat(reloadItem(correctionItem), nullValue());
         assertThat(reloadItem(correctionItemShadowCopy), nullValue());
@@ -623,11 +625,19 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(item, notNullValue());
         assertThat(item.getMetadata(), hasItem(with("dc.title", "Submission Item new title")));
         assertThat(getFirstMetadata(item, "dc.contributor.editor"), nullValue());
+        assertThat(item.getMetadata(), hasItem(with("perucris.concytec.feedback", APPROVE.name(), 0)));
+        assertThat(item.getMetadata(), hasItem(with("perucris.concytec.feedback", "CORRECTION::REJECT", 1)));
+        assertThat(metadataCount(item, "perucris.concytec.feedback"), is(2));
+        assertThat(item.getMetadata(), hasItem(with("perucris.concytec.comment", "CORRECTION::wrong", 0)));
 
         shadowItemCopy = reloadItem(shadowItemCopy);
         assertThat(shadowItemCopy, notNullValue());
         assertThat(shadowItemCopy.getMetadata(), hasItem(with("dc.title", ITEM_TITLE)));
         assertThat(shadowItemCopy.getMetadata(), hasItem(with("dc.contributor.editor", "Test editor")));
+        assertThat(shadowItemCopy.getMetadata(), hasItem(with("perucris.concytec.feedback", APPROVE.name(), 0)));
+        assertThat(shadowItemCopy.getMetadata(), hasItem(with("perucris.concytec.feedback", "CORRECTION::REJECT", 1)));
+        assertThat(metadataCount(shadowItemCopy, "perucris.concytec.feedback"), is(2));
+        assertThat(shadowItemCopy.getMetadata(), hasItem(with("perucris.concytec.comment", "CORRECTION::wrong", 0)));
 
     }
 
@@ -848,7 +858,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         item = reloadItem(item);
         assertThat(item.isArchived(), is(true));
-        assertThat(getConcytecFeedbackMetadataValue(item), equalTo(APPROVE.name()));
+        assertThat(item.getMetadata(), hasItem(with("perucris.concytec.feedback", APPROVE.name(), 0)));
 
     }
 
@@ -1075,11 +1085,17 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(item, notNullValue());
         assertThat(item.isArchived(), is(false));
         assertThat(item.isWithdrawn(), is(true));
+        assertThat(item.getMetadata(), hasItem(with("perucris.concytec.feedback", APPROVE.name(), 0)));
+        assertThat(item.getMetadata(), hasItem(with("perucris.concytec.feedback", "WITHDRAW::APPROVE", 1)));
+        assertThat(metadataCount(item, "perucris.concytec.feedback"), is(2));
 
         shadowItemCopy = reloadItem(shadowItemCopy);
         assertThat(shadowItemCopy, notNullValue());
         assertThat(shadowItemCopy.isArchived(), is(false));
         assertThat(shadowItemCopy.isWithdrawn(), is(true));
+        assertThat(shadowItemCopy.getMetadata(), hasItem(with("perucris.concytec.feedback", APPROVE.name(), 0)));
+        assertThat(shadowItemCopy.getMetadata(), hasItem(with("perucris.concytec.feedback", "WITHDRAW::APPROVE", 1)));
+        assertThat(metadataCount(shadowItemCopy, "perucris.concytec.feedback"), is(2));
 
         withdrawnItem = reloadItem(withdrawnItem);
         assertThat(withdrawnItem, nullValue());
@@ -1142,11 +1158,19 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(item, notNullValue());
         assertThat(item.isArchived(), is(false));
         assertThat(item.isWithdrawn(), is(true));
+        assertThat(item.getMetadata(), hasItem(with("perucris.concytec.feedback", APPROVE.name(), 0)));
+        assertThat(item.getMetadata(), hasItem(with("perucris.concytec.feedback", "WITHDRAW::REJECT", 1)));
+        assertThat(metadataCount(item, "perucris.concytec.feedback"), is(2));
+        assertThat(item.getMetadata(), hasItem(with("perucris.concytec.comment", "WITHDRAW::to keep", 0)));
 
         shadowItemCopy = reloadItem(shadowItemCopy);
         assertThat(shadowItemCopy, notNullValue());
         assertThat(shadowItemCopy.isArchived(), is(true));
         assertThat(shadowItemCopy.isWithdrawn(), is(false));
+        assertThat(shadowItemCopy.getMetadata(), hasItem(with("perucris.concytec.feedback", APPROVE.name(), 0)));
+        assertThat(shadowItemCopy.getMetadata(), hasItem(with("perucris.concytec.feedback", "WITHDRAW::REJECT", 1)));
+        assertThat(metadataCount(shadowItemCopy, "perucris.concytec.feedback"), is(2));
+        assertThat(shadowItemCopy.getMetadata(), hasItem(with("perucris.concytec.comment", "WITHDRAW::to keep", 0)));
 
         withdrawnItem = reloadItem(withdrawnItem);
         assertThat(withdrawnItem, nullValue());
@@ -1379,11 +1403,17 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(item, notNullValue());
         assertThat(item.isArchived(), is(true));
         assertThat(item.isWithdrawn(), is(false));
+        assertThat(item.getMetadata(), hasItem(with("perucris.concytec.feedback", APPROVE.name(), 0)));
+        assertThat(item.getMetadata(), hasItem(with("perucris.concytec.feedback", "REINSTATE::APPROVE", 1)));
+        assertThat(metadataCount(item, "perucris.concytec.feedback"), is(2));
 
         shadowItemCopy = reloadItem(shadowItemCopy);
         assertThat(shadowItemCopy, notNullValue());
         assertThat(shadowItemCopy.isArchived(), is(true));
         assertThat(shadowItemCopy.isWithdrawn(), is(false));
+        assertThat(shadowItemCopy.getMetadata(), hasItem(with("perucris.concytec.feedback", APPROVE.name(), 0)));
+        assertThat(shadowItemCopy.getMetadata(), hasItem(with("perucris.concytec.feedback", "REINSTATE::APPROVE", 1)));
+        assertThat(metadataCount(shadowItemCopy, "perucris.concytec.feedback"), is(2));
 
         reinstateItem = reloadItem(reinstateItem);
         assertThat(reinstateItem, nullValue());
@@ -1453,11 +1483,19 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(item, notNullValue());
         assertThat(item.isArchived(), is(true));
         assertThat(item.isWithdrawn(), is(false));
+        assertThat(item.getMetadata(), hasItem(with("perucris.concytec.feedback", APPROVE.name(), 0)));
+        assertThat(item.getMetadata(), hasItem(with("perucris.concytec.feedback", "REINSTATE::REJECT", 1)));
+        assertThat(metadataCount(item, "perucris.concytec.feedback"), is(2));
+        assertThat(item.getMetadata(), hasItem(with("perucris.concytec.comment", "REINSTATE::to remove", 0)));
 
         shadowItemCopy = reloadItem(shadowItemCopy);
         assertThat(shadowItemCopy, notNullValue());
         assertThat(shadowItemCopy.isArchived(), is(false));
         assertThat(shadowItemCopy.isWithdrawn(), is(true));
+        assertThat(shadowItemCopy.getMetadata(), hasItem(with("perucris.concytec.feedback", APPROVE.name(), 0)));
+        assertThat(shadowItemCopy.getMetadata(), hasItem(with("perucris.concytec.feedback", "REINSTATE::REJECT", 1)));
+        assertThat(metadataCount(shadowItemCopy, "perucris.concytec.feedback"), is(2));
+        assertThat(shadowItemCopy.getMetadata(), hasItem(with("perucris.concytec.comment", "REINSTATE::to remove", 0)));
 
         reinstateItem = reloadItem(reinstateItem);
         assertThat(reinstateItem, nullValue());
@@ -2182,33 +2220,33 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     }
 
     private RelationshipType createHasShadowCopyRelationship(EntityType institutionType, EntityType directorioType) {
-        return createRelationshipTypeBuilder(context, institutionType, directorioType, HAS_SHADOW_COPY_RELATIONSHIP,
-            IS_SHADOW_COPY_RELATIONSHIP, 0, 1, 0, 1).build();
+        return createRelationshipTypeBuilder(context, institutionType, directorioType, SHADOW_COPY.getLeftType(),
+            SHADOW_COPY.getRightType(), 0, 1, 0, 1).build();
     }
 
     private RelationshipType createIsOriginatedFromRelationship(EntityType directorioType, EntityType institutionType) {
         return createRelationshipTypeBuilder(context, directorioType, institutionType,
-            IS_ORIGINATED_FROM_IN_RELATIONSHIP, IS_ORIGIN_OF_RELATIONSHIP, 0, null, 0, 1).build();
+            ORIGINATED.getLeftType(), ORIGINATED.getRightType(), 0, null, 0, 1).build();
     }
 
     private RelationshipType createIsWithdrawOfRelationship(EntityType entityType) {
-        return createRelationshipTypeBuilder(context, entityType,
-            entityType, IS_WITHDRAW_OF_ITEM_RELATIONSHIP, IS_WITHDRAWN_BY_ITEM_RELATIONSHIP, 0, 1, 0, 1).build();
+        return createRelationshipTypeBuilder(context, entityType, entityType, WITHDRAW.getLeftType(),
+            WITHDRAW.getRightType(), 0, 1, 0, 1).build();
     }
 
     private RelationshipType createIsReinstatementOfRelationship(EntityType entityType) {
-        return createRelationshipTypeBuilder(context, entityType,
-            entityType, IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP, IS_REINSTATED_BY_ITEM_RELATIONSHIP, 0, 1, 0, 1).build();
+        return createRelationshipTypeBuilder(context, entityType, entityType, REINSTATE.getLeftType(),
+            REINSTATE.getRightType(), 0, 1, 0, 1).build();
     }
 
     private RelationshipType createIsCorrectionOfRelationship(EntityType entityType) {
-        return createRelationshipTypeBuilder(context, entityType,
-            entityType, "isCorrectionOfItem", "isCorrectedByItem", 0, 1, 0, 1).build();
+        return createRelationshipTypeBuilder(context, entityType, entityType, CORRECTION.getLeftType(),
+            CORRECTION.getRightType(), 0, 1, 0, 1).build();
     }
 
     private RelationshipType createIsMergedInRelationship(EntityType entityType) {
-        return createRelationshipTypeBuilder(context, entityType,
-            entityType, IS_MERGED_IN_RELATIONSHIP, IS_MERGE_OF_RELATIONSHIP, 0, 1, 0, null).build();
+        return createRelationshipTypeBuilder(context, entityType, entityType, MERGED.getLeftType(),
+            MERGED.getRightType(), 0, 1, 0, null).build();
     }
 
     private void claimTaskAndApprove(XmlWorkflowItem workflowItem, EPerson user, Group expectedGroup) throws Exception {
@@ -2341,14 +2379,6 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         return workspaceItemService.find(context, idRef.get());
     }
 
-    private String getConcytecCommentMetadataValue(Item item) {
-        return itemService.getMetadataFirstValue(item, "perucris", "concytec", "comment", ANY);
-    }
-
-    private String getConcytecFeedbackMetadataValue(Item item) {
-        return itemService.getMetadataFirstValue(item, "perucris", "concytec", "feedback", ANY);
-    }
-
     private void replaceTitle(Context context, Item item, String newTitle) throws SQLException, AuthorizeException {
         itemService.replaceMetadata(context, item, "dc", "title", null, null, newTitle, null, -1, 0);
         itemService.update(context, item);
@@ -2410,5 +2440,9 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Map<String, String> value = note != null ? Map.of("value", decision, "note", note) : Map.of("value", decision);
         Operation op = new AddOperation("/sections/detect-duplicate/matches/" + itemId + "/workflowDecision", value);
         return getPatchContent(List.of(op));
+    }
+
+    private int metadataCount(Item item, String metadataField) {
+        return itemService.getMetadataByMetadataString(item, metadataField).size();
     }
 }

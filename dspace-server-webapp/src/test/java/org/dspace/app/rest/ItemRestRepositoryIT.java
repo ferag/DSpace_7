@@ -15,8 +15,7 @@ import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadataDoesNotEx
 import static org.dspace.builder.RelationshipBuilder.createRelationshipBuilder;
 import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
 import static org.dspace.core.Constants.WRITE;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.HAS_SHADOW_COPY_RELATIONSHIP;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_SHADOW_COPY_RELATIONSHIP;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.SHADOW_COPY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
@@ -1362,7 +1361,7 @@ public class ItemRestRepositoryIT extends AbstractControllerIntegrationTest {
             .build();
 
         RelationshipType hasShadowCopyRelation = createRelationshipTypeBuilder(context, institutionPersonType,
-            personType, HAS_SHADOW_COPY_RELATIONSHIP, IS_SHADOW_COPY_RELATIONSHIP, 0, 1, 0, 1).build();
+            personType, SHADOW_COPY.getLeftType(), SHADOW_COPY.getRightType(), 0, 1, 0, 1).build();
 
         Community directorioCommunity = CommunityBuilder.createCommunity(context)
             .withName("Directorio Community")

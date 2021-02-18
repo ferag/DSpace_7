@@ -9,6 +9,9 @@ package org.dspace.xmlworkflow.state.actions.processingaction;
 
 import static org.dspace.app.deduplication.model.DuplicateDecisionType.WORKFLOW;
 import static org.dspace.app.deduplication.model.DuplicateDecisionValue.VERIFY;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.CORRECTION;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.REINSTATE;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.WITHDRAW;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -19,7 +22,6 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.deduplication.utils.DedupUtils;
 import org.dspace.app.deduplication.utils.DuplicateItemInfo;
 import org.dspace.authority.service.AuthorityValueService;
@@ -84,7 +86,7 @@ public class UnlockInstitutionAction extends ProcessingAction {
 
         Item institutionItem = concytecWorkflowService.findCopiedItem(context, item);
 
-        ConcytecFeedback concytecFeedback = concytecWorkflowService.getConcytecFeedback(context, item);
+        ConcytecFeedback concytecFeedback = concytecWorkflowService.getLastConcytecFeedback(context, item);
 
         try {
 
@@ -101,17 +103,14 @@ public class UnlockInstitutionAction extends ProcessingAction {
     }
 
     private void unlockInstitutionWorkflow(Context context, Item directorioItem, Item institutionItem,
-        ConcytecFeedback concytecFeedback) throws IOException, AuthorizeException, SQLException, WorkflowException,
+        ConcytecFeedback feedback) throws IOException, AuthorizeException, SQLException, WorkflowException,
         WorkflowConfigurationException {
 
         XmlWorkflowItem institutionWorkflowItem = workflowItemService.findByItem(context, institutionItem);
 
-        if (concytecFeedback != ConcytecFeedback.NONE) {
-            concytecWorkflowService.setConcytecFeedback(context, institutionItem, concytecFeedback);
-            String concytecComment = concytecWorkflowService.getConcytecComment(context, directorioItem);
-            if (StringUtils.isNotBlank(concytecComment)) {
-                concytecWorkflowService.setConcytecComment(context, institutionItem, concytecComment);
-            }
+        if (feedback != ConcytecFeedback.NONE) {
+            String comment = concytecWorkflowService.getLastConcytecComment(context, directorioItem);
+            addFeedback(context, institutionItem, feedback, comment);
         }
 
         Workflow institutionWorkflow = workflowFactory.getWorkflow(institutionWorkflowItem.getCollection());
@@ -121,6 +120,30 @@ public class UnlockInstitutionAction extends ProcessingAction {
         workflowService.processOutcome(context, context.getCurrentUser(), institutionWorkflow, waitForConcytecStep,
             waitForConcytecActionConfig, getCompleteActionResult(), institutionWorkflowItem, true);
 
+    }
+
+    private void addFeedback(Context context, Item item, ConcytecFeedback feedback, String comment)
+        throws SQLException {
+
+        Item itemToCorrect = itemCorrectionService.getCorrectedItem(context, item);
+        if (itemToCorrect != null) {
+            concytecWorkflowService.addConcytecFeedback(context, item, CORRECTION, feedback, comment);
+            return;
+        }
+
+        Item itemToWithdraw = concytecWorkflowService.findWithdrawnItem(context, item);
+        if (itemToWithdraw != null) {
+            concytecWorkflowService.addConcytecFeedback(context, itemToWithdraw, WITHDRAW, feedback, comment);
+            return;
+        }
+
+        Item itemToReinstate = concytecWorkflowService.findReinstateItem(context, item);
+        if (itemToReinstate != null) {
+            concytecWorkflowService.addConcytecFeedback(context, itemToReinstate, REINSTATE, feedback, comment);
+            return;
+        }
+
+        concytecWorkflowService.addConcytecFeedback(context, item, feedback, comment);
     }
 
     private ActionResult finalizeItem(Context context, XmlWorkflowItem workflowItem, Item institutionItem,

@@ -8,6 +8,8 @@
 package org.dspace.xmlworkflow.state.actions.processingaction;
 
 import static org.dspace.content.Item.ANY;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.REINSTATE;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.WITHDRAW;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -227,14 +229,14 @@ public class ShadowCopyAction extends ProcessingAction {
 
     private WorkspaceItem createItemCopyWithdraw(Context context, UUID itemCopyId)
         throws SQLException, AuthorizeException {
-        return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context, itemCopyId,
-            ConcytecWorkflowService.IS_WITHDRAW_OF_ITEM_RELATIONSHIP);
+        return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context,
+            itemCopyId, WITHDRAW.getLeftType());
     }
 
     private WorkspaceItem createItemCopyReinstate(Context context, UUID itemCopyId)
         throws SQLException, AuthorizeException {
-        return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context, itemCopyId,
-            ConcytecWorkflowService.IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP);
+        return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context,
+            itemCopyId, REINSTATE.getLeftType());
     }
 
     @Override

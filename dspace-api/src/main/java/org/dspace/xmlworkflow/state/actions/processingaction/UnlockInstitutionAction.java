@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections4.CollectionUtils;
 import org.dspace.app.deduplication.utils.DedupUtils;
 import org.dspace.app.deduplication.utils.DuplicateItemInfo;
-import org.dspace.authority.service.AuthorityValueService;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
 import org.dspace.content.service.InstallItemService;
@@ -156,7 +155,7 @@ public class UnlockInstitutionAction extends ProcessingAction {
 
         Item itemToCorrect = itemCorrectionService.getCorrectedItem(context, workflowItem.getItem());
         if (itemToCorrect != null) {
-            return finalizeItemCorrection(context, workflowItem, institutionItem, concytecFeedback);
+            return finalizeItemCorrection(context, workflowItem, concytecFeedback);
         }
 
         Item itemToWithdraw = concytecWorkflowService.findWithdrawnItem(context, workflowItem.getItem());
@@ -169,7 +168,7 @@ public class UnlockInstitutionAction extends ProcessingAction {
             return finalizeItemReinstate(context, workflowItem, itemToReinstate, concytecFeedback);
         }
 
-        return finalizeItemCreation(context, workflowItem, institutionItem, concytecFeedback);
+        return finalizeItemCreation(context, workflowItem, concytecFeedback);
     }
 
     private Item findVerifiedDuplicateItem(Context context, Item item) throws SQLException, WorkflowException {
@@ -207,10 +206,6 @@ public class UnlockInstitutionAction extends ProcessingAction {
 
         boolean isRejected = concytecFeedback == ConcytecFeedback.REJECT;
 
-        if (institutionItem != null) {
-            replaceWillBeReferencedWithItemId(context, isRejected ? duplicateItem : item, institutionItem);
-        }
-
         if (isRejected) {
 
             item = installItemService.installItem(context, workflowItem);
@@ -236,12 +231,8 @@ public class UnlockInstitutionAction extends ProcessingAction {
 
     }
 
-    private ActionResult finalizeItemCorrection(Context context, XmlWorkflowItem workflowItem, Item institutionItem,
+    private ActionResult finalizeItemCorrection(Context context, XmlWorkflowItem workflowItem,
         ConcytecFeedback concytecFeedback) throws SQLException, AuthorizeException, IOException {
-
-        if (institutionItem != null) {
-            replaceWillBeReferencedWithItemId(context, workflowItem.getItem(), institutionItem);
-        }
 
         if (concytecFeedback == ConcytecFeedback.REJECT) {
             workflowService.deleteWorkflowByWorkflowItem(context, workflowItem, context.getCurrentUser());
@@ -253,12 +244,8 @@ public class UnlockInstitutionAction extends ProcessingAction {
 
     }
 
-    private ActionResult finalizeItemCreation(Context context, XmlWorkflowItem workflowItem, Item institutionItem,
+    private ActionResult finalizeItemCreation(Context context, XmlWorkflowItem workflowItem,
         ConcytecFeedback concytecFeedback) throws SQLException, AuthorizeException, WorkflowException {
-
-        if (institutionItem != null) {
-            replaceWillBeReferencedWithItemId(context, workflowItem.getItem(), institutionItem);
-        }
 
         if (concytecFeedback == ConcytecFeedback.REJECT) {
             Item item = installItemService.installItem(context, workflowItem);
@@ -289,18 +276,6 @@ public class UnlockInstitutionAction extends ProcessingAction {
 
         workflowService.deleteWorkflowByWorkflowItem(context, workflowItem, context.getCurrentUser());
         return getCancelActionResult();
-    }
-
-    private void replaceWillBeReferencedWithItemId(Context context, Item item, Item institutionItem)
-        throws SQLException, AuthorizeException {
-        Mode originalMode = context.getCurrentMode();
-        try {
-            context.setMode(Mode.BATCH_EDIT);
-            String authority = AuthorityValueService.REFERENCE + "SHADOW::" + institutionItem.getID();
-            replaceAuthorities(context, item, authority);
-        } finally {
-            context.setMode(originalMode);
-        }
     }
 
     private void replaceAuthoritiesWithItemId(Context context, Item itemToReplace, Item item)

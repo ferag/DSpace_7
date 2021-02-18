@@ -575,6 +575,12 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
 
     @Override
     public List<String> getAuthorityControlledFieldsByRelationshipType(String relationshipType) {
+        init();
+
+        if (StringUtils.isEmpty(relationshipType)) {
+            return new ArrayList<String>(controller.keySet());
+        }
+
         return controller.keySet().stream()
             .filter(field -> isLinkableToAnEntityWithRelationshipType(controller.get(field), relationshipType))
             .collect(Collectors.toList());
@@ -584,4 +590,6 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
         return choiceAuthority instanceof LinkableEntityAuthority
             && relationshipType.equals(((LinkableEntityAuthority) choiceAuthority).getLinkedEntityType());
     }
+
+
 }

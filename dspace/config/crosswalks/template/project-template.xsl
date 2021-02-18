@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.1"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:fo="http://www.w3.org/1999/XSL/Format"
-	xmlns:cerif="https://www.openaire.eu/cerif-profile/1.1/"
+	xmlns:cerif="https://purl.org/pe-repo/cerif-profile/1.0/"
 	exclude-result-prefixes="fo">
 	
 	<xsl:param name="imageDir" />
@@ -31,6 +31,11 @@
 					<xsl:call-template name="section-title">
 				    	<xsl:with-param name="label" select="'Basic informations'" />
 			    	</xsl:call-template>
+                    
+                    <xsl:call-template name="print-values">
+                        <xsl:with-param name="label" select="'Project Type(s)'" />
+                        <xsl:with-param name="values" select="cerif:Type" />
+                    </xsl:call-template>
 			    	
 					<xsl:call-template name="print-value">
 				    	<xsl:with-param name="label" select="'Project Acronym'" />
@@ -44,7 +49,7 @@
 			    	
 					<xsl:call-template name="print-values">
 				    	<xsl:with-param name="label" select="'URL(s)'" />
-				    	<xsl:with-param name="values" select="cerif:Identifier[@type = 'URL']" />
+				    	<xsl:with-param name="values" select="cerif:URL" />
 			    	</xsl:call-template>
 			    	
 					<xsl:call-template name="print-value">
@@ -98,7 +103,7 @@
 
                     <xsl:call-template name="print-values">
                         <xsl:with-param name="label" select="'OCDE Subject(s)'" />
-                        <xsl:with-param name="values" select="Subject" />
+                        <xsl:with-param name="values" select="cerif:Subject" />
                     </xsl:call-template>
 					<xsl:call-template name="print-values">
 				    	<xsl:with-param name="label" select="'Uses equipment(s)'" />
@@ -116,6 +121,14 @@
 				    	<xsl:with-param name="label" select="'OA Policy URL'" />
 				    	<xsl:with-param name="value" select="cerif:OAMandate/@URL" />
 			    	</xsl:call-template>
+                    <xsl:call-template name="print-value">
+                        <xsl:with-param name="label" select="'Research line'" />
+                        <xsl:with-param name="value" select="cerif:ResearchLine" />
+                    </xsl:call-template>
+                    <xsl:call-template name="print-values">
+                        <xsl:with-param name="label" select="'Geo locations'" />
+                        <xsl:with-param name="values" select="cerif:geoLocations/cerif:geoLocation" />
+                    </xsl:call-template>
 				    
 				</fo:flow>
 			</fo:page-sequence>

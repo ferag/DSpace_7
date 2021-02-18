@@ -109,6 +109,42 @@ public class CERIFIngestionCrosswalkPeruCrisIT extends AbstractIntegrationTestWi
 
     @Test
     @SuppressWarnings("unchecked")
+    public void testInstitutionPublicationIngest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        Item item = ItemBuilder.createItem(context, collection).withRelationshipType("InstitutionPublication").build();
+        context.restoreAuthSystemState();
+
+        Document document = readDocument(OAI_PMH_DIR_PATH, "sample-perucris-publication.xml");
+        crosswalk.ingest(context, item, document.getRootElement(), false);
+
+        List<MetadataValue> values = item.getMetadata();
+        assertThat(values, hasSize(17));
+        assertThat(values, hasItems(with("dc.type", "Controlled Vocabulary for Resource Type Genres::text")));
+        assertThat(values, hasItems(with("dc.title", "La Implementacion de ORCID en la UASLP como parte de "
+            + "sus servicios de ciencia abierta")));
+
+        assertThat(values, hasItems(with("dc.date.issued", "2018-10-03")));
+        assertThat(values, hasItems(with("dc.publisher", "Consejo Nacional de Ciencia, Tecnologia e "
+            + "Innovacion Tecnologica - Concytec")));
+
+        assertThat(values, hasItems(with("dc.subject", "Sistema de informacion cientifica")));
+        assertThat(values, hasItems(with("dc.subject", "Informacion cientifica", 1)));
+        assertThat(values, hasItems(with("dc.subject", "Terminologia cientifica", 2)));
+        assertThat(values, hasItems(with("dc.subject", "Software de codigo abierto", 3)));
+        assertThat(values, hasItems(with("dc.subject", "Tecnologia de la informacion", 4)));
+
+        assertThat(values, hasItems(with("dc.contributor.author", "Vazquez Tapia, Rosalina")));
+        assertThat(values, hasItems(with("oairecerif.author.affiliation", METADATA_PLACEHOLDER)));
+        assertThat(values, hasItems(with("dc.description.abstract", "Es el Repositorio Institucional de Acceso Abierto"
+            + " de la UASLP, que almacena y organiza los acervos y publicaciones universitarias para su consulta, "
+            + "visibilidad y preservacion digital, de manera libre y gratuita. Esta desarrollado bajo un modelo propio "
+            + "basado en los principios de un CRIS (Current Research Information System). El objetivo de ORBIS es "
+            + "brindar a los investigadores una plataforma institucional que le permita gestionar su curriculum "
+            + "universitario y generar indicadores de produccion cientifica.")));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
     public void testPersonIngest() throws Exception {
         context.turnOffAuthorisationSystem();
         Item item = ItemBuilder.createItem(context, collection).withRelationshipType("Person").build();

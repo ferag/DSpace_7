@@ -11,7 +11,8 @@
 			<map>
 				<entry key="bibtex" value-ref="cslItemDataCrosswalkBibtex"></entry>
 				<entry key="endnote" value-ref="referCrosswalkEndnote"></entry>
-				<entry key="publication-xml" value-ref="referCrosswalkPublicationXml"></entry>
+				<entry key="publication-cerif-xml" value-ref="referCrosswalkPublicationCerifXml"></entry>
+                <entry key="publication-perucris-cerif-xml" value-ref="referCrosswalkPublicationPerucrisCerifXml"></entry>
 				<entry key="publication-json" value-ref="cslItemDataCrosswalkJson"></entry>
 				<entry key="publication-pdf" value-ref="pdfCrosswalkPublication"></entry>
 				<entry key="publication-csv" value-ref="csvCrosswalkPublication"></entry>
@@ -20,7 +21,8 @@
 				<entry key="publication-chicago" value-ref="cslItemDataCrosswalkChicago"></entry>
 
 				<entry key="person-xml" value-ref="referCrosswalkPersonXml"></entry>
-				<entry key="person-xml-cerif" value-ref="referCrosswalkPersonXmlCerif"></entry>
+				<entry key="person-cerif-xml" value-ref="referCrosswalkPersonCerifXml"></entry>
+                <entry key="person-perucris-cerif-xml" value-ref="referCrosswalkPersonPerucrisCerifXml"></entry>
 				<entry key="person-json" value-ref="referCrosswalkPersonJson"></entry>
 				<entry key="person-pdf" value-ref="pdfCrosswalkPerson"></entry>
 				<entry key="person-rtf" value-ref="rtfCrosswalkPerson"></entry>
@@ -28,38 +30,45 @@
 				<entry key="person-xls" value-ref="xlsCrosswalkPerson"></entry>
 
 				<entry key="ctivitae-profile-xml" value-ref="referCrosswalkPersonCvXml"></entry>
-				<entry key="ctivitae-profile-xml-cerif" value-ref="referCrosswalkPersonCvXmlCerif"></entry>
+				<entry key="ctivitae-profile-cerif-xml" value-ref="referCrosswalkPersonCvCerifXml"></entry>
+                <entry key="ctivitae-profile-perucris-cerif-xml" value-ref="referCrosswalkPersonCvPerucrisCerifXml"></entry>
 				<entry key="ctivitae-profile-json" value-ref="referCrosswalkPersonCvJson"></entry>
 				<entry key="ctivitae-profile-pdf" value-ref="pdfCrosswalkPersonCv"></entry>
 				<entry key="ctivitae-profile-rtf" value-ref="rtfCrosswalkPersonCv"></entry>
 				<entry key="ctivitae-profile-csv" value-ref="csvCrosswalkPersonCv"></entry>
 				<entry key="ctivitae-profile-xls" value-ref="xlsCrosswalkPersonCv"></entry>
 
-				<entry key="project-xml" value-ref="referCrosswalkProjectXml"></entry>
+				<entry key="project-cerif-xml" value-ref="referCrosswalkProjectCerifXml"></entry>
+                <entry key="project-perucris-cerif-xml" value-ref="referCrosswalkProjectPerucrisCerifXml"></entry>
 				<entry key="project-json" value-ref="referCrosswalkProjectJson"></entry>
 				<entry key="project-pdf" value-ref="pdfCrosswalkProject"></entry>
 				<entry key="project-csv" value-ref="csvCrosswalkProject"></entry>
 				<entry key="project-xls" value-ref="xlsCrosswalkProject"></entry>
 
 				<entry key="orgUnit-xml" value-ref="referCrosswalkOrgUnitXml"></entry>
+                <entry key="orgUnit-cerif-xml" value-ref="referCrosswalkOrgUnitCerifXml"></entry>
+                <entry key="orgUnit-perucris-cerif-xml" value-ref="referCrosswalkOrgUnitPerucrisCerifXml"></entry>
 				<entry key="orgUnit-json" value-ref="referCrosswalkOrgUnitJson"></entry>
 				<entry key="orgUnit-pdf" value-ref="pdfCrosswalkOrgUnit"></entry>
 				<entry key="orgUnit-csv" value-ref="csvCrosswalkOrgUnit"></entry>
 				<entry key="orgUnit-xls" value-ref="xlsCrosswalkOrgUnit"></entry>
 
-				<entry key="equipment-xml" value-ref="referCrosswalkEquipmentXml"></entry>
+                <entry key="equipment-perucris-cerif-xml" value-ref="referCrosswalkEquipmentPerucrisCerifXml"></entry>
+				<entry key="equipment-cerif-xml" value-ref="referCrosswalkEquipmentCerifXml"></entry>
 				<entry key="equipment-json" value-ref="referCrosswalkEquipmentJson"></entry>
 				<entry key="equipment-pdf" value-ref="pdfCrosswalkEquipment"></entry>
 				<entry key="equipment-csv" value-ref="csvCrosswalkEquipment"></entry>
 				<entry key="equipment-xls" value-ref="xlsCrosswalkEquipment"></entry>
 
-				<entry key="funding-xml" value-ref="referCrosswalkFundingXml"></entry>
+				<entry key="funding-cerif-xml" value-ref="referCrosswalkFundingCerifXml"></entry>
+                <entry key="funding-perucris-cerif-xml" value-ref="referCrosswalkFundingPerucrisCerifXml"></entry>
 				<entry key="funding-json" value-ref="referCrosswalkFundingJson"></entry>
 				<entry key="funding-pdf" value-ref="pdfCrosswalkFunding"></entry>
 				<entry key="funding-csv" value-ref="csvCrosswalkFunding"></entry>
 				<entry key="funding-xls" value-ref="xlsCrosswalkFunding"></entry>
 
-				<entry key="institutionpublication-xml" value-ref="referCrosswalkInstitutionPublicationXml"></entry>
+				<entry key="institutionpublication-cerif-xml" value-ref="referCrosswalkInstitutionPublicationCerifXml"></entry>
+                <entry key="institutionpublication-perucris-cerif-xml" value-ref="referCrosswalkInstitutionPublicationPerucrisCerifXml"></entry>
 				<entry key="institutionpublication-json" value-ref="cslItemDataCrosswalkJson"></entry>
 				<entry key="institutionpublication-pdf" value-ref="pdfCrosswalkInstitutionPublication"></entry>
 				<entry key="institutionpublication-csv" value-ref="csvCrosswalkInstitutionPublication"></entry>
@@ -68,32 +77,38 @@
 				<entry key="institutionpublication-chicago" value-ref="cslItemDataCrosswalkChicago"></entry>
 
 				<entry key="institutionperson-xml" value-ref="referCrosswalkInstitutionPersonXml"></entry>
-				<entry key="institutionperson-xml-cerif" value-ref="referCrosswalkInstitutionPersonXmlCerif"></entry>
+				<entry key="institutionperson-cerif-xml" value-ref="referCrosswalkInstitutionPersonCerifXml"></entry>
+                <entry key="institutionperson-perucris-cerif-xml" value-ref="referCrosswalkInstitutionPersonPerucrisCerifXml"></entry>
 				<entry key="institutionperson-json" value-ref="referCrosswalkInstitutionPersonJson"></entry>
 				<entry key="institutionperson-pdf" value-ref="pdfCrosswalkInstitutionPerson"></entry>
 				<entry key="institutionperson-rtf" value-ref="rtfCrosswalkInstitutionPerson"></entry>
 				<entry key="institutionperson-csv" value-ref="csvCrosswalkInstitutionPerson"></entry>
 				<entry key="institutionperson-xls" value-ref="xlsCrosswalkInstitutionPerson"></entry>
 
-				<entry key="institutionproject-xml" value-ref="referCrosswalkInstitutionProjectXml"></entry>
+				<entry key="institutionproject-cerif-xml" value-ref="referCrosswalkInstitutionProjectCerifXml"></entry>
+                <entry key="institutionproject-perucris-cerif-xml" value-ref="referCrosswalkInstitutionProjectPerucrisCerifXml"></entry>
 				<entry key="institutionproject-json" value-ref="referCrosswalkInstitutionProjectJson"></entry>
 				<entry key="institutionproject-pdf" value-ref="pdfCrosswalkInstitutionProject"></entry>
 				<entry key="institutionproject-csv" value-ref="csvCrosswalkInstitutionProject"></entry>
 				<entry key="institutionproject-xls" value-ref="xlsCrosswalkInstitutionProject"></entry>
 
 				<entry key="institutionorgUnit-xml" value-ref="referCrosswalkInstitutionOrgUnitXml"></entry>
+                <entry key="institutionorgUnit-cerif-xml" value-ref="referCrosswalkInstitutionOrgUnitCerifXml"></entry>
+                <entry key="institutionorgUnit-perucris-cerif-xml" value-ref="referCrosswalkInstitutionOrgUnitPerucrisCerifXml"></entry>
 				<entry key="institutionorgUnit-json" value-ref="referCrosswalkInstitutionOrgUnitJson"></entry>
 				<entry key="institutionorgUnit-pdf" value-ref="pdfCrosswalkInstitutionOrgUnit"></entry>
 				<entry key="institutionorgUnit-csv" value-ref="csvCrosswalkInstitutionOrgUnit"></entry>
 				<entry key="institutionorgUnit-xls" value-ref="xlsCrosswalkInstitutionOrgUnit"></entry>
 
-				<entry key="institutionequipment-xml" value-ref="referCrosswalkInstitutionEquipmentXml"></entry>
+				<entry key="institutionequipment-cerif-xml" value-ref="referCrosswalkInstitutionEquipmentCerifXml"></entry>
+                <entry key="institutionequipment-perucris-cerif-xml" value-ref="referCrosswalkInstitutionEquipmentPerucrisCerifXml"></entry>
 				<entry key="institutionequipment-json" value-ref="referCrosswalkInstitutionEquipmentJson"></entry>
 				<entry key="institutionequipment-pdf" value-ref="pdfCrosswalkInstitutionEquipment"></entry>
 				<entry key="institutionequipment-csv" value-ref="csvCrosswalkInstitutionEquipment"></entry>
 				<entry key="institutionequipment-xls" value-ref="xlsCrosswalkInstitutionEquipment"></entry>
 
-				<entry key="institutionfunding-xml" value-ref="referCrosswalkInstitutionFundingXml"></entry>
+				<entry key="institutionfunding-cerif-xml" value-ref="referCrosswalkInstitutionFundingCerifXml"></entry>
+                <entry key="institutionfunding-perucris-cerif-xml" value-ref="referCrosswalkInstitutionFundingPerucrisCerifXml"></entry>
 				<entry key="institutionfunding-json" value-ref="referCrosswalkInstitutionFundingJson"></entry>
 				<entry key="institutionfunding-pdf" value-ref="pdfCrosswalkInstitutionFunding"></entry>
 				<entry key="institutionfunding-csv" value-ref="csvCrosswalkInstitutionFunding"></entry>
@@ -144,15 +159,25 @@
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
 
-	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPersonXmlCerif">
-		<property name="templateFileName" value="crosswalks/template/person-xml-cerif.template"/>
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPersonCerifXml">
+		<property name="templateFileName" value="crosswalks/template/person-cerif-xml.template"/>
 		<property name="mimeType" value="application/xml; charset=UTF-8"/>
 		<property name="fileName" value="person.xml"/>
 		<property name="entityType" value="Person"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
-		<property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-xml-cerif.template"/>
+		<property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-cerif-xml.template"/>
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
+
+    <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPersonPerucrisCerifXml">
+        <property name="templateFileName" value="crosswalks/template/person-perucris-cerif-xml.template"/>
+        <property name="mimeType" value="application/xml; charset=UTF-8"/>
+        <property name="fileName" value="person.xml"/>
+        <property name="entityType" value="Person"/>
+        <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+        <property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-cerif-xml.template"/>
+        <property name="converter" ref="xmlValueConverter" />
+    </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPersonJson">
 		<property name="templateFileName" value="crosswalks/template/person-json.template"/>
@@ -175,15 +200,25 @@
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
 
-	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPersonCvXmlCerif">
-		<property name="templateFileName" value="crosswalks/template/person-xml-cerif.template"/>
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPersonCvCerifXml">
+		<property name="templateFileName" value="crosswalks/template/person-cerif-xml.template"/>
 		<property name="mimeType" value="application/xml; charset=UTF-8"/>
 		<property name="fileName" value="profile.xml"/>
 		<property name="entityType" value="PersonCv"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
-		<property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-xml-cerif.template"/>
+		<property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-cerif-xml.template"/>
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
+
+    <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPersonCvPerucrisCerifXml">
+        <property name="templateFileName" value="crosswalks/template/person-perucris-cerif-xml.template"/>
+        <property name="mimeType" value="application/xml; charset=UTF-8"/>
+        <property name="fileName" value="profile.xml"/>
+        <property name="entityType" value="PersonCv"/>
+        <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+        <property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-cerif-xml.template"/>
+        <property name="converter" ref="xmlValueConverter" />
+    </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPersonCvJson">
 		<property name="templateFileName" value="crosswalks/template/person-json.template"/>
@@ -196,8 +231,8 @@
 		<property name="linesPostProcessor" ref="jsonPostProcessor" />
 	</bean>
 
-	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPublicationXml">
-		<property name="templateFileName" value="crosswalks/template/publication-xml.template"/>
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPublicationCerifXml">
+		<property name="templateFileName" value="crosswalks/template/publication-cerif-xml.template"/>
 		<property name="mimeType" value="application/xml; charset=UTF-8"/>
 		<property name="fileName" value="publication.xml"/>
 		<property name="entityType" value="Publication"/>
@@ -205,6 +240,16 @@
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/publications-xml.template"/>
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
+
+    <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPublicationPerucrisCerifXml">
+        <property name="templateFileName" value="crosswalks/template/publication-perucris-cerif-xml.template"/>
+        <property name="mimeType" value="application/xml; charset=UTF-8"/>
+        <property name="fileName" value="publication.xml"/>
+        <property name="entityType" value="Publication"/>
+        <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+        <property name="multipleItemsTemplateFileName" value="crosswalks/template/publications-xml.template"/>
+        <property name="converter" ref="xmlValueConverter" />
+    </bean>
 	
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkEndnote">
 		<property name="templateFileName" value="crosswalks/template/endnote.template"/>
@@ -214,8 +259,8 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE}"/>
 	</bean>
 	
-	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkProjectXml">
-		<property name="templateFileName" value="crosswalks/template/project-xml.template"/>
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkProjectCerifXml">
+		<property name="templateFileName" value="crosswalks/template/project-cerif-xml.template"/>
 		<property name="mimeType" value="application/xml; charset=UTF-8"/>
 		<property name="fileName" value="project.xml"/>
 		<property name="entityType" value="Project"/>
@@ -223,6 +268,16 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
+    
+    <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkProjectPerucrisCerifXml">
+        <property name="templateFileName" value="crosswalks/template/project-perucris-cerif-xml.template"/>
+        <property name="mimeType" value="application/xml; charset=UTF-8"/>
+        <property name="fileName" value="project.xml"/>
+        <property name="entityType" value="Project"/>
+        <property name="multipleItemsTemplateFileName" value="crosswalks/template/projects-xml.template"/>
+        <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+        <property name="converter" ref="xmlValueConverter" />
+    </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkProjectJson">
 		<property name="templateFileName" value="crosswalks/template/project-json.template"/>
@@ -235,8 +290,8 @@
 		<property name="linesPostProcessor" ref="jsonPostProcessor" />
 	</bean>
 
-	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkEquipmentXml">
-		<property name="templateFileName" value="crosswalks/template/equipment-xml.template"/>
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkEquipmentCerifXml">
+		<property name="templateFileName" value="crosswalks/template/equipment-cerif-xml.template"/>
 		<property name="mimeType" value="application/xml; charset=UTF-8"/>
 		<property name="fileName" value="equipment.xml"/>
 		<property name="entityType" value="Equipment"/>
@@ -244,6 +299,16 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
+
+    <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkEquipmentPerucrisCerifXml">
+        <property name="templateFileName" value="crosswalks/template/equipment-perucris-cerif-xml.template"/>
+        <property name="mimeType" value="application/xml; charset=UTF-8"/>
+        <property name="fileName" value="equipment.xml"/>
+        <property name="entityType" value="Equipment"/>
+        <property name="multipleItemsTemplateFileName" value="crosswalks/template/equipments-xml.template"/>
+        <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+        <property name="converter" ref="xmlValueConverter" />
+    </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkEquipmentJson">
 		<property name="templateFileName" value="crosswalks/template/equipment-json.template"/>
@@ -266,6 +331,26 @@
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
 
+    <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkOrgUnitCerifXml">
+        <property name="templateFileName" value="crosswalks/template/orgUnit-cerif-xml.template"/>
+        <property name="mimeType" value="application/xml; charset=UTF-8"/>
+        <property name="fileName" value="orgUnit.xml"/>
+        <property name="entityType" value="OrgUnit"/>
+        <property name="multipleItemsTemplateFileName" value="crosswalks/template/orgUnits-xml.template"/>
+        <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+        <property name="converter" ref="xmlValueConverter" />
+    </bean>
+
+    <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkOrgUnitPerucrisCerifXml">
+        <property name="templateFileName" value="crosswalks/template/orgUnit-perucris-cerif-xml.template"/>
+        <property name="mimeType" value="application/xml; charset=UTF-8"/>
+        <property name="fileName" value="orgUnit.xml"/>
+        <property name="entityType" value="OrgUnit"/>
+        <property name="multipleItemsTemplateFileName" value="crosswalks/template/orgUnits-xml.template"/>
+        <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+        <property name="converter" ref="xmlValueConverter" />
+    </bean>
+
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkOrgUnitJson">
 		<property name="templateFileName" value="crosswalks/template/orgUnit-json.template"/>
 		<property name="mimeType" value="application/json; charset=UTF-8"/>
@@ -277,8 +362,8 @@
 		<property name="linesPostProcessor" ref="jsonPostProcessor" />
 	</bean>
 
-	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkFundingXml">
-		<property name="templateFileName" value="crosswalks/template/funding-xml.template"/>
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkFundingCerifXml">
+		<property name="templateFileName" value="crosswalks/template/funding-cerif-xml.template"/>
 		<property name="mimeType" value="application/xml; charset=UTF-8"/>
 		<property name="fileName" value="funding.xml"/>
 		<property name="entityType" value="Funding"/>
@@ -286,6 +371,16 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
+
+    <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkFundingPerucrisCerifXml">
+        <property name="templateFileName" value="crosswalks/template/funding-perucris-cerif-xml.template"/>
+        <property name="mimeType" value="application/xml; charset=UTF-8"/>
+        <property name="fileName" value="funding.xml"/>
+        <property name="entityType" value="Funding"/>
+        <property name="multipleItemsTemplateFileName" value="crosswalks/template/fundings-xml.template"/>
+        <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+        <property name="converter" ref="xmlValueConverter" />
+    </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkFundingJson">
 		<property name="templateFileName" value="crosswalks/template/funding-json.template"/>
@@ -335,7 +430,7 @@
 		<property name="fileName" value="publication.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="Publication"/>
-		<property name="referCrosswalk" ref="referCrosswalkPublicationXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkPublicationPerucrisCerifXml"/>
 	</bean>
 	
 	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="pdfCrosswalkProject">
@@ -343,7 +438,7 @@
 		<property name="fileName" value="project.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="Project"/>
-		<property name="referCrosswalk" ref="referCrosswalkProjectXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkProjectPerucrisCerifXml"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="pdfCrosswalkEquipment">
@@ -351,7 +446,7 @@
 		<property name="fileName" value="equipment.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="Equipment"/>
-		<property name="referCrosswalk" ref="referCrosswalkEquipmentXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkEquipmentPerucrisCerifXml"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="pdfCrosswalkOrgUnit">
@@ -367,7 +462,7 @@
 		<property name="fileName" value="funding.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="Funding"/>
-		<property name="referCrosswalk" ref="referCrosswalkFundingXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkFundingPerucrisCerifXml"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkPerson">
@@ -490,8 +585,8 @@
 	
 	<bean class="org.dspace.content.integration.crosswalks.postprocessors.JsonPostProcessor" id="jsonPostProcessor" />
 
-	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionPublicationXml">
-		<property name="templateFileName" value="crosswalks/template/publication-xml.template"/>
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionPublicationCerifXml">
+		<property name="templateFileName" value="crosswalks/template/publication-cerif-xml.template"/>
 		<property name="mimeType" value="application/xml; charset=UTF-8"/>
 		<property name="fileName" value="publication.xml"/>
 		<property name="entityType" value="InstitutionPublication"/>
@@ -499,6 +594,16 @@
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/publications-xml.template"/>
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
+
+    <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionPublicationPerucrisCerifXml">
+        <property name="templateFileName" value="crosswalks/template/publication-perucris-cerif-xml.template"/>
+        <property name="mimeType" value="application/xml; charset=UTF-8"/>
+        <property name="fileName" value="publication.xml"/>
+        <property name="entityType" value="InstitutionPublication"/>
+        <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+        <property name="multipleItemsTemplateFileName" value="crosswalks/template/publications-xml.template"/>
+        <property name="converter" ref="xmlValueConverter" />
+    </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkInstitutionPerson">
 		<property name="templateFileName" value="crosswalks/template/person-table.template"/>
@@ -520,7 +625,7 @@
 		<property name="fileName" value="publication.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="InstitutionPublication"/>
-		<property name="referCrosswalk" ref="referCrosswalkInstitutionPublicationXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkInstitutionPublicationPerucrisCerifXml"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkInstitutionPublication">
@@ -548,15 +653,25 @@
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
 
-	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionPersonXmlCerif">
-		<property name="templateFileName" value="crosswalks/template/person-xml-cerif.template"/>
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionPersonCerifXml">
+		<property name="templateFileName" value="crosswalks/template/person-cerif-xml.template"/>
 		<property name="mimeType" value="application/xml; charset=UTF-8"/>
 		<property name="fileName" value="person.xml"/>
 		<property name="entityType" value="InstitutionPerson"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
-		<property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-xml-cerif.template"/>
+		<property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-cerif-xml.template"/>
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
+
+    <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionPersonPerucrisCerifXml">
+        <property name="templateFileName" value="crosswalks/template/person-perucris-cerif-xml.template"/>
+        <property name="mimeType" value="application/xml; charset=UTF-8"/>
+        <property name="fileName" value="person.xml"/>
+        <property name="entityType" value="InstitutionPerson"/>
+        <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+        <property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-cerif-xml.template"/>
+        <property name="converter" ref="xmlValueConverter" />
+    </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionPersonJson">
 		<property name="templateFileName" value="crosswalks/template/person-json.template"/>
@@ -585,8 +700,8 @@
 		<property name="referCrosswalk" ref="referCrosswalkInstitutionPersonXml"/>
 	</bean>
 
-	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionProjectXml">
-		<property name="templateFileName" value="crosswalks/template/project-xml.template"/>
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionProjectCerifXml">
+		<property name="templateFileName" value="crosswalks/template/project-cerif-xml.template"/>
 		<property name="mimeType" value="application/xml; charset=UTF-8"/>
 		<property name="fileName" value="project.xml"/>
 		<property name="entityType" value="InstitutionProject"/>
@@ -594,6 +709,16 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
+
+    <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionProjectPerucrisCerifXml">
+        <property name="templateFileName" value="crosswalks/template/project-perucris-cerif-xml.template"/>
+        <property name="mimeType" value="application/xml; charset=UTF-8"/>
+        <property name="fileName" value="project.xml"/>
+        <property name="entityType" value="InstitutionProject"/>
+        <property name="multipleItemsTemplateFileName" value="crosswalks/template/projects-xml.template"/>
+        <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+        <property name="converter" ref="xmlValueConverter" />
+    </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionProjectJson">
 		<property name="templateFileName" value="crosswalks/template/project-json.template"/>
@@ -606,8 +731,8 @@
 		<property name="linesPostProcessor" ref="jsonPostProcessor" />
 	</bean>
 
-	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionEquipmentXml">
-		<property name="templateFileName" value="crosswalks/template/equipment-xml.template"/>
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionEquipmentCerifXml">
+		<property name="templateFileName" value="crosswalks/template/equipment-cerif-xml.template"/>
 		<property name="mimeType" value="application/xml; charset=UTF-8"/>
 		<property name="fileName" value="equipment.xml"/>
 		<property name="entityType" value="InstitutionEquipment"/>
@@ -615,6 +740,16 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
+
+    <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionEquipmentPerucrisCerifXml">
+        <property name="templateFileName" value="crosswalks/template/equipment-perucris-cerif-xml.template"/>
+        <property name="mimeType" value="application/xml; charset=UTF-8"/>
+        <property name="fileName" value="equipment.xml"/>
+        <property name="entityType" value="InstitutionEquipment"/>
+        <property name="multipleItemsTemplateFileName" value="crosswalks/template/equipments-xml.template"/>
+        <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+        <property name="converter" ref="xmlValueConverter" />
+    </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionEquipmentJson">
 		<property name="templateFileName" value="crosswalks/template/equipment-json.template"/>
@@ -637,12 +772,32 @@
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
 
+    <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionOrgUnitCerifXml">
+        <property name="templateFileName" value="crosswalks/template/orgUnit-cerif-xml.template"/>
+        <property name="mimeType" value="application/xml; charset=UTF-8"/>
+        <property name="fileName" value="orgUnit.xml"/>
+        <property name="entityType" value="InstitutionOrgUnit"/>
+        <property name="multipleItemsTemplateFileName" value="crosswalks/template/orgUnits-xml.template"/>
+        <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+        <property name="converter" ref="xmlValueConverter" />
+    </bean>
+
+    <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionOrgUnitPerucrisCerifXml">
+        <property name="templateFileName" value="crosswalks/template/orgUnit-perucris-cerif-xml.template"/>
+        <property name="mimeType" value="application/xml; charset=UTF-8"/>
+        <property name="fileName" value="orgUnit.xml"/>
+        <property name="entityType" value="InstitutionOrgUnit"/>
+        <property name="multipleItemsTemplateFileName" value="crosswalks/template/orgUnits-xml.template"/>
+        <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+        <property name="converter" ref="xmlValueConverter" />
+    </bean>
+
 	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="pdfCrosswalkInstitutionProject">
 		<property name="templateFileName" value="crosswalks/template/project-template.xsl"/>
 		<property name="fileName" value="project.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="InstitutionProject"/>
-		<property name="referCrosswalk" ref="referCrosswalkInstitutionProjectXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkInstitutionProjectPerucrisCerifXml"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkInstitutionProject">
@@ -699,7 +854,7 @@
 		<property name="fileName" value="equipment.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="InstitutionEquipment"/>
-		<property name="referCrosswalk" ref="referCrosswalkInstitutionEquipmentXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkInstitutionEquipmentPerucrisCerifXml"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkInstitutionEquipment">
@@ -717,8 +872,8 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
 	</bean>
 
-	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionFundingXml">
-		<property name="templateFileName" value="crosswalks/template/funding-xml.template"/>
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionFundingCerifXml">
+		<property name="templateFileName" value="crosswalks/template/funding-cerif-xml.template"/>
 		<property name="mimeType" value="application/xml; charset=UTF-8"/>
 		<property name="fileName" value="funding.xml"/>
 		<property name="entityType" value="InstitutionFunding"/>
@@ -726,6 +881,16 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
+
+    <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionFundingPerucrisCerifXml">
+        <property name="templateFileName" value="crosswalks/template/funding-perucris-cerif-xml.template"/>
+        <property name="mimeType" value="application/xml; charset=UTF-8"/>
+        <property name="fileName" value="funding.xml"/>
+        <property name="entityType" value="InstitutionFunding"/>
+        <property name="multipleItemsTemplateFileName" value="crosswalks/template/fundings-xml.template"/>
+        <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+        <property name="converter" ref="xmlValueConverter" />
+    </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionFundingJson">
 		<property name="templateFileName" value="crosswalks/template/funding-json.template"/>
@@ -743,7 +908,7 @@
 		<property name="fileName" value="funding.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="InstitutionFunding"/>
-		<property name="referCrosswalk" ref="referCrosswalkInstitutionFundingXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkInstitutionFundingPerucrisCerifXml"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkInstitutionFunding">

@@ -120,6 +120,50 @@ public class CERIFIngestionCrosswalkIT extends AbstractIntegrationTestWithDataba
 
     @Test
     @SuppressWarnings("unchecked")
+    public void testInstitutionPublicationIngest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        Item item = ItemBuilder.createItem(context, collection).withRelationshipType("InstitutionPublication").build();
+        context.restoreAuthSystemState();
+
+        Document document = readDocument(OAI_PMH_DIR_PATH, "sample-publication.xml");
+        crosswalk.ingest(context, item, document.getRootElement(), false);
+
+        List<MetadataValue> values = item.getMetadata();
+        assertThat(values, hasSize(22));
+
+        assertThat(values, hasItems(with("dc.type",
+            "Controlled Vocabulary for Resource Type Genres::text::conference object::conference proceedings"
+                + "::conference paper")));
+
+        assertThat(values, hasItems(with("dc.title", "Metadata and Semantics Research")));
+
+        assertThat(values, hasItems(with("dc.title.alternative",
+            "6th Research Conference, MTSR 2012, Cádiz, Spain, November 28-30, 2012. Proceedings")));
+
+        assertThat(values, hasItems(with("dc.relation.ispartof",
+            "The International Journal of Digital Curation")));
+
+        assertThat(values, hasItems(with("dc.date.issued", "2020-03-30")));
+        assertThat(values, hasItems(with("oaire.citation.startPage", "10")));
+        assertThat(values, hasItems(with("oaire.citation.endPage", "20")));
+        assertThat(values, hasItems(with("dc.identifier.doi", "10.1007/978-3-642-35233-1")));
+        assertThat(values, hasItems(with("dc.identifier.isbn", "9783642352324")));
+        assertThat(values, hasItems(with("dc.publisher", "Springer, Berlin, Heidelberg")));
+        assertThat(values, hasItems(with("dc.subject", "cultural heritage")));
+        assertThat(values, hasItems(with("dc.subject", "digital libraries", 1)));
+        assertThat(values, hasItems(with("dc.subject", "learning objects", 2)));
+        assertThat(values, hasItems(with("dc.subject", "linked open data", 3)));
+        assertThat(values, hasItems(with("dc.subject", "scholarly publications", 4)));
+
+        assertThat(values, hasItems(with("dc.relation.project", "2nd-Generation Open Access Infrastructure", null,
+            "will be generated::repository-id::e9ed438e-c7f7-4a18-95e5-3f635ea65fee", 0, 500)));
+
+        assertThat(values, hasItems(with("dc.relation.conference",
+            "6th Research Conference on Metadata and Semantics Research")));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
     public void testAnotherPublicationIngest() throws Exception {
         context.turnOffAuthorisationSystem();
         Item item = ItemBuilder.createItem(context, collection).withRelationshipType("Publication").build();
@@ -181,7 +225,7 @@ public class CERIFIngestionCrosswalkIT extends AbstractIntegrationTestWithDataba
         Item item = ItemBuilder.createItem(context, collection).withRelationshipType("Publication").build();
         context.restoreAuthSystemState();
 
-        Document document = readDocument(CROSSWALK_DIR_PATH, "publication.xml");
+        Document document = readDocument(CROSSWALK_DIR_PATH, "publication-cerif.xml");
         crosswalk.ingest(context, item, document.getRootElement(), false);
 
         List<MetadataValue> values = item.getMetadata();
@@ -311,7 +355,7 @@ public class CERIFIngestionCrosswalkIT extends AbstractIntegrationTestWithDataba
         Item item = ItemBuilder.createItem(context, collection).withRelationshipType("Project").build();
         context.restoreAuthSystemState();
 
-        Document document = readDocument(CROSSWALK_DIR_PATH, "project.xml");
+        Document document = readDocument(CROSSWALK_DIR_PATH, "project-cerif.xml");
         crosswalk.ingest(context, item, document.getRootElement(), false);
 
         List<MetadataValue> values = item.getMetadata();
@@ -364,7 +408,7 @@ public class CERIFIngestionCrosswalkIT extends AbstractIntegrationTestWithDataba
         Item item = ItemBuilder.createItem(context, collection).withRelationshipType("OrgUnit").build();
         context.restoreAuthSystemState();
 
-        Document document = readDocument(CROSSWALK_DIR_PATH, "orgUnit.xml");
+        Document document = readDocument(CROSSWALK_DIR_PATH, "orgUnit-cerif.xml");
         crosswalk.ingest(context, item, document.getRootElement(), false);
 
         List<MetadataValue> values = item.getMetadata();
@@ -409,7 +453,7 @@ public class CERIFIngestionCrosswalkIT extends AbstractIntegrationTestWithDataba
         Item item = ItemBuilder.createItem(context, collection).withRelationshipType("Equipment").build();
         context.restoreAuthSystemState();
 
-        Document document = readDocument(CROSSWALK_DIR_PATH, "equipment.xml");
+        Document document = readDocument(CROSSWALK_DIR_PATH, "equipment-cerif.xml");
         crosswalk.ingest(context, item, document.getRootElement(), false);
 
         List<MetadataValue> values = item.getMetadata();
@@ -429,7 +473,7 @@ public class CERIFIngestionCrosswalkIT extends AbstractIntegrationTestWithDataba
         Item item = ItemBuilder.createItem(context, collection).withRelationshipType("Funding").build();
         context.restoreAuthSystemState();
 
-        Document document = readDocument(CROSSWALK_DIR_PATH, "funding.xml");
+        Document document = readDocument(CROSSWALK_DIR_PATH, "funding-cerif.xml");
         crosswalk.ingest(context, item, document.getRootElement(), false);
 
         List<MetadataValue> values = item.getMetadata();

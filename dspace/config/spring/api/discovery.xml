@@ -114,6 +114,8 @@
                 <entry key="RELATION.InstitutionProject.ipgrants" value-ref="relationInstitutionProjectFundingsConfiguration"/>
                 <entry key="RELATION.InstitutionProject.ipresearchoutputs" value-ref="relationInstitutionProjectPublicationConfiguration"/>
                 <entry key="RELATION.InstitutionProject.ippatents" value-ref="relationInstitutionProjectPatentConfiguration"/>
+                <!-- PersonCv Related items -->
+                <entry key="RELATION.PersonCv.researchoutputs" value-ref="relationAuthorResearchOutputsConfiguration"/>
             </map>
         </property>
         <property name="toIgnoreMetadataFields">

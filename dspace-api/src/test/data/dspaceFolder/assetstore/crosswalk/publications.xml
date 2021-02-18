@@ -6,11 +6,6 @@
 	    	<Publication>
 	      	</Publication>
 	   	</PublishedIn>
-	   	<Publishers>
-	   		<Publisher>
-				<OrgUnit />
-	   		</Publisher>
-	   	</Publishers>
 	   	<PublicationDate>2019-12-31</PublicationDate>
 	   	<DOI>doi:111.111/publication</DOI>
 	   	<Authors>
@@ -34,6 +29,11 @@
 		</Authors>
 	   	<Editors>
 		</Editors>
+        <Publishers>
+            <Publisher>
+                <OrgUnit />
+            </Publisher>
+        </Publishers>
 		<Access xmlns="http://purl.org/coar/access_right"
 		>
 		</Access>
@@ -45,11 +45,6 @@
 	    	<Publication>
 	      	</Publication>
 	   	</PublishedIn>
-	   	<Publishers>
-	   		<Publisher>
-				<OrgUnit />
-	   		</Publisher>
-	   	</Publishers>
 	   	<PublicationDate>2010-02-01</PublicationDate>
 	   	<DOI>doi:222.222/publication</DOI>
 	   	<Authors>
@@ -63,6 +58,11 @@
 		</Authors>
 	   	<Editors>
 		</Editors>
+        <Publishers>
+            <Publisher>
+                <OrgUnit />
+            </Publisher>
+        </Publishers>
 		<Access xmlns="http://purl.org/coar/access_right"
 		>
 		</Access>

@@ -3,7 +3,7 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:fo="http://www.w3.org/1999/XSL/Format"
 	xmlns:pt="https://www.openaire.eu/cerif-profile/vocab/COAR_Publication_Types"
-	xmlns:cerif="https://www.openaire.eu/cerif-profile/1.1/"
+	xmlns:cerif="https://purl.org/pe-repo/cerif-profile/1.0/"
 	exclude-result-prefixes="fo">
 	
 	<xsl:param name="imageDir" />
@@ -45,6 +45,10 @@
 				    	<xsl:with-param name="label" select="'DOI'" />
 				    	<xsl:with-param name="value" select="cerif:DOI" />
 				    </xsl:call-template>
+                    <xsl:call-template name="print-value">
+                        <xsl:with-param name="label" select="'PubMed ID'" />
+                        <xsl:with-param name="value" select="cerif:PMCID" />
+                    </xsl:call-template>
 					<xsl:call-template name="print-value">
 				    	<xsl:with-param name="label" select="'ISBN'" />
 				    	<xsl:with-param name="value" select="cerif:ISBN" />
@@ -95,10 +99,34 @@
 				    </xsl:call-template>
                     <xsl:call-template name="print-value">
                         <xsl:with-param name="label" select="'OCDE Subject(s)'" />
-                        <xsl:with-param name="value" select="Subject" />
+                        <xsl:with-param name="value" select="cerif:Subject" />
                     </xsl:call-template>
-			    	
-			    	
+                    <xsl:call-template name="print-value">
+                        <xsl:with-param name="label" select="'License'" />
+                        <xsl:with-param name="value" select="cerif:License" />
+                    </xsl:call-template>
+                    <xsl:call-template name="print-value">
+                        <xsl:with-param name="label" select="'Version'" />
+                        <xsl:with-param name="value" select="cerif:Version" />
+                    </xsl:call-template>
+                    <xsl:call-template name="print-value">
+                        <xsl:with-param name="label" select="'Discipline'" />
+                        <xsl:with-param name="value" select="cerif:Discipline" />
+                    </xsl:call-template>
+                    <xsl:call-template name="print-values">
+                        <xsl:with-param name="label" select="'Advisors'" />
+                        <xsl:with-param name="values" select="cerif:Advisors/cerif:Advisor/cerif:Person/cerif:Name" />
+                    </xsl:call-template>
+                    <xsl:call-template name="print-value">
+                        <xsl:with-param name="label" select="'Access condition'" />
+                        <xsl:with-param name="value" select="cerif:Access" />
+                    </xsl:call-template>
+                    <xsl:call-template name="print-value">
+                        <xsl:with-param name="label" select="'Embargo End Date'" />
+                        <xsl:with-param name="value" select="cerif:Access/@endDate" />
+                    </xsl:call-template>
+                    
+                    
 					<xsl:call-template name="section-title">
 				    	<xsl:with-param name="label" select="'Publication bibliographic details'" />
 			    	</xsl:call-template>

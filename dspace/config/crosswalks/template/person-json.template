@@ -7,7 +7,10 @@
 			"@crisrp.name.variant@",
 		],
 		"given-name": "@person.givenName@",
-		"family-name": "@person.familyName@"
+		"family-name": "@person.familyName@",
+		"apellido-paterno": "@perucris.apellidoPaterno@",
+        "apellido-materno": "@perucris.apellidoMaterno@",
+        "appelido-casada": "@perucris.apellidoCasada@"
 	},
 	"birth-date": "@person.birthDate@",
 	"gender": "@oairecerif.person.gender@",
@@ -25,16 +28,23 @@
 		@group.oairecerif-identifier-url.end@
 	],
 	"email": "@person.email@",
+	"phone": "@perucris.phone@",
+    "mobile-phone": "@perucris.mobilePhone@",
 	"interests": [
 		"@dc.subject@",
 	],
 	"identifiers": {
 		"orcid": "@person.identifier.orcid@",
+		"dina": "@perucris.identifier.dina@",
+        "dni": "@perucris.identifier.dni@",
+        "passport": "@perucris.identifier.passport@",
+        "immigration-card": "@perucris.identifier.immigrationCard@",
+        "renacyt": "@perucris.identifier.renacyt@",
 		"scopus-author-ids": [
 			"@person.identifier.scopus-author-id@",
 		],
 		"researcher-ids": [
-			"researcher-id": "@person.identifier.rid@",
+			"@person.identifier.rid@",
 		]
 	},
 	"affiliations": [
@@ -71,6 +81,13 @@
 	"knows-languages": [
 		"@person.knowsLanguage@",
 	],
+	"ubigeo-reniec": "@perucris.domicilio.ubigeoReniec@",
+    "ubigeo": "@perucris.ubigeo@",
+    "address": {
+        "street": "@perucris.address.streetAddress@",
+        "postal-code": "@perucris.address.postalCode@",
+        "country": "@perucris.address.addressCountry@"
+    },
 	"publications": [
 		@relation.researchoutputs.start@
 		{

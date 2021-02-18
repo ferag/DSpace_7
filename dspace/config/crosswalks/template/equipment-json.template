@@ -1,8 +1,25 @@
 {
 	"name": "@dc.title@",
 	"acronym": "@oairecerif.acronym@",
+	"type": "@dc.type@",
 	"identifier": "@oairecerif.internalid@",
 	"description": "@dc.description@",
 	"ownerOrgUnit": "@crisequipment.ownerou@",
-	"ownerPerson": "@crisequipment.ownerrp@"
+	"ownerPerson": "@crisequipment.ownerrp@",
+	"usage": "@perucris.type.usage@",
+	"subjects": [
+	   "@dc.subject.ocde@",
+	],
+	"researchLine": "@perucris.researchLine@",
+	"fundings": [
+       "@dc.relation.funding@",
+    ],
+    "manufacturingCountry": "@perucris.manufacturingCountry@",
+    "manufacturingDate": "@perucris.date.manufacturing@",
+    "acquisitionDate": "@perucris.date.acquisition@",
+    "amount": {
+        "value": "@oairecerif.amount@",
+        "currency": "@oairecerif.amount.currency@"
+    },
+    "internalNote": "@perucris.description.internalNote@",
 }

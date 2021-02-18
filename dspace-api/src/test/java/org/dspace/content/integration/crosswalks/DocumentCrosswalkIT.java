@@ -285,7 +285,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withEditorAffiliation("Editor Affiliation")
             .withRelationProject("Test Project", project.getID().toString())
             .withRelationFunding("Another Test Funding", funding.getID().toString())
-            .withSubjectOCDE("OCDE")
+            .withPerucrisSubjectOCDE("OCDE")
             .build();
 
         context.restoreAuthSystemState();
@@ -335,8 +335,8 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withRelationEquipment("Test equipment")
             .withSubject("project")
             .withSubject("test")
-            .withSubjectOCDE("First OCDE Subject")
-            .withSubjectOCDE("Second OCDE Subject")
+            .withPerucrisSubjectOCDE("First OCDE Subject")
+            .withPerucrisSubjectOCDE("Second OCDE Subject")
             .withDescriptionAbstract("This is a project to test the export")
             .withOAMandate("true")
             .withOAMandateURL("oamandate-url")
@@ -382,9 +382,22 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withAcronym("T-EQ")
             .withTitle("Test Equipment")
             .withInternalId("ID-01")
+            .withType("Type")
             .withDescription("This is an equipment to test the export functionality")
             .withEquipmentOwnerOrgUnit("Test OrgUnit")
             .withEquipmentOwnerPerson("Walter White")
+            .withUsageType("Investigacion cientifica y desarrollo experimental")
+            .withSubjectOCDE("First subject")
+            .withSubjectOCDE("Second subject")
+            .withResearchLine("ResearchLine")
+            .withRelationFunding("Funding")
+            .withRelationFunding("Another Funding")
+            .withManufacturingCountry("IT")
+            .withManufacturingDate("2020-01-01")
+            .withAcquisitionDate("2021-01-01")
+            .withAmount("4000")
+            .withAmountCurrency("€")
+            .withInternalNote("Note")
             .build();
 
         context.restoreAuthSystemState();
@@ -670,7 +683,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(content, containsString("Acronym: TOU"));
         assertThat(content, containsString("Type: https://w3id.org/cerif/vocab/OrganisationTypes"
             + "#StrategicResearchInsitute"));
-        assertThat(content, containsString("Parent Organization: Parent OrgUnit"));
+        assertThat(content, containsString("Parent organization: Parent OrgUnit"));
         assertThat(content, containsString("Identifier(s): ID-01, ID-02"));
         assertThat(content, containsString("URL(s): www.orgUnit.com, www.orgUnit.it"));
         assertThat(content, containsString("People: Walter White, Jesse Pinkman"));
@@ -682,9 +695,18 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         assertThat(content, containsString("Basic informations"));
         assertThat(content, containsString("Equipment Acronym: T-EQ"));
+        assertThat(content, containsString("Type: Type"));
         assertThat(content, containsString("Institution Unique Identifier: ID-01"));
         assertThat(content, containsString("Owner (Organization): Test OrgUnit"));
         assertThat(content, containsString("Owner (Person): Walter White"));
+        assertThat(content, containsString("Funding(s): Funding, Another Funding"));
+        assertThat(content, containsString("Subject(s): First subject, Second subject"));
+        assertThat(content, containsString("Research line: ResearchLine"));
+        assertThat(content, containsString("Manufacturing country: IT"));
+        assertThat(content, containsString("Manufacturing date: 2020-01-01"));
+        assertThat(content, containsString("Acquisition date: 2021-01-01"));
+        assertThat(content, containsString("Amount: 4000"));
+        assertThat(content, containsString("Amount currency: €"));
 
     }
 

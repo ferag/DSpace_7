@@ -1,4 +1,6 @@
 {
+    "type-ocde": "@perucris.project.typeOcde@",
+    "type-other": "@perucris.project.typeOther@",
 	"acronym":"@oairecerif.acronym@",
 	"title":"@dc.title@",
 	"openaireid": [
@@ -91,5 +93,16 @@
 	"OAMandate": {
 		"mandated": "@oairecerif.oamandate@",
 		"URL": "@oairecerif.oamandate.url@" 
-	}
+	},
+	"industrialClassification": "@perucris.type.ciiu@",
+	"researchLine": "@perucris.researchLine@",
+    "geoLocations": [
+       "@datacite.geoLocationPlace@",
+    ],
+    "technicians": [
+        "@crispj.techniciansAndEquivalentStaff@",
+    ],
+    "supportingStaff": [
+        "@crispj.supportingStaff@",
+    ]
 }

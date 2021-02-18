@@ -3,7 +3,7 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:fo="http://www.w3.org/1999/XSL/Format"
 	xmlns:ft="https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types"
-	xmlns:cerif="https://www.openaire.eu/cerif-profile/1.1/"
+	xmlns:cerif="https://purl.org/pe-repo/cerif-profile/1.0/"
 	exclude-result-prefixes="fo">
 	
 	<xsl:param name="imageDir" />
@@ -68,11 +68,32 @@
 							</fo:inline>
 						</fo:block>
 				  	</xsl:if>
+                    
+                    <xsl:if test="cerif:ExecutedAmount">
+                        <fo:block font-size="10pt" margin-top="2mm">
+                            <fo:inline font-weight="bold" text-align="right" >
+                                <xsl:text>Executed Amount:</xsl:text>
+                            </fo:inline>
+                            <fo:inline>
+                                <xsl:value-of select="cerif:ExecutedAmount"/>
+                                <xsl:if test="cerif:ExecutedAmount/@currency">
+                                    <xsl:text> (</xsl:text>
+                                    <xsl:value-of select="cerif:ExecutedAmount/@currency" />
+                                    <xsl:text>)</xsl:text>
+                                </xsl:if>
+                            </fo:inline>
+                        </fo:block>
+                    </xsl:if>
 			    	
 					<xsl:call-template name="print-value">
 				    	<xsl:with-param name="label" select="'Funder'" />
 				    	<xsl:with-param name="value" select="cerif:Funder/cerif:OrgUnit/cerif:Name" />
 			    	</xsl:call-template>
+                    
+                    <xsl:call-template name="print-value">
+                        <xsl:with-param name="label" select="'Part of'" />
+                        <xsl:with-param name="value" select="cerif:PartOf/cerif:Funding/cerif:Name" />
+                    </xsl:call-template>
 			    	
 					<xsl:if test="cerif:Duration/@startDate or cerif:Duration/@endDate">
 					  	<fo:block font-size="10pt" margin-top="2mm">
@@ -92,6 +113,11 @@
 							</fo:inline >
 						</fo:block>
 				  	</xsl:if>
+                    
+                    <xsl:call-template name="print-values">
+                        <xsl:with-param name="label" select="'Keyword(s)'" />
+                        <xsl:with-param name="values" select="cerif:Keyword" />
+                    </xsl:call-template>
 				  	
 					<xsl:call-template name="print-value">
 				    	<xsl:with-param name="label" select="'OA Mandate'" />

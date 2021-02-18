@@ -399,6 +399,14 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "oairecerif", "funder", null, null, funder, authority, 600);
     }
 
+    public ItemBuilder withFundingParent(String parent) {
+        return addMetadataValue(item, "oairecerif", "fundingParent", null, parent);
+    }
+
+    public ItemBuilder withFundingParent(String parent, String authority) {
+        return addMetadataValue(item, "oairecerif", "fundingParent", null, null, parent, authority, 600);
+    }
+
     public ItemBuilder withPublisher(String publisher) {
         return addMetadataValue(item, "dc", "publisher", null, publisher);
     }
@@ -487,8 +495,32 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "oairecerif", "access", null, access);
     }
 
-    public ItemBuilder withSubjectOCDE(String ocde) {
+    public ItemBuilder withPerucrisSubjectOCDE(String ocde) {
         return addMetadataValue(item, "perucris", "subject", "ocde", ocde);
+    }
+
+    public ItemBuilder withSubjectOCDE(String ocde) {
+        return addMetadataValue(item, "dc", "subject", "ocde", ocde);
+    }
+
+    public ItemBuilder withRightsUri(String uri) {
+        return addMetadataValue(item, "dc", "rights", "uri", uri);
+    }
+
+    public ItemBuilder withVersion(String version) {
+        return addMetadataValue(item, "oaire", "version", null, version);
+    }
+
+    public ItemBuilder withCoveragePublication(String coveragePublication) {
+        return addMetadataValue(item, "dc", "coverage", "publication", coveragePublication);
+    }
+
+    public ItemBuilder withAdvisor(String advisor) {
+        return addMetadataValue(item, "dc", "contributor", "advisor", advisor);
+    }
+
+    public ItemBuilder withRenatiDiscipline(String discipline) {
+        return addMetadataValue(item, "renati", "discipline", null, discipline);
     }
 
     public ItemBuilder makeUnDiscoverable() {
@@ -544,6 +576,14 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "oairecerif", "amount", "currency", currency);
     }
 
+    public ItemBuilder withExecutedAmount(String amount) {
+        return addMetadataValue(item, "perucris", "executedAmount", null, amount);
+    }
+
+    public ItemBuilder withExecutedAmountCurrency(String currency) {
+        return addMetadataValue(item, "perucris", "executedAmount", "currency", currency);
+    }
+
     public ItemBuilder withFundingStartDate(String startDate) {
         return addMetadataValue(item, "oairecerif", "funding", "startDate", startDate);
     }
@@ -562,6 +602,126 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withOrgUnitCountry(String country) {
         return addMetadataValue(item, "orgunit", "identifier", "country", country);
+    }
+
+    public ItemBuilder withUsageType(String usage) {
+        return addMetadataValue(item, "perucris", "type", "usage", usage);
+    }
+
+    public ItemBuilder withResearchLine(String researchLine) {
+        return addMetadataValue(item, "perucris", "researchLine", null, researchLine);
+    }
+
+    public ItemBuilder withManufacturingCountry(String manufacturingCountry) {
+        return addMetadataValue(item, "perucris", "manufacturingCountry", null, manufacturingCountry);
+    }
+
+    public ItemBuilder withManufacturingDate(String manufacturing) {
+        return addMetadataValue(item, "perucris", "date", "manufacturing", manufacturing);
+    }
+
+    public ItemBuilder withAcquisitionDate(String acquisitionDate) {
+        return addMetadataValue(item, "perucris", "date", "acquisition", acquisitionDate);
+    }
+
+    public ItemBuilder withInternalNote(String internalNote) {
+        return addMetadataValue(item, "perucris", "description", "internalNote", internalNote);
+    }
+
+    public ItemBuilder withPhone(String phone) {
+        return addMetadataValue(item, "perucris", "phone", null, phone);
+    }
+
+    public ItemBuilder withMobilePhone(String mobilePhone) {
+        return addMetadataValue(item, "perucris", "mobilePhone", null, mobilePhone);
+    }
+
+    public ItemBuilder withDinaIdentifier(String dina) {
+        return addMetadataValue(item, "perucris", "identifier", "dina", dina);
+    }
+
+    public ItemBuilder withDniIdentifier(String dni) {
+        return addMetadataValue(item, "perucris", "identifier", "dni", dni);
+    }
+
+    public ItemBuilder withPassport(String passport) {
+        return addMetadataValue(item, "perucris", "identifier", "passport", passport);
+    }
+
+    public ItemBuilder withStreetAddress(String street) {
+        return addMetadataValue(item, "perucris", "address", "streetAddress", street);
+    }
+
+    public ItemBuilder withCountryAddress(String country) {
+        return addMetadataValue(item, "perucris", "address", "addressCountry", country);
+    }
+
+    public ItemBuilder withPostalCode(String postalCode) {
+        return addMetadataValue(item, "perucris", "address", "postalCode", postalCode);
+    }
+
+    public ItemBuilder withOrgUnitDirector(String director) {
+        return addMetadataValue(item, "crisou", "director", null, director);
+    }
+
+    public ItemBuilder withOrgUnitFoundingDate(String foundingDate) {
+        return addMetadataValue(item, "organization", "foundingDate", null, foundingDate);
+    }
+
+    public ItemBuilder withOrgUnitBoard(String boards) {
+        return addMetadataValue(item, "crisou", "boards", null, boards);
+    }
+
+    public ItemBuilder withOrgUnitIsniIdentifier(String isni) {
+        return addMetadataValue(item, "organization", "identifier", "isni", isni);
+    }
+
+    public ItemBuilder withOrgUnitRucIdentifier(String ruc) {
+        return addMetadataValue(item, "organization", "identifier", "ruc", ruc);
+    }
+
+    public ItemBuilder withOrgUnitRinIdentifier(String rin) {
+        return addMetadataValue(item, "organization", "identifier", "rin", rin);
+    }
+
+    public ItemBuilder withOrgUnitRorIdentifier(String ror) {
+        return addMetadataValue(item, "organization", "identifier", "ror", ror);
+    }
+
+    public ItemBuilder withOrgUnitScopusAffiliationIdentifier(String scopusaffid) {
+        return addMetadataValue(item, "organization", "identifier", "scopusaffid", scopusaffid);
+    }
+
+    public ItemBuilder withOrgUnitCrossRefFunderIdentifier(String crossrefid) {
+        return addMetadataValue(item, "organization", "identifier", "crossrefid", crossrefid);
+    }
+
+    public ItemBuilder withOrgUnitAddressLocality(String addressLocality) {
+        return addMetadataValue(item, "organization", "address", "addressLocality", addressLocality);
+    }
+
+    public ItemBuilder withOrgUnitAddressCountry(String addressCountry) {
+        return addMetadataValue(item, "organization", "address", "addressCountry", addressCountry);
+    }
+
+    public ItemBuilder withUbigeo(String ubigeo) {
+        return addMetadataValue(item, "perucris", "ubigeo", null, ubigeo);
+    }
+
+    public ItemBuilder withGeoLocationPlace(String geoLocationPlace) {
+        return addMetadataValue(item, "datacite", "geoLocationPlace", null, geoLocationPlace);
+    }
+
+    public ItemBuilder withIndustrialClassification(String industrialClassification) {
+        return addMetadataValue(item, "perucris", "type", "ciiu", industrialClassification);
+    }
+
+    public ItemBuilder withProjectTechniciansAndEquivalentStaff(String techniciansAndEquivalentStaff) {
+        return addMetadataValue(item, "crispj", "techniciansAndEquivalentStaff", null, techniciansAndEquivalentStaff);
+    }
+
+    public ItemBuilder withProjectSupportingStaff(String supportingStaff) {
+        return addMetadataValue(item, "crispj", "supportingStaff", null, supportingStaff);
     }
 
     public ItemBuilder withHandle(String handle) {

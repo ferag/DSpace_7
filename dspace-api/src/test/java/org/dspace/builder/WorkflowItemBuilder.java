@@ -215,10 +215,6 @@ public class WorkflowItemBuilder extends AbstractBuilder<XmlWorkflowItem, XmlWor
         return addMetadataValue("dc", "identifier", "scopus", issn);
     }
 
-    public WorkflowItemBuilder withRelationshipType(String entityType) {
-        return addMetadataValue("relationship", "type", null, entityType);
-    }
-
     public WorkflowItemBuilder grantLicense() {
         Item item = workspaceItem.getItem();
         String license;

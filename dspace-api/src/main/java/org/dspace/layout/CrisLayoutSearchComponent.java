@@ -19,6 +19,8 @@ public class CrisLayoutSearchComponent implements CrisLayoutSectionComponent {
 
     private String style;
 
+    private String searchType;
+
     /**
      * @return the discoveryConfigurationName
      */
@@ -45,4 +47,17 @@ public class CrisLayoutSearchComponent implements CrisLayoutSectionComponent {
         this.style = style;
     }
 
+    public String getSearchType() {
+        return searchType;
+    }
+
+    /**
+     *
+     * @param searchType the type of search, can be 'basic', with one input field,
+     *                   or 'advanced' with many input fields combining defined filters for
+     *                   discovery configuration set.
+     */
+    public void setSearchType(String searchType) {
+        this.searchType = searchType;
+    }
 }

@@ -1,0 +1,25 @@
+<OrgUnit xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="mock-id">
+    <Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">https://w3id.org/cerif/vocab/OrganisationTypes#StrategicResearchInsitute</Type>
+    <Acronym>TOU</Acronym>
+    <Name>Test OrgUnit</Name>
+    <Name>Test OrgUnit LegalName</Name>
+    <Identifier>ID-01</Identifier>
+    <Identifier>ID-02</Identifier>
+    <Identifier type="URL">www.orgUnit.com</Identifier>
+    <Identifier type="URL">www.orgUnit.it</Identifier>
+    <Identifier type="https://purl.org/pe-repo/concytec/terminos#ruc">RUC-01</Identifier>
+    <Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#ScopusAffiliationID">SCOPUS-01</Identifier>
+    <Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#FundRefID">CRF-01</Identifier>
+    <PartOf>
+        <OrgUnit> <Name>Parent OrgUnit</Name> </OrgUnit>
+    </PartOf>
+    <Subject>Subject OCDE</Subject>
+    <Keyword>Keyword1</Keyword>
+    <Keyword>Keyword2</Keyword>
+    <PostAddress>
+        <AddressLocality>via del canale</AddressLocality>
+        <AddressCountry>Italy</AddressCountry>
+    </PostAddress>
+    <UbiGeo scheme="https://purl.org/pe-repo/inei/ubigeo">010201</UbiGeo>
+    <Description>This is an org unit</Description>
+</OrgUnit>

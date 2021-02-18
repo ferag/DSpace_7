@@ -32,11 +32,16 @@
 		}
 	],
 	"email": "test@test.com",
+    "phone": "0744112233",
+    "mobile-phone": "3201122333",
 	"interests": [
 		"Science"
 	],
 	"identifiers": {
 		"orcid": "0000-0002-9079-5932",
+        "dina": "DINA-01",
+        "dni": "DNI-01",
+        "passport": "PASS-01",
 		"scopus-author-ids": [
 		],
 		"researcher-ids": [
@@ -74,6 +79,11 @@
 		"English",
 		"Italian"
 	],
+    "address": {
+        "street": "Via 1 maggio",
+        "postal-code": "05100",
+        "country": "IT"
+    },
 	"publications": [
 		{
 			"title": "First Publication",

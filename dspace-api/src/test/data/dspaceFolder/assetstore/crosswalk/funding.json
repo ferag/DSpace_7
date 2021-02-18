@@ -8,10 +8,19 @@
 		"currency": "EUR",
 		"value": "30.000,00"
 	},
+    "executedAmount": {
+        "value": "15.000,00"
+    },
 	"description": "Funding to test export",
+    "keywords": [
+    ],
 	"funder": {
 		"name": "OrgUnit Funder"
 	},
+    "partOf": {
+        "name": "Parent Funding",
+        "acronym": "P-FU"
+    },
 	"duration": {
 		"startDate": "2015-01-01",
 		"endDate": "2020-01-01"

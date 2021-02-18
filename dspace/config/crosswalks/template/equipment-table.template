@@ -1,6 +1,17 @@
 Name = dc.title
 Acronym = oairecerif.acronym
+Type = dc.type
 Institution assigned identifier = oairecerif.internalid
 Description = dc.description
 Owner organization = crisequipment.ownerou
 Owner person = crisequipment.ownerrp
+Usage = perucris.type.usage
+Subject(s) = dc.subject.ocde
+Research line = perucris.researchLine
+Funding(s) = dc.relation.funding
+Manufacturing country = perucris.manufacturingCountry
+Manufacturing date = perucris.date.manufacturing
+Acquisition date = perucris.date.acquisition
+Amount = oairecerif.amount
+Amount's currency = oairecerif.amount.currency
+Internal note = perucris.description.internalNote

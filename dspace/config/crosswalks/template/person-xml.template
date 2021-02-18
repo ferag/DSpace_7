@@ -1,4 +1,4 @@
-<person>
+<person id="@virtual.id@">
 	<names>
 		<preferred-name>@dc.title@</preferred-name>
 		<full-name>@crisrp.name@</full-name>
@@ -8,6 +8,9 @@
 		</variants>
 		<given-name>@person.givenName@</given-name>
 		<family-name>@person.familyName@</family-name>
+		<apellido-paterno>@perucris.apellidoPaterno@</apellido-paterno>
+        <apellido-materno>@perucris.apellidoMaterno@</apellido-materno>
+        <appelido-casada>@perucris.apellidoCasada@</appelido-casada>
 	</names>
 	<birth-date>@person.birthDate@</birth-date>
 	<gender>@oairecerif.person.gender@</gender>
@@ -25,11 +28,18 @@
 		@group.oairecerif-identifier-url.end@
 	</personal-sites>
 	<email>@person.email@</email>
+	<phone>@perucris.phone@</phone>
+    <mobile-phone>@perucris.mobilePhone@</mobile-phone>
 	<interests>
 		<interest>@dc.subject@</interest>
 	</interests>
 	<identifiers>
 		<orcid>@person.identifier.orcid@</orcid>
+		<dina>@person.identifier.dina@</dina>
+        <dni>@perucris.identifier.dni@</dni>
+        <passport>@perucris.identifier.passport@</passport>
+        <immigration-card>@perucris.identifier.immigrationCard@</immigration-card>
+        <renacyt>@perucris.identifier.renacyt@</renacyt>
 		<scopus-author-ids>
 			<scopus-author-id>@person.identifier.scopus-author-id@</scopus-author-id>
 		</scopus-author-ids>
@@ -72,6 +82,13 @@
 		<language>@person.knowsLanguage@</language>
 	</knows-languages>
 	<personal-picture>@virtual.bitstream.original.picture@</personal-picture>
+	<ubigeo-reniec>@perucris.domicilio.ubigeoReniec@</ubigeo-reniec>
+    <ubigeo>@perucris.ubigeo@</ubigeo>
+    <address>
+        <street>@perucris.address.streetAddress@</street>
+        <postal-code>@perucris.address.postalCode@</postal-code>
+        <country>@perucris.address.addressCountry@</country>
+    </address>
 	<publications>
 		@relation.researchoutputs.start@
 		<publication>

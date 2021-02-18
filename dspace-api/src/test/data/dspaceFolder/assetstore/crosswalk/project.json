@@ -79,6 +79,19 @@
 	"OAMandate": {
 		"mandated": "true",
 		"URL": "oamandate-url" 
-	}
+	},
+    "industrialClassification": "IND-CLASS",
+    "researchLine": "Research line",
+    "geoLocations": [
+       "location1",
+       "location2"
+    ],
+    "technicians": [
+        "technician"
+    ],
+    "supportingStaff": [
+        "supportingStaff1",
+        "supportingStaff2"
+    ]
 }
 

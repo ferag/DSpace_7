@@ -9,9 +9,11 @@ package org.dspace.app.rest.model;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import org.dspace.app.rest.RestResourceController;
+import org.dspace.layout.CrisLayoutCountersComponent;
 
 /**
  * The Layout section REST resource related to the explore functionality.
@@ -116,6 +118,8 @@ public class CrisLayoutSectionRest extends BaseObjectRest<String> {
 
         private String style;
 
+        private String titleKey;
+
         public String getDiscoveryConfigurationName() {
             return discoveryConfigurationName;
         }
@@ -157,6 +161,13 @@ public class CrisLayoutSectionRest extends BaseObjectRest<String> {
             this.style = style;
         }
 
+        public String getTitleKey() {
+            return titleKey;
+        }
+
+        public void setTitleKey(String titleKey) {
+            this.titleKey = titleKey;
+        }
     }
 
     public static class CrisLayoutFacetComponentRest implements CrisLayoutSectionComponentRest {
@@ -198,6 +209,8 @@ public class CrisLayoutSectionRest extends BaseObjectRest<String> {
 
         private String style;
 
+        private String searchType;
+
         public String getDiscoveryConfigurationName() {
             return discoveryConfigurationName;
         }
@@ -221,6 +234,154 @@ public class CrisLayoutSectionRest extends BaseObjectRest<String> {
          */
         public void setStyle(String style) {
             this.style = style;
+        }
+
+        public String getSearchType() {
+            return searchType;
+        }
+
+        public void setSearchType(String searchType) {
+            this.searchType = searchType;
+        }
+
+    }
+
+    public static class CrisLayoutTextRowComponentRest implements CrisLayoutSectionComponentRest,
+        Comparable<CrisLayoutTextRowComponentRest> {
+
+        private final Integer order;
+        private final String style;
+        private final String content;
+        private final String contentType;
+
+        public CrisLayoutTextRowComponentRest(Integer order, String style, String content, String contentType) {
+            this.order = order;
+            this.style = style;
+            this.content = content;
+            this.contentType = contentType;
+        }
+
+        @Override
+        public String getComponentType() {
+            return "text-row";
+        }
+
+        @Override
+        public String getStyle() {
+            return style;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public String getContentType() {
+            return contentType;
+        }
+
+        @Override
+        public int compareTo(CrisLayoutTextRowComponentRest other) {
+            return this.order.compareTo(other.order);
+        }
+    }
+
+    public static class CrisLayoutTextBoxComponentRest implements CrisLayoutSectionComponentRest {
+
+        private final List<CrisLayoutTextRowComponentRest> textRows;
+        private final String style;
+
+        public CrisLayoutTextBoxComponentRest(
+            List<CrisLayoutTextRowComponentRest> textRows, String style) {
+            this.textRows = textRows;
+            this.style = style;
+        }
+
+
+        @Override
+        public String getComponentType() {
+            return "text-box";
+        }
+
+        @Override
+        public String getStyle() {
+            return style;
+        }
+
+        public List<CrisLayoutTextRowComponentRest> getTextRows() {
+            return textRows;
+        }
+    }
+
+    public static class CrisLayoutCountersComponentRest implements CrisLayoutSectionComponentRest {
+
+        private final String style;
+        private final List<CounterSettingsRest> counterSettingsList;
+
+        public static CrisLayoutCountersComponentRest from (CrisLayoutCountersComponent source) {
+            return new CrisLayoutCountersComponentRest(source.getStyle(),
+                source.getCounterSettingsList().stream()
+                .map(CounterSettingsRest::from)
+                .collect(Collectors.toList())
+                );
+        }
+
+        @Override
+        public String getComponentType() {
+            return "counters";
+        }
+
+        public String getStyle() {
+            return style;
+        }
+
+        public List<CounterSettingsRest> getCounterSettingsList() {
+            return counterSettingsList;
+        }
+
+        private CrisLayoutCountersComponentRest(String style,
+                                                List<CounterSettingsRest> counterSettingsList) {
+            this.style = style;
+            this.counterSettingsList = counterSettingsList;
+        }
+
+        static class CounterSettingsRest {
+
+            private final String discoveryConfigurationName;
+            private final String icon;
+            private final String entityName;
+            private final String link;
+
+            static CounterSettingsRest from (CrisLayoutCountersComponent.CounterSettings source) {
+
+                return new CounterSettingsRest(source.getDiscoveryConfigurationName(),
+                    source.getIcon(),
+                    source.getLabel(),
+                    source.getLink());
+            }
+
+            private CounterSettingsRest(String discoveryConfigurationName, String icon, String entityName,
+                                        String link) {
+                this.discoveryConfigurationName = discoveryConfigurationName;
+                this.icon = icon;
+                this.entityName = entityName;
+                this.link = link;
+            }
+
+            public String getDiscoveryConfigurationName() {
+                return discoveryConfigurationName;
+            }
+
+            public String getIcon() {
+                return icon;
+            }
+
+            public String getEntityName() {
+                return entityName;
+            }
+
+            public String getLink() {
+                return link;
+            }
         }
 
     }

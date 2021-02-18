@@ -70,6 +70,15 @@
                 <xsl:value-of select="cerif:AcquisitionAmount/@currency" />
             </dim:field>
             
+            <xsl:for-each select="cerif:Funded/cerif:As/cerif:Funding">
+	            <dim:field mdschema="dc" element="relation" qualifier="funding">
+	                <xsl:if test="cerif:Funded/cerif:As/cerif:Funding/@id">
+	                    <xsl:attribute name="authority"><xsl:value-of select="concat($idPrefix,cerif:Funded/cerif:As/cerif:Funding/@id)"/></xsl:attribute>
+	                </xsl:if>
+	                <xsl:value-of select="cerif:Funded/cerif:As/cerif:Funding/cerif:Name"/>
+	            </dim:field>
+            </xsl:for-each>
+            
 		</dim:dim>
 	</xsl:template>
 	

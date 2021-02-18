@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.1"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:fo="http://www.w3.org/1999/XSL/Format"
-	xmlns:cerif="https://www.openaire.eu/cerif-profile/1.1/"
+	xmlns:cerif="https://purl.org/pe-repo/cerif-profile/1.0/"
 	exclude-result-prefixes="fo">
 	
 	<xsl:param name="imageDir" />
@@ -36,6 +36,11 @@
 				    	<xsl:with-param name="label" select="'Equipment Acronym'" />
 				    	<xsl:with-param name="value" select="cerif:Acronym" />
 			    	</xsl:call-template>
+                    
+                    <xsl:call-template name="print-value">
+                        <xsl:with-param name="label" select="'Type'" />
+                        <xsl:with-param name="value" select="cerif:Type" />
+                    </xsl:call-template>
 			    	
 					<xsl:call-template name="print-value">
 				    	<xsl:with-param name="label" select="'Institution Unique Identifier'" />
@@ -51,6 +56,46 @@
 				    	<xsl:with-param name="label" select="'Owner (Person)'" />
 				    	<xsl:with-param name="value" select="cerif:Owner/cerif:Person/@displayName" />
 			    	</xsl:call-template>
+                    
+                    <xsl:call-template name="print-values">
+                        <xsl:with-param name="label" select="'Funding(s)'" />
+                        <xsl:with-param name="values" select="cerif:Funder/cerif:As/cerif:Funding/cerif:Name" />
+                    </xsl:call-template>
+                    
+                    <xsl:call-template name="print-values">
+                        <xsl:with-param name="label" select="'Subject(s)'" />
+                        <xsl:with-param name="values" select="cerif:Subject" />
+                    </xsl:call-template>
+                    
+                    <xsl:call-template name="print-value">
+                        <xsl:with-param name="label" select="'Research line'" />
+                        <xsl:with-param name="value" select="cerif:ResearchLine" />
+                    </xsl:call-template>
+                    
+                    <xsl:call-template name="print-value">
+                        <xsl:with-param name="label" select="'Manufacturing country'" />
+                        <xsl:with-param name="value" select="cerif:ManufacturingCountry" />
+                    </xsl:call-template>
+                    
+                    <xsl:call-template name="print-value">
+                        <xsl:with-param name="label" select="'Manufacturing date'" />
+                        <xsl:with-param name="value" select="cerif:ManufacturingDate" />
+                    </xsl:call-template>
+                    
+                    <xsl:call-template name="print-value">
+                        <xsl:with-param name="label" select="'Acquisition date'" />
+                        <xsl:with-param name="value" select="cerif:AcquisitionDate" />
+                    </xsl:call-template>
+                    
+                    <xsl:call-template name="print-value">
+                        <xsl:with-param name="label" select="'Amount'" />
+                        <xsl:with-param name="value" select="cerif:AcquisitionAmount" />
+                    </xsl:call-template>
+                    
+                    <xsl:call-template name="print-value">
+                        <xsl:with-param name="label" select="'Amount currency'" />
+                        <xsl:with-param name="value" select="cerif:AcquisitionAmount/@currency" />
+                    </xsl:call-template>
 			    	
 				</fo:flow>
 			</fo:page-sequence>
@@ -72,6 +117,25 @@
 			</fo:block>
 	  	</xsl:if>
 	</xsl:template>
+	
+	<xsl:template name = "print-values" >
+        <xsl:param name = "label" />
+        <xsl:param name = "values" />
+        <xsl:if test="$values">
+            <fo:block font-size="10pt" margin-top="2mm">
+                <fo:inline font-weight="bold" text-align="right"  >
+                    <xsl:value-of select="$label" /> 
+                </fo:inline >
+                <xsl:text>: </xsl:text>
+                <fo:inline>
+                    <xsl:for-each select="$values">
+                        <xsl:value-of select="current()" />
+                        <xsl:if test="position() != last()">, </xsl:if>
+                    </xsl:for-each>
+                </fo:inline >
+            </fo:block>
+        </xsl:if>
+    </xsl:template>
 	
 	<xsl:template name = "section-title" >
 		<xsl:param name = "label" />

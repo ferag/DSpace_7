@@ -1,5 +1,5 @@
 <persons>
-	<person>
+	<person id="mock-id">
 		<names>
 			<preferred-name>John Smith</preferred-name>
 			<variants>
@@ -34,10 +34,12 @@
 		</qualifications>
 		<knows-languages>
 		</knows-languages>
+        <address>
+        </address>
 		<publications>
 		</publications>
 	</person>
-	<person>
+	<person id="mock-id">
 		<names>
 			<preferred-name>Adam White</preferred-name>
 			<variants>
@@ -77,6 +79,8 @@
 			<language>English</language>
 			<language>Italian</language>
 		</knows-languages>
+		<address>
+		</address>
 		<publications>
 		</publications>
 	</person>

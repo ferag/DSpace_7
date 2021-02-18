@@ -244,15 +244,6 @@ public interface ChoiceAuthorityService {
      * Returns all the configured metadata field that are authority controlled
      * related to the given relationship type.
      *
-     * @param relationshipType the relationship type
-     * @return the metadata fields
-     */
-    public List<String> getAuthorityControlledFieldsByRelationshipType(String relationshipType);
-
-    /**
-     * Returns all the configured metadata field that are authority controlled
-     * related to the given relationship type.
-     *
      * @param  relationshipType the relationship type
      * @return                  the metadata fields
      */

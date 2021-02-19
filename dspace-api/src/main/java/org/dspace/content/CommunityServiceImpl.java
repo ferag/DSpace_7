@@ -49,6 +49,8 @@ import org.dspace.eperson.service.GroupService;
 import org.dspace.event.Event;
 import org.dspace.identifier.IdentifierException;
 import org.dspace.identifier.service.IdentifierService;
+import org.dspace.services.ConfigurationService;
+import org.dspace.util.UUIDUtils;
 import org.dspace.xmlworkflow.Role.Scope;
 import org.dspace.xmlworkflow.WorkflowConfigurationException;
 import org.dspace.xmlworkflow.factory.XmlWorkflowFactory;
@@ -100,6 +102,9 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
 
     @Autowired(required = true)
     protected CollectionRoleService collectionRoleService;
+
+    @Autowired(required = true)
+    protected ConfigurationService configurationService;
 
     protected CommunityServiceImpl() {
         super();
@@ -730,6 +735,18 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
         setCommunityName(context, newCommunity, name);
 
         return newCommunity;
+    }
+
+    @Override
+    public Community findDirectorioCommunity(Context context) throws SQLException {
+
+        UUID directorioId = UUIDUtils.fromString(configurationService.getProperty("directorios.community-id"));
+        if (directorioId == null) {
+            log.warn("The property directorios.community-id is not configured correctly");
+            return null;
+        }
+
+        return find(context, directorioId);
     }
 
     private Community cloneCommunity(Context context, Community communityToClone, Community clone,

@@ -623,7 +623,15 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
 
         return controller.keySet().stream()
             .filter(field -> isLinkableToAnEntityWithRelationshipType(controller.get(field), relationshipType))
+            .map(field -> removeInstitutionPrefix(field))
             .collect(Collectors.toList());
+    }
+
+    private String removeInstitutionPrefix(String field) {
+        if (field != null && field.startsWith("institution")) {
+            return field.substring(field.indexOf("_") + 1);
+        }
+        return field;
     }
 
     private boolean isLinkableToAnEntityWithRelationshipType(ChoiceAuthority choiceAuthority, String relationshipType) {

@@ -19,9 +19,13 @@ import org.dspace.authority.service.AuthorityValueService;
 import org.dspace.authority.service.ItemReferenceResolver;
 import org.dspace.authority.service.ItemSearcher;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.content.Collection;
+import org.dspace.content.Community;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.authority.service.ChoiceAuthorityService;
+import org.dspace.content.service.CollectionService;
+import org.dspace.content.service.CommunityService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.core.Context.Mode;
@@ -31,6 +35,7 @@ import org.dspace.discovery.DiscoverResultItemIterator;
 import org.dspace.discovery.IndexableObject;
 import org.dspace.discovery.SearchService;
 import org.dspace.discovery.SearchServiceException;
+import org.dspace.discovery.indexobject.IndexableCommunity;
 import org.dspace.discovery.indexobject.IndexableInProgressSubmission;
 import org.dspace.discovery.indexobject.IndexableItem;
 import org.dspace.discovery.indexobject.IndexableWorkflowItem;
@@ -54,6 +59,12 @@ public class ItemSearcherByMetadata implements ItemSearcher, ItemReferenceResolv
 
     @Autowired
     private ChoiceAuthorityService choiceAuthorityService;
+
+    @Autowired
+    private CollectionService collectionService;
+
+    @Autowired
+    private CommunityService communityService;
 
     private final String metadata;
 
@@ -122,14 +133,12 @@ public class ItemSearcherByMetadata implements ItemSearcher, ItemReferenceResolv
     private void resolveReferences(Context context, List<MetadataValue> metadataValues, Item item)
         throws SQLException, AuthorizeException {
 
-        String relationshipType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
-
         List<String> authorities = metadataValues.stream()
             .map(MetadataValue::getValue)
             .map(value -> AuthorityValueService.REFERENCE + authorityPrefix + "::" + value)
             .collect(Collectors.toList());
 
-        Iterator<Item> itemIterator = findItemsToResolve(context, authorities, relationshipType);
+        Iterator<Item> itemIterator = findItemsToResolve(context, authorities, item);
 
         while (itemIterator.hasNext()) {
             Item itemWithReference = itemIterator.next();
@@ -142,8 +151,10 @@ public class ItemSearcherByMetadata implements ItemSearcher, ItemReferenceResolv
         }
     }
 
-    private Iterator<Item> findItemsToResolve(Context context, List<String> authorities,
-        String relationshipType) {
+    private Iterator<Item> findItemsToResolve(Context context, List<String> authorities, Item item)
+        throws SQLException {
+
+        String relationshipType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
 
         String query = choiceAuthorityService.getAuthorityControlledFieldsByRelationshipType(relationshipType).stream()
             .map(field -> getFieldFilter(field, authorities))
@@ -159,7 +170,8 @@ public class ItemSearcherByMetadata implements ItemSearcher, ItemReferenceResolv
         discoverQuery.addDSpaceObjectFilter(IndexableWorkflowItem.TYPE);
         discoverQuery.addFilterQueries(query);
 
-        return new DiscoverResultItemIterator(context, discoverQuery);
+        IndexableObject<?, ?> scopeObject = calculateScopeObject(context, item);
+        return new DiscoverResultItemIterator(context, scopeObject, discoverQuery);
 
     }
 
@@ -167,6 +179,23 @@ public class ItemSearcherByMetadata implements ItemSearcher, ItemReferenceResolv
         return authorities.stream()
             .map(authority -> field.replaceAll("_", ".") + "_allauthority: \"" + authority + "\"")
             .collect(Collectors.joining(" OR "));
+    }
+
+    private IndexableObject<?, ?> calculateScopeObject(Context context, Item item) throws SQLException {
+
+        Collection collection = collectionService.findByItem(context, item);
+        if (collection == null) {
+            return null;
+        }
+
+        if (collectionService.isDirectorioCollection(context, collection)) {
+            Community directorio = communityService.findDirectorioCommunity(context);
+            return directorio != null ? new IndexableCommunity(directorio) : null;
+        } else {
+            Community institution = (Community) collectionService.getParentObject(context, collection);
+            return institution != null ? new IndexableCommunity(institution) : null;
+        }
+
     }
 
 }

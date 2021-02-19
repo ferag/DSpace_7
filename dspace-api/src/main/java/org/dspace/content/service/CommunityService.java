@@ -294,4 +294,13 @@ public interface CommunityService extends DSpaceObjectService<Community>, DSpace
      */
     public Community cloneCommunity(Context context, Community template, Community parent, String name)
         throws SQLException, AuthorizeException;
+
+    /**
+     * Find the configured Directorio's root community, if any.
+     *
+     * @param context the DSpace context
+     * @return the Directorio's root community
+     * @throws SQLException if database error
+     */
+    Community findDirectorioCommunity(Context context) throws SQLException;
 }

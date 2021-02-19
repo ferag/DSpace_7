@@ -44,6 +44,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.dspace.app.rest.model.patch.AddOperation;
 import org.dspace.app.rest.model.patch.Operation;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
+import org.dspace.authority.service.AuthorityValueService;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.builder.CollectionBuilder;
 import org.dspace.builder.CommunityBuilder;
@@ -2217,6 +2218,106 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         reinstateItem = reloadItem(reinstateItem);
         assertThat(reinstateItem, nullValue());
 
+    }
+
+    @Test
+    public void testWillBeReferencedResolution() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EntityType institutionPersonType = createEntityType("InstitutionPerson");
+
+        EntityType personType = createEntityType("Person");
+
+        RelationshipType personHasShadowCopy = createHasShadowCopyRelationship(institutionPersonType, personType);
+
+        createIsCorrectionOfRelationship(personType);
+        createIsCorrectionOfRelationship(institutionPersonType);
+        createIsWithdrawOfRelationship(personType);
+        createIsWithdrawOfRelationship(institutionPersonType);
+        createIsReinstatementOfRelationship(personType);
+        createIsReinstatementOfRelationship(institutionPersonType);
+
+        Collection directorioPersons = CollectionBuilder
+            .createCollection(context, directorioCommunity)
+            .withWorkflow("directorioWorkflow")
+            .withName("Persons")
+            .withRelationshipType("Person")
+            .withSubmitterGroup(submitter)
+            .withRoleGroup("editor", directorioEditorGroup)
+            .build();
+
+        Collection institutionPersons = createCollection(context, parentCommunity)
+            .withWorkflow("institutionWorkflow")
+            .withName("Institution person collection")
+            .withRelationshipType("InstitutionPerson")
+            .withSubmissionDefinition("traditional")
+            .withSubmitterGroup(submitter)
+            .withRoleGroup("reviewer", reviewGroup)
+            .build();
+
+        WorkspaceItem publicationWorkspaceItem = WorkspaceItemBuilder
+            .createWorkspaceItem(context, institutionCollection)
+            .withTitle("Test publication")
+            .withAuthor("White, Walter", AuthorityValueService.REFERENCE + "ORCID::0000-1111-2222-3333")
+            .build();
+
+        Item publicationItem = publicationWorkspaceItem.getItem();
+
+        context.restoreAuthSystemState();
+
+        workflowService.start(context, publicationWorkspaceItem);
+
+        Relationship publicationRelationship = findRelation(publicationItem, hasShadowCopy);
+        Item publicationItemCopy = publicationRelationship.getRightItem();
+
+        XmlWorkflowItem publicationWorkflowItemCopy = getWorkflowItem(publicationItemCopy);
+
+        claimTaskAndApprove(publicationWorkflowItemCopy, secondDirectorioUser, directorioEditorGroup);
+
+        publicationItem = reloadItem(publicationItem);
+        assertThat(publicationItem.isArchived(), is(true));
+
+        assertThat(publicationItem.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", null,
+            AuthorityValueService.REFERENCE + "ORCID::0000-1111-2222-3333", 0, 600)));
+
+        publicationItemCopy = reloadItem(publicationItemCopy);
+        assertThat(publicationItemCopy.isArchived(), is(true));
+
+        assertThat(publicationItemCopy.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", null,
+            AuthorityValueService.REFERENCE + "ORCID::0000-1111-2222-3333", 0, 600)));
+
+        WorkspaceItem personWorkspaceItem = WorkspaceItemBuilder
+            .createWorkspaceItem(context, institutionPersons)
+            .withTitle("White, Walter")
+            .withOrcidIdentifier("0000-1111-2222-3333")
+            .build();
+
+        Item personItem = personWorkspaceItem.getItem();
+
+        workflowService.start(context, personWorkspaceItem);
+
+        Relationship personRelationship = findRelation(personItem, personHasShadowCopy);
+        Item personItemCopy = personRelationship.getRightItem();
+
+        XmlWorkflowItem personWorkflowItemCopy = getWorkflowItem(personItemCopy);
+
+        claimTaskAndApprove(personWorkflowItemCopy, secondDirectorioUser, directorioEditorGroup);
+
+        personItem = reloadItem(personItem);
+        assertThat(personItem.isArchived(), is(true));
+
+        personItemCopy = reloadItem(personItemCopy);
+        assertThat(personItemCopy.isArchived(), is(true));
+        assertThat(personItemCopy.getOwningCollection(), is(directorioPersons));
+
+        publicationItemCopy = reloadItem(publicationItemCopy);
+        assertThat(publicationItemCopy.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", null,
+            personItemCopy.getID().toString(), 0, 600)));
+
+        publicationItem = reloadItem(publicationItem);
+        assertThat(publicationItem.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", null,
+            personItem.getID().toString(), 0, 600)));
     }
 
     private RelationshipType createHasShadowCopyRelationship(EntityType institutionType, EntityType directorioType) {

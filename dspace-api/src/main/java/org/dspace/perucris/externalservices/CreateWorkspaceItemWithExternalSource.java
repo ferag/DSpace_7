@@ -20,6 +20,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -199,12 +200,16 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
                     totalRecordWorked += userPublicationsProcessed;
                     if (userPublicationsProcessed >= 20) {
                         context.commit();
+                        // to ensure that collection's template item is fully initialized
+                        reloadCollectionIfNeeded();
                     }
                 }
                 countItemsProcessed++;
                 if (countItemsProcessed == 20) {
                     context.commit();
                     countItemsProcessed = 0;
+                    // to ensure that collection's template item is fully initialized
+                    reloadCollectionIfNeeded();
                 }
             }
             context.commit();
@@ -213,6 +218,20 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
         } catch (SQLException | SearchServiceException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * utility method to check that we have collection's item fully loaded with template item fully initialized,
+     * in order to avoid lazy initialization exceptions.
+     *
+     * @throws SQLException
+     */
+    private void reloadCollectionIfNeeded() throws SQLException {
+        boolean needsReload = Objects.nonNull(this.collection.getTemplateItem()) &&
+            CollectionUtils.isNotEmpty(this.collection.getTemplateItem().getMetadata());
+        if (needsReload) {
+            this.context.reloadEntity(this.collection);
         }
     }
 

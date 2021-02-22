@@ -7,6 +7,7 @@
  */
 package org.dspace.app.rest.repository;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,9 +27,12 @@ import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 /**
+ * This is the repository responsible to manage ItemSource Rest object
+ * 
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
 @Component(ItemSourceRest.CATEGORY + "." + ItemSourceRest.NAME)
@@ -47,6 +51,7 @@ public class ItemSourceRestRepository extends DSpaceRestRepository<ItemSourceRes
     private ItemSourceService itemSourceService;
 
     @Override
+    @PreAuthorize("permitAll()")
     public ItemSourceRest findOne(Context context, UUID uuid) {
         ItemSource itemSource = new ItemSource();
         Item item = null;
@@ -60,8 +65,11 @@ public class ItemSourceRestRepository extends DSpaceRestRepository<ItemSourceRes
         }
         try {
             itemSource.setItemUuid(uuid);
-            List<RelationshipType> relationshipTypes = relationshipTypeService
-                 .findByLeftwardOrRightwardTypeName(context,ConcytecWorkflowService.IS_ORIGINATED_FROM_IN_RELATIONSHIP);
+            List<RelationshipType> relationshipTypes = new ArrayList<RelationshipType>();
+            relationshipTypes.addAll(relationshipTypeService.findByLeftwardOrRightwardTypeName(context,
+                                     ConcytecWorkflowService.IS_ORIGINATED_FROM_IN_RELATIONSHIP));
+            relationshipTypes.addAll(relationshipTypeService.findByLeftwardOrRightwardTypeName(context,
+                                     ConcytecWorkflowService.IS_SHADOW_COPY_RELATIONSHIP));
             for (RelationshipType relationshipType : relationshipTypes) {
                 List<Relationship> relationships = relationshipService.findByItemAndRelationshipType(context, item,
                         relationshipType);

@@ -7,24 +7,23 @@
  */
 package org.dspace.app.rest.model;
 import java.util.List;
-import java.util.UUID;
 
 import org.dspace.app.rest.RestResourceController;
-import org.dspace.app.source.ItemSource;
+import org.dspace.app.source.Source;
 
 /**
+ * The ItemSource REST Resource
+ * 
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
-public class ItemSourceRest extends BaseObjectRest<Integer> {
+public class ItemSourceRest extends BaseObjectRest<String> {
 
     private static final long serialVersionUID = 1L;
 
     public static final String CATEGORY = RestAddressableModel.CORE;
     public static final String NAME = "itemsource";
 
-    private UUID itemUuid;
-
-    private List<ItemSource> sources;
+    private List<Source> sources;
 
     @Override
     public String getType() {
@@ -41,19 +40,11 @@ public class ItemSourceRest extends BaseObjectRest<Integer> {
         return RestResourceController.class;
     }
 
-    public UUID getItemUuid() {
-        return itemUuid;
-    }
-
-    public void setItemUuid(UUID itemUuid) {
-        this.itemUuid = itemUuid;
-    }
-
-    public List<ItemSource> getSources() {
+    public List<Source> getSources() {
         return sources;
     }
 
-    public void setSources(List<ItemSource> sources) {
+    public void setSources(List<Source> sources) {
         this.sources = sources;
     }
 

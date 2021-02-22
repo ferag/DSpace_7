@@ -120,6 +120,7 @@ public class DefaultWorkflowIT extends AbstractControllerIntegrationTest {
         Collection collection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Collection")
             .withRelationshipType("InstitutionPublication")
+            .withSubmissionDefinition("institution-publication")
             .withWorkflowGroup(2, eperson)
             .withSubmitterGroup(eperson)
             .build();
@@ -156,7 +157,8 @@ public class DefaultWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(workspaceItemService.findByItem(context, correctionItem).getID(), equalTo(workspaceItemId));
 
         MetadataValueRest value = new MetadataValueRest("Test item correction");
-        List<Operation> operations = asList(new ReplaceOperation("/sections/publication/dc.title/0", value));
+        List<Operation> operations = asList(new ReplaceOperation("/sections/institution-publication/dc.title/0",
+            value));
 
         getClient(authToken).perform(patch("/api/submission/workspaceitems/" + workspaceItemId)
             .contentType(MediaType.APPLICATION_JSON)
@@ -186,6 +188,7 @@ public class DefaultWorkflowIT extends AbstractControllerIntegrationTest {
         Collection collection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Collection")
             .withRelationshipType("InstitutionPublication")
+            .withSubmissionDefinition("institution-publication")
             .withWorkflowGroup(2, eperson)
             .withSubmitterGroup(eperson)
             .build();
@@ -222,7 +225,8 @@ public class DefaultWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(workspaceItemService.findByItem(context, correctionItem).getID(), equalTo(workspaceItemId));
 
         MetadataValueRest value = new MetadataValueRest("Test item correction");
-        List<Operation> operations = asList(new ReplaceOperation("/sections/publication/dc.title/0", value));
+        List<Operation> operations = asList(new ReplaceOperation("/sections/institution-publication/dc.title/0",
+            value));
 
         getClient(authToken).perform(patch("/api/submission/workspaceitems/" + workspaceItemId)
             .contentType(MediaType.APPLICATION_JSON)
@@ -253,6 +257,7 @@ public class DefaultWorkflowIT extends AbstractControllerIntegrationTest {
         Collection collection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Collection")
             .withRelationshipType("InstitutionPublication")
+            .withSubmissionDefinition("institution-publication")
             .withSubmitterGroup(eperson)
             .build();
 
@@ -288,7 +293,8 @@ public class DefaultWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(workspaceItemService.findByItem(context, correctionItem).getID(), equalTo(workspaceItemId));
 
         MetadataValueRest value = new MetadataValueRest("Test item correction");
-        List<Operation> operations = asList(new ReplaceOperation("/sections/publication/dc.title/0", value));
+        List<Operation> operations = asList(new ReplaceOperation("/sections/institution-publication/dc.title/0",
+            value));
 
         getClient(authToken).perform(patch("/api/submission/workspaceitems/" + workspaceItemId)
             .contentType(MediaType.APPLICATION_JSON)

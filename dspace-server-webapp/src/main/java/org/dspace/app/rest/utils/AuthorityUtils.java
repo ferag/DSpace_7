@@ -48,8 +48,8 @@ public class AuthorityUtils {
         return cas.isChoicesConfigured(org.dspace.core.Utils.standardize(schema, element, qualifier, "_"), null);
     }
 
-    public String getAuthorityName(String schema, String element, String qualifier) {
-        return cas.getChoiceAuthorityName(schema, element, qualifier, null);
+    public String getAuthorityName(String schema, String element, String qualifier, String formNameDefinition) {
+        return cas.getChoiceAuthorityName(schema, element, qualifier, formNameDefinition);
     }
 
     public boolean isClosed(String schema, String element, String qualifier) {

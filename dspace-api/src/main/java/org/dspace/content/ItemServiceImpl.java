@@ -53,8 +53,10 @@ import org.dspace.core.Context;
 import org.dspace.core.I18nUtil;
 import org.dspace.core.LogManager;
 import org.dspace.discovery.DiscoverQuery;
-import org.dspace.discovery.DiscoverResultIterator;
+import org.dspace.discovery.DiscoverResultItemIterator;
 import org.dspace.discovery.indexobject.IndexableItem;
+import org.dspace.discovery.indexobject.IndexableWorkflowItem;
+import org.dspace.discovery.indexobject.IndexableWorkspaceItem;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.event.Event;
@@ -1467,10 +1469,12 @@ prevent the generation of resource policy entry values with null dspace_object a
         }
 
         DiscoverQuery discoverQuery = new DiscoverQuery();
-        discoverQuery.setDSpaceObjectFilter(IndexableItem.TYPE);
+        discoverQuery.addDSpaceObjectFilter(IndexableItem.TYPE);
+        discoverQuery.addDSpaceObjectFilter(IndexableWorkspaceItem.TYPE);
+        discoverQuery.addDSpaceObjectFilter(IndexableWorkflowItem.TYPE);
         discoverQuery.addFilterQueries(query);
 
-        return new DiscoverResultIterator<Item, UUID>(context, discoverQuery);
+        return new DiscoverResultItemIterator(context, discoverQuery);
     }
 
     private void resetWillBeReferencedAuthorities(Context context, Item item) throws SQLException, AuthorizeException {

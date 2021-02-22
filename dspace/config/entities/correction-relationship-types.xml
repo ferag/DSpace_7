@@ -13,7 +13,6 @@
         </leftCardinality>
         <rightCardinality>
             <min>0</min>
-	    <max>1</max>
         </rightCardinality>
     </type>
     <type>
@@ -27,7 +26,6 @@
         </leftCardinality>
         <rightCardinality>
             <min>0</min>
-            <max>1</max>
         </rightCardinality>
     </type>
     <type>
@@ -41,7 +39,6 @@
         </leftCardinality>
         <rightCardinality>
             <min>0</min>
-	    <max>1</max>
         </rightCardinality>
     </type>
     <type>
@@ -55,7 +52,6 @@
         </leftCardinality>
         <rightCardinality>
             <min>0</min>
-            <max>1</max>
         </rightCardinality>
     </type>
     <type>
@@ -69,7 +65,6 @@
         </leftCardinality>
         <rightCardinality>
             <min>0</min>
-	    <max>1</max>
         </rightCardinality>
     </type>
     <type>
@@ -83,7 +78,6 @@
         </leftCardinality>
         <rightCardinality>
             <min>0</min>
-            <max>1</max>
         </rightCardinality>
     </type>
     <type>
@@ -97,7 +91,6 @@
         </leftCardinality>
         <rightCardinality>
             <min>0</min>
-	    <max>1</max>
         </rightCardinality>
     </type>
     <type>
@@ -111,7 +104,6 @@
         </leftCardinality>
         <rightCardinality>
             <min>0</min>
-        <max>1</max>
         </rightCardinality>
     </type>
     <type>
@@ -139,7 +131,6 @@
         </leftCardinality>
         <rightCardinality>
             <min>0</min>
-	    <max>1</max>
         </rightCardinality>
     </type>
     <type>
@@ -153,7 +144,6 @@
         </leftCardinality>
         <rightCardinality>
             <min>0</min>
-        <max>1</max>
         </rightCardinality>
     </type>
     <type>
@@ -167,7 +157,6 @@
         </leftCardinality>
         <rightCardinality>
             <min>0</min>
-        <max>1</max>
         </rightCardinality>
     </type>
     <type>
@@ -181,7 +170,6 @@
         </leftCardinality>
         <rightCardinality>
             <min>0</min>
-	    <max>1</max>
         </rightCardinality>
     </type>
     <type>
@@ -195,7 +183,6 @@
         </leftCardinality>
         <rightCardinality>
             <min>0</min>
-	    <max>1</max>
         </rightCardinality>
     </type>
     <type>
@@ -209,7 +196,6 @@
         </leftCardinality>
         <rightCardinality>
             <min>0</min>
-	    <max>1</max>
         </rightCardinality>
     </type>
     <type>
@@ -223,7 +209,6 @@
         </leftCardinality>
         <rightCardinality>
             <min>0</min>
-	    <max>1</max>
         </rightCardinality>
     </type>
     <type>
@@ -237,7 +222,6 @@
         </leftCardinality>
         <rightCardinality>
             <min>0</min>
-        <max>1</max>
         </rightCardinality>
     </type>
     <type>
@@ -251,7 +235,6 @@
         </leftCardinality>
         <rightCardinality>
             <min>0</min>
-        <max>1</max>
         </rightCardinality>
     </type>
 </relationships>

@@ -15,7 +15,7 @@
 	        <collection>
 	            <name>People</name>
 	            <entity-type>InstitutionPerson</entity-type>
-	            <submission-type>person</submission-type>
+	            <submission-type>institution-person</submission-type>
 				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />
@@ -28,7 +28,7 @@
 	        <collection>
 	            <name>OrgUnits</name>
 	            <entity-type>InstitutionOrgUnit</entity-type>
-	            <submission-type>orgunit</submission-type>
+	            <submission-type>institution-orgunit</submission-type>
 				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />
@@ -41,7 +41,7 @@
 	        <collection>
 	            <name>Publications</name>
 	            <entity-type>InstitutionPublication</entity-type>
-	            <submission-type>publication</submission-type>
+	            <submission-type>institution-publication</submission-type>
 				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />
@@ -54,7 +54,7 @@
 	        <collection>
 	            <name>Patents</name>
 	            <entity-type>InstitutionPatent</entity-type>
-	            <submission-type>patent</submission-type>
+	            <submission-type>institution-patent</submission-type>
 				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />
@@ -67,7 +67,7 @@
 	        <collection>
 	            <name>Projects</name>
 	            <entity-type>InstitutionProject</entity-type>
-	            <submission-type>project</submission-type>
+	            <submission-type>institution-project</submission-type>
 				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />
@@ -80,7 +80,7 @@
 	        <collection>
 	            <name>Fundings</name>
 	            <entity-type>InstitutionFunding</entity-type>
-	            <submission-type>funding</submission-type>
+	            <submission-type>institution-funding</submission-type>
 				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />
@@ -93,7 +93,7 @@
 	        <collection>
 	            <name>Equipments</name>
 	            <entity-type>InstitutionEquipment</entity-type>
-	            <submission-type>equipment</submission-type>
+	            <submission-type>institution-equipment</submission-type>
 				<workflow-name>institutionWorkflow</workflow-name>
 	            <description />
 	            <intro />

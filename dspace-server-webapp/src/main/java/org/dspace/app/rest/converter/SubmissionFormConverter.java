@@ -131,7 +131,7 @@ public class SubmissionFormConverter implements DSpaceConverter<DCInputSet, Subm
                                                       dcinput.getQualifier(), inputType));
                     selMd.setControlledVocabulary(getAuthorityName(dcinput.getSchema(), dcinput.getElement(),
                                                         dcinput.getQualifier(), dcinput.getPairsType(),
-                                                        dcinput.getVocabulary()));
+                                                        dcinput.getVocabulary(), formName));
                     selMd.setClosed(
                             isClosed(dcinput.getSchema(), dcinput.getElement(), dcinput.getQualifier(),
                                     dcinput.getPairsType(), dcinput.getVocabulary()));
@@ -157,7 +157,7 @@ public class SubmissionFormConverter implements DSpaceConverter<DCInputSet, Subm
                                                       dcinput.getQualifier(), inputType));
                     selMd.setControlledVocabulary(getAuthorityName(dcinput.getSchema(), dcinput.getElement(),
                                                         dcinput.getQualifier(), dcinput.getPairsType(),
-                                                        dcinput.getVocabulary()));
+                                                        dcinput.getVocabulary(), formName));
                     selMd.setClosed(isClosed(dcinput.getSchema(), dcinput.getElement(),
                             dcinput.getQualifier(), null, dcinput.getVocabulary()));
                 }
@@ -175,7 +175,7 @@ public class SubmissionFormConverter implements DSpaceConverter<DCInputSet, Subm
                             .standardize(dcinput.getSchema(), dcinput.getElement(), pairs.get(idx + 1), "."));
                     if (authorityUtils.isChoice(dcinput.getSchema(), dcinput.getElement(), dcinput.getQualifier())) {
                         selMd.setControlledVocabulary(getAuthorityName(dcinput.getSchema(), dcinput.getElement(),
-                                pairs.get(idx + 1), dcinput.getPairsType(), dcinput.getVocabulary()));
+                                pairs.get(idx + 1), dcinput.getPairsType(), dcinput.getVocabulary(), formName));
                         selMd.setClosed(isClosed(dcinput.getSchema(), dcinput.getElement(),
                                 dcinput.getQualifier(), null, dcinput.getVocabulary()));
                     }
@@ -236,13 +236,13 @@ public class SubmissionFormConverter implements DSpaceConverter<DCInputSet, Subm
     }
 
     private String getAuthorityName(String schema, String element, String qualifier, String valuePairsName,
-                                    String vocabularyName) {
+                                    String vocabularyName, String formNameDefinition) {
         if (StringUtils.isNotBlank(valuePairsName)) {
             return valuePairsName;
         } else if (StringUtils.isNotBlank(vocabularyName)) {
             return vocabularyName;
         }
-        return authorityUtils.getAuthorityName(schema, element, qualifier);
+        return authorityUtils.getAuthorityName(schema, element, qualifier, formNameDefinition);
     }
 
     private boolean isClosed(String schema, String element, String qualifier, String valuePairsName,

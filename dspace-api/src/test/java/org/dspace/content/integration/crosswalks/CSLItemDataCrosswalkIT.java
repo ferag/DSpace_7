@@ -122,7 +122,7 @@ public class CSLItemDataCrosswalkIT extends AbstractIntegrationTestWithDatabase 
     }
 
     @Test
-    public void testBibtexDisseminate() throws Exception {
+    public void testPublicationBibtexDisseminate() throws Exception {
 
         context.turnOffAuthorisationSystem();
 
@@ -148,7 +148,7 @@ public class CSLItemDataCrosswalkIT extends AbstractIntegrationTestWithDatabase 
 
         context.restoreAuthSystemState();
 
-        StreamDisseminationCrosswalk crosswalk = crosswalkMapper.getByType("bibtex");
+        StreamDisseminationCrosswalk crosswalk = crosswalkMapper.getByType("publication-bibtex");
         assertThat(crosswalk, notNullValue());
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -161,7 +161,46 @@ public class CSLItemDataCrosswalkIT extends AbstractIntegrationTestWithDatabase 
     }
 
     @Test
-    public void testSingleItemJsonDisseminate() throws Exception {
+    public void testInstitutionPublicationBibtexDisseminate() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item item = createItem(context, collection)
+            .withRelationshipType("InstitutionPublication")
+            .withType("Controlled Vocabulary for Resource Type Genres::text::periodical::journal")
+            .withLanguage("en")
+            .withDoiIdentifier("10.1000/182")
+            .withIsbnIdentifier("11-22-33")
+            .withIssnIdentifier("0002")
+            .withSubject("publication")
+            .withPublisher("Publisher")
+            .withVolume("V01")
+            .withIssue("03")
+            .withRelationConference("Conference")
+            .withTitle("Publication title")
+            .withIssueDate("2018-05-17")
+            .withAuthor("Smith, John")
+            .withAuthor("Red, Edward")
+            .withEditor("Editor")
+            .withHandle("123456789/0001")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        StreamDisseminationCrosswalk crosswalk = crosswalkMapper.getByType("institutionpublication-bibtex");
+        assertThat(crosswalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        crosswalk.disseminate(context, item, out);
+
+        try (FileInputStream fis = getFileInputStream("publication.bib")) {
+            String expectedBibtex = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedBibtex, false);
+        }
+    }
+
+    @Test
+    public void testSinglePublicationJsonDisseminate() throws Exception {
         context.turnOffAuthorisationSystem();
 
         Item item = createItem(context, collection)
@@ -187,6 +226,44 @@ public class CSLItemDataCrosswalkIT extends AbstractIntegrationTestWithDatabase 
         context.restoreAuthSystemState();
 
         StreamDisseminationCrosswalk crosswalk = crosswalkMapper.getByType("publication-json");
+        assertThat(crosswalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        crosswalk.disseminate(context, item, out);
+
+        try (FileInputStream fis = getFileInputStream("publication.json")) {
+            String expectedJson = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedJson, true);
+        }
+    }
+
+    @Test
+    public void testSingleInstitutionPublicationJsonDisseminate() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Item item = createItem(context, collection)
+            .withRelationshipType("InstitutionPublication")
+            .withType("Controlled Vocabulary for Resource Type Genres::text::periodical::journal")
+            .withLanguage("en")
+            .withDoiIdentifier("10.1000/182")
+            .withIsbnIdentifier("11-22-33")
+            .withIssnIdentifier("0002")
+            .withSubject("publication")
+            .withPublisher("Publisher")
+            .withVolume("V01")
+            .withIssue("03")
+            .withRelationConference("Conference")
+            .withTitle("Publication title")
+            .withIssueDate("2018-05-17")
+            .withAuthor("Smith, John")
+            .withAuthor("Red, Edward")
+            .withEditor("Editor")
+            .withHandle("123456789/0001")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        StreamDisseminationCrosswalk crosswalk = crosswalkMapper.getByType("institutionpublication-json");
         assertThat(crosswalk, notNullValue());
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();

@@ -7,7 +7,6 @@
  */
 package org.dspace.authority.service.impl;
 
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Iterator;
@@ -20,19 +19,23 @@ import org.dspace.authority.service.AuthorityValueService;
 import org.dspace.authority.service.ItemReferenceResolver;
 import org.dspace.authority.service.ItemSearcher;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.content.InProgressSubmission;
+import org.dspace.content.Collection;
+import org.dspace.content.Community;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.authority.service.ChoiceAuthorityService;
+import org.dspace.content.service.CollectionService;
+import org.dspace.content.service.CommunityService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
-import org.dspace.core.ReloadableEntity;
+import org.dspace.core.Context.Mode;
 import org.dspace.discovery.DiscoverQuery;
 import org.dspace.discovery.DiscoverResult;
-import org.dspace.discovery.DiscoverResultIterator;
+import org.dspace.discovery.DiscoverResultItemIterator;
 import org.dspace.discovery.IndexableObject;
 import org.dspace.discovery.SearchService;
 import org.dspace.discovery.SearchServiceException;
+import org.dspace.discovery.indexobject.IndexableCommunity;
 import org.dspace.discovery.indexobject.IndexableInProgressSubmission;
 import org.dspace.discovery.indexobject.IndexableItem;
 import org.dspace.discovery.indexobject.IndexableWorkflowItem;
@@ -56,6 +59,12 @@ public class ItemSearcherByMetadata implements ItemSearcher, ItemReferenceResolv
 
     @Autowired
     private ChoiceAuthorityService choiceAuthorityService;
+
+    @Autowired
+    private CollectionService collectionService;
+
+    @Autowired
+    private CommunityService communityService;
 
     private final String metadata;
 
@@ -83,12 +92,15 @@ public class ItemSearcherByMetadata implements ItemSearcher, ItemReferenceResolv
             return;
         }
 
+        Mode originalMode = context.getCurrentMode();
         try {
             context.turnOffAuthorisationSystem();
+            context.setMode(Mode.BATCH_EDIT);
             resolveReferences(context, metadataValues, item);
         } catch (SQLException | AuthorizeException e) {
             throw new RuntimeException("An error occurs resolving references", e);
         } finally {
+            context.setMode(originalMode);
             context.restoreAuthSystemState();
         }
 
@@ -121,17 +133,15 @@ public class ItemSearcherByMetadata implements ItemSearcher, ItemReferenceResolv
     private void resolveReferences(Context context, List<MetadataValue> metadataValues, Item item)
         throws SQLException, AuthorizeException {
 
-        String relationshipType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
-
         List<String> authorities = metadataValues.stream()
             .map(MetadataValue::getValue)
             .map(value -> AuthorityValueService.REFERENCE + authorityPrefix + "::" + value)
             .collect(Collectors.toList());
 
-        Iterator<ReloadableEntity<?>> entityIterator = findItemsToResolve(context, authorities, relationshipType);
+        Iterator<Item> itemIterator = findItemsToResolve(context, authorities, item);
 
-        while (entityIterator.hasNext()) {
-            Item itemWithReference = getNextItem(entityIterator.next());
+        while (itemIterator.hasNext()) {
+            Item itemWithReference = itemIterator.next();
 
             itemWithReference.getMetadata().stream()
                 .filter(metadataValue -> authorities.contains(metadataValue.getAuthority()))
@@ -141,8 +151,10 @@ public class ItemSearcherByMetadata implements ItemSearcher, ItemReferenceResolv
         }
     }
 
-    private Iterator<ReloadableEntity<?>> findItemsToResolve(Context context, List<String> authorities,
-        String relationshipType) {
+    private Iterator<Item> findItemsToResolve(Context context, List<String> authorities, Item item)
+        throws SQLException {
+
+        String relationshipType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
 
         String query = choiceAuthorityService.getAuthorityControlledFieldsByRelationshipType(relationshipType).stream()
             .map(field -> getFieldFilter(field, authorities))
@@ -158,22 +170,32 @@ public class ItemSearcherByMetadata implements ItemSearcher, ItemReferenceResolv
         discoverQuery.addDSpaceObjectFilter(IndexableWorkflowItem.TYPE);
         discoverQuery.addFilterQueries(query);
 
-        return new DiscoverResultIterator<ReloadableEntity<?>, Serializable>(context, discoverQuery, false);
+        IndexableObject<?, ?> scopeObject = calculateScopeObject(context, item);
+        return new DiscoverResultItemIterator(context, scopeObject, discoverQuery);
 
-    }
-
-    @SuppressWarnings("unchecked")
-    private Item getNextItem(ReloadableEntity<?> nextEntity) {
-        if (nextEntity instanceof Item) {
-            return (Item) nextEntity;
-        }
-        return ((InProgressSubmission<Integer>) nextEntity).getItem();
     }
 
     private String getFieldFilter(String field, List<String> authorities) {
         return authorities.stream()
             .map(authority -> field.replaceAll("_", ".") + "_allauthority: \"" + authority + "\"")
             .collect(Collectors.joining(" OR "));
+    }
+
+    private IndexableObject<?, ?> calculateScopeObject(Context context, Item item) throws SQLException {
+
+        Collection collection = collectionService.findByItem(context, item);
+        if (collection == null) {
+            return null;
+        }
+
+        if (collectionService.isDirectorioCollection(context, collection)) {
+            Community directorio = communityService.findDirectorioCommunity(context);
+            return directorio != null ? new IndexableCommunity(directorio) : null;
+        } else {
+            Community institution = (Community) collectionService.getParentObject(context, collection);
+            return institution != null ? new IndexableCommunity(institution) : null;
+        }
+
     }
 
 }

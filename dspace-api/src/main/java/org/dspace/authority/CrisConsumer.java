@@ -21,10 +21,12 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dspace.app.util.SubmissionConfigReader;
 import org.dspace.authority.factory.AuthorityServiceFactory;
 import org.dspace.authority.filler.AuthorityImportFiller;
 import org.dspace.authority.filler.AuthorityImportFillerService;
 import org.dspace.authority.service.AuthorityValueService;
+import org.dspace.authority.service.FormNameLookup;
 import org.dspace.authority.service.ItemSearchService;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
@@ -94,6 +96,8 @@ public class CrisConsumer implements Consumer {
 
     private ItemSearchService itemSearchService;
 
+    private SubmissionConfigReader submissionConfigReader;
+
     @Override
     @SuppressWarnings("unchecked")
     public void initialize() throws Exception {
@@ -106,6 +110,7 @@ public class CrisConsumer implements Consumer {
         workflowService = WorkflowServiceFactory.getInstance().getWorkflowService();
         authorityImportFillerService = AuthorityServiceFactory.getInstance().getAuthorityImportFillerService();
         itemSearchService = new DSpace().getSingletonService(ItemSearchService.class);
+        submissionConfigReader = new SubmissionConfigReader();
         relationshipService = ContentServiceFactory.getInstance().getRelationshipService();
     }
 
@@ -152,11 +157,23 @@ public class CrisConsumer implements Consumer {
 
             String fieldKey = getFieldKey(metadata);
 
-            if (!choiceAuthorityService.isChoicesConfigured(fieldKey, null)) {
+            String submissionName = submissionConfigReader
+                .getSubmissionConfigByCollection(item.getOwningCollection()).getSubmissionName();
+            List<String> formNames = FormNameLookup.getInstance().formContainingField(submissionName, fieldKey);
+            if (formNames.size() > 1) {
+                throw new IllegalStateException(String.format("%s field appears in many forms for submission %s",
+                    fieldKey, submissionName));
+            }
+
+            String formName = formNames.isEmpty() ? "" : formNames.get(0);
+
+            if (!choiceAuthorityService.isChoicesConfigured(fieldKey, formName)) {
                 continue;
             }
 
-            String relationshipType = choiceAuthorityService.getRelationshipType(fieldKey);
+
+            String relationshipType = choiceAuthorityService.getRelationshipType(fieldKey,
+                formName);
             if (relationshipType == null) {
                 log.warn(NO_RELATIONSHIP_TYPE_FOUND_MSG, fieldKey);
                 continue;

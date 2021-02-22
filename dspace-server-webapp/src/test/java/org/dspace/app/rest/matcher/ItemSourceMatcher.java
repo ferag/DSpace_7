@@ -8,10 +8,8 @@
 package org.dspace.app.rest.matcher;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
 import static org.hamcrest.Matchers.allOf;
-//import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
-
-import java.util.List;
 
 import org.hamcrest.Matcher;
 
@@ -27,13 +25,12 @@ public class ItemSourceMatcher {
     public static Matcher<? super Object> matchSource(String itemUuid,
                                                       String relationshipType,
                                                       String source,
-                                                      List<String> metadata) {
+                                                      String ... metadata) {
         return allOf(
                 hasJsonPath("$.itemUuid", is(itemUuid)),
                 hasJsonPath("$.relationshipType", is(relationshipType)),
-                hasJsonPath("$.source", is(source))
-                //TODO
-                // hasJsonPath("$.metadata", arrayContainingInAnyOrder(metadata))
+                hasJsonPath("$.source", is(source)),
+                hasJsonPath("$.metadata", containsInAnyOrder(metadata))
                 );
     }
 

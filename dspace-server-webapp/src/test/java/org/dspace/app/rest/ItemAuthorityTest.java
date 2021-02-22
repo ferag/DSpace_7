@@ -134,21 +134,25 @@ public class ItemAuthorityTest extends AbstractControllerIntegrationTest {
 
         Collection collection = CollectionBuilder.createCollection(context, institutionCommunity)
             .withName("Test collection")
+            .withSubmissionDefinition("traditional")
             .withRelationshipType("InstitutionPerson")
             .build();
 
         Collection orgUnits = CollectionBuilder.createCollection(context, institutionCommunity)
             .withName("Test collection")
+            .withSubmissionDefinition("traditional")
             .withRelationshipType("InstitutionOrgUnit")
             .build();
 
         Collection otherInstitutionCollection = CollectionBuilder.createCollection(context, otherInstitutionCommunity)
             .withName("Test collection")
+            .withSubmissionDefinition("traditional")
             .withRelationshipType("InstitutionPerson")
             .build();
 
         Collection otherInstitutionOrgUnitsCollection = CollectionBuilder
             .createCollection(context, otherInstitutionCommunity)
+            .withSubmissionDefinition("traditional")
             .withName("Test collection")
             .withRelationshipType("InstitutionOrgUnit")
             .build();
@@ -181,7 +185,7 @@ public class ItemAuthorityTest extends AbstractControllerIntegrationTest {
         context.restoreAuthSystemState();
 
         String token = getAuthToken(eperson.getEmail(), password);
-        getClient(token).perform(get("/api/submission/vocabularies/AuthorAuthority/entries")
+        getClient(token).perform(get("/api/submission/vocabularies/InstitutionAuthorAuthority/entries")
             .param("metadata", "dc.contributor.author")
             .param("collection", collection.getID().toString())
             .param("filter", "author"))

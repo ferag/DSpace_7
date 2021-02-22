@@ -7,10 +7,13 @@
  */
 package org.dspace.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.solr.common.SolrDocument;
 import org.dspace.content.authority.Choice;
@@ -39,15 +42,27 @@ public class ItemAuthorityUtils {
     }
 
     public static List<Choice> buildAggregateByExtra(String authorityName, SolrDocument item) {
-        List<Choice> choiceList = new LinkedList<Choice>();
+        Map<String, Choice> choiceMap = new HashMap<>();
         List<ItemAuthorityExtraMetadataGenerator> generators = dspace.getServiceManager()
                 .getServicesByType(ItemAuthorityExtraMetadataGenerator.class);
         if (generators != null) {
             for (ItemAuthorityExtraMetadataGenerator gg : generators) {
-                choiceList.addAll(gg.buildAggregate(authorityName, item));
+                List<Choice> choices = gg.buildAggregate(authorityName, item);
+                choices.forEach(c -> {
+                    choiceMap.putIfAbsent(key(c), c);
+                });
             }
         }
-        return choiceList;
+        return new ArrayList<>(choiceMap.values());
+    }
+
+    private static String key(Choice choice) {
+        String extras = choice.extras.entrySet().stream().sorted()
+            .map(e -> e.getKey() + "|" + e.getValue())
+            .collect(Collectors.joining("-"));
+        return String.join("::", Arrays.asList(choice.authority,
+            choice.label, choice.value,
+            extras));
     }
 
 }

@@ -114,8 +114,8 @@
                 <entry key="RELATION.InstitutionProject.ipgrants" value-ref="relationInstitutionProjectFundingsConfiguration"/>
                 <entry key="RELATION.InstitutionProject.ipresearchoutputs" value-ref="relationInstitutionProjectPublicationConfiguration"/>
                 <entry key="RELATION.InstitutionProject.ippatents" value-ref="relationInstitutionProjectPatentConfiguration"/>
-                <!-- PersonCv Related items -->
-                <entry key="RELATION.PersonCv.researchoutputs" value-ref="relationAuthorResearchOutputsConfiguration"/>
+                <!-- CvPerson Related items -->
+                <entry key="RELATION.CvPerson.researchoutputs" value-ref="relationAuthorResearchOutputsConfiguration"/>
                 <entry key="RESUME.rprofiles" value-ref="person"/>
                 <entry key="RESUME.orgunits" value-ref="orgUnit"/>
                 <entry key="RESUME.researchoutputs" value-ref="researchoutputs"/>

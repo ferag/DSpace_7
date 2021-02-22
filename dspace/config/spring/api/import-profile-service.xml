@@ -30,7 +30,7 @@
         <property name="recordIdMetadata" value="dc.identifier"/>
         <property name="supportedEntityTypes">
             <list>
-                <value>PersonCv</value>
+                <value>CvPerson</value>
             </list>
         </property>
     </bean>
@@ -49,10 +49,10 @@
 
     <bean id="dspaceItemRelationshipService" class="org.dspace.importer.external.dspace.DSpaceItemRelationshipService">
 
-        <property name="leftEntityType" value="PersonCv"/>
+        <property name="leftEntityType" value="CvPerson"/>
         <property name="rightEntityType" value="Person"/>
         <property name="leftwardType" value="isPersonOwner"/>
-        <property name="rightwardType" value="isOwnedByPersonCv"/>
+        <property name="rightwardType" value="isOwnedByCvPerson"/>
     </bean>
 
     <bean id="removeRelationAction" class="org.dspace.importer.external.dspace.RemoveDSpaceRelationAction"/>

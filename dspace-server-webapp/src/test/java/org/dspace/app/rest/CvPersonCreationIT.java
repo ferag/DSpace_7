@@ -48,11 +48,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MvcResult;
 
 /**
- * Integration tests for {@link ResearcherProfileRestRepository} specific import into PersonCv scenario
+ * Integration tests for {@link ResearcherProfileRestRepository} specific import into CvPerson scenario
  *
  * @author Corrado Lombardi (corrado.lombardi at 4science.it)
  */
-public class PersonCvCreationIT extends AbstractControllerIntegrationTest {
+public class CvPersonCreationIT extends AbstractControllerIntegrationTest {
 
     @Autowired
     private ConfigurationService configurationService;
@@ -79,7 +79,7 @@ public class PersonCvCreationIT extends AbstractControllerIntegrationTest {
         context.turnOffAuthorisationSystem();
 
         personEntityType = EntityTypeBuilder.createEntityTypeBuilder(context, "Person").build();
-        EntityType personCvEntityType = EntityTypeBuilder.createEntityTypeBuilder(context, "PersonCv").build();
+        EntityType cvPersonEntityType = EntityTypeBuilder.createEntityTypeBuilder(context, "CvPerson").build();
 
         user = EPersonBuilder.createEPerson(context)
             .withEmail("user@example.com")
@@ -99,18 +99,18 @@ public class PersonCvCreationIT extends AbstractControllerIntegrationTest {
 
         Collection cvCollection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Profiles")
-            .withRelationshipType("PersonCv")
+            .withRelationshipType("CvPerson")
             .withSubmitterGroup(user)
             .build();
 
 
         RelationshipTypeBuilder
-            .createRelationshipTypeBuilder(context, personCvEntityType, personEntityType, "isPersonOwner",
-                "isOwnedByPersonCv", 0, null, 0,
+            .createRelationshipTypeBuilder(context, cvPersonEntityType, personEntityType, "isPersonOwner",
+                "isOwnedByCvPerson", 0, null, 0,
                 null).withCopyToLeft(false).withCopyToRight(false).build();
 
         configurationService.setProperty("researcher-profile.collection.uuid", cvCollection.getID().toString());
-        configurationService.setProperty("researcher-profile.type", "PersonCv");
+        configurationService.setProperty("researcher-profile.type", "CvPerson");
 
         context.setCurrentUser(user);
 
@@ -180,7 +180,7 @@ public class PersonCvCreationIT extends AbstractControllerIntegrationTest {
             .andExpect(jsonPath("$.type", is("item")))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", user.getName(), user.getID().toString(), 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.name", "Giuseppe Verdi", 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "PersonCv", 0)))
+            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "CvPerson", 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("person.birthDate", "1813-10-10", 0)));
 
         String profileItemId = getItemIdByProfileId(authToken, user.getID().toString());
@@ -332,7 +332,7 @@ public class PersonCvCreationIT extends AbstractControllerIntegrationTest {
             .andExpect(jsonPath("$.type", is("item")))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", user.getName(), userID.toString(), 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.name", "Mario Rossi", 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "PersonCv", 0)))
+            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "CvPerson", 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("person.birthDate", "1982-12-17", 0)));
 
         String profileItemId = getItemIdByProfileId(authToken, userID.toString());

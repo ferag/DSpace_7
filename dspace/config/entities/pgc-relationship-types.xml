@@ -151,8 +151,8 @@
         </rightCardinality>
     </type>
      <type>
-        <leftType>PersonCv</leftType>
-        <rightType>PersonCv</rightType>
+        <leftType>CvPerson</leftType>
+        <rightType>CvPerson</rightType>
         <leftwardType>hasShadowCopy</leftwardType>
         <rightwardType>isShadowCopy</rightwardType>
         <leftCardinality>
@@ -165,10 +165,10 @@
         </rightCardinality>
     </type>
     <type>
-        <leftType>PersonCv</leftType>
+        <leftType>CvPerson</leftType>
         <rightType>Person</rightType>
         <leftwardType>isPersonOwner</leftwardType>
-        <rightwardType>isOwnedByPersonCv</rightwardType>
+        <rightwardType>isOwnedByCvPerson</rightwardType>
         <leftCardinality>
             <min>0</min>
         </leftCardinality>

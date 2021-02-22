@@ -53,6 +53,7 @@ import org.dspace.utils.DSpace;
 import org.dspace.workflow.WorkflowException;
 import org.dspace.workflow.WorkflowService;
 import org.dspace.workflow.factory.WorkflowServiceFactory;
+import org.hibernate.LazyInitializationException;
 
 /**
  * Implementation of {@link DSpaceRunnable}
@@ -228,10 +229,17 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
      * @throws SQLException
      */
     private void reloadCollectionIfNeeded() throws SQLException {
-        boolean needsReload = Objects.nonNull(this.collection.getTemplateItem()) &&
-            CollectionUtils.isNotEmpty(this.collection.getTemplateItem().getMetadata());
+        boolean needsReload;
+        try {
+            needsReload = Objects.isNull(this.collection.getTemplateItem()) ||
+                CollectionUtils.isEmpty(this.collection.getTemplateItem().getMetadata());
+        } catch (LazyInitializationException e) {
+            log.warn(e.getMessage());
+            needsReload = true;
+        }
         if (needsReload) {
-            this.context.reloadEntity(this.collection);
+            log.debug("Reloading collection");
+            this.collection = this.context.reloadEntity(this.collection);
         }
     }
 

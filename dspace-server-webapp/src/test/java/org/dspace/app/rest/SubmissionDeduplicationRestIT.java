@@ -9,10 +9,8 @@ package org.dspace.app.rest;
 
 import static com.jayway.jsonpath.JsonPath.read;
 import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_REINSTATED_BY_ITEM_RELATIONSHIP;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_WITHDRAWN_BY_ITEM_RELATIONSHIP;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_WITHDRAW_OF_ITEM_RELATIONSHIP;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.REINSTATE;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.WITHDRAW;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.anEmptyMap;
 import static org.hamcrest.Matchers.is;
@@ -454,12 +452,12 @@ public class SubmissionDeduplicationRestIT extends AbstractControllerIntegration
 
     private RelationshipType createIsWithdrawOfRelationship(EntityType entityType) {
         return createRelationshipTypeBuilder(context, entityType,
-            entityType, IS_WITHDRAW_OF_ITEM_RELATIONSHIP, IS_WITHDRAWN_BY_ITEM_RELATIONSHIP, 0, 1, 0, 1).build();
+            entityType, WITHDRAW.getLeftType(), WITHDRAW.getRightType(), 0, 1, 0, 1).build();
     }
 
     private RelationshipType createIsReinstatementOfRelationship(EntityType entityType) {
         return createRelationshipTypeBuilder(context, entityType,
-            entityType, IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP, IS_REINSTATED_BY_ITEM_RELATIONSHIP, 0, 1, 0, 1).build();
+            entityType, REINSTATE.getLeftType(), REINSTATE.getRightType(), 0, 1, 0, 1).build();
     }
 
     private RelationshipType createIsCorrectionOfRelationship(EntityType entityType) {

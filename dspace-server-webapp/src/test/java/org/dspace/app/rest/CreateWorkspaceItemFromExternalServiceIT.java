@@ -8,8 +8,7 @@
 package org.dspace.app.rest;
 import static org.dspace.builder.CollectionBuilder.createCollection;
 import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.HAS_SHADOW_COPY_RELATIONSHIP;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_SHADOW_COPY_RELATIONSHIP;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.SHADOW_COPY;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -763,8 +762,8 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
     }
 
     private RelationshipType createHasShadowCopyRelationship(EntityType institutionType, EntityType directorioType) {
-        return createRelationshipTypeBuilder(context, institutionType, directorioType, HAS_SHADOW_COPY_RELATIONSHIP,
-            IS_SHADOW_COPY_RELATIONSHIP, 0, 1, 0, 1).build();
+        return createRelationshipTypeBuilder(context, institutionType, directorioType, SHADOW_COPY.getLeftType(),
+            SHADOW_COPY.getRightType(), 0, 1, 0, 1).build();
     }
 
     private RelationshipType createIsCorrectionOfRelationship(EntityType entityType) {

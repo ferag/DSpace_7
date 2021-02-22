@@ -20,6 +20,8 @@ public enum ConcytecFeedback {
     REJECT,
     NONE;
 
+    public static final String FEEDBACK_SEPARATOR = "::";
+
     /**
      * Returns an instance of {@link ConcytecFeedback} with the given name.
      *
@@ -27,8 +29,11 @@ public enum ConcytecFeedback {
      * @return an instance of {@link ConcytecFeedback}
      */
     public static ConcytecFeedback fromString(String feedback) {
+        String valueToSearch = feedback.contains(FEEDBACK_SEPARATOR)
+            ? feedback.substring(feedback.indexOf(FEEDBACK_SEPARATOR) + FEEDBACK_SEPARATOR.length())
+            : feedback;
         return Arrays.stream(ConcytecFeedback.values())
-            .filter(value -> value.name().equals(feedback))
+            .filter(value -> value.name().equals(valueToSearch))
             .findFirst()
             .orElse(NONE);
     }

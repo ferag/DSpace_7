@@ -7,7 +7,12 @@
  */
 package org.dspace.xmlworkflow;
 
-import static org.dspace.xmlworkflow.ConcytecFeedback.fromString;
+import static org.dspace.xmlworkflow.ConcytecFeedback.FEEDBACK_SEPARATOR;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.MERGED;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.ORIGINATED;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.REINSTATE;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.SHADOW_COPY;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.WITHDRAW;
 
 import java.sql.SQLException;
 import java.util.Collections;
@@ -15,9 +20,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.EntityType;
 import org.dspace.content.Item;
+import org.dspace.content.MetadataValue;
 import org.dspace.content.Relationship;
 import org.dspace.content.RelationshipType;
 import org.dspace.content.service.EntityTypeService;
@@ -113,23 +120,64 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
     }
 
     @Override
-    public void setConcytecFeedback(Context context, Item item, ConcytecFeedback feedback) throws SQLException {
-        replaceMetadata(context, item, "perucris", "concytec", "feedback", feedback.name());
+    public void addConcytecFeedback(Context context, Item item, ConcytecFeedback feedback) throws SQLException {
+        addConcytecFeedback(context, item, feedback.name());
     }
 
     @Override
-    public ConcytecFeedback getConcytecFeedback(Context context, Item item) {
-        return fromString(itemService.getMetadataFirstValue(item, "perucris", "concytec", "feedback", null));
+    public void addConcytecFeedback(Context context, Item item, String feedback) throws SQLException {
+        itemService.addMetadata(context, item, "perucris", "concytec", "feedback", null, feedback);
     }
 
     @Override
-    public void setConcytecComment(Context context, Item item, String comment) throws SQLException {
-        replaceMetadata(context, item, "perucris", "concytec", "comment", comment);
+    public void addConcytecFeedback(Context context, Item item, ConcytecWorkflowRelation relation,
+        ConcytecFeedback feedback, String concytecComment) throws SQLException {
+
+        addConcytecFeedback(context, item, relation.name() + FEEDBACK_SEPARATOR + feedback.name());
+        if (StringUtils.isNotBlank(concytecComment)) {
+            addConcytecComment(context, item, relation.name() + FEEDBACK_SEPARATOR + concytecComment);
+        }
+
     }
 
     @Override
-    public String getConcytecComment(Context context, Item item) throws SQLException {
-        return itemService.getMetadataFirstValue(item, "perucris", "concytec", "comment", null);
+    public void addConcytecFeedback(Context context, Item item, ConcytecFeedback feedback, String comment)
+        throws SQLException {
+
+        addConcytecFeedback(context, item, feedback);
+        if (StringUtils.isNotBlank(comment)) {
+            addConcytecComment(context, item, comment);
+        }
+
+    }
+
+    @Override
+    public ConcytecFeedback getLastConcytecFeedback(Context context, Item item) {
+        List<MetadataValue> feedbacks = itemService.getMetadata(item, "perucris", "concytec", "feedback", null);
+        if (CollectionUtils.isEmpty(feedbacks)) {
+            return ConcytecFeedback.NONE;
+        }
+
+        return ConcytecFeedback.fromString(feedbacks.get(feedbacks.size() - 1).getValue());
+    }
+
+    @Override
+    public void addConcytecComment(Context context, Item item, String comment) throws SQLException {
+        itemService.addMetadata(context, item, "perucris", "concytec", "comment", null, comment);
+    }
+
+    @Override
+    public String getLastConcytecComment(Context context, Item item) throws SQLException {
+        List<MetadataValue> comments = itemService.getMetadata(item, "perucris", "concytec", "comment", null);
+        if (CollectionUtils.isEmpty(comments)) {
+            return null;
+        }
+
+        String lastComment = comments.get(comments.size() - 1).getValue();
+
+        return lastComment.contains(FEEDBACK_SEPARATOR)
+            ? lastComment.substring(lastComment.indexOf(FEEDBACK_SEPARATOR) + FEEDBACK_SEPARATOR.length())
+            : lastComment;
     }
 
     @Override
@@ -200,17 +248,17 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
 
     private RelationshipType findShadowRelationshipType(Context context, Item item, boolean isLeft)
         throws SQLException {
-        return findRelationshipType(context, item, isLeft, HAS_SHADOW_COPY_RELATIONSHIP, IS_SHADOW_COPY_RELATIONSHIP);
+        return findRelationshipType(context, item, isLeft, SHADOW_COPY.getLeftType(), SHADOW_COPY.getRightType());
     }
 
     private RelationshipType findMergedInRelationshipType(Context context, Item item, boolean isLeft)
         throws SQLException {
-        return findRelationshipType(context, item, isLeft, IS_MERGED_IN_RELATIONSHIP, IS_MERGE_OF_RELATIONSHIP);
+        return findRelationshipType(context, item, isLeft, MERGED.getLeftType(), MERGED.getRightType());
     }
 
     private RelationshipType findOriginatedFromRelationshipType(Context ctx, Item item, boolean isLeft)
         throws SQLException {
-        return findRelationshipType(ctx, item, isLeft, IS_ORIGINATED_FROM_IN_RELATIONSHIP, IS_ORIGIN_OF_RELATIONSHIP);
+        return findRelationshipType(ctx, item, isLeft, ORIGINATED.getLeftType(), ORIGINATED.getRightType());
     }
 
     private List<Relationship> findItemWithdrawnRelationships(Context context, Item item, boolean isLeft)
@@ -224,8 +272,7 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
 
     private RelationshipType findWithdrawnRelationshipType(Context context, Item item, boolean isLeft)
         throws SQLException {
-        return findRelationshipType(context, item, isLeft, IS_WITHDRAW_OF_ITEM_RELATIONSHIP,
-            IS_WITHDRAWN_BY_ITEM_RELATIONSHIP);
+        return findRelationshipType(context, item, isLeft, WITHDRAW.getLeftType(), WITHDRAW.getRightType());
     }
 
     private List<Relationship> findItemReinstateRelationships(Context context, Item item, boolean isLeft)
@@ -248,8 +295,7 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
 
     private RelationshipType findReinstateRelationshipType(Context context, Item item, boolean isLeft)
         throws SQLException {
-        return findRelationshipType(context, item, isLeft, IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP,
-            IS_REINSTATED_BY_ITEM_RELATIONSHIP);
+        return findRelationshipType(context, item, isLeft, REINSTATE.getLeftType(), REINSTATE.getRightType());
     }
 
     private RelationshipType findRelationshipType(Context context, Item item, boolean isLeft, String leftwardType,
@@ -275,12 +321,6 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
         }
 
         return relationshipTypes.get(0);
-    }
-
-    private void replaceMetadata(Context context, Item item, String schema, String element, String qualifier,
-        String value) throws SQLException {
-        itemService.removeMetadataValues(context, item, schema, element, qualifier, Item.ANY);
-        itemService.addMetadata(context, item, schema, element, qualifier, null, value);
     }
 
 }

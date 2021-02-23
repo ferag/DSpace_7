@@ -12,7 +12,7 @@
         <property name="afterImportActionList">
             <list>
                 <ref bean="dspaceAfterImportAction"/>
-                <ref bean="itemCloningAction"/>
+                <ref bean="profileItemCloningAction"/>
             </list>
         </property>
     </bean>
@@ -48,7 +48,7 @@
         <constructor-arg name="dSpaceItemRelationshipService" ref="dspaceItemRelationshipService"/>
     </bean>
     
-    <bean id="itemCloningAction" class="org.dspace.importer.external.dspace.ItemCloningAction" />
+    <bean id="profileItemCloningAction" class="org.dspace.importer.external.dspace.ProfileItemCloningAction" />
 
     <bean id="dspaceItemRelationshipService" class="org.dspace.importer.external.dspace.DSpaceItemRelationshipService">
 

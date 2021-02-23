@@ -7,6 +7,8 @@
  */
 package org.dspace.content;
 
+import static java.util.Arrays.asList;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -312,20 +314,23 @@ public abstract class DSpaceObjectServiceImpl<T extends DSpaceObject> implements
     @Override
     public MetadataValue addMetadata(Context context, T dso, MetadataField metadataField, String language,
                             String value, String authority, int confidence) throws SQLException {
-        return addMetadata(context, dso, metadataField, language, Arrays.asList(value), Arrays.asList(authority),
-                    Arrays.asList(confidence)).get(0);
+        List<MetadataValue> metadata = addMetadata(context, dso, metadataField, language, Arrays.asList(value),
+            Arrays.asList(authority), Arrays.asList(confidence));
+        return CollectionUtils.isNotEmpty(metadata) ? metadata.get(0) : null;
     }
 
     @Override
     public MetadataValue addMetadata(Context context, T dso, String schema, String element, String qualifier,
                              String lang, String value) throws SQLException {
-        return addMetadata(context, dso, schema, element, qualifier, lang, Arrays.asList(value)).get(0);
+        List<MetadataValue> metadata = addMetadata(context, dso, schema, element, qualifier, lang, asList(value));
+        return CollectionUtils.isNotEmpty(metadata) ? metadata.get(0) : null;
     }
 
     @Override
     public MetadataValue addMetadata(Context context, T dso, MetadataField metadataField, String language, String value)
         throws SQLException {
-        return addMetadata(context, dso, metadataField, language, Arrays.asList(value)).get(0);
+        List<MetadataValue> metadata = addMetadata(context, dso, metadataField, language, Arrays.asList(value));
+        return CollectionUtils.isNotEmpty(metadata) ? metadata.get(0) : null;
     }
 
     @Override

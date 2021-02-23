@@ -8,6 +8,7 @@
 package org.dspace.xmlworkflow;
 
 import static org.dspace.xmlworkflow.ConcytecFeedback.FEEDBACK_SEPARATOR;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.CLONE;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.MERGED;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.ORIGINATED;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.REINSTATE;
@@ -22,12 +23,10 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.content.EntityType;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.Relationship;
 import org.dspace.content.RelationshipType;
-import org.dspace.content.service.EntityTypeService;
 import org.dspace.content.service.ItemService;
 import org.dspace.content.service.RelationshipService;
 import org.dspace.content.service.RelationshipTypeService;
@@ -53,15 +52,12 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
     private RelationshipTypeService relationshipTypeService;
 
     @Autowired
-    private EntityTypeService entityTypeService;
-
-    @Autowired
     private ItemService itemService;
 
     @Override
     public Relationship createShadowRelationship(Context context, Item item, Item shadowItemCopy)
         throws AuthorizeException, SQLException {
-        RelationshipType shadowRelationshipType = findShadowRelationshipType(context, item, true);
+        RelationshipType shadowRelationshipType = findShadowRelationshipType(context, item, shadowItemCopy);
         if (shadowRelationshipType == null) {
             return null;
         }
@@ -81,11 +77,21 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
     @Override
     public Relationship createOriginatedFromRelationship(Context context, Item leftItem, Item rightItem)
         throws AuthorizeException, SQLException {
-        RelationshipType originatedFromRelationshipType = findOriginatedFromRelationshipType(context, leftItem, true);
-        if (originatedFromRelationshipType == null) {
+        RelationshipType originatedFromType = findOriginatedFromRelationshipType(context, leftItem, rightItem);
+        if (originatedFromType == null) {
             return null;
         }
-        return relationshipService.create(context, leftItem, rightItem, originatedFromRelationshipType, true);
+        return relationshipService.create(context, leftItem, rightItem, originatedFromType, true);
+    }
+
+    @Override
+    public Relationship createCloneRelationship(Context context, Item leftItem, Item rightItem)
+        throws AuthorizeException, SQLException {
+        RelationshipType cloneRelationshipType = findCloneRelationshipType(context, leftItem, true);
+        if (cloneRelationshipType == null) {
+            return null;
+        }
+        return relationshipService.create(context, leftItem, rightItem, cloneRelationshipType, true);
     }
 
     @Override
@@ -212,12 +218,12 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
 
     @Override
     public List<Item> findOriginatedFromItems(Context context, Item item) throws SQLException {
-        RelationshipType originatedFromType = findOriginatedFromRelationshipType(context, item, true);
-        if (originatedFromType == null) {
+        List<RelationshipType> originatedFromTypes = findOriginatedFromRelationshipTypes(context, item, true);
+        if (CollectionUtils.isEmpty(originatedFromTypes)) {
             return Collections.emptyList();
         }
 
-        return relationshipService.findByItemAndRelationshipType(context, item, originatedFromType, true).stream()
+        return relationshipService.findByItemAndRelationshipTypes(context, item, originatedFromTypes, true).stream()
             .map(relationship -> relationship.getRightItem())
             .collect(Collectors.toList());
     }
@@ -239,26 +245,45 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
 
     private List<Relationship> findItemShadowRelationships(Context context, Item item, boolean isLeft)
         throws SQLException {
-        RelationshipType shadowRelationshipType = findShadowRelationshipType(context, item, isLeft);
-        if (shadowRelationshipType == null) {
+        List<RelationshipType> shadowRelationshipTypes = findShadowRelationshipTypes(context, item, isLeft);
+        if (CollectionUtils.isEmpty(shadowRelationshipTypes)) {
             return Collections.emptyList();
         }
-        return relationshipService.findByItemAndRelationshipType(context, item, shadowRelationshipType, isLeft);
+        return relationshipService.findByItemAndRelationshipTypes(context, item, shadowRelationshipTypes, isLeft);
     }
 
-    private RelationshipType findShadowRelationshipType(Context context, Item item, boolean isLeft)
+    private List<RelationshipType> findShadowRelationshipTypes(Context context, Item item, boolean isLeft)
         throws SQLException {
-        return findRelationshipType(context, item, isLeft, SHADOW_COPY.getLeftType(), SHADOW_COPY.getRightType());
+        return relationshipTypeService.findByItemAndTypeNames(context, item, isLeft, SHADOW_COPY.getLeftType(),
+            SHADOW_COPY.getRightType());
+    }
+
+    private RelationshipType findShadowRelationshipType(Context context, Item item, Item shadowCopy)
+        throws SQLException {
+        return relationshipTypeService.findByItemsAndTypeNames(context, item, shadowCopy, SHADOW_COPY.getLeftType(),
+            SHADOW_COPY.getRightType());
+    }
+
+    private RelationshipType findOriginatedFromRelationshipType(Context context, Item leftItem, Item rightItem)
+        throws SQLException {
+        return relationshipTypeService.findByItemsAndTypeNames(context, leftItem, rightItem, ORIGINATED.getLeftType(),
+            ORIGINATED.getRightType());
     }
 
     private RelationshipType findMergedInRelationshipType(Context context, Item item, boolean isLeft)
         throws SQLException {
-        return findRelationshipType(context, item, isLeft, MERGED.getLeftType(), MERGED.getRightType());
+        return findSingleRelationshipType(context, item, isLeft, MERGED.getLeftType(), MERGED.getRightType());
     }
 
-    private RelationshipType findOriginatedFromRelationshipType(Context ctx, Item item, boolean isLeft)
+    private List<RelationshipType> findOriginatedFromRelationshipTypes(Context ctx, Item item, boolean isLeft)
         throws SQLException {
-        return findRelationshipType(ctx, item, isLeft, ORIGINATED.getLeftType(), ORIGINATED.getRightType());
+        return relationshipTypeService.findByItemAndTypeNames(ctx, item, isLeft, ORIGINATED.getLeftType(),
+            ORIGINATED.getRightType());
+    }
+
+    private RelationshipType findCloneRelationshipType(Context ctx, Item item, boolean isLeft)
+        throws SQLException {
+        return findSingleRelationshipType(ctx, item, isLeft, CLONE.getLeftType(), CLONE.getRightType());
     }
 
     private List<Relationship> findItemWithdrawnRelationships(Context context, Item item, boolean isLeft)
@@ -272,16 +297,16 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
 
     private RelationshipType findWithdrawnRelationshipType(Context context, Item item, boolean isLeft)
         throws SQLException {
-        return findRelationshipType(context, item, isLeft, WITHDRAW.getLeftType(), WITHDRAW.getRightType());
+        return findSingleRelationshipType(context, item, isLeft, WITHDRAW.getLeftType(), WITHDRAW.getRightType());
     }
 
     private List<Relationship> findItemReinstateRelationships(Context context, Item item, boolean isLeft)
         throws SQLException {
-        RelationshipType reinstateRelationshipType = findReinstateRelationshipType(context, item, isLeft);
-        if (reinstateRelationshipType == null) {
+        List<RelationshipType> reinstateRelationshipTypes = findReinstateRelationshipType(context, item, isLeft);
+        if (CollectionUtils.isEmpty(reinstateRelationshipTypes)) {
             return Collections.emptyList();
         }
-        return relationshipService.findByItemAndRelationshipType(context, item, reinstateRelationshipType, isLeft);
+        return relationshipService.findByItemAndRelationshipTypes(context, item, reinstateRelationshipTypes, isLeft);
     }
 
     private List<Relationship> findItemMergeRelationships(Context context, Item item, boolean isLeft)
@@ -293,34 +318,30 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
         return relationshipService.findByItemAndRelationshipType(context, item, mergeRelationshipType, isLeft);
     }
 
-    private RelationshipType findReinstateRelationshipType(Context context, Item item, boolean isLeft)
+    private List<RelationshipType> findReinstateRelationshipType(Context context, Item item, boolean isLeft)
         throws SQLException {
-        return findRelationshipType(context, item, isLeft, REINSTATE.getLeftType(), REINSTATE.getRightType());
+        return relationshipTypeService.findByItemAndTypeNames(context, item, isLeft, REINSTATE.getLeftType(),
+            REINSTATE.getRightType());
     }
 
-    private RelationshipType findRelationshipType(Context context, Item item, boolean isLeft, String leftwardType,
-        String rightwardType) throws SQLException {
+    private RelationshipType findSingleRelationshipType(Context context, Item item, boolean isLeft, String leftType,
+        String rightType) throws SQLException {
 
-        EntityType type = entityTypeService.findByItem(context, item);
-        if (type == null) {
+        List<RelationshipType> relationships = relationshipTypeService.findByItemAndTypeNames(context, item, isLeft,
+            leftType, rightType);
+
+        if (CollectionUtils.isEmpty(relationships)) {
+            LOGGER.warn("No relationship type found with leftward {} and rightward {} for item with id {}", leftType,
+                rightType, item.getID());
             return null;
         }
 
-        List<RelationshipType> relationshipTypes = relationshipTypeService.findByTypeAndTypeNames(context, type, isLeft,
-            leftwardType, rightwardType);
-
-        if (CollectionUtils.isEmpty(relationshipTypes)) {
-            LOGGER.warn("No relationship type found with leftward {} and rightward {} for type", leftwardType,
-                rightwardType, type.getLabel());
-            return null;
-        }
-
-        if (relationshipTypes.size() > 1) {
+        if (relationships.size() > 1) {
             throw new IllegalStateException(
-                "Multiple " + leftwardType + " relationship types found for entity type " + type.getLabel());
+                "Multiple " + leftType + " relationship types found for item " + item.getID());
         }
 
-        return relationshipTypes.get(0);
+        return relationships.get(0);
     }
 
 }

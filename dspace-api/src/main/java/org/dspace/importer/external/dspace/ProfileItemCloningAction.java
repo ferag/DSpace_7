@@ -9,7 +9,6 @@ package org.dspace.importer.external.dspace;
 
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.MERGED;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
@@ -94,22 +93,23 @@ public class ProfileItemCloningAction implements AfterImportAction {
 
         Item institutionItem = concytecWorkflowService.findCopiedItem(context, personItem);
         if (institutionItem != null) {
-            personItem = createCopyAndMergeIn(context, personItem, profileItemClone);
+            Item personItemCopy = createCopyAndMergeIn(context, personItem, profileItemClone);
+            concytecWorkflowService.createShadowRelationship(context, profileItemClone, personItemCopy);
+        } else {
+            concytecWorkflowService.createShadowRelationship(context, profileItemClone, personItem);
         }
-
-        concytecWorkflowService.createShadowRelationship(context, profileItemClone, personItem);
 
     }
 
-    private Item createCopyAndMergeIn(Context context, Item item, Item profileItemClone) throws Exception {
+    private Item createCopyAndMergeIn(Context context, Item personItem, Item profileItemClone) throws Exception {
 
         WorkspaceItem workspaceItemCopy = itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context,
-            item.getID(), MERGED.getLeftType());
+            personItem.getID(), MERGED.getLeftType());
 
         Item itemCopy = installItemService.installItem(context, workspaceItemCopy);
 
         itemService.withdraw(context, itemCopy);
-        concytecWorkflowService.createOriginatedFromRelationship(context, item, profileItemClone);
+        concytecWorkflowService.createOriginatedFromRelationship(context, personItem, profileItemClone);
 
         return itemCopy;
     }
@@ -120,6 +120,7 @@ public class ProfileItemCloningAction implements AfterImportAction {
             throw new IllegalStateException("No collection found for researcher profile clones");
         }
         WorkspaceItem workspaceItem = itemCorrectionProvider.createNewItemAndAddItInWorkspace(ctx, collection, item);
+        concytecWorkflowService.createCloneRelationship(ctx, workspaceItem.getItem(), item);
         return installItemService.installItem(ctx, workspaceItem);
     }
 

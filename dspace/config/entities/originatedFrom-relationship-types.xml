@@ -102,8 +102,8 @@
         </rightCardinality>
     </type>
      <type>
-        <leftType>CvPerson</leftType>
-        <rightType>CvPerson</rightType>
+        <leftType>Person</leftType>
+        <rightType>CvPersonClone</rightType>
         <leftwardType>isOriginatedFrom</leftwardType>
         <rightwardType>isOriginOf</rightwardType>
         <leftCardinality>

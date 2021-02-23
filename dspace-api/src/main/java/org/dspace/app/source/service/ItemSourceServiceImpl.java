@@ -6,6 +6,7 @@
  * http://www.dspace.org/license/
  */
 package org.dspace.app.source.service;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -13,10 +14,18 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.dspace.app.source.ItemSource;
+import org.dspace.app.source.Source;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataValue;
+import org.dspace.content.Relationship;
+import org.dspace.content.RelationshipType;
 import org.dspace.content.service.ItemService;
+import org.dspace.content.service.RelationshipService;
+import org.dspace.content.service.RelationshipTypeService;
+import org.dspace.core.Context;
+import org.dspace.xmlworkflow.ConcytecWorkflowRelation;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -25,10 +34,47 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ItemSourceServiceImpl implements ItemSourceService {
 
     @Autowired
-    private ItemService itemSrvice;
+    private ItemService itemService;
+
+    @Autowired
+    private RelationshipTypeService relationshipTypeService;
+
+    @Autowired
+    private RelationshipService relationshipService;
 
     @Override
-    public List<String> getMatchedMetadata(Item item1, Item item2) {
+    public ItemSource getItemSource(Context context, Item item) {
+        ItemSource itemSource = new ItemSource();
+        try {
+            itemSource.setItemUuid(item.getID());
+            List<RelationshipType> relationshipTypes = new ArrayList<RelationshipType>();
+
+            relationshipTypes.addAll(relationshipTypeService.findByLeftwardOrRightwardTypeName(context,
+                    ConcytecWorkflowRelation.ORIGINATED.getLeftType()));
+
+            relationshipTypes.addAll(relationshipTypeService.findByLeftwardOrRightwardTypeName(context,
+                    ConcytecWorkflowRelation.SHADOW_COPY.getLeftType()));
+            for (RelationshipType relationshipType : relationshipTypes) {
+                List<Relationship> relationships = relationshipService.findByItemAndRelationshipType(context, item,
+                        relationshipType);
+                for (Relationship relationship : relationships) {
+                    Source source = new Source();
+                    Item right = relationship.getRightItem();
+                    source.setRelationshipType(relationshipType.getLeftwardType());
+                    source.setSource(right.getOwningCollection().getCommunities().get(0).getName());
+                    source.setItemUuid(right.getID());
+                    List<String> metadata = getMatchingMetadata(item, right);
+                    source.setMetadata(metadata);
+                    itemSource.addSource(source);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        return itemSource;
+    }
+
+    private List<String> getMatchingMetadata(Item item1, Item item2) {
         Set<MetadataField> fields = new HashSet<>();
         item1.getMetadata().stream().forEach(metadata -> {
             fields.add(metadata.getMetadataField());
@@ -41,11 +87,8 @@ public class ItemSourceServiceImpl implements ItemSourceService {
         List<String> results = new ArrayList<String>();
 
         fields.stream().forEach(field -> {
-            List<String> fieldResult = computeSourceMetatada(field,
-                    itemSrvice.getMetadata(item1, field.getMetadataSchema().getName(), field.getElement(),
-                            field.getQualifier(), null),
-                    itemSrvice.getMetadata(item2, field.getMetadataSchema().getName(), field.getElement(),
-                            field.getQualifier(), null));
+            List<String> fieldResult = computeSourceMetatada(field, getMetadataValue(item1, field),
+                                                                    getMetadataValue(item2, field));
             results.addAll(fieldResult);
         });
         return results;
@@ -54,19 +97,24 @@ public class ItemSourceServiceImpl implements ItemSourceService {
     private List<String> computeSourceMetatada(MetadataField field, List<MetadataValue> metadataValues1,
             List<MetadataValue> metadataValues2) {
         List<String> results = new ArrayList<String>();
-        if (!metadataValues1.isEmpty() && !metadataValues2.isEmpty()) {
-            for (int i = 0; i < metadataValues1.size(); i++) {
-                for (MetadataValue mv2 : metadataValues2) {
-                    if (StringUtils.equals(metadataValues1.get(i).getValue(), mv2.getValue())) {
-                        results.add(field.toString() + "/" + i);
-                    }
+        if (metadataValues1.isEmpty() || metadataValues2.isEmpty()) {
+            return results;
+        }
+        for (int i = 0; i < metadataValues1.size(); i++) {
+            for (MetadataValue mv2 : metadataValues2) {
+                if (StringUtils.equals(metadataValues1.get(i).getValue(), mv2.getValue())) {
+                    results.add(field.toString() + "/" + i);
                 }
             }
-            if ((metadataValues1.size() == metadataValues2.size()) && (metadataValues1.size() == results.size())) {
-                return Collections.singletonList(field.toString());
-            }
+        }
+        if ((metadataValues1.size() == metadataValues2.size()) && (metadataValues1.size() == results.size())) {
+            return Collections.singletonList(field.toString());
         }
         return results;
     }
 
+    private List<MetadataValue> getMetadataValue (Item item, MetadataField field) {
+        return itemService.getMetadata(item, field.getMetadataSchema().getName(), field.getElement(),
+                field.getQualifier(), null);
+    }
 }

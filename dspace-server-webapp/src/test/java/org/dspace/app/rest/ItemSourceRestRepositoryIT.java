@@ -28,7 +28,7 @@ import org.dspace.content.Item;
 import org.dspace.content.Relationship;
 import org.dspace.content.RelationshipType;
 import org.dspace.content.service.EntityTypeService;
-import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
+import org.dspace.xmlworkflow.ConcytecWorkflowRelation;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -115,12 +115,14 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
         Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
                                            .withName("Collection 2").build();
 
+        Thread.sleep(300);
         Item publication2 = ItemBuilder.createItem(context, col2)
                 .withTitle("Publication 2")
                 .withAuthor("Anton, Bandola")
                 .withIssueDate("2019-01-01")
                 .withRelationshipType("InstitutionPublication").build();
 
+        Thread.sleep(300);
         Item publication3 = ItemBuilder.createItem(context, col2)
                 .withTitle("Test Publication Title")
                 .withAuthor("Roman, Bandola")
@@ -129,8 +131,8 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
 
         RelationshipType relationshipType = RelationshipTypeBuilder.createRelationshipTypeBuilder(
                                             context, publicationType, institutionPublicationType,
-                                            ConcytecWorkflowService.IS_ORIGINATED_FROM_IN_RELATIONSHIP,
-                                            ConcytecWorkflowService.IS_ORIGIN_OF_RELATIONSHIP,
+                                            ConcytecWorkflowRelation.ORIGINATED.getLeftType(),
+                                            ConcytecWorkflowRelation.ORIGINATED.getRightType(),
                                             0, null, 0, 1).build();
 
         relationship1 = RelationshipBuilder.createRelationshipBuilder(context,
@@ -148,11 +150,11 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
                             .andExpect(jsonPath("$.type", is("itemsource")))
                             .andExpect(jsonPath("$.sources", Matchers.containsInAnyOrder(
                                        ItemSourceMatcher.matchSource(publication2.getID().toString(),
-                                                      ConcytecWorkflowService.IS_ORIGINATED_FROM_IN_RELATIONSHIP,
+                                                   ConcytecWorkflowRelation.ORIGINATED.getLeftType(),
                                                       parentCommunity.getName(), "dc_date_issued"),
                                        ItemSourceMatcher.matchSource(publication3.getID().toString(),
-                                                      ConcytecWorkflowService.IS_ORIGINATED_FROM_IN_RELATIONSHIP,
-                                                      parentCommunity.getName(), "dc_contributor_author", "dc_title")
+                                                   ConcytecWorkflowRelation.ORIGINATED.getLeftType(),
+                                                  parentCommunity.getName(), "dc_contributor_author", "dc_title")
                                        )));
     }
 
@@ -177,6 +179,7 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
         Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
                                            .withName("Collection 2").build();
 
+        Thread.sleep(300);
         Item publication2 = ItemBuilder.createItem(context, col2)
                 .withTitle("Project Title")
                 .withAuthor("Anton, Bandola")
@@ -185,8 +188,8 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
 
         RelationshipType relationshipType = RelationshipTypeBuilder.createRelationshipTypeBuilder(
                                             context, institutionProjectType, projectType,
-                                            ConcytecWorkflowService.HAS_SHADOW_COPY_RELATIONSHIP,
-                                            ConcytecWorkflowService.IS_SHADOW_COPY_RELATIONSHIP,
+                                            ConcytecWorkflowRelation.SHADOW_COPY.getLeftType(),
+                                            ConcytecWorkflowRelation.SHADOW_COPY.getRightType(),
                                             0, 1, 0, 1).build();
 
         relationship1 = RelationshipBuilder.createRelationshipBuilder(context,
@@ -201,8 +204,8 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
                             .andExpect(jsonPath("$.type", is("itemsource")))
                             .andExpect(jsonPath("$.sources", Matchers.contains(
                                        ItemSourceMatcher.matchSource(publication2.getID().toString(),
-                                                         ConcytecWorkflowService.HAS_SHADOW_COPY_RELATIONSHIP,
-                                                         parentCommunity.getName(), "dc_date_issued")
+                                                  ConcytecWorkflowRelation.SHADOW_COPY.getLeftType(),
+                                                  parentCommunity.getName(), "dc_title")
                                        )));
     }
 
@@ -267,8 +270,8 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
 
         RelationshipType relationshipType = RelationshipTypeBuilder.createRelationshipTypeBuilder(
                                             context, publicationType, institutionPublicationType,
-                                            ConcytecWorkflowService.IS_ORIGINATED_FROM_IN_RELATIONSHIP,
-                                            ConcytecWorkflowService.IS_ORIGIN_OF_RELATIONSHIP,
+                                            ConcytecWorkflowRelation.ORIGINATED.getLeftType(),
+                                            ConcytecWorkflowRelation.ORIGINATED.getRightType(),
                                             0, null, 0, 1).build();
 
         relationship1 = RelationshipBuilder.createRelationshipBuilder(context,
@@ -285,11 +288,11 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
                    .andExpect(jsonPath("$.type", is("itemsource")))
                    .andExpect(jsonPath("$.sources", Matchers.containsInAnyOrder(
                               ItemSourceMatcher.matchSource(publication2.getID().toString(),
-                                             ConcytecWorkflowService.IS_ORIGINATED_FROM_IN_RELATIONSHIP,
-                                             parentCommunity.getName(), "dc_date_issued"),
+                                          ConcytecWorkflowRelation.ORIGINATED.getLeftType(),
+                                               parentCommunity.getName(), "dc_date_issued"),
                               ItemSourceMatcher.matchSource(publication3.getID().toString(),
-                                             ConcytecWorkflowService.IS_ORIGINATED_FROM_IN_RELATIONSHIP,
-                                             parentCommunity.getName(), "dc_contributor_author", "dc_title")
+                                          ConcytecWorkflowRelation.ORIGINATED.getLeftType(),
+                                         parentCommunity.getName(), "dc_contributor_author", "dc_title")
                               )));
     }
 
@@ -315,12 +318,14 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
         Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
                                            .withName("Collection 2").build();
 
+        Thread.sleep(300);
         Item publication2 = ItemBuilder.createItem(context, col2)
                 .withTitle("Publication 2")
                 .withAuthor("Roman, Bandola")
                 .withIssueDate("2019-01-01")
                 .withRelationshipType("InstitutionPublication").build();
 
+        Thread.sleep(300);
         Item publication3 = ItemBuilder.createItem(context, col2)
                 .withTitle("Test Publication Title")
                 .withAuthor("Anton, Mostoviy")
@@ -329,8 +334,8 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
 
         RelationshipType relationshipType = RelationshipTypeBuilder.createRelationshipTypeBuilder(
                                             context, publicationType, institutionPublicationType,
-                                            ConcytecWorkflowService.IS_ORIGINATED_FROM_IN_RELATIONSHIP,
-                                            ConcytecWorkflowService.IS_ORIGIN_OF_RELATIONSHIP,
+                                               ConcytecWorkflowRelation.ORIGINATED.getLeftType(),
+                                               ConcytecWorkflowRelation.ORIGINATED.getRightType(),
                                             0, null, 0, 1).build();
 
         relationship1 = RelationshipBuilder.createRelationshipBuilder(context,
@@ -348,10 +353,10 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
                             .andExpect(jsonPath("$.type", is("itemsource")))
                             .andExpect(jsonPath("$.sources", Matchers.containsInAnyOrder(
                                        ItemSourceMatcher.matchSource(publication2.getID().toString(),
-                                           ConcytecWorkflowService.IS_ORIGINATED_FROM_IN_RELATIONSHIP,
+                                                   ConcytecWorkflowRelation.ORIGINATED.getLeftType(),
                                            parentCommunity.getName(), "dc_contributor_author/0", "dc_date_issued"),
                                        ItemSourceMatcher.matchSource(publication3.getID().toString(),
-                                                      ConcytecWorkflowService.IS_ORIGINATED_FROM_IN_RELATIONSHIP,
+                                                   ConcytecWorkflowRelation.ORIGINATED.getLeftType(),
                                                       parentCommunity.getName(), "dc_contributor_author/1", "dc_title")
                                        )));
     }

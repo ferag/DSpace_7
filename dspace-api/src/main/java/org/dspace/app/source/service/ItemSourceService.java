@@ -6,16 +6,19 @@
  * http://www.dspace.org/license/
  */
 package org.dspace.app.source.service;
-
-import java.util.List;
-
+import org.dspace.app.source.ItemSource;
 import org.dspace.content.Item;
+import org.dspace.core.Context;
 
 /**
+ * Service interface class for the ItemSource object.
+ * The implementation of this class is responsible for all business logic
+ * calls for the ItemSource object and is autowired by spring
+ * 
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
 public interface ItemSourceService {
 
-    public List<String> getMatchedMetadata(Item item1, Item item2);
+    public ItemSource getItemSource(Context context, Item item);
 
 }

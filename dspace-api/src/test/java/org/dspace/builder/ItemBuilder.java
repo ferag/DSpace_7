@@ -729,6 +729,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return this;
     }
 
+    public ItemBuilder withNotificationTo(String notification, String authority) {
+        return addMetadataValue(item, "perucris", "notification", "to", null, notification, authority, 600);
+    }
+
     /**
      * Withdrawn the item under build. Please note that an user need to be loggedin the context to avoid NPE during the
      * creation of the provenance metadata

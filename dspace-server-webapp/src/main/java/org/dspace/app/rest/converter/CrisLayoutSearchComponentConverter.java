@@ -33,6 +33,7 @@ public class CrisLayoutSearchComponentConverter implements CrisLayoutSectionComp
         rest.setDiscoveryConfigurationName(topComponent.getDiscoveryConfigurationName());
         rest.setStyle(component.getStyle());
         rest.setSearchType(topComponent.getSearchType());
+        rest.setInitialStatements(topComponent.getInitialStatements());
         return rest;
     }
 

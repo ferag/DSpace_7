@@ -300,6 +300,15 @@
                             </property>
                             <property name="submissionDefinition" value="cvperson-edit" />
                         </bean>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="EDUCATION" />
+                            <property name="security">
+                                <value type="org.dspace.content.security.CrisSecurity">
+                                    ADMIN_OWNER
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="cvperson-edit-education" />
+                        </bean>
                     </list>
                 </entry>
             </map>

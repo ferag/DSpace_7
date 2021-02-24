@@ -169,6 +169,10 @@ public class ItemCorrectionService {
         return workspaceItem;
     }
 
+    public WorkspaceItem createCorrectionItem(Context context, UUID itemUUID) throws SQLException, AuthorizeException {
+        return createWorkspaceItemAndRelationshipByItem(context, itemUUID, getCorrectionRelationshipName());
+    }
+
     public boolean checkIfIsCorrectionItem(Context context, Item item) throws SQLException {
         return checkIfIsCorrectionItem(context, item, getCorrectionRelationshipName());
     }
@@ -181,19 +185,23 @@ public class ItemCorrectionService {
         return isNotEmpty(relationshipService.findByItemAndRelationshipType(context, item, relationshipType, true));
     }
 
-    public Relationship getCorrectionItemRelationship(Context context, Item item) throws SQLException {
-        RelationshipType type = findRelationshipType(context, item, getCorrectionRelationshipName());
+    public List<Relationship> getCorrectionItemRelations(Context ctx, Item item, boolean isLeft) throws SQLException {
+        RelationshipType type = findRelationshipType(ctx, item, getCorrectionRelationshipName());
         if (type == null) {
             return null;
         }
-        List<Relationship> relationships = relationshipService.findByItemAndRelationshipType(context, item, type, true);
-        return isNotEmpty(relationships) ? relationships.get(0) : null;
+        return relationshipService.findByItemAndRelationshipType(ctx, item, type, isLeft);
+    }
+
+    public Relationship getCorrectionItemRelation(Context context, Item item, boolean isLeft) throws SQLException {
+        List<Relationship> relations = getCorrectionItemRelations(context, item, isLeft);
+        return isNotEmpty(relations) ? relations.get(0) : null;
     }
 
     public void replaceCorrectionItemWithNative(Context context, XmlWorkflowItem wfi) {
 
         try {
-            Relationship relationship = getCorrectionItemRelationship(context, wfi.getItem());
+            Relationship relationship = getCorrectionItemRelation(context, wfi.getItem(), true);
             Item nativeItem = relationship.getRightItem();
             relationshipService.delete(context, relationship);
             correctionItemProvider.updateNativeItemWithCorrection(context, wfi, wfi.getItem(), nativeItem);
@@ -203,8 +211,14 @@ public class ItemCorrectionService {
 
     }
 
+    public List<Item> getCorrectionItems(Context context, Item item) throws SQLException {
+        return getCorrectionItemRelations(context, item, false).stream()
+            .map(relationship -> relationship.getLeftItem())
+            .collect(Collectors.toList());
+    }
+
     public Item getCorrectedItem(Context context, Item correctionItem) throws SQLException {
-        Relationship relationship = getCorrectionItemRelationship(context, correctionItem);
+        Relationship relationship = getCorrectionItemRelation(context, correctionItem, true);
         return relationship != null ? relationship.getRightItem() : null;
     }
 

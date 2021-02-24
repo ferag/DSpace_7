@@ -118,6 +118,16 @@ public interface ConcytecWorkflowService {
     Item findMergeOfItem(Context context, Item item) throws SQLException;
 
     /**
+     * Find the clone of given item.
+     *
+     * @param context the DSpace context
+     * @param item    the item that has a clone
+     * @return the item shadow copy, if any
+     * @throws SQLException if an SQL error occurs
+     */
+    Item findClone(Context context, Item item) throws SQLException;
+
+    /**
      * Add the Concytec feedback on the given item.
      *
      * @param context  the DSpace context

@@ -950,6 +950,77 @@
         </field>
       </row>
     </form>
+    <form name="cv-person-edit-education-crisrp-education">
+      <row>
+        <field>
+          <dc-schema>crisrp</dc-schema>
+          <dc-element>education</dc-element>
+          <label>Education</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>You must enter at least the education title.</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crisrp</dc-schema>
+          <dc-element>education</dc-element>
+          <dc-qualifier>start</dc-qualifier>
+          <label>Start Date</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>crisrp</dc-schema>
+          <dc-element>education</dc-element>
+          <dc-qualifier>end</dc-qualifier>
+          <label>End Date</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crisrp</dc-schema>
+          <dc-element>education</dc-element>
+          <dc-qualifier>role</dc-qualifier>
+          <label>Role</label>
+          <input-type value-pairs-name="renati_levels">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>education</dc-element>
+          <dc-qualifier>grantor</dc-qualifier>
+          <label>Grantor</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>education</dc-element>
+          <dc-qualifier>country</dc-qualifier>
+          <label>Country</label>
+          <input-type value-pairs-name="common_iso_countries">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
     <form name="product-dc-contributor-author">
       <row>
         <field>
@@ -5655,6 +5726,31 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Written Language(s)</label>
           <input-type value-pairs-name="common_iso_languages">dropdown</input-type>
           <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="cv-person-edit-education">
+      <row>
+        <field>
+          <dc-schema>crisrp</dc-schema>
+          <dc-element>education</dc-element>
+          <label>Education(s)</label>
+          <input-type>group</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>cvPerson</dc-element>
+          <dc-qualifier>syncEducation</dc-qualifier>
+          <label>Send changes to Directorio</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
           <required />
           <hint />
         </field>

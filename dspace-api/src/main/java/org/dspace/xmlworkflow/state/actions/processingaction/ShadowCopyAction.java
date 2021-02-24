@@ -213,8 +213,7 @@ public class ShadowCopyAction extends ProcessingAction {
 
     private WorkspaceItem createItemCopyCorrection(Context context, UUID itemCopyId)
         throws SQLException, AuthorizeException {
-        String relationshipName = itemCorrectionService.getCorrectionRelationshipName();
-        return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context, itemCopyId, relationshipName);
+        return itemCorrectionService.createCorrectionItem(context, itemCopyId);
     }
 
     private WorkspaceItem createItemCopyWithdraw(Context context, UUID itemCopyId)

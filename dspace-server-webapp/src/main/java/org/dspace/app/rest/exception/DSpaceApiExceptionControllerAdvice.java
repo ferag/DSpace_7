@@ -169,7 +169,9 @@ public class DSpaceApiExceptionControllerAdvice extends ResponseEntityExceptionH
         request.setAttribute(EXCEPTION_ATTRIBUTE, ex);
 
         // Log the full error and status code
-        log.error(String.format("%s (status:%s)", message, statusCode), ex);
+        if (statusCode != 404) {
+            log.error(String.format("%s (status:%s)", message, statusCode), ex);
+        }
 
         //Exception properties will be set by org.springframework.boot.web.support.ErrorPageFilter
         response.sendError(statusCode, message);

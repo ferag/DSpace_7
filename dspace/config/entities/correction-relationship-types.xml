@@ -225,8 +225,8 @@
         </rightCardinality>
     </type>
     <type>
-        <leftType>CvPerson</leftType>
-        <rightType>CvPerson</rightType>
+        <leftType>CvPersonClone</leftType>
+        <rightType>CvPersonClone</rightType>
         <leftwardType>isCorrectionOfItem</leftwardType>
         <rightwardType>isCorrectedByItem</rightwardType>
         <leftCardinality>

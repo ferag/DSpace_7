@@ -59,6 +59,20 @@
     </bean>
 
     <bean id="removeRelationAction" class="org.dspace.importer.external.dspace.RemoveDSpaceRelationAction"/>
+    
+    <util:map id="profileSynchronizationMap" map-class="java.util.HashMap" key-type="java.lang.String" value-type="java.util.List"> 
+	   <entry key="perucris.cvPerson.syncEducation" >
+	       <list>
+	           <value>crisrp.education</value>
+               <value>crisrp.education.start</value>
+               <value>crisrp.education.end</value>
+               <value>crisrp.education.role</value>
+               <value>perucris.education.grantor</value>
+               <value>perucris.education.country</value>
+	       </list>
+	   </entry>
+	</util:map>
+    
 
     <!-- TODO: set orcid import -->
 

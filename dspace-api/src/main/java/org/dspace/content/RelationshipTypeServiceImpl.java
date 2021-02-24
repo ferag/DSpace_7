@@ -85,7 +85,7 @@ public class RelationshipTypeServiceImpl implements RelationshipTypeService {
 
         EntityType type = entityTypeService.findByItem(context, item);
         if (type == null) {
-            return null;
+            return Collections.emptyList();
         }
 
         return findByTypeAndTypeNames(context, type, isLeftItem, leftwardType, rightwardType);

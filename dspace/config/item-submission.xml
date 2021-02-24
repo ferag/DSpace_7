@@ -208,6 +208,13 @@
       <processing-class>org.dspace.app.rest.submit.step.DetectPotentialDuplicateStep</processing-class>
       <type>detect-duplicate</type>
     </step-definition>
+
+    <step-definition id="notification-step" mandatory="true">
+      <heading>submit.progressbar.notification</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+
   </step-definitions>
   <submission-definitions>
     <submission-process name="institution-product">
@@ -444,6 +451,11 @@
       <step id="upload" />
       <step id="license" />
     </submission-process>
+
+    <submission-process name="notification">
+      <step id="notification-step" />
+    </submission-process>
+
   </submission-definitions>
 </item-submission>
 

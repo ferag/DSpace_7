@@ -7852,6 +7852,43 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
     </form>
+
+	<form name="notification-form">
+		<row>
+			<field>
+				<dc-schema>dc</dc-schema>
+				<dc-element>title</dc-element>
+				<dc-qualifier></dc-qualifier>
+				<label>Enter the name</label>
+				<input-type>onebox</input-type>
+				<hint></hint>
+				<required>You must enter a title</required>
+			</field>
+		</row>
+		<row>
+			<field>
+				<dc-schema>perucris</dc-schema>
+				<dc-element>notification</dc-element>
+				<dc-qualifier>to</dc-qualifier>
+				<label></label>
+				<input-type>textarea</input-type>
+				<hint></hint>
+				<required></required>
+			</field>
+		</row>
+	    <row>
+			<field>
+				<dc-schema>perucris</dc-schema>
+				<dc-element>notification</dc-element>
+				<dc-qualifier>message</dc-qualifier>
+				<label></label>
+				<input-type>textarea</input-type>
+				<hint></hint>
+				<required></required>
+			</field>
+		</row>
+	</form>
+
   </form-definitions>
   <form-value-pairs>
     <value-pairs value-pairs-name="patent_types" dc-term="patent_types">

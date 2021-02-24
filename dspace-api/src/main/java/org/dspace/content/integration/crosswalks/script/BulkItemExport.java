@@ -223,7 +223,7 @@ public class BulkItemExport extends DSpaceRunnable<BulkItemExportScriptConfigura
         discoverQuery.setQuery(query);
         discoverQuery.setMaxResults(QUERY_PAGINATION_SIZE);
         discoverQuery.addFilterQueries(getFilterQueries(discoveryConfiguration));
-        discoverQuery.addFilterQueries("entityType:" + entityType);
+        discoverQuery.addFilterQueries("search.entitytype:" + entityType);
         configureSorting(discoverQuery, discoveryConfiguration);
 
         return discoverQuery;

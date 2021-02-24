@@ -192,8 +192,8 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-    <step-definition id="person-cv" mandatory="true">
-      <heading>submit.progressbar.describe.person-cv</heading>
+    <step-definition id="cv-person" mandatory="true">
+      <heading>submit.progressbar.describe.cv-person</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
@@ -355,12 +355,12 @@
       <step id="upload" />
       <step id="license" />
     </submission-process>
-    <submission-process name="personcv">
-      <step id="person-cv" />
+    <submission-process name="cvperson">
+      <step id="cv-person" />
       <step id="upload" />
     </submission-process>
-    <submission-process name="personcv-edit">
-      <step id="person-cv" />
+    <submission-process name="cvperson-edit">
+      <step id="cv-person" />
       <step id="upload" />
     </submission-process>
     <submission-process name="event">

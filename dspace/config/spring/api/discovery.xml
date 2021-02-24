@@ -29,6 +29,7 @@
     <bean id="solrServiceSpellIndexingPlugin" class="org.dspace.discovery.SolrServiceSpellIndexingPlugin" scope="prototype"/>
     <bean id="solrServiceMetadataBrowseIndexingPlugin" class="org.dspace.discovery.SolrServiceMetadataBrowseIndexingPlugin" scope="prototype"/>
     <bean id="solrServiceInstitutionTemplateFilterPlugin" class="org.dspace.discovery.SolrServiceInstitutionTemplateFilterPlugin" scope="prototype"/>
+    <bean id="solrServiceCvPersonCloneCommunityFilterPlugin" class="org.dspace.discovery.SolrServiceCvPersonCloneCommunityFilterPlugin" scope="prototype"/>
     <bean id="solrServicePrivateItemPlugin" class="org.dspace.discovery.SolrServicePrivateItemPlugin" scope="prototype"/>
     <bean id="SolrServiceParentObjectIndexingPlugin" class="org.dspace.discovery.SolrServiceParentObjectIndexingPlugin" scope="prototype"/>
     <bean id="SolrServiceIndexCollectionSubmittersPlugin" class="org.dspace.discovery.SolrServiceIndexCollectionSubmittersPlugin" scope="prototype"/>
@@ -114,8 +115,8 @@
                 <entry key="RELATION.InstitutionProject.ipgrants" value-ref="relationInstitutionProjectFundingsConfiguration"/>
                 <entry key="RELATION.InstitutionProject.ipresearchoutputs" value-ref="relationInstitutionProjectPublicationConfiguration"/>
                 <entry key="RELATION.InstitutionProject.ippatents" value-ref="relationInstitutionProjectPatentConfiguration"/>
-                <!-- PersonCv Related items -->
-                <entry key="RELATION.PersonCv.researchoutputs" value-ref="relationAuthorResearchOutputsConfiguration"/>
+                <!-- CvPerson Related items -->
+                <entry key="RELATION.CvPerson.researchoutputs" value-ref="relationAuthorResearchOutputsConfiguration"/>
                 <entry key="RESUME.rprofiles" value-ref="person"/>
                 <entry key="RESUME.orgunits" value-ref="orgUnit"/>
                 <entry key="RESUME.researchoutputs" value-ref="researchoutputs"/>

@@ -218,7 +218,7 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
 
         DiscoverQuery discoverQuery = new DiscoverQuery();
         discoverQuery.setDSpaceObjectFilter(IndexableCollection.TYPE);
-        discoverQuery.addFilterQueries("relationship.type:" + profileType);
+        discoverQuery.addFilterQueries("search.entitytype:" + profileType);
 
         DiscoverResult discoverResult = searchService.search(context, discoverQuery);
         List<IndexableObject> indexableObjects = discoverResult.getIndexableObjects();
@@ -261,7 +261,7 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
     }
 
     private String getProfileType() {
-        return configurationService.getProperty("researcher-profile.type", "Person");
+        return configurationService.getProperty("researcher-profile.type", "CvPerson");
     }
 
 }

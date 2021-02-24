@@ -19,9 +19,7 @@ import org.dspace.content.Item;
 import org.dspace.core.Context;
 import org.dspace.core.LogManager;
 import org.dspace.eperson.EPerson;
-import org.dspace.xmlworkflow.Role;
 import org.dspace.xmlworkflow.RoleMembers;
-import org.dspace.xmlworkflow.WorkflowConfigurationException;
 import org.dspace.xmlworkflow.factory.XmlWorkflowServiceFactory;
 import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
 import org.dspace.xmlworkflow.service.XmlWorkflowService;
@@ -128,28 +126,8 @@ public class InstitutionRejectAction extends UserSelectionAction {
     }
 
     @Override
-    public boolean isValidUserSelection(Context context, XmlWorkflowItem wfi, boolean hasUI)
-        throws WorkflowConfigurationException, SQLException {
-        //A user claim action always needs to have a UI, since somebody needs to be able to claim it
-        if (hasUI) {
-            Step step = getParent().getStep();
-            //First of all check if our step has a role
-            Role role = step.getRole();
-            if (role != null) {
-                //We have a role, check if we have a group to with that role
-                RoleMembers roleMembers = role.getMembers(context, wfi);
-
-                ArrayList<EPerson> epersons = roleMembers.getAllUniqueMembers(context);
-                return !(epersons.size() == 0 || step.getRequiredUsers() > epersons.size());
-            } else {
-                // We don't have a role and do have a UI so throw a workflow exception
-                throw new WorkflowConfigurationException(
-                    "The next step is invalid, since it doesn't have a valid role");
-            }
-        } else {
-            return true;
-        }
-
+    public boolean isValidUserSelection(Context context, XmlWorkflowItem wfi, boolean hasUI) {
+        return true;
     }
 
     @Override

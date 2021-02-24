@@ -8,7 +8,7 @@
         <sidebar/>
         <collection>
             <name>Profiles</name>
-            <entity-type>PersonCv</entity-type>
+            <entity-type>CvPerson</entity-type>
             <description/>
             <intro/>
             <copyright/>

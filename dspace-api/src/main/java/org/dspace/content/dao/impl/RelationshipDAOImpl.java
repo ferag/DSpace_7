@@ -255,4 +255,27 @@ public class RelationshipDAOImpl extends AbstractHibernateDAO<Relationship> impl
         return list(context, criteriaQuery, true, Relationship.class, -1, -1);
     }
 
+    @Override
+    public List<Relationship> findByItemAndRelationshipTypes(Context context, Item item,
+        List<RelationshipType> relationshipTypes, boolean isLeft) throws SQLException {
+
+        CriteriaBuilder criteriaBuilder = getCriteriaBuilder(context);
+        CriteriaQuery<Relationship> criteriaQuery = getCriteriaQuery(criteriaBuilder, Relationship.class);
+        Root<Relationship> relationshipRoot = criteriaQuery.from(Relationship.class);
+        criteriaQuery.select(relationshipRoot);
+        if (isLeft) {
+            criteriaQuery.where(
+                relationshipRoot.get(Relationship_.relationshipType).in(relationshipTypes),
+                criteriaBuilder.equal(relationshipRoot.get(Relationship_.leftItem), item));
+            criteriaQuery.orderBy(criteriaBuilder.asc(relationshipRoot.get(Relationship_.leftPlace)));
+        } else {
+            criteriaQuery.where(
+                relationshipRoot.get(Relationship_.relationshipType).in(relationshipTypes),
+                criteriaBuilder.equal(relationshipRoot.get(Relationship_.rightItem), item));
+            criteriaQuery.orderBy(criteriaBuilder.asc(relationshipRoot.get(Relationship_.rightPlace)));
+        }
+        return list(context, criteriaQuery, true, Relationship.class, -1, -1);
+
+    }
+
 }

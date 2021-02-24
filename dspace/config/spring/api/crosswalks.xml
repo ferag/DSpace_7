@@ -29,14 +29,14 @@
 				<entry key="person-csv" value-ref="csvCrosswalkPerson"></entry>
 				<entry key="person-xls" value-ref="xlsCrosswalkPerson"></entry>
 
-				<entry key="ctivitae-profile-xml" value-ref="referCrosswalkPersonCvXml"></entry>
-				<entry key="ctivitae-profile-cerif-xml" value-ref="referCrosswalkPersonCvCerifXml"></entry>
-                <entry key="ctivitae-profile-perucris-cerif-xml" value-ref="referCrosswalkPersonCvPerucrisCerifXml"></entry>
-				<entry key="ctivitae-profile-json" value-ref="referCrosswalkPersonCvJson"></entry>
-				<entry key="ctivitae-profile-pdf" value-ref="pdfCrosswalkPersonCv"></entry>
-				<entry key="ctivitae-profile-rtf" value-ref="rtfCrosswalkPersonCv"></entry>
-				<entry key="ctivitae-profile-csv" value-ref="csvCrosswalkPersonCv"></entry>
-				<entry key="ctivitae-profile-xls" value-ref="xlsCrosswalkPersonCv"></entry>
+				<entry key="ctivitae-profile-xml" value-ref="referCrosswalkCvPersonXml"></entry>
+				<entry key="ctivitae-profile-cerif-xml" value-ref="referCrosswalkCvPersonCerifXml"></entry>
+                <entry key="ctivitae-profile-perucris-cerif-xml" value-ref="referCrosswalkCvPersonPerucrisCerifXml"></entry>
+				<entry key="ctivitae-profile-json" value-ref="referCrosswalkCvPersonJson"></entry>
+				<entry key="ctivitae-profile-pdf" value-ref="pdfCrosswalkCvPerson"></entry>
+				<entry key="ctivitae-profile-rtf" value-ref="rtfCrosswalkCvPerson"></entry>
+				<entry key="ctivitae-profile-csv" value-ref="csvCrosswalkCvPerson"></entry>
+				<entry key="ctivitae-profile-xls" value-ref="xlsCrosswalkCvPerson"></entry>
 
 				<entry key="project-cerif-xml" value-ref="referCrosswalkProjectCerifXml"></entry>
                 <entry key="project-perucris-cerif-xml" value-ref="referCrosswalkProjectPerucrisCerifXml"></entry>
@@ -196,41 +196,41 @@
 		<property name="linesPostProcessor" ref="jsonPostProcessor" />
 	</bean>
 
-	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPersonCvXml">
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkCvPersonXml">
 		<property name="templateFileName" value="crosswalks/template/person-xml.template"/>
 		<property name="mimeType" value="application/xml; charset=UTF-8"/>
 		<property name="fileName" value="profile.xml"/>
-		<property name="entityType" value="PersonCv"/>
+		<property name="entityType" value="CvPerson"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-xml.template"/>
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
 
-	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPersonCvCerifXml">
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkCvPersonCerifXml">
 		<property name="templateFileName" value="crosswalks/template/person-cerif-xml.template"/>
 		<property name="mimeType" value="application/xml; charset=UTF-8"/>
 		<property name="fileName" value="profile.xml"/>
-		<property name="entityType" value="PersonCv"/>
+		<property name="entityType" value="CvPerson"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-cerif-xml.template"/>
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
 
-    <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPersonCvPerucrisCerifXml">
+    <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkCvPersonPerucrisCerifXml">
         <property name="templateFileName" value="crosswalks/template/person-perucris-cerif-xml.template"/>
         <property name="mimeType" value="application/xml; charset=UTF-8"/>
         <property name="fileName" value="profile.xml"/>
-        <property name="entityType" value="PersonCv"/>
+        <property name="entityType" value="CvPerson"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-cerif-xml.template"/>
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
-	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPersonCvJson">
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkCvPersonJson">
 		<property name="templateFileName" value="crosswalks/template/person-json.template"/>
 		<property name="mimeType" value="application/json; charset=UTF-8"/>
 		<property name="fileName" value="profile.json"/>
-		<property name="entityType" value="PersonCv"/>
+		<property name="entityType" value="CvPerson"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-json.template"/>
 		<property name="converter" ref="jsonValueConverter" />
@@ -415,20 +415,20 @@
 		<property name="referCrosswalk" ref="referCrosswalkPersonXml"/>
 	</bean>
 
-	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="pdfCrosswalkPersonCv">
+	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="pdfCrosswalkCvPerson">
 		<property name="templateFileName" value="crosswalks/template/person-template.xsl"/>
 		<property name="fileName" value="profile.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
-		<property name="entityType" value="PersonCv"/>
-		<property name="referCrosswalk" ref="referCrosswalkPersonCvXml"/>
+		<property name="entityType" value="CvPerson"/>
+		<property name="referCrosswalk" ref="referCrosswalkCvPersonXml"/>
 	</bean>
 
-	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="rtfCrosswalkPersonCv">
+	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="rtfCrosswalkCvPerson">
 		<property name="templateFileName" value="crosswalks/template/person-template.xsl"/>
 		<property name="fileName" value="profile.rtf"/>
 		<property name="mimeType" value="application/rtf"/>
-		<property name="entityType" value="PersonCv"/>
-		<property name="referCrosswalk" ref="referCrosswalkPersonCvXml"/>
+		<property name="entityType" value="CvPerson"/>
+		<property name="referCrosswalk" ref="referCrosswalkCvPersonXml"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="pdfCrosswalkPublication">
@@ -486,18 +486,18 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
 	</bean>
 
-	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkPersonCv">
+	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkCvPerson">
 		<property name="templateFileName" value="crosswalks/template/person-table.template"/>
 		<property name="fileName" value="profiles.csv"/>
-		<property name="entityType" value="PersonCv"/>
+		<property name="entityType" value="CvPerson"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
 	</bean>
 
-	<bean class="org.dspace.content.integration.crosswalks.XlsCrosswalk" id="xlsCrosswalkPersonCv">
+	<bean class="org.dspace.content.integration.crosswalks.XlsCrosswalk" id="xlsCrosswalkCvPerson">
 		<property name="templateFileName" value="crosswalks/template/person-table.template"/>
 		<property name="fileName" value="profiles.xls"/>
 		<property name="sheetName" value="Profiles"/>
-		<property name="entityType" value="PersonCv"/>
+		<property name="entityType" value="CvPerson"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
 	</bean>
 

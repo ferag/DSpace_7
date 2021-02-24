@@ -289,7 +289,7 @@
                         </bean>
                     </list>
                 </entry>
-                <entry key="personcv">
+                <entry key="cvperson">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
@@ -298,7 +298,7 @@
                                     ADMIN_OWNER
                                 </value>
                             </property>
-                            <property name="submissionDefinition" value="personcv-edit" />
+                            <property name="submissionDefinition" value="cvperson-edit" />
                         </bean>
                     </list>
                 </entry>

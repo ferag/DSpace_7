@@ -782,7 +782,7 @@
         </field>
       </row>
     </form>
-    <form name="person-cv-oairecerif-person-affiliation">
+    <form name="cv-person-oairecerif-person-affiliation">
       <row>
         <field>
           <dc-schema>oairecerif</dc-schema>
@@ -830,7 +830,7 @@
         </field>
       </row>
     </form>
-    <form name="person-cv-crisrp-qualification">
+    <form name="cv-person-crisrp-qualification">
       <row>
         <field>
           <dc-schema>crisrp</dc-schema>
@@ -879,7 +879,7 @@
         </field>
       </row>
     </form>
-    <form name="person-cv-crisrp-education">
+    <form name="cv-person-crisrp-education">
       <row>
         <field>
           <dc-schema>crisrp</dc-schema>
@@ -1202,7 +1202,7 @@
         </field>
       </row>
     </form>
-    <form name="person-cv-oairecerif-identifier-url">
+    <form name="cv-person-oairecerif-identifier-url">
       <row>
         <field>
           <dc-schema>oairecerif</dc-schema>
@@ -5202,7 +5202,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
     </form>
-    <form name="person-cv">
+    <form name="cv-person">
       <row>
         <field>
           <dc-schema>dc</dc-schema>

@@ -66,6 +66,18 @@ public interface ConcytecWorkflowService {
         throws AuthorizeException, SQLException;
 
     /**
+     * Create an clone relationship between the two given items.
+     * 
+     * @param context   the DSpace context
+     * @param leftItem  the item that is the clone of the rightItem
+     * @param rightItem the item that is cloned by the leftItem
+     * @throws AuthorizeException if an authorization error occurs
+     * @throws SQLException       if an SQL error occurs
+     */
+    Relationship createCloneRelationship(Context context, Item leftItem, Item rightItem)
+        throws AuthorizeException, SQLException;
+
+    /**
      * Find the shadow copy of the given item.
      *
      * @param context the DSpace context

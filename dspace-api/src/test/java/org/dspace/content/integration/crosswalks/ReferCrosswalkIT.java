@@ -2051,7 +2051,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item personItem = createItem(context, collection)
-            .withRelationshipType("PersonCv")
+            .withRelationshipType("CvPerson")
             .withTitle("John Smith")
             .withFullName("John Smith")
             .withVariantName("J.S.")
@@ -2121,7 +2121,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item personItem = createItem(context, collection)
-            .withRelationshipType("PersonCv")
+            .withRelationshipType("CvPerson")
             .withTitle("Smith, John")
             .withVariantName("J.S.")
             .withVariantName("Smith John")
@@ -2161,7 +2161,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item personItem = createItem(context, collection)
-            .withRelationshipType("PersonCv")
+            .withRelationshipType("CvPerson")
             .withTitle("Smith, John")
             .withVariantName("J.S.")
             .withVariantName("Smith John")
@@ -2201,7 +2201,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item firstPerson = createItem(context, collection)
-            .withRelationshipType("PersonCv")
+            .withRelationshipType("CvPerson")
             .withTitle("Smith, John")
             .withVariantName("J.S.")
             .withVariantName("Smith John")
@@ -2223,7 +2223,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item secondPerson = createItem(context, collection)
-            .withRelationshipType("PersonCv")
+            .withRelationshipType("CvPerson")
             .withTitle("White, Walter")
             .withGender("M")
             .withPersonMainAffiliation("University")
@@ -2256,7 +2256,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item item = createItem(context, collection)
-            .withRelationshipType("PersonCv")
+            .withRelationshipType("CvPerson")
             .withTitle("John Smith")
             .build();
 
@@ -2285,7 +2285,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item personItem = createItem(context, collection)
-            .withRelationshipType("PersonCv")
+            .withRelationshipType("CvPerson")
             .withTitle("John Smith")
             .withFullName("John Smith")
             .withVernacularName("JOHN SMITH")

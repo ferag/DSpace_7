@@ -133,8 +133,8 @@
         </rightCardinality>
     </type>
     <type>
-        <leftType>PersonCv</leftType>
-        <rightType>PersonCv</rightType>
+        <leftType>CvPerson</leftType>
+        <rightType>CvPerson</rightType>
         <leftwardType>isMergedIn</leftwardType>
         <rightwardType>isMergeOf</rightwardType>
         <leftCardinality>

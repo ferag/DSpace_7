@@ -124,6 +124,25 @@ public interface RelationshipService extends DSpaceCRUDService<Relationship> {
         throws SQLException;
 
     /**
+     * This method returns a list of Relationships for which the leftItem or
+     * rightItem is equal to the given Item object and for which one of the
+     * RelationshipType object is equal to the relationshipType property
+     * 
+     * @param context           The relevant DSpace context
+     * @param item              The Item object to be matched on the leftItem or
+     *                          rightItem for the relationship
+     * @param relationshipTypes The RelationshipType list that will be used to check
+     *                          the Relationship on
+     * @param isLeft            Is the item left or right
+     * @return The list of Relationship objects that have the given Item object as
+     *         leftItem or rightItem and for which the relationshipType property is
+     *         equal to the given RelationshipType
+     * @throws SQLException If something goes wrong
+     */
+    public List<Relationship> findByItemAndRelationshipTypes(Context context, Item item,
+        List<RelationshipType> relationshipTypes, boolean isLeft) throws SQLException;
+
+    /**
      * This method returns a list of Relationships for which the leftItem or rightItem is equal to the given
      * Item object and for which the RelationshipType object is equal to the relationshipType property
      * @param context           The relevant DSpace context

@@ -8,6 +8,7 @@
 package org.dspace.content;
 
 import static org.dspace.eperson.GroupType.SCOPED;
+import static org.dspace.util.UUIDUtils.fromString;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -206,7 +207,16 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
                 "Required metadata field '" + MetadataSchemaEnum.DC.getName() + ".title' doesn't exist!");
         }
 
-        return communityDAO.findAllNoParent(context, sortField);
+        List<Community> topCommunities = communityDAO.findAllNoParent(context, sortField);
+
+        UUID ctiVitaeCloneCommunityId = fromString(configurationService.getProperty("cti-vitae.clone.root-id"));
+        if (ctiVitaeCloneCommunityId == null) {
+            return topCommunities;
+        }
+
+        return topCommunities.stream()
+            .filter(community -> !community.getID().equals(ctiVitaeCloneCommunityId))
+            .collect(Collectors.toList());
     }
 
     @Override

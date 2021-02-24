@@ -682,6 +682,12 @@ public class RelationshipServiceImpl implements RelationshipService {
     }
 
     @Override
+    public List<Relationship> findByItemAndRelationshipTypes(Context context, Item item,
+        List<RelationshipType> relationshipTypes, boolean isLeft) throws SQLException {
+        return relationshipDAO.findByItemAndRelationshipTypes(context, item, relationshipTypes, isLeft);
+    }
+
+    @Override
     public List<Relationship> findByItemAndRelationshipType(Context context, Item item,
                                                             RelationshipType relationshipType, boolean isLeft,
                                                             int limit, int offset)

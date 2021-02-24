@@ -19,7 +19,8 @@ public enum ConcytecWorkflowRelation {
     WITHDRAW("isWithdrawOfItem", "isWithdrawnByItem"),
     REINSTATE("isReinstatementOfItem", "isReinstatedByItem"),
     MERGED("isMergedIn", "isMergeOf"),
-    ORIGINATED("isOriginatedFrom", "isOriginOf");
+    ORIGINATED("isOriginatedFrom", "isOriginOf"),
+    CLONE("isCloneOfItem", "isClonedByItem");
 
     private final String leftType;
 

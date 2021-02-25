@@ -17,7 +17,7 @@
             <provenance/>
         </collection>
         <collection>
-            <name>Notifications</name>
+            <name>notification</name>
             <entity-type>Notification</entity-type>
             <submission-type>notification-form</submission-type>
             <description/>

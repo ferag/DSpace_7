@@ -251,6 +251,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         List<String> groupIds = of(directorioReviewGroup.getID().toString(), directorioEditorGroup.getID().toString());
         configurationService.setProperty("directorio.security.policy-groups", groupIds);
+        configurationService.setProperty("item.enable-virtual-metadata", false);
 
     }
 

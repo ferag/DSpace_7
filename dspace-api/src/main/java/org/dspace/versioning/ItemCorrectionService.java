@@ -13,6 +13,7 @@ import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -188,7 +189,7 @@ public class ItemCorrectionService {
     public List<Relationship> getCorrectionItemRelations(Context ctx, Item item, boolean isLeft) throws SQLException {
         RelationshipType type = findRelationshipType(ctx, item, getCorrectionRelationshipName());
         if (type == null) {
-            return null;
+            return Collections.emptyList();
         }
         return relationshipService.findByItemAndRelationshipType(ctx, item, type, isLeft);
     }

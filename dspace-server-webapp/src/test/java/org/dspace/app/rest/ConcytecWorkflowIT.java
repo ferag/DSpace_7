@@ -11,9 +11,11 @@ import static com.jayway.jsonpath.JsonPath.read;
 import static java.util.List.of;
 import static org.dspace.app.matcher.MetadataValueMatcher.with;
 import static org.dspace.builder.CollectionBuilder.createCollection;
+import static org.dspace.builder.EntityTypeBuilder.createEntityTypeBuilder;
 import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
 import static org.dspace.xmlworkflow.ConcytecFeedback.APPROVE;
 import static org.dspace.xmlworkflow.ConcytecFeedback.REJECT;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.CLONE;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.CORRECTION;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.MERGED;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.ORIGINATED;
@@ -30,8 +32,10 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
+import static org.springframework.data.rest.webmvc.RestMediaTypes.TEXT_URI_LIST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
@@ -41,6 +45,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.IteratorUtils;
 import org.dspace.app.rest.model.patch.AddOperation;
 import org.dspace.app.rest.model.patch.Operation;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
@@ -94,9 +99,6 @@ import org.springframework.util.MultiValueMap;
  */
 public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
-    /**
-     * 
-     */
     private static final String ITEM_TITLE = "Submission Item";
 
     @Autowired
@@ -169,7 +171,6 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
     @Before
     public void before() throws Exception {
-        super.setUp();
 
         context.turnOffAuthorisationSystem();
 
@@ -249,7 +250,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         configurationService.setProperty("directorios.community-id", directorioCommunity.getID().toString());
 
         List<String> groupIds = of(directorioReviewGroup.getID().toString(), directorioEditorGroup.getID().toString());
-        configurationService.addPropertyValue("directorio.security.policy-groups", groupIds);
+        configurationService.setProperty("directorio.security.policy-groups", groupIds);
 
     }
 
@@ -2320,13 +2321,508 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             personItem.getID().toString(), 0, 600)));
     }
 
-    private RelationshipType createHasShadowCopyRelationship(EntityType institutionType, EntityType directorioType) {
-        return createRelationshipTypeBuilder(context, institutionType, directorioType, SHADOW_COPY.getLeftType(),
+    @Test
+    public void testCvPersonCorrectionWithoutSynchronization() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EntityType institutionPersonType = createEntityType("InstitutionPerson");
+
+        EntityType personType = createEntityType("Person");
+
+        EntityType cvPersonCloneType = createEntityTypeBuilder(context, "CvPersonClone").build();
+        EntityType cvPersonType = createEntityTypeBuilder(context, "CvPerson").build();
+
+        createHasShadowCopyRelationship(cvPersonCloneType, personType);
+        createIsCorrectionOfRelationship(cvPersonCloneType);
+        RelationshipType cvPersonIsCloneOf = createCloneRelationship(cvPersonCloneType, cvPersonType);
+        createIsOriginatedFromRelationship(personType, cvPersonCloneType);
+
+        RelationshipType personHasShadowCopy = createHasShadowCopyRelationship(institutionPersonType, personType);
+
+        RelationshipType personIsCorrectionOf = createIsCorrectionOfRelationship(personType);
+        createIsMergedInRelationship(personType);
+
+        CollectionBuilder.createCollection(context, directorioCommunity)
+            .withWorkflow("directorioWorkflow")
+            .withName("Persons")
+            .withRelationshipType("Person")
+            .withSubmitterGroup(submitter)
+            .withRoleGroup("editor", directorioEditorGroup)
+            .build();
+
+        Collection institutionPersons = createCollection(context, parentCommunity)
+            .withWorkflow("institutionWorkflow")
+            .withName("Institution person collection")
+            .withRelationshipType("InstitutionPerson")
+            .withSubmissionDefinition("traditional")
+            .withSubmitterGroup(submitter)
+            .withRoleGroup("reviewer", reviewGroup)
+            .build();
+
+        Collection cvPersons = createCollection(context, parentCommunity)
+            .withName("CV person collection")
+            .withRelationshipType("CvPerson")
+            .withSubmitterGroup(submitter)
+            .build();
+
+        Collection cvPersonClones = createCollection(context, parentCommunity)
+            .withName("CV person clone collection")
+            .withRelationshipType("CvPersonClone")
+            .withWorkflow("institutionWorkflow")
+            .withSubmitterGroup(submitter)
+            .build();
+
+        configurationService.setProperty("researcher-profile.collection.uuid", cvPersons.getID().toString());
+        configurationService.setProperty("cti-vitae.clone.profile-collection-id", cvPersonClones.getID().toString());
+
+        context.restoreAuthSystemState();
+
+        WorkspaceItem personWorkspaceItem = WorkspaceItemBuilder
+            .createWorkspaceItem(context, institutionPersons)
+            .withTitle("White, Walter")
+            .build();
+
+        Item personItem = personWorkspaceItem.getItem();
+
+        workflowService.start(context, personWorkspaceItem);
+
+        Relationship personRelationship = findRelation(personItem, personHasShadowCopy);
+        Item directorioPerson = personRelationship.getRightItem();
+
+        claimTaskAndApprove(directorioPerson, secondDirectorioUser, directorioEditorGroup);
+
+        claimProfile(admin, directorioPerson);
+
+        List<Item> profiles = findItems(cvPersons);
+        assertThat(profiles, hasSize(1));
+
+        Item profile = profiles.get(0);
+
+        List<Item> profileClones = findItems(cvPersonClones);
+        assertThat(profileClones, hasSize(1));
+
+        Item profileClone = profileClones.get(0);
+        Relationship isCloneOfRelation = findRelation(profileClone, cvPersonIsCloneOf);
+        assertThat(isCloneOfRelation.getRightItem(), is(profile));
+
+        List<Operation> operations = List.of(addEducationOperation("Education"));
+        updateProfile(admin, operations, profile, "EDUCATION");
+
+        profile = reloadItem(profile);
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.education", "Education")));
+
+        profileClone = reloadItem(profileClone);
+        assertThat(profileClone.getMetadata(), not(hasItem(with("crisrp.education", "Education"))));
+
+        directorioPerson = reloadItem(directorioPerson);
+        assertThat(directorioPerson.getMetadata(), not(hasItem(with("crisrp.education", "Education"))));
+
+        List<Relationship> directorioPersonCorrectionRelations = findRelations(directorioPerson, personIsCorrectionOf);
+        assertThat(directorioPersonCorrectionRelations, empty());
+
+        operations = List.of(addEducationOperation("Education 2", true), addSyncEducationOperation(false));
+        updateProfile(admin, operations, profile, "EDUCATION");
+
+        profile = reloadItem(profile);
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.education", "Education", 0)));
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.education", "Education 2", 1)));
+
+        profileClone = reloadItem(profileClone);
+        assertThat(profileClone.getMetadata(), not(hasItem(with("crisrp.education", "Education", 0))));
+        assertThat(profileClone.getMetadata(), not(hasItem(with("crisrp.education", "Education 2", 1))));
+
+        directorioPerson = reloadItem(directorioPerson);
+        assertThat(directorioPerson.getMetadata(), not(hasItem(with("crisrp.education", "Education", 0))));
+        assertThat(directorioPerson.getMetadata(), not(hasItem(with("crisrp.education", "Education 2", 1))));
+
+        directorioPersonCorrectionRelations = findRelations(directorioPerson, personIsCorrectionOf);
+        assertThat(directorioPersonCorrectionRelations, empty());
+
+    }
+
+    @Test
+    public void testCvPersonCorrectionWithConcytecApproval() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EntityType institutionPersonType = createEntityType("InstitutionPerson");
+
+        EntityType personType = createEntityType("Person");
+
+        EntityType cvPersonCloneType = createEntityTypeBuilder(context, "CvPersonClone").build();
+        EntityType cvPersonType = createEntityTypeBuilder(context, "CvPerson").build();
+
+        createHasShadowCopyRelationship(cvPersonCloneType, personType);
+        createIsCorrectionOfRelationship(cvPersonCloneType);
+        RelationshipType cvPersonIsCloneOf = createCloneRelationship(cvPersonCloneType, cvPersonType);
+        createIsOriginatedFromRelationship(personType, cvPersonCloneType);
+
+        RelationshipType personHasShadowCopy = createHasShadowCopyRelationship(institutionPersonType, personType);
+
+        RelationshipType personIsCorrectionOf = createIsCorrectionOfRelationship(personType);
+        createIsMergedInRelationship(personType);
+
+        CollectionBuilder.createCollection(context, directorioCommunity)
+            .withWorkflow("directorioWorkflow")
+            .withName("Persons")
+            .withRelationshipType("Person")
+            .withSubmitterGroup(submitter)
+            .withRoleGroup("editor", directorioEditorGroup)
+            .build();
+
+        Collection institutionPersons = createCollection(context, parentCommunity)
+            .withWorkflow("institutionWorkflow")
+            .withName("Institution person collection")
+            .withRelationshipType("InstitutionPerson")
+            .withSubmissionDefinition("traditional")
+            .withSubmitterGroup(submitter)
+            .withRoleGroup("reviewer", reviewGroup)
+            .build();
+
+        Collection cvPersons = createCollection(context, parentCommunity)
+            .withName("CV person collection")
+            .withRelationshipType("CvPerson")
+            .withSubmitterGroup(submitter)
+            .build();
+
+        Collection cvPersonClones = createCollection(context, parentCommunity)
+            .withName("CV person clone collection")
+            .withRelationshipType("CvPersonClone")
+            .withWorkflow("institutionWorkflow")
+            .withSubmitterGroup(submitter)
+            .build();
+
+        configurationService.setProperty("researcher-profile.collection.uuid", cvPersons.getID().toString());
+        configurationService.setProperty("cti-vitae.clone.profile-collection-id", cvPersonClones.getID().toString());
+
+        context.restoreAuthSystemState();
+
+        WorkspaceItem personWorkspaceItem = WorkspaceItemBuilder
+            .createWorkspaceItem(context, institutionPersons)
+            .withTitle("White, Walter")
+            .build();
+
+        Item personItem = personWorkspaceItem.getItem();
+
+        workflowService.start(context, personWorkspaceItem);
+
+        Relationship personRelationship = findRelation(personItem, personHasShadowCopy);
+        Item directorioPerson = personRelationship.getRightItem();
+
+        claimTaskAndApprove(directorioPerson, secondDirectorioUser, directorioEditorGroup);
+
+        claimProfile(admin, directorioPerson);
+
+        List<Item> profiles = findItems(cvPersons);
+        assertThat(profiles, hasSize(1));
+
+        Item profile = profiles.get(0);
+
+        List<Item> profileClones = findItems(cvPersonClones);
+        assertThat(profileClones, hasSize(1));
+
+        Item profileClone = profileClones.get(0);
+        Relationship isCloneOfRelation = findRelation(profileClone, cvPersonIsCloneOf);
+        assertThat(isCloneOfRelation.getRightItem(), is(profile));
+
+        List<Operation> operations = List.of(addEducationOperation("Education"), addSyncEducationOperation(true));
+        updateProfile(admin, operations, profile, "EDUCATION");
+
+        profile = reloadItem(profile);
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.education", "Education")));
+
+        profileClone = reloadItem(profileClone);
+        assertThat(profileClone.getMetadata(), not(hasItem(with("crisrp.education", "Education"))));
+
+        directorioPerson = reloadItem(directorioPerson);
+        assertThat(directorioPerson.getMetadata(), not(hasItem(with("crisrp.education", "Education"))));
+
+        Relationship directorioPersonCorrectionRelation = findRelation(directorioPerson, personIsCorrectionOf);
+        Item directorioPersonCorrection = directorioPersonCorrectionRelation.getLeftItem();
+
+        claimTaskAndApprove(directorioPersonCorrection, secondDirectorioUser, directorioEditorGroup);
+
+        profile = reloadItem(profile);
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.education", "Education")));
+
+        profileClone = reloadItem(profileClone);
+        assertThat(profileClone.getMetadata(), hasItem(with("crisrp.education", "Education")));
+
+        directorioPerson = reloadItem(directorioPerson);
+        assertThat(directorioPerson.getMetadata(), hasItem(with("crisrp.education", "Education")));
+
+        directorioPersonCorrection = reloadItem(directorioPersonCorrection);
+        assertThat(directorioPersonCorrection, nullValue());
+
+    }
+
+    @Test
+    public void testCvPersonCorrectionWithConcytecRejection() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EntityType institutionPersonType = createEntityType("InstitutionPerson");
+
+        EntityType personType = createEntityType("Person");
+
+        EntityType cvPersonCloneType = createEntityTypeBuilder(context, "CvPersonClone").build();
+        EntityType cvPersonType = createEntityTypeBuilder(context, "CvPerson").build();
+
+        createHasShadowCopyRelationship(cvPersonCloneType, personType);
+        createIsCorrectionOfRelationship(cvPersonCloneType);
+        RelationshipType cvPersonIsCloneOf = createCloneRelationship(cvPersonCloneType, cvPersonType);
+        createIsOriginatedFromRelationship(personType, cvPersonCloneType);
+
+        RelationshipType personHasShadowCopy = createHasShadowCopyRelationship(institutionPersonType, personType);
+
+        RelationshipType personIsCorrectionOf = createIsCorrectionOfRelationship(personType);
+        createIsMergedInRelationship(personType);
+
+        CollectionBuilder.createCollection(context, directorioCommunity)
+            .withWorkflow("directorioWorkflow")
+            .withName("Persons")
+            .withRelationshipType("Person")
+            .withSubmitterGroup(submitter)
+            .withRoleGroup("editor", directorioEditorGroup)
+            .build();
+
+        Collection institutionPersons = createCollection(context, parentCommunity)
+            .withWorkflow("institutionWorkflow")
+            .withName("Institution person collection")
+            .withRelationshipType("InstitutionPerson")
+            .withSubmissionDefinition("traditional")
+            .withSubmitterGroup(submitter)
+            .withRoleGroup("reviewer", reviewGroup)
+            .build();
+
+        Collection cvPersons = createCollection(context, parentCommunity)
+            .withName("CV person collection")
+            .withRelationshipType("CvPerson")
+            .withSubmitterGroup(submitter)
+            .build();
+
+        Collection cvPersonClones = createCollection(context, parentCommunity)
+            .withName("CV person clone collection")
+            .withRelationshipType("CvPersonClone")
+            .withWorkflow("institutionWorkflow")
+            .withSubmitterGroup(submitter)
+            .build();
+
+        configurationService.setProperty("researcher-profile.collection.uuid", cvPersons.getID().toString());
+        configurationService.setProperty("cti-vitae.clone.profile-collection-id", cvPersonClones.getID().toString());
+
+        context.restoreAuthSystemState();
+
+        WorkspaceItem personWorkspaceItem = WorkspaceItemBuilder
+            .createWorkspaceItem(context, institutionPersons)
+            .withTitle("White, Walter")
+            .build();
+
+        Item personItem = personWorkspaceItem.getItem();
+
+        workflowService.start(context, personWorkspaceItem);
+
+        Relationship personRelationship = findRelation(personItem, personHasShadowCopy);
+        Item directorioPerson = personRelationship.getRightItem();
+
+        claimTaskAndApprove(directorioPerson, secondDirectorioUser, directorioEditorGroup);
+
+        claimProfile(admin, directorioPerson);
+
+        List<Item> profiles = findItems(cvPersons);
+        assertThat(profiles, hasSize(1));
+
+        Item profile = profiles.get(0);
+
+        List<Item> profileClones = findItems(cvPersonClones);
+        assertThat(profileClones, hasSize(1));
+
+        Item profileClone = profileClones.get(0);
+        Relationship isCloneOfRelation = findRelation(profileClone, cvPersonIsCloneOf);
+        assertThat(isCloneOfRelation.getRightItem(), is(profile));
+
+        List<Operation> operations = List.of(addEducationOperation("Education"), addSyncEducationOperation(true));
+        updateProfile(admin, operations, profile, "EDUCATION");
+
+        profile = reloadItem(profile);
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.education", "Education")));
+
+        profileClone = reloadItem(profileClone);
+        assertThat(profileClone.getMetadata(), not(hasItem(with("crisrp.education", "Education"))));
+
+        directorioPerson = reloadItem(directorioPerson);
+        assertThat(directorioPerson.getMetadata(), not(hasItem(with("crisrp.education", "Education"))));
+
+        Relationship directorioPersonCorrectionRelation = findRelation(directorioPerson, personIsCorrectionOf);
+        Item directorioPersonCorrection = directorioPersonCorrectionRelation.getLeftItem();
+
+        claimTaskAndReject(directorioPersonCorrection, secondDirectorioUser, directorioEditorGroup, "invalid");
+
+        profile = reloadItem(profile);
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.education", "Education")));
+
+        profileClone = reloadItem(profileClone);
+        assertThat(profileClone.getMetadata(), hasItem(with("crisrp.education", "Education")));
+
+        directorioPerson = reloadItem(directorioPerson);
+        assertThat(directorioPerson.getMetadata(), not(hasItem(with("crisrp.education", "Education"))));
+
+        directorioPersonCorrection = reloadItem(directorioPersonCorrection);
+        assertThat(directorioPersonCorrection, nullValue());
+
+    }
+
+    @Test
+    public void testManyCvPersonCorrections() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EntityType institutionPersonType = createEntityType("InstitutionPerson");
+
+        EntityType personType = createEntityType("Person");
+
+        EntityType cvPersonCloneType = createEntityTypeBuilder(context, "CvPersonClone").build();
+        EntityType cvPersonType = createEntityTypeBuilder(context, "CvPerson").build();
+
+        createHasShadowCopyRelationship(cvPersonCloneType, personType);
+        RelationshipType cvPersonIsCorrectionOf = createIsCorrectionOfRelationship(cvPersonCloneType);
+        RelationshipType cvPersonIsCloneOf = createCloneRelationship(cvPersonCloneType, cvPersonType);
+        createIsOriginatedFromRelationship(personType, cvPersonCloneType);
+
+        RelationshipType personHasShadowCopy = createHasShadowCopyRelationship(institutionPersonType, personType);
+
+        RelationshipType personIsCorrectionOf = createIsCorrectionOfRelationship(personType);
+        createIsMergedInRelationship(personType);
+
+        CollectionBuilder.createCollection(context, directorioCommunity)
+            .withWorkflow("directorioWorkflow")
+            .withName("Persons")
+            .withRelationshipType("Person")
+            .withSubmitterGroup(submitter)
+            .withRoleGroup("editor", directorioEditorGroup)
+            .build();
+
+        Collection institutionPersons = createCollection(context, parentCommunity)
+            .withWorkflow("institutionWorkflow")
+            .withName("Institution person collection")
+            .withRelationshipType("InstitutionPerson")
+            .withSubmissionDefinition("traditional")
+            .withSubmitterGroup(submitter)
+            .withRoleGroup("reviewer", reviewGroup)
+            .build();
+
+        Collection cvPersons = createCollection(context, parentCommunity)
+            .withName("CV person collection")
+            .withRelationshipType("CvPerson")
+            .withSubmitterGroup(submitter)
+            .build();
+
+        Collection cvPersonClones = createCollection(context, parentCommunity)
+            .withName("CV person clone collection")
+            .withRelationshipType("CvPersonClone")
+            .withWorkflow("institutionWorkflow")
+            .withSubmitterGroup(submitter)
+            .build();
+
+        configurationService.setProperty("researcher-profile.collection.uuid", cvPersons.getID().toString());
+        configurationService.setProperty("cti-vitae.clone.profile-collection-id", cvPersonClones.getID().toString());
+
+        context.restoreAuthSystemState();
+
+        WorkspaceItem personWorkspaceItem = WorkspaceItemBuilder
+            .createWorkspaceItem(context, institutionPersons)
+            .withTitle("White, Walter")
+            .build();
+
+        Item personItem = personWorkspaceItem.getItem();
+
+        workflowService.start(context, personWorkspaceItem);
+
+        Relationship personRelationship = findRelation(personItem, personHasShadowCopy);
+        Item directorioPerson = personRelationship.getRightItem();
+
+        claimTaskAndApprove(directorioPerson, secondDirectorioUser, directorioEditorGroup);
+
+        claimProfile(admin, directorioPerson);
+
+        List<Item> profiles = findItems(cvPersons);
+        assertThat(profiles, hasSize(1));
+
+        Item profile = profiles.get(0);
+
+        List<Item> profileClones = findItems(cvPersonClones);
+        assertThat(profileClones, hasSize(1));
+
+        Item profileClone = profileClones.get(0);
+        Relationship isCloneOfRelation = findRelation(profileClone, cvPersonIsCloneOf);
+        assertThat(isCloneOfRelation.getRightItem(), is(profile));
+
+        List<Operation> operations = List.of(addEducationOperation("Education"), addSyncEducationOperation(true));
+        updateProfile(admin, operations, profile, "EDUCATION");
+
+        profile = reloadItem(profile);
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.education", "Education")));
+
+        profileClone = reloadItem(profileClone);
+        assertThat(profileClone.getMetadata(), not(hasItem(with("crisrp.education", "Education"))));
+
+        directorioPerson = reloadItem(directorioPerson);
+        assertThat(directorioPerson.getMetadata(), not(hasItem(with("crisrp.education", "Education"))));
+
+        Relationship directorioPersonCorrectionRelation = findRelation(directorioPerson, personIsCorrectionOf);
+        Item directorioPersonCorrection = directorioPersonCorrectionRelation.getLeftItem();
+
+        Relationship cvPersonCloneCorrectionRelation = findRelation(profileClone, cvPersonIsCorrectionOf);
+        Item cvPersonCloneCorrection = cvPersonCloneCorrectionRelation.getLeftItem();
+
+        operations = List.of(addEducationOperation("Education 2", true));
+        updateProfile(admin, operations, profile, "EDUCATION");
+
+        profile = reloadItem(profile);
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.education", "Education", 0)));
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.education", "Education 2", 1)));
+
+        profileClone = reloadItem(profileClone);
+        assertThat(profileClone.getMetadata(), not(hasItem(with("crisrp.education", "Education", 0))));
+        assertThat(profileClone.getMetadata(), not(hasItem(with("crisrp.education", "Education 2", 1))));
+
+        directorioPerson = reloadItem(directorioPerson);
+        assertThat(directorioPerson.getMetadata(), not(hasItem(with("crisrp.education", "Education", 0))));
+        assertThat(directorioPerson.getMetadata(), not(hasItem(with("crisrp.education", "Education 2", 1))));
+
+        directorioPersonCorrection = reloadItem(directorioPersonCorrection);
+        assertThat(directorioPersonCorrection, nullValue());
+
+        cvPersonCloneCorrection = reloadItem(cvPersonCloneCorrection);
+        assertThat(cvPersonCloneCorrection, nullValue());
+
+        Relationship newDirectorioPersonCorrectionRelation = findRelation(directorioPerson, personIsCorrectionOf);
+        Item newDirectorioPersonCorrection = newDirectorioPersonCorrectionRelation.getLeftItem();
+
+        claimTaskAndApprove(newDirectorioPersonCorrection, secondDirectorioUser, directorioEditorGroup);
+
+        profile = reloadItem(profile);
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.education", "Education", 0)));
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.education", "Education 2", 1)));
+
+        profileClone = reloadItem(profileClone);
+        assertThat(profileClone.getMetadata(), hasItem(with("crisrp.education", "Education", 0)));
+        assertThat(profileClone.getMetadata(), hasItem(with("crisrp.education", "Education 2", 1)));
+
+        directorioPerson = reloadItem(directorioPerson);
+        assertThat(directorioPerson.getMetadata(), hasItem(with("crisrp.education", "Education", 0)));
+        assertThat(directorioPerson.getMetadata(), hasItem(with("crisrp.education", "Education 2", 1)));
+
+    }
+
+    private RelationshipType createHasShadowCopyRelationship(EntityType leftType, EntityType rightType) {
+        return createRelationshipTypeBuilder(context, leftType, rightType, SHADOW_COPY.getLeftType(),
             SHADOW_COPY.getRightType(), 0, 1, 0, 1).build();
     }
 
-    private RelationshipType createIsOriginatedFromRelationship(EntityType directorioType, EntityType institutionType) {
-        return createRelationshipTypeBuilder(context, directorioType, institutionType,
+    private RelationshipType createIsOriginatedFromRelationship(EntityType rightType, EntityType leftType) {
+        return createRelationshipTypeBuilder(context, rightType, leftType,
             ORIGINATED.getLeftType(), ORIGINATED.getRightType(), 0, null, 0, 1).build();
     }
 
@@ -2350,9 +2846,22 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             MERGED.getRightType(), 0, 1, 0, null).build();
     }
 
+    private RelationshipType createCloneRelationship(EntityType leftType, EntityType rightType) {
+        return createRelationshipTypeBuilder(context, leftType, rightType, CLONE.getLeftType(),
+            CLONE.getRightType(), 0, 1, 0, 1).build();
+    }
+
+    private void claimTaskAndApprove(Item item, EPerson user, Group expectedGroup) throws Exception {
+        claimTaskAndApprove(getWorkflowItem(item), user, expectedGroup);
+    }
+
     private void claimTaskAndApprove(XmlWorkflowItem workflowItem, EPerson user, Group expectedGroup) throws Exception {
         ClaimedTask claimedTask = claimTask(workflowItem, user, expectedGroup);
         approveClaimedTaskViaRest(user, claimedTask);
+    }
+
+    private void claimTaskAndReject(Item item, EPerson user, Group expectedGroup, String reason) throws Exception {
+        claimTaskAndReject(getWorkflowItem(item), user, expectedGroup, reason);
     }
 
     private void claimTaskAndReject(XmlWorkflowItem workflowItem, EPerson user, Group expectedGroup, String reason)
@@ -2545,5 +3054,43 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
     private int metadataCount(Item item, String metadataField) {
         return itemService.getMetadataByMetadataString(item, metadataField).size();
+    }
+
+    private void claimProfile(EPerson user, Item item) throws Exception {
+        getClient(getAuthToken(user.getEmail(), password)).perform(post("/api/cris/profiles/")
+            .contentType(TEXT_URI_LIST).content("http://localhost:8080/server/api/core/items/" + item.getID()))
+            .andExpect(jsonPath("$.id", is(user.getID().toString())))
+            .andExpect(jsonPath("$.visible", is(false)))
+            .andExpect(jsonPath("$.type", is("profile")));
+    }
+
+    private Operation addEducationOperation(String value) {
+        return addEducationOperation(value, false);
+    }
+
+    private Operation addEducationOperation(String value, boolean append) {
+        String path = "/sections/cv-person-edit-education/crisrp.education";
+        if (append) {
+            return new AddOperation(path + "/-", Map.of("value", value));
+        } else {
+            return new AddOperation(path, List.of(Map.of("value", value)));
+        }
+    }
+
+    private Operation addSyncEducationOperation(boolean value) {
+        return new AddOperation("/sections/cv-person-edit-education/perucris.cvPerson.syncEducation",
+            List.of(Map.of("value", value + "")));
+    }
+
+    private void updateProfile(EPerson user, List<Operation> operations, Item profile, String mode) throws Exception {
+        getClient(getAuthToken(user.getEmail(), password))
+            .perform(patch("/api/core/edititems/" + profile.getID() + ":" + mode)
+                .content(getPatchContent(operations))
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+    }
+
+    private List<Item> findItems(Collection collection) throws SQLException {
+        return IteratorUtils.toList(itemService.findAllByCollection(context, collection));
     }
 }

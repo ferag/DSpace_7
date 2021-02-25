@@ -209,8 +209,8 @@
       <type>detect-duplicate</type>
     </step-definition>
 
-    <step-definition id="notification-step" mandatory="true">
-      <heading>submit.progressbar.notification</heading>
+    <step-definition id="notification-form" mandatory="true">
+      <heading>submit.progressbar.describe.notification-form</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
@@ -453,7 +453,8 @@
     </submission-process>
 
     <submission-process name="notification">
-      <step id="notification-step" />
+      <step id="collection" />
+      <step id="notification-form" />
     </submission-process>
 
   </submission-definitions>

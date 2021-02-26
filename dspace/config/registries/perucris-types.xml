@@ -651,4 +651,10 @@
         <qualifier>syncAffiliation</qualifier>
     </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>cvPerson</element>
+        <qualifier>syncQualification</qualifier>
+    </dc-type>
+
 </dspace-dc-types>

@@ -488,6 +488,71 @@ public class ProfileEditConsumerIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    public void testProfileEditConsumerWhenQualificationSynchronizationIsEnabled() throws Exception {
+
+        addMetadata(profile, "crisrp", "qualification", null, "First qualification");
+        addMetadata(profile, "crisrp", "qualification", "orgunit", "Group");
+        addMetadata(profile, "crisrp", "qualification", "start", "2015-01-01");
+        addMetadata(profile, "crisrp", "qualification", "end", "2018-01-01");
+
+        addMetadata(profile, "crisrp", "qualification", null, "Second qualification");
+        addMetadata(profile, "crisrp", "qualification", "orgunit", "Group");
+        addMetadata(profile, "crisrp", "qualification", "start", "2018-01-02");
+        addMetadata(profile, "crisrp", "qualification", "end", PLACEHOLDER);
+
+        addMetadata(profile, "perucris", "cvPerson", "syncQualification", "true");
+
+        profile = updateItem(profile);
+
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.qualification", "First qualification", 0)));
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.qualification.start", "2015-01-01", 0)));
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.qualification.end", "2018-01-01", 0)));
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.qualification.orgunit", "Group", 0)));
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.qualification", "Second qualification", 1)));
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.qualification.start", "2018-01-02", 1)));
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.qualification.end", PLACEHOLDER, 1)));
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.qualification.orgunit", "Group", 1)));
+
+        profileClone = reloadItem(profileClone);
+        assertThat(getMetadata(profileClone, "crisrp", "qualification", null), empty());
+        assertThat(getMetadata(profileClone, "crisrp", "qualification", "start"), empty());
+        assertThat(getMetadata(profileClone, "crisrp", "qualification", "end"), empty());
+        assertThat(getMetadata(profileClone, "crisrp", "qualification", "orgunit"), empty());
+
+        person = reloadItem(person);
+        assertThat(getMetadata(person, "crisrp", "qualification", null), empty());
+        assertThat(getMetadata(person, "crisrp", "qualification", "start"), empty());
+        assertThat(getMetadata(person, "crisrp", "qualification", "end"), empty());
+        assertThat(getMetadata(person, "crisrp", "qualification", "orgunit"), empty());
+
+        List<Relationship> cloneCorrectionRelations = findRelations(profileClone, cloneIsCorrectionOf);
+        assertThat(cloneCorrectionRelations, hasSize(1));
+
+        Item cloneCorrection = cloneCorrectionRelations.get(0).getLeftItem();
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("crisrp.qualification", "First qualification", 0)));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("crisrp.qualification.start", "2015-01-01", 0)));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("crisrp.qualification.end", "2018-01-01", 0)));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("crisrp.qualification.orgunit", "Group", 0)));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("crisrp.qualification", "Second qualification", 1)));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("crisrp.qualification.start", "2018-01-02", 1)));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("crisrp.qualification.end", PLACEHOLDER, 1)));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("crisrp.qualification.orgunit", "Group", 1)));
+
+        List<Relationship> personCorrectionRelations = findRelations(person, isCorrectionOf);
+        assertThat(personCorrectionRelations, hasSize(1));
+
+        Item personCorrection = personCorrectionRelations.get(0).getLeftItem();
+        assertThat(personCorrection.getMetadata(), hasItem(with("crisrp.qualification", "First qualification", 0)));
+        assertThat(personCorrection.getMetadata(), hasItem(with("crisrp.qualification.start", "2015-01-01", 0)));
+        assertThat(personCorrection.getMetadata(), hasItem(with("crisrp.qualification.end", "2018-01-01", 0)));
+        assertThat(personCorrection.getMetadata(), hasItem(with("crisrp.qualification.orgunit", "Group", 0)));
+        assertThat(personCorrection.getMetadata(), hasItem(with("crisrp.qualification", "Second qualification", 1)));
+        assertThat(personCorrection.getMetadata(), hasItem(with("crisrp.qualification.start", "2018-01-02", 1)));
+        assertThat(personCorrection.getMetadata(), hasItem(with("crisrp.qualification.end", PLACEHOLDER, 1)));
+        assertThat(personCorrection.getMetadata(), hasItem(with("crisrp.qualification.orgunit", "Group", 1)));
+    }
+
+    @Test
     public void testProfileEditConsumerWhenEducationAndAffiliationSynchronizationAreEnabled() throws Exception {
 
         addMetadata(profile, "crisrp", "education", null, "Education");

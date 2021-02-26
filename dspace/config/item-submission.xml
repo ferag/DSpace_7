@@ -207,6 +207,11 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
+    <step-definition id="cv-person-edit-qualification" mandatory="true">
+      <heading>submit.progressbar.describe.cv-person-edit-qualification</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
     <step-definition id="extraction" mandatory="false">
       <heading>submit.progressbar.extraction</heading>
       <processing-class>org.dspace.app.rest.submit.step.ExtractMetadataStep</processing-class>
@@ -378,6 +383,9 @@
     </submission-process>
     <submission-process name="cvperson-edit-affiliation">
       <step id="cv-person-edit-affiliation" />
+    </submission-process>
+    <submission-process name="cvperson-edit-qualification">
+      <step id="cv-person-edit-qualification" />
     </submission-process>
     <submission-process name="event">
       <step id="collection" />

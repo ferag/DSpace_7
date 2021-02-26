@@ -79,6 +79,14 @@
                <value>oairecerif.affiliation.role</value>
            </list>
        </entry>
+       <entry key="perucris.cvPerson.syncQualification" >
+           <list>
+               <value>crisrp.qualification</value>
+               <value>crisrp.qualification.orgunit</value>
+               <value>crisrp.qualification.start</value>
+               <value>crisrp.qualification.end</value>
+           </list>
+       </entry>
 	</util:map>
     
 

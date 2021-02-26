@@ -328,6 +328,9 @@ public class ProfileEditConsumerIT extends AbstractIntegrationTestWithDatabase {
         addMetadata(profile, "perucris", "education", "grantor", PLACEHOLDER);
         addMetadata(profile, "perucris", "education", "country", "England");
 
+        addMetadata(profile, "perucris", "subject", "ocde", "OCDE");
+        addMetadata(profile, "person", "identifier", "orcid", "1111-2222-3333-4444");
+
         addMetadata(profile, "perucris", "cvPerson", "syncEducation", "true");
 
         profile = updateItem(profile);
@@ -344,6 +347,8 @@ public class ProfileEditConsumerIT extends AbstractIntegrationTestWithDatabase {
         assertThat(profile.getMetadata(), hasItem(with("crisrp.education.role", "Role", 1)));
         assertThat(profile.getMetadata(), hasItem(with("perucris.education.grantor", PLACEHOLDER, 1)));
         assertThat(profile.getMetadata(), hasItem(with("perucris.education.country", "England", 1)));
+        assertThat(profile.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0)));
+        assertThat(profile.getMetadata(), hasItem(with("person.identifier.orcid", "1111-2222-3333-4444", 0)));
 
         profileClone = reloadItem(profileClone);
         assertThat(getMetadata(profileClone, "crisrp", "education", null), empty());
@@ -352,6 +357,8 @@ public class ProfileEditConsumerIT extends AbstractIntegrationTestWithDatabase {
         assertThat(getMetadata(profileClone, "crisrp", "education", "role"), empty());
         assertThat(getMetadata(profileClone, "perucris", "education", "grantor"), empty());
         assertThat(getMetadata(profileClone, "perucris", "education", "country"), empty());
+        assertThat(getMetadata(profileClone, "perucris", "subject", "ocde"), empty());
+        assertThat(getMetadata(profileClone, "person", "identifier", "orcid"), empty());
 
         person = reloadItem(person);
         assertThat(getMetadata(person, "crisrp", "education", null), empty());
@@ -360,6 +367,8 @@ public class ProfileEditConsumerIT extends AbstractIntegrationTestWithDatabase {
         assertThat(getMetadata(person, "crisrp", "education", "role"), empty());
         assertThat(getMetadata(person, "perucris", "education", "grantor"), empty());
         assertThat(getMetadata(person, "perucris", "education", "country"), empty());
+        assertThat(getMetadata(person, "perucris", "subject", "ocde"), empty());
+        assertThat(getMetadata(person, "person", "identifier", "orcid"), empty());
 
         List<Relationship> cloneCorrectionRelations = findRelations(profileClone, cloneIsCorrectionOf);
         assertThat(cloneCorrectionRelations, hasSize(1));
@@ -378,6 +387,9 @@ public class ProfileEditConsumerIT extends AbstractIntegrationTestWithDatabase {
         assertThat(cloneCorrection.getMetadata(), hasItem(with("perucris.education.grantor", PLACEHOLDER, 1)));
         assertThat(cloneCorrection.getMetadata(), hasItem(with("perucris.education.country", "England", 1)));
 
+        assertThat(getMetadata(cloneCorrection, "perucris", "subject", "ocde"), empty());
+        assertThat(getMetadata(cloneCorrection, "person", "identifier", "orcid"), empty());
+
         List<Relationship> personCorrectionRelations = findRelations(person, isCorrectionOf);
         assertThat(personCorrectionRelations, hasSize(1));
 
@@ -394,6 +406,9 @@ public class ProfileEditConsumerIT extends AbstractIntegrationTestWithDatabase {
         assertThat(personCorrection.getMetadata(), hasItem(with("crisrp.education.role", "Role", 1)));
         assertThat(personCorrection.getMetadata(), hasItem(with("perucris.education.grantor", PLACEHOLDER, 1)));
         assertThat(personCorrection.getMetadata(), hasItem(with("perucris.education.country", "England", 1)));
+
+        assertThat(getMetadata(personCorrection, "perucris", "subject", "ocde"), empty());
+        assertThat(getMetadata(personCorrection, "person", "identifier", "orcid"), empty());
     }
 
     @Test
@@ -550,6 +565,77 @@ public class ProfileEditConsumerIT extends AbstractIntegrationTestWithDatabase {
         assertThat(personCorrection.getMetadata(), hasItem(with("crisrp.qualification.start", "2018-01-02", 1)));
         assertThat(personCorrection.getMetadata(), hasItem(with("crisrp.qualification.end", PLACEHOLDER, 1)));
         assertThat(personCorrection.getMetadata(), hasItem(with("crisrp.qualification.orgunit", "Group", 1)));
+    }
+
+    @Test
+    public void testProfileEditConsumerWhenBasicInfoSynchronizationIsEnabled() throws Exception {
+
+        addMetadata(profile, "crisrp", "qualification", null, "Qualification");
+        addMetadata(profile, "crisrp", "qualification", "orgunit", "Group");
+        addMetadata(profile, "crisrp", "qualification", "start", "2015-01-01");
+        addMetadata(profile, "crisrp", "qualification", "end", "2018-01-01");
+
+        addMetadata(profile, "perucris", "subject", "ocde", "OCDE");
+        addMetadata(profile, "person", "identifier", "orcid", "1111-2222-3333-4444");
+        addMetadata(profile, "perucris", "address", "streetAddress", "My street");
+
+        addMetadata(profile, "perucris", "cvPerson", "syncBasicInfo", "true");
+
+        updateItem(profile);
+
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.qualification", "Qualification", 0)));
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.qualification.start", "2015-01-01", 0)));
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.qualification.end", "2018-01-01", 0)));
+        assertThat(profile.getMetadata(), hasItem(with("crisrp.qualification.orgunit", "Group", 0)));
+
+        assertThat(profile.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0)));
+        assertThat(profile.getMetadata(), hasItem(with("person.identifier.orcid", "1111-2222-3333-4444", 0)));
+        assertThat(profile.getMetadata(), hasItem(with("perucris.address.streetAddress", "My street", 0)));
+
+        profileClone = reloadItem(profileClone);
+        assertThat(getMetadata(profileClone, "crisrp", "qualification", null), empty());
+        assertThat(getMetadata(profileClone, "crisrp", "qualification", "start"), empty());
+        assertThat(getMetadata(profileClone, "crisrp", "qualification", "end"), empty());
+        assertThat(getMetadata(profileClone, "crisrp", "qualification", "orgunit"), empty());
+
+        assertThat(getMetadata(profileClone, "perucris", "subject", "ocde"), empty());
+        assertThat(getMetadata(profileClone, "person", "identifier", "orcid"), empty());
+        assertThat(getMetadata(profileClone, "perucris", "address", "streetAddress"), empty());
+
+        person = reloadItem(person);
+        assertThat(getMetadata(person, "crisrp", "qualification", null), empty());
+        assertThat(getMetadata(person, "crisrp", "qualification", "start"), empty());
+        assertThat(getMetadata(person, "crisrp", "qualification", "end"), empty());
+        assertThat(getMetadata(person, "crisrp", "qualification", "orgunit"), empty());
+
+        assertThat(getMetadata(person, "perucris", "subject", "ocde"), empty());
+        assertThat(getMetadata(person, "person", "identifier", "orcid"), empty());
+        assertThat(getMetadata(person, "perucris", "address", "streetAddress"), empty());
+
+        List<Relationship> cloneCorrectionRelations = findRelations(profileClone, cloneIsCorrectionOf);
+        assertThat(cloneCorrectionRelations, hasSize(1));
+
+        Item cloneCorrection = cloneCorrectionRelations.get(0).getLeftItem();
+        assertThat(getMetadata(cloneCorrection, "crisrp", "qualification", null), empty());
+        assertThat(getMetadata(cloneCorrection, "crisrp", "qualification", "start"), empty());
+        assertThat(getMetadata(cloneCorrection, "crisrp", "qualification", "end"), empty());
+        assertThat(getMetadata(cloneCorrection, "crisrp", "qualification", "orgunit"), empty());
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0)));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("person.identifier.orcid", "1111-2222-3333-4444", 0)));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("perucris.address.streetAddress", "My street", 0)));
+
+        List<Relationship> personCorrectionRelations = findRelations(person, isCorrectionOf);
+        assertThat(personCorrectionRelations, hasSize(1));
+
+        Item personCorrection = personCorrectionRelations.get(0).getLeftItem();
+        assertThat(getMetadata(personCorrection, "crisrp", "qualification", null), empty());
+        assertThat(getMetadata(personCorrection, "crisrp", "qualification", "start"), empty());
+        assertThat(getMetadata(personCorrection, "crisrp", "qualification", "end"), empty());
+        assertThat(getMetadata(personCorrection, "crisrp", "qualification", "orgunit"), empty());
+        assertThat(personCorrection.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0)));
+        assertThat(personCorrection.getMetadata(), hasItem(with("person.identifier.orcid", "1111-2222-3333-4444", 0)));
+        assertThat(personCorrection.getMetadata(), hasItem(with("perucris.address.streetAddress", "My street", 0)));
+
     }
 
     @Test

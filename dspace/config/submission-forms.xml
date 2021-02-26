@@ -5704,18 +5704,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       </row>
       <row>
         <field>
-          <dc-schema>oairecerif</dc-schema>
-          <dc-element>person</dc-element>
-          <dc-qualifier>affiliation</dc-qualifier>
-          <label>Affiliation(s)</label>
-          <input-type>group</input-type>
-          <repeatable>true</repeatable>
-          <required />
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>domicilio</dc-element>
           <dc-qualifier>ubigeoReniec</dc-qualifier>
@@ -5786,32 +5774,10 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       <row>
         <field>
           <dc-schema>crisrp</dc-schema>
-          <dc-element>education</dc-element>
-          <label>Education(s)</label>
-          <input-type>group</input-type>
-          <repeatable>true</repeatable>
-          <required />
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>crisrp</dc-schema>
           <dc-element>country</dc-element>
           <label>Country of Birth</label>
           <input-type value-pairs-name="common_iso_countries">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required />
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>crisrp</dc-schema>
-          <dc-element>qualification</dc-element>
-          <label>Qualification(s)</label>
-          <input-type>group</input-type>
-          <repeatable>true</repeatable>
           <required />
           <hint />
         </field>
@@ -5823,6 +5789,18 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Written Language(s)</label>
           <input-type value-pairs-name="common_iso_languages">dropdown</input-type>
           <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>cvPerson</dc-element>
+          <dc-qualifier>syncBasicInfo</dc-qualifier>
+          <label>Send changes to Directorio</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
           <required />
           <hint />
         </field>

@@ -657,4 +657,10 @@
         <qualifier>syncQualification</qualifier>
     </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>cvPerson</element>
+        <qualifier>syncBasicInfo</qualifier>
+    </dc-type>
+
 </dspace-dc-types>

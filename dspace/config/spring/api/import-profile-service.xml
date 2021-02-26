@@ -87,6 +87,49 @@
                <value>crisrp.qualification.end</value>
            </list>
        </entry>
+       <entry key="perucris.cvPerson.syncBasicInfo" >
+           <list>
+		       <value>dc.title</value>
+			   <value>crisrp.name</value>
+			   <value>crisrp.name.translated</value>
+			   <value>crisrp.name.variant</value>
+			   <value>person.givenName</value>
+			   <value>person.familyName</value>
+			   <value>perucris.apellidoPaterno</value>
+			   <value>perucris.apellidoMaterno</value>
+			   <value>perucris.apellidoCasada</value>
+			   <value>person.birthDate</value>
+			   <value>oairecerif.person.gender</value>
+			   <value>perucris.phone</value>
+			   <value>perucris.mobilePhone</value>
+			   <value>person.jobTitle</value>
+			   <value>person.affiliation.name</value>
+			   <value>crisrp.workgroup</value>
+			   <value>oairecerif.identifier.url</value>
+			   <value>person.email</value>
+			   <value>dc.subject</value>
+			   <value>perucris.subject.ocde</value>
+			   <value>perucris.subject.minam</value>
+			   <value>perucris.subject.ins</value>
+			   <value>perucris.identifier.dni</value>
+			   <value>perucris.identifier.passport</value>
+			   <value>perucris.identifier.immigrationCard</value>
+			   <value>person.identifier.orcid</value>
+			   <value>perucris.identifier.dina</value>
+			   <value>perucris.identifier.renacyt</value>
+			   <value>person.identifier.scopus-author-id</value>
+			   <value>person.identifier.rid</value>
+			   <value>perucris.domicilio.ubigeoReniec</value>
+			   <value>perucris.ubigeo</value>
+			   <value>perucris.address.streetAddress</value>
+			   <value>perucris.address.postalCode</value>
+			   <value>perucris.address.addressCountry</value>
+			   <value>dc.description.abstract</value>
+			   <value>crisrp.country</value>
+               <value>person.knowsLanguage</value>
+               <value>perucris.cvPerson.syncBasicInfo</value>
+           </list>
+       </entry>
 	</util:map>
     
 

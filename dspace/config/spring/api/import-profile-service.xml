@@ -127,7 +127,6 @@
 			   <value>dc.description.abstract</value>
 			   <value>crisrp.country</value>
                <value>person.knowsLanguage</value>
-               <value>perucris.cvPerson.syncBasicInfo</value>
            </list>
        </entry>
 	</util:map>

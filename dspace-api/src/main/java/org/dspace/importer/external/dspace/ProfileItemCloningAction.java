@@ -21,7 +21,6 @@ import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
-import org.dspace.discovery.SearchService;
 import org.dspace.discovery.SearchServiceException;
 import org.dspace.external.model.ExternalDataObject;
 import org.dspace.services.ConfigurationService;
@@ -59,9 +58,6 @@ public class ProfileItemCloningAction implements AfterImportAction {
 
     @Autowired
     private CollectionService collectionService;
-
-    @Autowired
-    private SearchService searchService;
 
     @Override
     public void applyTo(Context context, Item profileItem, ExternalDataObject externalDataObject)

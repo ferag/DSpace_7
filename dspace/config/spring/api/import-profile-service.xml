@@ -71,6 +71,14 @@
                <value>perucris.education.country</value>
 	       </list>
 	   </entry>
+	   <entry key="perucris.cvPerson.syncAffiliation" >
+           <list>
+               <value>oairecerif.person.affiliation</value>
+               <value>oairecerif.affiliation.startDate</value>
+               <value>oairecerif.affiliation.endDate</value>
+               <value>oairecerif.affiliation.role</value>
+           </list>
+       </entry>
 	</util:map>
     
 

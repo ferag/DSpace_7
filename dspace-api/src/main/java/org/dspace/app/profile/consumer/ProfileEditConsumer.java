@@ -101,7 +101,12 @@ public class ProfileEditConsumer implements Consumer {
             return;
         }
 
-        sendCorrectionRequest(context, item, cvPersonClone, correctionToSynchronize);
+        try {
+            context.turnOffAuthorisationSystem();
+            sendCorrectionRequest(context, item, cvPersonClone, correctionToSynchronize);
+        } finally {
+            context.restoreAuthSystemState();
+        }
 
     }
 

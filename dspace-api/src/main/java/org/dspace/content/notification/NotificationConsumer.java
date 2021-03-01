@@ -63,7 +63,7 @@ public class NotificationConsumer implements Consumer {
         DSpaceObject dso = event.getSubject(context);
         if ((dso instanceof Item)) {
             Item item = (Item) dso;
-            if (item.isArchived() & isNotificationEntityItem(item) & !itemsAlreadyProcessed.contains(item)) {
+            if (item.isArchived() && isNotificationEntityItem(item) && !itemsAlreadyProcessed.contains(item)) {
                 context.turnOffAuthorisationSystem();
                 List<MetadataValue> list = this.itemService.getMetadataByMetadataString(
                                                 item, "perucris.notification.to");

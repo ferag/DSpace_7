@@ -118,6 +118,8 @@
                 <entry key="RELATION.InstitutionProject.ippatents" value-ref="relationInstitutionProjectPatentConfiguration"/>
                 <!-- CvPerson Related items -->
                 <entry key="RELATION.CvPerson.researchoutputs" value-ref="relationCvPersonResearchOutputsConfiguration"/>
+                <entry key="RELATION.CvPerson.projects" value-ref="relationCvPersonProjectsConfiguration"/>
+                <entry key="RELATION.CvPerson.patents" value-ref="relationCvPersonPatentsConfiguration"/>
                 <entry key="RESUME.rprofiles" value-ref="person"/>
                 <entry key="RESUME.orgunits" value-ref="orgUnit"/>
                 <entry key="RESUME.researchoutputs" value-ref="researchoutputs"/>
@@ -1835,6 +1837,112 @@
             </bean>
         </property>
     </bean>
+
+    <!-- projects of a CvPerson -->
+    <bean id="relationCvPersonProjectsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="searchFilterType" />
+            </list>
+        </property>
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="searchFilterType" />
+                <ref bean="searchFilterProjectInvestigator"/>
+            </list>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <!--<property name="defaultSort" ref="sortDateIssued"/>-->
+                <!--DefaultSortOrder can either be desc or asc (desc is default)-->
+                <property name="defaultSortOrder" value="desc"/>
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortTitle" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+                queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>'{'!join from=search.resourceid to=investigators_authority fromIndex=${solr.multicorePrefix}search'}'relation.isOwnedByCvPerson:{0}</value>
+                <value>(entityType_keyword:Project OR entityType_keyword:CvProject)</value>
+                <value>search.resourcetype:Item</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list>
+                        <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
+                            <property name="field" value="relationship.type"/>
+                            <property name="snippets" value="5"/>
+                        </bean>
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- patents of a CvPerson -->
+    <bean id="relationCvPersonPatentsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <property name="sidebarFacets">
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="searchFilterAuthor" />
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterSubject" />
+            </list>
+        </property>
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="searchFilterAuthor" />
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterSubject" />
+            </list>
+        </property>
+
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <!--<property name="defaultSort" ref="sortDateIssued"/>-->
+                <!--DefaultSortOrder can either be desc or asc (desc is default)-->
+                <property name="defaultSortOrder" value="desc"/>
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortTitle" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+                queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>'{'!join from=search.resourceid to=author_authority fromIndex=${solr.multicorePrefix}search'}'relation.isOwnedByCvPerson:{0}</value>
+                <value>(entityType_keyword:Patent OR entityType_keyword:CvPatent)</value>
+                <value>search.resourcetype:Item</value>
+            </list>
+        </property>
+    </bean>
+
 
     <bean id="researchoutputs" class="org.dspace.discovery.configuration.DiscoveryConfiguration" scope="prototype">
         <property name="id" value="researchoutputs"/>

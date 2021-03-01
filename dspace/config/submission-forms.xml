@@ -8094,7 +8094,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
 				<dc-qualifier>to</dc-qualifier>
 				<label>Profile to be notified</label>
 				<input-type>onebox</input-type>
-				<hint>Recipient's profile</hint>
+				<hint></hint>
 				<required>You must enter a Profile</required>
 			</field>
 		</row>

@@ -10,10 +10,8 @@ package org.dspace.importer.external.dspace;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.MERGED;
 
 import java.sql.SQLException;
-import java.util.List;
 import java.util.UUID;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.dspace.app.profile.service.AfterImportAction;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
@@ -23,12 +21,7 @@ import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
-import org.dspace.discovery.DiscoverQuery;
-import org.dspace.discovery.DiscoverResult;
-import org.dspace.discovery.IndexableObject;
-import org.dspace.discovery.SearchService;
 import org.dspace.discovery.SearchServiceException;
-import org.dspace.discovery.indexobject.IndexableCollection;
 import org.dspace.external.model.ExternalDataObject;
 import org.dspace.services.ConfigurationService;
 import org.dspace.util.UUIDUtils;
@@ -65,9 +58,6 @@ public class ProfileItemCloningAction implements AfterImportAction {
 
     @Autowired
     private CollectionService collectionService;
-
-    @Autowired
-    private SearchService searchService;
 
     @Override
     public void applyTo(Context context, Item profileItem, ExternalDataObject externalDataObject)
@@ -124,31 +114,9 @@ public class ProfileItemCloningAction implements AfterImportAction {
         return installItemService.installItem(ctx, workspaceItem);
     }
 
-    @SuppressWarnings("rawtypes")
     private Collection findProfileCloneCollection(Context context) throws SQLException, SearchServiceException {
-        UUID uuid = UUIDUtils.fromString(configurationService.getProperty("cti-vitae.clone.profile-collection-id"));
-        if (uuid != null) {
-            return collectionService.find(context, uuid);
-        }
-
-        String profileType = getProfileCloneType();
-
-        DiscoverQuery discoverQuery = new DiscoverQuery();
-        discoverQuery.setDSpaceObjectFilter(IndexableCollection.TYPE);
-        discoverQuery.addFilterQueries("search.entitytype:" + profileType);
-
-        DiscoverResult discoverResult = searchService.search(context, discoverQuery);
-        List<IndexableObject> indexableObjects = discoverResult.getIndexableObjects();
-
-        if (CollectionUtils.isEmpty(indexableObjects)) {
-            return null;
-        }
-
-        return (Collection) indexableObjects.get(0).getIndexedObject();
-    }
-
-    private String getProfileCloneType() {
-        return configurationService.getProperty("researcher-profile.clone.type", "CvPersonClone");
+        return collectionService.find(context,
+            UUIDUtils.fromString(configurationService.getProperty("cti-vitae.clone.profile-collection-id")));
     }
 
 }

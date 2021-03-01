@@ -59,6 +59,8 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
         throws AuthorizeException, SQLException {
         RelationshipType shadowRelationshipType = findShadowRelationshipType(context, item, shadowItemCopy);
         if (shadowRelationshipType == null) {
+            LOGGER.warn("No shadow copy relationship type found for the left item {} and right item {}",
+                item.getID(), shadowItemCopy.getID());
             return null;
         }
         return relationshipService.create(context, item, shadowItemCopy, shadowRelationshipType, true);
@@ -69,6 +71,7 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
         throws AuthorizeException, SQLException {
         RelationshipType mergedInRelationshipType = findMergedInRelationshipType(context, leftItem, true);
         if (mergedInRelationshipType == null) {
+            LOGGER.warn("No merged in relationship type found for the left item {}", leftItem.getID());
             return null;
         }
         return relationshipService.create(context, leftItem, rightItem, mergedInRelationshipType, true);
@@ -79,6 +82,8 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
         throws AuthorizeException, SQLException {
         RelationshipType originatedFromType = findOriginatedFromRelationshipType(context, leftItem, rightItem);
         if (originatedFromType == null) {
+            LOGGER.warn("No originated from relationship type found for the left item {} and right item {}",
+                leftItem.getID(), rightItem.getID());
             return null;
         }
         return relationshipService.create(context, leftItem, rightItem, originatedFromType, true);
@@ -89,6 +94,7 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
         throws AuthorizeException, SQLException {
         RelationshipType cloneRelationshipType = findCloneRelationshipType(context, leftItem, true);
         if (cloneRelationshipType == null) {
+            LOGGER.warn("No clone relationship type found for the left item {}", leftItem.getID());
             return null;
         }
         return relationshipService.create(context, leftItem, rightItem, cloneRelationshipType, true);
@@ -123,6 +129,21 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
 
         return relationships.get(0).getLeftItem();
 
+    }
+
+    @Override
+    public Item findClone(Context context, Item item) throws SQLException {
+        List<Relationship> cloneRelationships = findItemCloneRelationships(context, item, false);
+
+        if (CollectionUtils.isEmpty(cloneRelationships)) {
+            return null;
+        }
+
+        if (cloneRelationships.size() > 1) {
+            throw new IllegalStateException("The item " + item.getID() + " is cloned by more than one item");
+        }
+
+        return cloneRelationships.get(0).getLeftItem();
     }
 
     @Override
@@ -250,6 +271,15 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
             return Collections.emptyList();
         }
         return relationshipService.findByItemAndRelationshipTypes(context, item, shadowRelationshipTypes, isLeft);
+    }
+
+    private List<Relationship> findItemCloneRelationships(Context context, Item item, boolean isLeft)
+        throws SQLException {
+        RelationshipType cloneRelationshipType = findCloneRelationshipType(context, item, isLeft);
+        if (cloneRelationshipType == null) {
+            return Collections.emptyList();
+        }
+        return relationshipService.findByItemAndRelationshipType(context, item, cloneRelationshipType, isLeft);
     }
 
     private List<RelationshipType> findShadowRelationshipTypes(Context context, Item item, boolean isLeft)

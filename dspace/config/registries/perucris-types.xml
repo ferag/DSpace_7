@@ -653,4 +653,28 @@
         <qualifier>birthdate</qualifier>
     </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>cvPerson</element>
+        <qualifier>syncEducation</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>cvPerson</element>
+        <qualifier>syncAffiliation</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>cvPerson</element>
+        <qualifier>syncQualification</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>cvPerson</element>
+        <qualifier>syncBasicInfo</qualifier>
+    </dc-type>
+
 </dspace-dc-types>

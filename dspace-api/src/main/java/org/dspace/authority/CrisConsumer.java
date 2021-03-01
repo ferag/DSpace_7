@@ -142,6 +142,9 @@ public class CrisConsumer implements Consumer {
 
         List<MetadataValue> metadataValues = item.getMetadata();
 
+        String submissionName = submissionConfigReader.getSubmissionConfigByCollection(item.getOwningCollection())
+            .getSubmissionName();
+
         for (MetadataValue metadata : metadataValues) {
 
             String authority = metadata.getAuthority();
@@ -156,13 +159,10 @@ public class CrisConsumer implements Consumer {
             }
 
             String fieldKey = getFieldKey(metadata);
-
-            String submissionName = submissionConfigReader
-                .getSubmissionConfigByCollection(item.getOwningCollection()).getSubmissionName();
             List<String> formNames = FormNameLookup.getInstance().formContainingField(submissionName, fieldKey);
             if (formNames.size() > 1) {
-                throw new IllegalStateException(String.format("%s field appears in many forms for submission %s",
-                    fieldKey, submissionName));
+                log.warn("{} field appears in many forms for submission {}", fieldKey, submissionName);
+                continue;
             }
 
             String formName = formNames.isEmpty() ? "" : formNames.get(0);
@@ -171,9 +171,7 @@ public class CrisConsumer implements Consumer {
                 continue;
             }
 
-
-            String relationshipType = choiceAuthorityService.getRelationshipType(fieldKey,
-                formName);
+            String relationshipType = choiceAuthorityService.getRelationshipType(fieldKey, formName);
             if (relationshipType == null) {
                 log.warn(NO_RELATIONSHIP_TYPE_FOUND_MSG, fieldKey);
                 continue;

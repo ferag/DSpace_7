@@ -513,7 +513,7 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
         if (keyInController.isPresent()) {
             return controller.get(keyInController.get());
         }
-        if (StringUtils.isNotBlank(formNameDefinition)) {
+        if (StringUtils.isNotBlank(formNameDefinition) && controllerFormDefinitions.containsKey(fieldKey)) {
             return controllerFormDefinitions.get(fieldKey).get(formNameDefinition);
         }
         return null;

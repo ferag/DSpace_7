@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <import_structure>
     <community>
-        <name>CTI Vitae clone</name>
+        <name>CTI Vitae</name>
         <description/>
         <intro/>
         <copyright/>
@@ -10,6 +10,7 @@
             <name>Profiles</name>
             <entity-type>CvPersonClone</entity-type>
             <workflow-name>institutionWorkflow</workflow-name>
+            <submission-type>cvperson</submission-type>
             <description/>
             <intro/>
             <copyright/>

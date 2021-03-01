@@ -59,6 +59,78 @@
     </bean>
 
     <bean id="removeRelationAction" class="org.dspace.importer.external.dspace.RemoveDSpaceRelationAction"/>
+    
+    <util:map id="profileSynchronizationMap" map-class="java.util.HashMap" key-type="java.lang.String" value-type="java.util.List"> 
+	   <entry key="perucris.cvPerson.syncEducation" >
+	       <list>
+	           <value>crisrp.education</value>
+               <value>crisrp.education.start</value>
+               <value>crisrp.education.end</value>
+               <value>crisrp.education.role</value>
+               <value>perucris.education.grantor</value>
+               <value>perucris.education.country</value>
+	       </list>
+	   </entry>
+	   <entry key="perucris.cvPerson.syncAffiliation" >
+           <list>
+               <value>oairecerif.person.affiliation</value>
+               <value>oairecerif.affiliation.startDate</value>
+               <value>oairecerif.affiliation.endDate</value>
+               <value>oairecerif.affiliation.role</value>
+           </list>
+       </entry>
+       <entry key="perucris.cvPerson.syncQualification" >
+           <list>
+               <value>crisrp.qualification</value>
+               <value>crisrp.qualification.orgunit</value>
+               <value>crisrp.qualification.start</value>
+               <value>crisrp.qualification.end</value>
+           </list>
+       </entry>
+       <entry key="perucris.cvPerson.syncBasicInfo" >
+           <list>
+		       <value>dc.title</value>
+			   <value>crisrp.name</value>
+			   <value>crisrp.name.translated</value>
+			   <value>crisrp.name.variant</value>
+			   <value>person.givenName</value>
+			   <value>person.familyName</value>
+			   <value>perucris.apellidoPaterno</value>
+			   <value>perucris.apellidoMaterno</value>
+			   <value>perucris.apellidoCasada</value>
+			   <value>person.birthDate</value>
+			   <value>oairecerif.person.gender</value>
+			   <value>perucris.phone</value>
+			   <value>perucris.mobilePhone</value>
+			   <value>person.jobTitle</value>
+			   <value>person.affiliation.name</value>
+			   <value>crisrp.workgroup</value>
+			   <value>oairecerif.identifier.url</value>
+			   <value>person.email</value>
+			   <value>dc.subject</value>
+			   <value>perucris.subject.ocde</value>
+			   <value>perucris.subject.minam</value>
+			   <value>perucris.subject.ins</value>
+			   <value>perucris.identifier.dni</value>
+			   <value>perucris.identifier.passport</value>
+			   <value>perucris.identifier.immigrationCard</value>
+			   <value>person.identifier.orcid</value>
+			   <value>perucris.identifier.dina</value>
+			   <value>perucris.identifier.renacyt</value>
+			   <value>person.identifier.scopus-author-id</value>
+			   <value>person.identifier.rid</value>
+			   <value>perucris.domicilio.ubigeoReniec</value>
+			   <value>perucris.ubigeo</value>
+			   <value>perucris.address.streetAddress</value>
+			   <value>perucris.address.postalCode</value>
+			   <value>perucris.address.addressCountry</value>
+			   <value>dc.description.abstract</value>
+			   <value>crisrp.country</value>
+               <value>person.knowsLanguage</value>
+           </list>
+       </entry>
+	</util:map>
+    
 
     <!-- TODO: set orcid import -->
 

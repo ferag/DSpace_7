@@ -64,7 +64,7 @@ public class SubmissionFormsControllerIT extends AbstractControllerIntegrationTe
                    .andExpect(status().isOk())
                    //We expect the content type to be "application/hal+json;charset=UTF-8"
                    .andExpect(content().contentType(contentType))
-                   //The configuration file for the test env includes 21 forms
+                   //The configuration file for the test env includes 31 forms
                    .andExpect(jsonPath("$.page.size", is(20)))
                    .andExpect(jsonPath("$.page.totalElements", equalTo(31)))
                    .andExpect(jsonPath("$.page.totalPages", equalTo(2)))

@@ -17,6 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 import java.net.URI;
@@ -55,11 +56,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Integration tests for {@link ProfileEditConsumer}.
+ * Integration tests for {@link ProfileEditConsumer} with profile test cases.
  *
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  */
-public class ProfileEditConsumerIT extends AbstractIntegrationTestWithDatabase {
+public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegrationTestWithDatabase {
 
     private static final String PLACEHOLDER = PLACEHOLDER_PARENT_METADATA_VALUE;
 
@@ -374,6 +375,7 @@ public class ProfileEditConsumerIT extends AbstractIntegrationTestWithDatabase {
         assertThat(cloneCorrectionRelations, hasSize(1));
 
         Item cloneCorrection = cloneCorrectionRelations.get(0).getLeftItem();
+        assertThat(cloneCorrection.isArchived(), is(false));
         assertThat(cloneCorrection.getMetadata(), hasItem(with("crisrp.education", "First education", 0)));
         assertThat(cloneCorrection.getMetadata(), hasItem(with("crisrp.education.start", "2015-01-01", 0)));
         assertThat(cloneCorrection.getMetadata(), hasItem(with("crisrp.education.end", "2018-01-01", 0)));
@@ -394,6 +396,7 @@ public class ProfileEditConsumerIT extends AbstractIntegrationTestWithDatabase {
         assertThat(personCorrectionRelations, hasSize(1));
 
         Item personCorrection = personCorrectionRelations.get(0).getLeftItem();
+        assertThat(personCorrection.isArchived(), is(false));
         assertThat(personCorrection.getMetadata(), hasItem(with("crisrp.education", "First education", 0)));
         assertThat(personCorrection.getMetadata(), hasItem(with("crisrp.education.start", "2015-01-01", 0)));
         assertThat(personCorrection.getMetadata(), hasItem(with("crisrp.education.end", "2018-01-01", 0)));

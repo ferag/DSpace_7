@@ -15,13 +15,16 @@
             <set>
                 <value>dc.date.accessioned</value>
                 <value>dc.description.provenance</value>
+                <value>dc.date.available</value>
+                <value>relationship.type</value>
+                <value>dc.identifier.uri</value>
             </set>
         </constructor-arg>
     </bean>
 
     <!-- Correction Item Provider, defines behavior for replicating
          Item, Metadata, Budles and Bitstreams. Autowired at this time. -->
-    <bean class="org.dspace.versioning.ItemCorrectionProvider">
+    <bean id="org.dspace.versioning.ItemCorrectionProvider" class="org.dspace.versioning.ItemCorrectionProvider">
         <property name="ignoredMetadataFields" >
             <set>
 				<value>dc.date.accessioned</value>

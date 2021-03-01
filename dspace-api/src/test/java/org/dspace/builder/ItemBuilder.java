@@ -732,6 +732,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "crispj", "supportingStaff", null, supportingStaff);
     }
 
+    public ItemBuilder withCvPublicationSyncEnabled(boolean enabled) {
+        return setMetadataSingleValue(item, "perucris", "cvPublication", "syncEnabled", enabled + "");
+    }
+
     public ItemBuilder withHandle(String handle) {
         this.handle = handle;
         return this;

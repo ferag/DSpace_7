@@ -21,7 +21,6 @@ import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
-import org.dspace.discovery.SearchServiceException;
 import org.dspace.external.model.ExternalDataObject;
 import org.dspace.services.ConfigurationService;
 import org.dspace.util.UUIDUtils;
@@ -114,7 +113,7 @@ public class ProfileItemCloningAction implements AfterImportAction {
         return installItemService.installItem(ctx, workspaceItem);
     }
 
-    private Collection findProfileCloneCollection(Context context) throws SQLException, SearchServiceException {
+    private Collection findProfileCloneCollection(Context context) throws SQLException {
         return collectionService.find(context,
             UUIDUtils.fromString(configurationService.getProperty("cti-vitae.clone.profile-collection-id")));
     }

@@ -40,4 +40,8 @@ public class ItemCorrection {
         return metadataCorrections.isEmpty();
     }
 
+    public boolean isNotEmpty() {
+        return !isEmpty();
+    }
+
 }

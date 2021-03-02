@@ -887,6 +887,49 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         assertThat(personCorrection.getMetadata(), hasItem(with("oairecerif.affiliation.role", "Researcher", 0)));
     }
 
+    @Test
+    public void testProfileEditConsumerWithChangeReversion() throws Exception {
+
+        addMetadata(profile, "perucris", "subject", "ocde", "OCDE");
+        addMetadata(profile, "perucris", "cvPerson", "syncBasicInfo", "true");
+
+        profile = updateItem(profile);
+        assertThat(profile.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0)));
+
+        profileClone = reloadItem(profileClone);
+        assertThat(getMetadata(profileClone, "perucris", "subject", "ocde"), empty());
+
+        person = reloadItem(person);
+        assertThat(getMetadata(person, "perucris", "subject", "ocde"), empty());
+
+        List<Relationship> cloneCorrectionRelations = findRelations(profileClone, cloneIsCorrectionOf);
+        assertThat(cloneCorrectionRelations, hasSize(1));
+
+        Item cloneCorrection = cloneCorrectionRelations.get(0).getLeftItem();
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0)));
+
+        List<Relationship> personCorrectionRelations = findRelations(person, isCorrectionOf);
+        assertThat(personCorrectionRelations, hasSize(1));
+
+        Item personCorrection = personCorrectionRelations.get(0).getLeftItem();
+        assertThat(personCorrection.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0)));
+
+        removeMetadata(profile, "perucris", "subject", "ocde");
+
+        profile = updateItem(profile);
+        assertThat(getMetadata(profile, "perucris", "subject", "ocde"), empty());
+
+        person = reloadItem(person);
+        assertThat(getMetadata(person, "perucris", "subject", "ocde"), empty());
+
+        assertThat(reloadItem(cloneCorrection), nullValue());
+        assertThat(reloadItem(personCorrection), nullValue());
+
+        assertThat(findRelations(profileClone, cloneIsCorrectionOf), empty());
+        assertThat(findRelations(person, isCorrectionOf), empty());
+
+    }
+
     private Item updateItem(Item item) throws Exception {
         itemService.update(context, item);
         context.commit();
@@ -896,6 +939,10 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
     private void addMetadata(Item item, String schema, String element, String qualifier, String value)
         throws SQLException {
         itemService.addMetadata(context, item, schema, element, qualifier, null, value);
+    }
+
+    private void removeMetadata(Item item, String schema, String element, String qualifier) throws SQLException {
+        itemService.removeMetadataValues(context, item, schema, element, qualifier, Item.ANY);
     }
 
     private List<MetadataValue> getMetadata(Item item, String schema, String element, String qualifier) {

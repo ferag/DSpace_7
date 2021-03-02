@@ -164,6 +164,20 @@
             <max>1</max>
         </rightCardinality>
     </type>
+     <type>
+        <leftType>CvPublicationClone</leftType>
+        <rightType>Publication</rightType>
+        <leftwardType>hasShadowCopy</leftwardType>
+        <rightwardType>isShadowCopy</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+            <max>1</max>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
     <type>
         <leftType>CvPerson</leftType>
         <rightType>Person</rightType>

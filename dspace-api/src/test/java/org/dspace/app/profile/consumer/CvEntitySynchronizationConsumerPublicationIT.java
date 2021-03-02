@@ -527,6 +527,69 @@ public class CvEntitySynchronizationConsumerPublicationIT extends AbstractIntegr
 
     }
 
+    @Test
+    public void testCvPublicationEditWithChangeReversion() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item cvPublication = ItemBuilder.createItem(context, cvCollection)
+            .withTitle("Test Publication")
+            .withIssueDate("2021-01-01")
+            .withCvPublicationSyncEnabled(true)
+            .build();
+
+        List<XmlWorkflowItem> publicationWorkflowItems = workflowItemService.findByCollection(context, publications);
+        assertThat(publicationWorkflowItems, hasSize(1));
+
+        Item publication = publicationWorkflowItems.get(0).getItem();
+        installItemService.installItem(context, publicationWorkflowItems.get(0));
+
+        List<XmlWorkflowItem> cloneWorkflowItems = workflowItemService.findByCollection(context, cvCloneCollection);
+        assertThat(cloneWorkflowItems, hasSize(1));
+
+        Item cvPublicationClone = cloneWorkflowItems.get(0).getItem();
+        installItemService.installItem(context, cloneWorkflowItems.get(0));
+
+        context.restoreAuthSystemState();
+
+        replaceMetadata(cvPublication, "dc", "date", "issued", "2021-04-04", 0);
+        cvPublication = updateItem(cvPublication);
+
+        cvPublicationClone = reloadItem(cvPublicationClone);
+        assertThat(cvPublicationClone.getMetadata(), hasItem(with("dc.date.issued", "2021-01-01")));
+
+        publication = reloadItem(publication);
+        assertThat(publication.getMetadata(), hasItem(with("dc.date.issued", "2021-01-01")));
+
+        List<Relationship> cloneCorrectionRelations = findRelations(cvPublicationClone, cloneIsCorrectionOf);
+        assertThat(cloneCorrectionRelations, hasSize(1));
+
+        Item cloneCorrection = cloneCorrectionRelations.get(0).getLeftItem();
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("dc.date.issued", "2021-04-04")));
+
+        List<Relationship> publicationCorrectionRelations = findRelations(publication, isCorrectionOf);
+        assertThat(publicationCorrectionRelations, hasSize(1));
+
+        Item correction = publicationCorrectionRelations.get(0).getLeftItem();
+        assertThat(correction.getMetadata(), hasItem(with("dc.date.issued", "2021-04-04")));
+
+        replaceMetadata(cvPublication, "dc", "date", "issued", "2021-01-01", 0);
+        cvPublication = updateItem(cvPublication);
+
+        cvPublicationClone = reloadItem(cvPublicationClone);
+        assertThat(cvPublicationClone.getMetadata(), hasItem(with("dc.date.issued", "2021-01-01")));
+
+        publication = reloadItem(publication);
+        assertThat(publication.getMetadata(), hasItem(with("dc.date.issued", "2021-01-01")));
+
+        assertThat(reloadItem(cloneCorrection), nullValue());
+        assertThat(reloadItem(correction), nullValue());
+
+        assertThat(findRelations(cvPublicationClone, cloneIsCorrectionOf), empty());
+        assertThat(findRelations(publication, isCorrectionOf), empty());
+
+    }
+
     private Item updateItem(Item item) throws Exception {
         try {
             context.turnOffAuthorisationSystem();
@@ -546,6 +609,11 @@ public class CvEntitySynchronizationConsumerPublicationIT extends AbstractIntegr
     private void addMetadata(Item item, String schema, String element, String qualifier, String value)
         throws SQLException {
         itemService.addMetadata(context, item, schema, element, qualifier, null, value);
+    }
+
+    private void replaceMetadata(Item item, String schema, String element, String qualifier, String value, int place)
+        throws SQLException {
+        itemService.replaceMetadata(context, item, schema, element, qualifier, null, value, null, -1, place);
     }
 
     private void removeMetadata(Item item, String schema, String element, String qualifier) throws SQLException {

@@ -18,6 +18,7 @@
                 <value>dc.date.available</value>
                 <value>relationship.type</value>
                 <value>dc.identifier.uri</value>
+                <value>perucris.concytec.feedback</value>
             </set>
         </constructor-arg>
     </bean>

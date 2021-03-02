@@ -151,8 +151,13 @@ public class CvEntitySynchronizationConsumer implements Consumer {
             workflowService.start(context, workspaceItemClone);
 
         } else {
+
+            rejectPreviousCorrections(context, clone);
+
             ItemCorrection corrections = itemCorrectionService.getAppliedCorrections(context, clone, item);
-            sendCorrectionRequest(context, item, clone, corrections);
+            if (corrections.isNotEmpty()) {
+                sendCorrectionRequest(context, item, clone, corrections);
+            }
         }
 
     }
@@ -164,12 +169,12 @@ public class CvEntitySynchronizationConsumer implements Consumer {
             return;
         }
 
-        ItemCorrection correctionToSynchronize = calculateProfileCorrectionToSynchronize(context, cvPersonClone, item);
-        if (correctionToSynchronize.isEmpty()) {
-            return;
-        }
+        rejectPreviousCorrections(context, cvPersonClone);
 
-        sendCorrectionRequest(context, item, cvPersonClone, correctionToSynchronize);
+        ItemCorrection correctionToSynchronize = calculateProfileCorrectionToSynchronize(context, cvPersonClone, item);
+        if (correctionToSynchronize.isNotEmpty()) {
+            sendCorrectionRequest(context, item, cvPersonClone, correctionToSynchronize);
+        }
     }
 
     private WorkspaceItem createItemClone(Context ctx, Item item, String entityType) throws Exception {
@@ -185,20 +190,20 @@ public class CvEntitySynchronizationConsumer implements Consumer {
     private void sendCorrectionRequest(Context context, Item item, Item clone, ItemCorrection correctionToSynchronize)
         throws SQLException, AuthorizeException, IOException, WorkflowException {
 
-        List<Item> cloneCorrections = itemCorrectionService.getCorrectionItems(context, clone);
-        for (Item cloneCorrection : cloneCorrections) {
-            rejectItemRequest(context, cloneCorrection);
-        }
-
         WorkspaceItem correctionWorkspaceItem = itemCorrectionService.createCorrectionItem(context, clone.getID());
         Item correctionItem = correctionWorkspaceItem.getItem();
         itemCorrectionService.applyCorrectionsOnItem(context, correctionItem, correctionToSynchronize);
         workflowService.start(context, correctionWorkspaceItem);
     }
 
-    private void rejectItemRequest(Context context, Item item)
-        throws SQLException, AuthorizeException, IOException {
+    private void rejectPreviousCorrections(Context context, Item clone) throws Exception {
+        List<Item> cloneCorrections = itemCorrectionService.getCorrectionItems(context, clone);
+        for (Item cloneCorrection : cloneCorrections) {
+            rejectItemRequest(context, cloneCorrection);
+        }
+    }
 
+    private void rejectItemRequest(Context context, Item item) throws Exception {
         EPerson currentUser = context.getCurrentUser();
 
         XmlWorkflowItem shadowWorkflowItemCopy = findWorkflowShadowItemCopy(context, item);
@@ -210,7 +215,6 @@ public class CvEntitySynchronizationConsumer implements Consumer {
         if (workflowItem != null) {
             workflowService.deleteWorkflowByWorkflowItem(context, workflowItem, currentUser);
         }
-
     }
 
     private XmlWorkflowItem findWorkflowShadowItemCopy(Context context, Item item) throws SQLException {

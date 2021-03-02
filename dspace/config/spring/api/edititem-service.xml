@@ -329,6 +329,19 @@
                         </bean>
                     </list>
                 </entry>
+                <entry key="cvpublication">
+                    <list>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="FULL" />
+                            <property name="security">
+                                <value type="org.dspace.content.security.CrisSecurity">
+                                    ADMIN_OWNER
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="cvpublication-edit" />
+                        </bean>
+                    </list>
+                </entry>
             </map>
         </property>
     </bean>

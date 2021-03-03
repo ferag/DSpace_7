@@ -30,5 +30,29 @@
             <license/>
             <provenance/>
         </collection>
+        <collection>
+            <name>Projects</name>
+            <entity-type>CvProjectClone</entity-type>
+            <workflow-name>institutionWorkflow</workflow-name>
+            <submission-type>cvproject</submission-type>
+            <description/>
+            <intro/>
+            <copyright/>
+            <sidebar/>
+            <license/>
+            <provenance/>
+        </collection>
+        <collection>
+            <name>Patents</name>
+            <entity-type>CvPatentClone</entity-type>
+            <workflow-name>institutionWorkflow</workflow-name>
+            <submission-type>cvpatent</submission-type>
+            <description/>
+            <intro/>
+            <copyright/>
+            <sidebar/>
+            <license/>
+            <provenance/>
+        </collection>
     </community>
 </import_structure>

@@ -241,6 +241,16 @@
 	      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
 	      <type>submission-form</type>
 	    </step-definition>
+	    <step-definition id="cv-patent" mandatory="true">
+	      <heading>submit.progressbar.describe.cv-patent</heading>
+	      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+	      <type>submission-form</type>
+	    </step-definition>
+	    <step-definition id="cv-project" mandatory="true">
+	      <heading>submit.progressbar.describe.cv-project</heading>
+	      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+	      <type>submission-form</type>
+	    </step-definition>
     </step-definitions>
 
     <!-- The submission-definitions map lays out the detailed definition of -->
@@ -382,6 +392,26 @@
 	      <step id="cv-publication_bibliographic_details" />
 	      <step id="cv-publication_references" />
 	      <step id="cv-publication_thesis" />
+	      <step id="upload" />
+	      <step id="license" />
+	    </submission-process>
+	    <submission-process name="cvpatent-edit">
+	      <step id="cv-patent" />
+	      <step id="upload" />
+	    </submission-process>
+	    <submission-process name="cvpatent">
+	      <step id="collection" />
+	      <step id="cv-patent" />
+	      <step id="upload" />
+	      <step id="license" />
+	    </submission-process>
+	    <submission-process name="cvproject-edit">
+	      <step id="cv-project" />
+	      <step id="upload" />
+	    </submission-process>
+	    <submission-process name="cvproject">
+	      <step id="collection" />
+	      <step id="cv-project" />
 	      <step id="upload" />
 	      <step id="license" />
 	    </submission-process>

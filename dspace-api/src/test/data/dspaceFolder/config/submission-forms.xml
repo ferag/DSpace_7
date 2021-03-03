@@ -182,7 +182,633 @@ it, please enter the types and the actual numbers or codes.</hint>
        </field>
      </row>
 	</form>
+    <form name="cv-patent-dc-contributor-author">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>contributor</dc-element>
+          <dc-qualifier>author</dc-qualifier>
+          <label>Author</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>You must enter at least the author.</required>
+          <hint>Enter the names of the authors of this item in the form Lastname, Firstname [i.e. Smith, Josh or Smith, J].</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>author</dc-element>
+          <dc-qualifier>affiliation</dc-qualifier>
+          <label>Affiliation</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Enter the affiliation of the author as stated on the publication.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>author</dc-element>
+          <dc-qualifier>orcid</dc-qualifier>
+          <label>Author’s ORCID</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>author</dc-element>
+          <dc-qualifier>dni</dc-qualifier>
+          <label>Author’s DNI</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="cv-patent">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Title</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>You must specify a title for the patent</required>
+          <hint>The title of the patent</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>patent</dc-element>
+          <dc-qualifier>issuer</dc-qualifier>
+          <label>Issuer</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dcterms</dc-schema>
+          <dc-element>dateSubmitted</dc-element>
+          <label>Application Date</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Date of filing the application.
+You can leave out the day and/or month if they aren't applicable.</hint>
+        </field>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>date</dc-element>
+          <dc-qualifier>issued</dc-qualifier>
+          <label>Publication Date</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Date of making available to the public by printing or similar process of a patent document on which grant has taken place on or before the said date.
+You can leave out the day and/or month if they aren't applicable.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>patent</dc-element>
+          <dc-qualifier>country</dc-qualifier>
+          <label>Patent Country</label>
+          <input-type value-pairs-name="common_iso_countries">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>paisdeltitular</dc-element>
+          <label>Patent Holder Country</label>
+          <input-type value-pairs-name="common_iso_countries">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>contributor</dc-element>
+          <dc-qualifier>author</dc-qualifier>
+          <label>Inventor(s)</label>
+          <input-type>group</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>The inventor: The actual devisor of an invention that is the subject of a patent.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dcterms</dc-schema>
+          <dc-element>rightsHolder</dc-element>
+          <label>Holder</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>The holders of this patent</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>publisher</dc-element>
+          <label>Issuer</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>The issuer of the patent: the patent office</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>patentno</dc-qualifier>
+          <label>Patent Number</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>The patent number.</hint>
+        </field>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>url</dc-qualifier>
+          <label>URL</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>type</dc-element>
+          <label>Type</label>
+          <input-type value-pairs-name="peru_patent_types">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required>You must select a patent type</required>
+          <hint>Select the type of content of the patent.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>internalNote</dc-qualifier>
+          <label>Internal Note</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>cvPatent</dc-element>
+          <dc-qualifier>syncEnabled</dc-qualifier>
+          <label>Send changes to Directorio</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="cv-project">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Project title</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>You must enter the project name.</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>acronym</dc-element>
+          <label>Project Acronym</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crispj</dc-schema>
+          <dc-element>coordinator</dc-element>
+          <label>Consortium Coordinator(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>internalid</dc-element>
+          <label>Internal project ID</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crispj</dc-schema>
+          <dc-element>partnerou</dc-element>
+          <label>Partner Organization(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crispj</dc-schema>
+          <dc-element>investigator</dc-element>
+          <label>Project Coordinator</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>You must enter the project coordinator.</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oaire</dc-schema>
+          <dc-element>awardURI</dc-element>
+          <label>Award URL</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crispj</dc-schema>
+          <dc-element>openaireid</dc-element>
+          <label>OpenAIRE ID</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crispj</dc-schema>
+          <dc-element>organization</dc-element>
+          <label>Participant Organization(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>url</dc-qualifier>
+          <label>Project URL</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>oamandate</dc-element>
+          <label>OA Mandate</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>oamandate</dc-element>
+          <dc-qualifier>url</dc-qualifier>
+          <label>OA Policy URL</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>The Open Access policy that applies to the project</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>project</dc-element>
+          <dc-qualifier>startDate</dc-qualifier>
+          <label>Start date</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>project</dc-element>
+          <dc-qualifier>endDate</dc-qualifier>
+          <label>Expected Completion</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>project</dc-element>
+          <dc-qualifier>status</dc-qualifier>
+          <label>Status</label>
+          <input-type value-pairs-name="project_status">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>project</dc-element>
+          <dc-qualifier>typeOcde</dc-qualifier>
+          <label>Project type</label>
+          <input-type value-pairs-name="project_types">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>project</dc-element>
+          <dc-qualifier>typeOther</dc-qualifier>
+          <label>Project type</label>
+          <input-type value-pairs-name="project_types_other">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>abstract</dc-qualifier>
+          <label>Abstract</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crispj</dc-schema>
+          <dc-element>coinvestigators</dc-element>
+          <label>Co-Investigator(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crispj</dc-schema>
+          <dc-element>techniciansAndEquivalentStaff</dc-element>
+          <label>Technicians and equivalent staff</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crispj</dc-schema>
+          <dc-element>supportingStaff</dc-element>
+          <label>Supporting staff</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>subject</dc-element>
+          <label>Keyword(s)</label>
+          <input-type>tag</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>subject</dc-element>
+          <dc-qualifier>ocde</dc-qualifier>
+          <label>OCDE Subject(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+          <vocabulary closed="true">ocde_subjects</vocabulary>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>type</dc-element>
+          <dc-qualifier>ciiu</dc-qualifier>
+          <label>Industrial Classification</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+          <vocabulary closed="true">peru_ciiu</vocabulary>
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>researchLine</dc-element>
+          <label>Research Line</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>funder</dc-element>
+          <label>Funded/By</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>relation</dc-element>
+          <dc-qualifier>equipment</dc-qualifier>
+          <label>Uses equipment(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationPlace</dc-element>
+          <label>Project Geolocation(s)</label>
+          <input-type>group</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>internalNote</dc-qualifier>
+          <label>Internal Note</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>cvProject</dc-element>
+          <dc-qualifier>syncEnabled</dc-qualifier>
+          <label>Send changes to Directorio</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
 
+    <form name="cv-project-datacite-geoLocationPlace">
+      <row>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationPlace</dc-element>
+          <label>Geolocation Place</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationPoint</dc-element>
+          <dc-qualifier>pointLongitude</dc-qualifier>
+          <label>Geolocation Longitude</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationPoint</dc-element>
+          <dc-qualifier>pointLatitude</dc-qualifier>
+          <label>Geolocation Latitude</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationBox</dc-element>
+          <dc-qualifier>westBoundLongitude</dc-qualifier>
+          <label>Westbound Longitude</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationBox</dc-element>
+          <dc-qualifier>eastBoundLongitude</dc-qualifier>
+          <label>Eastbound Longitude</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationBox</dc-element>
+          <dc-qualifier>southBoundLongitude</dc-qualifier>
+          <label>Southbound Longitude</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationBox</dc-element>
+          <dc-qualifier>northBoundLongitude</dc-qualifier>
+          <label>Northbound Longitude</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
     <form name="traditionalpageone-cris-dc-contributor-author">
       <row>
         <field>
@@ -4668,7 +5294,90 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <stored-value>Trabajo académico</stored-value>
       </pair>
     </value-pairs>
-    
+    <value-pairs value-pairs-name="project_status" dc-term="project_status">
+      <pair>
+        <displayed-value>Activo</displayed-value>
+        <stored-value>Active</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Suspendido</displayed-value>
+        <stored-value>Suspended</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Concluido</displayed-value>
+        <stored-value>Finished</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="project_types" dc-term="project_types">
+      <pair>
+        <displayed-value>Unspecified</displayed-value>
+        <stored-value />
+      </pair>
+      <pair>
+        <displayed-value>basic research</displayed-value>
+        <stored-value>basic research</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>applied research</displayed-value>
+        <stored-value>applied research</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>experimental development</displayed-value>
+        <stored-value>experimental development</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="project_types_other" dc-term="project_types_other">
+      <pair>
+        <displayed-value>Desarrollo tecnológico</displayed-value>
+        <stored-value>Technological development</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Transferencia tecnológica</displayed-value>
+        <stored-value>Technology transfer</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Investigación adaptativa</displayed-value>
+        <stored-value>Adaptive research</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Investigación económica</displayed-value>
+        <stored-value>Economic research</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Servicios de extensión</displayed-value>
+        <stored-value>Extension services</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Fortalecimiento de capacidades</displayed-value>
+        <stored-value>Capacity building</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Incubación y desarrollo de empresas</displayed-value>
+        <stored-value>Business incubation and development</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Equipamiento científico</displayed-value>
+        <stored-value>Scientific equipment</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="peru_patent_types" dc-term="peru_patent_types">
+      <pair>
+        <displayed-value>Unspecified</displayed-value>
+        <stored-value />
+      </pair>
+      <pair>
+        <displayed-value>Patente de invención</displayed-value>
+        <stored-value>Invention patent</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Patente de Modelo de utilidad</displayed-value>
+        <stored-value>Utility model</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Certificado de Obtentor</displayed-value>
+        <stored-value>Certificate of plant breeder's right</stored-value>
+      </pair>
+    </value-pairs>
  </form-value-pairs>
 
 </input-forms>

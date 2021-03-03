@@ -683,4 +683,16 @@
         <qualifier>syncEnabled</qualifier>
     </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>cvPatent</element>
+        <qualifier>syncEnabled</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>cvProject</element>
+        <qualifier>syncEnabled</qualifier>
+    </dc-type>
+
 </dspace-dc-types>

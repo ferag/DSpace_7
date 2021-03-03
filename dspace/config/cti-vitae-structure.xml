@@ -27,6 +27,26 @@
             <provenance/>
         </collection>
         <collection>
+            <name>Patents</name>
+            <entity-type>CvPatent</entity-type>
+            <description/>
+            <intro/>
+            <copyright/>
+            <sidebar/>
+            <license/>
+            <provenance/>
+        </collection>
+        <collection>
+            <name>Projects</name>
+            <entity-type>CvProject</entity-type>
+            <description/>
+            <intro/>
+            <copyright/>
+            <sidebar/>
+            <license/>
+            <provenance/>
+        </collection>
+        <collection>
             <name>notification</name>
             <entity-type>Notification</entity-type>
             <submission-type>notification-form</submission-type>

@@ -30,4 +30,32 @@
             <max>1</max>
         </rightCardinality>
     </type>
+    <type>
+        <leftType>CvProjectClone</leftType>
+        <rightType>CvProject</rightType>
+        <leftwardType>isCloneOfItem</leftwardType>
+        <rightwardType>isClonedByItem</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+            <max>1</max>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
+    <type>
+        <leftType>CvPatentClone</leftType>
+        <rightType>CvPatent</rightType>
+        <leftwardType>isCloneOfItem</leftwardType>
+        <rightwardType>isClonedByItem</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+            <max>1</max>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
 </relationships>

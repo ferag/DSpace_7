@@ -257,7 +257,7 @@ public class CvEntitySynchronizationConsumer implements Consumer {
 
     private boolean isNotCvEntity(Item item) {
         String entityType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
-        return !(entityType != null && entityType.startsWith("Cv"));
+        return !(entityType != null && entityType.startsWith("Cv") && !entityType.endsWith("Clone"));
     }
 
     private boolean isCvPerson(String entityType) {

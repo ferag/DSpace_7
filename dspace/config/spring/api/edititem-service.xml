@@ -302,6 +302,19 @@
                         </bean>
                     </list>
                 </entry>
+                <entry key="notification">
+                    <list>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="FULL" />
+                            <property name="security">
+                                <value type="org.dspace.content.security.CrisSecurity">
+                                    ADMIN
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="notification" />
+                        </bean>
+                    </list>
+                </entry>
             </map>
         </property>
     </bean>

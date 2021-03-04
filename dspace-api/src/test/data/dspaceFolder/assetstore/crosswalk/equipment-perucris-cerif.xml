@@ -1,0 +1,19 @@
+<Equipment xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="mock-id">
+    <Type>Type</Type>
+    <Acronym>T-EQ</Acronym>
+    <Name>Test Equipment</Name>
+    <Identifier type="Institution assigned unique equipment identifier">ID-01</Identifier>
+    <Description>This is an equipment to test the export functionality</Description>
+    <Owner> <OrgUnit> <Name>Test OrgUnit</Name> </OrgUnit> </Owner>
+    <Owner> <Person displayName="Walter White" ></Person> </Owner>
+    <Funder> <As> <Funding> <Name>Funding</Name> </Funding> </As> </Funder> 
+    <Subject>First subject</Subject>
+    <Subject>Second subject</Subject>
+    <ResearchLine>ResearchLine</ResearchLine>
+    <ManufacturingCountry>IT</ManufacturingCountry>
+    <ManufacturingDate>2020-01-01</ManufacturingDate>
+    <AcquisitionDate>2021-01-01</AcquisitionDate>
+    <AcquisitionAmount 
+        currency="€"
+    >4000</AcquisitionAmount>
+</Equipment>

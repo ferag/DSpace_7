@@ -289,7 +289,7 @@
                         </bean>
                     </list>
                 </entry>
-                <entry key="personcv">
+                <entry key="cvperson">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
@@ -298,7 +298,34 @@
                                     ADMIN_OWNER
                                 </value>
                             </property>
-                            <property name="submissionDefinition" value="personcv-edit" />
+                            <property name="submissionDefinition" value="cvperson-edit" />
+                        </bean>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="EDUCATION" />
+                            <property name="security">
+                                <value type="org.dspace.content.security.CrisSecurity">
+                                    ADMIN_OWNER
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="cvperson-edit-education" />
+                        </bean>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="AFFILIATION" />
+                            <property name="security">
+                                <value type="org.dspace.content.security.CrisSecurity">
+                                    ADMIN_OWNER
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="cvperson-edit-affiliation" />
+                        </bean>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="QUALIFICATION" />
+                            <property name="security">
+                                <value type="org.dspace.content.security.CrisSecurity">
+                                    ADMIN_OWNER
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="cvperson-edit-qualification" />
                         </bean>
                     </list>
                 </entry>

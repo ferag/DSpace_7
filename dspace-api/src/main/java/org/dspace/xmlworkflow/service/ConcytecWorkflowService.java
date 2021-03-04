@@ -15,6 +15,7 @@ import org.dspace.content.Item;
 import org.dspace.content.Relationship;
 import org.dspace.core.Context;
 import org.dspace.xmlworkflow.ConcytecFeedback;
+import org.dspace.xmlworkflow.ConcytecWorkflowRelation;
 
 /**
  * Service that handle the relationships between the item related to the
@@ -23,66 +24,6 @@ import org.dspace.xmlworkflow.ConcytecFeedback;
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  */
 public interface ConcytecWorkflowService {
-
-    /**
-     * Left type of the shadow copy relationship.
-     */
-    public static final String HAS_SHADOW_COPY_RELATIONSHIP = "hasShadowCopy";
-
-    /**
-     * Right type of the shadow copy relationship.
-     */
-    public static final String IS_SHADOW_COPY_RELATIONSHIP = "isShadowCopy";
-
-    /**
-     * Left type of the withdrawn relationship.
-     */
-    public static final String IS_CORRECTION_OF_ITEM_RELATIONSHIP = "isCorrectionOfItem";
-
-    /**
-     * Right type of the withdrawn relationship.
-     */
-    public static final String IS_CORRECTED_BY_ITEM_RELATIONSHIP = "isCorrectedByItem";
-
-    /**
-     * Left type of the withdrawn relationship.
-     */
-    public static final String IS_WITHDRAW_OF_ITEM_RELATIONSHIP = "isWithdrawOfItem";
-
-    /**
-     * Right type of the withdrawn relationship.
-     */
-    public static final String IS_WITHDRAWN_BY_ITEM_RELATIONSHIP = "isWithdrawnByItem";
-
-    /**
-     * Left type of the reinstate relationship.
-     */
-    public static final String IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP = "isReinstatementOfItem";
-
-    /**
-     * Right type of the reinstate relationship.
-     */
-    public static final String IS_REINSTATED_BY_ITEM_RELATIONSHIP = "isReinstatedByItem";
-
-    /**
-     * Left type of the merge relationship.
-     */
-    public static final String IS_MERGED_IN_RELATIONSHIP = "isMergedIn";
-
-    /**
-     * Right type of the merge relationship.
-     */
-    public static final String IS_MERGE_OF_RELATIONSHIP = "isMergeOf";
-
-    /**
-     * Left type of the originated from relationship.
-     */
-    public static final String IS_ORIGINATED_FROM_IN_RELATIONSHIP = "isOriginatedFrom";
-
-    /**
-     * Right type of the originated from relationship.
-     */
-    public static final String IS_ORIGIN_OF_RELATIONSHIP = "isOriginOf";
 
     /**
      * Create a shadow copy relationship between the two given items
@@ -122,6 +63,18 @@ public interface ConcytecWorkflowService {
      * @throws SQLException       if an SQL error occurs
      */
     Relationship createOriginatedFromRelationship(Context context, Item leftItem, Item rightItem)
+        throws AuthorizeException, SQLException;
+
+    /**
+     * Create an clone relationship between the two given items.
+     * 
+     * @param context   the DSpace context
+     * @param leftItem  the item that is the clone of the rightItem
+     * @param rightItem the item that is cloned by the leftItem
+     * @throws AuthorizeException if an authorization error occurs
+     * @throws SQLException       if an SQL error occurs
+     */
+    Relationship createCloneRelationship(Context context, Item leftItem, Item rightItem)
         throws AuthorizeException, SQLException;
 
     /**
@@ -165,6 +118,16 @@ public interface ConcytecWorkflowService {
     Item findMergeOfItem(Context context, Item item) throws SQLException;
 
     /**
+     * Find the clone of given item.
+     *
+     * @param context the DSpace context
+     * @param item    the item that has a clone
+     * @return the item shadow copy, if any
+     * @throws SQLException if an SQL error occurs
+     */
+    Item findClone(Context context, Item item) throws SQLException;
+
+    /**
      * Add the Concytec feedback on the given item.
      *
      * @param context  the DSpace context
@@ -172,18 +135,56 @@ public interface ConcytecWorkflowService {
      * @param feedback the feedback
      * @throws SQLException if an SQL error occurs
      */
-    void setConcytecFeedback(Context context, Item item, ConcytecFeedback feedback) throws SQLException;
+    void addConcytecFeedback(Context context, Item item, ConcytecFeedback feedback) throws SQLException;
 
     /**
-     * Returns the Concytec feedback regarding the given item, or
+     * Add the Concytec feedback on the given item.
+     *
+     * @param context  the DSpace context
+     * @param item     the item
+     * @param feedback the feedback
+     * @throws SQLException if an SQL error occurs
+     */
+    void addConcytecFeedback(Context context, Item item, String feedback) throws SQLException;
+
+    /**
+     * Add the Concytec feedback on the given item.
+     *
+     * @param context  the DSpace context
+     * @param item     the item
+     * @param relation the relation between the given item and the item related to
+     *                 the concytec feedback
+     * @param feedback the feedback
+     * @param comment  an optional concytec comment
+     * @throws SQLException if an SQL error occurs
+     */
+
+    void addConcytecFeedback(Context context, Item item, ConcytecWorkflowRelation relation, ConcytecFeedback feedback,
+        String comment) throws SQLException;
+
+    /**
+     * Add the Concytec feedback on the given item.
+     *
+     * @param context  the DSpace context
+     * @param item     the item
+     * @param feedback the feedback
+     * @param comment  an optional concytec comment
+     * @throws SQLException if an SQL error occurs
+     */
+
+    void addConcytecFeedback(Context context, Item item, ConcytecFeedback feedback, String comment)
+        throws SQLException;
+
+    /**
+     * Returns the last Concytec feedback regarding the given item, or
      * {@link ConcytecFeedback}.NONE if no feedback was already given.
      *
      * @param context the DSpace context
      * @param item    the item
-     * @return the Concytec feedback on the given item
+     * @return the last Concytec feedback on the given item
      * @throws SQLException if an SQL error occurs
      */
-    ConcytecFeedback getConcytecFeedback(Context context, Item item) throws SQLException;
+    ConcytecFeedback getLastConcytecFeedback(Context context, Item item) throws SQLException;
 
     /**
      * Add a Concytec comment on the given item.
@@ -193,17 +194,17 @@ public interface ConcytecWorkflowService {
      * @param comment the comment to add
      * @throws SQLException if an SQL error occurs
      */
-    void setConcytecComment(Context context, Item item, String comment) throws SQLException;
+    void addConcytecComment(Context context, Item item, String comment) throws SQLException;
 
     /**
-     * Returns the Concytec comment regarding the given item.
+     * Returns the last Concytec comment regarding the given item.
      *
      * @param context the DSpace context
      * @param item    the item
-     * @return the Concytec comment on the given item
+     * @return the last Concytec comment on the given item
      * @throws SQLException if an SQL error occurs
      */
-    String getConcytecComment(Context context, Item item) throws SQLException;
+    String getLastConcytecComment(Context context, Item item) throws SQLException;
 
     /**
      * Find the item to be withdraw related to the given item.

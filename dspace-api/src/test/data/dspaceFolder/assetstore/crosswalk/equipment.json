@@ -1,8 +1,27 @@
 {
-	"name": "Test Equipment",
-	"acronym": "T-EQ",
-	"identifier": "ID-01",
-	"description": "This is an equipment to test the export functionality",
-	"ownerOrgUnit": "Test OrgUnit",
-	"ownerPerson": "Walter White"
+    "name": "Test Equipment",
+    "acronym": "T-EQ",
+    "type": "Type",
+    "identifier": "ID-01",
+    "description": "This is an equipment to test the export functionality",
+    "ownerOrgUnit": "Test OrgUnit",
+    "ownerPerson": "Walter White",
+    "usage": "Investigacion cientifica y desarrollo experimental",
+    "subjects": [
+       "First subject",
+       "Second subject"
+    ],
+    "researchLine": "ResearchLine",
+    "fundings": [
+       "Funding",
+       "Another Funding"
+    ],
+    "manufacturingCountry": "IT",
+    "manufacturingDate": "2020-01-01",
+    "acquisitionDate": "2021-01-01",
+    "amount": {
+        "value": "4000",
+        "currency": "\u20AC"
+    },
+    "internalNote": "Note"
 }

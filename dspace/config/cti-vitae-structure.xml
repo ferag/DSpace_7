@@ -8,7 +8,18 @@
         <sidebar/>
         <collection>
             <name>Profiles</name>
-            <entity-type>PersonCv</entity-type>
+            <entity-type>CvPerson</entity-type>
+            <description/>
+            <intro/>
+            <copyright/>
+            <sidebar/>
+            <license/>
+            <provenance/>
+        </collection>
+        <collection>
+            <name>notification</name>
+            <entity-type>Notification</entity-type>
+            <submission-type>notification-form</submission-type>
             <description/>
             <intro/>
             <copyright/>

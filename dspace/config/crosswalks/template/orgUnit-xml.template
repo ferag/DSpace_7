@@ -1,21 +1,28 @@
-<OrgUnit xmlns="https://www.openaire.eu/cerif-profile/1.1/" id="@virtual.id@">
-	<Name>@dc.title@</Name>
-	<Name>@organization.legalName@</Name>
-	<Acronym>@oairecerif.acronym@</Acronym>
+<OrgUnit id="@virtual.id@">
 	<Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">@virtual.mapConverter.orgUnitTypes.dc-type@</Type>
-	<PartOf>
-		@relation.organization-parentOrganization.start@
-		<OrgUnit id="@virtual.id@">
-			<Name>@dc.title@</Name>
-			<Acronym>@oairecerif.acronym@</Acronym>
-		</OrgUnit>
-		@relation.organization-parentOrganization.end@
-		@if.not.authority.organization-parentOrganization.start@
-		<OrgUnit> <Name>@organization.parentOrganization@</Name> </OrgUnit>
-		@if.not.authority.organization-parentOrganization.end@
-	</PartOf>
-	<Identifier>@organization.identifier@</Identifier>
-	<Identifier type="URL">@oairecerif.identifier.url@</Identifier>
+    <Acronym>@oairecerif.acronym@</Acronym>
+    <Name>@dc.title@</Name>
+    <Name>@organization.legalName@</Name>
+    <Director>@crisou.director@</Director>
+    <Established>@organization.foundingDate@</Established>
+    <ScientificBoard>@crisou.boards@</ScientificBoard>
+    <Identifier>@organization.identifier@</Identifier>
+    <Url>@oairecerif.identifier.url@</Url>
+    <Identifier type="RUC">@organization.identifier.ruc@</Identifier>
+    <Identifier type="Ringgold">@organization.identifier.rin@</Identifier>
+    <Identifier type="Research Organization Registry">@organization.identifier.ror@</Identifier>
+    <Identifier type="International Standard Name">@organization.identifier.isni@</Identifier>
+    <Identifier type="Scopus Affiliation">@organization.identifier.scopusaffid@</Identifier>
+    <Identifier type="CrossRef Funder">@organization.identifier.crossrefid@</Identifier>
+    <ParentOrganization>@organization.parentOrganization@</ParentOrganization>
+    <Subject>@dc.subject.ocde@</Subject>
+    <Keyword>@dc.subject@</Keyword>
+    <PostAddress>
+        <AddressLocality>@organization.address.addressLocality@</AddressLocality>
+        <AddressCountry>@organization.address.addressCountry@</AddressCountry>
+    </PostAddress>
+    <UbiGeo scheme="https://purl.org/pe-repo/inei/ubigeo">@perucris.ubigeo@</UbiGeo>
+    <Description>@dc.description.abstract@</Description>
 	<People>
 		@relation.people.start@
 		<Person displayName="@dc.title@"/>

@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -171,14 +172,7 @@ public class ItemAuthority implements ChoiceAuthority, LinkableEntityAuthority {
 
     @Override
     public String getLinkedEntityType() {
-        StringBuilder stringBuilder = new StringBuilder();
-        // FIXME: temporary solution to distinguish between institution entities and normal entities
-        // move this logic to authority.
-        if (isInstitutionEntity()) {
-            stringBuilder.append("Institution");
-        }
-        return stringBuilder.append(
-            configurationService.getProperty("cris.ItemAuthority." + authorityName + ".relationshipType")).toString();
+        return configurationService.getProperty("cris.ItemAuthority." + authorityName + ".relationshipType");
     }
 
     private boolean isInstitutionEntity() {
@@ -186,7 +180,11 @@ public class ItemAuthority implements ChoiceAuthority, LinkableEntityAuthority {
         if (Objects.isNull(currentRequest)) {
             return false;
         }
-        String collection = currentRequest.getHttpServletRequest().getParameter("collection");
+        HttpServletRequest httpServletRequest = currentRequest.getHttpServletRequest();
+        if (httpServletRequest == null) {
+            return false;
+        }
+        String collection = httpServletRequest.getParameter("collection");
         if (StringUtils.isBlank(collection)) {
             return false;
         }

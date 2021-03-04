@@ -72,10 +72,39 @@
 							    	<xsl:with-param name="label" select="'Email'" />
 							    	<xsl:with-param name="value" select="email" />
 							    </xsl:call-template>
+                                <xsl:call-template name="print-value">
+                                    <xsl:with-param name="label" select="'Phone'" />
+                                    <xsl:with-param name="value" select="phone" />
+                                </xsl:call-template>
+                                <xsl:call-template name="print-value">
+                                    <xsl:with-param name="label" select="'Mobile phone'" />
+                                    <xsl:with-param name="value" select="mobile-phone" />
+                                </xsl:call-template>
+                                
 								<xsl:call-template name="print-value">
 							    	<xsl:with-param name="label" select="'ORCID'" />
 							    	<xsl:with-param name="value" select="identifiers/orcid" />
 							    </xsl:call-template>
+                                <xsl:call-template name="print-value">
+                                    <xsl:with-param name="label" select="'Dina'" />
+                                    <xsl:with-param name="value" select="identifiers/dina" />
+                                </xsl:call-template>
+                                <xsl:call-template name="print-value">
+                                    <xsl:with-param name="label" select="'Dni'" />
+                                    <xsl:with-param name="value" select="identifiers/dni" />
+                                </xsl:call-template>
+                                <xsl:call-template name="print-value">
+                                    <xsl:with-param name="label" select="'Passport'" />
+                                    <xsl:with-param name="value" select="identifiers/passport" />
+                                </xsl:call-template>
+                                <xsl:call-template name="print-value">
+                                    <xsl:with-param name="label" select="'Immigration card'" />
+                                    <xsl:with-param name="value" select="identifiers/immigration-card" />
+                                </xsl:call-template>
+                                <xsl:call-template name="print-value">
+                                    <xsl:with-param name="label" select="'Renacyt'" />
+                                    <xsl:with-param name="value" select="identifiers/renacyt" />
+                                </xsl:call-template>
 								<xsl:call-template name="print-values">
 							    	<xsl:with-param name="label" select="'Scopus Author IDs'" />
 							    	<xsl:with-param name="values" select="identifiers/scopus-author-ids/scopus-author-id" />
@@ -153,6 +182,19 @@
 					<xsl:call-template name="section-title">
 				    	<xsl:with-param name="label" select="'Other informations'" />
 			    	</xsl:call-template>
+			    	
+                    <xsl:call-template name="print-value">
+                        <xsl:with-param name="label" select="'Street address'" />
+                        <xsl:with-param name="value" select="address/street" />
+                    </xsl:call-template>
+                    <xsl:call-template name="print-value">
+                        <xsl:with-param name="label" select="'Postal code'" />
+                        <xsl:with-param name="value" select="address/postal-code" />
+                    </xsl:call-template>
+                    <xsl:call-template name="print-value">
+                        <xsl:with-param name="label" select="'Country address'" />
+                        <xsl:with-param name="value" select="address/country" />
+                    </xsl:call-template>
 					<xsl:call-template name="print-values">
 				    	<xsl:with-param name="label" select="'Working groups'" />
 				    	<xsl:with-param name="values" select="working-groups/working-group" />

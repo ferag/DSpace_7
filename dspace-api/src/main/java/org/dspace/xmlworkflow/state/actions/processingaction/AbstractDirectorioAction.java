@@ -9,6 +9,9 @@ package org.dspace.xmlworkflow.state.actions.processingaction;
 
 import static java.lang.String.format;
 import static org.dspace.content.MetadataSchemaEnum.DC;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.CORRECTION;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.REINSTATE;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.WITHDRAW;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -16,7 +19,6 @@ import java.util.List;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.DCDate;
 import org.dspace.content.Item;
@@ -24,6 +26,7 @@ import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.service.EPersonService;
 import org.dspace.util.UUIDUtils;
+import org.dspace.versioning.ItemCorrectionService;
 import org.dspace.workflow.WorkflowException;
 import org.dspace.xmlworkflow.ConcytecFeedback;
 import org.dspace.xmlworkflow.WorkflowConfigurationException;
@@ -64,6 +67,9 @@ public abstract class AbstractDirectorioAction extends ProcessingAction {
     @Autowired
     protected EPersonService ePersonService;
 
+    @Autowired
+    protected ItemCorrectionService itemCorrectionService;
+
     @Override
     public void activate(Context context, XmlWorkflowItem wf) {
 
@@ -71,7 +77,7 @@ public abstract class AbstractDirectorioAction extends ProcessingAction {
 
     protected ActionResult processAccept(Context context, Item item) throws SQLException, AuthorizeException {
         addApprovedProvenance(context, item);
-        concytecWorkflowService.setConcytecFeedback(context, item, ConcytecFeedback.APPROVE);
+        addFeedback(context, item, ConcytecFeedback.APPROVE, null);
         return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, ActionResult.OUTCOME_COMPLETE);
     }
 
@@ -107,14 +113,36 @@ public abstract class AbstractDirectorioAction extends ProcessingAction {
 
     protected ActionResult processRejectPage(Context context, Item item, HttpServletRequest request)
         throws SQLException, AuthorizeException, IOException {
-
         String reason = request.getParameter("reason");
-        if (StringUtils.isNotEmpty(reason)) {
-            concytecWorkflowService.setConcytecComment(context, item, reason);
+        addFeedback(context, item, ConcytecFeedback.REJECT, reason);
+        return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, ActionResult.OUTCOME_COMPLETE);
+    }
+
+    private void addFeedback(Context context, Item item, ConcytecFeedback feedback, String comment)
+        throws SQLException {
+
+        Item itemToCorrect = itemCorrectionService.getCorrectedItem(context, item);
+        if (itemToCorrect != null) {
+            concytecWorkflowService.addConcytecFeedback(context, itemToCorrect, CORRECTION, feedback, comment);
+            concytecWorkflowService.addConcytecFeedback(context, item, CORRECTION, feedback, comment);
+            return;
         }
 
-        concytecWorkflowService.setConcytecFeedback(context, item, ConcytecFeedback.REJECT);
-        return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, ActionResult.OUTCOME_COMPLETE);
+        Item itemToWithdraw = concytecWorkflowService.findWithdrawnItem(context, item);
+        if (itemToWithdraw != null) {
+            concytecWorkflowService.addConcytecFeedback(context, itemToWithdraw, WITHDRAW, feedback, comment);
+            concytecWorkflowService.addConcytecFeedback(context, item, WITHDRAW, feedback, comment);
+            return;
+        }
+
+        Item itemToReinstate = concytecWorkflowService.findReinstateItem(context, item);
+        if (itemToReinstate != null) {
+            concytecWorkflowService.addConcytecFeedback(context, itemToReinstate, REINSTATE, feedback, comment);
+            concytecWorkflowService.addConcytecFeedback(context, item, REINSTATE, feedback, comment);
+            return;
+        }
+
+        concytecWorkflowService.addConcytecFeedback(context, item, feedback, comment);
     }
 
     private void addApprovedProvenance(Context context, Item item) throws SQLException, AuthorizeException {

@@ -1,4 +1,4 @@
-<person>
+<person id="mock-id">
 	<names>
 		<preferred-name>John Smith</preferred-name>
 		<full-name>John Smith</full-name>
@@ -53,6 +53,8 @@
 	</qualifications>
 	<knows-languages>
 	</knows-languages>
+	<address>
+	</address>
 	<publications>
 	</publications>
 </person>

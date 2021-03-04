@@ -117,6 +117,18 @@ public class SubmissionConfigReader {
         buildInputs(configDir + SUBMIT_DEF_FILE_PREFIX + SUBMIT_DEF_FILE_SUFFIX);
     }
 
+    /**
+     * Load Submission Configuration from the
+     * custom path passed in input
+     *
+     * @param filePath path of file to be loaded
+     *
+     * @throws SubmissionConfigReaderException if servlet error
+     */
+    public SubmissionConfigReader(String filePath) throws SubmissionConfigReaderException {
+        buildInputs(filePath);
+    }
+
     public void reload() throws SubmissionConfigReaderException {
         collectionToSubmissionConfig = null;
         stepDefns = null;

@@ -15,6 +15,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.dao.RelationshipTypeDAO;
+import org.dspace.content.service.EntityTypeService;
 import org.dspace.content.service.RelationshipTypeService;
 import org.dspace.core.Context;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class RelationshipTypeServiceImpl implements RelationshipTypeService {
 
     @Autowired(required = true)
     protected AuthorizeService authorizeService;
+
+    @Autowired(required = true)
+    private EntityTypeService entityTypeService;
 
     @Override
     public RelationshipType create(Context context) throws SQLException, AuthorizeException {
@@ -53,9 +57,38 @@ public class RelationshipTypeServiceImpl implements RelationshipTypeService {
     }
 
     @Override
+    public RelationshipType findByItemsAndTypeNames(Context context, Item leftItem, Item rightItem,
+        String leftwardType, String rightwardType) throws SQLException {
+
+        EntityType leftType = entityTypeService.findByItem(context, leftItem);
+        if (leftType == null) {
+            return null;
+        }
+
+        EntityType rightType = entityTypeService.findByItem(context, rightItem);
+        if (rightType == null) {
+            return null;
+        }
+
+        return relationshipTypeDAO.findbyTypesAndTypeName(context, leftType, rightType, leftwardType, rightwardType);
+    }
+
+    @Override
     public List<RelationshipType> findByTypeAndTypeNames(Context context, EntityType type, boolean isLeftType,
         String leftwardType, String rightwardType) throws SQLException {
         return relationshipTypeDAO.findByTypeAndTypeNames(context, type, isLeftType, leftwardType, rightwardType);
+    }
+
+    @Override
+    public List<RelationshipType> findByItemAndTypeNames(Context context, Item item, boolean isLeftItem,
+        String leftwardType, String rightwardType) throws SQLException {
+
+        EntityType type = entityTypeService.findByItem(context, item);
+        if (type == null) {
+            return Collections.emptyList();
+        }
+
+        return findByTypeAndTypeNames(context, type, isLeftItem, leftwardType, rightwardType);
     }
 
     @Override

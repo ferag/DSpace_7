@@ -1,3 +1,5 @@
+Type OCDE = perucris.project.typeOcde
+Type other = perucris.project.typeOther
 Title = dc.title
 Acronym = oairecerif.acronym
 OpenAIRE id(s) = crispj.openaireid
@@ -15,3 +17,8 @@ Keyword(s) = dc.subject
 Description = dc.description.abstract
 OA Mandate = oairecerif.oamandate
 OA Policy URL = oairecerif.oamandate.url
+Research line = perucris.researchLine
+Geo locations = datacite.geoLocationPlace
+Industrial Classification = perucris.type.ciiu
+Technicians = crispj.techniciansAndEquivalentStaff
+Supporting staff = crispj.supportingStaff 

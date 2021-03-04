@@ -48,6 +48,7 @@ public class CanClaimProfileIT extends AbstractControllerIntegrationTest {
     private Item collectionBProfile;
     private Item notClaimableCollectionProfile;
     private Item publication;
+    private Collection cvPersonCollection;
 
     @Autowired
     private ConfigurationService configurationService;
@@ -73,6 +74,8 @@ public class CanClaimProfileIT extends AbstractControllerIntegrationTest {
         Community community = CommunityBuilder.createCommunity(context).withName("Community").build();
         claimableCollectionA = CollectionBuilder.createCollection(context, community).withRelationshipType("Person")
                                                 .withName("claimableA").build();
+        cvPersonCollection = CollectionBuilder.createCollection(context, community).withRelationshipType("CvPerson")
+                                              .withName("CV person").build();
         final Collection claimableCollectionB =
             CollectionBuilder.createCollection(context, community).withRelationshipType("Person")
                              .withName("claimableB").build();
@@ -82,16 +85,12 @@ public class CanClaimProfileIT extends AbstractControllerIntegrationTest {
             CollectionBuilder.createCollection(context, community).withRelationshipType("Publication")
                              .withName("notClaimable").build();
 
-        collectionAProfile =
-            ItemBuilder.createItem(context, claimableCollectionA).withRelationshipType("Person").build();
-        collectionBProfile =
-            ItemBuilder.createItem(context, claimableCollectionB).withRelationshipType("Person").build();
+        collectionAProfile = ItemBuilder.createItem(context, claimableCollectionA).build();
+        collectionBProfile = ItemBuilder.createItem(context, claimableCollectionB).build();
 
-        publication =
-            ItemBuilder.createItem(context, publicationCollection).withRelationshipType("Publication").build();
+        publication = ItemBuilder.createItem(context, publicationCollection).build();
 
-        notClaimableCollectionProfile =
-            ItemBuilder.createItem(context, notClaimableCollection).withRelationshipType("Person").build();
+        notClaimableCollectionProfile = ItemBuilder.createItem(context, notClaimableCollection).build();
 
         configurationService.addPropertyValue("claimable.entityType", "Person");
         configurationService.addPropertyValue("claimable.collection.uuid", claimableCollectionA.getID().toString());
@@ -188,7 +187,7 @@ public class CanClaimProfileIT extends AbstractControllerIntegrationTest {
     public void userHasAlreadyAProfile() throws Exception {
 
         context.turnOffAuthorisationSystem();
-        ItemBuilder.createItem(context, claimableCollectionA)
+        ItemBuilder.createItem(context, cvPersonCollection)
                    .withCrisOwner(eperson.getFullName(), eperson.getID().toString())
                    .build();
         context.restoreAuthSystemState();

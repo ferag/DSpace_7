@@ -10,8 +10,10 @@ package org.dspace.app.rest;
 import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withBrowseComponent;
 import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withFacetComponent;
 import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withIdAndBrowseComponent;
+import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withIdAndCountersComponent;
 import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withIdAndFacetComponent;
 import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withIdAndSearchComponent;
+import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withIdAndTextRowComponent;
 import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withIdAndTopComponent;
 import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withSearchComponent;
 import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withTopComponent;
@@ -21,6 +23,8 @@ import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Arrays;
 
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
 import org.junit.Test;
@@ -40,7 +44,7 @@ public class CrisLayoutSectionRestRepositoryIT extends AbstractControllerIntegra
 
         getClient().perform(get("/api/layout/sections"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$._embedded.sections", hasSize(5)))
+            .andExpect(jsonPath("$._embedded.sections", hasSize(6)))
 
             .andExpect(jsonPath("$._embedded.sections",
                 hasItem(withIdAndBrowseComponent("researchoutputs", 0, 0, "col-md-4", expectedBrowseNames))))
@@ -80,7 +84,21 @@ public class CrisLayoutSectionRestRepositoryIT extends AbstractControllerIntegra
             .andExpect(jsonPath("$._embedded.sections",
                 hasItem(withIdAndSearchComponent("infrastructure", 0, 1, "col-md-8", "infrastructure"))))
             .andExpect(jsonPath("$._embedded.sections",
-                hasItem(withIdAndFacetComponent("infrastructure", 1, 0, "col-md-12", "infrastructure"))));
+                hasItem(withIdAndFacetComponent("infrastructure", 1, 0, "col-md-12", "infrastructure"))))
+            .andExpect(jsonPath("$._embedded.sections",
+                hasItem(withIdAndTextRowComponent("directorios", 0, 0, "col-md-12 center", "image"))))
+            .andExpect(jsonPath("$._embedded.sections",
+                hasItem(withIdAndTextRowComponent("directorios", 0, 1,
+                    "col-md-12 h2 d-flex justify-content-center py-3","text-key"))))
+            .andExpect(jsonPath("$._embedded.sections",
+                hasItem(withIdAndTextRowComponent("directorios", 0, 2, "col-md-12 d-flex justify-content-center py-2",
+                    "text-key"))))
+            .andExpect(jsonPath("$._embedded.sections",
+                hasItem(withIdAndSearchComponent("directorios", 1, 0, "col-md-12", "site"))))
+            .andExpect(jsonPath("$._embedded.sections",
+                hasItem(withIdAndCountersComponent("directorios", 2, 0, "col-md-12 py-4",
+                    Arrays.asList("RESUME.rprofiles","RESUME.orgunits", "RESUME.researchoutputs",
+                        "RESUME.project_funding", "RESUME.infrastructure")))));
     }
 
     @Test

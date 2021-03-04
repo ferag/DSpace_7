@@ -41,7 +41,6 @@ import org.dspace.builder.EntityTypeBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.EntityType;
-import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataSchema;
 import org.dspace.content.service.MetadataFieldService;
@@ -78,7 +77,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
     private EPerson anotherUser;
 
-    private Collection personCollection;
+    private Collection cvPersonCollection;
 
     /**
      * Tests setup.
@@ -103,13 +102,13 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
             .withName("Parent Community")
             .build();
 
-        personCollection = CollectionBuilder.createCollection(context, parentCommunity)
+        cvPersonCollection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Profile Collection")
-            .withRelationshipType("Person")
+            .withRelationshipType("CvPerson")
             .withSubmitterGroup(user)
             .build();
 
-        configurationService.setProperty("researcher-profile.collection.uuid", personCollection.getID().toString());
+        configurationService.setProperty("researcher-profile.collection.uuid", cvPersonCollection.getID().toString());
 
         context.setCurrentUser(user);
 
@@ -132,7 +131,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
         context.turnOffAuthorisationSystem();
 
-        ItemBuilder.createItem(context, personCollection)
+        ItemBuilder.createItem(context, cvPersonCollection)
             .withCrisOwner(name, id.toString())
             .build();
 
@@ -149,7 +148,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.type", is("item")))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", name, id.toString(), 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "Person", 0)));
+            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "CvPerson", 0)));
 
         getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", id))
             .andExpect(status().isOk())
@@ -174,7 +173,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
         context.turnOffAuthorisationSystem();
 
-        ItemBuilder.createItem(context, personCollection)
+        ItemBuilder.createItem(context, cvPersonCollection)
             .withCrisOwner(name, id.toString())
             .build();
 
@@ -191,7 +190,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.type", is("item")))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", name, id.toString(), 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "Person", 0)));
+            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "CvPerson", 0)));
 
         getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", id))
             .andExpect(status().isOk())
@@ -215,7 +214,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
         context.turnOffAuthorisationSystem();
 
-        ItemBuilder.createItem(context, personCollection)
+        ItemBuilder.createItem(context, cvPersonCollection)
             .withCrisOwner(name, id.toString())
             .build();
 
@@ -261,7 +260,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
             .andExpect(jsonPath("$.type", is("item")))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", name, id.toString(), 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.sourceId", id, 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "Person", 0)));
+            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "CvPerson", 0)));
 
         getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", id))
             .andExpect(status().isOk())
@@ -302,7 +301,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
             .andExpect(jsonPath("$.type", is("item")))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", name, id.toString(), 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.sourceId", id, 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "Person", 0)));
+            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "CvPerson", 0)));
 
         getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", id))
             .andExpect(status().isOk())
@@ -717,14 +716,13 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
         // FIXME: unIgnore once orcid integration ready
 
         context.turnOffAuthorisationSystem();
-        Item person = ItemBuilder.createItem(context, personCollection)
+        ItemBuilder.createItem(context, cvPersonCollection)
             .withFullName("Giuseppe Garibaldi")
-            .withRelationshipType("Person")
             .withBirthDate("1807-07-04")
             .withOrcidIdentifier("0000-1111-2222-3333")
             .build();
 
-        EntityType entityType = EntityTypeBuilder.createEntityTypeBuilder(context, "Person").build();
+        EntityType entityType = EntityTypeBuilder.createEntityTypeBuilder(context, "CvPerson").build();
 
         CrisLayoutBox publicBox = CrisLayoutBoxBuilder.createBuilder(context, entityType, false, false)
             .withSecurity(LayoutSecurity.PUBLIC).build();
@@ -769,7 +767,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
             .andExpect(jsonPath("$.type", is("item")))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", user.getName(), user.getID().toString(), 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.name", "Giuseppe Garibaldi", 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "Person", 0)))
+            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "CvPerson", 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("person.birthDate", "1807-07-04", 0)));
 
         getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", user.getID()))

@@ -3,7 +3,7 @@
     xmlns:util="http://www.springframework.org/schema/util"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <bean class="org.dspace.xmlworkflow.ConcytecWorkflowServiceImpl"/>
+    <bean id="org.dspace.xmlworkflow.service.ConcytecWorkflowService" class="org.dspace.xmlworkflow.ConcytecWorkflowServiceImpl"/>
     
     <bean class="org.dspace.xmlworkflow.CrisPolicyGroupAddition"/>
     

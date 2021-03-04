@@ -33,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -65,9 +66,9 @@ import org.dspace.content.Community;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.PasswordHash;
-import org.dspace.eperson.dao.RegistrationDataDAO;
 import org.dspace.eperson.service.AccountService;
 import org.dspace.eperson.service.EPersonService;
+import org.dspace.eperson.service.GroupService;
 import org.dspace.eperson.service.RegistrationDataService;
 import org.dspace.services.ConfigurationService;
 import org.hamcrest.Matchers;
@@ -87,7 +88,8 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
     private EPersonService ePersonService;
 
     @Autowired
-    private RegistrationDataDAO registrationDataDAO;
+    private GroupService groupService;
+
     @Autowired
     private ConfigurationService configurationService;
 
@@ -1986,7 +1988,7 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
         AddOperation addOperation = new AddOperation("/password", newPassword);
         ops.add(addOperation);
         String patchBody = getPatchContent(ops);
-        accountService.sendRegistrationInfo(context, ePerson.getEmail());
+        accountService.sendRegistrationInfo(context, ePerson.getEmail(), Collections.emptyList());
         String tokenForEPerson = registrationDataService.findByEmail(context, ePerson.getEmail()).getToken();
         PasswordHash oldPassword = ePersonService.getPasswordHash(ePerson);
         // updates password
@@ -2022,7 +2024,7 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
         AddOperation addOperation = new AddOperation("/password", newPassword);
         ops.add(addOperation);
         String patchBody = getPatchContent(ops);
-        accountService.sendRegistrationInfo(context, ePerson.getEmail());
+        accountService.sendRegistrationInfo(context, ePerson.getEmail(), Collections.emptyList());
         String tokenForEPerson = registrationDataService.findByEmail(context, ePerson.getEmail()).getToken();
         PasswordHash oldPassword = ePersonService.getPasswordHash(ePerson);
         // updates password
@@ -2067,8 +2069,8 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
         AddOperation addOperation = new AddOperation("/password", newPassword);
         ops.add(addOperation);
         String patchBody = getPatchContent(ops);
-        accountService.sendRegistrationInfo(context, ePerson.getEmail());
-        accountService.sendRegistrationInfo(context, ePersonTwo.getEmail());
+        accountService.sendRegistrationInfo(context, ePerson.getEmail(), Collections.emptyList());
+        accountService.sendRegistrationInfo(context, ePersonTwo.getEmail(), Collections.emptyList());
         String tokenForEPerson = registrationDataService.findByEmail(context, ePerson.getEmail()).getToken();
         String tokenForEPersonTwo = registrationDataService.findByEmail(context, ePersonTwo.getEmail()).getToken();
 
@@ -2109,7 +2111,7 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
         ReplaceOperation replaceOperation = new ReplaceOperation("/email", newEmail);
         ops.add(replaceOperation);
         String patchBody = getPatchContent(ops);
-        accountService.sendRegistrationInfo(context, ePerson.getEmail());
+        accountService.sendRegistrationInfo(context, ePerson.getEmail(), Collections.emptyList());
         String tokenForEPerson = registrationDataService.findByEmail(context, ePerson.getEmail()).getToken();
         PasswordHash oldPassword = ePersonService.getPasswordHash(ePerson);
         // updates password
@@ -2158,7 +2160,7 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
         AddOperation addOperation = new AddOperation("/password", newPassword);
         ops.add(addOperation);
         String patchBody = getPatchContent(ops);
-        accountService.sendRegistrationInfo(context, ePerson.getEmail());
+        accountService.sendRegistrationInfo(context, ePerson.getEmail(), Collections.emptyList());
         String newRegisterToken = registrationDataService.findByEmail(context, newRegisterEmail).getToken();
         PasswordHash oldPassword = ePersonService.getPasswordHash(ePerson);
         try {

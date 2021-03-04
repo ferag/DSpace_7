@@ -370,6 +370,20 @@
         <scope_note></scope_note>
     </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>notification</element>
+        <qualifier>to</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>notification</element>
+        <qualifier>message</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
 <!--    geolocations-->
 <!--Using Openaire datacite schema-->
 
@@ -637,6 +651,30 @@
         <schema>perucris</schema>
         <element>eperson</element>
         <qualifier>birthdate</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>cvPerson</element>
+        <qualifier>syncEducation</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>cvPerson</element>
+        <qualifier>syncAffiliation</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>cvPerson</element>
+        <qualifier>syncQualification</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>cvPerson</element>
+        <qualifier>syncBasicInfo</qualifier>
     </dc-type>
 
 </dspace-dc-types>

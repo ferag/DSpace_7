@@ -14,6 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,7 @@ import org.dspace.app.util.DCInputsReaderException;
 import org.dspace.app.util.SubmissionConfig;
 import org.dspace.app.util.SubmissionConfigReader;
 import org.dspace.app.util.SubmissionConfigReaderException;
+import org.dspace.authority.service.FormNameLookup;
 import org.dspace.content.Collection;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.authority.service.ChoiceAuthorityService;
@@ -98,7 +101,16 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
 
     // translate tail of configuration key (supposed to be schema.element.qual)
     // into field key
+    // in some particular cases, specific form name definition is present between key prefix and followed by ".override"
+    // postfix
     protected String config2fkey(String field) {
+        StringBuilder stringBuilder = new StringBuilder();
+        boolean isAnOverride = field.contains(".override.");
+        if (isAnOverride) {
+            String[] split = field.split(".override.");
+            stringBuilder.append(split[0]).append("_");
+            field = split[1];
+        }
         // field is expected to be "schema.element.qualifier"
         int dot = field.indexOf('.');
         if (dot < 0) {
@@ -112,7 +124,7 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
             qualifier = element.substring(dot + 1);
             element = element.substring(0, dot);
         }
-        return makeFieldKey(schema, element, qualifier);
+        return stringBuilder.append(makeFieldKey(schema, element, qualifier)).toString();
     }
 
     @Override
@@ -202,8 +214,8 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
     }
 
     @Override
-    public boolean isChoicesConfigured(String fieldKey, Collection collection) {
-        return getAuthorityByFieldKeyCollection(fieldKey, collection) != null;
+    public boolean isChoicesConfigured(String fieldKey, String formName) {
+        return getAuthorityByFieldKeyAndFormName(fieldKey, formName) != null;
     }
 
     @Override
@@ -234,27 +246,28 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
 
 
     @Override
-    public String getChoiceAuthorityName(String schema, String element, String qualifier, Collection collection) {
+    public String getChoiceAuthorityName(String schema, String element, String qualifier, String formNameDefinition) {
         init();
         String fieldKey = makeFieldKey(schema, element, qualifier);
+        Optional<String> keyInController = lookupKeyInController(formNameDefinition, fieldKey);
         // check if there is an authority configured for the metadata valid for all the collections
-        if (controller.containsKey(fieldKey)) {
+        if (keyInController.isPresent()) {
             for (Entry<String, List<String>> authority2md : authorities.entrySet()) {
-                if (authority2md.getValue().contains(fieldKey)) {
+                if (authority2md.getValue().contains(keyInController.get())) {
                     return authority2md.getKey();
                 }
             }
-        } else if (collection != null && controllerFormDefinitions.containsKey(fieldKey)) {
-            // there is an authority configured for the metadata valid for some collections,
-            // check if it is the requested collection
+        } else if (StringUtils.isNotBlank(formNameDefinition) && controllerFormDefinitions.containsKey(fieldKey)) {
+            // there is an authority configured for the metadata valid for some forms ,
+            // check if it is the requested form
+
             Map<String, ChoiceAuthority> controllerFormDef = controllerFormDefinitions.get(fieldKey);
-            SubmissionConfig submissionConfig = itemSubmissionConfigReader.getSubmissionConfigByCollection(collection);
-            String submissionName = submissionConfig.getSubmissionName();
-            // check if the requested collection has a submission definition that use an authority for the metadata
-            if (controllerFormDef.containsKey(submissionName)) {
+
+            // check if the requested form name definition uses an authority for the metadata
+            if (controllerFormDef.containsKey(formNameDefinition)) {
                 for (Entry<String, Map<String, List<String>>> authority2defs2md :
                         authoritiesFormDefinitions.entrySet()) {
-                    List<String> mdByDefinition = authority2defs2md.getValue().get(submissionName);
+                    List<String> mdByDefinition = authority2defs2md.getValue().get(formNameDefinition);
                     if (mdByDefinition != null && mdByDefinition.contains(fieldKey)) {
                         return authority2defs2md.getKey();
                     }
@@ -336,6 +349,7 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
                 List<DCInputSet> inputsBySubmissionName = dcInputsReader.getInputsBySubmissionName(submissionName);
                 // loop over the submission forms configuration eventually associated with the submission panel
                 for (DCInputSet dcinputSet : inputsBySubmissionName) {
+                    String formNameDefinition = dcinputSet.getFormName();
                     DCInput[][] dcinputs = dcinputSet.getFields();
                     for (DCInput[] dcrows : dcinputs) {
                         for (DCInput dcinput : dcrows) {
@@ -365,8 +379,8 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
                                     }
                                 }
 
-                                addAuthorityToFormCacheMap(submissionName, fieldKey, ca);
-                                addFormDetailsToAuthorityCacheMap(submissionName, authorityName, fieldKey);
+                                addAuthorityToFormCacheMap(formNameDefinition, fieldKey, ca);
+                                addFormDetailsToAuthorityCacheMap(formNameDefinition, authorityName, fieldKey);
                             }
                         }
                     }
@@ -383,11 +397,11 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
      * Add the form/field to the cache map keeping track of which form/field are
      * associated with the specific authority name
      * 
-     * @param submissionName the form definition name
+     * @param formDefinitionName the form definition name
      * @param authorityName  the name of the authority plugin
      * @param fieldKey       the field key that use the authority
      */
-    private void addFormDetailsToAuthorityCacheMap(String submissionName, String authorityName, String fieldKey) {
+    private void addFormDetailsToAuthorityCacheMap(String formDefinitionName, String authorityName, String fieldKey) {
         Map<String, List<String>> submissionDefinitionNames2fieldKeys;
         if (authoritiesFormDefinitions.containsKey(authorityName)) {
             submissionDefinitionNames2fieldKeys = authoritiesFormDefinitions.get(authorityName);
@@ -396,13 +410,13 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
         }
 
         List<String> fields;
-        if (submissionDefinitionNames2fieldKeys.containsKey(submissionName)) {
-            fields = submissionDefinitionNames2fieldKeys.get(submissionName);
+        if (submissionDefinitionNames2fieldKeys.containsKey(formDefinitionName)) {
+            fields = submissionDefinitionNames2fieldKeys.get(formDefinitionName);
         } else {
             fields = new ArrayList<String>();
         }
         fields.add(fieldKey);
-        submissionDefinitionNames2fieldKeys.put(submissionName, fields);
+        submissionDefinitionNames2fieldKeys.put(formDefinitionName, fields);
         authoritiesFormDefinitions.put(authorityName, submissionDefinitionNames2fieldKeys);
     }
 
@@ -410,18 +424,18 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
      * Add the authority plugin to the cache map keeping track of which authority is
      * used by a specific form/field
      * 
-     * @param submissionName the submission definition name
+     * @param formNameDefinition the form name definition
      * @param fieldKey       the field key that require the authority
      * @param ca             the authority plugin
      */
-    private void addAuthorityToFormCacheMap(String submissionName, String fieldKey, ChoiceAuthority ca) {
+    private void addAuthorityToFormCacheMap(String formNameDefinition, String fieldKey, ChoiceAuthority ca) {
         Map<String, ChoiceAuthority> definition2authority;
         if (controllerFormDefinitions.containsKey(fieldKey)) {
             definition2authority = controllerFormDefinitions.get(fieldKey);
         } else {
             definition2authority = new HashMap<String, ChoiceAuthority>();
         }
-        definition2authority.put(submissionName, ca);
+        definition2authority.put(formNameDefinition, ca);
         controllerFormDefinitions.put(fieldKey, definition2authority);
     }
 
@@ -493,22 +507,47 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
         return ma;
     }
 
-    private ChoiceAuthority getAuthorityByFieldKeyCollection(String fieldKey, Collection collection) {
+    private ChoiceAuthority getAuthorityByFieldKeyAndFormName(String fieldKey, String formNameDefinition) {
         init();
-        ChoiceAuthority ma = controller.get(fieldKey);
-        if (ma == null && collection != null) {
-            SubmissionConfigReader configReader;
-            try {
-                configReader = new SubmissionConfigReader();
-                SubmissionConfig submissionName = configReader.getSubmissionConfigByCollection(collection);
-                ma = controllerFormDefinitions.get(fieldKey).get(submissionName.getSubmissionName());
-            } catch (SubmissionConfigReaderException e) {
-                // the system is in an illegal state as the submission definition is not valid
-                throw new IllegalStateException("Error reading the item submission configuration: " + e.getMessage(),
-                        e);
-            }
+        Optional<String> keyInController = lookupKeyInController(formNameDefinition, fieldKey);
+        if (keyInController.isPresent()) {
+            return controller.get(keyInController.get());
         }
-        return ma;
+        if (StringUtils.isNotBlank(formNameDefinition) && controllerFormDefinitions.containsKey(fieldKey)) {
+            return controllerFormDefinitions.get(fieldKey).get(formNameDefinition);
+        }
+        return null;
+    }
+
+    private ChoiceAuthority getAuthorityByFieldKeyCollection(String fieldKey, Collection collection) {
+        return getAuthorityByFieldKeyAndFormName(fieldKey, formNameDefinition(fieldKey, collection));
+    }
+
+    private String formNameDefinition(String fieldKey, Collection collection) {
+
+        if (Objects.isNull(collection)) {
+            return "";
+        }
+
+        try {
+
+            SubmissionConfigReader configReader = new SubmissionConfigReader();
+            SubmissionConfig submissionName = configReader.getSubmissionConfigByCollection(collection);
+            List<String> formsContainingField =
+                FormNameLookup.getInstance().formContainingField(submissionName.getSubmissionName(), fieldKey);
+
+            if (formsContainingField.size() > 1) {
+                throw new IllegalStateException(
+                    String.format("%s defined multiple times in %s collection submission form", fieldKey,
+                        collection.getID()));
+            }
+            return formsContainingField.isEmpty() ? "" : formsContainingField.get(0);
+
+        } catch (SubmissionConfigReaderException e) {
+            // the system is in an illegal state as the submission definition is not valid
+            throw new IllegalStateException("Error reading the item submission configuration: " + e.getMessage(),
+                e);
+        }
     }
 
     @Override
@@ -552,8 +591,9 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
     }
 
     @Override
-    public String getRelationshipType(String fieldKey) {
-        ChoiceAuthority ma = getAuthorityByFieldKeyCollection(fieldKey, null);
+    public String getRelationshipType(String fieldKey, String formNameDefinition) {
+
+        ChoiceAuthority ma = getAuthorityByFieldKeyAndFormName(fieldKey, formNameDefinition);
         if (ma == null) {
             throw new IllegalArgumentException("No choices plugin was configured for  field \"" + fieldKey + "\".");
         }
@@ -575,13 +615,50 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
 
     @Override
     public List<String> getAuthorityControlledFieldsByRelationshipType(String relationshipType) {
+        init();
+
+        if (StringUtils.isEmpty(relationshipType)) {
+            return new ArrayList<String>(controller.keySet());
+        }
+
         return controller.keySet().stream()
             .filter(field -> isLinkableToAnEntityWithRelationshipType(controller.get(field), relationshipType))
+            .map(field -> removeInstitutionPrefix(field))
             .collect(Collectors.toList());
+    }
+
+    private String removeInstitutionPrefix(String field) {
+        if (field != null && field.startsWith("institution")) {
+            return field.substring(field.indexOf("_") + 1);
+        }
+        return field;
     }
 
     private boolean isLinkableToAnEntityWithRelationshipType(ChoiceAuthority choiceAuthority, String relationshipType) {
         return choiceAuthority instanceof LinkableEntityAuthority
             && relationshipType.equals(((LinkableEntityAuthority) choiceAuthority).getLinkedEntityType());
     }
+
+    private Optional<String> lookupKeyInController(String formNameDefinition, String fieldKey) {
+
+        if (StringUtils.isNotBlank(formNameDefinition)) {
+            String composedKey = composedKey(formNameDefinition, fieldKey);
+            if (controller.containsKey(composedKey)) {
+                return Optional.of(composedKey);
+            }
+        }
+        if (controller.containsKey(fieldKey)) {
+            return Optional.of(fieldKey);
+        }
+        return Optional.empty();
+    }
+
+    private String composedKey(String formNameDefinition, String fieldKey) {
+        String composedKey = String.join("_",
+            StringUtils.defaultString(formNameDefinition, ""),
+            fieldKey);
+        return composedKey;
+    }
+
+
 }

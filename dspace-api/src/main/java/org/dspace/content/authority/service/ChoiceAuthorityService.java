@@ -47,11 +47,13 @@ public interface ChoiceAuthorityService {
      * @param schema    schema of metadata field
      * @param element   element of metadata field
      * @param qualifier qualifier of metadata field
+     * @param formNameDefinition form name definition of submission where lookup is performed
      * @return the name of the choice authority associated with the specified
      * metadata. Throw IllegalArgumentException if the supplied metadata
      * is not associated with an authority choice
      */
-    public String getChoiceAuthorityName(String schema, String element, String qualifier, Collection collection);
+    public String getChoiceAuthorityName(String schema, String element, String qualifier,
+                                         String formNameDefinition);
 
     /**
      * Wrapper that calls getMatches method of the plugin corresponding to
@@ -149,10 +151,10 @@ public interface ChoiceAuthorityService {
      * given metadata field?
      *
      * @param fieldKey single string identifying metadata field
-     * @param collection Collection owner of Item
+     * @param formName name of form containing fieldKey
      * @return true if choices are configured for this field.
      */
-    public boolean isChoicesConfigured(String fieldKey, Collection collection);
+    public boolean isChoicesConfigured(String fieldKey, String formName);
 
     /**
      * Get the presentation keyword (should be "lookup", "select" or "suggest", but this
@@ -196,9 +198,10 @@ public interface ChoiceAuthorityService {
      * Get the relationship type starting from the metadata field.
      *
      * @param field single string identifying metadata field
+     * @param formNameDefinition string identifying name of form containing field
      * @return the relationshipType as a String
      */
-    String getRelationshipType(String fieldKey);
+    String getRelationshipType(String fieldKey, String formNameDefinition);
 
     /**
      * Should we store the authority key (if any) for such field key and collection?
@@ -244,8 +247,8 @@ public interface ChoiceAuthorityService {
      * Returns all the configured metadata field that are authority controlled
      * related to the given relationship type.
      *
-     * @param relationshipType the relationship type
-     * @return the metadata fields
+     * @param  relationshipType the relationship type
+     * @return                  the metadata fields
      */
     public List<String> getAuthorityControlledFieldsByRelationshipType(String relationshipType);
 }

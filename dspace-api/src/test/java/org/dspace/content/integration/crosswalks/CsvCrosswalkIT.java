@@ -277,6 +277,9 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withProjectCoinvestigators("Coinvestigator")
             .withRelationEquipment("Another test equipment")
             .withOAMandateURL("oamandate")
+            .withResearchLine("Research line")
+            .withGeoLocationPlace("location1")
+            .withGeoLocationPlace("location2")
             .build();
 
         Item thirdItem = ItemBuilder.createItem(context, collection)
@@ -331,6 +334,18 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withOrgUnitIdentifier("ID-02")
             .withUrlIdentifier("www.orgUnit.com")
             .withUrlIdentifier("www.orgUnit.it")
+            .withOrgUnitDirector("OU Director")
+            .withOrgUnitFoundingDate("1990-05-12")
+            .withOrgUnitBoard("board1")
+            .withOrgUnitBoard("board2")
+            .withOrgUnitRucIdentifier("RUC-01")
+            .withOrgUnitRinIdentifier("RIN-01")
+            .withOrgUnitRorIdentifier("ROR-01")
+            .withOrgUnitScopusAffiliationIdentifier("SCOPUS-01")
+            .withOrgUnitCrossRefFunderIdentifier("CRF-01")
+            .withOrgUnitAddressLocality("via del canale")
+            .withOrgUnitAddressCountry("Italy")
+            .withUbigeo("010201")
             .build();
 
         Item secondItem = ItemBuilder.createItem(context, collection)
@@ -340,6 +355,9 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withType("Private non-profit")
             .withParentOrganization("Parent OrgUnit")
             .withOrgUnitIdentifier("ID-03")
+            .withOrgUnitRucIdentifier("RUC-02")
+            .withOrgUnitRinIdentifier("RIN-02")
+            .withOrgUnitRorIdentifier("ROR-02")
             .build();
 
         Item thirdItem = ItemBuilder.createItem(context, collection)
@@ -374,11 +392,23 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item firstItem = ItemBuilder.createItem(context, collection)
             .withRelationshipType("Equipment")
             .withAcronym("FT-EQ")
+            .withType("Type")
             .withTitle("First Test Equipment")
             .withInternalId("ID-01")
             .withDescription("This is an equipment to test the export functionality")
             .withEquipmentOwnerOrgUnit("Test OrgUnit")
             .withEquipmentOwnerPerson("Walter White")
+            .withUsageType("Investigacion cientifica y desarrollo experimental")
+            .withSubjectOCDE("First subject")
+            .withSubjectOCDE("Second subject")
+            .withResearchLine("ResearchLine")
+            .withRelationFunding("Funding")
+            .withManufacturingCountry("IT")
+            .withManufacturingDate("2020-01-01")
+            .withAcquisitionDate("2021-01-01")
+            .withAmount("4000")
+            .withAmountCurrency("€")
+            .withInternalNote("Note")
             .build();
 
         Item secondItem = ItemBuilder.createItem(context, collection)
@@ -388,6 +418,12 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withInternalId("ID-02")
             .withDescription("This is another equipment to test the export functionality")
             .withEquipmentOwnerPerson("John Smith")
+            .withSubjectOCDE("Subject")
+            .withRelationFunding("First funding")
+            .withRelationFunding("Second funding")
+            .withAcquisitionDate("2021-02-01")
+            .withAmount("5000")
+            .withAmountCurrency("€")
             .build();
 
         Item thirdItem = ItemBuilder.createItem(context, collection)
@@ -432,6 +468,8 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withFundingEndDate("2020-01-01")
             .withOAMandate("true")
             .withOAMandateURL("www.mandate.url")
+            .withFundingParent("Parent Funding")
+            .withExecutedAmount("15.000,00")
             .build();
 
         Item secondItem = ItemBuilder.createItem(context, collection)
@@ -446,6 +484,8 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withFundingStartDate("2020-01-01")
             .withOAMandate("true")
             .withOAMandateURL("www.mandate.url")
+            .withExecutedAmount("25.000,00")
+            .withExecutedAmountCurrency("€")
             .build();
 
         Item thirdItem = ItemBuilder.createItem(context, collection)
@@ -509,7 +549,7 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withPersonAffiliationStartDate("2018-01-01")
             .withPersonAffiliationRole("Developer")
             .withPersonAffiliationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
-            .withDescriptionAbstract("Biography: \n\t\"This is my biography\"")
+            .withDescriptionAbstract("Biography: \n\"This is my biography\"")
             .withPersonCountry("England")
             .withPersonKnowsLanguages("English")
             .withPersonKnowsLanguages("Italian")
@@ -523,6 +563,15 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withPersonQualification("Second Qualification")
             .withPersonQualificationStartDate("2016-01-02")
             .withPersonQualificationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPhone("0744112233")
+            .withMobilePhone("3201122333")
+            .withDinaIdentifier("DINA-01")
+            .withDniIdentifier("DNI-01")
+            .withPassport("PASS-01")
+            .withStreetAddress("Via 1 maggio")
+            .withCountryAddress("IT")
+            .withPostalCode("05100")
+            .withUbigeo("12345")
             .build();
         return item;
     }
@@ -555,6 +604,12 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withEditorAffiliation("Editor Affiliation")
             .withRelationConference("The best Conference")
             .withRelationDataset("DataSet")
+            .withRightsUri("rights-uri")
+            .withCoveragePublication("Coverage publication")
+            .withVersion("V01")
+            .withAdvisor("First advisor")
+            .withAdvisor("Second advisor")
+            .withRenatiDiscipline("discipline")
             .build();
     }
 

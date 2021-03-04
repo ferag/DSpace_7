@@ -164,6 +164,32 @@
 	      <type>submission-form</type>
 	    </step-definition>
 
+        <step-definition id="institution-publication" mandatory="true">
+            <heading>submit.progressbar.describe.publication</heading>
+            <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+            <type>submission-form</type>
+        </step-definition>
+        <step-definition id="institution-publication_indexing" mandatory="false">
+            <heading>submit.progressbar.describe.publication_indexing</heading>
+            <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+            <type>submission-form</type>
+        </step-definition>
+        <step-definition id="institution-publication_bibliographic_details" mandatory="true">
+            <heading>submit.progressbar.describe.publication_bibliographic_details</heading>
+            <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+            <type>submission-form</type>
+        </step-definition>
+        <step-definition id="institution-publication_references" mandatory="false">
+            <heading>submit.progressbar.describe.publication_references</heading>
+            <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+            <type>submission-form</type>
+        </step-definition>
+
+	    <step-definition id="person" mandatory="true">
+	      <heading>submit.progressbar.describe.person</heading>
+	      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+	      <type>submission-form</type>
+	    </step-definition>
         <step-definition id="languagetest" mandatory="true">
             <heading>submit.progressbar.describe.stepone</heading>
             <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
@@ -177,6 +203,16 @@
         </step-definition>
         <step-definition id="onlyTitle" mandatory="true">
             <heading>submit.progressbar.describe.stepone</heading>
+            <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+            <type>submission-form</type>
+        </step-definition>
+	    <step-definition id="cv-person" mandatory="true">
+	        <heading>submit.progressbar.describe.cv-person</heading>
+	        <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+	        <type>submission-form</type>
+	    </step-definition>
+        <step-definition id="cv-person-edit-education" mandatory="true">
+            <heading>submit.progressbar.describe.cv-person-edit-education</heading>
             <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
             <type>submission-form</type>
         </step-definition>
@@ -258,13 +294,13 @@
 	      <step id="license" />
 	    </submission-process>
 
-        <submission-process name="institutionpublication">
+        <submission-process name="institution-publication">
             <step id="collection" />
             <step id="extraction" />
-            <step id="publication" />
-            <step id="publication_indexing" />
-            <step id="publication_bibliographic_details" />
-            <step id="publication_references" />
+            <step id="institution-publication" />
+            <step id="institution-publication_indexing" />
+            <step id="institution-publication_bibliographic_details" />
+            <step id="institution-publication_references" />
             <step id="upload" />
             <step id="license" />
         </submission-process>
@@ -278,6 +314,13 @@
             <step id="upload" />
             <step id="license" />
         </submission-process>
+	    <submission-process name="person">
+	      <step id="collection" />
+	      <step id="person" />
+	      <step id="detect-duplicate" />
+	      <step id="upload" />
+	      <step id="license" />
+	    </submission-process>
 
         <submission-process name="languagetestprocess">
             <step id="collection"/>
@@ -290,13 +333,13 @@
         <submission-process name="modeB">
            <step id="onlyTitle"/>
         </submission-process>
-        
-	    <submission-process name="person">
-	      <step id="collection" />
+	    <submission-process name="cvperson">
+	      <step id="person" />
 	      <step id="upload" />
-          <step id="detect-duplicate"/>
-	      <step id="license" />
 	    </submission-process>
+        <submission-process name="cvperson-edit-education">
+            <step id="cv-person-edit-education" />
+        </submission-process>
     
     </submission-definitions>
 

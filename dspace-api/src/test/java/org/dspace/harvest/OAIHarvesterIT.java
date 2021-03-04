@@ -101,7 +101,8 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
 
     private static final String OAI_PMH_DIR_PATH = "./target/testing/dspace/assetstore/oai-pmh/";
     private static final String VALIDATION_DIR = OAI_PMH_DIR_PATH + "cerif/validation/";
-    private static final String CERIF_XSD_NAME = "openaire-cerif-profile.xsd";
+    private static final String CERIF_XSD_NAME = "openaire/openaire-cerif-profile.xsd";
+    private static final String PERUCRIS_CERIF_XSD_NAME = "perucris/perucris-cerif-profile.xsd";
 
     private OAIHarvester harvester = HarvestServiceFactory.getInstance().getOAIHarvester();
 
@@ -145,14 +146,17 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
         mockClient = mock(OAIHarvesterClient.class);
         harvester.setOaiHarvesterClient(mockClient);
 
-        String metadataURI = NamespaceUtils.getMetadataFormatNamespace("cerif").getURI();
+        String cerifMetadataURI = NamespaceUtils.getMetadataFormatNamespace("cerif").getURI();
+        String cerifPerucrisMetadataURI = NamespaceUtils.getMetadataFormatNamespace("perucris-cerif").getURI();
 
-        when(mockClient.resolveNamespaceToPrefix(BASE_URL, metadataURI)).thenReturn("oai_cerif_openaire");
+        when(mockClient.resolveNamespaceToPrefix(BASE_URL, cerifMetadataURI)).thenReturn("oai_cerif_openaire");
+        when(mockClient.resolveNamespaceToPrefix(BASE_URL, cerifPerucrisMetadataURI)).thenReturn("cerif_perucris");
         when(mockClient.identify(BASE_URL)).thenReturn(buildResponse("test-identify.xml"));
 
         configurationService.setProperty("oai.harvester.tranformation-dir", OAI_PMH_DIR_PATH + "cerif");
         configurationService.setProperty("oai.harvester.validation-dir", VALIDATION_DIR);
         configurationService.setProperty("oai.harvester.validation.cerif.xsd", CERIF_XSD_NAME);
+        configurationService.setProperty("oai.harvester.validation.perucris-cerif.xsd", PERUCRIS_CERIF_XSD_NAME);
     }
 
     @After
@@ -1488,6 +1492,119 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
         } finally {
             harvester.setOaiHarvesterEmailSender(originalEmailSender);
         }
+    }
+
+    @Test
+    public void testRunHarvestWithPeruCrisCerifFormat() throws Exception {
+
+        when(mockClient.listRecords(eq(BASE_URL), isNull(), any(), eq("publications"), eq("cerif_perucris")))
+            .thenReturn(buildResponse("many-perucris-publications.xml"));
+
+        context.turnOffAuthorisationSystem();
+        HarvestedCollection harvestRow = HarvestedCollectionBuilder.create(context, collection)
+            .withOaiSource(BASE_URL)
+            .withOaiSetId("publications")
+            .withMetadataConfigId("perucris-cerif")
+            .withHarvestType(HarvestedCollection.TYPE_DMD)
+            .withHarvestStatus(HarvestedCollection.STATUS_READY)
+            .build();
+        context.restoreAuthSystemState();
+
+        harvester.runHarvest(context, harvestRow, getDefaultOptions());
+
+        verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("perucris-cerif").getURI());
+        verify(mockClient).identify(BASE_URL);
+        verify(mockClient).listRecords(eq(BASE_URL), isNull(), any(), eq("publications"), eq("cerif_perucris"));
+        verifyNoMoreInteractions(mockClient);
+
+        List<Item> items = IteratorUtils.toList(itemService.findAllByCollection(context, collection));
+        assertThat(items, hasSize(2));
+
+        harvestRow = harvestedCollectionService.find(context, collection);
+        assertThat(harvestRow.getHarvestStatus(), equalTo(HarvestedCollection.STATUS_READY));
+        assertThat(harvestRow.getHarvestStartTime(), notNullValue());
+        assertThat(harvestRow.getLastHarvestDate(), notNullValue());
+        assertThat(harvestRow.getHarvestMessage(), equalTo("Imported 2 records with success"));
+
+        Item item = findItemByOaiID("oai:test-harvest:Publications/20.500.12390/24", collection);
+        assertThat(item.isArchived(), equalTo(true));
+        assertThat(getFirstMetadataValue(item, "dc.title"), equalTo("La Implementacion de ORCID en la UASLP como "
+            + "parte de sus servicios de ciencia abierta"));
+        assertThat(getFirstMetadataValue(item, "cris.sourceId"), equalTo("test-harvest::Publications/20.500.12390/24"));
+
+        item = findItemByOaiID("oai:test-harvest:Publications/20.500.12390/25", collection);
+        assertThat(item.isArchived(), equalTo(true));
+        assertThat(getFirstMetadataValue(item, "dc.title"), equalTo("Importancia y estado actual de la gestion de la "
+            + "informacion sobre investigacion (GII) en el Peru"));
+        assertThat(getFirstMetadataValue(item, "cris.sourceId"), equalTo("test-harvest::Publications/20.500.12390/25"));
+
+    }
+
+    @Test
+    public void testRunHarvestWithPeruCrisCerifFormatWithValidationErrors() throws Exception {
+
+        OAIHarvesterEmailSender originalEmailSender = harvester.getOaiHarvesterEmailSender();
+
+        try {
+
+            OAIHarvesterEmailSender mockEmailSender = mock(OAIHarvesterEmailSender.class);
+            harvester.setOaiHarvesterEmailSender(mockEmailSender);
+
+            when(mockClient.listRecords(eq(BASE_URL), isNull(), any(), eq("publications"), eq("cerif_perucris")))
+                .thenReturn(buildResponse("many-perucris-publications.xml"));
+
+            context.turnOffAuthorisationSystem();
+            HarvestedCollection harvestRow = HarvestedCollectionBuilder.create(context, collection)
+                .withOaiSource(BASE_URL)
+                .withOaiSetId("publications")
+                .withMetadataConfigId("perucris-cerif")
+                .withHarvestType(HarvestedCollection.TYPE_DMD)
+                .withHarvestStatus(HarvestedCollection.STATUS_READY)
+                .build();
+            context.restoreAuthSystemState();
+
+            harvester.runHarvest(context, harvestRow, getOptionsWithRecordValidationEnabled());
+
+            verify(mockClient).resolveNamespaceToPrefix(BASE_URL,
+                getMetadataFormatNamespace("perucris-cerif").getURI());
+            verify(mockClient).identify(BASE_URL);
+            verify(mockClient).listRecords(eq(BASE_URL), isNull(), any(), eq("publications"), eq("cerif_perucris"));
+            verifyNoMoreInteractions(mockClient);
+
+            List<Item> items = IteratorUtils.toList(itemService.findAllByCollection(context, collection));
+            assertThat(items, hasSize(2));
+
+            harvestRow = harvestedCollectionService.find(context, collection);
+            assertThat(harvestRow.getHarvestStatus(), equalTo(HarvestedCollection.STATUS_READY));
+            assertThat(harvestRow.getHarvestStartTime(), notNullValue());
+            assertThat(harvestRow.getLastHarvestDate(), notNullValue());
+            assertThat(harvestRow.getHarvestMessage(), equalTo("Imported 2 records with success"));
+
+            Item item = findItemByOaiID("oai:test-harvest:Publications/20.500.12390/24", collection);
+            assertThat(item.isArchived(), equalTo(true));
+
+            item = findItemByOaiID("oai:test-harvest:Publications/20.500.12390/25", collection);
+            assertThat(item.isArchived(), equalTo(true));
+
+            ArgumentCaptor<OAIHarvesterReport> captor = ArgumentCaptor.forClass(OAIHarvesterReport.class);
+            String defaultEmail = configurationService.getProperty("alert.recipient");
+            verify(mockEmailSender).notifyCompletionWithErrors(eq(defaultEmail), any(), captor.capture());
+
+            OAIHarvesterReport harvesterReport = captor.getValue();
+            assertThat(harvesterReport.getSuccessCount(), is(2));
+            assertThat(harvesterReport.getFailureCount(), is(0));
+
+            Map<String, ErrorDetails> errors = harvesterReport.getErrors();
+            assertThat(errors.size(), is(2));
+            assertThat(errors, hasKey("oai:test-harvest:Publications/20.500.12390/24"));
+            assertThat(errors, hasKey("oai:test-harvest:Publications/20.500.12390/25"));
+
+            verifyNoMoreInteractions(mockEmailSender);
+
+        } finally {
+            harvester.setOaiHarvesterEmailSender(originalEmailSender);
+        }
+
     }
 
     private Item findItemByOaiID(String oaiId, Collection collection) throws SQLException {

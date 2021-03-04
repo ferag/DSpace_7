@@ -14,8 +14,7 @@ import static org.dspace.builder.RelationshipBuilder.createRelationshipBuilder;
 import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
 import static org.dspace.content.authority.Choices.CF_ACCEPTED;
 import static org.dspace.content.authority.Choices.CF_UNSET;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.HAS_SHADOW_COPY_RELATIONSHIP;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_SHADOW_COPY_RELATIONSHIP;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.SHADOW_COPY;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -54,8 +53,10 @@ import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.EntityType;
 import org.dspace.content.Item;
+import org.dspace.content.MetadataValue;
 import org.dspace.content.RelationshipType;
 import org.dspace.content.WorkspaceItem;
+import org.dspace.content.service.ItemService;
 import org.dspace.eperson.EPerson;
 import org.dspace.event.factory.EventServiceFactory;
 import org.dspace.event.service.EventService;
@@ -102,6 +103,9 @@ public class CrisConsumerIT extends AbstractControllerIntegrationTest {
 
     @Autowired
     private PoolTaskService poolTaskService;
+
+    @Autowired
+    private ItemService itemService;
 
     /**
      * This method will be run before the first test as per @BeforeClass. It will
@@ -680,7 +684,7 @@ public class CrisConsumerIT extends AbstractControllerIntegrationTest {
         Collection personCollection = createCollection("Collection of persons", "Person", subCommunity);
 
         Item person = ItemBuilder.createItem(context, personCollection)
-            .withTitle("Walter White")
+            .withTitle("Walter White Original")
             .withOrcidIdentifier("0000-0002-9079-593X")
             .build();
 
@@ -699,7 +703,11 @@ public class CrisConsumerIT extends AbstractControllerIntegrationTest {
         String authorAuthority = author.getAuthority();
         assertThat("The author should have the authority set", authorAuthority, equalTo(person.getID().toString()));
         assertThat("The author should have an ACCEPTED confidence", author.getConfidence(), equalTo(CF_ACCEPTED));
-
+        person = context.reloadEntity(person);
+        List<MetadataValue> metadata = itemService.getMetadataByMetadataString(person, "dc.title");
+        assertThat("The person item still have a single dc.title", metadata.size(), equalTo(1));
+        assertThat("The person item still have the original dc.title", metadata.get(0).getValue(),
+                equalTo("Walter White Original"));
     }
 
     @Test
@@ -736,7 +744,7 @@ public class CrisConsumerIT extends AbstractControllerIntegrationTest {
         Collection personCollection = createCollection("Collection of persons", "Person", subCommunity);
 
         Item person = ItemBuilder.createItem(context, personCollection)
-            .withTitle("Walter White")
+            .withTitle("Walter White Original")
             .withOrcidIdentifier("0000-0002-9079-593X")
             .build();
 
@@ -755,7 +763,11 @@ public class CrisConsumerIT extends AbstractControllerIntegrationTest {
         String authorAuthority = author.getAuthority();
         assertThat("The author should have the authority set", authorAuthority, equalTo(person.getID().toString()));
         assertThat("The author should have an ACCEPTED confidence", author.getConfidence(), equalTo(CF_ACCEPTED));
-
+        person = context.reloadEntity(person);
+        List<MetadataValue> metadata = itemService.getMetadataByMetadataString(person, "dc.title");
+        assertThat("The person item still have a single dc.title", metadata.size(), equalTo(1));
+        assertThat("The person item still have the original dc.title", metadata.get(0).getValue(),
+                equalTo("Walter White Original"));
     }
 
     @Test
@@ -790,7 +802,7 @@ public class CrisConsumerIT extends AbstractControllerIntegrationTest {
         EntityType publicationType = EntityTypeBuilder.createEntityTypeBuilder(context, "Person").build();
 
         RelationshipType hasShadowCopyRelationshipType = createRelationshipTypeBuilder(context, publicationType,
-            publicationType, HAS_SHADOW_COPY_RELATIONSHIP, IS_SHADOW_COPY_RELATIONSHIP, 0, 1, 0, 1).build();
+            publicationType, SHADOW_COPY.getLeftType(), SHADOW_COPY.getRightType(), 0, 1, 0, 1).build();
 
         createCollection("Collection of persons", "Person", subCommunity);
 

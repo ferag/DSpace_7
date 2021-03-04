@@ -125,7 +125,8 @@ public class VocabularyRestRepositoryIT extends AbstractControllerIntegrationTes
                      VocabularyMatcher.matchProperties("SolrAuthorAuthority", "SolrAuthorAuthority", false , false),
                      VocabularyMatcher.matchProperties("patent_types", "patent_types", true , false),
                      VocabularyMatcher.matchProperties("types", "types", false , true),
-                     VocabularyMatcher.matchProperties("gender", "gender", true , false)
+                     VocabularyMatcher.matchProperties("gender", "gender", true , false),
+                     VocabularyMatcher.matchProperties("truefalse", "truefalse", true , false)
                  )))
         .andExpect(jsonPath("$._links.self.href",
             Matchers.containsString("api/submission/vocabularies")))

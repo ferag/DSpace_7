@@ -162,10 +162,12 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
     @Test
     public void findOnIsShadowCopyTest() throws Exception {
         context.turnOffAuthorisationSystem();
+        parentCommunity = CommunityBuilder.createCommunity(context)
+            .withName("Parent Community").build();
         Community directorio = CommunityBuilder.createCommunity(context)
                                                .withName("Directorio").build();
 
-        Collection col1 = CollectionBuilder.createCollection(context, directorio)
+        Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
                                            .withName("Collection 1").build();
 
         Item publication1 = ItemBuilder.createItem(context, col1)
@@ -174,9 +176,7 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
                 .withRelationshipType("InstitutionProject")
                 .build();
 
-        parentCommunity = CommunityBuilder.createCommunity(context)
-                                          .withName("Parent Community").build();
-        Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
+        Collection col2 = CollectionBuilder.createCollection(context, directorio)
                                            .withName("Collection 2").build();
 
         Thread.sleep(300);
@@ -198,13 +198,13 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
         context.restoreAuthSystemState();
 
         String authToken = getAuthToken(admin.getEmail(), password);
-        getClient(authToken).perform(get("/api/core/itemsources/" + publication1.getID().toString()))
+        getClient(authToken).perform(get("/api/core/itemsources/" + publication2.getID().toString()))
                             .andExpect(status().isOk())
-                            .andExpect(jsonPath("$.id", is(publication1.getID().toString())))
+                            .andExpect(jsonPath("$.id", is(publication2.getID().toString())))
                             .andExpect(jsonPath("$.type", is("itemsource")))
                             .andExpect(jsonPath("$.sources", Matchers.contains(
-                                       ItemSourceMatcher.matchSource(publication2.getID().toString(),
-                                                  ConcytecWorkflowRelation.SHADOW_COPY.getLeftType(),
+                                       ItemSourceMatcher.matchSource(publication1.getID().toString(),
+                                                  ConcytecWorkflowRelation.SHADOW_COPY.getRightType(),
                                                   parentCommunity.getName(), "dc_title")
                                        )));
     }
@@ -320,14 +320,14 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
         Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
                                            .withName("Collection 2").build();
 
-        Thread.sleep(300);
+        Thread.sleep(600);
         Item publication2 = ItemBuilder.createItem(context, col2)
                 .withTitle("Publication 2")
                 .withAuthor("Roman, Bandola")
                 .withIssueDate("2019-01-01")
                 .withRelationshipType("InstitutionPublication").build();
 
-        Thread.sleep(300);
+        Thread.sleep(600);
         Item publication3 = ItemBuilder.createItem(context, col2)
                 .withTitle("Test Publication Title")
                 .withAuthor("Anton, Mostoviy")

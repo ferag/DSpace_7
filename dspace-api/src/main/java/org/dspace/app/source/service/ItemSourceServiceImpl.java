@@ -59,11 +59,15 @@ public class ItemSourceServiceImpl implements ItemSourceService {
                         relationshipType);
                 for (Relationship relationship : relationships) {
                     Source source = new Source();
-                    Item right = relationship.getRightItem();
-                    source.setRelationshipType(relationshipType.getLeftwardType());
-                    source.setSource(right.getOwningCollection().getCommunities().get(0).getName());
-                    source.setItemUuid(right.getID());
-                    List<String> metadata = getMatchingMetadata(item, right);
+                    boolean leftwardRelation = item.getID().equals(relationship.getLeftItem().getID());
+                    Item relatedItem = leftwardRelation ? relationship.getRightItem() : relationship.getLeftItem();
+                    String type = leftwardRelation ? relationshipType.getLeftwardType() :
+                        relationshipType.getRightwardType();
+
+                    source.setRelationshipType(type);
+                    source.setSource(relatedItem.getOwningCollection().getCommunities().get(0).getName());
+                    source.setItemUuid(relatedItem.getID());
+                    List<String> metadata = getMatchingMetadata(item, relatedItem);
                     source.setMetadata(metadata);
                     itemSource.addSource(source);
                 }

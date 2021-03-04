@@ -115,14 +115,14 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
         Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
                                            .withName("Collection 2").build();
 
-        Thread.sleep(300);
+        Thread.sleep(600L);
         Item publication2 = ItemBuilder.createItem(context, col2)
                 .withTitle("Publication 2")
                 .withAuthor("Anton, Bandola")
                 .withIssueDate("2019-01-01")
                 .withRelationshipType("InstitutionPublication").build();
 
-        Thread.sleep(300);
+        Thread.sleep(1000L);
         Item publication3 = ItemBuilder.createItem(context, col2)
                 .withTitle("Test Publication Title")
                 .withAuthor("Roman, Bandola")
@@ -151,10 +151,10 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
                             .andExpect(jsonPath("$.sources", Matchers.containsInAnyOrder(
                                        ItemSourceMatcher.matchSource(publication2.getID().toString(),
                                                    ConcytecWorkflowRelation.ORIGINATED.getLeftType(),
-                                                      parentCommunity.getName(), "dc_date_issued"),
+                                                      parentCommunity.getName(), "dc.date.issued"),
                                        ItemSourceMatcher.matchSource(publication3.getID().toString(),
                                                    ConcytecWorkflowRelation.ORIGINATED.getLeftType(),
-                                                  parentCommunity.getName(), "dc_contributor_author", "dc_title")
+                                                  parentCommunity.getName(), "dc.contributor.author", "dc.title")
                                        )));
     }
 
@@ -205,7 +205,7 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
                             .andExpect(jsonPath("$.sources", Matchers.contains(
                                        ItemSourceMatcher.matchSource(publication1.getID().toString(),
                                                   ConcytecWorkflowRelation.SHADOW_COPY.getRightType(),
-                                                  parentCommunity.getName(), "dc_title")
+                                                  parentCommunity.getName(), "dc.title")
                                        )));
     }
 
@@ -291,10 +291,10 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
                    .andExpect(jsonPath("$.sources", Matchers.containsInAnyOrder(
                               ItemSourceMatcher.matchSource(publication2.getID().toString(),
                                           ConcytecWorkflowRelation.ORIGINATED.getLeftType(),
-                                               parentCommunity.getName(), "dc_date_issued"),
+                                               parentCommunity.getName(), "dc.date.issued"),
                               ItemSourceMatcher.matchSource(publication3.getID().toString(),
                                           ConcytecWorkflowRelation.ORIGINATED.getLeftType(),
-                                         parentCommunity.getName(), "dc_contributor_author", "dc_title")
+                                         parentCommunity.getName(), "dc.contributor.author", "dc.title")
                               )));
     }
 
@@ -356,10 +356,10 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
                             .andExpect(jsonPath("$.sources", Matchers.containsInAnyOrder(
                                        ItemSourceMatcher.matchSource(publication2.getID().toString(),
                                                    ConcytecWorkflowRelation.ORIGINATED.getLeftType(),
-                                           parentCommunity.getName(), "dc_contributor_author/0", "dc_date_issued"),
+                                           parentCommunity.getName(), "dc.contributor.author/0", "dc.date.issued"),
                                        ItemSourceMatcher.matchSource(publication3.getID().toString(),
                                                    ConcytecWorkflowRelation.ORIGINATED.getLeftType(),
-                                                      parentCommunity.getName(), "dc_contributor_author/1", "dc_title")
+                                                      parentCommunity.getName(), "dc.contributor.author/1", "dc.title")
                                        )));
     }
 

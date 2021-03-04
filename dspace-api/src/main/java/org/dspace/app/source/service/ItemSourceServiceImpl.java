@@ -107,12 +107,12 @@ public class ItemSourceServiceImpl implements ItemSourceService {
         for (int i = 0; i < metadataValues1.size(); i++) {
             for (MetadataValue mv2 : metadataValues2) {
                 if (StringUtils.equals(metadataValues1.get(i).getValue(), mv2.getValue())) {
-                    results.add(field.toString() + "/" + i);
+                    results.add(field.toString('.') + "/" + i);
                 }
             }
         }
         if ((metadataValues1.size() == metadataValues2.size()) && (metadataValues1.size() == results.size())) {
-            return Collections.singletonList(field.toString());
+            return Collections.singletonList(field.toString('.'));
         }
         return results;
     }

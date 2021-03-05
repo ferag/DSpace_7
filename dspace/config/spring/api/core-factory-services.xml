@@ -15,6 +15,7 @@
     <bean id="appUtilServiceFactory" class="org.dspace.app.util.factory.UtilServiceFactoryImpl"/>
 
     <bean id="authenticateServiceFactory" class="org.dspace.authenticate.factory.AuthenticateServiceFactoryImpl"/>
+    <bean id="externalRegistrationServiceFactory" class="org.dspace.externalregistration.factory.ExternalRegistrationServiceFactoryImpl"/>
 
     <bean id="authorityServiceFactory" class="org.dspace.authority.factory.AuthorityServiceFactoryImpl"/>
     <bean id="externalServiceFactory" class="org.dspace.external.factory.ExternalServiceFactoryImpl"/>

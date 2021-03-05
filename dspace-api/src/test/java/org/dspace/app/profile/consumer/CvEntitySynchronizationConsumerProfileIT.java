@@ -18,6 +18,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
 import java.net.URI;
@@ -41,6 +42,7 @@ import org.dspace.content.MetadataValue;
 import org.dspace.content.Relationship;
 import org.dspace.content.RelationshipType;
 import org.dspace.content.factory.ContentServiceFactory;
+import org.dspace.content.service.InstallItemService;
 import org.dspace.content.service.ItemService;
 import org.dspace.content.service.RelationshipService;
 import org.dspace.eperson.EPerson;
@@ -49,6 +51,7 @@ import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 import org.dspace.utils.DSpace;
 import org.dspace.xmlworkflow.factory.XmlWorkflowServiceFactory;
+import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.dspace.xmlworkflow.storedcomponents.service.CollectionRoleService;
 import org.dspace.xmlworkflow.storedcomponents.service.XmlWorkflowItemService;
 import org.junit.After;
@@ -56,7 +59,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Integration tests for {@link ProfileEditConsumer} with profile test cases.
+ * Integration tests for {@link ClaimedProfileEdit} with profile test cases.
  *
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  */
@@ -76,9 +79,13 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
 
     private XmlWorkflowItemService workflowItemService;
 
+    private InstallItemService installItemService;
+
     private EPerson submitter;
 
     private Group directorioEditorGroup;
+
+    private RelationshipType cloneHasShadowCopy;
 
     private RelationshipType isCorrectionOf;
 
@@ -98,12 +105,6 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
 
     private Collection cvCloneCollection;
 
-    private Item person;
-
-    private Item profile;
-
-    private Item profileClone;
-
     @Before
     public void before() throws Exception {
 
@@ -113,6 +114,7 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         relationshipService = ContentServiceFactory.getInstance().getRelationshipService();
         configurationService = DSpaceServicesFactory.getInstance().getConfigurationService();
         researcherProfileService = new DSpace().getSingletonService(ResearcherProfileService.class);
+        installItemService = ContentServiceFactory.getInstance().getInstallItemService();
 
         context.turnOffAuthorisationSystem();
 
@@ -120,7 +122,7 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         EntityType cvPersonType = createEntityType("CvPerson");
         EntityType cvPersonCloneType = createEntityType("CvPersonClone");
 
-        createHasShadowCopyRelationship(cvPersonCloneType, personType);
+        cloneHasShadowCopy = createHasShadowCopyRelationship(cvPersonCloneType, personType);
         isCorrectionOf = createIsCorrectionOfRelationship(personType);
         cloneIsCorrectionOf = createIsCorrectionOfRelationship(cvPersonCloneType);
         isCloneOf = createCloneRelationship(cvPersonCloneType, cvPersonType);
@@ -172,22 +174,8 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
 
         configurationService.setProperty("directorios.community-id", directorioCommunity.getID().toString());
         configurationService.setProperty("researcher-profile.collection.uuid", cvCollection.getID().toString());
-        configurationService.setProperty("cti-vitae.clone.profile-collection-id", cvCloneCollection.getID().toString());
+        configurationService.setProperty("cti-vitae.clone.person-collection-id", cvCloneCollection.getID().toString());
         configurationService.setProperty("item.enable-virtual-metadata", false);
-
-        person = ItemBuilder.createItem(context, directorioPersons)
-            .withTitle("White, Walter")
-            .build();
-
-        DSpaceServicesFactory.getInstance().getRequestService().startRequest();
-        ResearcherProfile researcherProfile = researcherProfileService.createFromSource(context, submitter,
-            URI.create("http://localhost:8080/server/api/core/items/" + person.getID()));
-
-        profile = researcherProfile.getItem();
-        List<Relationship> findRelations = findRelations(profile, isCloneOf);
-        assertThat(findRelations, hasSize(1));
-
-        profileClone = findRelations.get(0).getLeftItem();
 
         context.restoreAuthSystemState();
 
@@ -207,7 +195,25 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
     }
 
     @Test
-    public void testProfileEditConsumerWhenSynchronizationIsDisabled() throws Exception {
+    public void testClaimedProfileEditWhenSynchronizationIsDisabled() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item person = ItemBuilder.createItem(context, directorioPersons)
+            .withTitle("White, Walter")
+            .build();
+
+        DSpaceServicesFactory.getInstance().getRequestService().startRequest();
+        ResearcherProfile researcherProfile = researcherProfileService.createFromSource(context, submitter,
+            URI.create("http://localhost:8080/server/api/core/items/" + person.getID()));
+
+        Item profile = researcherProfile.getItem();
+        List<Relationship> findRelations = findRelations(profile, isCloneOf);
+        assertThat(findRelations, hasSize(1));
+
+        Item profileClone = findRelations.get(0).getLeftItem();
+
+        context.restoreAuthSystemState();
 
         addMetadata(profile, "crisrp","education", null, "First education");
         addMetadata(profile, "crisrp","education", "start", "2015-01-01");
@@ -259,7 +265,25 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
     }
 
     @Test
-    public void testProfileEditConsumerWhenSynchronizationIsSetToFalse() throws Exception {
+    public void testClaimedProfileEditWhenSynchronizationIsSetToFalse() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item person = ItemBuilder.createItem(context, directorioPersons)
+            .withTitle("White, Walter")
+            .build();
+
+        DSpaceServicesFactory.getInstance().getRequestService().startRequest();
+        ResearcherProfile researcherProfile = researcherProfileService.createFromSource(context, submitter,
+            URI.create("http://localhost:8080/server/api/core/items/" + person.getID()));
+
+        Item profile = researcherProfile.getItem();
+        List<Relationship> findRelations = findRelations(profile, isCloneOf);
+        assertThat(findRelations, hasSize(1));
+
+        Item profileClone = findRelations.get(0).getLeftItem();
+
+        context.restoreAuthSystemState();
 
         addMetadata(profile, "crisrp", "education", null, "First education");
         addMetadata(profile, "crisrp", "education", "start", "2015-01-01");
@@ -313,7 +337,25 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
     }
 
     @Test
-    public void testProfileEditConsumerWhenEducationSynchronizationIsEnabled() throws Exception {
+    public void testClaimedProfileEditWhenEducationSynchronizationIsEnabled() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item person = ItemBuilder.createItem(context, directorioPersons)
+            .withTitle("White, Walter")
+            .build();
+
+        DSpaceServicesFactory.getInstance().getRequestService().startRequest();
+        ResearcherProfile researcherProfile = researcherProfileService.createFromSource(context, submitter,
+            URI.create("http://localhost:8080/server/api/core/items/" + person.getID()));
+
+        Item profile = researcherProfile.getItem();
+        List<Relationship> findRelations = findRelations(profile, isCloneOf);
+        assertThat(findRelations, hasSize(1));
+
+        Item profileClone = findRelations.get(0).getLeftItem();
+
+        context.restoreAuthSystemState();
 
         addMetadata(profile, "crisrp", "education", null, "First education");
         addMetadata(profile, "crisrp", "education", "start", "2015-01-01");
@@ -415,7 +457,25 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
     }
 
     @Test
-    public void testProfileEditConsumerWhenAffiliationSynchronizationIsEnabled() throws Exception {
+    public void testClaimedProfileEditWhenAffiliationSynchronizationIsEnabled() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item person = ItemBuilder.createItem(context, directorioPersons)
+            .withTitle("White, Walter")
+            .build();
+
+        DSpaceServicesFactory.getInstance().getRequestService().startRequest();
+        ResearcherProfile researcherProfile = researcherProfileService.createFromSource(context, submitter,
+            URI.create("http://localhost:8080/server/api/core/items/" + person.getID()));
+
+        Item profile = researcherProfile.getItem();
+        List<Relationship> findRelations = findRelations(profile, isCloneOf);
+        assertThat(findRelations, hasSize(1));
+
+        Item profileClone = findRelations.get(0).getLeftItem();
+
+        context.restoreAuthSystemState();
 
         addMetadata(profile, "crisrp", "education", null, "Education");
         addMetadata(profile, "crisrp", "education", "start", "2015-01-01");
@@ -506,7 +566,25 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
     }
 
     @Test
-    public void testProfileEditConsumerWhenQualificationSynchronizationIsEnabled() throws Exception {
+    public void testClaimedProfileEditWhenQualificationSynchronizationIsEnabled() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item person = ItemBuilder.createItem(context, directorioPersons)
+            .withTitle("White, Walter")
+            .build();
+
+        DSpaceServicesFactory.getInstance().getRequestService().startRequest();
+        ResearcherProfile researcherProfile = researcherProfileService.createFromSource(context, submitter,
+            URI.create("http://localhost:8080/server/api/core/items/" + person.getID()));
+
+        Item profile = researcherProfile.getItem();
+        List<Relationship> findRelations = findRelations(profile, isCloneOf);
+        assertThat(findRelations, hasSize(1));
+
+        Item profileClone = findRelations.get(0).getLeftItem();
+
+        context.restoreAuthSystemState();
 
         addMetadata(profile, "crisrp", "qualification", null, "First qualification");
         addMetadata(profile, "crisrp", "qualification", "orgunit", "Group");
@@ -571,7 +649,25 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
     }
 
     @Test
-    public void testProfileEditConsumerWhenBasicInfoSynchronizationIsEnabled() throws Exception {
+    public void testClaimedProfileEditWhenBasicInfoSynchronizationIsEnabled() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item person = ItemBuilder.createItem(context, directorioPersons)
+            .withTitle("White, Walter")
+            .build();
+
+        DSpaceServicesFactory.getInstance().getRequestService().startRequest();
+        ResearcherProfile researcherProfile = researcherProfileService.createFromSource(context, submitter,
+            URI.create("http://localhost:8080/server/api/core/items/" + person.getID()));
+
+        Item profile = researcherProfile.getItem();
+        List<Relationship> findRelations = findRelations(profile, isCloneOf);
+        assertThat(findRelations, hasSize(1));
+
+        Item profileClone = findRelations.get(0).getLeftItem();
+
+        context.restoreAuthSystemState();
 
         addMetadata(profile, "crisrp", "qualification", null, "Qualification");
         addMetadata(profile, "crisrp", "qualification", "orgunit", "Group");
@@ -642,7 +738,25 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
     }
 
     @Test
-    public void testProfileEditConsumerWhenEducationAndAffiliationSynchronizationAreEnabled() throws Exception {
+    public void testClaimedProfileEditWhenEducationAndAffiliationSynchronizationAreEnabled() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item person = ItemBuilder.createItem(context, directorioPersons)
+            .withTitle("White, Walter")
+            .build();
+
+        DSpaceServicesFactory.getInstance().getRequestService().startRequest();
+        ResearcherProfile researcherProfile = researcherProfileService.createFromSource(context, submitter,
+            URI.create("http://localhost:8080/server/api/core/items/" + person.getID()));
+
+        Item profile = researcherProfile.getItem();
+        List<Relationship> findRelations = findRelations(profile, isCloneOf);
+        assertThat(findRelations, hasSize(1));
+
+        Item profileClone = findRelations.get(0).getLeftItem();
+
+        context.restoreAuthSystemState();
 
         addMetadata(profile, "crisrp", "education", null, "Education");
         addMetadata(profile, "crisrp", "education", "start", "2015-01-01");
@@ -731,7 +845,25 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
     }
 
     @Test
-    public void testProfileEditConsumerWithManyConsecutiveCorrections() throws Exception {
+    public void testClaimedProfileEditWithManyConsecutiveCorrections() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item person = ItemBuilder.createItem(context, directorioPersons)
+            .withTitle("White, Walter")
+            .build();
+
+        DSpaceServicesFactory.getInstance().getRequestService().startRequest();
+        ResearcherProfile researcherProfile = researcherProfileService.createFromSource(context, submitter,
+            URI.create("http://localhost:8080/server/api/core/items/" + person.getID()));
+
+        Item profile = researcherProfile.getItem();
+        List<Relationship> findRelations = findRelations(profile, isCloneOf);
+        assertThat(findRelations, hasSize(1));
+
+        Item profileClone = findRelations.get(0).getLeftItem();
+
+        context.restoreAuthSystemState();
 
         /**
          * Add education without synchronization.
@@ -888,7 +1020,25 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
     }
 
     @Test
-    public void testProfileEditConsumerWithChangeReversion() throws Exception {
+    public void testClaimedProfileEditWithChangeReversion() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item person = ItemBuilder.createItem(context, directorioPersons)
+            .withTitle("White, Walter")
+            .build();
+
+        DSpaceServicesFactory.getInstance().getRequestService().startRequest();
+        ResearcherProfile researcherProfile = researcherProfileService.createFromSource(context, submitter,
+            URI.create("http://localhost:8080/server/api/core/items/" + person.getID()));
+
+        Item profile = researcherProfile.getItem();
+        List<Relationship> findRelations = findRelations(profile, isCloneOf);
+        assertThat(findRelations, hasSize(1));
+
+        Item profileClone = findRelations.get(0).getLeftItem();
+
+        context.restoreAuthSystemState();
 
         addMetadata(profile, "perucris", "subject", "ocde", "OCDE");
         addMetadata(profile, "perucris", "cvPerson", "syncBasicInfo", "true");
@@ -927,6 +1077,294 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
 
         assertThat(findRelations(profileClone, cloneIsCorrectionOf), empty());
         assertThat(findRelations(person, isCorrectionOf), empty());
+
+    }
+
+    @Test
+    public void testNewProfileSubmissionWithSynchronizationDisabled() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item profile = ItemBuilder.createItem(context, cvCollection)
+            .withTitle("Test profile")
+            .withBirthDate("1992-06-26")
+            .withPersonAffiliation("4Science")
+            .withPersonAffiliationStartDate("2020-07-01")
+            .withPersonAffiliationEndDate(PLACEHOLDER)
+            .withPersonAffiliationRole("Researcher")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        assertThat(findRelations(profile, isCloneOf), empty());
+
+    }
+
+    @Test
+    public void testNewProfileSubmissionWithOneSectionSynchronizationEnabled() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item profile = ItemBuilder.createItem(context, cvCollection)
+            .withTitle("Test profile")
+            .withBirthDate("1992-06-26")
+            .withPersonAffiliation("4Science")
+            .withPersonAffiliationStartDate("2020-07-01")
+            .withPersonAffiliationEndDate(PLACEHOLDER)
+            .withPersonAffiliationRole("Researcher")
+            .withCvPersonBasicInfoSyncEnabled(true)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        List<Relationship> cloneRelations = findRelations(profile, isCloneOf);
+        assertThat(cloneRelations, hasSize(1));
+        Item profileClone = cloneRelations.get(0).getLeftItem();
+
+        assertThat(profileClone.isArchived(), is(false));
+        assertThat(getMetadata(profileClone, "oairecerif", "person", "affiliation"), empty());
+        assertThat(getMetadata(profileClone, "oairecerif", "affiliation", "startDate"), empty());
+        assertThat(getMetadata(profileClone, "oairecerif", "affiliation", "endDate"), empty());
+        assertThat(getMetadata(profileClone, "oairecerif", "affiliation", "role"), empty());
+        assertThat(profileClone.getMetadata(), hasItem(with("dc.title", "Test profile")));
+        assertThat(profileClone.getMetadata(), hasItem(with("person.birthDate", "1992-06-26")));
+
+        List<Relationship> cloneShadowCopyRelations = findRelations(profileClone, cloneHasShadowCopy);
+        assertThat(cloneShadowCopyRelations, hasSize(1));
+        Item person = cloneShadowCopyRelations.get(0).getRightItem();
+
+        assertThat(person.isArchived(), is(false));
+        assertThat(getMetadata(person, "oairecerif", "person", "affiliation"), empty());
+        assertThat(getMetadata(person, "oairecerif", "affiliation", "startDate"), empty());
+        assertThat(getMetadata(person, "oairecerif", "affiliation", "endDate"), empty());
+        assertThat(getMetadata(person, "oairecerif", "affiliation", "role"), empty());
+        assertThat(person.getMetadata(), hasItem(with("dc.title", "Test profile")));
+        assertThat(person.getMetadata(), hasItem(with("person.birthDate", "1992-06-26")));
+
+    }
+
+    @Test
+    public void testNewProfileSubmissionWithManySectionSynchronizationEnabled() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item profile = ItemBuilder.createItem(context, cvCollection)
+            .withTitle("Test profile")
+            .withBirthDate("1992-06-26")
+            .withPersonAffiliation("4Science")
+            .withPersonAffiliationStartDate("2020-07-01")
+            .withPersonAffiliationEndDate(PLACEHOLDER)
+            .withPersonAffiliationRole("Researcher")
+            .withPersonEducation("High school")
+            .withCvPersonBasicInfoSyncEnabled(true)
+            .withCvPersonAffiliationSyncEnabled(true)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        List<Relationship> cloneRelations = findRelations(profile, isCloneOf);
+        assertThat(cloneRelations, hasSize(1));
+        Item profileClone = cloneRelations.get(0).getLeftItem();
+
+        assertThat(profileClone.isArchived(), is(false));
+        assertThat(profileClone.getMetadata(), hasItem(with("oairecerif.person.affiliation", "4Science", 0, 400)));
+        assertThat(profileClone.getMetadata(), hasItem(with("oairecerif.affiliation.startDate", "2020-07-01")));
+        assertThat(profileClone.getMetadata(), hasItem(with("oairecerif.affiliation.endDate", PLACEHOLDER)));
+        assertThat(profileClone.getMetadata(), hasItem(with("oairecerif.affiliation.role", "Researcher")));
+        assertThat(profileClone.getMetadata(), hasItem(with("dc.title", "Test profile")));
+        assertThat(profileClone.getMetadata(), hasItem(with("person.birthDate", "1992-06-26")));
+        assertThat(getMetadata(profileClone, "crisrp", "education", null), empty());
+
+        List<Relationship> cloneShadowCopyRelations = findRelations(profileClone, cloneHasShadowCopy);
+        assertThat(cloneShadowCopyRelations, hasSize(1));
+        Item person = cloneShadowCopyRelations.get(0).getRightItem();
+
+        assertThat(person.isArchived(), is(false));
+        assertThat(person.getMetadata(), hasItem(with("oairecerif.person.affiliation", "4Science", 0, 400)));
+        assertThat(person.getMetadata(), hasItem(with("oairecerif.affiliation.startDate", "2020-07-01")));
+        assertThat(person.getMetadata(), hasItem(with("oairecerif.affiliation.endDate", PLACEHOLDER)));
+        assertThat(person.getMetadata(), hasItem(with("oairecerif.affiliation.role", "Researcher")));
+        assertThat(person.getMetadata(), hasItem(with("dc.title", "Test profile")));
+        assertThat(person.getMetadata(), hasItem(with("person.birthDate", "1992-06-26")));
+        assertThat(getMetadata(person, "crisrp", "education", null), empty());
+
+    }
+
+    @Test
+    public void testNewProfileSubmissionWithSubsequentModificationToSynchronize() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item profile = ItemBuilder.createItem(context, cvCollection)
+            .withTitle("Test profile")
+            .withBirthDate("1992-06-26")
+            .withPersonAffiliation("4Science")
+            .withPersonAffiliationStartDate("2020-07-01")
+            .withPersonAffiliationEndDate(PLACEHOLDER)
+            .withPersonAffiliationRole("Researcher")
+            .withCvPersonBasicInfoSyncEnabled(true)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        List<Relationship> cloneRelations = findRelations(profile, isCloneOf);
+        assertThat(cloneRelations, hasSize(1));
+        Item profileClone = cloneRelations.get(0).getLeftItem();
+        assertThat(profileClone.isArchived(), is(false));
+
+        List<Relationship> cloneShadowCopyRelations = findRelations(profileClone, cloneHasShadowCopy);
+        assertThat(cloneShadowCopyRelations, hasSize(1));
+        Item person = cloneShadowCopyRelations.get(0).getRightItem();
+        assertThat(person.isArchived(), is(false));
+
+        context.turnOffAuthorisationSystem();
+        addMetadata(profile, "person", "identifier", "orcid", "1111-2222-3333-4444");
+        profile = updateItem(profile);
+        context.restoreAuthSystemState();
+
+        assertThat(reloadItem(profileClone), nullValue());
+        assertThat(reloadItem(person), nullValue());
+
+        cloneRelations = findRelations(profile, isCloneOf);
+        assertThat(cloneRelations, hasSize(1));
+        Item newProfileClone = cloneRelations.get(0).getLeftItem();
+
+        assertThat(newProfileClone.isArchived(), is(false));
+        assertThat(getMetadata(newProfileClone, "oairecerif", "person", "affiliation"), empty());
+        assertThat(getMetadata(newProfileClone, "oairecerif", "affiliation", "startDate"), empty());
+        assertThat(getMetadata(newProfileClone, "oairecerif", "affiliation", "endDate"), empty());
+        assertThat(getMetadata(newProfileClone, "oairecerif", "affiliation", "role"), empty());
+        assertThat(newProfileClone.getMetadata(), hasItem(with("dc.title", "Test profile")));
+        assertThat(newProfileClone.getMetadata(), hasItem(with("person.birthDate", "1992-06-26")));
+        assertThat(newProfileClone.getMetadata(), hasItem(with("person.identifier.orcid", "1111-2222-3333-4444")));
+
+        cloneShadowCopyRelations = findRelations(newProfileClone, cloneHasShadowCopy);
+        assertThat(cloneShadowCopyRelations, hasSize(1));
+        Item newPerson = cloneShadowCopyRelations.get(0).getRightItem();
+
+        assertThat(newPerson.isArchived(), is(false));
+        assertThat(getMetadata(newPerson, "oairecerif", "person", "affiliation"), empty());
+        assertThat(getMetadata(newPerson, "oairecerif", "affiliation", "startDate"), empty());
+        assertThat(getMetadata(newPerson, "oairecerif", "affiliation", "endDate"), empty());
+        assertThat(getMetadata(newPerson, "oairecerif", "affiliation", "role"), empty());
+        assertThat(newPerson.getMetadata(), hasItem(with("dc.title", "Test profile")));
+        assertThat(newPerson.getMetadata(), hasItem(with("person.birthDate", "1992-06-26")));
+        assertThat(newPerson.getMetadata(), hasItem(with("person.identifier.orcid", "1111-2222-3333-4444")));
+
+    }
+
+    @Test
+    public void testNewProfileSubmissionWithSubsequentModificationNotToBeSynchronized() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item profile = ItemBuilder.createItem(context, cvCollection)
+            .withTitle("Test profile")
+            .withBirthDate("1992-06-26")
+            .withPersonAffiliation("4Science")
+            .withPersonAffiliationStartDate("2020-07-01")
+            .withPersonAffiliationEndDate(PLACEHOLDER)
+            .withPersonAffiliationRole("Researcher")
+            .withCvPersonBasicInfoSyncEnabled(true)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        List<Relationship> cloneRelations = findRelations(profile, isCloneOf);
+        assertThat(cloneRelations, hasSize(1));
+        Item profileClone = cloneRelations.get(0).getLeftItem();
+        assertThat(profileClone.isArchived(), is(false));
+
+        List<Relationship> cloneShadowCopyRelations = findRelations(profileClone, cloneHasShadowCopy);
+        assertThat(cloneShadowCopyRelations, hasSize(1));
+        Item person = cloneShadowCopyRelations.get(0).getRightItem();
+        assertThat(person.isArchived(), is(false));
+
+        context.turnOffAuthorisationSystem();
+        addMetadata(profile, "crisrp", "education", null, "High school");
+        profile = updateItem(profile);
+        context.restoreAuthSystemState();
+
+        assertThat(reloadItem(profileClone), notNullValue());
+        assertThat(profileClone.isArchived(), is(false));
+        assertThat(getMetadata(profileClone, "oairecerif", "person", "affiliation"), empty());
+        assertThat(getMetadata(profileClone, "oairecerif", "affiliation", "startDate"), empty());
+        assertThat(getMetadata(profileClone, "oairecerif", "affiliation", "endDate"), empty());
+        assertThat(getMetadata(profileClone, "oairecerif", "affiliation", "role"), empty());
+        assertThat(getMetadata(person, "crisrp", "education", null), empty());
+        assertThat(profileClone.getMetadata(), hasItem(with("dc.title", "Test profile")));
+        assertThat(profileClone.getMetadata(), hasItem(with("person.birthDate", "1992-06-26")));
+
+        assertThat(reloadItem(person), notNullValue());
+        assertThat(person.isArchived(), is(false));
+        assertThat(getMetadata(person, "oairecerif", "person", "affiliation"), empty());
+        assertThat(getMetadata(person, "oairecerif", "affiliation", "startDate"), empty());
+        assertThat(getMetadata(person, "oairecerif", "affiliation", "endDate"), empty());
+        assertThat(getMetadata(person, "oairecerif", "affiliation", "role"), empty());
+        assertThat(getMetadata(person, "crisrp", "education", null), empty());
+        assertThat(person.getMetadata(), hasItem(with("dc.title", "Test profile")));
+        assertThat(person.getMetadata(), hasItem(with("person.birthDate", "1992-06-26")));
+
+    }
+
+    @Test
+    public void testCvProfileCorrectionsWithSyncEnabled() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item profile = ItemBuilder.createItem(context, cvCollection)
+            .withTitle("Test profile")
+            .withBirthDate("1992-06-26")
+            .withPersonAffiliation("4Science")
+            .withPersonAffiliationStartDate("2020-07-01")
+            .withPersonAffiliationEndDate(PLACEHOLDER)
+            .withPersonAffiliationRole("Researcher")
+            .withCvPersonBasicInfoSyncEnabled(true)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        context.turnOffAuthorisationSystem();
+        List<XmlWorkflowItem> personWorkflowItems = workflowItemService.findByCollection(context, directorioPersons);
+        assertThat(personWorkflowItems, hasSize(1));
+
+        Item person = personWorkflowItems.get(0).getItem();
+        installItemService.installItem(context, personWorkflowItems.get(0));
+
+        List<XmlWorkflowItem> cloneWorkflowItems = workflowItemService.findByCollection(context, cvCloneCollection);
+        assertThat(cloneWorkflowItems, hasSize(1));
+
+        Item cvPersonClone = cloneWorkflowItems.get(0).getItem();
+        installItemService.installItem(context, cloneWorkflowItems.get(0));
+
+        addMetadata(profile, "person", "identifier", "orcid", "1111-2222-3333-4444");
+        profile = updateItem(profile);
+
+        context.restoreAuthSystemState();
+
+        cvPersonClone = reloadItem(cvPersonClone);
+        assertThat(getMetadata(cvPersonClone, "person", "identifier", "orcid"), empty());
+
+        person = reloadItem(person);
+        assertThat(getMetadata(person, "person", "identifier", "orcid"), empty());
+
+        List<Relationship> cloneCorrectionRelations = findRelations(cvPersonClone, cloneIsCorrectionOf);
+        assertThat(cloneCorrectionRelations, hasSize(1));
+
+        Item cloneCorrection = cloneCorrectionRelations.get(0).getLeftItem();
+        assertThat(cloneCorrection.isArchived(), is(false));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("dc.title", "Test profile")));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("person.birthDate", "1992-06-26")));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("person.identifier.orcid", "1111-2222-3333-4444")));
+
+        List<Relationship> personCorrectionRelations = findRelations(person, isCorrectionOf);
+        assertThat(personCorrectionRelations, hasSize(1));
+
+        Item correction = personCorrectionRelations.get(0).getLeftItem();
+        assertThat(correction.isArchived(), is(false));
+        assertThat(correction.getMetadata(), hasItem(with("dc.title", "Test profile")));
+        assertThat(correction.getMetadata(), hasItem(with("person.birthDate", "1992-06-26")));
+        assertThat(correction.getMetadata(), hasItem(with("person.identifier.orcid", "1111-2222-3333-4444")));
 
     }
 

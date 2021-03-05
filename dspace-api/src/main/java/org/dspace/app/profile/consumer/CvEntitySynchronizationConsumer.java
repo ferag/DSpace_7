@@ -32,6 +32,7 @@ import org.dspace.content.WorkspaceItem;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.ItemService;
+import org.dspace.content.service.WorkspaceItemService;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.event.Consumer;
@@ -51,8 +52,6 @@ import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
 import org.dspace.xmlworkflow.service.XmlWorkflowService;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.dspace.xmlworkflow.storedcomponents.service.XmlWorkflowItemService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of {@link Consumer} to request synchronize the Cv entities
@@ -61,8 +60,6 @@ import org.slf4j.LoggerFactory;
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  */
 public class CvEntitySynchronizationConsumer implements Consumer {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(CvEntitySynchronizationConsumer.class);
 
     private ItemService itemService;
 
@@ -73,6 +70,8 @@ public class CvEntitySynchronizationConsumer implements Consumer {
     private XmlWorkflowService workflowService;
 
     private XmlWorkflowItemService workflowItemService;
+
+    private WorkspaceItemService workspaceItemService;
 
     private ItemCorrectionProvider itemCorrectionProvider;
 
@@ -98,6 +97,7 @@ public class CvEntitySynchronizationConsumer implements Consumer {
         itemCorrectionService = dSpace.getSingletonService(ItemCorrectionService.class);
         workflowService = (XmlWorkflowService) WorkflowServiceFactory.getInstance().getWorkflowService();
         workflowItemService = (XmlWorkflowItemService) XmlWorkflowServiceFactory.getInstance().getWorkflowItemService();
+        workspaceItemService = ContentServiceFactory.getInstance().getWorkspaceItemService();
 
         profileSynchronizationMap = ofNullable(serviceManager.getServiceByName("profileSynchronizationMap", Map.class))
             .orElseGet(HashMap::new);
@@ -121,7 +121,7 @@ public class CvEntitySynchronizationConsumer implements Consumer {
             String entityType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
 
             if (isCvPerson(entityType)) {
-                consumeCvPerson(context, item);
+                consumeCvPerson(context, item, entityType);
             } else {
                 consumeCvEntity(context, item, entityType);
             }
@@ -162,18 +162,36 @@ public class CvEntitySynchronizationConsumer implements Consumer {
 
     }
 
-    private void consumeCvPerson(Context context, Item item) throws Exception {
+    private void consumeCvPerson(Context context, Item item, String entityType) throws Exception {
         Item cvPersonClone = concytecWorkflowService.findClone(context, item);
-        if (cvPersonClone == null) {
-            LOGGER.warn("The Profile with id {} does not have the clone", item.getID());
+
+        if (cvPersonClone == null && noCvPersonSectionSynchronizationIsEnabled(item)) {
             return;
         }
 
-        rejectPreviousCorrections(context, cvPersonClone);
+        if (cvPersonClone == null) {
 
-        ItemCorrection correctionToSynchronize = calculateProfileCorrectionToSynchronize(context, cvPersonClone, item);
-        if (correctionToSynchronize.isNotEmpty()) {
-            sendCorrectionRequest(context, item, cvPersonClone, correctionToSynchronize);
+            WorkspaceItem workspaceItemClone = createCvPersonClone(context, item, entityType);
+            workflowService.start(context, workspaceItemClone);
+
+        } else if (!cvPersonClone.isArchived()) {
+
+            ItemCorrection correctionToSynchronize = getProfileCorrectionToSynchronize(context, cvPersonClone, item);
+            if (correctionToSynchronize.isNotEmpty()) {
+                rejectItemRequest(context, cvPersonClone);
+                WorkspaceItem workspaceItemClone = createCvPersonClone(context, item, entityType);
+                workflowService.start(context, workspaceItemClone);
+            }
+
+        } else {
+
+            rejectPreviousCorrections(context, cvPersonClone);
+
+            ItemCorrection correctionToSynchronize = getProfileCorrectionToSynchronize(context, cvPersonClone, item);
+            if (correctionToSynchronize.isNotEmpty()) {
+                sendCorrectionRequest(context, item, cvPersonClone, correctionToSynchronize);
+            }
+
         }
     }
 
@@ -185,6 +203,20 @@ public class CvEntitySynchronizationConsumer implements Consumer {
         concytecWorkflowService.createCloneRelationship(ctx, workspaceItem.getItem(), item);
 
         return workspaceItem;
+    }
+
+    private WorkspaceItem createCvPersonClone(Context ctx, Item cvPerson, String entityType) throws Exception {
+        Collection collection = findCvCloneCollection(ctx, entityType)
+            .orElseThrow(() -> new IllegalStateException("No collection found for clones of entity " + entityType));
+
+        WorkspaceItem cloneWorkspaceItem = workspaceItemService.create(ctx, collection, false);
+        Item cvPersonClone = cloneWorkspaceItem.getItem();
+
+        concytecWorkflowService.createCloneRelationship(ctx, cvPersonClone, cvPerson);
+        ItemCorrection correctionToSynchronize = getProfileCorrectionToSynchronize(ctx, cvPersonClone, cvPerson);
+        itemCorrectionService.applyCorrectionsOnItem(ctx, cvPersonClone, correctionToSynchronize);
+
+        return cloneWorkspaceItem;
     }
 
     private void sendCorrectionRequest(Context context, Item item, Item clone, ItemCorrection correctionToSynchronize)
@@ -222,7 +254,7 @@ public class CvEntitySynchronizationConsumer implements Consumer {
         return shadowItemCopy != null ? workflowItemService.findByItem(context, shadowItemCopy) : null;
     }
 
-    private ItemCorrection calculateProfileCorrectionToSynchronize(Context context, Item cvPersonClone, Item item) {
+    private ItemCorrection getProfileCorrectionToSynchronize(Context context, Item cvPersonClone, Item item) {
         ItemCorrection corrections = itemCorrectionService.getAppliedCorrections(context, cvPersonClone, item);
         List<String> metadataFieldToSynchronize = calculateProfileMetadataToSynchronize(item);
         List<MetadataCorrection> correctionToSynchronize = corrections.getMetadataCorrections().stream()
@@ -245,6 +277,11 @@ public class CvEntitySynchronizationConsumer implements Consumer {
 
     private boolean isSynchronizationEnabled(Item item, String synchronizationMetadata) {
         return toBoolean(itemService.getMetadataFirstValue(item, new MetadataFieldName(synchronizationMetadata), ANY));
+    }
+
+    private boolean noCvPersonSectionSynchronizationIsEnabled(Item item) {
+        return profileSynchronizationMap.entrySet().stream()
+            .noneMatch(entry -> isSynchronizationEnabled(item, entry.getKey()));
     }
 
     private boolean isSynchronizationDisabled(Item item, String entityType) {

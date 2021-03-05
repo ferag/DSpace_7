@@ -115,7 +115,7 @@ public class ProfileItemCloningAction implements AfterImportAction {
 
     private Collection findProfileCloneCollection(Context context) throws SQLException {
         return collectionService.find(context,
-            UUIDUtils.fromString(configurationService.getProperty("cti-vitae.clone.profile-collection-id")));
+            UUIDUtils.fromString(configurationService.getProperty("cti-vitae.clone.person-collection-id")));
     }
 
 }

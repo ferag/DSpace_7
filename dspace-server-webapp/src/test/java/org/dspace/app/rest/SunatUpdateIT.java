@@ -83,6 +83,8 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                  .andExpect(jsonPath("$.metadata['relationship.type'].[0].value", is("OrgUnit")))
                  .andExpect(jsonPath("$.metadata['organization.identifier.ruc'].[0].value", is("20172627421")))
                  .andExpect(jsonPath("$.metadata['organization.legalName'].[0].value", is("UNIVERSIDAD DE PIURA")))
+                 .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].value", is("PIURA")))
+                 .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].authority", is("200101")))
                  .andExpect(jsonPath("$.metadata['perucris.type.ciiu'].[0].value", is("80309")))
                  .andExpect(jsonPath("$.metadata['organization.address.addressLocality'].[0].value",
                                   is("RAMON MUGICA,SAN EDUARDO,131,-,SECTOR EL CHIPE,PIURA,PIURA,PIURA")));
@@ -95,6 +97,8 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                  .andExpect(jsonPath("$.metadata['orgunit.identifier.country'].[0].value", is("Peru")))
                  .andExpect(jsonPath("$.metadata['relationship.type'].[0].value", is("OrgUnit")))
                  .andExpect(jsonPath("$.metadata['organization.identifier.ruc'].[0].value", is("20101247865")))
+                 .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].authority", is("150114")))
+                 .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].value", is("LA MOLINA")))
                  .andExpect(jsonPath("$.metadata['organization.legalName'].[0].value",
                                   is("COOP.SERV.EDUC. ING CARLOS LISSON B LTDA")))
                  .andExpect(jsonPath("$.metadata['perucris.type.ciiu'].[0].value", is("80210")))
@@ -110,7 +114,7 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                  .andExpect(jsonPath("$.metadata['organization.identifier.ruc'].[0].value", is("20102982372")))
                  .andExpect(jsonPath("$.metadata['organization.address.addressLocality']").doesNotExist())
                  .andExpect(jsonPath("$.metadata['perucris.type.ciiu']").doesNotExist())
-                 .andExpect(jsonPath("$.metadata['organization.legalNamen']").doesNotExist());
+                 .andExpect(jsonPath("$.metadata['organization.legalName']").doesNotExist());
     }
 
     @Test
@@ -160,6 +164,8 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                  .andExpect(jsonPath("$.metadata['dc.title'].[0].value", is("Title item A")))
                  .andExpect(jsonPath("$.metadata['orgunit.identifier.country'].[0].value", is("Peru")))
                  .andExpect(jsonPath("$.metadata['relationship.type'].[0].value", is("OrgUnit")))
+                 .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].value", is("PIURA")))
+                 .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].authority", is("200101")))
                  .andExpect(jsonPath("$.metadata['organization.identifier.ruc'].[0].value", is("20172627421")))
                  .andExpect(jsonPath("$.metadata['organization.legalName'].[0].value", is("UNIVERSIDAD DE PIURA")))
                  .andExpect(jsonPath("$.metadata['perucris.type.ciiu'].[0].value", is("80309")))
@@ -173,6 +179,8 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                  .andExpect(jsonPath("$.metadata['dc.title'].[0].value", is("Title item B")))
                  .andExpect(jsonPath("$.metadata['orgunit.identifier.country'].[0].value", is("Peru")))
                  .andExpect(jsonPath("$.metadata['relationship.type'].[0].value", is("OrgUnit")))
+                 .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].value", is("LA MOLINA")))
+                 .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].authority", is("150114")))
                  .andExpect(jsonPath("$.metadata['organization.identifier.ruc'].[0].value", is("20101247865")))
                  .andExpect(jsonPath("$.metadata['organization.legalName'].[0].value",
                                   is("COOP.SERV.EDUC. ING CARLOS LISSON B LTDA")))
@@ -186,6 +194,8 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                  .andExpect(jsonPath("$.metadata['dc.title'].[0].value", is("Title item C")))
                  .andExpect(jsonPath("$.metadata['orgunit.identifier.country'].[0].value", is("Peru")))
                  .andExpect(jsonPath("$.metadata['relationship.type'].[0].value", is("OrgUnit")))
+                 .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].value", is("SULLANA")))
+                 .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].authority", is("200601")))
                  .andExpect(jsonPath("$.metadata['organization.identifier.ruc'].[0].value", is("20102982372")))
                  .andExpect(jsonPath("$.metadata['organization.legalName'].[0].value",
                                   is("INSTITUCION EDUCATIVA SANTA URSULA")))
@@ -242,6 +252,7 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                  .andExpect(jsonPath("$.metadata['relationship.type'].[0].value", is("OrgUnit")))
                  .andExpect(jsonPath("$.metadata['organization.identifier.ruc'].[0].value", is("20172627421")))
                  .andExpect(jsonPath("$.metadata['organization.address.addressLocality']").doesNotExist())
+                 .andExpect(jsonPath("$.metadata['perucris.ubigeoSunat']").doesNotExist())
                  .andExpect(jsonPath("$.metadata['perucris.type.ciiu']").doesNotExist())
                  .andExpect(jsonPath("$.metadata['organization.legalNamen']").doesNotExist());
 
@@ -254,6 +265,7 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                  .andExpect(jsonPath("$.metadata['organization.identifier.ruc'].[0].value", is("20101247865")))
                  .andExpect(jsonPath("$.metadata['organization.address.addressLocality']").doesNotExist())
                  .andExpect(jsonPath("$.metadata['perucris.type.ciiu']").doesNotExist())
+                 .andExpect(jsonPath("$.metadata['perucris.ubigeoSunat']").doesNotExist())
                  .andExpect(jsonPath("$.metadata['organization.legalNamen']").doesNotExist());
 
         getClient(authToken).perform(get("/api/core/items/" + orgUnitC.getID())).andExpect(status().isOk())
@@ -264,6 +276,7 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                  .andExpect(jsonPath("$.metadata['organization.identifier.ruc'].[0].value", is("20102982372")))
                  .andExpect(jsonPath("$.metadata['organization.address.addressLocality']").doesNotExist())
                  .andExpect(jsonPath("$.metadata['perucris.type.ciiu']").doesNotExist())
+                 .andExpect(jsonPath("$.metadata['perucris.ubigeoSunat']").doesNotExist())
                  .andExpect(jsonPath("$.metadata['organization.legalNamen']").doesNotExist());
     }
 

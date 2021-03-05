@@ -59,11 +59,15 @@ public class ItemSourceServiceImpl implements ItemSourceService {
                         relationshipType);
                 for (Relationship relationship : relationships) {
                     Source source = new Source();
-                    Item right = relationship.getRightItem();
-                    source.setRelationshipType(relationshipType.getLeftwardType());
-                    source.setSource(right.getOwningCollection().getCommunities().get(0).getName());
-                    source.setItemUuid(right.getID());
-                    List<String> metadata = getMatchingMetadata(item, right);
+                    boolean leftwardRelation = item.getID().equals(relationship.getLeftItem().getID());
+                    Item relatedItem = leftwardRelation ? relationship.getRightItem() : relationship.getLeftItem();
+                    String type = leftwardRelation ? relationshipType.getLeftwardType() :
+                        relationshipType.getRightwardType();
+
+                    source.setRelationshipType(type);
+                    source.setSource(relatedItem.getOwningCollection().getCommunities().get(0).getName());
+                    source.setItemUuid(relatedItem.getID());
+                    List<String> metadata = getMatchingMetadata(item, relatedItem);
                     source.setMetadata(metadata);
                     itemSource.addSource(source);
                 }
@@ -103,12 +107,12 @@ public class ItemSourceServiceImpl implements ItemSourceService {
         for (int i = 0; i < metadataValues1.size(); i++) {
             for (MetadataValue mv2 : metadataValues2) {
                 if (StringUtils.equals(metadataValues1.get(i).getValue(), mv2.getValue())) {
-                    results.add(field.toString() + "/" + i);
+                    results.add(field.toString('.') + "/" + i);
                 }
             }
         }
         if ((metadataValues1.size() == metadataValues2.size()) && (metadataValues1.size() == results.size())) {
-            return Collections.singletonList(field.toString());
+            return Collections.singletonList(field.toString('.'));
         }
         return results;
     }

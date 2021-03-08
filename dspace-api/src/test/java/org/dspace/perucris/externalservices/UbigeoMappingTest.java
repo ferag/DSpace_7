@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.dspace.app.bulkimport.model.MetadataValueVO;
+import org.dspace.content.vo.MetadataValueVO;
 import org.dspace.util.SimpleMapConverter;
 import org.junit.Before;
 import org.junit.Test;

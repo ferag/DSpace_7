@@ -10,7 +10,7 @@ package org.dspace.perucris.externalservices;
 import java.util.Map;
 import java.util.Optional;
 
-import org.dspace.app.bulkimport.model.MetadataValueVO;
+import org.dspace.content.vo.MetadataValueVO;
 import org.dspace.util.SimpleMapConverter;
 
 /**

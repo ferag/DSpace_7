@@ -20,6 +20,7 @@ import java.util.UUID;
 import org.dspace.authorize.ResourcePolicy;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
+import org.dspace.content.vo.MetadataValueVO;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
@@ -45,10 +46,10 @@ public class CollectionPolicyGeneratorTest {
     @Test
     public void malformedParameters() {
         Collection collection = collection(UUID.randomUUID(), Collections.emptyList());
-        String generated = collectionPolicyGenerator
+        MetadataValueVO generated = collectionPolicyGenerator
             .generator(context, item(), itemTemplateOf(collection), "foo.bar.baz");
 
-        assertThat(generated, is(""));
+        assertThat(generated.getValue(), is(""));
     }
 
     @Test
@@ -59,10 +60,10 @@ public class CollectionPolicyGeneratorTest {
         when(collection.getResourcePolicies())
             .thenReturn(resourcePolicies);
 
-        String generated = collectionPolicyGenerator
+        MetadataValueVO generated = collectionPolicyGenerator
             .generator(context, item(), itemTemplateOf(collection), "invalid.eperson");
 
-        assertThat(generated, is(""));
+        assertThat(generated.getValue(), is(""));
     }
 
     @Test
@@ -73,10 +74,10 @@ public class CollectionPolicyGeneratorTest {
         when(collection.getResourcePolicies())
             .thenReturn(resourcePolicies);
 
-        String generated = collectionPolicyGenerator
+        MetadataValueVO generated = collectionPolicyGenerator
             .generator(context, item(), itemTemplateOf(collection), "default_item_read.invalid");
 
-        assertThat(generated, is(""));
+        assertThat(generated.getValue(), is(""));
     }
 
     @Test
@@ -84,10 +85,10 @@ public class CollectionPolicyGeneratorTest {
         List<ResourcePolicy> resourcePolicies = resourcePolicy(Constants.DEFAULT_BITSTREAM_READ, null, null);
         Collection collection = collection(UUID.randomUUID(), resourcePolicies);
 
-        String generated = collectionPolicyGenerator
+        MetadataValueVO generated = collectionPolicyGenerator
             .generator(context, item(), itemTemplateOf(collection),"default_item_read.epersongroup");
 
-        assertThat(generated, is(""));
+        assertThat(generated.getValue(), is(""));
     }
 
     @Test
@@ -99,10 +100,10 @@ public class CollectionPolicyGeneratorTest {
         when(collection.getResourcePolicies())
             .thenReturn(resourcePolicies);
 
-        String generated = collectionPolicyGenerator
+        MetadataValueVO generated = collectionPolicyGenerator
             .generator(context, item(), itemTemplateOf(collection), "default_item_read.eperson");
 
-        assertThat(generated, is("epersonName"));
+        assertThat(generated.getValue(), is("epersonName"));
     }
 
     @Test
@@ -114,10 +115,10 @@ public class CollectionPolicyGeneratorTest {
         when(collection.getResourcePolicies())
             .thenReturn(resourcePolicies);
 
-        String generated = collectionPolicyGenerator
+        MetadataValueVO generated = collectionPolicyGenerator
             .generator(context, item(), itemTemplateOf(collection),"default_item_read.epersongroup");
 
-        assertThat(generated, is("groupName"));
+        assertThat(generated.getValue(), is("groupName"));
     }
 
     private Group group(String name) {

@@ -110,7 +110,7 @@
                 <entry key="RELATION.InstitutionOrgUnit.ioupublications" value-ref="relationOrgunitPublicationsConfiguration"/>
                 <entry key="RELATION.InstitutionOrgUnit.iourppublications" value-ref="relationInstitutionOrgunitRPPublicationsConfiguration"/>
                 <entry key="RELATION.InstitutionOrgUnit.ioupeople" value-ref="relationOrgunitPersonsConfiguration"/>
-                <entry key="RELATION.InstitutionOrgUnit.iouprojects" value-ref="relationOrgunitProjectsConfiguration"/>
+                <entry key="RELATION.InstitutionOrgUnit.iouprojects" value-ref="relationOrgunitInstitutionProjectsConfiguration"/>
                 <entry key="RELATION.InstitutionOrgUnit.iouorganizations" value-ref="relationOrgunitOrgunitsConfiguration"/>
                 <!-- InstitutionProject Related items -->
                 <entry key="RELATION.InstitutionProject.ipgrants" value-ref="relationInstitutionProjectFundingsConfiguration"/>
@@ -1254,7 +1254,7 @@
         <property name="defaultFilterQueries">
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
-                <value>'{'!join from=search.resourceid to=projectinvestigators_authority fromIndex=${solr.multicorePrefix}search'}'person.affiliation.name_authority:{0}</value>
+                <value>'{'!join from=search.resourceid to=investigators_authority fromIndex=${solr.multicorePrefix}search'}'person.affiliation.name_authority:{0}</value>
             </list>
         </property>
     </bean>
@@ -1461,7 +1461,51 @@
         <property name="defaultFilterQueries">
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
-                <value>involvedorganisation_authority:{0}</value>
+                <value>crispj.organization_authority:{0} AND entityType_keyword:Project</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="relationOrgunitInstitutionProjectsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <property name="sidebarFacets">
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="searchFilterAuthor" />
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterSubject" />
+            </list>
+        </property>
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="searchFilterAuthor" />
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterSubject" />
+            </list>
+        </property>
+
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <!--<property name="defaultSort" ref="sortDateIssued"/>-->
+                <!--DefaultSortOrder can either be desc or asc (desc is default)-->
+                <property name="defaultSortOrder" value="desc"/>
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortTitle" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+                queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>crispj.organization_authority:{0} AND entityType_keyword:InstitutionProject</value>
             </list>
         </property>
     </bean>

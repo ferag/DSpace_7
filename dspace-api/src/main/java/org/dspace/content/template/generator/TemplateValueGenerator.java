@@ -8,6 +8,7 @@
 package org.dspace.content.template.generator;
 
 import org.dspace.content.Item;
+import org.dspace.content.vo.MetadataValueVO;
 import org.dspace.core.Context;
 
 /**
@@ -18,13 +19,15 @@ import org.dspace.core.Context;
 public interface TemplateValueGenerator {
 
     /**
-     * Generate a dynamic value according to template item value syntax
-     * @param context DSpace current context
-     * @param targetItem item which metadata have to be set
-     * @param templateItem item source of metadata value
-     * @param extraParams custom params, related to the implementation
-     * @return
+     * Generate a metadata value and authority starting from the given items and
+     * params.
+     *
+     * @param  context      the DSpace context
+     * @param  targetItem   the target item
+     * @param  templateItem the template item
+     * @param  extraParams  other params that could be usefull to the generator
+     * @return              an instance of {@link MetadataValueVO} with the
+     *                      generated metadata value and authority
      */
-    String generator(Context context, Item targetItem, Item templateItem,
-                     String extraParams);
+    MetadataValueVO generator(Context context, Item targetItem, Item templateItem, String extraParams);
 }

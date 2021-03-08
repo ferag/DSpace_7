@@ -646,6 +646,13 @@
         <element>eperson</element>
         <qualifier>orcid</qualifier>
     </dc-type>
+    
+    <dc-type>
+        <schema>perucris</schema>
+        <element>eperson</element>
+        <qualifier>rejectedAssociation</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
 
     <dc-type>
         <schema>perucris</schema>

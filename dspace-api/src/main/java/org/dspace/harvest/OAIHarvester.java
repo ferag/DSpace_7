@@ -126,6 +126,8 @@ public class OAIHarvester {
     public static final String OAI_DMD_ERROR = "metadataNotSupported";
     public static final String OAI_ORE_ERROR = "oreNotSupported";
 
+    public static final String RECORD_LINK_FORMAT = "%s?verb=GetRecord&identifier=%s&metadataPrefix=%s";
+
     @Autowired
     private BitstreamService bitstreamService;
 
@@ -257,7 +259,7 @@ public class OAIHarvester {
         int totalRecordSize = getTotalRecordSize(responseDTO.getDocument());
         log.info("Found " + totalRecordSize + " records to harvest");
 
-        OAIHarvesterReport report = new OAIHarvesterReport(totalRecordSize);
+        OAIHarvesterReport report = new OAIHarvesterReport(totalRecordSize, descriptiveMetadataFormat);
 
         processOAIHarvesterResponse(context, harvestRow, responseDTO, toDate, repositoryId, report, options);
 
@@ -1048,11 +1050,16 @@ public class OAIHarvester {
             .append(isValid).append(LOG_DELIMITER)
             .append(action).append(LOG_DELIMITER)
             .append(duration).append(LOG_DELIMITER)
+            .append(formatRecordLink(harvestRow, itemIdentifier, report.getMetadataFormat())).append(LOG_DELIMITER)
             .append(formatErrorMessages(isValid, report.getErrors().get(itemIdentifier)))
             .toString();
 
         log.trace(logMessage);
 
+    }
+
+    private String formatRecordLink(HarvestedCollection harvestRow, String itemIdentifier, String metadataFormat) {
+        return String.format(RECORD_LINK_FORMAT, harvestRow.getOaiSource(), itemIdentifier, metadataFormat);
     }
 
     private String formatErrorMessages(boolean isValid, ErrorDetails errors) {

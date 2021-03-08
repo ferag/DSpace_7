@@ -26,10 +26,13 @@ public class OAIHarvesterReport {
 
     private final int totalRecordSize;
 
+    private final String metadataFormat;
+
     private final Map<String, ErrorDetails> errors;
 
-    public OAIHarvesterReport(int totalRecordSize) {
+    public OAIHarvesterReport(int totalRecordSize, String metadataFormat) {
         this.totalRecordSize = totalRecordSize;
+        this.metadataFormat = metadataFormat;
         this.errors = new LinkedHashMap<String, ErrorDetails>();
     }
 
@@ -83,6 +86,13 @@ public class OAIHarvesterReport {
 
     public boolean hasErrors() {
         return !errors.isEmpty();
+    }
+
+    /**
+     * @return the metadataFormat
+     */
+    public String getMetadataFormat() {
+        return metadataFormat;
     }
 
     public final class ErrorDetails {

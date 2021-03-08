@@ -157,7 +157,7 @@ public class CvPersonCreationIT extends AbstractControllerIntegrationTest {
             "isOwnedByCvPerson", 0, null, 0, null).withCopyToLeft(false).withCopyToRight(false).build();
 
         configurationService.setProperty("researcher-profile.collection.uuid", cvCollection.getID().toString());
-        configurationService.setProperty("cti-vitae.clone.profile-collection-id", cvCloneCollection.getID().toString());
+        configurationService.setProperty("cti-vitae.clone.person-collection-id", cvCloneCollection.getID().toString());
         configurationService.setProperty("researcher-profile.type", "CvPerson");
 
         context.setCurrentUser(user);

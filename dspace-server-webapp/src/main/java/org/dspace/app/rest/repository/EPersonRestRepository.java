@@ -34,7 +34,6 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.MetadataField;
 import org.dspace.content.service.MetadataFieldService;
-import org.dspace.content.service.SiteService;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;

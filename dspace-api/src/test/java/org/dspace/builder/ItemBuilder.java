@@ -732,6 +732,34 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "crispj", "supportingStaff", null, supportingStaff);
     }
 
+    public ItemBuilder withCvPublicationSyncEnabled(boolean enabled) {
+        return setMetadataSingleValue(item, "perucris", "cvPublication", "syncEnabled", enabled + "");
+    }
+
+    public ItemBuilder withCvProjectSyncEnabled(boolean enabled) {
+        return setMetadataSingleValue(item, "perucris", "cvProject", "syncEnabled", enabled + "");
+    }
+
+    public ItemBuilder withCvPatentSyncEnabled(boolean enabled) {
+        return setMetadataSingleValue(item, "perucris", "cvPatent", "syncEnabled", enabled + "");
+    }
+
+    public ItemBuilder withCvPersonBasicInfoSyncEnabled(boolean enabled) {
+        return setMetadataSingleValue(item, "perucris", "cvPerson", "syncBasicInfo", enabled + "");
+    }
+
+    public ItemBuilder withCvPersonEducationSyncEnabled(boolean enabled) {
+        return setMetadataSingleValue(item, "perucris", "cvPerson", "syncEducation", enabled + "");
+    }
+
+    public ItemBuilder withCvPersonAffiliationSyncEnabled(boolean enabled) {
+        return setMetadataSingleValue(item, "perucris", "cvPerson", "syncAffiliation", enabled + "");
+    }
+
+    public ItemBuilder withCvPersonQualificationSyncEnabled(boolean enabled) {
+        return setMetadataSingleValue(item, "perucris", "cvPerson", "syncQualification", enabled + "");
+    }
+
     public ItemBuilder withHandle(String handle) {
         this.handle = handle;
         return this;

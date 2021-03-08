@@ -2375,7 +2375,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .build();
 
         configurationService.setProperty("researcher-profile.collection.uuid", cvPersons.getID().toString());
-        configurationService.setProperty("cti-vitae.clone.profile-collection-id", cvPersonClones.getID().toString());
+        configurationService.setProperty("cti-vitae.clone.person-collection-id", cvPersonClones.getID().toString());
 
         context.restoreAuthSystemState();
 
@@ -2495,7 +2495,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .build();
 
         configurationService.setProperty("researcher-profile.collection.uuid", cvPersons.getID().toString());
-        configurationService.setProperty("cti-vitae.clone.profile-collection-id", cvPersonClones.getID().toString());
+        configurationService.setProperty("cti-vitae.clone.person-collection-id", cvPersonClones.getID().toString());
 
         context.restoreAuthSystemState();
 
@@ -2611,7 +2611,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .build();
 
         configurationService.setProperty("researcher-profile.collection.uuid", cvPersons.getID().toString());
-        configurationService.setProperty("cti-vitae.clone.profile-collection-id", cvPersonClones.getID().toString());
+        configurationService.setProperty("cti-vitae.clone.person-collection-id", cvPersonClones.getID().toString());
 
         context.restoreAuthSystemState();
 
@@ -2727,7 +2727,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .build();
 
         configurationService.setProperty("researcher-profile.collection.uuid", cvPersons.getID().toString());
-        configurationService.setProperty("cti-vitae.clone.profile-collection-id", cvPersonClones.getID().toString());
+        configurationService.setProperty("cti-vitae.clone.person-collection-id", cvPersonClones.getID().toString());
 
         context.restoreAuthSystemState();
 

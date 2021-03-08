@@ -893,7 +893,7 @@
             </bean>
         </property>
     </bean>
-[    <bean id="relationInvestigatorInstitutionProjectsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+    <bean id="relationInvestigatorInstitutionProjectsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>

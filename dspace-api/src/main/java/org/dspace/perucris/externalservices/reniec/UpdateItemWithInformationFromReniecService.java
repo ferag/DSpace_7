@@ -90,11 +90,6 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
                 informationsFromReniec.getNames())) {
             return false;
         }
-//        if (!checkMetadata(
-//                itemService.getMetadataFirstValue(currentItem, "perucris", "domicilio", "ubigeoReniec", null),
-//                informationsFromReniec.getHomeCode())) {
-//            return false;
-//        }
         if (!checkMetadataAuthority(
             itemService.getMetadata(currentItem, "perucris", "domicilio", "ubigeoReniec", null),
             informationsFromReniec.getHomeCode())) {
@@ -116,11 +111,6 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
                 informationsFromReniec.getHomeAddress())) {
             return false;
         }
-//        if (!checkMetadata(
-//                itemService.getMetadataFirstValue(currentItem, "perucris", "nacimiento", "ubigeoReniec", null),
-//                informationsFromReniec.getNacimientoCode())) {
-//            return false;
-//        }
         if (!checkMetadataAuthority(
             itemService.getMetadata(currentItem, "perucris", "nacimiento", "ubigeoReniec", null),
             informationsFromReniec.getNacimientoCode())) {

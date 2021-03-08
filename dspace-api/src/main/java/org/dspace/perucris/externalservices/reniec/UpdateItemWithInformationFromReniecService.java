@@ -11,16 +11,21 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dspace.app.bulkimport.model.MetadataValueVO;
+import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
+import org.dspace.content.MetadataValue;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.perucris.externalservices.PeruExternalService;
+import org.dspace.perucris.externalservices.UbigeoMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -37,6 +42,9 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
     private ItemService itemService;
 
     private Map<Integer, String> genderMap;
+
+    @Autowired
+    private UbigeoMapping ubigeoMapping;
 
     public UpdateItemWithInformationFromReniecService() {
         //FIXME: evaluate if this map needs to / can be injected
@@ -82,9 +90,9 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
                 informationsFromReniec.getNames())) {
             return false;
         }
-        if (!checkMetadata(
-                itemService.getMetadataFirstValue(currentItem, "perucris", "domicilio", "ubigeoReniec", null),
-                informationsFromReniec.getHomeCode())) {
+        if (!checkMetadataAuthority(
+            itemService.getMetadata(currentItem, "perucris", "domicilio", "ubigeoReniec", null),
+            informationsFromReniec.getHomeCode())) {
             return false;
         }
         if (!checkMetadata(itemService.getMetadataFirstValue(currentItem, "perucris", "domicilio", "region", null),
@@ -103,9 +111,9 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
                 informationsFromReniec.getHomeAddress())) {
             return false;
         }
-        if (!checkMetadata(
-                itemService.getMetadataFirstValue(currentItem, "perucris", "nacimiento", "ubigeoReniec", null),
-                informationsFromReniec.getNacimientoCode())) {
+        if (!checkMetadataAuthority(
+            itemService.getMetadata(currentItem, "perucris", "nacimiento", "ubigeoReniec", null),
+            informationsFromReniec.getNacimientoCode())) {
             return false;
         }
         if (!checkMetadata(itemService.getMetadataFirstValue(currentItem, "perucris", "nacimiento", "region", null),
@@ -138,6 +146,13 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
 
     private boolean checkMetadata(String itemMetadata, String infoFromReniec) {
         return StringUtils.equals(itemMetadata, infoFromReniec);
+    }
+
+    private boolean checkMetadataAuthority(List<MetadataValue> itemMetadata, String authorityFromReniec) {
+        if (Objects.isNull(itemMetadata) || itemMetadata.isEmpty()) {
+            return false;
+        }
+        return StringUtils.equals(itemMetadata.get(0).getAuthority(), authorityFromReniec);
     }
 
     private boolean checkGender(String gender, String genderFromReniec) {
@@ -196,8 +211,8 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
                         dto.getNames());
             }
             if (dto.getHomeCode() != null) {
-                itemService.addMetadata(context, currentItem, "perucris", "domicilio", "ubigeoReniec", null,
-                        dto.getHomeCode());
+                addMappedUbigeoValue(context, currentItem, "perucris", "domicilio", "ubigeoReniec",
+                    dto.getHomeCode());
             }
             if (dto.getRegionOfResidence() != null) {
                 itemService.addMetadata(context, currentItem, "perucris", "domicilio", "region", null,
@@ -216,8 +231,8 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
                         dto.getHomeAddress());
             }
             if (dto.getNacimientoCode() != null) {
-                itemService.addMetadata(context, currentItem, "perucris", "nacimiento", "ubigeoReniec", null,
-                        dto.getNacimientoCode());
+                addMappedUbigeoValue(context, currentItem, "perucris", "nacimiento", "ubigeoReniec",
+                    dto.getNacimientoCode());
             }
             if (dto.getRegionOfBirth() != null) {
                 itemService.addMetadata(context, currentItem, "perucris", "nacimiento", "region", null,
@@ -239,8 +254,20 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
                 String birthDate = dto.getBirthDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                 itemService.addMetadata(context, currentItem, "person", "birthDate", null, null, birthDate);
             }
-        } catch (SQLException e) {
+        } catch (SQLException | AuthorizeException e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    private void addMappedUbigeoValue(Context context, Item item, String schema, String element, String qualifier,
+                                      String ubigeoValue) throws SQLException, AuthorizeException {
+        MetadataValueVO metadataValueVO = ubigeoMapping.convert("reniec", ubigeoValue);
+        MetadataValue metadata =
+            itemService.addMetadata(context, item, schema, element, qualifier, null, metadataValueVO.getValue());
+
+        metadata.setAuthority(metadataValueVO.getAuthority());
+        metadata.setConfidence(metadataValueVO.getConfidence());
+
+        itemService.update(context, item);
     }
 }

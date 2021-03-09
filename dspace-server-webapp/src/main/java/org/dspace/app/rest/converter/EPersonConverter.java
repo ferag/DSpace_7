@@ -106,7 +106,12 @@ public class EPersonConverter extends DSpaceObjectConverter<EPerson, org.dspace.
 
             SortedMap<String, List<MetadataValueRest>> metadataMap = eperson.getMetadata().getMap();
             metadataMap.putIfAbsent("perucris.eperson.role", new ArrayList<>());
-            metadataMap.get("perucris.eperson.role").add(metadataValueConverter.convert(metadataValue));
+
+            MetadataValueRest metadataValueRest = metadataValueConverter.convert(metadataValue);
+
+            List<MetadataValueRest> metadataList = metadataMap.get("perucris.eperson.role");
+            metadataValueRest.setPlace(metadataList.size());
+            metadataList.add(metadataValueRest);
 
         } catch (SQLException e) {
             LOGGER.warn("Error while finding default group: {}", e.getMessage());

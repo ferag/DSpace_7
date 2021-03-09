@@ -1,0 +1,227 @@
+/**
+ * The contents of this file are subject to the license and copyright
+ * detailed in the LICENSE and NOTICE files at the root of the source
+ * tree and available online at
+ *
+ * http://www.dspace.org/license/
+ */
+package org.dspace.app.profile.consumer;
+
+import static org.dspace.app.matcher.MetadataValueMatcher.with;
+import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.CLONE;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.SHADOW_COPY;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+
+import java.net.URI;
+import java.sql.SQLException;
+
+import org.dspace.AbstractIntegrationTestWithDatabase;
+import org.dspace.app.matcher.MetadataValueMatcher;
+import org.dspace.app.profile.ResearcherProfile;
+import org.dspace.app.profile.service.ResearcherProfileService;
+import org.dspace.builder.CollectionBuilder;
+import org.dspace.builder.CommunityBuilder;
+import org.dspace.builder.EPersonBuilder;
+import org.dspace.builder.EntityTypeBuilder;
+import org.dspace.builder.GroupBuilder;
+import org.dspace.builder.ItemBuilder;
+import org.dspace.content.Collection;
+import org.dspace.content.Community;
+import org.dspace.content.EntityType;
+import org.dspace.content.Item;
+import org.dspace.content.RelationshipType;
+import org.dspace.content.factory.ContentServiceFactory;
+import org.dspace.content.service.ItemService;
+import org.dspace.eperson.EPerson;
+import org.dspace.eperson.Group;
+import org.dspace.services.ConfigurationService;
+import org.dspace.services.factory.DSpaceServicesFactory;
+import org.dspace.utils.DSpace;
+import org.dspace.xmlworkflow.factory.XmlWorkflowServiceFactory;
+import org.dspace.xmlworkflow.storedcomponents.service.CollectionRoleService;
+import org.dspace.xmlworkflow.storedcomponents.service.XmlWorkflowItemService;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+/**
+ * Integration tests for {@link CvEntityFlagConsumer}.
+ *
+ * @author Luca Giamminonni (luca.giamminonni at 4science.it)
+ */
+public class CvEntityFlagConsumerIT extends AbstractIntegrationTestWithDatabase {
+
+    private ConfigurationService configurationService;
+
+    private ItemService itemService;
+
+    private ResearcherProfileService researcherProfileService;
+
+    private CollectionRoleService collectionRoleService;
+
+    private XmlWorkflowItemService workflowItemService;
+
+    private EPerson submitter;
+
+    private Group directorioEditorGroup;
+
+    private Community directorioCommunity;
+
+    private Community ctiVitaeCommunity;
+
+    private Community ctiVitaeCloneCommunity;
+
+    private Collection directorioPersons;
+
+    private Collection cvCollection;
+
+    private Collection cvCloneCollection;
+
+    @Before
+    public void before() throws Exception {
+
+        itemService = ContentServiceFactory.getInstance().getItemService();
+        workflowItemService = (XmlWorkflowItemService) XmlWorkflowServiceFactory.getInstance().getWorkflowItemService();
+        collectionRoleService = XmlWorkflowServiceFactory.getInstance().getCollectionRoleService();
+        configurationService = DSpaceServicesFactory.getInstance().getConfigurationService();
+        researcherProfileService = new DSpace().getSingletonService(ResearcherProfileService.class);
+
+        context.turnOffAuthorisationSystem();
+
+        EntityType personType = createEntityType("Person");
+        EntityType cvPersonType = createEntityType("CvPerson");
+        EntityType cvPersonCloneType = createEntityType("CvPersonClone");
+
+        createHasShadowCopyRelationship(cvPersonCloneType, personType);
+        createCloneRelationship(cvPersonCloneType, cvPersonType);
+
+        submitter = createEPerson("submitter@example.com");
+        context.setCurrentUser(submitter);
+
+        EPerson directorioUser = createEPerson("directorioUser@example.com");
+
+        directorioCommunity = CommunityBuilder.createCommunity(context)
+            .withName("Directorio Community")
+            .build();
+
+        directorioEditorGroup = GroupBuilder.createGroup(context)
+            .withName("editor group")
+            .addMember(directorioUser)
+            .build();
+
+        directorioPersons = CollectionBuilder
+            .createCollection(context, directorioCommunity)
+            .withWorkflow("directorioWorkflow")
+            .withName("Persons")
+            .withRelationshipType("Person")
+            .withSubmitterGroup(submitter)
+            .withRoleGroup("editor", directorioEditorGroup)
+            .build();
+
+        ctiVitaeCommunity = CommunityBuilder.createCommunity(context)
+            .withName("CTIVitae Community")
+            .build();
+
+        ctiVitaeCloneCommunity = CommunityBuilder.createCommunity(context)
+            .withName("CTIVitae clone Community")
+            .build();
+
+        cvCollection = CollectionBuilder.createCollection(context, ctiVitaeCommunity)
+            .withName("Profiles")
+            .withRelationshipType("CvPerson")
+            .withSubmitterGroup(submitter)
+            .build();
+
+        cvCloneCollection = CollectionBuilder.createCollection(context, ctiVitaeCloneCommunity)
+            .withName("Profiles")
+            .withRelationshipType("CvPersonClone")
+            .withWorkflow("institutionWorkflow")
+            .build();
+
+        configurationService.setProperty("directorios.community-id", directorioCommunity.getID().toString());
+        configurationService.setProperty("researcher-profile.collection.uuid", cvCollection.getID().toString());
+        configurationService.setProperty("cti-vitae.clone.person-collection-id", cvCloneCollection.getID().toString());
+        configurationService.setProperty("item.enable-virtual-metadata", false);
+
+        context.restoreAuthSystemState();
+
+    }
+
+    @After
+    public void destroy() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+        collectionRoleService.deleteByCollection(context, cvCloneCollection);
+        collectionRoleService.deleteByCollection(context, directorioPersons);
+        workflowItemService.deleteByCollection(context, cvCloneCollection);
+        workflowItemService.deleteByCollection(context, directorioPersons);
+        context.restoreAuthSystemState();
+
+        super.destroy();
+    }
+
+    @Test
+    public void testClaimedProfileEdit() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item person = ItemBuilder.createItem(context, directorioPersons)
+            .withTitle("White, Walter")
+            .build();
+
+        DSpaceServicesFactory.getInstance().getRequestService().startRequest();
+        ResearcherProfile researcherProfile = researcherProfileService.createFromSource(context, submitter,
+            URI.create("http://localhost:8080/server/api/core/items/" + person.getID()));
+
+        Item profile = researcherProfile.getItem();
+
+        addMetadata(profile, "person", "birthDate", null, "1992-06-26");
+        addMetadata(profile, "perucris", "phone", null, "1112223333");
+
+        profile = updateItem(profile);
+
+        context.restoreAuthSystemState();
+
+        assertThat(profile.getMetadata(), hasItem(with("perucris.flagcv.personbirthDate", "false")));
+        assertThat(profile.getMetadata(), hasItem(with("perucris.flagcv.perucrisphone", "false")));
+
+    }
+
+    private Item updateItem(Item item) throws Exception {
+        itemService.update(context, item);
+        context.commit();
+        return reloadItem(item);
+    }
+
+    private void addMetadata(Item item, String schema, String element, String qualifier, String value)
+        throws SQLException {
+        itemService.addMetadata(context, item, schema, element, qualifier, null, value);
+    }
+
+    private Item reloadItem(Item item) throws SQLException {
+        return context.reloadEntity(item);
+    }
+
+    private EntityType createEntityType(String entityType) {
+        return EntityTypeBuilder.createEntityTypeBuilder(context, entityType).build();
+    }
+
+    private RelationshipType createHasShadowCopyRelationship(EntityType leftType, EntityType rightType) {
+        return createRelationshipTypeBuilder(context, leftType, rightType, SHADOW_COPY.getLeftType(),
+            SHADOW_COPY.getRightType(), 0, 1, 0, 1).build();
+    }
+
+    private RelationshipType createCloneRelationship(EntityType leftType, EntityType rightType) {
+        return createRelationshipTypeBuilder(context, leftType, rightType, CLONE.getLeftType(),
+            CLONE.getRightType(), 0, 1, 0, 1).build();
+    }
+
+    private EPerson createEPerson(String email) {
+        return EPersonBuilder.createEPerson(context)
+            .withEmail(email)
+            .withPassword(password)
+            .build();
+    }
+}

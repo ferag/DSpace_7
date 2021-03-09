@@ -19,7 +19,7 @@
         <collection>
             <name>notification</name>
             <entity-type>Notification</entity-type>
-            <submission-type>notification-form</submission-type>
+            <submission-type>notification</submission-type>
             <description/>
             <intro/>
             <copyright/>

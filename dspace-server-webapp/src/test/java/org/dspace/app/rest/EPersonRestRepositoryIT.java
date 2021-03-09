@@ -471,6 +471,62 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    public void findByEmailWithDefaultRoleEnabled() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Group defaultRole = GroupBuilder.createGroup(context).withName("Default role").build();
+
+        EPerson ePerson = EPersonBuilder.createEPerson(context)
+            .withNameInMetadata("John", "Doe")
+            .withEmail("Johndoe@example.com")
+            .build();
+
+        EPersonBuilder.createEPerson(context)
+            .withNameInMetadata("Jane", "Smith")
+            .withEmail("janesmith@example.com")
+            .build();
+
+        configurationService.setProperty("eperson.group.default", defaultRole.getID());
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        getClient(authToken).perform(get("/api/eperson/epersons/search/byEmail")
+            .param("email", ePerson.getEmail()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.metadata", matchMetadata("perucris.eperson.role", "Default role",
+                defaultRole.getID().toString(), 0)));
+
+        configurationService.setProperty("eperson.group.default", "");
+    }
+
+    @Test
+    public void findByEmailWithDefaultRoleDisabled() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Group defaultRole = GroupBuilder.createGroup(context).withName("Default role").build();
+
+        EPerson ePerson = EPersonBuilder.createEPerson(context)
+            .withNameInMetadata("John", "Doe")
+            .withEmail("Johndoe@example.com")
+            .build();
+
+        configurationService.setProperty("eperson.group.default", "");
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        getClient(authToken).perform(get("/api/eperson/epersons/search/byEmail")
+            .param("email", ePerson.getEmail()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.metadata['perucris.eperson.role']").doesNotExist());
+
+        configurationService.setProperty("eperson.group.default", "");
+    }
+
+    @Test
     public void findByEmailUndefined() throws Exception {
         String authToken = getAuthToken(admin.getEmail(), password);
         getClient(authToken).perform(get("/api/eperson/epersons/search/byEmail")

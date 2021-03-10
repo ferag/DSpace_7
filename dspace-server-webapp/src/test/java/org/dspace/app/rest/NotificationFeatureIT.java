@@ -112,7 +112,7 @@ public class NotificationFeatureIT extends AbstractControllerIntegrationTest {
 
        this.cvPersonItem = ItemBuilder.createItem(context, colPersonCv)
                 .withTitle("CvPerson")
-                .withCrisOwner(user.getID().toString(), ePersonItem.getID().toString())
+                .withCrisOwner(user.getName(), user.getID().toString())
                 .withRelationshipType("CvPerson")
                 .build();
 
@@ -158,7 +158,7 @@ public class NotificationFeatureIT extends AbstractControllerIntegrationTest {
 
        this.cvPersonItem = ItemBuilder.createItem(context, colPersonCv)
                 .withTitle("CvPerson")
-                .withCrisOwner(user.getID().toString(), ePersonItem.getID().toString())
+                .withCrisOwner(user.getName(), user.getID().toString())
                 .withRelationshipType("CvPerson")
                 .build();
 
@@ -214,12 +214,12 @@ public class NotificationFeatureIT extends AbstractControllerIntegrationTest {
 
        this.cvPersonItem = ItemBuilder.createItem(context, colCvPerson)
                 .withTitle("CvPerson")
-                .withCrisOwner(user.getID().toString(), ePersonItem.getID().toString())
+                .withCrisOwner(user.getName(), user.getID().toString())
                 .withRelationshipType("CvPerson").build();
 
        this.cvPerson2Item = ItemBuilder.createItem(context, colCvPerson)
                .withTitle("CvPerson")
-               .withCrisOwner(user2.getID().toString(), ePerson2Item.getID().toString())
+               .withCrisOwner(user2.getName(), user2.getID().toString())
                .withRelationshipType("CvPerson").build();
 
        this.notification = ItemBuilder.createItem(context, colNotification)
@@ -288,7 +288,7 @@ public class NotificationFeatureIT extends AbstractControllerIntegrationTest {
 
        this.cvPersonItem = ItemBuilder.createItem(context, colPersonCv)
                 .withTitle("CvPerson")
-                .withCrisOwner(user.getID().toString(), ePersonItem.getID().toString())
+                .withCrisOwner(user.getName(), user.getID().toString())
                 .withRelationshipType("CvPerson")
                 .build();
 

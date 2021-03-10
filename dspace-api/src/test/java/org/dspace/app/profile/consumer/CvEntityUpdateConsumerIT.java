@@ -12,13 +12,18 @@ import static org.dspace.builder.CrisLayoutBoxBuilder.createBuilder;
 import static org.dspace.builder.CrisLayoutFieldBuilder.createMetadataField;
 import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.CLONE;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.CORRECTION;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.MERGED;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.ORIGINATED;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.SHADOW_COPY;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 
 import java.net.URI;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.dspace.AbstractIntegrationTestWithDatabase;
 import org.dspace.app.profile.ResearcherProfile;
@@ -29,15 +34,20 @@ import org.dspace.builder.EPersonBuilder;
 import org.dspace.builder.EntityTypeBuilder;
 import org.dspace.builder.GroupBuilder;
 import org.dspace.builder.ItemBuilder;
+import org.dspace.builder.RelationshipBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.EntityType;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
+import org.dspace.content.MetadataValue;
+import org.dspace.content.Relationship;
 import org.dspace.content.RelationshipType;
 import org.dspace.content.factory.ContentServiceFactory;
+import org.dspace.content.service.InstallItemService;
 import org.dspace.content.service.ItemService;
 import org.dspace.content.service.MetadataFieldService;
+import org.dspace.content.service.RelationshipService;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.layout.CrisLayoutBox;
@@ -53,13 +63,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Integration tests for {@link CvEntityFlagConsumer}.
+ * Integration tests for {@link CvEntityUpdateConsumer}.
  *
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  */
-public class CvEntityFlagConsumerIT extends AbstractIntegrationTestWithDatabase {
+public class CvEntityUpdateConsumerIT extends AbstractIntegrationTestWithDatabase {
 
     private ConfigurationService configurationService;
+
+    private RelationshipService relationshipService;
 
     private ItemService itemService;
 
@@ -69,11 +81,23 @@ public class CvEntityFlagConsumerIT extends AbstractIntegrationTestWithDatabase 
 
     private XmlWorkflowItemService workflowItemService;
 
+    private InstallItemService installItemService;
+
     private MetadataFieldService metadataFieldService;
 
     private EPerson submitter;
 
     private Group directorioEditorGroup;
+
+    private RelationshipType cloneHasShadowCopy;
+
+    private RelationshipType isCorrectionOf;
+
+    private RelationshipType cloneIsCorrectionOf;
+
+    private RelationshipType isCloneOf;
+
+    private EntityType personType;
 
     private Community directorioCommunity;
 
@@ -87,16 +111,16 @@ public class CvEntityFlagConsumerIT extends AbstractIntegrationTestWithDatabase 
 
     private Collection cvCloneCollection;
 
-    private EntityType personType;
-
     @Before
     public void before() throws Exception {
 
         itemService = ContentServiceFactory.getInstance().getItemService();
         workflowItemService = (XmlWorkflowItemService) XmlWorkflowServiceFactory.getInstance().getWorkflowItemService();
         collectionRoleService = XmlWorkflowServiceFactory.getInstance().getCollectionRoleService();
+        relationshipService = ContentServiceFactory.getInstance().getRelationshipService();
         configurationService = DSpaceServicesFactory.getInstance().getConfigurationService();
         researcherProfileService = new DSpace().getSingletonService(ResearcherProfileService.class);
+        installItemService = ContentServiceFactory.getInstance().getInstallItemService();
         metadataFieldService = ContentServiceFactory.getInstance().getMetadataFieldService();
 
         context.turnOffAuthorisationSystem();
@@ -105,13 +129,21 @@ public class CvEntityFlagConsumerIT extends AbstractIntegrationTestWithDatabase 
         EntityType cvPersonType = createEntityType("CvPerson");
         EntityType cvPersonCloneType = createEntityType("CvPersonClone");
 
-        createHasShadowCopyRelationship(cvPersonCloneType, personType);
-        createCloneRelationship(cvPersonCloneType, cvPersonType);
+        cloneHasShadowCopy = createHasShadowCopyRelationship(cvPersonCloneType, personType);
+        isCorrectionOf = createIsCorrectionOfRelationship(personType);
+        cloneIsCorrectionOf = createIsCorrectionOfRelationship(cvPersonCloneType);
+        isCloneOf = createCloneRelationship(cvPersonCloneType, cvPersonType);
+        createIsMergedInRelationship(personType);
+        createIsOriginatedFromRelationship(personType, cvPersonCloneType);
 
         submitter = createEPerson("submitter@example.com");
         context.setCurrentUser(submitter);
 
         EPerson directorioUser = createEPerson("directorioUser@example.com");
+
+        parentCommunity = CommunityBuilder.createCommunity(context)
+            .withName("Parent Community")
+            .build();
 
         directorioCommunity = CommunityBuilder.createCommunity(context)
             .withName("Directorio Community")
@@ -176,7 +208,7 @@ public class CvEntityFlagConsumerIT extends AbstractIntegrationTestWithDatabase 
     }
 
     @Test
-    public void testClaimedProfileEdit() throws Exception {
+    public void testUpdatesOnPersonAreAlsoMadeOnProfile() throws Exception {
 
         context.turnOffAuthorisationSystem();
 
@@ -190,45 +222,92 @@ public class CvEntityFlagConsumerIT extends AbstractIntegrationTestWithDatabase 
             URI.create("http://localhost:8080/server/api/core/items/" + person.getID()));
 
         Item profile = researcherProfile.getItem();
+        List<Relationship> findRelations = findRelations(profile, isCloneOf);
+        assertThat(findRelations, hasSize(1));
 
-        addMetadata(profile, "perucris", "phone", null, "1112223333");
-        removeMetadata(profile, "person", "birthDate", null);
+        Item profileClone = findRelations.get(0).getLeftItem();
 
-        profile = updateItem(profile);
+        context.commit();
+        person = reloadItem(person);
 
         context.restoreAuthSystemState();
 
-        assertThat(profile.getMetadata(), hasItem(with("perucris.flagcv.personbirthDate", "false")));
-        assertThat(profile.getMetadata(), hasItem(with("perucris.flagcv.perucrisphone", "false")));
+        addMetadata(person, "perucris", "phone", null, "1112223333");
+        removeMetadata(person, "person", "birthDate", null);
+
+        context.turnOffAuthorisationSystem();
+        person = updateItem(person);
+        context.restoreAuthSystemState();
+
+        profile = reloadItem(profile);
+        assertThat(profile.getMetadata(), hasItem(with("perucris.phone", "1112223333")));
+        assertThat(getMetadata(profile, "person", "birthDate", null), empty());
+
+        profileClone = reloadItem(profileClone);
+        assertThat(profileClone.getMetadata(), hasItem(with("perucris.phone", "1112223333")));
+        assertThat(getMetadata(profileClone, "person", "birthDate", null), empty());
+
+        assertThat(findRelations(person, isCorrectionOf), empty());
+        assertThat(findRelations(profileClone, cloneIsCorrectionOf), empty());
 
     }
 
     @Test
-    public void testNewProfileCreationAndCorrection() throws Exception {
+    public void testUpdatesOnPersonRelatedToInstitutionPersonAreAlsoMadeOnProfile() throws Exception {
 
         context.turnOffAuthorisationSystem();
 
-        Item profile = ItemBuilder.createItem(context, cvCollection)
-            .withTitle("White, Walter")
-            .withPhone("1112223333")
+        Collection institutionPersonCollection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("People")
+            .withRelationshipType("InstitutionPerson")
             .build();
 
+        Item person = ItemBuilder.createItem(context, directorioPersons)
+            .withTitle("White, Walter")
+            .withBirthDate("1992-06-26")
+            .build();
+
+        Item institutionPerson = ItemBuilder.createItem(context, institutionPersonCollection)
+            .withTitle("White, Walter")
+            .withBirthDate("1992-06-26")
+            .build();
+
+        EntityType institutionPersonType = createEntityType("InstitutionPerson");
+        RelationshipType institutionShadowCopy = createHasShadowCopyRelationship(institutionPersonType, personType);
+        RelationshipBuilder.createRelationshipBuilder(context, institutionPerson, person, institutionShadowCopy);
+
+        DSpaceServicesFactory.getInstance().getRequestService().startRequest();
+        ResearcherProfile researcherProfile = researcherProfileService.createFromSource(context, submitter,
+            URI.create("http://localhost:8080/server/api/core/items/" + person.getID()));
+
+        Item profile = researcherProfile.getItem();
+        List<Relationship> findRelations = findRelations(profile, isCloneOf);
+        assertThat(findRelations, hasSize(1));
+
+        Item profileClone = findRelations.get(0).getLeftItem();
+
+        context.commit();
+        person = reloadItem(person);
+
         context.restoreAuthSystemState();
 
-        assertThat(profile.getMetadata(), hasItem(with("perucris.flagcv.dctitle", "false")));
-        assertThat(profile.getMetadata(), hasItem(with("perucris.flagcv.perucrisphone", "false")));
-
-        addMetadata(profile, "person", "birthDate", null, "1992-06-26");
-        removeMetadata(profile, "perucris", "phone", null);
+        addMetadata(person, "perucris", "phone", null, "1112223333");
+        removeMetadata(person, "person", "birthDate", null);
 
         context.turnOffAuthorisationSystem();
-        profile = updateItem(profile);
+        person = updateItem(person);
         context.restoreAuthSystemState();
 
-        assertThat(profile.getMetadata(), hasItem(with("perucris.flagcv.dctitle", "false")));
-        assertThat(profile.getMetadata(), hasItem(with("perucris.flagcv.perucrisphone", "false")));
-        assertThat(profile.getMetadata(), hasItem(with("perucris.flagcv.personbirthDate", "false")));
-        assertThat(itemService.getMetadataByMetadataString(profile, "perucris.flagcv.perucrisphone"), hasSize(1));
+        profile = reloadItem(profile);
+        assertThat(profile.getMetadata(), hasItem(with("perucris.phone", "1112223333")));
+        assertThat(getMetadata(profile, "person", "birthDate", null), empty());
+
+        profileClone = reloadItem(profileClone);
+        assertThat(profileClone.getMetadata(), hasItem(with("perucris.phone", "1112223333")));
+        assertThat(getMetadata(profileClone, "person", "birthDate", null), empty());
+
+        assertThat(findRelations(person, isCorrectionOf), empty());
+        assertThat(findRelations(profileClone, cloneIsCorrectionOf), empty());
 
     }
 
@@ -241,28 +320,32 @@ public class CvEntityFlagConsumerIT extends AbstractIntegrationTestWithDatabase 
             .withBox(publicBox)
             .build();
 
-        createMetadataField(context,metadataField("person", "birthDate", null), 2, 1)
+        createMetadataField(context, metadataField("person", "birthDate", null), 2, 1)
             .withBox(publicBox)
             .build();
     }
 
     private MetadataField metadataField(String schema, String element, String qualifier) throws SQLException {
-        return metadataFieldService.findByElement(context,schema, element, qualifier);
+        return metadataFieldService.findByElement(context, schema, element, qualifier);
+    }
+
+    private void addMetadata(Item item, String schema, String element, String qualifier, String value)
+        throws SQLException {
+        itemService.addMetadata(context, item, schema, element, qualifier, null, value);
     }
 
     private void removeMetadata(Item item, String schema, String element, String qualifier) throws SQLException {
         itemService.removeMetadataValues(context, item, schema, element, qualifier, Item.ANY);
     }
 
+    private List<MetadataValue> getMetadata(Item item, String schema, String element, String qualifier) {
+        return itemService.getMetadata(item, schema, element, qualifier, Item.ANY);
+    }
+
     private Item updateItem(Item item) throws Exception {
         itemService.update(context, item);
         context.commit();
         return reloadItem(item);
-    }
-
-    private void addMetadata(Item item, String schema, String element, String qualifier, String value)
-        throws SQLException {
-        itemService.addMetadata(context, item, schema, element, qualifier, null, value);
     }
 
     private Item reloadItem(Item item) throws SQLException {
@@ -278,9 +361,28 @@ public class CvEntityFlagConsumerIT extends AbstractIntegrationTestWithDatabase 
             SHADOW_COPY.getRightType(), 0, 1, 0, 1).build();
     }
 
+    private RelationshipType createIsCorrectionOfRelationship(EntityType entityType) {
+        return createRelationshipTypeBuilder(context, entityType, entityType, CORRECTION.getLeftType(),
+            CORRECTION.getRightType(), 0, 1, 0, 1).build();
+    }
+
     private RelationshipType createCloneRelationship(EntityType leftType, EntityType rightType) {
         return createRelationshipTypeBuilder(context, leftType, rightType, CLONE.getLeftType(),
             CLONE.getRightType(), 0, 1, 0, 1).build();
+    }
+
+    private RelationshipType createIsOriginatedFromRelationship(EntityType rightType, EntityType leftType) {
+        return createRelationshipTypeBuilder(context, rightType, leftType,
+            ORIGINATED.getLeftType(), ORIGINATED.getRightType(), 0, null, 0, 1).build();
+    }
+
+    private RelationshipType createIsMergedInRelationship(EntityType entityType) {
+        return createRelationshipTypeBuilder(context, entityType, entityType, MERGED.getLeftType(),
+            MERGED.getRightType(), 0, 1, 0, null).build();
+    }
+
+    private List<Relationship> findRelations(Item item, RelationshipType type) throws SQLException {
+        return relationshipService.findByItemAndRelationshipType(context, item, type);
     }
 
     private EPerson createEPerson(String email) {

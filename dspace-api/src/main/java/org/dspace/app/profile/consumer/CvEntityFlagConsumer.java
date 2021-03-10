@@ -11,7 +11,9 @@ import static org.apache.commons.lang.StringUtils.replace;
 
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.dspace.authorize.AuthorizeException;
@@ -61,11 +63,15 @@ public class CvEntityFlagConsumer implements Consumer {
 
         Item item = (Item) event.getSubject(context);
 
-        if (isNotArchivedCvEntity(item) || itemsAlreadyProcessed.contains(item)) {
+        if (itemsAlreadyProcessed.contains(item)) {
             return;
         }
 
         itemsAlreadyProcessed.add(item);
+
+        if (isNotArchivedCvEntity(item)) {
+            return;
+        }
 
         try {
             context.turnOffAuthorisationSystem();
@@ -78,25 +84,50 @@ public class CvEntityFlagConsumer implements Consumer {
 
     private void flagMetadata(Context context, Item cvItem) throws SQLException, AuthorizeException {
 
-        Item cvClone = concytecWorkflowService.findClone(context, cvItem);
-        if (cvClone == null) {
-            return;
-        }
-
-        Item directorioItem = concytecWorkflowService.findShadowItemCopy(context, cvClone);
+        Item directorioItem = findDirectorioItem(context, cvItem);
         if (directorioItem == null) {
+            flagAllMetadata(context, cvItem);
             return;
         }
 
         ItemCorrection corrections = itemCorrectionService.getAppliedCorrections(context, directorioItem, cvItem);
         for (MetadataCorrection correction : corrections.getMetadataCorrections()) {
-            String cvFlagMetadataField = "perucris.flagcv." + replace(correction.getMetadataField(), ".", "");
-            if (CollectionUtils.isEmpty(itemService.getMetadataByMetadataString(cvItem, cvFlagMetadataField))) {
-                MetadataField metadataField = metadataFieldService.findByString(context, cvFlagMetadataField, '.');
-                if (metadataField != null) {
-                    itemService.addMetadata(context, cvItem, metadataField, null, "false");
-                }
-            }
+            flagMetadata(context, cvItem, correction.getMetadataField());
+        }
+
+    }
+
+    private Item findDirectorioItem(Context context, Item cvItem) throws SQLException {
+        Item cvClone = concytecWorkflowService.findClone(context, cvItem);
+        if (cvClone == null) {
+            return null;
+        }
+
+        return concytecWorkflowService.findShadowItemCopy(context, cvClone);
+    }
+
+    private void flagAllMetadata(Context context, Item cvItem) throws SQLException {
+
+        List<String> metadataFieldsToFlag = cvItem.getMetadata().stream()
+            .map(metadataValue -> metadataValue.getMetadataField().toString('.'))
+            .collect(Collectors.toList());
+
+        for (String metadataField : metadataFieldsToFlag) {
+            flagMetadata(context, cvItem, metadataField);
+        }
+
+    }
+
+    private void flagMetadata(Context context, Item cvItem, String metadataFieldAsString) throws SQLException {
+
+        String cvFlagMetadataField = "perucris.flagcv." + replace(metadataFieldAsString, ".", "");
+        if (CollectionUtils.isNotEmpty(itemService.getMetadataByMetadataString(cvItem, cvFlagMetadataField))) {
+            return;
+        }
+
+        MetadataField metadataField = metadataFieldService.findByString(context, cvFlagMetadataField, '.');
+        if (metadataField != null) {
+            itemService.addMetadata(context, cvItem, metadataField, null, "false");
         }
 
     }

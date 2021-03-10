@@ -147,6 +147,21 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
     }
 
     @Override
+    public Item findClonedItem(Context context, Item cloneItem) throws SQLException {
+        List<Relationship> cloneRelationships = findItemCloneRelationships(context, cloneItem, true);
+
+        if (CollectionUtils.isEmpty(cloneRelationships)) {
+            return null;
+        }
+
+        if (cloneRelationships.size() > 1) {
+            throw new IllegalStateException("The item " + cloneItem.getID() + " is the clone of more than one item");
+        }
+
+        return cloneRelationships.get(0).getRightItem();
+    }
+
+    @Override
     public void addConcytecFeedback(Context context, Item item, ConcytecFeedback feedback) throws SQLException {
         addConcytecFeedback(context, item, feedback.name());
     }

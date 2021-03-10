@@ -109,11 +109,15 @@ public class CvEntitySynchronizationConsumer implements Consumer {
 
         Item item = (Item) event.getSubject(context);
 
-        if (isNotArchivedCvEntity(item) || itemsAlreadyProcessed.contains(item)) {
+        if (itemsAlreadyProcessed.contains(item)) {
             return;
         }
 
         itemsAlreadyProcessed.add(item);
+
+        if (isNotArchivedCvEntity(item)) {
+            return;
+        }
 
         try {
 

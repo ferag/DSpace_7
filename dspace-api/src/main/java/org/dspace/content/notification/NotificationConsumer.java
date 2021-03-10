@@ -70,11 +70,19 @@ public class NotificationConsumer implements Consumer {
                 if (!list.isEmpty()) {
                     UUID cvPersonitemUuid = UUID.fromString(list.get(0).getAuthority());
                     Item cvPersonItem = itemService.find(context, cvPersonitemUuid);
-                    UUID ePersonUuid = UUID.fromString(
-                            this.itemService.getMetadataFirstValue(cvPersonItem, "cris", "owner", null, Item.ANY));
-                    EPerson cvOwner = this.ePersonService.find(context, ePersonUuid);
-                    this.resourcePolicyService.removeAllPolicies(context, item);
-                    this.authorizeService.addPolicy(context, item, Constants.READ, cvOwner);
+                    List<MetadataValue> crisOwner =
+                        this.itemService.getMetadata(cvPersonItem, "cris", "owner", null, null);
+                    if (!crisOwner.isEmpty()) {
+                        UUID ePersonUuid = UUID.fromString(crisOwner.get(0).getAuthority());
+                        EPerson cvOwner = this.ePersonService.find(context, ePersonUuid);
+                        this.resourcePolicyService.removeAllPolicies(context, item);
+                        this.authorizeService.addPolicy(context, item, Constants.READ, cvOwner);
+                    }
+//                    UUID ePersonUuid = UUID.fromString(
+//                            this.itemService.getMetadataFirstValue(cvPersonItem, "cris", "owner", null, Item.ANY));
+//                    EPerson cvOwner = this.ePersonService.find(context, ePersonUuid);
+//                    this.resourcePolicyService.removeAllPolicies(context, item);
+//                    this.authorizeService.addPolicy(context, item, Constants.READ, cvOwner);
                 }
                 itemsAlreadyProcessed.add(item);
                 context.restoreAuthSystemState();
@@ -102,7 +110,7 @@ public class NotificationConsumer implements Consumer {
     /**
      * Finish the event
      *
-     * @param ctx The relevant DSpace Context.
+     * @param context The relevant DSpace Context.
      */
     @Override
     public void finish(Context context) throws Exception {}

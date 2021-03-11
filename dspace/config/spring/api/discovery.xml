@@ -2176,37 +2176,72 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphUbigeo"/>
+                <ref bean="graphOcdeInstitutionalSector"/>
+                <ref bean="graphOcdeArea"/>
 
-                <ref bean="searchFilterOrganizationAddressCountry"/>
-                <ref bean="searchFilterOrganizationAddressLocality"/>
-                <ref bean="searchFilterOrganizationPeruCrisSector"/>
-                <ref bean="searchFilterType"/>
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterUbigeo"/>
+                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterInstitutionalOcde"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterClassification"/>
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
-                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+<!--                <ref bean="graphPublicationByType" />-->
+<!--                <ref bean="graphPublicationByDate" />-->
+
+<!--                <ref bean="searchFilterOrganizationAddressCountry"/>-->
+<!--                <ref bean="searchFilterOrganizationAddressLocality"/>-->
+<!--                <ref bean="searchFilterOrganizationPeruCrisSector"/>-->
+<!--                <ref bean="searchFilterType"/>-->
+<!--                <ref bean="searchFilterOrganizationPeruCrisClassification"/>-->
+<!--                <ref bean="searchFilterOrganizationSuneduClassification"/>-->
+<!--                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>-->
+<!--                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>-->
+<!--                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>-->
                 <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
-
-                <ref bean="searchFilterOrganizationLegalName"/>
-                <ref bean="searchFilterOrganizationAddressCountry"/>
-                <ref bean="searchFilterOrganizationAddressLocality"/>
-                <ref bean="searchFilterOrganizationPeruCrisSector"/>
-                <ref bean="searchFilterType"/>
+                <ref bean="graphUbigeo"/>
+                <ref bean="graphOcdeInstitutionalSector"/>
+                <ref bean="graphOcdeArea"/>
+                <ref bean="searchFilterOrganizationNameOrAcronym"/>
+                <ref bean="searchFilterOrganizationKeywords"/>
+                <ref bean="searchFilterDescription"/>
+                <ref bean="searchFilterOrganizationIdentifier"/>
+                <ref bean="searchFilterParentOrgUnit"/>
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterUbigeo"/>
+                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterInstitutionalOcde"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterClassification"/>
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
-                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+<!--                <ref bean="searchFilterUbiGeo"/>-->
+<!--                <ref bean="graphPublicationByType" />-->
+<!--                <ref bean="graphPublicationByDate" />-->
+
+<!--                <ref bean="searchFilterOrganizationLegalName"/>-->
+<!--                <ref bean="searchFilterOrganizationAddressCountry"/>-->
+<!--                <ref bean="searchFilterOrganizationAddressLocality"/>-->
+<!--                <ref bean="searchFilterOrganizationPeruCrisSector"/>-->
+<!--                <ref bean="searchFilterType"/>-->
+<!--                <ref bean="searchFilterOrganizationPeruCrisClassification"/>-->
+<!--                <ref bean="searchFilterOrganizationSuneduClassification"/>-->
+<!--                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>-->
+<!--                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>-->
+<!--                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>-->
                 <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
             </list>
         </property>
@@ -3883,6 +3918,102 @@
 
     </bean>
 
+    <bean id="searchFilterInstitutionalOcde" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="institutionalOcde"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.type.sectorInstitucional</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+
+    <bean id="searchFilterClassification" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="renacytClassification"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.renacyt.classification</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+
+    <bean id="searchFilterOrganizationKeywords" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="perucrisKeywords"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.subject</value>
+                <value>perucris.renacyt.strength</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+
+    <bean id="searchFilterDescription" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="renacytClassification"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.description.abstract</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+
+    <bean id="searchFilterOrganizationIdentifier" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="renacytClassification"/>
+        <property name="metadataFields">
+            <list>
+                <value>organization.identifier.*</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+
+    <bean id="searchFilterParentOrgUnit" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="renacytClassification"/>
+        <property name="metadataFields">
+            <list>
+                <value>organization.parentOrganization</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+
+    <bean id="searchFilterOrganizationNameOrAcronym" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="organizationNameOrAcronym"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.title</value>
+                <value>oairecerif.acronym</value>
+                <value>organization.legalName</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+
+
+
     <bean id="searchFilterUbigeo" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
         <property name="indexFieldName" value="ubigeo"/>
         <property name="metadataFields">
@@ -4087,6 +4218,65 @@
         <property name="metadataFields">
             <list>
                 <value>dc.type</value>
+            </list>
+        </property>
+        <property name="graphType" value="pie" />
+        <property name="exposeMissing" value="true" />
+        <property name="exposeMore" value="true" />
+        <property name="exposeTotalElements" value="true" />
+    </bean>
+
+    <!-- PeruCRIS Graphs -->
+    <bean id="graphUbigeo" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
+        <property name="facetLimit" value="10"/>
+        <property name="indexFieldName" value="graphitemubigeo" />
+        <!-- the splitter needs to be a not empty string -->
+        <property name="splitter" value="::" />
+        <property name="onlyLastNodeRelevant" value="true" />
+        <!-- isDate cannot be true if the splitter is set -->
+        <property name="isDate" value="false" />
+        <property name="metadataFields">
+            <list>
+                <value>perucris.ubigeo</value>
+            </list>
+        </property>
+        <property name="graphType" value="bar" />
+        <property name="exposeMissing" value="true" />
+        <property name="exposeMore" value="true" />
+        <property name="exposeTotalElements" value="true" />
+    </bean>
+
+    <bean id="graphOcdeInstitutionalSector" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
+        <property name="facetLimit" value="10"/>
+        <property name="indexFieldName" value="graphiteminstitutionalSector" />
+        <!-- the splitter needs to be a not empty string -->
+        <property name="splitter" value="::" />
+        <property name="onlyLastNodeRelevant" value="true" />
+        <!-- isDate cannot be true if the splitter is set -->
+        <property name="isDate" value="false" />
+        <property name="metadataFields">
+            <list>
+                <value>perucris.type.sectorInstitutional</value>
+            </list>
+        </property>
+        <property name="graphType" value="pie" />
+        <property name="exposeMissing" value="true" />
+        <property name="exposeMore" value="true" />
+        <property name="exposeTotalElements" value="true" />
+    </bean>
+
+    <bean id="graphOcdeArea" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
+        <property name="facetLimit" value="10"/>
+        <property name="indexFieldName" value="graphitemtypeOcdeArea" />
+        <!-- the splitter needs to be a not empty string -->
+        <property name="splitter" value="::" />
+        <property name="onlyLastNodeRelevant" value="true" />
+        <!-- isDate cannot be true if the splitter is set -->
+        <property name="isDate" value="false" />
+        <property name="metadataFields">
+            <list>
+                <value>dc.subject.ocde</value>
+                <value>perucris.renacyt.ocde</value>
             </list>
         </property>
         <property name="graphType" value="pie" />

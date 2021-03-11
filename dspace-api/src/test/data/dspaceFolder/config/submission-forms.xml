@@ -3753,7 +3753,56 @@ You can leave out the day and/or month if they aren't applicable.</hint>
          <!--    <language value-pairs-name="common_iso_languages">true</language> -->
        </field>
      </row>
-	</form>  
+	</form>
+
+   <form name="person-oairecerif-person-affiliation">
+     <row>
+       <field>
+         <dc-schema>oairecerif</dc-schema>
+         <dc-element>person</dc-element>
+         <dc-qualifier>affiliation</dc-qualifier>
+         <label>Affiliation</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required>You must enter at least the affiliation.</required>
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>oairecerif</dc-schema>
+         <dc-element>affiliation</dc-element>
+         <dc-qualifier>startDate</dc-qualifier>
+         <label>Start Date</label>
+         <input-type>date</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+       <field>
+         <dc-schema>oairecerif</dc-schema>
+         <dc-element>affiliation</dc-element>
+         <dc-qualifier>endDate</dc-qualifier>
+         <label>End Date</label>
+         <input-type>date</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>oairecerif</dc-schema>
+         <dc-element>affiliation</dc-element>
+         <dc-qualifier>role</dc-qualifier>
+         <label>Role</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+   </form>
  </form-definitions>
 
 

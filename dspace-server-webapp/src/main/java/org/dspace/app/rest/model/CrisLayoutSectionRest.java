@@ -406,8 +406,17 @@ public class CrisLayoutSectionRest extends BaseObjectRest<String> {
 
     }
 
-    public static class CrisLayoutMultiColumnTopComponentRest extends CrisLayoutTopComponentRest
-        implements CrisLayoutSectionComponentRest {
+    public static class CrisLayoutMultiColumnTopComponentRest implements CrisLayoutSectionComponentRest {
+
+        private String discoveryConfigurationName;
+
+        private String sortField;
+
+        private String order;
+
+        private String style;
+
+        private String titleKey;
 
         private List<Column> columnList = new ArrayList<>();
 
@@ -423,6 +432,47 @@ public class CrisLayoutSectionRest extends BaseObjectRest<String> {
         @Override
         public String getComponentType() {
             return "multi-column-top";
+        }
+
+        @Override
+        public String getStyle() {
+            return this.style;
+        }
+
+        public String getDiscoveryConfigurationName() {
+            return discoveryConfigurationName;
+        }
+
+        public void setDiscoveryConfigurationName(String discoveryConfigurationName) {
+            this.discoveryConfigurationName = discoveryConfigurationName;
+        }
+
+        public String getSortField() {
+            return sortField;
+        }
+
+        public void setSortField(String sortField) {
+            this.sortField = sortField;
+        }
+
+        public String getOrder() {
+            return order;
+        }
+
+        public void setOrder(String order) {
+            this.order = order;
+        }
+
+        public void setStyle(String style) {
+            this.style = style;
+        }
+
+        public String getTitleKey() {
+            return titleKey;
+        }
+
+        public void setTitleKey(String titleKey) {
+            this.titleKey = titleKey;
         }
 
         public static class Column {

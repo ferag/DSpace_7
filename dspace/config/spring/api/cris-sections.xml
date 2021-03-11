@@ -196,11 +196,11 @@
                         </list>
                         <list>
                             <bean class="org.dspace.layout.CrisLayoutMultiColumnTopComponent">
-                                <property name="discoveryConfigurationName" value="orgunits" />
+                                <property name="discoveryConfigurationName" value="orgunit" />
                                 <property name="sortField" value="dc.date.accessioned" />
                                 <property name="order" value="desc" />
                                 <property name="style" value="col-md-8 pt-5"/>
-                                <property name="titleKey" value="lastProjects"/>
+                                <property name="titleKey" value="name"/>
                                 <property name="columns">
                                     <list>
                                         <bean class="org.dspace.layout.CrisLayoutMultiColumnTopComponent.Column">

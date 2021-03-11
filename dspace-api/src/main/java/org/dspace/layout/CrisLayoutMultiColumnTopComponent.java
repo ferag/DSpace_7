@@ -17,9 +17,51 @@ import java.util.List;
  * @author Corrado Lombardi (corrado.lombardi at 4science.it)
  *
  */
-public class CrisLayoutMultiColumnTopComponent extends CrisLayoutTopComponent {
+public class CrisLayoutMultiColumnTopComponent implements CrisLayoutSectionComponent {
+
+    private String discoveryConfigurationName;
+
+    private String sortField;
+
+    private String order;
+
+    private String style;
+
+    private String titleKey;
 
     private List<Column> columns = new ArrayList<>();
+
+    public String getDiscoveryConfigurationName() {
+        return discoveryConfigurationName;
+    }
+
+    public void setDiscoveryConfigurationName(String discoveryConfigurationName) {
+        this.discoveryConfigurationName = discoveryConfigurationName;
+    }
+
+    public String getSortField() {
+        return sortField;
+    }
+
+    public void setSortField(String sortField) {
+        this.sortField = sortField;
+    }
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
+
+    public String getTitleKey() {
+        return titleKey;
+    }
+
+    public void setTitleKey(String titleKey) {
+        this.titleKey = titleKey;
+    }
 
     public void setColumns(List<Column> columns) {
         this.columns = columns;
@@ -27,6 +69,15 @@ public class CrisLayoutMultiColumnTopComponent extends CrisLayoutTopComponent {
 
     public List<Column> getColumns() {
         return columns;
+    }
+
+    @Override
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
     }
 
     public static class Column {

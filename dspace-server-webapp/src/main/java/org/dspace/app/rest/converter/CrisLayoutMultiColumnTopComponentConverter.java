@@ -9,12 +9,13 @@ package org.dspace.app.rest.converter;
 
 import static org.dspace.app.rest.model.CrisLayoutSectionRest.CrisLayoutMultiColumnTopComponentRest.Column;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.dspace.app.rest.model.CrisLayoutSectionRest;
+import org.dspace.app.rest.model.CrisLayoutSectionRest.CrisLayoutMultiColumnTopComponentRest;
 import org.dspace.layout.CrisLayoutMultiColumnTopComponent;
 import org.dspace.layout.CrisLayoutSectionComponent;
+import org.springframework.stereotype.Component;
 
 /**
  * extension of {@link CrisLayoutTopComponentConverter} to convert
@@ -24,7 +25,8 @@ import org.dspace.layout.CrisLayoutSectionComponent;
  *
  */
 
-public class CrisLayoutMultiColumnTopComponentConverter extends CrisLayoutTopComponentConverter {
+@Component
+public class CrisLayoutMultiColumnTopComponentConverter implements CrisLayoutSectionComponentConverter {
 
     @Override
     public boolean support(CrisLayoutSectionComponent component) {
@@ -32,17 +34,21 @@ public class CrisLayoutMultiColumnTopComponentConverter extends CrisLayoutTopCom
     }
 
     @Override
-    public CrisLayoutSectionRest.CrisLayoutMultiColumnTopComponentRest convert(CrisLayoutSectionComponent component) {
+    public CrisLayoutMultiColumnTopComponentRest convert(CrisLayoutSectionComponent component) {
 
         CrisLayoutMultiColumnTopComponent topComponent = (CrisLayoutMultiColumnTopComponent) component;
-        CrisLayoutSectionRest.CrisLayoutMultiColumnTopComponentRest result =
-            (CrisLayoutSectionRest.CrisLayoutMultiColumnTopComponentRest) super.convert(topComponent);
+        CrisLayoutMultiColumnTopComponentRest rest = new CrisLayoutMultiColumnTopComponentRest();
+        rest.setDiscoveryConfigurationName(topComponent.getDiscoveryConfigurationName());
+        rest.setOrder(topComponent.getOrder());
+        rest.setSortField(topComponent.getSortField());
+        rest.setStyle(component.getStyle());
+        rest.setTitleKey(topComponent.getTitleKey());
 
-        List<Column> columnList = new ArrayList<>();
+        List<Column> columnList =  topComponent.getColumns().stream().map(Column::from)
+            .collect(Collectors.toList());
 
-        topComponent.getColumns().forEach(c -> columnList.add(Column.from(c)));
-        result.setColumnList(columnList);
+        rest.setColumnList(columnList);
 
-        return result;
+        return rest;
     }
 }

@@ -3,7 +3,7 @@
  * detailed in the LICENSE and NOTICE files at the root of the source
  * tree and available online at
  *
- *  http://www.dspace.org/license/
+ * http://www.dspace.org/license/
  */
 package org.dspace.perucris.externalservices;
 
@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * 
+ *
  *
  * @author Corrado Lombardi (corrado.lombardi at 4science.it)
  *

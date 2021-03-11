@@ -109,7 +109,7 @@ public class CvEntitySynchronizationConsumer implements Consumer {
 
         Item item = (Item) event.getSubject(context);
 
-        if (itemsAlreadyProcessed.contains(item)) {
+        if (itemsAlreadyProcessed.contains(item) || context.getCurrentUser() == null) {
             return;
         }
 

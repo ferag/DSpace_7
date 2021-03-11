@@ -67,7 +67,7 @@ public class CvEntityUpdateConsumer implements Consumer {
     public void consume(Context context, Event event) throws Exception {
         Item item = (Item) event.getSubject(context);
 
-        if (itemsAlreadyProcessed.contains(item)) {
+        if (itemsAlreadyProcessed.contains(item) || context.getCurrentUser() == null) {
             return;
         }
 

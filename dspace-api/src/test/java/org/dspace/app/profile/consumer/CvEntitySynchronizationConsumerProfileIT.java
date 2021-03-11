@@ -1322,9 +1322,6 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
             .withCvPersonBasicInfoSyncEnabled(true)
             .build();
 
-        context.restoreAuthSystemState();
-
-        context.turnOffAuthorisationSystem();
         List<XmlWorkflowItem> personWorkflowItems = workflowItemService.findByCollection(context, directorioPersons);
         assertThat(personWorkflowItems, hasSize(1));
 
@@ -1336,6 +1333,9 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
 
         Item cvPersonClone = cloneWorkflowItems.get(0).getItem();
         installItemService.installItem(context, cloneWorkflowItems.get(0));
+
+        context.commit();
+        profile = reloadItem(profile);
 
         addMetadata(profile, "person", "identifier", "orcid", "1111-2222-3333-4444");
         profile = updateItem(profile);

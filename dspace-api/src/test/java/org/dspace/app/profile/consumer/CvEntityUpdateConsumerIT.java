@@ -11,6 +11,7 @@ import static org.dspace.app.matcher.MetadataValueMatcher.with;
 import static org.dspace.builder.CrisLayoutBoxBuilder.createBuilder;
 import static org.dspace.builder.CrisLayoutFieldBuilder.createMetadataField;
 import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
+import static org.dspace.core.CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.CLONE;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.CORRECTION;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.MERGED;
@@ -56,6 +57,7 @@ import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 import org.dspace.utils.DSpace;
 import org.dspace.xmlworkflow.factory.XmlWorkflowServiceFactory;
+import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.dspace.xmlworkflow.storedcomponents.service.CollectionRoleService;
 import org.dspace.xmlworkflow.storedcomponents.service.XmlWorkflowItemService;
 import org.junit.After;
@@ -68,6 +70,8 @@ import org.junit.Test;
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  */
 public class CvEntityUpdateConsumerIT extends AbstractIntegrationTestWithDatabase {
+
+    private static final String PLACEHOLDER = PLACEHOLDER_PARENT_METADATA_VALUE;
 
     private ConfigurationService configurationService;
 
@@ -88,8 +92,6 @@ public class CvEntityUpdateConsumerIT extends AbstractIntegrationTestWithDatabas
     private EPerson submitter;
 
     private Group directorioEditorGroup;
-
-    private RelationshipType cloneHasShadowCopy;
 
     private RelationshipType isCorrectionOf;
 
@@ -129,7 +131,7 @@ public class CvEntityUpdateConsumerIT extends AbstractIntegrationTestWithDatabas
         EntityType cvPersonType = createEntityType("CvPerson");
         EntityType cvPersonCloneType = createEntityType("CvPersonClone");
 
-        cloneHasShadowCopy = createHasShadowCopyRelationship(cvPersonCloneType, personType);
+        createHasShadowCopyRelationship(cvPersonCloneType, personType);
         isCorrectionOf = createIsCorrectionOfRelationship(personType);
         cloneIsCorrectionOf = createIsCorrectionOfRelationship(cvPersonCloneType);
         isCloneOf = createCloneRelationship(cvPersonCloneType, cvPersonType);
@@ -208,7 +210,7 @@ public class CvEntityUpdateConsumerIT extends AbstractIntegrationTestWithDatabas
     }
 
     @Test
-    public void testUpdatesOnPersonAreAlsoMadeOnProfile() throws Exception {
+    public void testUpdatesOnPersonAreAlsoMadeOnClaimedProfile() throws Exception {
 
         context.turnOffAuthorisationSystem();
 
@@ -253,7 +255,7 @@ public class CvEntityUpdateConsumerIT extends AbstractIntegrationTestWithDatabas
     }
 
     @Test
-    public void testUpdatesOnPersonRelatedToInstitutionPersonAreAlsoMadeOnProfile() throws Exception {
+    public void testUpdatesOnPersonRelatedToInstitutionPersonAreAlsoMadeOnClaimedProfile() throws Exception {
 
         context.turnOffAuthorisationSystem();
 
@@ -309,6 +311,57 @@ public class CvEntityUpdateConsumerIT extends AbstractIntegrationTestWithDatabas
         assertThat(findRelations(person, isCorrectionOf), empty());
         assertThat(findRelations(profileClone, cloneIsCorrectionOf), empty());
 
+    }
+
+    @Test
+    public void testUpdatesOnPersonAreAlsoMadeOnProfileCreatedFromScratchWithoutOverwritingMetadata() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item profile = ItemBuilder.createItem(context, cvCollection)
+            .withTitle("Test profile")
+            .withBirthDate("1992-06-26")
+            .withPersonAffiliation("4Science")
+            .withPersonAffiliationStartDate("2020-07-01")
+            .withPersonAffiliationEndDate(PLACEHOLDER)
+            .withPersonAffiliationRole("Researcher")
+            .withCvPersonBasicInfoSyncEnabled(true)
+            .build();
+
+        List<XmlWorkflowItem> personWorkflowItems = workflowItemService.findByCollection(context, directorioPersons);
+        assertThat(personWorkflowItems, hasSize(1));
+
+        Item person = personWorkflowItems.get(0).getItem();
+        installItemService.installItem(context, personWorkflowItems.get(0));
+
+        List<XmlWorkflowItem> cloneWorkflowItems = workflowItemService.findByCollection(context, cvCloneCollection);
+        assertThat(cloneWorkflowItems, hasSize(1));
+
+        Item profileClone = cloneWorkflowItems.get(0).getItem();
+        installItemService.installItem(context, cloneWorkflowItems.get(0));
+
+        context.commit();
+        person = reloadItem(person);
+
+        context.restoreAuthSystemState();
+
+        addMetadata(person, "perucris", "phone", null, "1112223333");
+        removeMetadata(person, "person", "birthDate", null);
+
+        context.turnOffAuthorisationSystem();
+        person = updateItem(person);
+        context.restoreAuthSystemState();
+
+        profile = reloadItem(profile);
+        assertThat(profile.getMetadata(), hasItem(with("perucris.phone", "1112223333")));
+        assertThat(profile.getMetadata(), hasItem(with("person.birthDate", "1992-06-26")));
+
+        profileClone = reloadItem(profileClone);
+        assertThat(profileClone.getMetadata(), hasItem(with("perucris.phone", "1112223333")));
+        assertThat(profileClone.getMetadata(), hasItem(with("person.birthDate", "1992-06-26")));
+
+        assertThat(findRelations(person, isCorrectionOf), empty());
+        assertThat(findRelations(profileClone, cloneIsCorrectionOf), empty());
     }
 
     private void createPersonCrisLayout() throws Exception {

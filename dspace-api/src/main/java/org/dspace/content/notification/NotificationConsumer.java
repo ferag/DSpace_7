@@ -8,6 +8,7 @@
 package org.dspace.content.notification;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
@@ -22,6 +23,8 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
+import org.dspace.core.Email;
+import org.dspace.core.I18nUtil;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
@@ -77,12 +80,18 @@ public class NotificationConsumer implements Consumer {
                         EPerson cvOwner = this.ePersonService.find(context, ePersonUuid);
                         this.resourcePolicyService.removeAllPolicies(context, item);
                         this.authorizeService.addPolicy(context, item, Constants.READ, cvOwner);
+                        if (event.getSubjectType() == Event.INSTALL) {
+                            Locale supportedLocale = I18nUtil.getEPersonLocale(cvOwner);
+                            Email email = Email.getEmail(I18nUtil.getEmailFilename(supportedLocale,
+                                                                                   "notification_email"));
+                            email.addArgument(itemService.getMetadataFirstValue(item,
+                                              "perucris", "notification", "message", Item.ANY));
+                            email.addRecipient(cvOwner.getEmail());
+                            email.addArgument(cvOwner);
+                            email.send();
+                        }
                     }
-//                    UUID ePersonUuid = UUID.fromString(
-//                            this.itemService.getMetadataFirstValue(cvPersonItem, "cris", "owner", null, Item.ANY));
-//                    EPerson cvOwner = this.ePersonService.find(context, ePersonUuid);
-//                    this.resourcePolicyService.removeAllPolicies(context, item);
-//                    this.authorizeService.addPolicy(context, item, Constants.READ, cvOwner);
+
                 }
                 itemsAlreadyProcessed.add(item);
                 context.restoreAuthSystemState();

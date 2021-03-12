@@ -7,9 +7,9 @@
  */
 package org.dspace.app.profile.consumer;
 
-import static org.apache.commons.collections4.CollectionUtils.isEmpty;
 import static org.apache.commons.lang.StringUtils.replace;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.dspace.content.Item.ANY;
 
 import java.sql.SQLException;
 import java.util.HashSet;
@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
+import org.dspace.content.MetadataFieldName;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.ItemService;
@@ -140,9 +141,16 @@ public class CvEntityUpdateConsumer implements Consumer {
 
     private boolean isSynchronizationEnabled(Context context, Item item, MetadataCorrection metadataCorrection) {
         try {
+
             String cvFlagMetadataField = "perucris.flagcv." + replace(metadataCorrection.getMetadataField(), ".", "");
             MetadataField metadataField = metadataFieldService.findByString(context, cvFlagMetadataField, '.');
-            return metadataField != null && isEmpty(itemService.getMetadataByMetadataString(item, cvFlagMetadataField));
+            if (metadataField == null) {
+                return false;
+            }
+
+            String flagValue = itemService.getMetadataFirstValue(item, new MetadataFieldName(cvFlagMetadataField), ANY);
+            return flagValue == null || flagValue.equalsIgnoreCase("true");
+
         } catch (SQLException e) {
             throw new SQLRuntimeException(e);
         }

@@ -163,6 +163,28 @@
 	      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
 	      <type>submission-form</type>
 	    </step-definition>
+
+        <step-definition id="institution-publication" mandatory="true">
+            <heading>submit.progressbar.describe.publication</heading>
+            <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+            <type>submission-form</type>
+        </step-definition>
+        <step-definition id="institution-publication_indexing" mandatory="false">
+            <heading>submit.progressbar.describe.publication_indexing</heading>
+            <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+            <type>submission-form</type>
+        </step-definition>
+        <step-definition id="institution-publication_bibliographic_details" mandatory="true">
+            <heading>submit.progressbar.describe.publication_bibliographic_details</heading>
+            <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+            <type>submission-form</type>
+        </step-definition>
+        <step-definition id="institution-publication_references" mandatory="false">
+            <heading>submit.progressbar.describe.publication_references</heading>
+            <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+            <type>submission-form</type>
+        </step-definition>
+
 	    <step-definition id="person" mandatory="true">
 	      <heading>submit.progressbar.describe.person</heading>
 	      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
@@ -184,6 +206,51 @@
             <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
             <type>submission-form</type>
         </step-definition>
+	    <step-definition id="cv-person" mandatory="true">
+	        <heading>submit.progressbar.describe.cv-person</heading>
+	        <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+	        <type>submission-form</type>
+	    </step-definition>
+        <step-definition id="cv-person-edit-education" mandatory="true">
+            <heading>submit.progressbar.describe.cv-person-edit-education</heading>
+            <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+            <type>submission-form</type>
+        </step-definition>
+        <step-definition id="cv-publication" mandatory="true">
+	      <heading>submit.progressbar.describe.cv-publication</heading>
+	      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+	      <type>submission-form</type>
+	    </step-definition>
+	    <step-definition id="cv-publication_indexing" mandatory="false">
+	      <heading>submit.progressbar.describe.cv-publication_indexing</heading>
+	      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+	      <type>submission-form</type>
+	    </step-definition>
+	    <step-definition id="cv-publication_bibliographic_details" mandatory="true">
+	      <heading>submit.progressbar.describe.cv-publication_bibliographic_details</heading>
+	      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+	      <type>submission-form</type>
+	    </step-definition>
+	    <step-definition id="cv-publication_references" mandatory="false">
+	      <heading>submit.progressbar.describe.cv-publication_references</heading>
+	      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+	      <type>submission-form</type>
+	    </step-definition>
+	    <step-definition id="cv-publication_thesis" mandatory="false">
+	      <heading>submit.progressbar.describe.cv-publication_thesis</heading>
+	      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+	      <type>submission-form</type>
+	    </step-definition>
+	    <step-definition id="cv-patent" mandatory="true">
+	      <heading>submit.progressbar.describe.cv-patent</heading>
+	      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+	      <type>submission-form</type>
+	    </step-definition>
+	    <step-definition id="cv-project" mandatory="true">
+	      <heading>submit.progressbar.describe.cv-project</heading>
+	      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+	      <type>submission-form</type>
+	    </step-definition>
     </step-definitions>
 
     <!-- The submission-definitions map lays out the detailed definition of -->
@@ -262,13 +329,13 @@
 	      <step id="license" />
 	    </submission-process>
 
-        <submission-process name="institutionpublication">
+        <submission-process name="institution-publication">
             <step id="collection" />
             <step id="extraction" />
-            <step id="publication" />
-            <step id="publication_indexing" />
-            <step id="publication_bibliographic_details" />
-            <step id="publication_references" />
+            <step id="institution-publication" />
+            <step id="institution-publication_indexing" />
+            <step id="institution-publication_bibliographic_details" />
+            <step id="institution-publication_references" />
             <step id="upload" />
             <step id="license" />
         </submission-process>
@@ -301,11 +368,51 @@
         <submission-process name="modeB">
            <step id="onlyTitle"/>
         </submission-process>
-        
-	    <submission-process name="person">
-	      <step id="collection" />
+	    <submission-process name="cvperson">
+	      <step id="person" />
 	      <step id="upload" />
-          <step id="detect-duplicate"/>
+	    </submission-process>
+        <submission-process name="cvperson-edit-education">
+            <step id="cv-person-edit-education" />
+        </submission-process>
+	    <submission-process name="cvpublication-edit">
+	      <step id="extraction" />
+	      <step id="cv-publication" />
+	      <step id="cv-publication_indexing" />
+	      <step id="cv-publication_bibliographic_details" />
+	      <step id="cv-publication_references" />
+	      <step id="cv-publication_thesis" />
+	      <step id="upload" />
+	    </submission-process>
+	    <submission-process name="cvpublication">
+	      <step id="collection" />
+	      <step id="extraction" />
+	      <step id="cv-publication" />
+	      <step id="cv-publication_indexing" />
+	      <step id="cv-publication_bibliographic_details" />
+	      <step id="cv-publication_references" />
+	      <step id="cv-publication_thesis" />
+	      <step id="upload" />
+	      <step id="license" />
+	    </submission-process>
+	    <submission-process name="cvpatent-edit">
+	      <step id="cv-patent" />
+	      <step id="upload" />
+	    </submission-process>
+	    <submission-process name="cvpatent">
+	      <step id="collection" />
+	      <step id="cv-patent" />
+	      <step id="upload" />
+	      <step id="license" />
+	    </submission-process>
+	    <submission-process name="cvproject-edit">
+	      <step id="cv-project" />
+	      <step id="upload" />
+	    </submission-process>
+	    <submission-process name="cvproject">
+	      <step id="collection" />
+	      <step id="cv-project" />
+	      <step id="upload" />
 	      <step id="license" />
 	    </submission-process>
     

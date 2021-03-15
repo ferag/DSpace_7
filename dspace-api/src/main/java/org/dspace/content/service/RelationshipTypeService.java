@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.EntityType;
+import org.dspace.content.Item;
 import org.dspace.content.RelationshipType;
 import org.dspace.core.Context;
 import org.dspace.service.DSpaceCRUDService;
@@ -46,6 +47,25 @@ public interface RelationshipTypeService extends DSpaceCRUDService<RelationshipT
                                             throws SQLException;
 
     /**
+     * Retrieves a RelationshipType for which the given parameters all match the one
+     * in the returned RelationshipType
+     * 
+     * @param context       The relevant DSpace context
+     * @param leftItem      The left item that needs to match for the returned
+     *                      RelationshipType
+     * @param rightItem     The right item that needs to match for the returned
+     *                      RelationshipType
+     * @param leftwardType  The leftwardType String that needs to match for the
+     *                      returned RelationshipType
+     * @param rightwardType The rightwardType String that needs to match for the
+     *                      returned RelationshipType
+     * @return
+     * @throws SQLException If something goes wrong
+     */
+    RelationshipType findByItemsAndTypeNames(Context context, Item leftItem, Item rightItem, String leftwardType,
+        String rightwardType) throws SQLException;
+
+    /**
      * Retrieves the RelationshipTypes for which the given parameters all match the
      * one in the returned RelationshipType.
      *
@@ -63,6 +83,25 @@ public interface RelationshipTypeService extends DSpaceCRUDService<RelationshipT
      */
     List<RelationshipType> findByTypeAndTypeNames(Context context, EntityType type, boolean isLeftType,
         String leftwardType, String rightwardType) throws SQLException;
+
+    /**
+     * Retrieves the RelationshipTypes for which the given parameters all match the
+     * one in the returned RelationshipType.
+     *
+     * @param context       The relevant DSpace context
+     * @param type          The EntityType that needs to match for the returned
+     *                      relationship types
+     * @param isLeftItem    true if the given item refers to the left item, false if
+     *                      it refers to the right item
+     * @param leftwardType  The leftwardType String that needs to match for the
+     *                      returned RelationshipType
+     * @param rightwardType The rightwardType String that needs to match for the
+     *                      returned RelationshipType
+     * @return the found relationship types
+     * @throws SQLException If something goes wrong
+     */
+    List<RelationshipType> findByItemAndTypeNames(Context context, Item item, boolean isLeftItem, String leftwardType,
+        String rightwardType) throws SQLException;
 
     /**
      * Retrieves all RelationshipType objects currently in the system

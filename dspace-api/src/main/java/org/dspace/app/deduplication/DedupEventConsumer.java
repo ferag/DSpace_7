@@ -103,7 +103,7 @@ public class DedupEventConsumer implements Consumer {
 
         Item item = (Item) subject;
 
-        if (item != null && (isInstitutionItem(ctx, item) || isWorkspaceItem(ctx, item))) {
+        if (item != null && (isInstitutionOrCvItem(ctx, item) || isWorkspaceItem(ctx, item))) {
             return;
         }
 
@@ -265,9 +265,9 @@ public class DedupEventConsumer implements Consumer {
 
     }
 
-    private boolean isInstitutionItem(Context context, Item item) {
+    private boolean isInstitutionOrCvItem(Context context, Item item) {
         String entityType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
-        return entityType != null && entityType.startsWith("Institution");
+        return entityType != null && (entityType.startsWith("Institution") || entityType.startsWith("Cv"));
     }
 
     private boolean isWorkspaceItem(Context context, Item item) throws SQLException {

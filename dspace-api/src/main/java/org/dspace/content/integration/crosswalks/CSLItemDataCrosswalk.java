@@ -64,11 +64,13 @@ public class CSLItemDataCrosswalk implements ItemExportCrosswalk {
 
     private String fileName;
 
+    private String entityType;
+
     private CrosswalkMode crosswalkMode;
 
     @Override
     public boolean canDisseminate(Context context, DSpaceObject dso) {
-        return dso.getType() == Constants.ITEM && isPublication((Item) dso);
+        return dso.getType() == Constants.ITEM && isExpectedEntityType((Item) dso);
     }
 
     @Override
@@ -87,7 +89,8 @@ public class CSLItemDataCrosswalk implements ItemExportCrosswalk {
             DSpaceObject dso = dsoIterator.next();
 
             if (!canDisseminate(context, dso)) {
-                throw new CrosswalkObjectNotSupported("CSLItemDataCrosswalk can only crosswalk a Publication item.");
+                throw new CrosswalkObjectNotSupported(
+                    "CSLItemDataCrosswalk can only crosswalk a " + entityType + " item.");
             }
 
             dSpaceListItemDataProvider.processItem((Item) dso);
@@ -140,9 +143,9 @@ public class CSLItemDataCrosswalk implements ItemExportCrosswalk {
         return dSpaceListItemDataProviderObjectFactory.getObject();
     }
 
-    private boolean isPublication(Item item) {
+    private boolean isExpectedEntityType(Item item) {
         String relationshipType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
-        return Objects.equals(relationshipType, "Publication");
+        return Objects.equals(relationshipType, entityType);
     }
 
     public void setMimeType(String mimeType) {
@@ -165,13 +168,17 @@ public class CSLItemDataCrosswalk implements ItemExportCrosswalk {
         this.crosswalkMode = crosswalkMode;
     }
 
+    public void setEntityType(String entityType) {
+        this.entityType = entityType;
+    }
+
     public CrosswalkMode getCrosswalkMode() {
         return Optional.ofNullable(this.crosswalkMode).orElse(ItemExportCrosswalk.super.getCrosswalkMode());
     }
 
     @Override
     public Optional<String> getEntityType() {
-        return Optional.of("Publication");
+        return Optional.ofNullable(entityType);
     }
 
 }

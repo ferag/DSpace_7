@@ -925,7 +925,48 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.restoreAuthSystemState();
         context.commit();
 
-        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("endnote");
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("publication-endnote");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, publication, out);
+
+        try (FileInputStream fis = getFileInputStream("endnote")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+    }
+
+    @Test
+    public void testInstitutionPublicationEndnoteDisseminate() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item publication = ItemBuilder.createItem(context, collection)
+            .withRelationshipType("InstitutionPublication")
+            .withTitle("Test Publication")
+            .withDoiIdentifier("doi:111.111/publication")
+            .withHandle("123456789/xxx")
+            .withIssueDate("2020-01-01")
+            .withAuthor("John Smith")
+            .withAuthor("Walter White")
+            .withAuthor("Jessie Pinkman")
+            .withIsPartOf("Journal")
+            .withPublisher("Publisher")
+            .withVolume("V.01")
+            .withIssue("Issue")
+            .withDescriptionAbstract("This is a publication to test export")
+            .withSubject("test")
+            .withSubject("publication")
+            .withCitationStartPage("2")
+            .withCitationEndPage("20")
+            .withLanguage("en")
+            .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("institutionpublication-endnote");
         assertThat(referCrossWalk, notNullValue());
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -2010,7 +2051,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item personItem = createItem(context, collection)
-            .withRelationshipType("PersonCv")
+            .withRelationshipType("CvPerson")
             .withTitle("John Smith")
             .withFullName("John Smith")
             .withVariantName("J.S.")
@@ -2080,7 +2121,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item personItem = createItem(context, collection)
-            .withRelationshipType("PersonCv")
+            .withRelationshipType("CvPerson")
             .withTitle("Smith, John")
             .withVariantName("J.S.")
             .withVariantName("Smith John")
@@ -2120,7 +2161,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item personItem = createItem(context, collection)
-            .withRelationshipType("PersonCv")
+            .withRelationshipType("CvPerson")
             .withTitle("Smith, John")
             .withVariantName("J.S.")
             .withVariantName("Smith John")
@@ -2160,7 +2201,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item firstPerson = createItem(context, collection)
-            .withRelationshipType("PersonCv")
+            .withRelationshipType("CvPerson")
             .withTitle("Smith, John")
             .withVariantName("J.S.")
             .withVariantName("Smith John")
@@ -2182,7 +2223,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item secondPerson = createItem(context, collection)
-            .withRelationshipType("PersonCv")
+            .withRelationshipType("CvPerson")
             .withTitle("White, Walter")
             .withGender("M")
             .withPersonMainAffiliation("University")
@@ -2215,7 +2256,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item item = createItem(context, collection)
-            .withRelationshipType("PersonCv")
+            .withRelationshipType("CvPerson")
             .withTitle("John Smith")
             .build();
 
@@ -2244,7 +2285,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item personItem = createItem(context, collection)
-            .withRelationshipType("PersonCv")
+            .withRelationshipType("CvPerson")
             .withTitle("John Smith")
             .withFullName("John Smith")
             .withVernacularName("JOHN SMITH")

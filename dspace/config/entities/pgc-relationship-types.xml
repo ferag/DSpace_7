@@ -151,8 +151,50 @@
         </rightCardinality>
     </type>
      <type>
-        <leftType>PersonCv</leftType>
-        <rightType>PersonCv</rightType>
+        <leftType>CvPersonClone</leftType>
+        <rightType>Person</rightType>
+        <leftwardType>hasShadowCopy</leftwardType>
+        <rightwardType>isShadowCopy</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+            <max>1</max>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
+     <type>
+        <leftType>CvPublicationClone</leftType>
+        <rightType>Publication</rightType>
+        <leftwardType>hasShadowCopy</leftwardType>
+        <rightwardType>isShadowCopy</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+            <max>1</max>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
+     <type>
+        <leftType>CvProjectClone</leftType>
+        <rightType>Project</rightType>
+        <leftwardType>hasShadowCopy</leftwardType>
+        <rightwardType>isShadowCopy</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+            <max>1</max>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
+     <type>
+        <leftType>CvPatentClone</leftType>
+        <rightType>Patent</rightType>
         <leftwardType>hasShadowCopy</leftwardType>
         <rightwardType>isShadowCopy</rightwardType>
         <leftCardinality>
@@ -165,10 +207,10 @@
         </rightCardinality>
     </type>
     <type>
-        <leftType>PersonCv</leftType>
+        <leftType>CvPerson</leftType>
         <rightType>Person</rightType>
         <leftwardType>isPersonOwner</leftwardType>
-        <rightwardType>isOwnedByPersonCv</rightwardType>
+        <rightwardType>isOwnedByCvPerson</rightwardType>
         <leftCardinality>
             <min>0</min>
         </leftCardinality>

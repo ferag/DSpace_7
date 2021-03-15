@@ -8,6 +8,8 @@
 package org.dspace.xmlworkflow.state.actions.processingaction;
 
 import static org.dspace.content.Item.ANY;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.REINSTATE;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.WITHDRAW;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -19,6 +21,7 @@ import java.util.function.Predicate;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.tools.ant.util.StringUtils;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
@@ -28,8 +31,6 @@ import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.core.Context;
-import org.dspace.services.ConfigurationService;
-import org.dspace.util.UUIDUtils;
 import org.dspace.versioning.ItemCorrectionProvider;
 import org.dspace.versioning.ItemCorrectionService;
 import org.dspace.versioning.model.ItemCorrection;
@@ -57,9 +58,6 @@ public class ShadowCopyAction extends ProcessingAction {
 
     @Autowired
     private CommunityService communityService;
-
-    @Autowired
-    private ConfigurationService configurationService;
 
     @Autowired
     private ItemCorrectionProvider itemCorrectionProvider;
@@ -194,9 +192,13 @@ public class ShadowCopyAction extends ProcessingAction {
     private Collection findDirectorioCollectionByRelationshipType(Context context, Item item)
         throws SQLException, WorkflowException {
 
-        Community directorio = findDirectorioCommunity(context);
+        Community directorio = communityService.findDirectorioCommunity(context);
+        if (directorio == null) {
+            throw new WorkflowException("No Directorio's root community configured");
+        }
 
-        Predicate<Collection> relationshipTypePredicate = (collection) -> hasSameRelatioshipType(collection, item);
+        String itemType = getEntityTypeWithoutInstitutionOrCvPrefixes(item);
+        Predicate<Collection> relationshipTypePredicate = (collection) -> hasSameRelatioshipType(collection, itemType);
         List<Collection> collections = communityService.getCollections(context, directorio, relationshipTypePredicate);
         if (CollectionUtils.isEmpty(collections)) {
             throw new WorkflowException("No directorio collection found for the shadow copy of item " + item.getID());
@@ -205,36 +207,39 @@ public class ShadowCopyAction extends ProcessingAction {
         return collections.get(0);
     }
 
-    private Community findDirectorioCommunity(Context context) throws WorkflowException, SQLException {
-        UUID directorioId = UUIDUtils.fromString(configurationService.getProperty("directorios.community-id"));
-        if (directorioId == null) {
-            throw new WorkflowException("Invalid directorios.community-id set");
+    private String getEntityTypeWithoutInstitutionOrCvPrefixes(Item item) {
+        String itemType = itemService.getMetadataFirstValue(item, "relationship", "type", null, ANY);
+        if (itemType == null) {
+            return null;
         }
-        return communityService.find(context, directorioId);
+
+        itemType = StringUtils.removePrefix(itemType, "Institution");
+        itemType = StringUtils.removePrefix(itemType, "Cv");
+        itemType = StringUtils.removeSuffix(itemType, "Clone");
+
+        return itemType;
     }
 
-    private boolean hasSameRelatioshipType(Collection collection, Item item) {
+    private boolean hasSameRelatioshipType(Collection collection, String relationshipType) {
         String collectionType = collectionService.getMetadataFirstValue(collection, "relationship", "type", null, ANY);
-        String itemType = itemService.getMetadataFirstValue(item, "relationship", "type", null, ANY);
-        return Objects.equals(collectionType, itemType) || Objects.equals("Institution" + collectionType, itemType);
+        return Objects.equals(relationshipType, collectionType);
     }
 
     private WorkspaceItem createItemCopyCorrection(Context context, UUID itemCopyId)
         throws SQLException, AuthorizeException {
-        String relationshipName = itemCorrectionService.getCorrectionRelationshipName();
-        return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context, itemCopyId, relationshipName);
+        return itemCorrectionService.createCorrectionItem(context, itemCopyId);
     }
 
     private WorkspaceItem createItemCopyWithdraw(Context context, UUID itemCopyId)
         throws SQLException, AuthorizeException {
-        return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context, itemCopyId,
-            ConcytecWorkflowService.IS_WITHDRAW_OF_ITEM_RELATIONSHIP);
+        return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context,
+            itemCopyId, WITHDRAW.getLeftType());
     }
 
     private WorkspaceItem createItemCopyReinstate(Context context, UUID itemCopyId)
         throws SQLException, AuthorizeException {
-        return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context, itemCopyId,
-            ConcytecWorkflowService.IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP);
+        return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context,
+            itemCopyId, REINSTATE.getLeftType());
     }
 
     @Override

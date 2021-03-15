@@ -39,4 +39,22 @@
         <property name="singleResultOnAggregate" value="false"/>
      </bean>
 
+    <bean class="org.dspace.content.authority.ItemSimpleAuthorityMetadataGenerator">
+        <property name="authorityName" value="InstitutionAuthorAuthority"/>
+        <property name="relatedInputformMetadata" value="oairecerif_author_affiliation"/>
+        <property name="schema" value="person"/>
+        <property name="element" value="affiliation"/>
+        <property name="qualifier" value="name"/>
+        <property name="singleResultOnAggregate" value="false"/>
+    </bean>
+
+    <bean class="org.dspace.content.authority.ItemSimpleAuthorityMetadataGenerator">
+        <property name="authorityName" value="InstitutionEditorAuthority"/>
+        <property name="relatedInputformMetadata" value="oairecerif_editor_affiliation"/>
+        <property name="schema" value="person"/>
+        <property name="element" value="affiliation"/>
+        <property name="qualifier" value="name"/>
+        <property name="singleResultOnAggregate" value="false"/>
+    </bean>
+
 </beans>

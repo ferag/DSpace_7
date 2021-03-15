@@ -62,7 +62,7 @@
     <bean class="org.dspace.content.authority.ChoiceAuthorityServiceImpl"/>
     <bean class="org.dspace.content.authority.MetadataAuthorityServiceImpl" lazy-init="true"/>
 
-    <bean class="org.dspace.app.profile.ResearcherProfileServiceImpl"/>
+    <bean id= "org.dspace.app.profile.service.ResearcherProfileService" class="org.dspace.app.profile.ResearcherProfileServiceImpl"/>
 
     <!-- Ensure PluginService is initialized properly via init() method -->
     <bean class="org.dspace.core.LegacyPluginServiceImpl" init-method="init"/>
@@ -161,5 +161,6 @@
 
     <bean class="org.dspace.app.metrics.service.CrisMetricsServiceImpl" />
 
+    <bean class="org.dspace.app.source.service.ItemSourceServiceImpl" />
 </beans>
 

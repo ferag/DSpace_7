@@ -8,6 +8,7 @@
 package org.dspace.versioning.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,7 +33,15 @@ public class ItemCorrection {
     }
 
     public List<MetadataCorrection> getMetadataCorrections() {
-        return metadataCorrections;
+        return Collections.unmodifiableList(metadataCorrections);
+    }
+
+    public boolean isEmpty() {
+        return metadataCorrections.isEmpty();
+    }
+
+    public boolean isNotEmpty() {
+        return !isEmpty();
     }
 
 }

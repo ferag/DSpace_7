@@ -387,12 +387,139 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
 
     @Test
     @SuppressWarnings("unchecked")
+    public void testCreateInstitutionPublicationWithAuthority() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+        Collection publications = createCollection(context, community)
+            .withSubmissionDefinition("institution-publication")
+            .withAdminGroup(eperson)
+            .build();
+        context.commit();
+        context.restoreAuthSystemState();
+
+        String fileLocation = getXlsFilePath("create-publication-with-authority.xlsx");
+        String[] args = new String[] { "bulk-import", "-c", publications.getID().toString(), "-f", fileLocation };
+        TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
+
+        handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, eperson);
+        assertThat("Expected no errors", handler.getErrorMessages(), empty());
+
+        List<String> warningMessages = handler.getWarningMessages();
+        assertThat("Expected 1 warning message", warningMessages, hasSize(1));
+        assertThat(warningMessages.get(0), containsString("Row 2 - Invalid item left in workspace"));
+
+        List<String> infoMessages = handler.getInfoMessages();
+        assertThat("Expected 3 info messages", infoMessages, hasSize(3));
+        assertThat(infoMessages.get(0), containsString("Start reading all the metadata group rows"));
+        assertThat(infoMessages.get(1), containsString("Found 2 metadata groups to process"));
+        assertThat(infoMessages.get(2), containsString("Found 1 items to process"));
+
+        String id = getItemUuidFromMessage(warningMessages.get(0));
+        Item createdItem = itemService.findByIdOrLegacyId(context, id);
+        assertThat("Item expected to be created", createdItem, notNullValue());
+        assertThat(createdItem.isArchived(), is(false));
+        assertThat(findWorkspaceItem(createdItem), notNullValue());
+
+        List<MetadataValue> metadata = createdItem.getMetadata();
+        assertThat(metadata, hasItems(with("dc.contributor.author", "Author1", null, "authority1", 0, 600)));
+        assertThat(metadata, hasItems(with("dc.contributor.author", "Author2", 1)));
+        assertThat(metadata, hasItems(with("oairecerif.author.affiliation", "OrgUnit1")));
+        assertThat(metadata, hasItems(with("oairecerif.author.affiliation", "OrgUnit2", null, "authority2", 1, 400)));
+
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
     public void testManyPublicationImport() throws Exception {
 
         context.turnOffAuthorisationSystem();
 
         Collection publications = createCollection(context, community)
             .withSubmissionDefinition("publication")
+            .withAdminGroup(eperson)
+            .build();
+
+        Item itemToUpdateByRid = createItem(context, publications)
+            .withTitle("My Publication")
+            .withTitleForLanguage("My Publication English", "en")
+            .withResearcherIdentifier("123456789")
+            .build();
+
+        Item itemToDelete = createItem(context, publications).withDoiIdentifier("10.1000/182").build();
+
+        context.commit();
+        context.restoreAuthSystemState();
+
+        String fileLocation = getXlsFilePath("many-publications.xls");
+        String[] args = new String[] { "bulk-import", "-c", publications.getID().toString(), "-f", fileLocation };
+        TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
+
+        handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, eperson);
+        assertThat("Expected no errors", handler.getErrorMessages(), empty());
+
+        List<String> warningMessages = handler.getWarningMessages();
+        assertThat("Expected 1 warning message", warningMessages, hasSize(1));
+        assertThat(warningMessages.get(0), containsString("Row 2 - Invalid item left in workspace"));
+
+        List<String> infoMessages = handler.getInfoMessages();
+        assertThat("Expected 5 info messages", infoMessages, hasSize(5));
+
+        assertThat(infoMessages.get(0), containsString("Start reading all the metadata group rows"));
+        assertThat(infoMessages.get(1), containsString("Found 6 metadata groups to process"));
+        assertThat(infoMessages.get(2), containsString("Found 3 items to process"));
+        assertThat(infoMessages.get(3), containsString("Row 3 - Item updated successfully"));
+        assertThat(infoMessages.get(4), containsString("Row 4 - Item deleted successfully"));
+
+        // verify created item (ROW 2)
+        String createdItemId = getItemUuidFromMessage(warningMessages.get(0));
+        Item createdItem = itemService.findByIdOrLegacyId(context, createdItemId);
+        assertThat("Item expected to be created", createdItem, notNullValue());
+        assertThat(createdItem.isArchived(), is(false));
+        assertThat(findWorkspaceItem(createdItem), notNullValue());
+
+        List<MetadataValue> metadata = createdItem.getMetadata();
+        assertThat(metadata, hasItems(with("dc.title", "First publication")));
+        assertThat(metadata, hasItems(with("dc.title", "First publication English", "en", null, 1, -1)));
+        assertThat(metadata, hasItems(with("dc.date.issued", "12/12/65")));
+        assertThat(metadata, hasItems(with("dc.contributor.author", "Thomas Edison")));
+        assertThat(metadata, hasItems(with("dc.contributor.author", "Morgan Pitt", 1)));
+        assertThat(metadata, hasItems(with("oairecerif.author.affiliation", "Company")));
+        assertThat(metadata, hasItems(with("oairecerif.author.affiliation", PLACEHOLDER, 1)));
+        assertThat(metadata, hasItems(with("dc.contributor.editor", "Editor")));
+        assertThat(metadata, hasItems(with("oairecerif.editor.affiliation", "EditorAffiliation")));
+        assertThat(metadata, hasItems(with("dc.identifier.doi", "10.1000/183")));
+        assertThat(metadata, hasItems(with("dc.type", "Article")));
+
+        // verify updated item (ROW 3)
+        Item itemUpdated = itemService.find(context, itemToUpdateByRid.getID());
+        metadata = itemUpdated.getMetadata();
+
+        assertThat(metadata, hasItems(with("dc.title", "Publication")));
+        assertThat(metadata, hasItems(with("dc.title", "Publication English", "en", null, 1, -1)));
+        assertThat(metadata, hasItems(with("dc.title", "English Publication", "en", null, 2, -1)));
+        assertThat(metadata, hasItems(with("dc.date.issued", "01/07/95")));
+        assertThat(metadata, hasItems(with("dc.contributor.author", "John Smith")));
+        assertThat(metadata, hasItems(with("oairecerif.author.affiliation", PLACEHOLDER)));
+        assertThat(metadata, hasItems(with("dc.identifier.doi", "10.1000/184")));
+        assertThat(metadata, hasItems(with("dc.relation.project", "Test Project")));
+        assertThat(metadata, hasItems(with("dc.relation.grantno", "1")));
+        assertThat(metadata, hasItems(with("dc.relation.project", "Another Test Project", 1)));
+        assertThat(metadata, hasItems(with("dc.relation.grantno", PLACEHOLDER, 1)));
+        assertThat(metadata, hasItems(with("dc.type", "Book")));
+
+        // verify deleted item (ROW 4)
+        assertThat("Item expected to be deleted", itemService.find(context, itemToDelete.getID()), nullValue());
+
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testManyInstitutionPublicationImport() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Collection publications = createCollection(context, community)
+            .withSubmissionDefinition("institution-publication")
             .withAdminGroup(eperson)
             .build();
 
@@ -727,6 +854,62 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
 
     @Test
     @SuppressWarnings("unchecked")
+    public void testCreateInstitutionPublicationWithWillBeGeneratedAuthority() throws Exception {
+        String[] defaultConsumers = activateCrisConsumer();
+        try {
+
+            context.turnOffAuthorisationSystem();
+
+            Item person = ItemBuilder.createItem(context, collection)
+                .withRelationshipType("InstitutionPerson")
+                .withTitle("Walter White")
+                .withOrcidIdentifier("0000-0002-9079-593X")
+                .build();
+
+            Collection publications = createCollection(context, community)
+                .withSubmissionDefinition("institution-publication")
+                .withAdminGroup(eperson)
+                .build();
+
+            context.commit();
+            context.restoreAuthSystemState();
+
+            String publicationCollectionId = publications.getID().toString();
+            String fileLocation = getXlsFilePath("create-publication-with-will-be-generated-authority.xls");
+            String[] args = new String[] { "bulk-import", "-c", publicationCollectionId, "-f", fileLocation, "-e" };
+            TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
+
+            handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin);
+            assertThat("Expected no errors", handler.getErrorMessages(), empty());
+            assertThat("Expected no warnings", handler.getWarningMessages(), empty());
+
+            List<String> infoMessages = handler.getInfoMessages();
+            assertThat("Expected 4 info messages", infoMessages, hasSize(4));
+
+            assertThat(infoMessages.get(0), containsString("Start reading all the metadata group rows"));
+            assertThat(infoMessages.get(1), containsString("Found 1 metadata groups to process"));
+            assertThat(infoMessages.get(2), containsString("Found 1 items to process"));
+            assertThat(infoMessages.get(3), containsString("Row 2 - Item archived successfully"));
+
+            // verify created item (ROW 2)
+            String createdItemId = getItemUuidFromMessage(infoMessages.get(3));
+
+            Item createdItem = itemService.findByIdOrLegacyId(context, createdItemId);
+            assertThat("Item expected to be created", createdItem, notNullValue());
+
+            String personId = person.getID().toString();
+
+            List<MetadataValue> metadata = createdItem.getMetadata();
+            assertThat(metadata, hasItems(with("dc.contributor.author", "Walter White", null, personId, 0, 600)));
+            assertThat(metadata, hasItems(with("dc.title", "Wonderful Publication")));
+
+        } finally {
+            resetConsumers(defaultConsumers);
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
     public void testCreatePublicationWithWillBeGeneratedAuthorityAndNoRelatedItemFound() throws Exception {
         String[] defaultConsumers = activateCrisConsumer();
         try {
@@ -799,6 +982,63 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
 
             Collection publications = createCollection(context, community)
                 .withSubmissionDefinition("publication")
+                .withAdminGroup(eperson)
+                .build();
+
+            context.commit();
+            context.restoreAuthSystemState();
+
+            String publicationCollectionId = publications.getID().toString();
+            String fileLocation = getXlsFilePath("create-publication-with-will-be-referenced-authority.xls");
+            String[] args = new String[] { "bulk-import", "-c", publicationCollectionId, "-f", fileLocation, "-e" };
+            TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
+
+            handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin);
+            assertThat("Expected no errors", handler.getErrorMessages(), empty());
+            assertThat("Expected no warnings", handler.getWarningMessages(), empty());
+
+            List<String> infoMessages = handler.getInfoMessages();
+            assertThat("Expected 4 info messages", infoMessages, hasSize(4));
+
+            assertThat(infoMessages.get(0), containsString("Start reading all the metadata group rows"));
+            assertThat(infoMessages.get(1), containsString("Found 1 metadata groups to process"));
+            assertThat(infoMessages.get(2), containsString("Found 1 items to process"));
+            assertThat(infoMessages.get(3), containsString("Row 2 - Item archived successfully"));
+
+            // verify created item (ROW 2)
+            String createdItemId = getItemUuidFromMessage(infoMessages.get(3));
+
+            Item createdItem = itemService.findByIdOrLegacyId(context, createdItemId);
+            assertThat("Item expected to be created", createdItem, notNullValue());
+
+            String personId = person.getID().toString();
+
+            List<MetadataValue> metadata = createdItem.getMetadata();
+            assertThat(metadata, hasItems(with("dc.contributor.author", "Walter White", null, personId, 0, 600)));
+            assertThat(metadata, hasItems(with("dc.title", "Wonderful Publication")));
+
+        } finally {
+            resetConsumers(defaultConsumers);
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testCreateInstitutionPublicationWithWillBeReferencedAuthority() throws Exception {
+        String[] defaultConsumers = activateCrisConsumer();
+        try {
+
+            context.turnOffAuthorisationSystem();
+
+            Item person = ItemBuilder.createItem(context, collection)
+                .withRelationshipType("InstitutionPerson")
+                .withTitle("Walter White")
+                .withOrcidIdentifier("0000-0002-9079-593X")
+                .build();
+
+            Collection publications = createCollection(context, community)
+                .withSubmissionDefinition("institution-publication")
+                .withRelationshipType("InstitutionPublication")
                 .withAdminGroup(eperson)
                 .build();
 
@@ -1375,6 +1615,8 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
     private void resetConsumers(String[] consumers) {
         ConfigurationService configService = DSpaceServicesFactory.getInstance().getConfigurationService();
         configService.setProperty("event.dispatcher.default.consumers", consumers);
+        EventService eventService = EventServiceFactory.getInstance().getEventService();
+        eventService.reloadConfiguration();
     }
 
     private Item findItemByMetadata(String schema, String element, String qualifier, String value) throws Exception {

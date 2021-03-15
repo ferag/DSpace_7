@@ -182,7 +182,633 @@ it, please enter the types and the actual numbers or codes.</hint>
        </field>
      </row>
 	</form>
+    <form name="cv-patent-dc-contributor-author">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>contributor</dc-element>
+          <dc-qualifier>author</dc-qualifier>
+          <label>Author</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>You must enter at least the author.</required>
+          <hint>Enter the names of the authors of this item in the form Lastname, Firstname [i.e. Smith, Josh or Smith, J].</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>author</dc-element>
+          <dc-qualifier>affiliation</dc-qualifier>
+          <label>Affiliation</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Enter the affiliation of the author as stated on the publication.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>author</dc-element>
+          <dc-qualifier>orcid</dc-qualifier>
+          <label>Author’s ORCID</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>author</dc-element>
+          <dc-qualifier>dni</dc-qualifier>
+          <label>Author’s DNI</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="cv-patent">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Title</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>You must specify a title for the patent</required>
+          <hint>The title of the patent</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>patent</dc-element>
+          <dc-qualifier>issuer</dc-qualifier>
+          <label>Issuer</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dcterms</dc-schema>
+          <dc-element>dateSubmitted</dc-element>
+          <label>Application Date</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Date of filing the application.
+You can leave out the day and/or month if they aren't applicable.</hint>
+        </field>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>date</dc-element>
+          <dc-qualifier>issued</dc-qualifier>
+          <label>Publication Date</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Date of making available to the public by printing or similar process of a patent document on which grant has taken place on or before the said date.
+You can leave out the day and/or month if they aren't applicable.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>patent</dc-element>
+          <dc-qualifier>country</dc-qualifier>
+          <label>Patent Country</label>
+          <input-type value-pairs-name="common_iso_countries">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>paisdeltitular</dc-element>
+          <label>Patent Holder Country</label>
+          <input-type value-pairs-name="common_iso_countries">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>contributor</dc-element>
+          <dc-qualifier>author</dc-qualifier>
+          <label>Inventor(s)</label>
+          <input-type>group</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>The inventor: The actual devisor of an invention that is the subject of a patent.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dcterms</dc-schema>
+          <dc-element>rightsHolder</dc-element>
+          <label>Holder</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>The holders of this patent</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>publisher</dc-element>
+          <label>Issuer</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>The issuer of the patent: the patent office</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>patentno</dc-qualifier>
+          <label>Patent Number</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>The patent number.</hint>
+        </field>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>url</dc-qualifier>
+          <label>URL</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>type</dc-element>
+          <label>Type</label>
+          <input-type value-pairs-name="peru_patent_types">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required>You must select a patent type</required>
+          <hint>Select the type of content of the patent.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>internalNote</dc-qualifier>
+          <label>Internal Note</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>cvPatent</dc-element>
+          <dc-qualifier>syncEnabled</dc-qualifier>
+          <label>Send changes to Directorio</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="cv-project">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Project title</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>You must enter the project name.</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>acronym</dc-element>
+          <label>Project Acronym</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crispj</dc-schema>
+          <dc-element>coordinator</dc-element>
+          <label>Consortium Coordinator(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>internalid</dc-element>
+          <label>Internal project ID</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crispj</dc-schema>
+          <dc-element>partnerou</dc-element>
+          <label>Partner Organization(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crispj</dc-schema>
+          <dc-element>investigator</dc-element>
+          <label>Project Coordinator</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>You must enter the project coordinator.</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oaire</dc-schema>
+          <dc-element>awardURI</dc-element>
+          <label>Award URL</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crispj</dc-schema>
+          <dc-element>openaireid</dc-element>
+          <label>OpenAIRE ID</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crispj</dc-schema>
+          <dc-element>organization</dc-element>
+          <label>Participant Organization(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>url</dc-qualifier>
+          <label>Project URL</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>oamandate</dc-element>
+          <label>OA Mandate</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>oamandate</dc-element>
+          <dc-qualifier>url</dc-qualifier>
+          <label>OA Policy URL</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>The Open Access policy that applies to the project</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>project</dc-element>
+          <dc-qualifier>startDate</dc-qualifier>
+          <label>Start date</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>project</dc-element>
+          <dc-qualifier>endDate</dc-qualifier>
+          <label>Expected Completion</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>project</dc-element>
+          <dc-qualifier>status</dc-qualifier>
+          <label>Status</label>
+          <input-type value-pairs-name="project_status">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>project</dc-element>
+          <dc-qualifier>typeOcde</dc-qualifier>
+          <label>Project type</label>
+          <input-type value-pairs-name="project_types">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>project</dc-element>
+          <dc-qualifier>typeOther</dc-qualifier>
+          <label>Project type</label>
+          <input-type value-pairs-name="project_types_other">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>abstract</dc-qualifier>
+          <label>Abstract</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crispj</dc-schema>
+          <dc-element>coinvestigators</dc-element>
+          <label>Co-Investigator(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crispj</dc-schema>
+          <dc-element>techniciansAndEquivalentStaff</dc-element>
+          <label>Technicians and equivalent staff</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crispj</dc-schema>
+          <dc-element>supportingStaff</dc-element>
+          <label>Supporting staff</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>subject</dc-element>
+          <label>Keyword(s)</label>
+          <input-type>tag</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>subject</dc-element>
+          <dc-qualifier>ocde</dc-qualifier>
+          <label>OCDE Subject(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+          <vocabulary closed="true">ocde_subjects</vocabulary>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>type</dc-element>
+          <dc-qualifier>ciiu</dc-qualifier>
+          <label>Industrial Classification</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+          <vocabulary closed="true">peru_ciiu</vocabulary>
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>researchLine</dc-element>
+          <label>Research Line</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>funder</dc-element>
+          <label>Funded/By</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>relation</dc-element>
+          <dc-qualifier>equipment</dc-qualifier>
+          <label>Uses equipment(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationPlace</dc-element>
+          <label>Project Geolocation(s)</label>
+          <input-type>group</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>internalNote</dc-qualifier>
+          <label>Internal Note</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>cvProject</dc-element>
+          <dc-qualifier>syncEnabled</dc-qualifier>
+          <label>Send changes to Directorio</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
 
+    <form name="cv-project-datacite-geoLocationPlace">
+      <row>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationPlace</dc-element>
+          <label>Geolocation Place</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationPoint</dc-element>
+          <dc-qualifier>pointLongitude</dc-qualifier>
+          <label>Geolocation Longitude</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationPoint</dc-element>
+          <dc-qualifier>pointLatitude</dc-qualifier>
+          <label>Geolocation Latitude</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationBox</dc-element>
+          <dc-qualifier>westBoundLongitude</dc-qualifier>
+          <label>Westbound Longitude</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationBox</dc-element>
+          <dc-qualifier>eastBoundLongitude</dc-qualifier>
+          <label>Eastbound Longitude</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationBox</dc-element>
+          <dc-qualifier>southBoundLongitude</dc-qualifier>
+          <label>Southbound Longitude</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>geoLocationBox</dc-element>
+          <dc-qualifier>northBoundLongitude</dc-qualifier>
+          <label>Northbound Longitude</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
     <form name="traditionalpageone-cris-dc-contributor-author">
       <row>
         <field>
@@ -377,6 +1003,926 @@ it, please enter the types and the actual numbers or codes.</hint>
        </field>
      </row>
 	</form>
+	
+    <form name="cv-publication-dc-contributor-author">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>contributor</dc-element>
+          <dc-qualifier>author</dc-qualifier>
+          <label>Author</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>You must enter at least the author.</required>
+          <hint>Enter the names of the authors of this item in the form Lastname, Firstname [i.e. Smith, Josh or Smith, J].</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>author</dc-element>
+          <dc-qualifier>affiliation</dc-qualifier>
+          <label>Affiliation</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Enter the affiliation of the author as stated on the publication.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>author</dc-element>
+          <dc-qualifier>orcid</dc-qualifier>
+          <label>Author’s ORCID</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>author</dc-element>
+          <dc-qualifier>dni</dc-qualifier>
+          <label>Author’s DNI</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="cv-publication-dc-contributor-editor">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>contributor</dc-element>
+          <dc-qualifier>editor</dc-qualifier>
+          <label>Editor</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>You must enter at least the author.</required>
+          <hint>The editors of this publication.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>editor</dc-element>
+          <dc-qualifier>affiliation</dc-qualifier>
+          <label>Affiliation</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Enter the affiliation of the editor as stated on the publication.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>editor</dc-element>
+          <dc-qualifier>orcid</dc-qualifier>
+          <label>Editor’s ORCID</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>editor</dc-element>
+          <dc-qualifier>dni</dc-qualifier>
+          <label>Editor’s DNI</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="cv-publication_references-dc-relation-funding">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>relation</dc-element>
+          <dc-qualifier>funding</dc-qualifier>
+          <label>Funding</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>You must enter at least the funding name.</required>
+          <hint>Enter the name of funding, if any, that has supported this publication</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>relation</dc-element>
+          <dc-qualifier>grantno</dc-qualifier>
+          <label>Grant Number / Funding identifier</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>If the funding is not found in the system please enter the funding identifier / grant no</hint>
+        </field>
+      </row>
+    </form>
+    <form name="cv-publication_thesis-dc-contributor-advisor">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>contributor</dc-element>
+          <dc-qualifier>advisor</dc-qualifier>
+          <label>Advisor</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>advisor</dc-element>
+          <dc-qualifier>orcid</dc-qualifier>
+          <label>Advisor’s ORCID</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>advisor</dc-element>
+          <dc-qualifier>dni</dc-qualifier>
+          <label>Advisor’s DNI</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="cv-publication">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>isbn</dc-qualifier>
+          <label>ISBN</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>If the publication has an ISBN on its own please enter it here, don’t use for book chapter or items contained in a publication with ISBN.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>pmid</dc-qualifier>
+          <label>PubMed ID</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Please enter here the PubMed ID of the publication if any</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>scopus</dc-qualifier>
+          <label>Scopus EID</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Please enter here the Scopus Article ID, i.e. the eid, of the publication if any</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>doi</dc-qualifier>
+          <label>DOI</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Please enter here the DOI of the publication if any</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>isi</dc-qualifier>
+          <label>ISI</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Please enter here the Web of Science Article ID, i.e. the UT in ISI, of the publication if any</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Title</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>You must enter a main title for this item.</required>
+          <hint>Enter the main title of the item.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <dc-qualifier>alternative</dc-qualifier>
+          <label>Other Titles</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>If the item has any alternative titles, please enter them here.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>date</dc-element>
+          <dc-qualifier>issued</dc-qualifier>
+          <label>Date of Issue</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required>You must enter at least the year.</required>
+          <hint>Please give the date of previous publication or public distribution.
+                        You can leave out the day and/or month if they aren't
+                        applicable.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>contributor</dc-element>
+          <dc-qualifier>author</dc-qualifier>
+          <label>Authors</label>
+          <input-type>group</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>Enter the names of the authors of this item.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>contributor</dc-element>
+          <dc-qualifier>editor</dc-qualifier>
+          <label>Editors</label>
+          <input-type>group</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>The editors of this publication.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>type</dc-element>
+          <label>Type</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>You must select a publication type</required>
+          <hint>Select the type(s) of content of the item. To select more than one value in the list, you may have to hold down the "CTRL" or "Shift" key.</hint>
+          <vocabulary closed="true">types</vocabulary>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oaire</dc-schema>
+          <dc-element>version</dc-element>
+          <label>Version</label>
+          <input-type value-pairs-name="coar_versions">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>url</dc-qualifier>
+          <label>Alternative URL(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>internalNote</dc-qualifier>
+          <label>Internal Note</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>rights</dc-element>
+          <dc-qualifier>uri</dc-qualifier>
+          <label>License</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>access</dc-element>
+          <label>Access condition</label>
+          <input-type value-pairs-name="peru_oairecerif_access">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>access</dc-element>
+          <dc-qualifier>embargoEnd</dc-qualifier>
+          <label>Embargo End Date</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>cvPublication</dc-element>
+          <dc-qualifier>syncEnabled</dc-qualifier>
+          <label>Send changes to Directorio</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="cv-publication_indexing">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>language</dc-element>
+          <dc-qualifier>iso</dc-qualifier>
+          <label>Language</label>
+          <input-type value-pairs-name="common_iso_languages">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Select the language of the main content of the item.  If the language does not appear in the list, please select 'Other'.  If the content does not really have a language (for example, if it is a dataset or an image) please select 'N/A'.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>subject</dc-element>
+          <label>Subject Keywords</label>
+          <input-type>tag</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>Enter appropriate subject keywords or phrases.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>subject</dc-element>
+          <dc-qualifier>ddc</dc-qualifier>
+          <label>DDC Subject(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>subject</dc-element>
+          <dc-qualifier>loc</dc-qualifier>
+          <label>LOC Subject(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>subject</dc-element>
+          <dc-qualifier>mesh</dc-qualifier>
+          <label>Mesh Keyword(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>subject</dc-element>
+          <dc-qualifier>ocde</dc-qualifier>
+          <label>OCDE Subject(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+          <vocabulary closed="true">ocde_subjects</vocabulary>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>abstract</dc-qualifier>
+          <label>Abstract</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Enter the abstract of the item.</hint>
+        </field>
+      </row>
+    </form>
+    <form name="cv-publication_bibliographic_details">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>relation</dc-element>
+          <dc-qualifier>publication</dc-qualifier>
+          <label>Part Of</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>The publication where this publication is included. E.g. a book chapter lists here the book, a contribution to a conference lists here the conference proceeding.</hint>
+          <type-bind>book part</type-bind>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>relation</dc-element>
+          <dc-qualifier>isbn</dc-qualifier>
+          <label>ISBN (of the container)</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>The ISBN of the book/report if it was not found in the system</hint>
+          <type-bind>book part</type-bind>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>relation</dc-element>
+          <dc-qualifier>doi</dc-qualifier>
+          <label>DOI (of the container)</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>The DOI of the book/report if it was not found in the system</hint>
+          <type-bind>book part</type-bind>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>relation</dc-element>
+          <dc-qualifier>ispartof</dc-qualifier>
+          <label>Journal or Serie</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>The journal or Serie where this publication has been published</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>relation</dc-element>
+          <dc-qualifier>ispartofseries</dc-qualifier>
+          <label>Series/Report No.</label>
+          <input-type>series</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>Enter the series and number assigned to this item by your community.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>relation</dc-element>
+          <dc-qualifier>issn</dc-qualifier>
+          <label>ISSN</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>The journal or Serie ISSN if it was not found in the system</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>coverage</dc-element>
+          <dc-qualifier>publication</dc-qualifier>
+          <label>Review of</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>The publication object of the review</hint>
+          <type-bind>review,book review</type-bind>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>coverage</dc-element>
+          <dc-qualifier>isbn</dc-qualifier>
+          <label>ISBN (of the reviewed item)</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>The ISBN of the reviewed item if it was not found in the system</hint>
+          <type-bind>review,book review</type-bind>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>coverage</dc-element>
+          <dc-qualifier>doi</dc-qualifier>
+          <label>DOI (of the reviewed item)</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>The DOI of the reviewed item if it was not found in the system</hint>
+          <type-bind>review,book review</type-bind>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>sponsorship</dc-qualifier>
+          <label>Sponsors</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>Enter the name of any sponsors.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oaire</dc-schema>
+          <dc-element>citation</dc-element>
+          <dc-qualifier>volume</dc-qualifier>
+          <label>Volume</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>If applicable, the volume of the publishing channel where this publication appeared</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oaire</dc-schema>
+          <dc-element>citation</dc-element>
+          <dc-qualifier>issue</dc-qualifier>
+          <label>Issue</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>If applicable, the issue of the publishing channel where this publication appeared</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oaire</dc-schema>
+          <dc-element>citation</dc-element>
+          <dc-qualifier>startPage</dc-qualifier>
+          <label>Start Page</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>If applicable, the page where this publication starts</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oaire</dc-schema>
+          <dc-element>citation</dc-element>
+          <dc-qualifier>endPage</dc-qualifier>
+          <label>End Page</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>If applicable, the page where this publication ends</hint>
+        </field>
+      </row>
+    </form>
+    <form name="cv-publication_thesis">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>contributor</dc-element>
+          <dc-qualifier>advisor</dc-qualifier>
+          <label>Advisor(s)</label>
+          <input-type>group</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>renati</dc-schema>
+          <dc-element>type</dc-element>
+          <label>Renati Type</label>
+          <input-type value-pairs-name="renati_types">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>thesis</dc-schema>
+          <dc-element>degree</dc-element>
+          <dc-qualifier>name</dc-qualifier>
+          <label>Degree Name</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>renati</dc-schema>
+          <dc-element>level</dc-element>
+          <label>Level</label>
+          <input-type value-pairs-name="renati_levels">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>thesis</dc-schema>
+          <dc-element>degree</dc-element>
+          <dc-qualifier>discipline</dc-qualifier>
+          <label>Degree Discipline(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>renati</dc-schema>
+          <dc-element>discipline</dc-element>
+          <label>Discipline(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>renati</dc-schema>
+          <dc-element>juror</dc-element>
+          <label>Juror(s)</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>thesis</dc-schema>
+          <dc-element>degree</dc-element>
+          <dc-qualifier>grantor</dc-qualifier>
+          <label>Grantor</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="cv-publication_references">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>relation</dc-element>
+          <dc-qualifier>funding</dc-qualifier>
+          <label>Funding</label>
+          <input-type>group</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>Acknowledge the funding received for this publication.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>relation</dc-element>
+          <dc-qualifier>project</dc-qualifier>
+          <label>Projects</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>Enter the name of project, if any, that has produced this publication. It is NOT necessary to list the projects connected with an acknowledge funding.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>relation</dc-element>
+          <dc-qualifier>conference</dc-qualifier>
+          <label>Conference</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>Enter the name of the conference where the item has been presented, if any.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>relation</dc-element>
+          <dc-qualifier>dataset</dc-qualifier>
+          <label>Dataset</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>Link the item to one or more existent dataset in the repository used or described by the publication or, put here the dataset citation</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>citation</dc-qualifier>
+          <label>Citation</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Enter the standard citation for the previously issued instance of this item.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>description</dc-element>
+          <label>Description</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Enter any other description or comments in this box.</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>sponsorship</dc-qualifier>
+          <label>Sponsors</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>Enter the name of any sponsors.</hint>
+        </field>
+      </row>
+    </form>
+    <form name="cv-person-edit-education-crisrp-education">
+      <row>
+        <field>
+          <dc-schema>crisrp</dc-schema>
+          <dc-element>education</dc-element>
+          <label>Education</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>You must enter at least the education title.</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crisrp</dc-schema>
+          <dc-element>education</dc-element>
+          <dc-qualifier>start</dc-qualifier>
+          <label>Start Date</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>crisrp</dc-schema>
+          <dc-element>education</dc-element>
+          <dc-qualifier>end</dc-qualifier>
+          <label>End Date</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crisrp</dc-schema>
+          <dc-element>education</dc-element>
+          <dc-qualifier>role</dc-qualifier>
+          <label>Role</label>
+          <input-type value-pairs-name="renati_levels">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>education</dc-element>
+          <dc-qualifier>grantor</dc-qualifier>
+          <label>Grantor</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>education</dc-element>
+          <dc-qualifier>country</dc-qualifier>
+          <label>Country</label>
+          <input-type value-pairs-name="common_iso_countries">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
+    
+    <form name="cv-person-edit-education">
+      <row>
+        <field>
+          <dc-schema>crisrp</dc-schema>
+          <dc-element>education</dc-element>
+          <label>Education(s)</label>
+          <input-type>group</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>cvPerson</dc-element>
+          <dc-qualifier>syncEducation</dc-qualifier>
+          <label>Send changes to Directorio</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
 	
 	<form name="traditionalpagetwo">
      <row>
@@ -931,6 +2477,470 @@ it, please enter the types and the actual numbers or codes.</hint>
         </field>
       </row>
     </form>
+
+   <form name="institution-publication-dc-contributor-editor">
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>contributor</dc-element>
+         <dc-qualifier>editor</dc-qualifier>
+         <label>Editor</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required>You must enter at least the author.</required>
+         <hint>The editors of this publication.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>oairecerif</dc-schema>
+         <dc-element>editor</dc-element>
+         <dc-qualifier>affiliation</dc-qualifier>
+         <label>Affiliation</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>Enter the affiliation of the editor as stated on the publication.</hint>
+       </field>
+     </row>
+   </form>
+   <form name="institution-publication_thesis-dc-contributor-advisor">
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>contributor</dc-element>
+         <dc-qualifier>advisor</dc-qualifier>
+         <label>Advisor</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>advisor</dc-element>
+         <dc-qualifier>orcid</dc-qualifier>
+         <label>Advisor’s ORCID</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>advisor</dc-element>
+         <dc-qualifier>dni</dc-qualifier>
+         <label>Advisor’s DNI</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+   </form>
+   <form name="institution-publication_references-dc-relation-project">
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>relation</dc-element>
+         <dc-qualifier>project</dc-qualifier>
+         <label>Project</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required>You must enter at least the project name.</required>
+         <hint>Enter the name of project, if any, that has supported this publication</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>relation</dc-element>
+         <dc-qualifier>funding</dc-qualifier>
+         <label>Grant Number / Funding identifier</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+   </form>
+   <form name="institution-publication">
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>identifier</dc-element>
+         <label>Identifiers</label>
+         <input-type value-pairs-name="common_identifiers">qualdrop_value</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint>If the item has any identification numbers or codes associated with
+           it, please enter the types and the actual numbers or codes.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>title</dc-element>
+         <label>Title</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required>You must enter a main title for this item.</required>
+         <hint>Enter the main title of the item.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>title</dc-element>
+         <dc-qualifier>alternative</dc-qualifier>
+         <label>Other Titles</label>
+         <input-type>onebox</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint>If the item has any alternative titles, please enter them here.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>date</dc-element>
+         <dc-qualifier>issued</dc-qualifier>
+         <label>Date of Issue</label>
+         <input-type>date</input-type>
+         <repeatable>false</repeatable>
+         <required>You must enter at least the year.</required>
+         <hint>Please give the date of previous publication or public distribution.
+           You can leave out the day and/or month if they aren't
+           applicable.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>contributor</dc-element>
+         <dc-qualifier>author</dc-qualifier>
+         <label>Authors</label>
+         <input-type>group</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint>Enter the names of the authors of this item.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>contributor</dc-element>
+         <dc-qualifier>editor</dc-qualifier>
+         <label>Editors</label>
+         <input-type>group</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint>The editors of this publication.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>type</dc-element>
+         <label>Type</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required>You must select a publication type</required>
+         <hint>Select the type of content of the item.</hint>
+         <vocabulary>types</vocabulary>
+       </field>
+     </row>
+   </form>
+   <form name="institution-publication_indexing">
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>language</dc-element>
+         <dc-qualifier>iso</dc-qualifier>
+         <label>Language</label>
+         <input-type value-pairs-name="common_iso_languages">dropdown</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>Select the language of the main content of the item.  If the language does not appear in the list, please select 'Other'.  If the content does not really have a language (for example, if it is a dataset or an image) please select 'N/A'.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>subject</dc-element>
+         <label>Subject Keywords</label>
+         <input-type>tag</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint>Enter appropriate subject keywords or phrases.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>description</dc-element>
+         <dc-qualifier>abstract</dc-qualifier>
+         <label>Abstract</label>
+         <input-type>textarea</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>Enter the abstract of the item.</hint>
+       </field>
+     </row>
+   </form>
+   <form name="institution-publication_bibliographic_details">
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>relation</dc-element>
+         <dc-qualifier>publication</dc-qualifier>
+         <label>Part Of</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>The publication where this publication is included. E.g. a book chapter lists here the book, a contribution to a conference lists here the conference proceeding.</hint>
+         <type-bind>book part</type-bind>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>relation</dc-element>
+         <dc-qualifier>isbn</dc-qualifier>
+         <label>ISBN (of the container)</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>The ISBN of the book/report if it was not found in the system</hint>
+         <type-bind>book part</type-bind>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>relation</dc-element>
+         <dc-qualifier>doi</dc-qualifier>
+         <label>DOI (of the container)</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>The DOI of the book/report if it was not found in the system</hint>
+         <type-bind>book part</type-bind>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>relation</dc-element>
+         <dc-qualifier>ispartof</dc-qualifier>
+         <label>Journal or Serie</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>The journal or Serie where this publication has been published</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>relation</dc-element>
+         <dc-qualifier>ispartofseries</dc-qualifier>
+         <label>Series/Report No.</label>
+         <input-type>series</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint>Enter the series and number assigned to this item by your community.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>relation</dc-element>
+         <dc-qualifier>issn</dc-qualifier>
+         <label>ISSN</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>The journal or Serie ISSN if it was not found in the system</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>coverage</dc-element>
+         <dc-qualifier>publication</dc-qualifier>
+         <label>Review of</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>The publication object of the review</hint>
+         <type-bind>review,book review</type-bind>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>coverage</dc-element>
+         <dc-qualifier>isbn</dc-qualifier>
+         <label>ISBN (of the reviewed item)</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>The ISBN of the reviewed item if it was not found in the system</hint>
+         <type-bind>review,book review</type-bind>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>coverage</dc-element>
+         <dc-qualifier>doi</dc-qualifier>
+         <label>DOI (of the reviewed item)</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>The DOI of the reviewed item if it was not found in the system</hint>
+         <type-bind>review,book review</type-bind>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>description</dc-element>
+         <dc-qualifier>sponsorship</dc-qualifier>
+         <label>Sponsors</label>
+         <input-type>onebox</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint>Enter the name of any sponsors.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>description</dc-element>
+         <dc-qualifier>volume</dc-qualifier>
+         <label>Volume</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>If applicable, the volume of the publishing channel where this publication appeared</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>description</dc-element>
+         <dc-qualifier>issue</dc-qualifier>
+         <label>Issue</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>If applicable, the issue of the publishing channel where this publication appeared</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>description</dc-element>
+         <dc-qualifier>startpage</dc-qualifier>
+         <label>Start Page</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>If applicable, the page where this publication starts</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>description</dc-element>
+         <dc-qualifier>endpage</dc-qualifier>
+         <label>End Page</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>If applicable, the page where this publication ends</hint>
+       </field>
+     </row>
+   </form>
+   <form name="institution-publication_references">
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>relation</dc-element>
+         <dc-qualifier>project</dc-qualifier>
+         <label>Projects</label>
+         <input-type>group</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint>Enter the name of project, if any, that has produced this publication.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>relation</dc-element>
+         <dc-qualifier>conference</dc-qualifier>
+         <label>Conference</label>
+         <input-type>onebox</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint>Enter the name of the conference where the item has been presented, if any.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>relation</dc-element>
+         <dc-qualifier>dataset</dc-qualifier>
+         <label>Dataset</label>
+         <input-type>onebox</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint>Link the item to one or more existent dataset in the repository used or described by the publication or, put here the dataset citation</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>identifier</dc-element>
+         <dc-qualifier>citation</dc-qualifier>
+         <label>Citation</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>Enter the standard citation for the previously issued instance of this item.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>description</dc-element>
+         <label>Description</label>
+         <input-type>textarea</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>Enter any other description or comments in this box.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>description</dc-element>
+         <dc-qualifier>sponsorship</dc-qualifier>
+         <label>Sponsors</label>
+         <input-type>onebox</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint>Enter the name of any sponsors.</hint>
+       </field>
+     </row>
+   </form>
     
    <!-- Form patent [START] -->
    <form name="patent">
@@ -1422,6 +3432,116 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
     </form>
+    <form name="person-crisrp-qualification">
+      <row>
+        <field>
+          <dc-schema>crisrp</dc-schema>
+          <dc-element>qualification</dc-element>
+          <label>Qualification</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>You must enter at least the qualification title.</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crisrp</dc-schema>
+          <dc-element>qualification</dc-element>
+          <dc-qualifier>start</dc-qualifier>
+          <label>Start Date</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crisrp</dc-schema>
+          <dc-element>qualification</dc-element>
+          <dc-qualifier>end</dc-qualifier>
+          <label>End Date</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="person-crisrp-education">
+      <row>
+        <field>
+          <dc-schema>crisrp</dc-schema>
+          <dc-element>education</dc-element>
+          <label>Education</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>You must enter at least the education title.</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crisrp</dc-schema>
+          <dc-element>education</dc-element>
+          <dc-qualifier>start</dc-qualifier>
+          <label>Start Date</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>crisrp</dc-schema>
+          <dc-element>education</dc-element>
+          <dc-qualifier>end</dc-qualifier>
+          <label>End Date</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crisrp</dc-schema>
+          <dc-element>education</dc-element>
+          <dc-qualifier>role</dc-qualifier>
+          <label>Role</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="person-oairecerif-identifier-url">
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>url</dc-qualifier>
+          <label>Site URL</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>You must enter at least the site url.</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>crisrp</dc-schema>
+          <dc-element>site</dc-element>
+          <dc-qualifier>title</dc-qualifier>
+          <label>Site Title</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
    <form name="languagetest">
       <row>
         <field>
@@ -1485,7 +3605,109 @@ You can leave out the day and/or month if they aren't applicable.</hint>
             <required></required>
         </field>
      </row>
-  </form> 
+   </form>
+
+   <form name="directorio-publication-dc-contributor-author">
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>contributor</dc-element>
+         <dc-qualifier>author</dc-qualifier>
+         <label>Author</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required>You must enter at least the author.</required>
+         <hint>Enter the names of the authors of this item in the form Lastname, Firstname [i.e. Smith, Josh or Smith, J].</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>oairecerif</dc-schema>
+         <dc-element>author</dc-element>
+         <dc-qualifier>affiliation</dc-qualifier>
+         <label>Affiliation</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>Enter the affiliation of the author as stated on the publication.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>author</dc-element>
+         <dc-qualifier>orcid</dc-qualifier>
+         <label>Author’s ORCID</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>author</dc-element>
+         <dc-qualifier>dni</dc-qualifier>
+         <label>Author’s DNI</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+   </form>
+
+   <form name="institution-publication-dc-contributor-author">
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>contributor</dc-element>
+         <dc-qualifier>author</dc-qualifier>
+         <label>Author</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required>You must enter at least the author.</required>
+         <hint>Enter the names of the authors of this item in the form Lastname, Firstname [i.e. Smith, Josh or Smith, J].</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>oairecerif</dc-schema>
+         <dc-element>author</dc-element>
+         <dc-qualifier>affiliation</dc-qualifier>
+         <label>Affiliation</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>Enter the affiliation of the author as stated on the publication.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>author</dc-element>
+         <dc-qualifier>orcid</dc-qualifier>
+         <label>Author’s ORCID</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>author</dc-element>
+         <dc-qualifier>dni</dc-qualifier>
+         <label>Author’s DNI</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+   </form>
 
    <form name="titleAndIssuedDate">
      <row>
@@ -1531,7 +3753,56 @@ You can leave out the day and/or month if they aren't applicable.</hint>
          <!--    <language value-pairs-name="common_iso_languages">true</language> -->
        </field>
      </row>
-	</form>  
+	</form>
+
+   <form name="person-oairecerif-person-affiliation">
+     <row>
+       <field>
+         <dc-schema>oairecerif</dc-schema>
+         <dc-element>person</dc-element>
+         <dc-qualifier>affiliation</dc-qualifier>
+         <label>Affiliation</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required>You must enter at least the affiliation.</required>
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>oairecerif</dc-schema>
+         <dc-element>affiliation</dc-element>
+         <dc-qualifier>startDate</dc-qualifier>
+         <label>Start Date</label>
+         <input-type>date</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+       <field>
+         <dc-schema>oairecerif</dc-schema>
+         <dc-element>affiliation</dc-element>
+         <dc-qualifier>endDate</dc-qualifier>
+         <label>End Date</label>
+         <input-type>date</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>oairecerif</dc-schema>
+         <dc-element>affiliation</dc-element>
+         <dc-qualifier>role</dc-qualifier>
+         <label>Role</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+   </form>
  </form-definitions>
 
 
@@ -1952,7 +4223,1210 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <stored-value>n/a</stored-value>
       </pair>
     </value-pairs>
-    
+    <value-pairs value-pairs-name="renati_levels" dc-term="renati_levels">
+      <pair>
+        <displayed-value>Unspecified</displayed-value>
+        <stored-value />
+      </pair>
+      <pair>
+        <displayed-value>Bachiller</displayed-value>
+        <stored-value>Bachiller</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Título Profesional</displayed-value>
+        <stored-value>Título Profesional</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Segunda Especialidad</displayed-value>
+        <stored-value>Segunda Especialidad</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Maestro</displayed-value>
+        <stored-value>Maestro</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Doctor</displayed-value>
+        <stored-value>Doctor</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="common_iso_countries" dc-term="common_iso_countries">
+      <pair>
+        <displayed-value>Unspecified</displayed-value>
+        <stored-value />
+      </pair>
+      <pair>
+        <displayed-value>Afganistán</displayed-value>
+        <stored-value>AF</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Islas de Åland</displayed-value>
+        <stored-value>AX</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Albania</displayed-value>
+        <stored-value>AL</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Algeria</displayed-value>
+        <stored-value>DZ</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Samoa Americana</displayed-value>
+        <stored-value>AS</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Andorra</displayed-value>
+        <stored-value>AD</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Angola</displayed-value>
+        <stored-value>AO</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Anguila</displayed-value>
+        <stored-value>AI</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Antártida</displayed-value>
+        <stored-value>AQ</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Antigua y Barbuda</displayed-value>
+        <stored-value>AG</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Argentina</displayed-value>
+        <stored-value>AR</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Armenia</displayed-value>
+        <stored-value>AM</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Aruba</displayed-value>
+        <stored-value>AW</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Australia</displayed-value>
+        <stored-value>AU</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Austria</displayed-value>
+        <stored-value>AT</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Azerbayán</displayed-value>
+        <stored-value>AZ</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Bahamas</displayed-value>
+        <stored-value>BS</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Bahrein</displayed-value>
+        <stored-value>BH</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Bangladesh</displayed-value>
+        <stored-value>BD</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Barbados</displayed-value>
+        <stored-value>BB</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Bielorrusia</displayed-value>
+        <stored-value>BY</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Bélgica</displayed-value>
+        <stored-value>BE</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Belice</displayed-value>
+        <stored-value>BZ</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Benín</displayed-value>
+        <stored-value>BJ</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Islas Bermudas</displayed-value>
+        <stored-value>BM</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Bhután</displayed-value>
+        <stored-value>BT</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Bolivia</displayed-value>
+        <stored-value>BO</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Bonaire, San Eustaquio y Saba</displayed-value>
+        <stored-value>BQ</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Bosnia y Herzegovina</displayed-value>
+        <stored-value>BA</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Botsuana</displayed-value>
+        <stored-value>BW</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Isla Bouvet</displayed-value>
+        <stored-value>BV</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Brasil</displayed-value>
+        <stored-value>BR</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Territorio Británico del Océano Índico</displayed-value>
+        <stored-value>IO</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Brunéi</displayed-value>
+        <stored-value>BN</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Bulgaria</displayed-value>
+        <stored-value>BG</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Burkina Faso</displayed-value>
+        <stored-value>BF</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Burundi</displayed-value>
+        <stored-value>BI</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Cabo Verde</displayed-value>
+        <stored-value>CV</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Camboya</displayed-value>
+        <stored-value>KH</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Camerún</displayed-value>
+        <stored-value>CM</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Canadá</displayed-value>
+        <stored-value>CA</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Islas Caimán</displayed-value>
+        <stored-value>KY</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>República Centroafricana</displayed-value>
+        <stored-value>CF</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Chad</displayed-value>
+        <stored-value>TD</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Chile</displayed-value>
+        <stored-value>CL</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>China</displayed-value>
+        <stored-value>CN</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Isla de Navidad</displayed-value>
+        <stored-value>CX</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Islas Cocos (Keeling)</displayed-value>
+        <stored-value>CC</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Colombia</displayed-value>
+        <stored-value>CO</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Comoras</displayed-value>
+        <stored-value>KM</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Congo</displayed-value>
+        <stored-value>CD</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Congo</displayed-value>
+        <stored-value>CG</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Islas Cook</displayed-value>
+        <stored-value>CK</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Costa Rica</displayed-value>
+        <stored-value>CR</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Costa de Marfil</displayed-value>
+        <stored-value>CI</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Croacia</displayed-value>
+        <stored-value>HR</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Cuba</displayed-value>
+        <stored-value>CU</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Curazao</displayed-value>
+        <stored-value>CW</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Chipre</displayed-value>
+        <stored-value>CY</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>República Checa</displayed-value>
+        <stored-value>CZ</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Dinamarca</displayed-value>
+        <stored-value>DK</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Yibuti</displayed-value>
+        <stored-value>DJ</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Dominica</displayed-value>
+        <stored-value>DM</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>República Dominicana</displayed-value>
+        <stored-value>DO</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Ecuador</displayed-value>
+        <stored-value>EC</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Egipto</displayed-value>
+        <stored-value>EG</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>El Salvador</displayed-value>
+        <stored-value>SV</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Guinea Ecuatorial</displayed-value>
+        <stored-value>GQ</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Eritrea</displayed-value>
+        <stored-value>ER</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Estonia</displayed-value>
+        <stored-value>EE</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Etiopía</displayed-value>
+        <stored-value>ET</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Islas Malvinas</displayed-value>
+        <stored-value>FK</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Islas Feroe</displayed-value>
+        <stored-value>FO</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Fiyi</displayed-value>
+        <stored-value>FJ</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Finlandia</displayed-value>
+        <stored-value>FI</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Francia</displayed-value>
+        <stored-value>FR</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Guayana Francesa</displayed-value>
+        <stored-value>GF</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Polinesia Francesa</displayed-value>
+        <stored-value>PF</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Territorios Australes y Antárticas Franceses</displayed-value>
+        <stored-value>TF</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Gabón</displayed-value>
+        <stored-value>GA</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Gambia</displayed-value>
+        <stored-value>GM</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Georgia</displayed-value>
+        <stored-value>GE</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Alemania</displayed-value>
+        <stored-value>DE</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Ghana</displayed-value>
+        <stored-value>GH</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Gibraltar</displayed-value>
+        <stored-value>GI</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Grecia</displayed-value>
+        <stored-value>GR</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Groenlandia</displayed-value>
+        <stored-value>GL</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Granada</displayed-value>
+        <stored-value>GD</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Guadalupe</displayed-value>
+        <stored-value>GP</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Guam</displayed-value>
+        <stored-value>GU</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Guatemala</displayed-value>
+        <stored-value>GT</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Guernsey</displayed-value>
+        <stored-value>GG</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Guinea</displayed-value>
+        <stored-value>GN</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Guinea-Bissau</displayed-value>
+        <stored-value>GW</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Guyana</displayed-value>
+        <stored-value>GY</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Haití</displayed-value>
+        <stored-value>HT</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Islas Heard y McDonald</displayed-value>
+        <stored-value>HM</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Ciudad del Vaticano</displayed-value>
+        <stored-value>VA</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Honduras</displayed-value>
+        <stored-value>HN</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Hong kong</displayed-value>
+        <stored-value>HK</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Hungría</displayed-value>
+        <stored-value>HU</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Islandia</displayed-value>
+        <stored-value>IS</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>India</displayed-value>
+        <stored-value>IN</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Indonesia</displayed-value>
+        <stored-value>ID</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Irán</displayed-value>
+        <stored-value>IR</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Irak</displayed-value>
+        <stored-value>IQ</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Irlanda</displayed-value>
+        <stored-value>IE</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Isla de Man</displayed-value>
+        <stored-value>IM</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Israel</displayed-value>
+        <stored-value>IL</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Italia</displayed-value>
+        <stored-value>IT</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Jamaica</displayed-value>
+        <stored-value>JM</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Japón</displayed-value>
+        <stored-value>JP</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Jersey</displayed-value>
+        <stored-value>JE</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Jordania</displayed-value>
+        <stored-value>JO</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Kazajistán</displayed-value>
+        <stored-value>KZ</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Kenia</displayed-value>
+        <stored-value>KE</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Kiribati</displayed-value>
+        <stored-value>KI</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Corea del Norte</displayed-value>
+        <stored-value>KP</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Corea del Sur</displayed-value>
+        <stored-value>KR</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Kuwait</displayed-value>
+        <stored-value>KW</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Kirgizstán</displayed-value>
+        <stored-value>KG</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Laos</displayed-value>
+        <stored-value>LA</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Letonia</displayed-value>
+        <stored-value>LV</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Líbano</displayed-value>
+        <stored-value>LB</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Lesoto</displayed-value>
+        <stored-value>LS</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Liberia</displayed-value>
+        <stored-value>LR</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Libia</displayed-value>
+        <stored-value>LY</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Liechtenstein</displayed-value>
+        <stored-value>LI</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Lituania</displayed-value>
+        <stored-value>LT</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Luxemburgo</displayed-value>
+        <stored-value>LU</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Macao</displayed-value>
+        <stored-value>MO</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Macedônia</displayed-value>
+        <stored-value>MK</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Madagascar</displayed-value>
+        <stored-value>MG</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Malawi</displayed-value>
+        <stored-value>MW</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Malasia</displayed-value>
+        <stored-value>MY</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Islas Maldivas</displayed-value>
+        <stored-value>MV</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Mali</displayed-value>
+        <stored-value>ML</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Malta</displayed-value>
+        <stored-value>MT</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Islas Marshall</displayed-value>
+        <stored-value>MH</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Martinica</displayed-value>
+        <stored-value>MQ</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Mauritania</displayed-value>
+        <stored-value>MR</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Mauricio</displayed-value>
+        <stored-value>MU</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Mayotte</displayed-value>
+        <stored-value>YT</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>México</displayed-value>
+        <stored-value>MX</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Micronesia</displayed-value>
+        <stored-value>FM</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Moldavia</displayed-value>
+        <stored-value>MD</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Mónaco</displayed-value>
+        <stored-value>MC</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Mongolia</displayed-value>
+        <stored-value>MN</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Montenegro</displayed-value>
+        <stored-value>ME</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Montserrat</displayed-value>
+        <stored-value>MS</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Marruecos</displayed-value>
+        <stored-value>MA</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Mozambique</displayed-value>
+        <stored-value>MZ</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Birmania</displayed-value>
+        <stored-value>MM</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Namibia</displayed-value>
+        <stored-value>NA</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Nauru</displayed-value>
+        <stored-value>NR</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Nepal</displayed-value>
+        <stored-value>NP</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Países Bajos</displayed-value>
+        <stored-value>NL</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Nueva Caledonia</displayed-value>
+        <stored-value>NC</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Nueva Zelanda</displayed-value>
+        <stored-value>NZ</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Nicaragua</displayed-value>
+        <stored-value>NI</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Niger</displayed-value>
+        <stored-value>NE</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Nigeria</displayed-value>
+        <stored-value>NG</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Niue</displayed-value>
+        <stored-value>NU</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Isla Norfolk</displayed-value>
+        <stored-value>NF</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Islas Marianas del Norte</displayed-value>
+        <stored-value>MP</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Noruega</displayed-value>
+        <stored-value>NO</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Omán</displayed-value>
+        <stored-value>OM</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Pakistán</displayed-value>
+        <stored-value>PK</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Palau</displayed-value>
+        <stored-value>PW</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Palestina</displayed-value>
+        <stored-value>PS</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Panamá</displayed-value>
+        <stored-value>PA</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Papúa Nueva Guinea</displayed-value>
+        <stored-value>PG</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Paraguay</displayed-value>
+        <stored-value>PY</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Perú</displayed-value>
+        <stored-value>PE</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Filipinas</displayed-value>
+        <stored-value>PH</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Islas Pitcairn</displayed-value>
+        <stored-value>PN</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Polonia</displayed-value>
+        <stored-value>PL</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Portugal</displayed-value>
+        <stored-value>PT</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Puerto Rico</displayed-value>
+        <stored-value>PR</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Qatar</displayed-value>
+        <stored-value>QA</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Reunión</displayed-value>
+        <stored-value>RE</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Rumanía</displayed-value>
+        <stored-value>RO</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Rusia</displayed-value>
+        <stored-value>RU</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Ruanda</displayed-value>
+        <stored-value>RW</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>San Bartolomé</displayed-value>
+        <stored-value>BL</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Santa Elena</displayed-value>
+        <stored-value>SH</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>San Cristóbal y Nieves</displayed-value>
+        <stored-value>KN</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Santa Lucía</displayed-value>
+        <stored-value>LC</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>San Martín (Francia)</displayed-value>
+        <stored-value>MF</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>San Pedro y Miquelón</displayed-value>
+        <stored-value>PM</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>San Vicente y las Granadinas</displayed-value>
+        <stored-value>VC</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Samoa</displayed-value>
+        <stored-value>WS</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>San Marino</displayed-value>
+        <stored-value>SM</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Santo Tomé y Príncipe</displayed-value>
+        <stored-value>ST</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Arabia Saudita</displayed-value>
+        <stored-value>SA</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Senegal</displayed-value>
+        <stored-value>SN</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Serbia</displayed-value>
+        <stored-value>RS</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Seychelles</displayed-value>
+        <stored-value>SC</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Sierra Leona</displayed-value>
+        <stored-value>SL</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Singapur</displayed-value>
+        <stored-value>SG</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Sint Maarten (parte neerlandesa)</displayed-value>
+        <stored-value>SX</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Eslovaquia</displayed-value>
+        <stored-value>SK</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Eslovenia</displayed-value>
+        <stored-value>SI</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Islas Salomón</displayed-value>
+        <stored-value>SB</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Somalia</displayed-value>
+        <stored-value>SO</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Sudáfrica</displayed-value>
+        <stored-value>ZA</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Islas Georgias del Sur y Sandwich del Sur</displayed-value>
+        <stored-value>GS</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Sudán del Sur</displayed-value>
+        <stored-value>SS</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>España</displayed-value>
+        <stored-value>ES</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Sri lanka</displayed-value>
+        <stored-value>LK</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Sudán</displayed-value>
+        <stored-value>SD</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Surinám</displayed-value>
+        <stored-value>SR</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Svalbard y Jan Mayen</displayed-value>
+        <stored-value>SJ</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Swazilandia</displayed-value>
+        <stored-value>SZ</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Suecia</displayed-value>
+        <stored-value>SE</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Suiza</displayed-value>
+        <stored-value>CH</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Siria</displayed-value>
+        <stored-value>SY</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Taiwán</displayed-value>
+        <stored-value>TW</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Tadjikistán</displayed-value>
+        <stored-value>TJ</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Tanzania</displayed-value>
+        <stored-value>TZ</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Tailandia</displayed-value>
+        <stored-value>TH</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Timor Oriental</displayed-value>
+        <stored-value>TL</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Togo</displayed-value>
+        <stored-value>TG</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Tokelau</displayed-value>
+        <stored-value>TK</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Tonga</displayed-value>
+        <stored-value>TO</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Trinidad y Tobago</displayed-value>
+        <stored-value>TT</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Tunez</displayed-value>
+        <stored-value>TN</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Turquía</displayed-value>
+        <stored-value>TR</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Turkmenistán</displayed-value>
+        <stored-value>TM</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Islas Turcas y Caicos</displayed-value>
+        <stored-value>TC</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Tuvalu</displayed-value>
+        <stored-value>TV</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Uganda</displayed-value>
+        <stored-value>UG</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Ucrania</displayed-value>
+        <stored-value>UA</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Emiratos Árabes Unidos</displayed-value>
+        <stored-value>AE</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Reino Unido</displayed-value>
+        <stored-value>GB</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Islas Ultramarinas Menores de Estados Unidos</displayed-value>
+        <stored-value>UM</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Estados Unidos de América</displayed-value>
+        <stored-value>US</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Uruguay</displayed-value>
+        <stored-value>UY</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Uzbekistán</displayed-value>
+        <stored-value>UZ</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Vanuatu</displayed-value>
+        <stored-value>VU</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Venezuela</displayed-value>
+        <stored-value>VE</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Vietnam</displayed-value>
+        <stored-value>VN</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Islas Vírgenes Británicas</displayed-value>
+        <stored-value>VG</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Islas Vírgenes de los Estados Unidos</displayed-value>
+        <stored-value>VI</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Wallis y Futuna</displayed-value>
+        <stored-value>WF</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Sahara Occidental</displayed-value>
+        <stored-value>EH</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Yemen</displayed-value>
+        <stored-value>YE</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Zambia</displayed-value>
+        <stored-value>ZM</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Zimbabue</displayed-value>
+        <stored-value>ZW</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="peru_oairecerif_access" dc-term="peru_oairecerif_access">
+      <pair>
+        <displayed-value>Unspecified</displayed-value>
+        <stored-value />
+      </pair>
+      <pair>
+        <displayed-value>open access</displayed-value>
+        <stored-value>open access</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>embargoed access</displayed-value>
+        <stored-value>embargoed access</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>restricted access</displayed-value>
+        <stored-value>restricted access</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>metadata only access</displayed-value>
+        <stored-value>metadata only access</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="truefalse" dc-term="truefalse">
+      <pair>
+        <displayed-value>True</displayed-value>
+        <stored-value>true</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>False</displayed-value>
+        <stored-value>false</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="coar_versions" dc-term="coar_versions">
+      <pair>
+        <displayed-value>Unspecified</displayed-value>
+        <stored-value />
+      </pair>
+      <pair>
+        <displayed-value>Author’s Original</displayed-value>
+        <stored-value>AO</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Submitted Manuscript Under Review</displayed-value>
+        <stored-value>SMUR</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Accepted Manuscript</displayed-value>
+        <stored-value>AM</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Proof</displayed-value>
+        <stored-value>P</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Version of Record</displayed-value>
+        <stored-value>VoR</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Corrected Version of Record</displayed-value>
+        <stored-value>CvoR</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Enhanced Version of Record</displayed-value>
+        <stored-value>EvoR</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Not Applicable (or Unknown)</displayed-value>
+        <stored-value>NA</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="renati_types" dc-term="renati_types">
+      <pair>
+        <displayed-value>Unspecified</displayed-value>
+        <stored-value />
+      </pair>
+      <pair>
+        <displayed-value>Tesis</displayed-value>
+        <stored-value>Tesis</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Trabajo de investigación</displayed-value>
+        <stored-value>Trabajo de investigación</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Trabajo de suficiencia profesional</displayed-value>
+        <stored-value>Trabajo de suficiencia profesional</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Trabajo académico</displayed-value>
+        <stored-value>Trabajo académico</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="project_status" dc-term="project_status">
+      <pair>
+        <displayed-value>Activo</displayed-value>
+        <stored-value>Active</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Suspendido</displayed-value>
+        <stored-value>Suspended</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Concluido</displayed-value>
+        <stored-value>Finished</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="project_types" dc-term="project_types">
+      <pair>
+        <displayed-value>Unspecified</displayed-value>
+        <stored-value />
+      </pair>
+      <pair>
+        <displayed-value>basic research</displayed-value>
+        <stored-value>basic research</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>applied research</displayed-value>
+        <stored-value>applied research</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>experimental development</displayed-value>
+        <stored-value>experimental development</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="project_types_other" dc-term="project_types_other">
+      <pair>
+        <displayed-value>Desarrollo tecnológico</displayed-value>
+        <stored-value>Technological development</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Transferencia tecnológica</displayed-value>
+        <stored-value>Technology transfer</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Investigación adaptativa</displayed-value>
+        <stored-value>Adaptive research</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Investigación económica</displayed-value>
+        <stored-value>Economic research</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Servicios de extensión</displayed-value>
+        <stored-value>Extension services</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Fortalecimiento de capacidades</displayed-value>
+        <stored-value>Capacity building</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Incubación y desarrollo de empresas</displayed-value>
+        <stored-value>Business incubation and development</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Equipamiento científico</displayed-value>
+        <stored-value>Scientific equipment</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="peru_patent_types" dc-term="peru_patent_types">
+      <pair>
+        <displayed-value>Unspecified</displayed-value>
+        <stored-value />
+      </pair>
+      <pair>
+        <displayed-value>Patente de invención</displayed-value>
+        <stored-value>Invention patent</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Patente de Modelo de utilidad</displayed-value>
+        <stored-value>Utility model</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Certificado de Obtentor</displayed-value>
+        <stored-value>Certificate of plant breeder's right</stored-value>
+      </pair>
+    </value-pairs>
  </form-value-pairs>
 
 </input-forms>

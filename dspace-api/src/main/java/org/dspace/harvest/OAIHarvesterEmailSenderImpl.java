@@ -69,7 +69,7 @@ public class OAIHarvesterEmailSenderImpl implements OAIHarvesterEmailSender {
 
         String attachmentName = oaiHarvesterReportGenerator.getName();
         String attachmentMimeType = oaiHarvesterReportGenerator.getMimeType();
-        InputStream is = oaiHarvesterReportGenerator.generate(report);
+        InputStream is = oaiHarvesterReportGenerator.generate(report, harvestRow);
 
         sendEmail(recipient, ccAddress, COMPLETED_WITH_ERRORS_TEMPLATE, is, attachmentName, attachmentMimeType, args);
     }

@@ -9,6 +9,7 @@ package org.dspace.app.profile;
 
 import static org.dspace.content.authority.Choices.CF_ACCEPTED;
 import static org.dspace.core.Constants.READ;
+import static org.dspace.core.Constants.WRITE;
 import static org.dspace.eperson.Group.ANONYMOUS;
 
 import java.net.URI;
@@ -153,6 +154,7 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
         Group anonymous = groupService.findByName(context, ANONYMOUS);
         authorizeService.removeGroupPolicies(context, item, anonymous);
         authorizeService.addPolicy(context, item, READ, ePerson);
+        authorizeService.addPolicy(context, item, WRITE, ePerson);
     }
 
     @Override
@@ -218,7 +220,7 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
 
         DiscoverQuery discoverQuery = new DiscoverQuery();
         discoverQuery.setDSpaceObjectFilter(IndexableCollection.TYPE);
-        discoverQuery.addFilterQueries("relationship.type:" + profileType);
+        discoverQuery.addFilterQueries("search.entitytype:" + profileType);
 
         DiscoverResult discoverResult = searchService.search(context, discoverQuery);
         List<IndexableObject> indexableObjects = discoverResult.getIndexableObjects();
@@ -261,7 +263,7 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
     }
 
     private String getProfileType() {
-        return configurationService.getProperty("researcher-profile.type", "Person");
+        return configurationService.getProperty("researcher-profile.type", "CvPerson");
     }
 
 }

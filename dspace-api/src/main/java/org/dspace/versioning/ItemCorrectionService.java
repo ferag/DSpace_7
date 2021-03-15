@@ -13,6 +13,7 @@ import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -169,6 +170,10 @@ public class ItemCorrectionService {
         return workspaceItem;
     }
 
+    public WorkspaceItem createCorrectionItem(Context context, UUID itemUUID) throws SQLException, AuthorizeException {
+        return createWorkspaceItemAndRelationshipByItem(context, itemUUID, getCorrectionRelationshipName());
+    }
+
     public boolean checkIfIsCorrectionItem(Context context, Item item) throws SQLException {
         return checkIfIsCorrectionItem(context, item, getCorrectionRelationshipName());
     }
@@ -181,19 +186,10 @@ public class ItemCorrectionService {
         return isNotEmpty(relationshipService.findByItemAndRelationshipType(context, item, relationshipType, true));
     }
 
-    public Relationship getCorrectionItemRelationship(Context context, Item item) throws SQLException {
-        RelationshipType type = findRelationshipType(context, item, getCorrectionRelationshipName());
-        if (type == null) {
-            return null;
-        }
-        List<Relationship> relationships = relationshipService.findByItemAndRelationshipType(context, item, type, true);
-        return isNotEmpty(relationships) ? relationships.get(0) : null;
-    }
-
     public void replaceCorrectionItemWithNative(Context context, XmlWorkflowItem wfi) {
 
         try {
-            Relationship relationship = getCorrectionItemRelationship(context, wfi.getItem());
+            Relationship relationship = getCorrectionItemRelation(context, wfi.getItem(), true);
             Item nativeItem = relationship.getRightItem();
             relationshipService.delete(context, relationship);
             correctionItemProvider.updateNativeItemWithCorrection(context, wfi, wfi.getItem(), nativeItem);
@@ -203,8 +199,14 @@ public class ItemCorrectionService {
 
     }
 
+    public List<Item> getCorrectionItems(Context context, Item item) throws SQLException {
+        return getCorrectionItemRelations(context, item, false).stream()
+            .map(relationship -> relationship.getLeftItem())
+            .collect(Collectors.toList());
+    }
+
     public Item getCorrectedItem(Context context, Item correctionItem) throws SQLException {
-        Relationship relationship = getCorrectionItemRelationship(context, correctionItem);
+        Relationship relationship = getCorrectionItemRelation(context, correctionItem, true);
         return relationship != null ? relationship.getRightItem() : null;
     }
 
@@ -216,6 +218,19 @@ public class ItemCorrectionService {
         throws SQLException, AuthorizeException {
         applyMetadataCorrectionsOnItem(context, item, correction.getMetadataCorrections());
         itemService.update(context, item);
+    }
+
+    private List<Relationship> getCorrectionItemRelations(Context ctx, Item item, boolean isLeft) throws SQLException {
+        RelationshipType type = findRelationshipType(ctx, item, getCorrectionRelationshipName());
+        if (type == null) {
+            return Collections.emptyList();
+        }
+        return relationshipService.findByItemAndRelationshipType(ctx, item, type, isLeft);
+    }
+
+    private Relationship getCorrectionItemRelation(Context context, Item item, boolean isLeft) throws SQLException {
+        List<Relationship> relations = getCorrectionItemRelations(context, item, isLeft);
+        return isNotEmpty(relations) ? relations.get(0) : null;
     }
 
     private RelationshipType findRelationshipType(Context context, Item item, String relationship) throws SQLException {
@@ -239,6 +254,10 @@ public class ItemCorrectionService {
 
         for (String metadataField : originalItemMetadata.keySet()) {
 
+            if (ignoredMetadataFields.contains(metadataField)) {
+                continue;
+            }
+
             if (!correctionItemMetadata.containsKey(metadataField)) {
                 metadataCorrections.add(MetadataCorrection.metadataRemoval(metadataField));
                 continue;
@@ -256,6 +275,11 @@ public class ItemCorrectionService {
         }
 
         for (String metadataField : correctionItemMetadata.keySet()) {
+
+            if (ignoredMetadataFields.contains(metadataField)) {
+                continue;
+            }
+
             if (!originalItemMetadata.containsKey(metadataField)) {
                 List<MetadataValue> metadataValues = correctionItemMetadata.get(metadataField);
                 List<MetadataValueDTO> metadataValueDtos = getMetadataValueDtos(metadataValues);
@@ -284,9 +308,6 @@ public class ItemCorrectionService {
         for (MetadataCorrection correction : metadataCorrections) {
 
             String metadataField = correction.getMetadataField();
-            if (ignoredMetadataFields.contains(metadataField)) {
-                continue;
-            }
 
             CorrectionType correctionType = correction.getCorrectionType();
             switch (correctionType) {

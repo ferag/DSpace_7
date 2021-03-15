@@ -7,9 +7,7 @@
  */
 package org.dspace.app.deduplication.service.impl;
 
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_CORRECTION_OF_ITEM_RELATIONSHIP;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_WITHDRAW_OF_ITEM_RELATIONSHIP;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.isCorrectionOrWithdrawOrReinstateRelationshipType;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -410,11 +408,6 @@ public class SolrDedupServiceImpl implements DedupService {
             throw new SQLRuntimeException(e);
         }
 
-    }
-
-    private boolean isCorrectionOrWithdrawOrReinstateRelationshipType(String type) {
-        return IS_WITHDRAW_OF_ITEM_RELATIONSHIP.equals(type) || IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP.equals(type)
-            || IS_CORRECTION_OF_ITEM_RELATIONSHIP.equals(type);
     }
 
     private void removeFake(String dedupID, Integer type) throws SearchServiceException {

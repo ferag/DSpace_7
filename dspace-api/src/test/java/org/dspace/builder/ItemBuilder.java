@@ -371,8 +371,16 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "crispj", "investigator", null, investigator);
     }
 
+    public ItemBuilder withProjectInvestigator(String investigator, String authority) {
+        return addMetadataValue(item, "crispj", "investigator", null, null, investigator, authority, 600);
+    }
+
     public ItemBuilder withProjectCoinvestigators(String coinvestigators) {
         return addMetadataValue(item, "crispj", "coinvestigators", null, coinvestigators);
+    }
+
+    public ItemBuilder withProjectCoinvestigators(String coinvestigators, String authority) {
+        return addMetadataValue(item, "crispj", "coinvestigators", null, null, coinvestigators, authority, 600);
     }
 
     public ItemBuilder withProjectCoordinator(String coordinator) {
@@ -724,9 +732,41 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "crispj", "supportingStaff", null, supportingStaff);
     }
 
+    public ItemBuilder withCvPublicationSyncEnabled(boolean enabled) {
+        return setMetadataSingleValue(item, "perucris", "cvPublication", "syncEnabled", enabled + "");
+    }
+
+    public ItemBuilder withCvProjectSyncEnabled(boolean enabled) {
+        return setMetadataSingleValue(item, "perucris", "cvProject", "syncEnabled", enabled + "");
+    }
+
+    public ItemBuilder withCvPatentSyncEnabled(boolean enabled) {
+        return setMetadataSingleValue(item, "perucris", "cvPatent", "syncEnabled", enabled + "");
+    }
+
+    public ItemBuilder withCvPersonBasicInfoSyncEnabled(boolean enabled) {
+        return setMetadataSingleValue(item, "perucris", "cvPerson", "syncBasicInfo", enabled + "");
+    }
+
+    public ItemBuilder withCvPersonEducationSyncEnabled(boolean enabled) {
+        return setMetadataSingleValue(item, "perucris", "cvPerson", "syncEducation", enabled + "");
+    }
+
+    public ItemBuilder withCvPersonAffiliationSyncEnabled(boolean enabled) {
+        return setMetadataSingleValue(item, "perucris", "cvPerson", "syncAffiliation", enabled + "");
+    }
+
+    public ItemBuilder withCvPersonQualificationSyncEnabled(boolean enabled) {
+        return setMetadataSingleValue(item, "perucris", "cvPerson", "syncQualification", enabled + "");
+    }
+
     public ItemBuilder withHandle(String handle) {
         this.handle = handle;
         return this;
+    }
+
+    public ItemBuilder withNotificationTo(String notification, String authority) {
+        return addMetadataValue(item, "perucris", "notification", "to", null, notification, authority, 600);
     }
 
     /**

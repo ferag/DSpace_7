@@ -20,6 +20,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,6 +53,7 @@ import org.dspace.utils.DSpace;
 import org.dspace.workflow.WorkflowException;
 import org.dspace.workflow.WorkflowService;
 import org.dspace.workflow.factory.WorkflowServiceFactory;
+import org.hibernate.LazyInitializationException;
 
 /**
  * Implementation of {@link DSpaceRunnable}
@@ -199,12 +201,16 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
                     totalRecordWorked += userPublicationsProcessed;
                     if (userPublicationsProcessed >= 20) {
                         context.commit();
+                        // to ensure that collection's template item is fully initialized
+                        reloadCollectionIfNeeded();
                     }
                 }
                 countItemsProcessed++;
                 if (countItemsProcessed == 20) {
                     context.commit();
                     countItemsProcessed = 0;
+                    // to ensure that collection's template item is fully initialized
+                    reloadCollectionIfNeeded();
                 }
             }
             context.commit();
@@ -213,6 +219,27 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
         } catch (SQLException | SearchServiceException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * utility method to check that we have collection's item fully loaded with template item fully initialized,
+     * in order to avoid lazy initialization exceptions.
+     *
+     * @throws SQLException
+     */
+    private void reloadCollectionIfNeeded() throws SQLException {
+        boolean needsReload;
+        try {
+            needsReload = Objects.isNull(this.collection.getTemplateItem()) ||
+                CollectionUtils.isEmpty(this.collection.getTemplateItem().getMetadata());
+        } catch (LazyInitializationException e) {
+            log.warn(e.getMessage());
+            needsReload = true;
+        }
+        if (needsReload) {
+            log.debug("Reloading collection");
+            this.collection = this.context.reloadEntity(this.collection);
         }
     }
 

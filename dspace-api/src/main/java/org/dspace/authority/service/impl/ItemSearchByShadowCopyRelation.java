@@ -8,12 +8,17 @@
 package org.dspace.authority.service.impl;
 
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.UUID;
 
+import org.dspace.authority.service.AuthorityValueService;
+import org.dspace.authority.service.ItemReferenceResolver;
 import org.dspace.authority.service.ItemSearcher;
+import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
+import org.dspace.core.Context.Mode;
 import org.dspace.core.exception.SQLRuntimeException;
 import org.dspace.util.UUIDUtils;
 import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
@@ -25,7 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  */
-public class ItemSearchByShadowCopyRelation implements ItemSearcher {
+public class ItemSearchByShadowCopyRelation implements ItemSearcher, ItemReferenceResolver {
 
     @Autowired
     private ItemService itemService;
@@ -46,6 +51,53 @@ public class ItemSearchByShadowCopyRelation implements ItemSearcher {
         } catch (SQLException e) {
             throw new SQLRuntimeException(e);
         }
+    }
+
+    @Override
+    public void resolveReferences(Context context, Item item) {
+        Mode originalMode = context.getCurrentMode();
+        try {
+
+            context.turnOffAuthorisationSystem();
+
+            Item copiedItem = concytecWorkflowService.findCopiedItem(context, item);
+            if (copiedItem == null) {
+                return;
+            }
+
+            context.setMode(Mode.BATCH_EDIT);
+
+            String authority = AuthorityValueService.REFERENCE + "SHADOW::" + copiedItem.getID();
+            Iterator<Item> itemIterator = findItemsWithAuthority(context, authority, item);
+
+            while (itemIterator.hasNext()) {
+                Item itemToUpdate = itemIterator.next();
+
+                itemToUpdate.getMetadata().stream()
+                    .filter(metadataValue -> authority.equals(metadataValue.getAuthority()))
+                    .forEach(metadataValue -> metadataValue.setAuthority(item.getID().toString()));
+
+                itemService.update(context, itemToUpdate);
+            }
+
+        } catch (SQLException | AuthorizeException e) {
+            throw new RuntimeException(e);
+        } finally {
+            context.restoreAuthSystemState();
+            if (originalMode != context.getCurrentMode()) {
+                context.setMode(originalMode);
+            }
+        }
+
+    }
+
+    private Iterator<Item> findItemsWithAuthority(Context context, String authority, Item item) {
+        String relationshipType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
+        if (relationshipType == null) {
+            throw new IllegalArgumentException("The given item has no relationship.type: " + item.getID());
+        }
+
+        return itemService.findByAuthorityControlledMetadataFields(context, authority, relationshipType);
     }
 
 }

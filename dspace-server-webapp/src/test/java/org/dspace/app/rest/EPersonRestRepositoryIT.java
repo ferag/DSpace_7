@@ -33,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -62,12 +63,13 @@ import org.dspace.builder.GroupBuilder;
 import org.dspace.builder.WorkflowItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
+import org.dspace.content.authority.Choices;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.PasswordHash;
-import org.dspace.eperson.dao.RegistrationDataDAO;
 import org.dspace.eperson.service.AccountService;
 import org.dspace.eperson.service.EPersonService;
+import org.dspace.eperson.service.GroupService;
 import org.dspace.eperson.service.RegistrationDataService;
 import org.dspace.services.ConfigurationService;
 import org.hamcrest.Matchers;
@@ -87,7 +89,8 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
     private EPersonService ePersonService;
 
     @Autowired
-    private RegistrationDataDAO registrationDataDAO;
+    private GroupService groupService;
+
     @Autowired
     private ConfigurationService configurationService;
 
@@ -466,6 +469,154 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
                             .andExpect(jsonPath("$", is(
                                     EPersonMatcher.matchEPersonEntry(ePerson)
                             )));
+    }
+
+    @Test
+    public void findByEmailWithDefaultRoleEnabled() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Group defaultRole = GroupBuilder.createGroup(context).withName("Default role").build();
+
+        EPerson ePerson = EPersonBuilder.createEPerson(context)
+            .withNameInMetadata("John", "Doe")
+            .withEmail("Johndoe@example.com")
+            .build();
+
+        EPersonBuilder.createEPerson(context)
+            .withNameInMetadata("Jane", "Smith")
+            .withEmail("janesmith@example.com")
+            .build();
+
+        configurationService.setProperty("eperson.group.default", defaultRole.getID());
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        getClient(authToken).perform(get("/api/eperson/epersons/search/byEmail")
+            .param("email", ePerson.getEmail()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.metadata", matchMetadata("perucris.eperson.role", "Default role",
+                defaultRole.getID().toString(), 0)));
+
+        configurationService.setProperty("eperson.group.default", "");
+    }
+
+    @Test
+    public void findByEmailWithNotAdminUserDefaultRoleEnabled() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Group defaultRole = GroupBuilder.createGroup(context).withName("Default role").build();
+
+        EPerson ePerson = EPersonBuilder.createEPerson(context)
+            .withNameInMetadata("John", "Doe")
+            .withEmail("Johndoe@example.com")
+            .withPassword("secret")
+            .build();
+
+        EPersonBuilder.createEPerson(context)
+            .withNameInMetadata("Jane", "Smith")
+            .withEmail("janesmith@example.com")
+            .build();
+
+        configurationService.setProperty("eperson.group.default", defaultRole.getID());
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(ePerson.getEmail(), "secret");
+        getClient(authToken).perform(get("/api/eperson/epersons/search/byEmail")
+            .param("email", ePerson.getEmail()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.metadata", matchMetadata("perucris.eperson.role", "Default role",
+                defaultRole.getID().toString(), 0)));
+
+        configurationService.setProperty("eperson.group.default", "");
+    }
+
+    @Test
+    public void findByEmailWithDefaultRoleEnabledAndAppendedToExistingOnes() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Group defaultRole = GroupBuilder.createGroup(context).withName("Default role").build();
+
+        String existingRoleId = UUID.randomUUID().toString();
+        EPerson ePerson = EPersonBuilder.createEPerson(context)
+            .withNameInMetadata("John", "Doe")
+            .withEmail("Johndoe@example.com")
+            .withMetadata("perucris", "eperson", "role",
+                "Existing role", null,
+                existingRoleId,
+                Choices.CF_ACCEPTED)
+            .build();
+
+        configurationService.setProperty("eperson.group.default", defaultRole.getID());
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        getClient(authToken).perform(get("/api/eperson/epersons/search/byEmail")
+            .param("email", ePerson.getEmail()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.metadata", matchMetadata("perucris.eperson.role", "Default role",
+                defaultRole.getID().toString(), 1)))
+            .andExpect(jsonPath("$.metadata", matchMetadata("perucris.eperson.role", "Existing role",
+                existingRoleId, 0)));
+
+        configurationService.setProperty("eperson.group.default", "");
+    }
+
+    @Test
+    public void findByEmailWithDefaultRoleDisabled() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Group defaultRole = GroupBuilder.createGroup(context).withName("Default role").build();
+
+        EPerson ePerson = EPersonBuilder.createEPerson(context)
+            .withNameInMetadata("John", "Doe")
+            .withEmail("Johndoe@example.com")
+            .build();
+
+        configurationService.setProperty("eperson.group.default", "");
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        getClient(authToken).perform(get("/api/eperson/epersons/search/byEmail")
+            .param("email", ePerson.getEmail()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.metadata['perucris.eperson.role']").doesNotExist());
+
+        configurationService.setProperty("eperson.group.default", "");
+    }
+
+    @Test
+    public void findByEmailWithDefaultRoleEnabledUnauthorized() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Group defaultRole = GroupBuilder.createGroup(context).withName("Default role").build();
+
+        EPerson ePerson = EPersonBuilder.createEPerson(context)
+            .withNameInMetadata("John", "Doe")
+            .withEmail("Johndoe@example.com")
+            .build();
+
+        EPersonBuilder.createEPerson(context)
+            .withNameInMetadata("Jane", "Smith")
+            .withEmail("janesmith@example.com")
+            .build();
+
+        configurationService.setProperty("eperson.group.default", defaultRole.getID());
+
+        context.restoreAuthSystemState();
+
+        getClient().perform(get("/api/eperson/epersons/search/byEmail")
+            .param("email", ePerson.getEmail()))
+            .andExpect(status().isNoContent());
+
+        configurationService.setProperty("eperson.group.default", "");
     }
 
     @Test
@@ -1986,7 +2137,7 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
         AddOperation addOperation = new AddOperation("/password", newPassword);
         ops.add(addOperation);
         String patchBody = getPatchContent(ops);
-        accountService.sendRegistrationInfo(context, ePerson.getEmail());
+        accountService.sendRegistrationInfo(context, ePerson.getEmail(), Collections.emptyList());
         String tokenForEPerson = registrationDataService.findByEmail(context, ePerson.getEmail()).getToken();
         PasswordHash oldPassword = ePersonService.getPasswordHash(ePerson);
         // updates password
@@ -2022,7 +2173,7 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
         AddOperation addOperation = new AddOperation("/password", newPassword);
         ops.add(addOperation);
         String patchBody = getPatchContent(ops);
-        accountService.sendRegistrationInfo(context, ePerson.getEmail());
+        accountService.sendRegistrationInfo(context, ePerson.getEmail(), Collections.emptyList());
         String tokenForEPerson = registrationDataService.findByEmail(context, ePerson.getEmail()).getToken();
         PasswordHash oldPassword = ePersonService.getPasswordHash(ePerson);
         // updates password
@@ -2067,8 +2218,8 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
         AddOperation addOperation = new AddOperation("/password", newPassword);
         ops.add(addOperation);
         String patchBody = getPatchContent(ops);
-        accountService.sendRegistrationInfo(context, ePerson.getEmail());
-        accountService.sendRegistrationInfo(context, ePersonTwo.getEmail());
+        accountService.sendRegistrationInfo(context, ePerson.getEmail(), Collections.emptyList());
+        accountService.sendRegistrationInfo(context, ePersonTwo.getEmail(), Collections.emptyList());
         String tokenForEPerson = registrationDataService.findByEmail(context, ePerson.getEmail()).getToken();
         String tokenForEPersonTwo = registrationDataService.findByEmail(context, ePersonTwo.getEmail()).getToken();
 
@@ -2109,7 +2260,7 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
         ReplaceOperation replaceOperation = new ReplaceOperation("/email", newEmail);
         ops.add(replaceOperation);
         String patchBody = getPatchContent(ops);
-        accountService.sendRegistrationInfo(context, ePerson.getEmail());
+        accountService.sendRegistrationInfo(context, ePerson.getEmail(), Collections.emptyList());
         String tokenForEPerson = registrationDataService.findByEmail(context, ePerson.getEmail()).getToken();
         PasswordHash oldPassword = ePersonService.getPasswordHash(ePerson);
         // updates password
@@ -2158,7 +2309,7 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
         AddOperation addOperation = new AddOperation("/password", newPassword);
         ops.add(addOperation);
         String patchBody = getPatchContent(ops);
-        accountService.sendRegistrationInfo(context, ePerson.getEmail());
+        accountService.sendRegistrationInfo(context, ePerson.getEmail(), Collections.emptyList());
         String newRegisterToken = registrationDataService.findByEmail(context, newRegisterEmail).getToken();
         PasswordHash oldPassword = ePersonService.getPasswordHash(ePerson);
         try {

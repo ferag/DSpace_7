@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE relationships SYSTEM "relationship-types.dtd">
+
+<relationships>
+    <type>
+        <leftType>CvPersonClone</leftType>
+        <rightType>CvPerson</rightType>
+        <leftwardType>isCloneOfItem</leftwardType>
+        <rightwardType>isClonedByItem</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+            <max>1</max>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
+    <type>
+        <leftType>CvPublicationClone</leftType>
+        <rightType>CvPublication</rightType>
+        <leftwardType>isCloneOfItem</leftwardType>
+        <rightwardType>isClonedByItem</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+            <max>1</max>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
+    <type>
+        <leftType>CvProjectClone</leftType>
+        <rightType>CvProject</rightType>
+        <leftwardType>isCloneOfItem</leftwardType>
+        <rightwardType>isClonedByItem</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+            <max>1</max>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
+    <type>
+        <leftType>CvPatentClone</leftType>
+        <rightType>CvPatent</rightType>
+        <leftwardType>isCloneOfItem</leftwardType>
+        <rightwardType>isClonedByItem</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+            <max>1</max>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
+</relationships>

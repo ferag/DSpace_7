@@ -241,8 +241,8 @@
         </rightCardinality>
     </type>
     <type>
-        <leftType>PersonCv</leftType>
-        <rightType>PersonCv</rightType>
+        <leftType>CvPerson</leftType>
+        <rightType>CvPerson</rightType>
         <leftwardType>isReinstatementOfItem</leftwardType>
         <rightwardType>isReinstatedByItem</rightwardType>
         <leftCardinality>

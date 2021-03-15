@@ -71,7 +71,7 @@ import org.dspace.submit.AbstractProcessingStep;
 import org.dspace.util.UUIDUtils;
 import org.dspace.validation.service.ValidationService;
 import org.dspace.versioning.ItemCorrectionService;
-import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
+import org.dspace.xmlworkflow.ConcytecWorkflowRelation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -572,11 +572,11 @@ public class WorkspaceItemRestRepository extends DSpaceRestRepository<WorkspaceI
             return ItemCorrectionFeature.NAME;
         }
 
-        if (relationship.equals(ConcytecWorkflowService.IS_WITHDRAW_OF_ITEM_RELATIONSHIP)) {
+        if (relationship.equals(ConcytecWorkflowRelation.WITHDRAW.getLeftType())) {
             return ItemWithdrawRequestFeature.NAME;
         }
 
-        if (relationship.equals(ConcytecWorkflowService.IS_REINSTATEMENT_OF_ITEM_RELATIONSHIP)) {
+        if (relationship.equals(ConcytecWorkflowRelation.REINSTATE.getLeftType())) {
             return ItemReinstateRequestFeature.NAME;
         }
 

@@ -5050,6 +5050,35 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         is(WorkflowItemMatcher.matchProperties(wfItem)))))));
     }
 
+    @Test
+    public void testGetSearchObjectsWithCvPersonCloneCommunityFilterPlugin() throws Exception {
+        context.turnOffAuthorisationSystem();
+        parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
+        Collection collection =
+            CollectionBuilder.createCollection(context, parentCommunity).withName("Collection").build();
+        CollectionBuilder.createCollection(context, parentCommunity).withName("Collection 2").build();
+        ItemBuilder.createItem(context, collection).withTitle("Parent Community Item").build();
+        context.restoreAuthSystemState();
+
+        String adminToken = getAuthToken(admin.getEmail(), password);
+
+        getClient(adminToken).perform(get("/api/discover/search/objects")
+            .param("query", "Parent Community"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.type", is("discover")))
+            .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(1)));
+
+        configurationService.setProperty("cti-vitae.clone.root-id", parentCommunity.getID().toString());
+
+        // no results
+        getClient(adminToken).perform(get("/api/discover/search/objects")
+            .param("query", "Parent Community"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.type", is("discover")))
+            .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(0)));
+
+    }
+
     private EPerson createEPerson(String email) {
         return EPersonBuilder.createEPerson(context).withEmail(email).withPassword(password).build();
     }

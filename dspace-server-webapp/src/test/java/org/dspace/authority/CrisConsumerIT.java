@@ -14,8 +14,7 @@ import static org.dspace.builder.RelationshipBuilder.createRelationshipBuilder;
 import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
 import static org.dspace.content.authority.Choices.CF_ACCEPTED;
 import static org.dspace.content.authority.Choices.CF_UNSET;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.HAS_SHADOW_COPY_RELATIONSHIP;
-import static org.dspace.xmlworkflow.service.ConcytecWorkflowService.IS_SHADOW_COPY_RELATIONSHIP;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.SHADOW_COPY;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -130,6 +129,8 @@ public class CrisConsumerIT extends AbstractControllerIntegrationTest {
     public static void resetDefaultConsumers() {
         ConfigurationService configService = DSpaceServicesFactory.getInstance().getConfigurationService();
         configService.setProperty("event.dispatcher.default.consumers", consumers);
+        EventService eventService = EventServiceFactory.getInstance().getEventService();
+        eventService.reloadConfiguration();
     }
 
     @Override
@@ -803,7 +804,7 @@ public class CrisConsumerIT extends AbstractControllerIntegrationTest {
         EntityType publicationType = EntityTypeBuilder.createEntityTypeBuilder(context, "Person").build();
 
         RelationshipType hasShadowCopyRelationshipType = createRelationshipTypeBuilder(context, publicationType,
-            publicationType, HAS_SHADOW_COPY_RELATIONSHIP, IS_SHADOW_COPY_RELATIONSHIP, 0, 1, 0, 1).build();
+            publicationType, SHADOW_COPY.getLeftType(), SHADOW_COPY.getRightType(), 0, 1, 0, 1).build();
 
         createCollection("Collection of persons", "Person", subCommunity);
 

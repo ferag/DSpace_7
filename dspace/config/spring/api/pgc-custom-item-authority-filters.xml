@@ -30,6 +30,19 @@
         </property>
     </bean>
 
+    <bean id="onlyCvPersonFilter" class="org.dspace.content.authority.SimpleQueryCustomAuthorityFilter">
+        <constructor-arg name="customQueries">
+            <list>
+                <value>search.entitytype:CvPerson</value>
+            </list>
+        </constructor-arg>
+        <property name="supportedEntities">
+            <list>
+                <value>CvPerson</value>
+            </list>
+        </property>
+    </bean>
+
     <bean id="peruInstitutionItemsFilter" class="org.dspace.content.authority.PeruItemAuthorityFilter">
         <property name="supportedEntities">
             <list>

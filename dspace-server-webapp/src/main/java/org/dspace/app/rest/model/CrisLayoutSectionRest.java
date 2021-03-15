@@ -224,6 +224,8 @@ public class CrisLayoutSectionRest extends BaseObjectRest<String> {
 
         private Integer initialStatements;
 
+        private boolean displayTitle;
+
         public String getDiscoveryConfigurationName() {
             return discoveryConfigurationName;
         }
@@ -263,6 +265,14 @@ public class CrisLayoutSectionRest extends BaseObjectRest<String> {
 
         public Integer getInitialStatements() {
             return initialStatements;
+        }
+
+        public void setDisplayTitle(boolean displayTitle) {
+            this.displayTitle = displayTitle;
+        }
+
+        public boolean getDisplayTitle() {
+            return displayTitle;
         }
     }
 

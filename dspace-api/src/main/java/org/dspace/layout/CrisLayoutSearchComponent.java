@@ -23,6 +23,8 @@ public class CrisLayoutSearchComponent implements CrisLayoutSectionComponent {
 
     private Integer initialStatements = 3;
 
+    private boolean displayTitle = true;
+
     /**
      * @return the discoveryConfigurationName
      */
@@ -65,6 +67,18 @@ public class CrisLayoutSearchComponent implements CrisLayoutSectionComponent {
 
     public Integer getInitialStatements() {
         return initialStatements;
+    }
+
+    public boolean isDisplayTitle() {
+        return displayTitle;
+    }
+
+    /**
+     * define wether or not for this search component title has to be displayed
+     * @param displayTitle
+     */
+    public void setDisplayTitle(boolean displayTitle) {
+        this.displayTitle = displayTitle;
     }
 
     /**

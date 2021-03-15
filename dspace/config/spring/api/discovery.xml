@@ -2288,7 +2288,7 @@
 
     <bean id="funding" class="org.dspace.discovery.configuration.DiscoveryConfiguration"
           scope="prototype">
-        <property name="id" value="orgUnit"/>
+        <property name="id" value="funding"/>
         <property name="indexAlways" value="true"/>
         <!--The sort filters for the discovery search-->
         <property name="searchSortConfiguration">
@@ -3959,7 +3959,7 @@
     </bean>
 
     <bean id="searchFilterDescription" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
-        <property name="indexFieldName" value="renacytClassification"/>
+        <property name="indexFieldName" value="descriptionAbstract"/>
         <property name="metadataFields">
             <list>
                 <value>dc.description.abstract</value>
@@ -3972,7 +3972,7 @@
     </bean>
 
     <bean id="searchFilterOrganizationIdentifier" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
-        <property name="indexFieldName" value="renacytClassification"/>
+        <property name="indexFieldName" value="organizationIdentifier"/>
         <property name="metadataFields">
             <list>
                 <value>organization.identifier.*</value>
@@ -3985,7 +3985,7 @@
     </bean>
 
     <bean id="searchFilterParentOrgUnit" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
-        <property name="indexFieldName" value="renacytClassification"/>
+        <property name="indexFieldName" value="parentOrganization"/>
         <property name="metadataFields">
             <list>
                 <value>organization.parentOrganization</value>

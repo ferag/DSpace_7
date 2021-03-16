@@ -277,7 +277,7 @@
                                 <property name="order" value="0"/>
                                 <property name="contentType" value="image"/>
                                 <property name="content" value="https://perucris.dev.4science.cloud/assets/images/perucris-home.png"/>
-                                <property name="style" value="col-md-12 w-50 center"/>
+                                <property name="style" value="col-md-12 py-5 w-50 center"/>
                             </bean>
                             <bean class="org.dspace.layout.CrisLayoutTextRowComponent">
                                 <property name="order" value="1"/>

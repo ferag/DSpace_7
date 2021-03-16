@@ -25,6 +25,7 @@ import org.dspace.content.service.EntityTypeService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.core.exception.SQLRuntimeException;
+import org.dspace.eperson.EPerson;
 import org.dspace.services.ConfigurationService;
 import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,7 +119,7 @@ public class ProfileRelatedEntityChangeFeature implements AuthorizationFeature {
             .filter(originItem -> isCvClone(originItem))
             .map(originItem -> getClonedItem(context, originItem))
             .filter(cvItem -> cvItem != null)
-            .noneMatch(cvItem -> isCurrentUserCrisOwnerOfItem(cvItem));
+            .noneMatch(cvItem -> isCurrentUserCrisOwnerOfItem(cvItem, context.getCurrentUser()));
     }
 
     private boolean isCvClone(Item item) {
@@ -134,9 +135,9 @@ public class ProfileRelatedEntityChangeFeature implements AuthorizationFeature {
         }
     }
 
-    private boolean isCurrentUserCrisOwnerOfItem(Item item) {
+    private boolean isCurrentUserCrisOwnerOfItem(Item item, EPerson currentUser) {
         return itemService.getMetadataByMetadataString(item, "cris.owner").stream()
-            .anyMatch(metadataValue -> item.getID().toString().equals(metadataValue.getAuthority()));
+            .anyMatch(metadataValue -> currentUser.getID().toString().equals(metadataValue.getAuthority()));
     }
 
     private String getEntityType(Item item) {

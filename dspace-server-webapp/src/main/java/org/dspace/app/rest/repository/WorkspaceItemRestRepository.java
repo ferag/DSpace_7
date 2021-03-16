@@ -197,6 +197,7 @@ public class WorkspaceItemRestRepository extends DSpaceRestRepository<WorkspaceI
         HttpServletRequest httpServletRequest = getRequestService().getCurrentRequest().getHttpServletRequest();
         String itemUUID = httpServletRequest.getParameter("item");
         String relationship = httpServletRequest.getParameter("relationship");
+        String collectionUUID = httpServletRequest.getParameter("owningCollection");
 
         WorkspaceItem source;
 
@@ -220,7 +221,12 @@ public class WorkspaceItemRestRepository extends DSpaceRestRepository<WorkspaceI
 
         } else if (StringUtils.isNotBlank(itemUUID)) {
             try {
-                source = itemCorrectionService.createWorkspaceItemByItem(context, UUIDUtils.fromString(itemUUID));
+                if (StringUtils.isBlank(collectionUUID)) {
+                    source = itemCorrectionService.createWorkspaceItemByItem(context, UUIDUtils.fromString(itemUUID));
+                } else {
+                    source = itemCorrectionService.createWorkspaceItemByItem(context, UUIDUtils.fromString(itemUUID),
+                        UUIDUtils.fromString(collectionUUID));
+                }
             } catch (Exception e) {
                 throw new UnprocessableEntityException(e.getMessage());
             }

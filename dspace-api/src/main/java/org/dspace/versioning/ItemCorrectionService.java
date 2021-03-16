@@ -137,6 +137,39 @@ public class ItemCorrectionService {
     }
 
     /**
+     * Create a workspaceitem by an existing Item in the given collection
+     * 
+     * @param context  the dspace context
+     * @param request  the request containing the details about the workspace to
+     *                 create
+     * @param itemUUID the item UUID to use for creating the workspaceitem
+     * @param collectionUUID the collection UUID to use for creating the workspaceitem
+     * @return the created workspaceitem
+     * @throws SQLException       if a SQL error occurs
+     * @throws AuthorizeException if an authorization error occurs
+     */
+    public WorkspaceItem createWorkspaceItemByItem(Context context, UUID itemUUID, UUID collectionUUID)
+        throws SQLException, AuthorizeException {
+
+        Item item = itemService.find(context, itemUUID);
+        if (item == null) {
+            throw new IllegalArgumentException("Item " + itemUUID + " is not found");
+        }
+
+        Collection collection = collectionService.find(context, collectionUUID);
+        if (collection == null) {
+            throw new IllegalArgumentException("Collection " + collectionUUID + " is not found");
+        }
+
+        try {
+            return correctionItemProvider.createNewItemAndAddItInWorkspace(context, collection, item);
+        } catch (IOException | SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+
+    }
+
+    /**
      * Create a workspaceitem by an existing Item
      * 
      * @param context  the dspace context

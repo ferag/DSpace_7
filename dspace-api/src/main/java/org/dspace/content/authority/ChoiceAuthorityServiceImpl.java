@@ -215,7 +215,8 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
 
     @Override
     public boolean isChoicesConfigured(String fieldKey, String formName) {
-        return getAuthorityByFieldKeyAndFormName(fieldKey, formName) != null;
+        return Optional.ofNullable(getAuthorityByFieldKeyAndFormName(fieldKey, formName))
+            .map(ca -> !(ca instanceof DisabledAuthority)).orElse(false);
     }
 
     @Override

@@ -27,6 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
+ * Implementation of {@link CustomAuthorityFilter} that restricts searches for
+ * Institutional Entity Authorities into the community they are
  *
  * @author Corrado Lombardi (corrado.lombardi at 4science.it)
  *

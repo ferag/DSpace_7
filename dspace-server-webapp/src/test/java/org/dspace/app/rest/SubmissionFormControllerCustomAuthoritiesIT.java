@@ -57,7 +57,8 @@ public class SubmissionFormControllerCustomAuthoritiesIT extends AbstractControl
                 "org.dspace.content.authority.ItemAuthority = AdvisorAuthority",
                 "org.dspace.content.authority.ItemAuthority = InstitutionAuthorAuthority",
                 "org.dspace.content.authority.ItemAuthority = InstitutionEditorAuthority",
-                "org.dspace.content.authority.ItemAuthority = InstitutionAdvisorAuthority"
+                "org.dspace.content.authority.ItemAuthority = InstitutionAdvisorAuthority",
+                "org.dspace.content.authority.DisabledAuthority = DisabledAuthority"
             });
 
         configurationService.setProperty("cris.ItemAuthority.AuthorAuthority.relationshipType", "Person");
@@ -133,6 +134,45 @@ public class SubmissionFormControllerCustomAuthoritiesIT extends AbstractControl
                     null, "dc.contributor.author", "AuthorAuthority")
             )))
         ;
+
+    }
+
+    @Test
+    public void findFieldWithAuthorityDisabledByFieldAndFormName() throws Exception {
+
+
+        String token = getAuthToken(admin.getEmail(), password);
+
+        getClient(token).perform(get("/api/config/submissionforms/cv-patent-dc-contributor-author"))
+            //The status has to be 200 OK
+            .andExpect(status().isOk())
+            //We expect the content type to be "application/hal+json;charset=UTF-8"
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.rows[0].fields", contains(
+                SubmissionFormFieldMatcher.matchFormFieldDefinition("onebox", "Author",
+                    "You must enter at least the author.", false,
+                    "Enter the names of the authors of this item in the form Lastname, " +
+                        "Firstname [i.e. Smith, Josh or Smith, J].",
+                    null, "dc.contributor.author", "AuthorAuthority")
+            )));
+
+        configurationService
+            .setProperty("choices.plugin.cv-patent-dc-contributor-author.override.dc.contributor.author",
+                "DisabledAuthority");
+        cas.clearCache();
+
+        getClient(token).perform(get("/api/config/submissionforms/cv-patent-dc-contributor-author"))
+            //The status has to be 200 OK
+            .andExpect(status().isOk())
+            //We expect the content type to be "application/hal+json;charset=UTF-8"
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.rows[0].fields", contains(
+                SubmissionFormFieldMatcher.matchFormFieldDefinition("onebox", "Author",
+                    "You must enter at least the author.", false,
+                    "Enter the names of the authors of this item in the form Lastname, " +
+                        "Firstname [i.e. Smith, Josh or Smith, J].",
+                    null, "dc.contributor.author", null)
+            )));
 
     }
 

@@ -456,6 +456,9 @@ public class CvEntitySynchronizationConsumerPatentIT extends AbstractIntegration
         Item cvPatentClone = cloneWorkflowItems.get(0).getItem();
         installItemService.installItem(context, cloneWorkflowItems.get(0));
 
+        context.commit();
+        cvPatent = reloadItem(cvPatent);
+
         context.restoreAuthSystemState();
 
         addMetadata(cvPatent, "dc", "contributor", "author", "White, Walter");

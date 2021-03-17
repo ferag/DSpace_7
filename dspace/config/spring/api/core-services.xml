@@ -63,6 +63,7 @@
     <bean class="org.dspace.content.authority.MetadataAuthorityServiceImpl" lazy-init="true"/>
 
     <bean id= "org.dspace.app.profile.service.ResearcherProfileService" class="org.dspace.app.profile.ResearcherProfileServiceImpl"/>
+    <bean id= "org.dspace.app.profile.service.CvEntityService" class="org.dspace.app.profile.CvEntityServiceImpl"/>
 
     <!-- Ensure PluginService is initialized properly via init() method -->
     <bean class="org.dspace.core.LegacyPluginServiceImpl" init-method="init"/>

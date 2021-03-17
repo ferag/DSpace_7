@@ -51,6 +51,7 @@ import org.dspace.app.rest.model.BaseObjectRest;
 import org.dspace.app.rest.model.CommunityRest;
 import org.dspace.app.rest.model.CrisLayoutBoxRest;
 import org.dspace.app.rest.model.CrisMetricsRest;
+import org.dspace.app.rest.model.CvEntityRest;
 import org.dspace.app.rest.model.LinkRest;
 import org.dspace.app.rest.model.LinksRest;
 import org.dspace.app.rest.model.OrcidHistoryRest;
@@ -314,6 +315,9 @@ public class Utils {
         }
         if (StringUtils.equals(modelPlural, "categories")) {
             return UsageReportCategoryRest.NAME;
+        }
+        if (StringUtils.equals(modelPlural, "cventities")) {
+            return CvEntityRest.NAME;
         }
         return modelPlural.replaceAll("s$", "");
     }

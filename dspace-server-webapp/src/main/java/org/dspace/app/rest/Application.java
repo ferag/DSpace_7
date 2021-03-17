@@ -15,7 +15,7 @@ import javax.servlet.Filter;
 import org.dspace.app.rest.filter.DSpaceRequestContextFilter;
 import org.dspace.app.rest.model.hateoas.DSpaceLinkRelationProvider;
 import org.dspace.app.rest.parameter.resolver.SearchFilterResolver;
-import org.dspace.app.rest.security.CasLogoutSuccessHandler;
+import org.dspace.app.rest.security.OidcLogoutSuccessHandler;
 import org.dspace.app.rest.utils.ApplicationConfig;
 import org.dspace.app.rest.utils.DSpaceConfigurationInitializer;
 import org.dspace.app.rest.utils.DSpaceKernelInitializer;
@@ -65,7 +65,7 @@ public class Application extends SpringBootServletInitializer {
     private ApplicationConfig configuration;
 
     @Autowired
-    private CasLogoutSuccessHandler casLogoutSuccessHandler;
+    private OidcLogoutSuccessHandler oidcLogoutSuccessHandler;
 
     @Scheduled(cron = "${sitemap.cron:-}")
     public void generateSitemap() throws IOException, SQLException {
@@ -168,7 +168,7 @@ public class Application extends SpringBootServletInitializer {
                             // Allow list of response headers allowed to be sent by us (the server)
                             .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials",
                                     "Authorization", "expires", "Location", "Content-Disposition", "WWW-Authenticate",
-                                    "Set-Cookie", "X-Requested-With", casLogoutSuccessHandler.getCasLogoutHeader());
+                                    "Set-Cookie", "X-Requested-With", oidcLogoutSuccessHandler.getOidcLogoutHeader());
                 }
             }
 

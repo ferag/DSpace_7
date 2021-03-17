@@ -60,7 +60,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private ConfigurationService configurationService;
 
     @Autowired
-    public CasLogoutSuccessHandler casForwardLogoutSuccessHandler;
+    public OidcLogoutSuccessHandler oidcLogoutSuccessHandler;
 
 
     @Override
@@ -100,7 +100,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 //Configure the logout entry point
                 .logoutRequestMatcher(new AntPathRequestMatcher("/api/authn/logout"))
                 //When logout is successful, return OK (204) status
-                 .logoutSuccessHandler(casForwardLogoutSuccessHandler)
+                 .logoutSuccessHandler(oidcLogoutSuccessHandler)
                 //Everyone can call this endpoint
                 .permitAll()
             .and()

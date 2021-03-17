@@ -9,26 +9,26 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.stereotype.Service;
 
 @Service
-public class CasLogoutSuccessHandler implements LogoutSuccessHandler {
+public class OidcLogoutSuccessHandler implements LogoutSuccessHandler {
 
-    private final static String CAS_LOGOUT_HEADER = "Cas-Logout";
+    private final static String OIDC_LOGOUT_HEADER = "Oidc-Logout";
 
-    @Value("${auth.cas.logoutUrl}")
-    private String casLogoutUrl;
+    @Value("${authentication-oidc.logoutUrl}")
+    private String logoutUrl;
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request,
             HttpServletResponse response, Authentication authentication) {
         response.setStatus(204);
-        response.setHeader(getCasLogoutHeader(), getLogoutUrl());
+        response.setHeader(getOidcLogoutHeader(), getLogoutUrl());
     }
 
     public String getLogoutUrl() {
-        return casLogoutUrl;
+        return logoutUrl;
     }
 
-    public String getCasLogoutHeader() {
-        return CAS_LOGOUT_HEADER;
+    public String getOidcLogoutHeader() {
+        return OIDC_LOGOUT_HEADER;
     }
 
 

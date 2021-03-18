@@ -7,12 +7,16 @@
  */
 package org.dspace.importer.external.dspace;
 
+import static java.util.Arrays.asList;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.MERGED;
 
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 
 import org.dspace.app.profile.service.AfterImportAction;
+import org.dspace.app.profile.service.ProfileItemCloneService;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
@@ -35,7 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * 
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  */
-public class ProfileItemCloningAction implements AfterImportAction {
+public class ProfileItemCloningAction implements AfterImportAction, ProfileItemCloneService {
 
     @Autowired
     private ItemService itemService;
@@ -76,7 +80,17 @@ public class ProfileItemCloningAction implements AfterImportAction {
 
     }
 
-    private void cloneProfile(Context context, Item profileItem, Item personItem) throws Exception {
+    @Override
+    public void cloneProfile(Context context, Item profileItem, Item personItem)
+        throws SQLException, AuthorizeException, IOException {
+
+        if (unClaimableEntityType(personItem)) {
+            throw new IllegalArgumentException("The given person item is not claimable: " + personItem.getID());
+        }
+
+        if (concytecWorkflowService.findClone(context, profileItem) != null) {
+            throw new IllegalStateException("The given profile item is already cloned: " + profileItem.getID());
+        }
 
         Item profileItemClone = createProfileItemClone(context, profileItem);
 
@@ -90,7 +104,8 @@ public class ProfileItemCloningAction implements AfterImportAction {
 
     }
 
-    private Item createCopyAndMergeIn(Context context, Item personItem, Item profileItemClone) throws Exception {
+    private Item createCopyAndMergeIn(Context context, Item personItem, Item profileItemClone)
+        throws SQLException, AuthorizeException {
 
         WorkspaceItem workspaceItemCopy = itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context,
             personItem.getID(), MERGED.getLeftType());
@@ -103,7 +118,7 @@ public class ProfileItemCloningAction implements AfterImportAction {
         return itemCopy;
     }
 
-    private Item createProfileItemClone(Context ctx, Item item) throws Exception {
+    private Item createProfileItemClone(Context ctx, Item item) throws SQLException, AuthorizeException, IOException {
         Collection collection = findProfileCloneCollection(ctx);
         if (collection == null) {
             throw new IllegalStateException("No collection found for researcher profile clones");
@@ -116,6 +131,12 @@ public class ProfileItemCloningAction implements AfterImportAction {
     private Collection findProfileCloneCollection(Context context) throws SQLException {
         return collectionService.find(context,
             UUIDUtils.fromString(configurationService.getProperty("cti-vitae.clone.person-collection-id")));
+    }
+
+    private boolean unClaimableEntityType(Item item) {
+        List<String> claimableEntityTypes = asList(configurationService.getArrayProperty("claimable.entityType"));
+        return itemService.getMetadataByMetadataString(item, "relationship.type").stream()
+            .noneMatch(mv -> claimableEntityTypes.contains(mv.getValue()));
     }
 
 }

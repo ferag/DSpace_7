@@ -161,6 +161,8 @@ public class CvEntityRestRepositoryIT extends AbstractControllerIntegrationTest 
         assertThat(cvPublication.getOwningCollection(), is(equalTo(cvCollection)));
         assertThat(cvPublication.getMetadata(), hasItem(with("dc.title", "Test publication")));
         assertThat(cvPublication.getMetadata(), hasItem(with("dc.date.issued", "2021-03-17")));
+        assertThat(cvPublication.getMetadata(), hasItem(with("cris.owner", eperson.getName(), null,
+            eperson.getID().toString(), 0, 600)));
 
     }
 

@@ -22,6 +22,7 @@ import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
+import org.dspace.eperson.EPerson;
 import org.dspace.services.ConfigurationService;
 import org.dspace.util.UUIDUtils;
 import org.dspace.versioning.ItemCorrectionProvider;
@@ -100,7 +101,13 @@ public class CvEntityServiceImpl implements CvEntityService {
             throw new IllegalArgumentException("No compliance CV collection found for the item: " + item.getID());
         }
 
-        return createItemCopy(context, collection, item);
+        Item cvItem = createItemCopy(context, collection, item);
+
+        EPerson currentUser = context.getCurrentUser();
+        itemService.addMetadata(context, cvItem, "cris", "owner", null, null, currentUser.getName(),
+            currentUser.getID().toString(), 600);
+
+        return cvItem;
     }
 
     private Collection findCollectionByItemEntityType(Context context, Item item, String propertyFormat)

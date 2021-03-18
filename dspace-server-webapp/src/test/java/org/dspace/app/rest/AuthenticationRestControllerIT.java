@@ -47,6 +47,8 @@ import org.dspace.content.Collection;
 import org.dspace.content.Item;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.factory.EPersonServiceFactory;
+import org.dspace.eperson.service.EPersonService;
 import org.dspace.services.ConfigurationService;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -878,6 +880,30 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
         getClient().perform(post("/api/authn/shortlivedtokens?authentication-token=" + shortLivedToken))
             .andExpect(status().isForbidden());
     }
+
+    @Test
+    public void testLoginWithNetidAndPassword() throws Exception {
+
+        EPersonService ePersonService = EPersonServiceFactory.getInstance().getEPersonService();
+        String oldNetid = eperson.getNetid();
+        eperson.setNetid("netid");
+        ePersonService.update(context, eperson);
+
+        try {
+            String token = getAuthToken("netid", password);
+
+            //Check if we succesfully authenticated
+            getClient(token).perform(get("/api/authn/status"))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$.okay", is(true)))
+                            .andExpect(jsonPath("$.authenticated", is(true)))
+                            .andExpect(jsonPath("$.type", is("status")));
+        } finally {
+            eperson.setNetid(oldNetid);
+            ePersonService.update(context, eperson);
+        }
+    }
+
 
     private String getShortLivedToken(EPerson requestUser) throws Exception {
         ObjectMapper mapper = new ObjectMapper();

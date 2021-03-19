@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
+import org.dspace.app.exception.ResourceConflictException;
 import org.dspace.app.profile.service.AfterImportAction;
 import org.dspace.app.profile.service.ProfileItemCloneService;
 import org.dspace.authorize.AuthorizeException;
@@ -85,21 +86,30 @@ public class ProfileItemCloningAction implements AfterImportAction, ProfileItemC
         throws SQLException, AuthorizeException, IOException {
 
         if (unClaimableEntityType(personItem)) {
-            throw new IllegalArgumentException("The given person item is not claimable: " + personItem.getID());
+            throw new IllegalArgumentException("The given item is not claimable: " + personItem.getID());
         }
 
-        if (concytecWorkflowService.findClone(context, profileItem) != null) {
-            throw new IllegalStateException("The given profile item is already cloned: " + profileItem.getID());
+        Item preExistingClone = concytecWorkflowService.findClone(context, profileItem);
+        if (preExistingClone != null) {
+            throw new ResourceConflictException("The given profile item is already cloned", preExistingClone);
         }
 
-        Item profileItemClone = createProfileItemClone(context, profileItem);
+        try {
 
-        Item institutionItem = concytecWorkflowService.findCopiedItem(context, personItem);
-        if (institutionItem != null) {
-            Item personItemCopy = createCopyAndMergeIn(context, personItem, profileItemClone);
-            concytecWorkflowService.createShadowRelationship(context, profileItemClone, personItemCopy);
-        } else {
-            concytecWorkflowService.createShadowRelationship(context, profileItemClone, personItem);
+            context.turnOffAuthorisationSystem();
+
+            Item profileItemClone = createProfileItemClone(context, profileItem);
+
+            Item institutionItem = concytecWorkflowService.findCopiedItem(context, personItem);
+            if (institutionItem != null) {
+                Item personItemCopy = createCopyAndMergeIn(context, personItem, profileItemClone);
+                concytecWorkflowService.createShadowRelationship(context, profileItemClone, personItemCopy);
+            } else {
+                concytecWorkflowService.createShadowRelationship(context, profileItemClone, personItem);
+            }
+
+        } finally {
+            context.restoreAuthSystemState();
         }
 
     }

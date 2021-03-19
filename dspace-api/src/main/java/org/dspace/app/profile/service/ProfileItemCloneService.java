@@ -28,12 +28,13 @@ public interface ProfileItemCloneService {
      * @param context     the DSpace context
      * @param profileItem the profile item
      * @param personItem  the person item
-     * @throws SQLException             if an SQL error occurs
-     * @throws AuthorizeException       if an authorization check fails
-     * @throws IOException              if an IO error occurs
-     * @throws IllegalArgumentException if the relationship type of the personItem
-     *                                  is not consistent
-     * @throws IllegalStateException    if the given profileItem has already a clone
+     * @throws SQLException              if an SQL error occurs
+     * @throws AuthorizeException        if an authorization check fails
+     * @throws IOException               if an IO error occurs
+     * @throws IllegalArgumentException  if the relationship type of the personItem
+     *                                   is not consistent
+     * @throws ResourceConflictException if the given profileItem has already a
+     *                                   clone
      */
     public void cloneProfile(Context context, Item profileItem, Item personItem)
         throws SQLException, AuthorizeException, IOException;

@@ -343,6 +343,29 @@ public class EPersonRestRepository extends DSpaceObjectRestRepository<EPerson, E
     }
 
     /**
+     * Find the eperson with the provided username if any. The search is delegated to the
+     * {@link EPersonService#findByUsername(Context, String)} method
+     *
+     * @param username
+     *            is the *required* username
+     * @return a Page of EPersonRest instances matching the user query
+     */
+    @SearchRestMethod(name = "byUsername")
+    public EPersonRest findByUsername(@Parameter(value = "username", required = true) String username) {
+        EPerson eperson = null;
+        try {
+            Context context = obtainContext();
+            eperson = es.findByUsername(context, username);
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        if (eperson == null) {
+            return null;
+        }
+        return converter.toRest(eperson, utils.obtainProjection());
+    }
+
+    /**
      * Find the epersons matching the query parameter. The search is delegated to the
      * {@link EPersonService#search(Context, String, int, int)} method
      *

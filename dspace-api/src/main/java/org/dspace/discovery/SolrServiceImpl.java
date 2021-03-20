@@ -79,6 +79,7 @@ import org.dspace.discovery.indexobject.factory.IndexObjectFactoryFactory;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.GroupService;
+import org.dspace.perucris.ctivitae.CvRelatedEntitiesService;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,6 +120,8 @@ public class SolrServiceImpl implements SearchService, IndexingService {
     protected SolrSearchCore solrSearchCore;
     @Autowired
     protected ConfigurationService configurationService;
+    @Autowired
+    private CvRelatedEntitiesService cvRelatedEntitiesService;
 
     protected SolrServiceImpl() {
 
@@ -1530,5 +1533,25 @@ public class SolrServiceImpl implements SearchService, IndexingService {
             log.error(e.getMessage(), e);
         }
         return queryResponse;
+    }
+
+    @Override
+    public void updateCtiVitaeReferences(Context context,
+                                         UUID itemID,
+                                         List<String> ctiVitaeReferencesToAdd) {
+        UpdateRequest req = new UpdateRequest();
+        SolrInputDocument solrInputDocument = new SolrInputDocument();
+        solrInputDocument.addField(SearchUtils.RESOURCE_UNIQUE_ID, "Item-" + itemID);
+        solrInputDocument.addField("ctivitae.owner",
+            Collections.singletonMap("set", ctiVitaeReferencesToAdd));
+        req.add(solrInputDocument);
+
+        try {
+            SolrClient solrClient =  solrSearchCore.getSolr();
+            solrClient.request(req);
+            solrClient.commit();
+        } catch (SolrServerException | IOException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 }

@@ -27,6 +27,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.dspace.app.profile.ResearcherProfile;
+import org.dspace.app.profile.service.ResearcherProfileService;
+import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataValue;
@@ -55,11 +58,12 @@ public class CvRelatedEntitiesServiceTest {
     private final RelationshipTypeService relationshipTypeService = mock(RelationshipTypeService.class);
     private final Context context = mock(Context.class);
     private final RelationshipType profileOwnershipRelation = mock(RelationshipType.class);
+    private final ResearcherProfileService researcherProfileService = mock(ResearcherProfileService.class);
 
     @Before
     public void setUp() throws Exception {
         service = new CvRelatedEntitiesService(concytecWorkflowService, itemService, relationshipService,
-            relationshipTypeService);
+            relationshipTypeService, researcherProfileService);
     }
 
     @Test
@@ -293,12 +297,110 @@ public class CvRelatedEntitiesServiceTest {
 
     }
 
+    /**
+     * Given a publication of the Directoriowith two authors, one author owns a copy of the publication
+     * in its CTIVitae space, the other doesn't.
+     * <p>
+     * When CTIVitae profiles directly related to this publication lookup is performed
+     * only the id of the second author is returned.
+     */
+    @Test
+    public void onlyOneAuthorRelatedToDirectorio() throws SQLException, AuthorizeException {
+
+        UUID firstAuthorId = randomUUID();
+        UUID firstAuthorOwnerId = randomUUID();
+        UUID secondAuthorId = randomUUID();
+        UUID secondAuthorOwnerId = randomUUID();
+
+        Map<String, List<String>> metadataMap = Collections.singletonMap("Publication",
+            singletonList("dc.contributor.author"));
+        service.setEntityToMetadataMap(metadataMap);
+
+        Item firstAuthor = item(firstAuthorId, "Person");
+        Item ctiVitaeFirstAuthor = item(randomUUID(), "CvPerson",
+            metadataValue("cris.owner", "owner", firstAuthorOwnerId.toString()));
+
+        Item secondAuthor = item(secondAuthorId, "Person");
+        Item ctiVitaeSecondAuthor = item(randomUUID(), "CvPerson",
+            metadataValue("cris.owner", "owner", secondAuthorOwnerId.toString()));
+
+        Item publication = item(randomUUID(), "Publication",
+            metadataValue("dc.contributor.author", "Rossi Mario", firstAuthor.getID().toString()),
+            metadataValue("dc.contributor.author", "Smith John", secondAuthor.getID().toString())
+        );
+
+        expectPersonOwnerRelationship(firstAuthor, ctiVitaeFirstAuthor);
+        expectPersonOwnerRelationship(secondAuthor, ctiVitaeSecondAuthor);
+
+        Item cvPublicationClone = item(randomUUID(), "CvPublicationClone");
+        Item cvPublication = item(randomUUID(), "CvPublication",
+            metadataValue("cris.owner", "owner", firstAuthorOwnerId.toString()));
+
+        ResearcherProfile firstAuthorResearcherProfile = researcherProfile(ctiVitaeFirstAuthor);
+        when(researcherProfileService.findById(context, firstAuthorOwnerId))
+            .thenReturn(firstAuthorResearcherProfile);
+        expectDirectorioToCtiVitaeStructure(publication, cvPublicationClone, cvPublication);
+
+        List<String> directorioRelatedIds =
+            service.findCtiVitaeRelationsForDirectorioItem(context, publication);
+
+        assertThat(directorioRelatedIds, is(
+            singletonList(ctiVitaeSecondAuthor.getID().toString())));
+    }
+
+    @Test(expected = SQLException.class)
+    public void exceptionWhileDirectorioLookup() throws SQLException, AuthorizeException {
+
+        UUID firstAuthorId = randomUUID();
+        UUID firstAuthorOwnerId = randomUUID();
+        UUID secondAuthorId = randomUUID();
+        UUID secondAuthorOwnerId = randomUUID();
+
+        Map<String, List<String>> metadataMap = Collections.singletonMap("Publication",
+            singletonList("dc.contributor.author"));
+        service.setEntityToMetadataMap(metadataMap);
+
+        Item firstAuthor = item(firstAuthorId, "Person");
+        Item ctiVitaeFirstAuthor = item(randomUUID(), "CvPerson",
+            metadataValue("cris.owner", "owner", firstAuthorOwnerId.toString()));
+
+        Item secondAuthor = item(secondAuthorId, "Person");
+        Item ctiVitaeSecondAuthor = item(randomUUID(), "CvPerson",
+            metadataValue("cris.owner", "owner", secondAuthorOwnerId.toString()));
+
+        Item publication = item(randomUUID(), "Publication",
+            metadataValue("dc.contributor.author", "Rossi Mario", firstAuthor.getID().toString()),
+            metadataValue("dc.contributor.author", "Smith John", secondAuthor.getID().toString())
+        );
+
+        expectPersonOwnerRelationship(firstAuthor, ctiVitaeFirstAuthor);
+        expectPersonOwnerRelationship(secondAuthor, ctiVitaeSecondAuthor);
+
+        Item cvPublicationClone = item(randomUUID(), "CvPublicationClone");
+        Item cvPublication = item(randomUUID(), "CvPublication",
+            metadataValue("cris.owner", "owner", firstAuthorOwnerId.toString()));
+
+        ResearcherProfile firstAuthorResearcherProfile = researcherProfile(ctiVitaeFirstAuthor);
+        doThrow(new SQLException("sql exception")).when(researcherProfileService)
+            .findById(context, firstAuthorOwnerId);
+        expectDirectorioToCtiVitaeStructure(publication, cvPublicationClone, cvPublication);
+
+        service.findCtiVitaeRelationsForDirectorioItem(context, publication);
+    }
+
+
     private Relationship relationship(RelationshipType relationshipType, Item leftItem, Item rightItem) {
         Relationship relationship = mock(Relationship.class);
         when(relationship.getRelationshipType()).thenReturn(relationshipType);
         when(relationship.getLeftItem()).thenReturn(leftItem);
         when(relationship.getRightItem()).thenReturn(rightItem);
         return relationship;
+    }
+
+    private ResearcherProfile researcherProfile(Item item) {
+        ResearcherProfile researcherProfile = mock(ResearcherProfile.class);
+        when(researcherProfile.getItem()).thenReturn(item);
+        return researcherProfile;
     }
 
     private void expectDirectorioToCtiVitaeStructure(Item directorioItem, Item cloneItem, Item ctiVitaeItem)

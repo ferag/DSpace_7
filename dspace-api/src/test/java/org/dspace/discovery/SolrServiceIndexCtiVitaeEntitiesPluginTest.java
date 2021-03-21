@@ -65,7 +65,8 @@ public class SolrServiceIndexCtiVitaeEntitiesPluginTest {
         indexPlugin = new SolrServiceIndexCtiVitaeEntitiesPlugin(itemService,
             researcherProfileService,
             cvRelatedEntitiesService,
-            indexingService, configurationService);
+            indexingService,
+            configurationService);
     }
 
     @Test
@@ -132,6 +133,9 @@ public class SolrServiceIndexCtiVitaeEntitiesPluginTest {
         Item item = ownedItem("CvPublication", ownerAuthority.toString());
         IndexableItem indexableItem = indexableItem(item);
 
+        when(cvRelatedEntitiesService.entityWithCvReferences("CvPublication"))
+            .thenReturn(true);
+
         indexPlugin.additionalIndex(context, indexableItem, document);
         assertThat(document.getField("ctivitae.owner").getValue(), is(UUIDUtils.toString(ownedProfileId)));
         verifyNoInteractions(indexingService);
@@ -147,6 +151,9 @@ public class SolrServiceIndexCtiVitaeEntitiesPluginTest {
 
         Item item = ownedItem("CvProject", profileId.toString());
         IndexableItem indexableItem = indexableItem(item);
+
+        when(cvRelatedEntitiesService.entityWithCvReferences("CvProject"))
+            .thenReturn(true);
 
         expectRelatedResearcherProfile(profileId, cvPersonId);
 
@@ -166,6 +173,9 @@ public class SolrServiceIndexCtiVitaeEntitiesPluginTest {
 
         Item item = ownedItem("CvPatent", ownerAuthority.toString());
         IndexableItem indexableItem = indexableItem(item);
+
+        when(cvRelatedEntitiesService.entityWithCvReferences("CvPatent"))
+            .thenReturn(true);
 
         indexPlugin.additionalIndex(context, indexableItem, document);
         assertThat(document.getField("ctivitae.owner").getValue(), is(UUIDUtils.toString(ownedProfileId)));
@@ -188,41 +198,32 @@ public class SolrServiceIndexCtiVitaeEntitiesPluginTest {
 
         UUID firstOwnerProfileId = UUID.randomUUID();
         UUID firstOwnerCvPersonId = UUID.randomUUID();
-        UUID secondOwnerProfileId = UUID.randomUUID();
         UUID secondOwnerCvPersonId = UUID.randomUUID();
-        UUID thirdOwnerProfileId = UUID.randomUUID();
-        UUID thirdOwnerCvPersonId = UUID.randomUUID();
         Item directorioItem = item("Publication");
 
         Item firstRelatedCvItem = ownedItem("CvPublication", firstOwnerProfileId.toString());
-        Item secondRelatedCvItem = ownedItem("CvPublication", secondOwnerProfileId.toString());
+
+        when(cvRelatedEntitiesService.entityWithCvReferences("Publication"))
+            .thenReturn(true);
 
         SolrInputDocument document = new SolrInputDocument();
-
-        Item firstOwnerCvPerson = expectRelatedResearcherProfile(firstOwnerProfileId, firstOwnerCvPersonId).getItem();
-        Item secondOwnerCvPerson =
-            expectRelatedResearcherProfile(secondOwnerProfileId, secondOwnerCvPersonId).getItem();
-        Item thirdOwnerCvPerson = expectRelatedResearcherProfile(thirdOwnerProfileId, thirdOwnerCvPersonId).getItem();
 
         when(cvRelatedEntitiesService.findDirectorioRelated(context, firstRelatedCvItem))
             .thenReturn(Optional.of(directorioItem));
 
-        when(cvRelatedEntitiesService.findCTIVitaeRelated(context, directorioItem))
-            .thenReturn(asList(firstRelatedCvItem, secondRelatedCvItem));
-
-        when(cvRelatedEntitiesService.findCtiVitaeRelatedProfiles(context, directorioItem))
-            .thenReturn(asList(firstOwnerCvPerson, secondOwnerCvPerson, thirdOwnerCvPerson));
+        when(cvRelatedEntitiesService.findCtiVitaeRelationsForDirectorioItem(context, directorioItem))
+            .thenReturn(asList(secondOwnerCvPersonId.toString()));
 
         indexPlugin.additionalIndex(context, indexableItem(firstRelatedCvItem), document);
 
         assertThat(document.getField("ctivitae.owner").getValue(), is(firstOwnerCvPersonId.toString()));
         verify(indexingService).updateCtiVitaeReferences(context, directorioItem.getID(),
-            Collections.singletonList(thirdOwnerCvPersonId.toString()));
+            Collections.singletonList(secondOwnerCvPersonId.toString()));
 
     }
 
     @Test
-    public void directorioItemDirectlyIndexed() throws SQLException, AuthorizeException {
+    public void directorioItemNotIndexed() throws SQLException, AuthorizeException {
 
         UUID firstOwnerProfileId = UUID.randomUUID();
         UUID firstOwnerCvPersonId = UUID.randomUUID();
@@ -233,6 +234,9 @@ public class SolrServiceIndexCtiVitaeEntitiesPluginTest {
 
         UUID directorioCommunityId = UUID.randomUUID();
         Item directorioItem = item("Publication", directorioCommunityId);
+
+        when(cvRelatedEntitiesService.entityWithCvReferences("Publication"))
+            .thenReturn(false);
 
         when(configurationService.getProperty("directorios.community-id"))
             .thenReturn(UUIDUtils.toString(directorioCommunityId));
@@ -259,10 +263,7 @@ public class SolrServiceIndexCtiVitaeEntitiesPluginTest {
 
         indexPlugin.additionalIndex(context, indexableItem(directorioItem), document);
 
-//        assertThat(document.getField("ctivitae.owner").getValue(), is(thirdOwnerCvPersonId.toString()));
-        verify(indexingService).updateCtiVitaeReferences(context, directorioItem.getID(),
-            Collections.singletonList(thirdOwnerCvPersonId.toString()));
-
+        assertNull(document.getField("ctivitae.owner"));
     }
 
     private ResearcherProfile expectRelatedResearcherProfile(UUID profileId, UUID cvProfileId)
@@ -276,8 +277,6 @@ public class SolrServiceIndexCtiVitaeEntitiesPluginTest {
     public void documentWithoutOwnerDocumentNotUpdated() throws SQLException, AuthorizeException {
 
         SolrInputDocument document = new SolrInputDocument();
-        UUID ownedProfileId = UUID.randomUUID();
-
 
         Item item = item("CvPatent");
         IndexableItem indexableItem = indexableItem(item);
@@ -291,7 +290,6 @@ public class SolrServiceIndexCtiVitaeEntitiesPluginTest {
         Item item = item("CvProfile");
         when(item.getID()).thenReturn(ownedProfileId);
         when(researcherProfile.getItem()).thenReturn(item);
-//        when(researcherProfile.getId()).thenReturn(ownedProfileId);
         return researcherProfile;
     }
 
@@ -315,8 +313,11 @@ public class SolrServiceIndexCtiVitaeEntitiesPluginTest {
     private Item ownedItem(String entityType, String ownerAuthority) {
         Item item = mock(Item.class);
         List<MetadataValue> ownerMetadata = metadataValue("owner", ownerAuthority);
-        when(itemService.getMetadata(item, "search.entitytype")).thenReturn(entityType);
+        when(itemService.getMetadata(item, "relationship.type")).thenReturn(entityType);
         when(itemService.getMetadataByMetadataString(item, "cris.owner")).thenReturn(ownerMetadata);
+        Collection collection = mock(Collection.class);
+        when(collection.getID()).thenReturn(UUID.randomUUID());
+        when(item.getOwningCollection()).thenReturn(collection);
         return item;
     }
 

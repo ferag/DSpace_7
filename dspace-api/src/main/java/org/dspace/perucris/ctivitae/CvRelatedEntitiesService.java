@@ -11,14 +11,21 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.dspace.app.profile.ResearcherProfile;
+import org.dspace.app.profile.service.ResearcherProfileService;
+import org.dspace.authorize.AuthorizeException;
+import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.Relationship;
@@ -47,6 +54,7 @@ public class CvRelatedEntitiesService {
     private final ItemService itemService;
     private final RelationshipService relationshipService;
     private final RelationshipTypeService relationshipTypeService;
+    private final ResearcherProfileService researcherProfileService;
 
     private Map<String, List<String>> entityToMetadataMap = new HashMap<>();
 
@@ -54,11 +62,13 @@ public class CvRelatedEntitiesService {
     public CvRelatedEntitiesService(ConcytecWorkflowService concytecWorkflowService,
                                     ItemService itemService,
                                     RelationshipService relationshipService,
-                                    RelationshipTypeService relationshipTypeService) {
+                                    RelationshipTypeService relationshipTypeService,
+                                    ResearcherProfileService researcherProfileService) {
         this.concytecWorkflowService = concytecWorkflowService;
         this.itemService = itemService;
         this.relationshipService = relationshipService;
         this.relationshipTypeService = relationshipTypeService;
+        this.researcherProfileService = researcherProfileService;
     }
 
     /**
@@ -130,6 +140,41 @@ public class CvRelatedEntitiesService {
         return result;
     }
 
+    /**
+     * Given a relationship type, returns true if this entity type can have references to
+     * person metadata, false otherwise.
+     * @param relationshipType
+     * @return
+     */
+    public boolean entityWithCvReferences(String relationshipType) {
+        return entityToMetadataMap.containsKey(relationshipType);
+    }
+
+    /**
+     * Given a directorio item, find ids of CTIVitae Profiles that can be directly put in relation
+     * with it, since they are not related to an item of CTIVitae community that is in relation with
+     * this directorio item. In this case, in this second case, profile the relation to be considered is
+     * the one existing between the CTIVitae profile and the copy of this directorio item.
+     *
+     * @param context DSpace application context
+     * @param item a directorio item
+     * @return
+     */
+    public List<String> findCtiVitaeRelationsForDirectorioItem(Context context, Item item)
+        throws SQLException, AuthorizeException {
+        // ids of profiles that are in relation with directorio item clone
+        Set<UUID> relatedEntitiesProfiles = findCvProfileIdsOwningCloneOfItem(context, item);
+
+        // Lookup of cti vitae profile ids that are in relation with directorio item and that are not
+        // owners of directorio entity clone into their personal CTIVitae space.
+        List<String> ctiVitaeProfilesRelatedToDirectorioItem = findCtiVitaeRelatedProfiles(context, item)
+            .stream().map(DSpaceObject::getID)
+                .filter(id -> !relatedEntitiesProfiles.contains(id))
+                .map(UUIDUtils::toString)
+                .collect(Collectors.toList());
+        return ctiVitaeProfilesRelatedToDirectorioItem;
+    }
+
     public void setEntityToMetadataMap(Map<String, List<String>> entityToMetadataMap) {
         this.entityToMetadataMap = entityToMetadataMap;
     }
@@ -179,5 +224,30 @@ public class CvRelatedEntitiesService {
             .map(MetadataValue::getAuthority)
             .filter(StringUtils::isNotBlank)
             .collect(Collectors.toList());
+    }
+
+    private Set<UUID> findCvProfileIdsOwningCloneOfItem(Context context, Item directorioItem)
+        throws SQLException, AuthorizeException {
+
+        Set<UUID> relatedEntitiesOwners = findCTIVitaeRelated(context, directorioItem)
+                .stream().map(cvEntity -> itemService.getMetadataByMetadataString(cvEntity, "cris.owner"))
+                .filter(values -> !values.isEmpty())
+                .map(values -> values.get(0).getAuthority())
+                .filter(org.apache.commons.lang.StringUtils::isNotBlank)
+                .map(UUIDUtils::fromString)
+                .collect(Collectors.toSet());
+
+        Set<UUID> relatedEntitiesProfiles = new HashSet<>();
+        for (UUID ownerId : relatedEntitiesOwners) {
+            ResearcherProfile researcherProfile = researcherProfileService.findById(context, ownerId);
+            if (Objects.isNull(researcherProfile)) {
+                continue;
+            }
+            Optional.ofNullable(researcherProfile.getItem())
+                .map(DSpaceObject::getID)
+                .ifPresent(relatedEntitiesProfiles::add);
+
+        }
+        return relatedEntitiesProfiles;
     }
 }

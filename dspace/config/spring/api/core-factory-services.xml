@@ -62,4 +62,6 @@
 
     <bean id="crisMetricsServiceFactory" class="org.dspace.externalservices.scopus.factory.CrisMetricsServiceFactoryImpl"/>
 
+    <bean id="researcherProfileServiceFactory" class="org.dspace.app.profile.factory.ResearcherProfileServiceFactoryImpl"/>
+
 </beans>

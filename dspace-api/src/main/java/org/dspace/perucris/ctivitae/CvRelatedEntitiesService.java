@@ -191,6 +191,11 @@ public class CvRelatedEntitiesService {
         List<RelationshipType> relationshipType = relationshipTypeService.findByItemAndTypeNames(context,
             person, false, "isPersonOwner", "isOwnedByCvPerson");
 
+        if (Objects.isNull(relationshipType) || relationshipType.isEmpty()) {
+            LOGGER.warn("Unable to find relationship type isPersonOwner for {}", person.getID().toString());
+            return Optional.empty();
+        }
+
         List<Relationship> relationships = relationshipService.findByItemAndRelationshipType(context,
             person, relationshipType.get(0), false);
 

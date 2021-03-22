@@ -10085,6 +10085,14 @@ You can leave out the day and/or month if they aren't applicable.</hint>
     </value-pairs>
     <value-pairs value-pairs-name="currency" dc-term="currency">
       <pair>
+        <displayed-value>Peruvian Soles</displayed-value>
+        <stored-value>Peruvian Soles</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>US Dollar</displayed-value>
+        <stored-value>US Dollar</stored-value>
+      </pair>
+      <pair>
         <displayed-value>Euro</displayed-value>
         <stored-value>Euro</stored-value>
       </pair>
@@ -10173,10 +10181,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <stored-value>Norwegian krone</stored-value>
       </pair>
       <pair>
-        <displayed-value>Peruvian Sole</displayed-value>
-        <stored-value>Peruvian Sole</stored-value>
-      </pair>
-      <pair>
         <displayed-value>Polish zloty</displayed-value>
         <stored-value>Polish zloty</stored-value>
       </pair>
@@ -10207,10 +10211,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       <pair>
         <displayed-value>Ukrainian hryvnia</displayed-value>
         <stored-value>Ukrainian hryvnia</stored-value>
-      </pair>
-      <pair>
-        <displayed-value>US Dollar</displayed-value>
-        <stored-value>US Dollar</stored-value>
       </pair>
       <pair>
         <displayed-value>Pound sterling</displayed-value>
@@ -10595,6 +10595,10 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       <pair>
         <displayed-value>Unspecified</displayed-value>
         <stored-value />
+      </pair>
+      <pair>
+        <displayed-value>Perú</displayed-value>
+        <stored-value>PE</stored-value>
       </pair>
       <pair>
         <displayed-value>Afganistán</displayed-value>
@@ -11287,10 +11291,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       <pair>
         <displayed-value>Paraguay</displayed-value>
         <stored-value>PY</stored-value>
-      </pair>
-      <pair>
-        <displayed-value>Perú</displayed-value>
-        <stored-value>PE</stored-value>
       </pair>
       <pair>
         <displayed-value>Filipinas</displayed-value>

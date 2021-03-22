@@ -208,6 +208,8 @@ public class SolrServiceIndexCtiVitaeEntitiesPluginTest {
 
         SolrInputDocument document = new SolrInputDocument();
 
+        expectRelatedResearcherProfile(firstOwnerProfileId, firstOwnerCvPersonId);
+
         when(cvRelatedEntitiesService.findDirectorioRelated(context, firstRelatedCvItem))
             .thenReturn(Optional.of(directorioItem));
 

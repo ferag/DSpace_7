@@ -1,0 +1,160 @@
+/**
+ * The contents of this file are subject to the license and copyright
+ * detailed in the LICENSE and NOTICE files at the root of the source
+ * tree and available online at
+ *
+ * http://www.dspace.org/license/
+ */
+package org.dspace.discovery;
+
+import static java.util.Collections.singletonList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.apache.solr.common.SolrInputDocument;
+import org.dspace.authorize.AuthorizeException;
+import org.dspace.content.Collection;
+import org.dspace.content.Community;
+import org.dspace.content.Item;
+import org.dspace.content.service.ItemService;
+import org.dspace.core.Context;
+import org.dspace.discovery.indexobject.IndexableItem;
+import org.dspace.perucris.ctivitae.CvRelatedEntitiesService;
+import org.dspace.services.ConfigurationService;
+import org.junit.Before;
+import org.junit.Test;
+
+/**
+ * Unit tests for {@link SolrServiceIndexCtiVitaeDirectorioRelationshipsPlugin}
+ *
+ * @author Corrado Lombardi (corrado.lombardi at 4science.it)
+ */
+public class SolrServiceIndexCtiVitaeDirectorioRelationshipsPluginTest {
+
+    private Context context = mock(Context.class);
+
+    private SolrServiceIndexCtiVitaeDirectorioRelationshipsPlugin plugin;
+    private CvRelatedEntitiesService cvRelatedEntitiesService = mock(CvRelatedEntitiesService.class);
+    private ItemService itemService = mock(ItemService.class);
+    private ConfigurationService configurationService = mock(ConfigurationService.class);
+
+    @Before
+    public void setUp() throws Exception {
+        plugin = new SolrServiceIndexCtiVitaeDirectorioRelationshipsPlugin(
+            cvRelatedEntitiesService, itemService, configurationService);
+    }
+
+    @Test
+    public void notADirectorioItem() throws SQLException {
+
+        IndexableItem indexableItem = new IndexableItem(item("CvPerson"));
+        SolrInputDocument document = new SolrInputDocument();
+
+        when(cvRelatedEntitiesService.entityWithCvReferences("CvPerson"))
+            .thenReturn(false);
+        plugin.additionalIndex(context, indexableItem, document);
+
+        assertNull(document.getField("cti.owner"));
+    }
+
+    @Test
+    public void notInDirectorioCollection() throws SQLException {
+
+        IndexableItem indexableItem = new IndexableItem(item("Publication",
+            UUID.randomUUID()));
+        SolrInputDocument document = new SolrInputDocument();
+
+        when(cvRelatedEntitiesService.entityWithCvReferences("Publication"))
+            .thenReturn(true);
+
+        when(configurationService.getProperty("directorios.community-id")).thenReturn(UUID.randomUUID().toString());
+
+        plugin.additionalIndex(context, indexableItem, document);
+
+        assertNull(document.getField("cti.owner"));
+    }
+
+    @Test
+    public void directorioItemUpdated() throws SQLException, AuthorizeException {
+
+        UUID directorioCommunityId = UUID.randomUUID();
+        Item item = item("Publication", directorioCommunityId);
+        IndexableItem indexableItem = new IndexableItem(item);
+        SolrInputDocument document = new SolrInputDocument();
+
+        when(cvRelatedEntitiesService.entityWithCvReferences("Publication"))
+            .thenReturn(true);
+
+        when(configurationService.getProperty("directorios.community-id"))
+            .thenReturn(directorioCommunityId.toString());
+
+        String publicationOwnerId = UUID.randomUUID().toString();
+        when(cvRelatedEntitiesService.findCtiVitaeRelationsForDirectorioItem(context, item))
+            .thenReturn(singletonList(publicationOwnerId));
+
+        plugin.additionalIndex(context, indexableItem, document);
+
+        assertThat(document.getField("ctivitae.owner").getValue(),
+            is(singletonList(publicationOwnerId)));
+    }
+
+    @Test
+    public void exceptionDuringOwnerLookup() throws SQLException, AuthorizeException {
+
+        UUID directorioCommunityId = UUID.randomUUID();
+        Item item = item("Publication", directorioCommunityId);
+        IndexableItem indexableItem = new IndexableItem(item);
+        SolrInputDocument document = new SolrInputDocument();
+
+        when(cvRelatedEntitiesService.entityWithCvReferences("Publication"))
+            .thenReturn(true);
+
+        when(configurationService.getProperty("directorios.community-id"))
+            .thenReturn(directorioCommunityId.toString());
+
+        String publicationOwnerId = UUID.randomUUID().toString();
+
+        doThrow(new SQLException("sql exception"))
+            .when(cvRelatedEntitiesService)
+            .findCtiVitaeRelationsForDirectorioItem(context, item);
+
+        plugin.additionalIndex(context, indexableItem, document);
+
+        assertNull(document.getField("cti.owner"));
+    }
+
+    private Item item(String relationshipType, UUID... owningCommunities) throws SQLException {
+        Item item = mock(Item.class);
+        when(itemService.getMetadata(item, "relationship.type"))
+            .thenReturn(relationshipType);
+        Collection collection = collection(owningCommunities);
+        when(item.getOwningCollection())
+            .thenReturn(collection);
+        return item;
+    }
+
+    private Collection collection(UUID... owningCommunities) throws SQLException {
+        Collection collection = mock(Collection.class);
+        List<Community> communities = Arrays.stream(owningCommunities)
+            .map(this::community).collect(Collectors.toList());
+        when(collection.getCommunities())
+            .thenReturn(communities);
+        return collection;
+    }
+
+    private Community community(UUID uuid) {
+        Community community = mock(Community.class);
+        when(community.getID()).thenReturn(uuid);
+        return community;
+    }
+}

@@ -1,0 +1,114 @@
+/**
+ * The contents of this file are subject to the license and copyright
+ * detailed in the LICENSE and NOTICE files at the root of the source
+ * tree and available online at
+ *
+ * http://www.dspace.org/license/
+ */
+package org.dspace.discovery;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import org.apache.solr.common.SolrInputDocument;
+import org.dspace.authorize.AuthorizeException;
+import org.dspace.content.Item;
+import org.dspace.content.service.ItemService;
+import org.dspace.core.Context;
+import org.dspace.discovery.indexobject.IndexableItem;
+import org.dspace.perucris.ctivitae.CvRelatedEntitiesService;
+import org.dspace.services.ConfigurationService;
+import org.dspace.util.UUIDUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+/**
+ * Custom PGC implementation of {@link SolrServiceIndexPlugin} that add relations reference
+ * between a Directorio entity and its owning CvPerson entity, if present.
+ * <p>
+ * For example: in case of a publication (Publication) it adds references to the CvPerson
+ * owner of the profile that is author or editor of such publication, if present.
+ *
+ * @author Corrado Lombardi (corrado.lombardi at 4science.it)
+ */
+
+public class SolrServiceIndexCtiVitaeDirectorioRelationshipsPlugin implements SolrServiceIndexPlugin {
+
+    private static final Logger LOGGER =
+        LoggerFactory.getLogger(SolrServiceIndexCtiVitaeDirectorioRelationshipsPlugin.class);
+
+    private final CvRelatedEntitiesService cvRelatedEntitiesService;
+    private final ItemService itemService;
+    private final ConfigurationService configurationService;
+
+    @Autowired
+    public SolrServiceIndexCtiVitaeDirectorioRelationshipsPlugin(
+        CvRelatedEntitiesService cvRelatedEntitiesService, ItemService itemService,
+        ConfigurationService configurationService) {
+
+        this.cvRelatedEntitiesService = cvRelatedEntitiesService;
+        this.itemService = itemService;
+        this.configurationService = configurationService;
+    }
+
+    @Override
+    public void additionalIndex(Context context, IndexableObject indexableObject, SolrInputDocument document) {
+
+        Optional<Item> item = Optional.empty();
+
+        try {
+            item = item(indexableObject);
+        } catch (SQLException e) {
+            LOGGER.error("An error occurred during ctivitae item related indexing", e);
+        }
+
+        item.ifPresent(i -> {
+            try {
+                tryToUpdateDocument(context, document, i);
+            } catch (SQLException | AuthorizeException e) {
+                LOGGER.error("An error occurred during ctivitae item related indexing", e);
+            }
+        });
+    }
+
+    private Optional<Item> item(IndexableObject indexableObject) throws SQLException {
+        if (!(indexableObject instanceof IndexableItem)) {
+            return Optional.empty();
+        }
+        Item indexedObject = ((IndexableItem) indexableObject).getIndexedObject();
+        if (Objects.isNull(indexedObject)) {
+            return Optional.empty();
+        }
+        if (notADirectorioItem(indexedObject)) {
+            return Optional.empty();
+        }
+        return Optional.of(indexedObject);
+    }
+
+    private void tryToUpdateDocument(Context context, SolrInputDocument document, Item item)
+        throws SQLException, AuthorizeException {
+        {
+            List<String> relatedProfiles = cvRelatedEntitiesService.
+                findCtiVitaeRelationsForDirectorioItem(context, item);
+
+            if (!relatedProfiles.isEmpty()) {
+                document.addField("ctivitae.owner", relatedProfiles);
+            }
+        }
+    }
+
+    private boolean notADirectorioItem(Item item) throws SQLException {
+
+        if (!cvRelatedEntitiesService.entityWithCvReferences(itemService.getMetadata(item,
+            "relationship.type"))) {
+            return true;
+        }
+        String directorioCommunityId = configurationService.getProperty("directorios.community-id");
+        return item.getOwningCollection().getCommunities()
+            .stream()
+            .noneMatch(c -> UUIDUtils.toString(c.getID()).equals(directorioCommunityId));
+    }
+}

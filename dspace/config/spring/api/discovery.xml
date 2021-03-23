@@ -2419,87 +2419,87 @@
         <property name="spellCheckEnabled" value="false"/>
     </bean>
 
-<!--    <bean id="orgUnit" class="org.dspace.discovery.configuration.DiscoveryConfiguration"-->
-<!--          scope="prototype">-->
-<!--        <property name="id" value="orgUnit"/>-->
-<!--        <property name="indexAlways" value="true"/>-->
-<!--        &lt;!&ndash;Which sidebar facets are to be displayed&ndash;&gt;-->
-<!--        <property name="sidebarFacets">-->
-<!--            <list>-->
-<!--                <ref bean="graphPublicationByType" />-->
-<!--                <ref bean="graphPublicationByDate" />-->
+    <bean id="orgUnitWithSameFacetFilters" class="org.dspace.discovery.configuration.DiscoveryConfiguration"
+          scope="prototype">
+        <property name="id" value="orgUnit"/>
+        <property name="indexAlways" value="true"/>
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
 
-<!--                <ref bean="searchFilterOrganizationAddressCountry"/>-->
-<!--                <ref bean="searchFilterOrganizationAddressLocality"/>-->
-<!--                <ref bean="searchFilterOrganizationPeruCrisSector"/>-->
-<!--                <ref bean="searchFilterType"/>-->
-<!--                <ref bean="searchFilterOrganizationPeruCrisClassification"/>-->
-<!--                <ref bean="searchFilterOrganizationSuneduClassification"/>-->
-<!--                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>-->
-<!--                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>-->
-<!--                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>-->
-<!--                &lt;!&ndash;                <ref bean="searchFilterOrganizationFoundingDate"/>&ndash;&gt;-->
-<!--            </list>-->
-<!--        </property>-->
-<!--        &lt;!&ndash;The search filters which can be used on the discovery search page&ndash;&gt;-->
-<!--        <property name="searchFilters">-->
-<!--            <list>-->
-<!--                <ref bean="graphPublicationByType" />-->
-<!--                <ref bean="graphPublicationByDate" />-->
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationPeruCrisSector"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationSuneduClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+                <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
+            </list>
+        </property>
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
 
-<!--                <ref bean="searchFilterOrganizationLegalName"/>-->
-<!--                <ref bean="searchFilterOrganizationAddressCountry"/>-->
-<!--                <ref bean="searchFilterOrganizationAddressLocality"/>-->
-<!--                <ref bean="searchFilterOrganizationPeruCrisSector"/>-->
-<!--                <ref bean="searchFilterType"/>-->
-<!--                <ref bean="searchFilterOrganizationPeruCrisClassification"/>-->
-<!--                <ref bean="searchFilterOrganizationSuneduClassification"/>-->
-<!--                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>-->
-<!--                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>-->
-<!--                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>-->
-<!--                &lt;!&ndash;                <ref bean="searchFilterOrganizationFoundingDate"/>&ndash;&gt;-->
-<!--            </list>-->
-<!--        </property>-->
-<!--        &lt;!&ndash;The sort filters for the discovery search&ndash;&gt;-->
-<!--        <property name="searchSortConfiguration">-->
-<!--            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">-->
-<!--                &lt;!&ndash;<property name="defaultSort" ref="sortDateIssued"/>&ndash;&gt;-->
-<!--                &lt;!&ndash;DefaultSortOrder can either be desc or asc (desc is default)&ndash;&gt;-->
-<!--                <property name="defaultSortOrder" value="desc"/>-->
-<!--                <property name="sortFields">-->
-<!--                    <list>-->
-<!--                        <ref bean="sortOrganizationLegalName"/>-->
-<!--                        <ref bean="sortOrganizationAddressCountry"/>-->
-<!--                        <ref bean="sortOrganizationAddressLocality"/>-->
-<!--                        <ref bean="sortOrganizationFoundingDate"/>-->
-<!--                        <ref bean="sortDateAccessioned"/>-->
-<!--                    </list>-->
-<!--                </property>-->
-<!--            </bean>-->
-<!--        </property>-->
-<!--        &lt;!&ndash;Any default filter queries, these filter queries will be used for all-->
-<!--            queries done by discovery for this configuration &ndash;&gt;-->
-<!--        <property name="defaultFilterQueries">-->
-<!--            <list>-->
-<!--                &lt;!&ndash;Only find items of type OrgUnit&ndash;&gt;-->
-<!--                <value>search.resourcetype:Item AND entityType_keyword:OrgUnit</value>-->
-<!--            </list>-->
-<!--        </property>-->
-<!--        &lt;!&ndash;The configuration for the recent submissions&ndash;&gt;-->
-<!--        <property name="recentSubmissionConfiguration">-->
-<!--            <bean class="org.dspace.discovery.configuration.DiscoveryRecentSubmissionsConfiguration">-->
-<!--                <property name="metadataSortField" value="dc.date.accessioned"/>-->
-<!--                <property name="type" value="date"/>-->
-<!--                <property name="max" value="20"/>-->
-<!--                &lt;!&ndash; If enabled the collection home page will not display metadata but show a pageable list of recent submissions &ndash;&gt;-->
-<!--                <property name="useAsHomePage" value="false"/>-->
-<!--            </bean>-->
-<!--        </property>-->
-<!--        &lt;!&ndash;Default result per page  &ndash;&gt;-->
-<!--        <property name="defaultRpp" value="10"/>-->
-<!--        &lt;!&ndash; When true a "did you mean" example will be displayed, value can be true or false &ndash;&gt;-->
-<!--        <property name="spellCheckEnabled" value="true"/>-->
-<!--    </bean>-->
+                <ref bean="searchFilterOrganizationLegalName"/>
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationPeruCrisSector"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationSuneduClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+                <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
+            </list>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <!--<property name="defaultSort" ref="sortDateIssued"/>-->
+                <!--DefaultSortOrder can either be desc or asc (desc is default)-->
+                <property name="defaultSortOrder" value="desc"/>
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortOrganizationLegalName"/>
+                        <ref bean="sortOrganizationAddressCountry"/>
+                        <ref bean="sortOrganizationAddressLocality"/>
+                        <ref bean="sortOrganizationFoundingDate"/>
+                        <ref bean="sortDateAccessioned"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find items of type OrgUnit-->
+                <value>search.resourcetype:Item AND entityType_keyword:OrgUnit</value>
+            </list>
+        </property>
+        <!--The configuration for the recent submissions-->
+        <property name="recentSubmissionConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryRecentSubmissionsConfiguration">
+                <property name="metadataSortField" value="dc.date.accessioned"/>
+                <property name="type" value="date"/>
+                <property name="max" value="20"/>
+                <!-- If enabled the collection home page will not display metadata but show a pageable list of recent submissions -->
+                <property name="useAsHomePage" value="false"/>
+            </bean>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10"/>
+        <!-- When true a "did you mean" example will be displayed, value can be true or false -->
+        <property name="spellCheckEnabled" value="true"/>
+    </bean>
 
     <bean id="orgUnit" class="org.dspace.discovery.configuration.DiscoveryConfiguration"
           scope="prototype">
@@ -2523,19 +2523,6 @@
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
-<!--                <ref bean="graphPublicationByType" />-->
-<!--                <ref bean="graphPublicationByDate" />-->
-
-<!--                <ref bean="searchFilterOrganizationAddressCountry"/>-->
-<!--                <ref bean="searchFilterOrganizationAddressLocality"/>-->
-<!--                <ref bean="searchFilterOrganizationPeruCrisSector"/>-->
-<!--                <ref bean="searchFilterType"/>-->
-<!--                <ref bean="searchFilterOrganizationPeruCrisClassification"/>-->
-<!--                <ref bean="searchFilterOrganizationSuneduClassification"/>-->
-<!--                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>-->
-<!--                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>-->
-<!--                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>-->
-                <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
@@ -2560,21 +2547,6 @@
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
-<!--                <ref bean="searchFilterUbiGeo"/>-->
-<!--                <ref bean="graphPublicationByType" />-->
-<!--                <ref bean="graphPublicationByDate" />-->
-
-<!--                <ref bean="searchFilterOrganizationLegalName"/>-->
-<!--                <ref bean="searchFilterOrganizationAddressCountry"/>-->
-<!--                <ref bean="searchFilterOrganizationAddressLocality"/>-->
-<!--                <ref bean="searchFilterOrganizationPeruCrisSector"/>-->
-<!--                <ref bean="searchFilterType"/>-->
-<!--                <ref bean="searchFilterOrganizationPeruCrisClassification"/>-->
-<!--                <ref bean="searchFilterOrganizationSuneduClassification"/>-->
-<!--                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>-->
-<!--                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>-->
-<!--                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>-->
-                <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
             </list>
         </property>
         <!--The sort filters for the discovery search-->

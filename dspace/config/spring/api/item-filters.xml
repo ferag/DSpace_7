@@ -97,6 +97,17 @@
             </map>
         </property>
     </bean>
+
+    <!-- relationship.type is exactly CvPerson -->
+    <bean id="relationship-type-equals-cv-person_condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="relationship.type" />
+                <entry key="pattern" value="^CvPerson$" />
+            </map>
+        </property>
+    </bean>
     
     <!-- has orcid identifier set -->
     <bean id="has-orcid-set_condition"
@@ -236,6 +247,27 @@
             <map>
                 <entry key="bundle" value="ORIGINAL"/>
                 <entry key="min" value="1"/>
+            </map>
+        </property>
+    </bean>
+
+    <!-- has ubigeo value set -->
+    <bean id="has-ubigeo-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.ubigeo" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has nationality value set to PE-->
+    <bean id="has-nationality-peruvian_condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.address.addressCountry" />
+                <entry key="pattern" value="PE" />
             </map>
         </property>
     </bean>
@@ -423,6 +455,35 @@
                         <ref bean="has-renacyt-set_condition" />
                         <ref bean="has-scopus-author-id-set_condition" />
                         <ref bean="has-researcher-id-set_condition" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="peruvian-cv-person-has-ubigeo_filter" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="relationship-type-equals-cv-person_condition"/>
+                            </property>
+                        </bean>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="has-nationality-peruvian_condition"/>
+                            </property>
+                        </bean>
+                        <bean class="org.dspace.content.logic.operator.And">
+                            <property name="statements">
+                                <list>
+                                    <ref bean="has-nationality-peruvian_condition"/>
+                                    <ref bean="has-ubigeo-set_condition"/>
+                                </list>
+                            </property>
+                        </bean>
                     </list>
                 </property>
             </bean>

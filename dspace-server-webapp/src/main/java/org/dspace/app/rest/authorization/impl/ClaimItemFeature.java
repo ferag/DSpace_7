@@ -17,6 +17,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.dspace.app.profile.ResearcherProfile;
 import org.dspace.app.profile.service.ResearcherProfileService;
 import org.dspace.app.rest.authorization.AuthorizationFeature;
 import org.dspace.app.rest.authorization.AuthorizationFeatureDocumentation;
@@ -28,6 +29,7 @@ import org.dspace.content.service.ItemService;
 import org.dspace.content.service.RelationshipService;
 import org.dspace.core.Context;
 import org.dspace.services.ConfigurationService;
+import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,16 +52,19 @@ public class ClaimItemFeature implements AuthorizationFeature {
     private final ResearcherProfileService researcherProfileService;
     private final ConfigurationService configurationService;
     private final RelationshipService relationshipService;
+    private final ConcytecWorkflowService concytecWorkflowService;
 
     @Autowired
     public ClaimItemFeature(ItemService itemService,
                             ResearcherProfileService researcherProfileService,
                             ConfigurationService configurationService,
-                            final RelationshipService relationshipService) {
+                            final RelationshipService relationshipService,
+                            ConcytecWorkflowService concytecWorkflowService) {
         this.itemService = itemService;
         this.researcherProfileService = researcherProfileService;
         this.configurationService = configurationService;
         this.relationshipService = relationshipService;
+        this.concytecWorkflowService = concytecWorkflowService;
     }
 
     @Override
@@ -67,7 +72,7 @@ public class ClaimItemFeature implements AuthorizationFeature {
 
         if (!(object instanceof ItemRest) ||
                 Objects.isNull(context.getCurrentUser()) ||
-                hasAlreadyAProfile(context) ||
+                hasAlreadyAProfileWithClone(context) ||
                 Objects.isNull(configurationService.getArrayProperty("claimable.collection.uuid"))) {
             return false;
         }
@@ -76,10 +81,16 @@ public class ClaimItemFeature implements AuthorizationFeature {
         return claimable(context, item);
     }
 
-    private boolean hasAlreadyAProfile(Context context) {
+    private boolean hasAlreadyAProfileWithClone(Context context) {
         try {
-            return Objects.nonNull(
-                researcherProfileService.findById(context, context.getCurrentUser().getID()));
+
+            ResearcherProfile profile = researcherProfileService.findById(context, context.getCurrentUser().getID());
+            if (profile == null) {
+                return false;
+            }
+
+            return concytecWorkflowService.findClone(context, profile.getItem()) != null;
+
         } catch (SQLException | AuthorizeException e) {
             LOG.warn("Error while checking if eperson has a ResearcherProfileAssociated: {}",
                      e.getMessage(), e);

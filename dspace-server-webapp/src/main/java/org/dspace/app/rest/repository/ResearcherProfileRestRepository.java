@@ -33,7 +33,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,9 +46,6 @@ import org.springframework.stereotype.Component;
  */
 @Component(ResearcherProfileRest.CATEGORY + "." + ResearcherProfileRest.NAME)
 public class ResearcherProfileRestRepository extends DSpaceRestRepository<ResearcherProfileRest, UUID> {
-
-    public static final String NO_VISIBILITY_CHANGE_MSG = "Refused to perform the Researcher Profile patch based "
-        + "on a token without changing the visibility";
 
     @Autowired
     private ResearcherProfileService researcherProfileService;
@@ -149,10 +145,6 @@ public class ResearcherProfileRestRepository extends DSpaceRestRepository<Resear
     protected void patch(Context context, HttpServletRequest request, String apiCategory, String model,
         UUID id, Patch patch) throws SQLException, AuthorizeException {
 
-        if (hasNotVisibilityChange(patch)) {
-            throw new AccessDeniedException(NO_VISIBILITY_CHANGE_MSG);
-        }
-
         ResearcherProfile profile = researcherProfileService.findById(context, id);
         if (profile == null) {
             throw new ResourceNotFoundException(apiCategory + "." + model + " with id: " + id + " not found");
@@ -160,11 +152,6 @@ public class ResearcherProfileRestRepository extends DSpaceRestRepository<Resear
 
         resourcePatch.patch(context, profile, patch.getOperations());
 
-    }
-
-    public boolean hasNotVisibilityChange(Patch patch) {
-        return patch.getOperations().stream()
-            .noneMatch(operation -> "/visible".equalsIgnoreCase(operation.getPath()));
     }
 
     @Override

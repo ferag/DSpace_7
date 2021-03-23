@@ -441,6 +441,9 @@ public class CvEntitySynchronizationConsumerProjectIT extends AbstractIntegratio
         Item cvProjectClone = cloneWorkflowItems.get(0).getItem();
         installItemService.installItem(context, cloneWorkflowItems.get(0));
 
+        context.commit();
+        cvProject = reloadItem(cvProject);
+
         context.restoreAuthSystemState();
 
         addMetadata(cvProject, "crispj", "coordinator", null, "White, Walter");

@@ -17,13 +17,9 @@ import org.dspace.eperson.service.EPersonService;
 import org.dspace.perucris.externalservices.reniec.ReniecDTO;
 import org.dspace.perucris.externalservices.reniec.ReniecProvider;
 import org.eclipse.jetty.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class DniRegistrationServiceImpl implements DniRegistrationService {
-
-    protected static final Logger log = LoggerFactory.getLogger(DniRegistrationServiceImpl.class);
 
     @Autowired
     private EPersonService ePersonService;
@@ -32,36 +28,36 @@ public class DniRegistrationServiceImpl implements DniRegistrationService {
     private ReniecProvider reniecProvider;
 
     @Override
-    public DniValidationResult validateDni(Context context, String dni, LocalDate date) throws SQLException {
+    public DniValidationResult validateDni(Context context, String dni, LocalDate localDate) throws SQLException {
 
-        if (dni == null || date == null) {
-            return new DniValidationResult(true, HttpStatus.BAD_REQUEST_400, null);
+        if (dni == null || localDate == null) {
+            return new DniValidationResult(HttpStatus.BAD_REQUEST_400, null);
         }
 
         // dni already exists
         EPerson ePerson = ePersonService.findByNetid(context, dni);
         if (ePerson != null) {
-            return new DniValidationResult(true, HttpStatus.CONFLICT_409, null);
+            return new DniValidationResult(HttpStatus.CONFLICT_409, null);
         }
 
         // reniec service error
-        ReniecDTO reniecDto = null;
+        ReniecDTO reniecDto;
         try {
             reniecDto = getReniecProvider().getReniecObject(dni);
         } catch (Exception ex) { // Runtime exception
-            return new DniValidationResult(true, HttpStatus.SERVICE_UNAVAILABLE_503, reniecDto);
+            return new DniValidationResult(HttpStatus.SERVICE_UNAVAILABLE_503, null);
         }
 
         // dni not found
         if (reniecDto == null) {
-            return new DniValidationResult(true, HttpStatus.NOT_FOUND_404, reniecDto);
+            return new DniValidationResult(HttpStatus.NOT_FOUND_404, reniecDto);
         }
 
         // dni and date doesn't match
-        if (!date.isEqual(reniecDto.getBirthDate())) {
-            return new DniValidationResult(true, HttpStatus.UNPROCESSABLE_ENTITY_422, reniecDto);
+        if (!localDate.isEqual(reniecDto.getBirthDate())) {
+            return new DniValidationResult(HttpStatus.UNPROCESSABLE_ENTITY_422, reniecDto);
         }
-        return new DniValidationResult(false,  HttpStatus.NO_CONTENT_204, reniecDto);
+        return new DniValidationResult(HttpStatus.NO_CONTENT_204, reniecDto);
     }
 
     public ReniecProvider getReniecProvider() {

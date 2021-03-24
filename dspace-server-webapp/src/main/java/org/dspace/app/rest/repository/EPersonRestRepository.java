@@ -253,7 +253,6 @@ public class EPersonRestRepository extends DSpaceObjectRestRepository<EPerson, E
         }
 
         // TODO patch the epersonRest with data coming from reniec
-        new MetadataValueRest(validationResult.getReniecDto().getNames());
         epersonRest.getMetadata().put("eperson.firstname",
                 new MetadataValueRest(validationResult.getReniecDto().getNames()));
         epersonRest.getMetadata().put("eperson.lastname",

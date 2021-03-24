@@ -8,41 +8,28 @@
 package org.dspace.perucris.registration;
 
 import org.dspace.perucris.externalservices.reniec.ReniecDTO;
+import org.eclipse.jetty.http.HttpStatus;
 
 public class DniValidationResult {
 
-    private boolean isError;
-    private int statusCode;
-    private ReniecDTO reniecDto;
+    private final int statusCode;
+    private final ReniecDTO reniecDto;
 
-    public DniValidationResult(boolean isError, int statusCode, ReniecDTO reniecDto) {
-        this.setError(isError);
-        this.setStatusCode(statusCode);
-        this.setReniecDto(reniecDto);
+    public DniValidationResult(int statusCode, ReniecDTO reniecDto) {
+        this.statusCode = statusCode;
+        this.reniecDto = reniecDto;
     }
 
     public boolean isError() {
-        return isError;
-    }
-
-    public void setError(boolean isError) {
-        this.isError = isError;
+        return statusCode != HttpStatus.NO_CONTENT_204;
     }
 
     public int getStatusCode() {
         return statusCode;
     }
 
-    public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
-    }
-
     public ReniecDTO getReniecDto() {
         return reniecDto;
-    }
-
-    public void setReniecDto(ReniecDTO reniecDto) {
-        this.reniecDto = reniecDto;
     }
 
 }

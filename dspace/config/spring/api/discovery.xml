@@ -89,6 +89,7 @@
                 <entry key="RELATION.Person.projects" value-ref="relationInvestigatorProjectsConfiguration"/>
                 <entry key="RELATION.Person.researchoutputs" value-ref="relationAuthorResearchOutputsConfiguration"/>
                 <entry key="RELATION.Person.patents" value-ref="relationAuthorPatentsConfiguration"/>
+                <entry key="RELATION.Person.cvprofiles" value-ref="relationPersonCvProfilesConfiguration"/>
                 <!-- OrgUnit Related items -->
                 <entry key="RELATION.OrgUnit.rpprojects" value-ref="relationOrgunitRPProjectConfiguration"/>
                 <entry key="RELATION.OrgUnit.publications" value-ref="relationOrgunitPublicationsConfiguration"/>
@@ -1149,6 +1150,50 @@
                             <property name="snippets" value="5"/>
                         </bean>
                     </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- relation between Researcher profile and CTIVitae profile -->
+    <bean id="relationPersonCvProfilesConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+<!--        <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/>-->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <!--<property name="defaultSort" ref="sortDateIssued"/>-->
+                <!--DefaultSortOrder can either be desc or asc (desc is default)-->
+                <property name="defaultSortOrder" value="desc"/>
+                <property name="sortFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+                queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:CvPerson</value>
+                <value>relation.isPersonOwner:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
                 </property>
             </bean>
         </property>

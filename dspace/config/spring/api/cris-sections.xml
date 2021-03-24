@@ -102,32 +102,6 @@
                         </list>
                     </list>
                 </entry>
-<!--                <entry key="orgunits">-->
-<!--                    <list>-->
-<!--                        <list>-->
-<!--                            <bean class="org.dspace.layout.CrisLayoutBrowseComponent">-->
-<!--                                <property name="browseNames">-->
-<!--                                    <list>-->
-<!--                                        <value>ouname</value>-->
-<!--                                        <value>oudatecreated</value>-->
-<!--                                        <value>oudatemodified</value>-->
-<!--                                    </list>-->
-<!--                                </property>-->
-<!--                                <property name="style" value="col-md-4"/>-->
-<!--                            </bean>-->
-<!--                            <bean class="org.dspace.layout.CrisLayoutSearchComponent">-->
-<!--                                <property name="discoveryConfigurationName" value="orgunit" />-->
-<!--                                <property name="style" value="col-md-8"/>-->
-<!--                            </bean>-->
-<!--                        </list>-->
-<!--                        <list>-->
-<!--                            <bean class="org.dspace.layout.CrisLayoutFacetComponent">-->
-<!--                                <property name="discoveryConfigurationName" value="orgunit" />-->
-<!--                                <property name="style" value="col-md-12"/>-->
-<!--                            </bean>-->
-<!--                        </list>-->
-<!--                    </list>-->
-<!--                </entry>-->
                 <entry key="orgunits">
                     <list>
                         <list>

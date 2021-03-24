@@ -15,6 +15,13 @@
                 <ref bean="profileItemCloningAction"/>
             </list>
         </property>
+        <property name="importProfileProviders">
+            <list>
+                <ref bean="researcherProfileDspaceProvider"/>
+                <ref bean="researcherProfileReniecProvider"/>
+                <ref bean="researcherProfileOrcidProvider"/>
+            </list>
+        </property>
     </bean>
 
     <bean id="importProfileExternalDataService" class="org.dspace.external.service.impl.ExternalDataServiceImpl">
@@ -36,6 +43,18 @@
             </list>
         </property>
     </bean>
+    
+    <!-- researcher profile import providers -->
+    <bean id="researcherProfileDspaceProvider" class="org.dspace.app.profile.importproviders.impl.ResearcherProfileDspaceProvider">
+        <property name="sourceIdentifier" value="dspace"/>
+    </bean>
+
+    <bean id="researcherProfileReniecProvider" class="org.dspace.app.profile.importproviders.impl.ResearcherProfileReniecProvider">
+        <property name="sourceIdentifier" value="reniec"/>
+    </bean>
+
+    <bean id="researcherProfileOrcidProvider" class="org.dspace.app.profile.importproviders.impl.ResearcherProfileOrcidProvider"></bean>
+    
 
     <bean id="dspaceImportService" class="org.dspace.importer.external.dspace.DSpaceImportService"/>
 
@@ -152,6 +171,27 @@
     
 
     <!-- TODO: set orcid import -->
+    
+    <!-- reniec live import data provider TODO move configuration to external services -->
+
+    <bean id="reniecLiveImportDataProvider" class="org.dspace.external.provider.impl.LiveImportDataProvider">
+        <property name="metadataSource" ref="reniecImportService"/>
+        <property name="sourceIdentifier" value="reniec"/>
+        <property name="recordIdMetadata" value="perucris.identifier.dni"/>
+        <property name="supportedEntityTypes">
+            <list>
+                <value>CvPerson</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="reniecImportService" class="org.dspace.importer.external.reniec.ReniecImportService"/>
+
+    <bean id="reniecMetadataFieldMapping"
+          class="org.dspace.importer.external.reniec.ReniecMetadataFieldMapping">
+        <property name="identifierMetadata" value="perucris.identifier.dni"/>
+    </bean>
+    
 
 </beans>
 

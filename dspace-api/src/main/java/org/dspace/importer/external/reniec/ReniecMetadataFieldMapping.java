@@ -8,24 +8,22 @@
 
 package org.dspace.importer.external.reniec;
 
-import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-import org.dspace.content.MetadataField;
-import org.dspace.content.service.ItemService;
-import org.dspace.content.service.MetadataFieldService;
-import org.dspace.core.Context;
-import org.dspace.eperson.EPerson;
-import org.dspace.eperson.service.EPersonService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dspace.importer.external.metadatamapping.MetadataFieldConfig;
 import org.dspace.importer.external.metadatamapping.MetadataFieldMapping;
 import org.dspace.importer.external.metadatamapping.MetadatumDTO;
 import org.dspace.importer.external.metadatamapping.contributor.MetadataContributor;
 import org.dspace.layout.service.CrisLayoutBoxService;
 import org.dspace.perucris.externalservices.reniec.ReniecDTO;
-import org.dspace.services.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -36,20 +34,18 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class ReniecMetadataFieldMapping implements MetadataFieldMapping<ReniecDTO, MetadataContributor<ReniecDTO>> {
 
-    private final MetadataFieldService metadataFieldService;
-    private final EPersonService ePersonService;
-    private final RequestService requestService;
+    private static Logger log = LogManager.getLogger(ReniecMetadataFieldMapping.class);
+
+    private String[] identifierMetadata = "perucris.identifier.dni".split("\\.");
+
+    private Map<Integer, String> genderMap;
 
     @Autowired
     public ReniecMetadataFieldMapping(
-            ItemService itemService,
-            RequestService requestService,
-            MetadataFieldService metadataFieldService,
-            EPersonService ePersonService,
             CrisLayoutBoxService crisLayoutBoxService) {
-        this.requestService = requestService;
-        this.metadataFieldService = metadataFieldService;
-        this.ePersonService = ePersonService;
+        genderMap = new HashMap<>();
+        genderMap.put(1, "m");
+        genderMap.put(2, "f");
     }
 
     @Override
@@ -59,29 +55,8 @@ public class ReniecMetadataFieldMapping implements MetadataFieldMapping<ReniecDT
 
     @Override
     public Collection<MetadatumDTO> resultToDCValueMapping(ReniecDTO record) {
-
-        try {
-
-            Context context = (Context) requestService.getCurrentRequest().getAttribute("context");
-            final MetadataField field = metadataFieldService.findByString(context, "perucris.eperson.dni", '.');
-            EPerson eperson = ePersonService.findByEid(context, field, record.getIdentifierDni());
-            // if it exists it means the user authenticated through reniec and oidc metadata have been saved.
-            if (eperson == null) {
-                throw new RuntimeException("EPerson must be verified through reniec oidc");
-            }
-
-            List<MetadatumDTO> metadataList = new LinkedList<>();
-
-            metadataList.add(toDto("perucris", "eperson", "dni", record.getIdentifierDni()));
-            metadataList.add(toDto("dc", "title", null, record.getNames() + record.getFatherLastName()));
-            metadataList.add(toDto("perucris", "eperson", "birthdate", record.getBirthDate().toString()));
-
-            // TODO: email? other info? geo-spatial info?
-            return metadataList;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        List<MetadatumDTO> metadataList = parseReniecDTO(record);
+        return metadataList;
     }
 
     private MetadatumDTO toDto(String schema, String element, String qualifier, String value) {
@@ -94,4 +69,74 @@ public class ReniecMetadataFieldMapping implements MetadataFieldMapping<ReniecDT
 
         return metadatumDTO;
     }
+
+    public void setIdentifierMetadata(String identifierMetadata) {
+        this.identifierMetadata = identifierMetadata.split("\\.");
+    }
+
+    private List<MetadatumDTO> parseReniecDTO(ReniecDTO dto) {
+        List<MetadatumDTO> metadataList = new LinkedList<>();
+
+        if (dto.getIdentifierDni() != null) {
+            metadataList.add(toDto("perucris", "identifier", "dni", dto.getIdentifierDni()));
+        }
+        if (dto.getFatherLastName() != null) {
+            metadataList.add(toDto("perucris", "apellidoPaterno", null, dto.getFatherLastName()));
+        }
+        if (dto.getMaternalLastName() != null) {
+            metadataList.add(toDto("perucris", "apellidoMaterno", null, dto.getMaternalLastName()));
+        }
+        if (dto.getLastNameMarried() != null) {
+            metadataList.add(toDto("perucris", "apellidoCasada", null, dto.getLastNameMarried()));
+        }
+        if (dto.getNames() != null) {
+            metadataList.add(toDto("person", "givenName", null, dto.getNames()));
+        }
+        if (dto.getHomeCode() != null) {
+            metadataList.add(toDto("perucris", "domicilio", "ubigeoReniec", dto.getHomeCode()));
+        }
+        if (dto.getRegionOfResidence() != null) {
+            metadataList.add(toDto("perucris", "domicilio", "region", dto.getRegionOfResidence()));
+        }
+        if (dto.getProvinceOfResidence() != null) {
+            metadataList.add(toDto("perucris", "domicilio", "provincia", dto.getProvinceOfResidence()));
+        }
+        if (dto.getDistrictOfResidence() != null) {
+            metadataList.add(toDto("perucris", "domicilio", "distrito", dto.getDistrictOfResidence()));
+        }
+        if (dto.getHomeAddress() != null) {
+            metadataList.add(toDto("perucris", "domicilio", "direccion", dto.getHomeAddress()));
+        }
+        if (dto.getNacimientoCode() != null) {
+            metadataList.add(toDto("perucris", "nacimiento", "ubigeoReniec", dto.getNacimientoCode()));
+        }
+        if (dto.getRegionOfBirth() != null) {
+            metadataList.add(toDto("perucris", "nacimiento", "region", dto.getRegionOfBirth()));
+        }
+        if (dto.getProvinceOfBirth() != null) {
+            metadataList.add(toDto("perucris", "nacimiento", "provincia", dto.getProvinceOfBirth()));
+        }
+        if (dto.getDistrictOfBirth() != null) {
+            metadataList.add(toDto("perucris", "nacimiento", "distrito", dto.getDistrictOfBirth()));
+        }
+        if (Objects.nonNull(gender(dto.getIndexSex()))) {
+            metadataList.add(toDto("oairecerif", "person", "gender", gender(dto.getIndexSex())));
+        }
+        if (dto.getBirthDate() != null) {
+            String birthDate = dto.getBirthDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            metadataList.add(toDto("person", "birthDate", null, birthDate));
+        }
+
+        return metadataList;
+
+    }
+
+    private String gender(int indexSex) {
+        //FIXME evaluate if this mapping can / needs to be configured
+        if (!genderMap.containsKey(indexSex)) {
+            log.warn("Unknown gender returned from RENIEC: {}", indexSex);
+        }
+        return genderMap.get(indexSex);
+    }
+
 }

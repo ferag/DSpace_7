@@ -7,10 +7,10 @@
  */
 package org.dspace.authenticate;
 
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -36,8 +36,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
-import org.dspace.app.profile.factory.ResearcherProfileServiceFactory;
-import org.dspace.app.profile.service.ResearcherProfileService;
 import org.dspace.authenticate.factory.AuthenticateServiceFactory;
 import org.dspace.authenticate.model.OIDCProfileElementsResponse;
 import org.dspace.authenticate.model.OIDCTokenResponse;
@@ -57,6 +55,8 @@ import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+
 
 
 /**
@@ -82,8 +82,6 @@ public class OIDCAuthentication implements AuthenticationMethod {
         .getInstance().getConfigurationService();
     protected AuthenticationService authenticationService = AuthenticateServiceFactory.getInstance()
             .getAuthenticationService();
-    protected ResearcherProfileService researcherProfileService = ResearcherProfileServiceFactory.getInstance()
-            .getResearcherProfileService();
 
     private static final Logger log = LoggerFactory.getLogger(OIDCAuthentication.class);
 
@@ -476,18 +474,6 @@ public class OIDCAuthentication implements AuthenticationMethod {
 
             context.dispatchEvents();
             context.setCurrentUser(eperson);
-
-            // Profile creation
-            if (userData.getReniecDni() != null) {
-                URI uri = URI.create("https://dspacecris7.4science.cloud/server/api/reniec/dni/" + userData.getReniecDni());
-                try {
-                    researcherProfileService.createFromSource(context, eperson, uri);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    log.error("Unable to create profile for the eperson with uri: " + uri.toString());
-                }
-            }
-
 
 
         } catch (AuthorizeException | JsonProcessingException e) {

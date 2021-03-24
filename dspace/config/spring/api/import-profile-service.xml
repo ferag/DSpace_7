@@ -63,24 +63,6 @@
         <property name="identifierMetadata" value="dc.identifier"/>
     </bean>
 
-    <bean id="reniecLiveImportDataProvider" class="org.dspace.external.provider.impl.LiveImportDataProvider">
-        <property name="metadataSource" ref="reniecImportService"/>
-        <property name="sourceIdentifier" value="reniec"/>
-        <property name="recordIdMetadata" value="perucris.eperson.dni"/>
-        <property name="supportedEntityTypes">
-            <list>
-                <value>CvPerson</value>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="reniecImportService" class="org.dspace.importer.external.reniec.ReniecImportService"/>
-
-    <bean id="reniecMetadataFieldMapping"
-          class="org.dspace.importer.external.reniec.ReniecMetadataFieldMapping">
-        <property name="identifierMetadata" value="perucris.eperson.dni"/>
-    </bean>
-
     <bean id="dspaceAfterImportAction" class="org.dspace.importer.external.dspace.DspaceAfterImportAction">
 
         <constructor-arg name="dSpaceItemRelationshipService" ref="dspaceItemRelationshipService"/>

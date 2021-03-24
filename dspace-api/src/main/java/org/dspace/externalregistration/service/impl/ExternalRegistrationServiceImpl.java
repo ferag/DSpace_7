@@ -2,6 +2,7 @@ package org.dspace.externalregistration.service.impl;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
@@ -44,16 +45,16 @@ public class ExternalRegistrationServiceImpl implements ExternalRegistrationServ
             OIDCProfileElementsResponse userData)
             throws SQLException {
 
-        EPerson eperson = null;
+        EPerson eperson;
         try {
             context.turnOffAuthorisationSystem();
 
-            ExternalRegistrationProvider provider = getProvider(userData);
-            if (provider == null) {
+            Optional<ExternalRegistrationProvider> provider = getProvider(userData);
+            if (provider.isEmpty()) {
                 throw new IllegalStateException("No provider found for the user data context.");
             }
 
-            eperson = provider.createEPerson(context, userData);
+            eperson = provider.get().createEPerson(context, userData);
 
             createInitialGrant(context, tokens, eperson);
 
@@ -64,14 +65,13 @@ public class ExternalRegistrationServiceImpl implements ExternalRegistrationServ
             context.dispatchEvents();
             context.setCurrentUser(eperson);
 
+            return eperson;
 
         } catch (AuthorizeException | JsonProcessingException e) {
             throw new IllegalStateException();
         } finally {
             context.restoreAuthSystemState();
         }
-        return eperson;
-
 
     }
 
@@ -98,14 +98,10 @@ public class ExternalRegistrationServiceImpl implements ExternalRegistrationServ
         ePersonService.addMetadata(context, eperson, "perucris", "oidc", "granted", null, client);
     }
 
-    private ExternalRegistrationProvider getProvider(
-            OIDCProfileElementsResponse userData) {
-        for (ExternalRegistrationProvider provider: getExternalRegistrationProviders()) {
-            if (provider.support(userData)) {
-                return provider;
-            }
-        }
-        return null;
+    private Optional<ExternalRegistrationProvider> getProvider(OIDCProfileElementsResponse userData) {
+        return getExternalRegistrationProviders().stream()
+                .filter(provider -> provider.support(userData))
+                .findFirst();
     }
 
     public List<ExternalRegistrationProvider> getExternalRegistrationProviders() {

@@ -28,16 +28,16 @@ public class RENIECRegistrationProvider extends AbstractExternalRegistrationProv
         getePersonService().addMetadata(context, eperson, "perucris", "eperson", "dni", null, vals);
         eperson.setNetid(userData.getReniecDni());
 
-        if (StringUtils.isNotEmpty(userData.getEmail())) {
+        if (StringUtils.isNotBlank(userData.getEmail())) {
             eperson.setEmail(userData.getEmail());
         }
-        if (StringUtils.isNotEmpty(userData.getGivenName())) {
+        if (StringUtils.isNotBlank(userData.getGivenName())) {
             eperson.setFirstName(context, userData.getGivenName());
         }
-        if (StringUtils.isNotEmpty(userData.getFamilyName())) {
+        if (StringUtils.isNotBlank(userData.getFamilyName())) {
             eperson.setLastName(context, userData.getFamilyName());
         }
-        if (StringUtils.isNotEmpty(userData.getBirthdate())) {
+        if (StringUtils.isNotBlank(userData.getBirthdate())) {
             vals = new ArrayList<String>();
             vals.add(userData.getBirthdate());
             getePersonService().addMetadata(context, eperson, "perucris", "eperson", "birthdate", null, vals);

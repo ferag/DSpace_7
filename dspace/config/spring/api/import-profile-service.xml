@@ -43,7 +43,26 @@
             </list>
         </property>
     </bean>
-    
+
+    <bean id="reniecLiveImportDataProvider" class="org.dspace.external.provider.impl.LiveImportDataProvider">
+        <property name="metadataSource" ref="reniecImportService"/>
+        <property name="sourceIdentifier" value="reniec"/>
+        <property name="recordIdMetadata" value="perucris.identifier.dni"/>
+        <property name="supportedEntityTypes">
+            <list>
+                <value>CvPerson</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="reniecImportService" class="org.dspace.importer.external.reniec.ReniecImportService"/>
+
+    <bean id="reniecMetadataFieldMapping"
+          class="org.dspace.importer.external.reniec.ReniecMetadataFieldMapping">
+        <property name="identifierMetadata" value="perucris.identifier.dni"/>
+    </bean>
+
+
     <!-- researcher profile import providers -->
     <bean id="researcherProfileDspaceProvider" class="org.dspace.app.profile.importproviders.impl.ResearcherProfileDspaceProvider">
         <property name="sourceIdentifier" value="dspace"/>
@@ -153,26 +172,6 @@
     
 
     <!-- TODO: set orcid import -->
-    
-    <!-- reniec live import data provider TODO move configuration to external services -->
-
-    <bean id="reniecLiveImportDataProvider" class="org.dspace.external.provider.impl.LiveImportDataProvider">
-        <property name="metadataSource" ref="reniecImportService"/>
-        <property name="sourceIdentifier" value="reniec"/>
-        <property name="recordIdMetadata" value="perucris.identifier.dni"/>
-        <property name="supportedEntityTypes">
-            <list>
-                <value>CvPerson</value>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="reniecImportService" class="org.dspace.importer.external.reniec.ReniecImportService"/>
-
-    <bean id="reniecMetadataFieldMapping"
-          class="org.dspace.importer.external.reniec.ReniecMetadataFieldMapping">
-        <property name="identifierMetadata" value="perucris.identifier.dni"/>
-    </bean>
     
 
 </beans>

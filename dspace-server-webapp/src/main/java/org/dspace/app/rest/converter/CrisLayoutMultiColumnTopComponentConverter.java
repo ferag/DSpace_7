@@ -3,7 +3,7 @@
  * detailed in the LICENSE and NOTICE files at the root of the source
  * tree and available online at
  *
- *  http://www.dspace.org/license/
+ * http://www.dspace.org/license/
  */
 package org.dspace.app.rest.converter;
 
@@ -44,7 +44,7 @@ public class CrisLayoutMultiColumnTopComponentConverter implements CrisLayoutSec
         rest.setStyle(component.getStyle());
         rest.setTitleKey(topComponent.getTitleKey());
 
-        List<Column> columnList =  topComponent.getColumns().stream().map(Column::from)
+        List<Column> columnList = topComponent.getColumns().stream().map(Column::from)
             .collect(Collectors.toList());
 
         rest.setColumnList(columnList);

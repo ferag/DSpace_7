@@ -8,9 +8,14 @@
 package org.dspace.content.authority;
 
 /**
- * custom implementation of {@link ChoiceAuthority} that represent an authority
+ * Custom implementation of {@link ChoiceAuthority} that represent an authority
  * that is disabled and thus for metadata where it is associated, no authority has
  * indeed to be set.
+ *
+ * It is used only to make the {@link ChoiceAuthorityServiceImpl#isChoicesConfigured(java.lang.String, java.lang.String)}
+ * call performed, for a given form name and field pair, return false in case this authority is defined for this pair.
+ *
+ * Any call to its methods will end up in an {@link UnsupportedOperationException}.
  *
  * @author Corrado Lombardi (corrado.lombardi at 4science.it)
  *
@@ -21,17 +26,20 @@ public class DisabledAuthority implements ChoiceAuthority {
 
     @Override
     public Choices getMatches(String text, int start, int limit, String locale) {
-        return new Choices(Choices.CF_UNSET);
+        throw new UnsupportedOperationException(
+            "DisabledAuthority should not be used to lookup over authority settings");
     }
 
     @Override
     public Choices getBestMatch(String text, String locale) {
-        return new Choices(Choices.CF_UNSET);
+        throw new UnsupportedOperationException(
+            "DisabledAuthority should not be used to lookup over authority settings");
     }
 
     @Override
     public String getLabel(String key, String locale) {
-        return "";
+        throw new UnsupportedOperationException(
+            "DisabledAuthority should not be used to lookup over authority settings");
     }
 
     @Override

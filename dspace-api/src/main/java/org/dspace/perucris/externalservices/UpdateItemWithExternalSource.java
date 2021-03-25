@@ -110,7 +110,9 @@ public class UpdateItemWithExternalSource
             while (itemIterator.hasNext()) {
                 Item item = itemIterator.next();
                 countFoundItems++;
+                final Item itemToUpdate = context.reloadEntity(item);
                 final boolean updated = externalService.updateItem(context, item);
+                context.uncacheEntity(itemToUpdate);
                 if (updated) {
                     countUpdatedItems++;
                 }

@@ -105,25 +105,115 @@
                 <entry key="orgunits">
                     <list>
                         <list>
-                            <bean class="org.dspace.layout.CrisLayoutBrowseComponent">
-                                <property name="browseNames">
-                                    <list>
-                                        <value>ouname</value>
-                                        <value>oudatecreated</value>
-                                        <value>oudatemodified</value>
-                                    </list>
-                                </property>
-                                <property name="style" value="col-md-4"/>
-                            </bean>
-                            <bean class="org.dspace.layout.CrisLayoutSearchComponent">
-                                <property name="discoveryConfigurationName" value="orgunit" />
-                                <property name="style" value="col-md-8"/>
+                            <bean class="org.dspace.layout.CrisLayoutTextRowComponent">
+                                <property name="order" value="1"/>
+                                <property name="contentType" value="text-key"/>
+                                <property name="content" value="orgunits.title"/>
+                                <property name="style" value="col-md-12 h2 d-flex justify-content-center p-4"/>
                             </bean>
                         </list>
                         <list>
+                            <bean class="org.dspace.layout.CrisLayoutCountersComponent">
+                                <property name="style" value="col-md-12 py-4"/>
+                                <property name="counterSettingsList">
+                                    <list>
+                                        <bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
+                                            <property name="discoveryConfigurationName" value="RESUME.orgunit.universities"/>
+                                            <property name="label" value="orgunit.universities"/>
+                                            <property name="icon" value="fas fa-university fa-3x"/>
+                                            <property name="link" value="/search?configuration=RESUME.orgunit.universities"/>
+                                        </bean>
+                                        <bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
+                                            <property name="discoveryConfigurationName" value="RESUME.orgunit.ipis"/>
+                                            <property name="label" value="orgunit.ipis"/>
+                                            <property name="icon" value="fas fa-university fa-3x"/>
+                                            <property name="link" value="/search?configuration=RESUME.orgunit.ipis"/>
+                                        </bean>
+                                        <bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
+                                            <property name="discoveryConfigurationName" value="RESUME.orgunit.investigation_innovation_unities"/>
+                                            <property name="label" value="orgunit.investigation_innovation_unities"/>
+                                            <property name="icon" value="fas fa-university fa-3x"/>
+                                            <property name="link" value="/search?configuration=RESUME.orgunit.investigation_innovation_unities"/>
+                                        </bean>
+                                        <bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
+                                            <property name="discoveryConfigurationName" value="RESUME.orgunit.investigation_groups"/>
+                                            <property name="label" value="orgunit.investigation_groups"/>
+                                            <property name="icon" value="fas fa-university fa-3x"/>
+                                            <property name="link" value="/search?configuration=RESUME.orgunit.investigation_groups"/>
+                                        </bean>
+                                        <bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
+                                            <property name="discoveryConfigurationName" value="RESUME.orgunit.investigation_lines"/>
+                                            <property name="label" value="orgunit.investigation_lines"/>
+                                            <property name="icon" value="fas fa-university fa-3x"/>
+                                            <property name="link" value="/search?configuration=RESUME.orgunit.investigation_lines"/>
+                                        </bean>
+                                        <bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
+                                            <property name="discoveryConfigurationName" value="RESUME.orgunit.enterprises"/>
+                                            <property name="label" value="orgunit.enterprises"/>
+                                            <property name="icon" value="fas fa-university fa-3x"/>
+                                            <property name="link" value="/search?configuration=RESUME.orgunit.enterprises"/>
+                                        </bean>
+                                        <bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
+                                            <property name="discoveryConfigurationName" value="RESUME.orgunit.cti_funders"/>
+                                            <property name="label" value="orgunit.cti_funders"/>
+                                            <property name="icon" value="fas fa-university fa-3x"/>
+                                            <property name="link" value="/search?configuration=RESUME.orgunit.cti_funders"/>
+                                        </bean>
+                                        <bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
+                                            <property name="discoveryConfigurationName" value="RESUME.orgunit.renacyt_centres"/>
+                                            <property name="label" value="orgunit.renacyt_centres"/>
+                                            <property name="icon" value="fas fa-university fa-3x"/>
+                                            <property name="link" value="/search?configuration=RESUME.orgunit.renacyt_centres"/>
+                                        </bean>
+                                    </list>
+                                </property>
+                            </bean>
+                        </list>
+                        <list>
+                            <bean class="org.dspace.layout.CrisLayoutSearchComponent">
+                                <property name="discoveryConfigurationName" value="orgunit" />
+<!--                                <property name="style" value="col-md-9 p-4"/>-->
+                                <property name="style" value="col-md-9 p-5"/>
+                                <property name="initialStatements" value="2"/>
+                                <property name="displayTitle" value="true"/>
+                            </bean>
+                        </list>
+                        <list>
+                            <bean class="org.dspace.layout.CrisLayoutMultiColumnTopComponent">
+                                <property name="discoveryConfigurationName" value="orgunit" />
+                                <property name="sortField" value="dc.date.accessioned" />
+                                <property name="order" value="desc" />
+                                <property name="style" value="col-md-8 pt-5"/>
+                                <property name="titleKey" value="name"/>
+                                <property name="columns">
+                                    <list>
+                                        <bean class="org.dspace.layout.CrisLayoutMultiColumnTopComponent.Column">
+                                            <property name="style" value="col-md-6"/>
+                                            <property name="metadataField" value="dc.title"/>
+                                            <property name="titleKey" value="name"/>
+                                        </bean>
+                                        <bean class="org.dspace.layout.CrisLayoutMultiColumnTopComponent.Column">
+                                            <property name="style" value="col-md-2"/>
+                                            <property name="metadataField" value="oairecerif.acronym"/>
+                                            <property name="titleKey" value="acronym"/>
+                                        </bean>
+                                        <bean class="org.dspace.layout.CrisLayoutMultiColumnTopComponent.Column">
+                                            <property name="style" value="col-md-2"/>
+                                            <property name="metadataField" value="perucris.type.orgunit"/>
+                                            <property name="titleKey" value="type"/>
+                                        </bean>
+                                        <bean class="org.dspace.layout.CrisLayoutMultiColumnTopComponent.Column">
+                                            <property name="style" value="col-md-2"/>
+                                            <property name="metadataField" value="perucris.ubigeo"/>
+                                            <property name="titleKey" value="region"/>
+                                        </bean>
+                                    </list>
+                                </property>
+                            </bean>
                             <bean class="org.dspace.layout.CrisLayoutFacetComponent">
                                 <property name="discoveryConfigurationName" value="orgunit" />
-                                <property name="style" value="col-md-12"/>
+                                <property name="style" value="col-md-4 pt-5"/>
+                                <property name="facetsPerRow" value="1"/>
                             </bean>
                         </list>
                     </list>
@@ -161,7 +251,7 @@
                                 <property name="order" value="0"/>
                                 <property name="contentType" value="image"/>
                                 <property name="content" value="https://perucris.dev.4science.cloud/assets/images/perucris-home.png"/>
-                                <property name="style" value="col-md-12 center"/>
+                                <property name="style" value="col-md-12 py-5 w-50 center"/>
                             </bean>
                             <bean class="org.dspace.layout.CrisLayoutTextRowComponent">
                                 <property name="order" value="1"/>
@@ -181,6 +271,7 @@
                                 <property name="discoveryConfigurationName" value="site" />
                                 <property name="style" value="col-md-12"/>
                                 <property name="searchType" value="basic"/>
+                                <property name="displayTitle" value="false"/>
                             </bean>
                         </list>
                         <list>

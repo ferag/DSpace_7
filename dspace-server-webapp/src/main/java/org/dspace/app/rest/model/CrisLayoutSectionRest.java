@@ -7,6 +7,7 @@
  */
 package org.dspace.app.rest.model;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import org.dspace.app.rest.RestResourceController;
 import org.dspace.layout.CrisLayoutCountersComponent;
+import org.dspace.layout.CrisLayoutMultiColumnTopComponent;
 
 /**
  * The Layout section REST resource related to the explore functionality.
@@ -176,6 +178,8 @@ public class CrisLayoutSectionRest extends BaseObjectRest<String> {
 
         private String style;
 
+        private Integer facetsPerRow;
+
         public String getDiscoveryConfigurationName() {
             return discoveryConfigurationName;
         }
@@ -201,6 +205,13 @@ public class CrisLayoutSectionRest extends BaseObjectRest<String> {
             this.style = style;
         }
 
+        public void setFacetsPerRow(Integer facetsPerRow) {
+            this.facetsPerRow = facetsPerRow;
+        }
+
+        public Integer getFacetsPerRow() {
+            return facetsPerRow;
+        }
     }
 
     public static class CrisLayoutSearchComponentRest implements CrisLayoutSectionComponentRest {
@@ -210,6 +221,10 @@ public class CrisLayoutSectionRest extends BaseObjectRest<String> {
         private String style;
 
         private String searchType;
+
+        private Integer initialStatements;
+
+        private boolean displayTitle;
 
         public String getDiscoveryConfigurationName() {
             return discoveryConfigurationName;
@@ -244,6 +259,21 @@ public class CrisLayoutSectionRest extends BaseObjectRest<String> {
             this.searchType = searchType;
         }
 
+        public void setInitialStatements(Integer initialStatements) {
+            this.initialStatements = initialStatements;
+        }
+
+        public Integer getInitialStatements() {
+            return initialStatements;
+        }
+
+        public void setDisplayTitle(boolean displayTitle) {
+            this.displayTitle = displayTitle;
+        }
+
+        public boolean getDisplayTitle() {
+            return displayTitle;
+        }
     }
 
     public static class CrisLayoutTextRowComponentRest implements CrisLayoutSectionComponentRest,
@@ -384,6 +414,105 @@ public class CrisLayoutSectionRest extends BaseObjectRest<String> {
             }
         }
 
+    }
+
+    public static class CrisLayoutMultiColumnTopComponentRest implements CrisLayoutSectionComponentRest {
+
+        private String discoveryConfigurationName;
+
+        private String sortField;
+
+        private String order;
+
+        private String style;
+
+        private String titleKey;
+
+        private List<Column> columnList = new ArrayList<>();
+
+        public void setColumnList(
+            List<Column> columnList) {
+            this.columnList = columnList;
+        }
+
+        public List<Column> getColumnList() {
+            return columnList;
+        }
+
+        @Override
+        public String getComponentType() {
+            return "multi-column-top";
+        }
+
+        @Override
+        public String getStyle() {
+            return this.style;
+        }
+
+        public String getDiscoveryConfigurationName() {
+            return discoveryConfigurationName;
+        }
+
+        public void setDiscoveryConfigurationName(String discoveryConfigurationName) {
+            this.discoveryConfigurationName = discoveryConfigurationName;
+        }
+
+        public String getSortField() {
+            return sortField;
+        }
+
+        public void setSortField(String sortField) {
+            this.sortField = sortField;
+        }
+
+        public String getOrder() {
+            return order;
+        }
+
+        public void setOrder(String order) {
+            this.order = order;
+        }
+
+        public void setStyle(String style) {
+            this.style = style;
+        }
+
+        public String getTitleKey() {
+            return titleKey;
+        }
+
+        public void setTitleKey(String titleKey) {
+            this.titleKey = titleKey;
+        }
+
+        public static class Column {
+            private final String style;
+            private final String metadataField;
+            private final String titleKey;
+
+            public static Column from (CrisLayoutMultiColumnTopComponent.Column column) {
+                return new Column(column.getStyle(), column.getMetadataField(),
+                    column.getTitleKey());
+            }
+
+            private Column(String style, String metadataField, String titleKey) {
+                this.style = style;
+                this.metadataField = metadataField;
+                this.titleKey = titleKey;
+            }
+
+            public String getStyle() {
+                return style;
+            }
+
+            public String getMetadataField() {
+                return metadataField;
+            }
+
+            public String getTitleKey() {
+                return titleKey;
+            }
+        }
     }
 
 }

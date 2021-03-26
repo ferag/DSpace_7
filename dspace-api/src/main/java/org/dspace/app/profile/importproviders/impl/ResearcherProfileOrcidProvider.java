@@ -29,7 +29,7 @@ public class ResearcherProfileOrcidProvider implements ResearcherProfileProvider
         Optional<MetadataValue> metadataIdentifier = getMetadataIdentifier(eperson);
         if (metadataIdentifier.isPresent()) {
             ConfiguredResearcherProfileProvider configured = new ConfiguredResearcherProfileProvider(
-                    new ResearcherProfileSource(null, metadataIdentifier.get().getValue()), this);
+                    new ResearcherProfileSource(metadataIdentifier.get().getValue()), this);
             return Optional.of(configured);
         }
         return Optional.empty();
@@ -42,9 +42,9 @@ public class ResearcherProfileOrcidProvider implements ResearcherProfileProvider
 
     private Optional<MetadataValue> getMetadataIdentifier(EPerson eperson) {
         return eperson.getMetadata().stream().filter(metadata -> {
-            return metadata.getMetadataField().getMetadataSchema().getName().equals("perucris") &&
-                    metadata.getMetadataField().getElement().equals("eperson") &&
-                    metadata.getMetadataField().getQualifier().equals("orcid");
+            return "perucris".equals(metadata.getMetadataField().getMetadataSchema().getName()) &&
+                    "eperson".equals(metadata.getMetadataField().getElement()) &&
+                    "orcid".equals(metadata.getMetadataField().getQualifier());
         }).findFirst();
     }
 

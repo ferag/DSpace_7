@@ -97,7 +97,7 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
      * conflicting metadata are resolved by giving priority to the first match.
      * </p>
      * <p>
-     * Other fields of the returned merged object are taken from the first external objects of the list.
+     * Other fields of the returned merged object are not relevant.
      * </p>
      * 
      * @param externalObjects the merged source external object
@@ -115,10 +115,10 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
         });
 
         ExternalDataObject result = new ExternalDataObject();
-        result.setId(externalObjects.get(0).getId());
-        result.setSource(externalObjects.get(0).getSource());
-        result.setDisplayValue(externalObjects.get(0).getDisplayValue());
-        result.setValue(externalObjects.get(0).getValue());
+        result.setId("N/A");
+        result.setSource("merged");
+        result.setDisplayValue("N/A");
+        result.setValue("N/A");
         result.setMetadata(metadataSet.stream().collect(Collectors.toList()));
         return result;
 

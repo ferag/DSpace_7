@@ -34,6 +34,13 @@ public class ResearcherProfileSource {
         this.id = id;
     }
 
+    public ResearcherProfileSource(String id) {
+
+        this.source = null;
+
+        this.id = id;
+    }
+
     //FIXME: improve way to distinguish between dspace and actually external objects
     private boolean isDspace(String[] path) {
         return "server".equals(path[path.length - 5])

@@ -21,7 +21,7 @@ import org.dspace.perucris.externalservices.reniec.ReniecProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * This import service does not perform queries against external services, but lookup for a reniec object given a DNI.
+ * Implements a data source for querying the reniec database.
  * <p>
  * For metadata field mapping it is mandatory the usage of an instance of {@link ReniecMetadataFieldMapping}
  *

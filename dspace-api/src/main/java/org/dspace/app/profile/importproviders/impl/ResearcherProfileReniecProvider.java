@@ -52,9 +52,9 @@ public class ResearcherProfileReniecProvider implements ResearcherProfileProvide
 
     private Optional<MetadataValue> getMetadataIdentifier(EPerson eperson) {
         return eperson.getMetadata().stream().filter(metadata -> {
-            return metadata.getMetadataField().getMetadataSchema().getName().equals("perucris") &&
-                    metadata.getMetadataField().getElement().equals("eperson") &&
-                    metadata.getMetadataField().getQualifier().equals("dni");
+            return "perucris".equals(metadata.getMetadataField().getMetadataSchema().getName()) &&
+                    "eperson".equals(metadata.getMetadataField().getElement()) &&
+                    "dni".equals(metadata.getMetadataField().getQualifier());
         }).findFirst();
     }
 

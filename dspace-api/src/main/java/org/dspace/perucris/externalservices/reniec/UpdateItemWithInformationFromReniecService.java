@@ -77,49 +77,49 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
     }
 
     private boolean checkCurrentItemWithInformationFromReniec(Item currentItem, ExternalDataObject externalDataObject) {
-        if (!checkMetadata2(currentItem, externalDataObject, "perucris", "apellidoPaterno", null, null)) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "apellidoPaterno", null, null)) {
             return false;
         }
-        if (!checkMetadata2(currentItem, externalDataObject, "perucris", "apellidoMaterno", null, null)) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "apellidoMaterno", null, null)) {
             return false;
         }
-        if (!checkMetadata2(currentItem, externalDataObject, "perucris", "apellidoCasada", null, null)) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "apellidoCasada", null, null)) {
             return false;
         }
-        if (!checkMetadata2(currentItem, externalDataObject, "perucris", "givenName", null, null)) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "givenName", null, null)) {
             return false;
         }
-        if (!checkMetadataAuthority2(currentItem, externalDataObject, "perucris", "domicilio", "ubigeoReniec", null)) {
+        if (!checkMetadataAuthority(currentItem, externalDataObject, "perucris", "domicilio", "ubigeoReniec", null)) {
             return false;
         }
-        if (!checkMetadata2(currentItem, externalDataObject, "perucris", "domicilio", "region", null)) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "domicilio", "region", null)) {
             return false;
         }
-        if (!checkMetadata2(currentItem, externalDataObject, "perucris", "domicilio", "provincia", null)) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "domicilio", "provincia", null)) {
             return false;
         }
-        if (!checkMetadata2(currentItem, externalDataObject, "perucris", "domicilio", "distrito", null)) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "domicilio", "distrito", null)) {
             return false;
         }
-        if (!checkMetadata2(currentItem, externalDataObject, "perucris", "domicilio", "direccion", null)) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "domicilio", "direccion", null)) {
             return false;
         }
-        if (!checkMetadataAuthority2(currentItem, externalDataObject, "perucris", "nacimiento", "ubigeoReniec", null)) {
+        if (!checkMetadataAuthority(currentItem, externalDataObject, "perucris", "nacimiento", "ubigeoReniec", null)) {
             return false;
         }
-        if (!checkMetadata2(currentItem, externalDataObject, "perucris", "nacimiento", "region", null)) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "nacimiento", "region", null)) {
             return false;
         }
-        if (!checkMetadata2(currentItem, externalDataObject, "perucris", "nacimiento", "provincia", null)) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "nacimiento", "provincia", null)) {
             return false;
         }
-        if (!checkMetadata2(currentItem, externalDataObject, "perucris", "nacimiento", "distrito", null)) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "nacimiento", "distrito", null)) {
             return false;
         }
-        if (!checkMetadata2(currentItem, externalDataObject, "oairecerif", "person", "gender", null)) {
+        if (!checkMetadata(currentItem, externalDataObject, "oairecerif", "person", "gender", null)) {
             return false;
         }
-        if (!checkMetadata2(currentItem, externalDataObject, "person", "birthDate", null, null)) {
+        if (!checkMetadata(currentItem, externalDataObject, "person", "birthDate", null, null)) {
             return false;
         }
         return true;
@@ -137,7 +137,7 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
         return firstValue.isPresent() ? firstValue.get().getValue() : null;
     }
 
-    private boolean checkMetadata2(Item currentItem, ExternalDataObject externalDataObject,
+    private boolean checkMetadata(Item currentItem, ExternalDataObject externalDataObject,
             String schema, String element, String qualifier, String language) {
 
         return StringUtils.equals(
@@ -146,7 +146,7 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
 
     }
 
-    private boolean checkMetadataAuthority2(Item currentItem, ExternalDataObject externalDataObject,
+    private boolean checkMetadataAuthority(Item currentItem, ExternalDataObject externalDataObject,
             String schema, String element, String qualifier, String language) {
 
         List<MetadataValue> itemMetadata = itemService.getMetadata(currentItem,  schema, element, qualifier, language);

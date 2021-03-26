@@ -8,6 +8,8 @@
 
 package org.dspace.app.profile;
 
+import static java.util.stream.Collectors.joining;
+
 import java.net.URI;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.velocity.exception.ResourceNotFoundException;
@@ -105,6 +108,9 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
      */
     private ExternalDataObject mergeExternalObjects(List<ExternalDataObject> externalObjects) {
 
+        if (externalObjects.size() == 1) {
+            return externalObjects.get(0);
+        }
         Set<MetadataValueDTO> metadataSet = new HashSet<MetadataValueDTO>();
         externalObjects.stream().forEach(object -> {
             object.getMetadata().stream().forEach(metadataValue -> {
@@ -115,13 +121,19 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
         });
 
         ExternalDataObject result = new ExternalDataObject();
-        result.setId("N/A");
-        result.setSource("merged");
+        result.setId("merged::" + fromSources(externalObjects, ExternalDataObject::getId));
+        result.setSource("merged::" + fromSources(externalObjects, ExternalDataObject::getSource));
         result.setDisplayValue("N/A");
         result.setValue("N/A");
         result.setMetadata(metadataSet.stream().collect(Collectors.toList()));
         return result;
 
+    }
+
+    private String fromSources(List<ExternalDataObject> externalObjects,
+                               Function<ExternalDataObject, String> originalData) {
+        return externalObjects.stream().map(originalData)
+            .collect(joining("+"));
     }
 
     private Item createItem(Context context, Collection collection, ExternalDataObject externalDataObject)

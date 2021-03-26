@@ -8,8 +8,20 @@
 package org.dspace.app.rest;
 
 import static java.util.Arrays.asList;
+import static org.dspace.app.matcher.MetadataValueMatcher.with;
 import static org.dspace.app.rest.matcher.HalMatcher.matchLinks;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadata;
+import static org.dspace.builder.RelationshipBuilder.createRelationshipBuilder;
+import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.CLONE;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.MERGED;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.ORIGINATED;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.SHADOW_COPY;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.data.rest.webmvc.RestMediaTypes.TEXT_URI_LIST;
@@ -41,10 +53,14 @@ import org.dspace.builder.EntityTypeBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.EntityType;
+import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataSchema;
+import org.dspace.content.Relationship;
+import org.dspace.content.RelationshipType;
 import org.dspace.content.service.MetadataFieldService;
 import org.dspace.content.service.MetadataSchemaService;
+import org.dspace.content.service.RelationshipService;
 import org.dspace.eperson.EPerson;
 import org.dspace.layout.CrisLayoutBox;
 import org.dspace.layout.LayoutSecurity;
@@ -72,6 +88,9 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
     @Autowired
     private MetadataFieldService metadataFieldService;
+
+    @Autowired
+    private RelationshipService relationshipService;
 
     private EPerson user;
 
@@ -839,6 +858,305 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
             .andExpect(status().isBadRequest());
     }
 
+    @Test
+    public void testPatchToClaimPerson() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EntityType personType = createEntityType("Person");
+        EntityType cvPersonCloneType = createEntityType("CvPersonClone");
+        EntityType cvPersonType = createEntityType("CvPerson");
+
+        RelationshipType cvShadowCopy = createHasShadowCopyRelationship(cvPersonCloneType, personType);
+        RelationshipType isCloneOf = createCloneRelationship(cvPersonCloneType, cvPersonType);
+
+        Collection cvPersonCloneCollection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Cv Person Clone Collection")
+            .withRelationshipType("CvPersonClone")
+            .build();
+
+        Collection personCollection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Person Collection")
+            .withRelationshipType("Person")
+            .build();
+
+        Item person = ItemBuilder.createItem(context, personCollection)
+            .withTitle("User")
+            .build();
+
+        configurationService.setProperty("claimable.entityType", "Person");
+        configurationService.setProperty("cti-vitae.clone.person-collection-id",
+            cvPersonCloneCollection.getID().toString());
+
+        context.restoreAuthSystemState();
+
+        String id = user.getID().toString();
+
+        String userToken = getAuthToken(user.getEmail(), password);
+
+        getClient(userToken).perform(post("/api/cris/profiles/")
+            .param("eperson", id)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isCreated());
+
+        List<Operation> operations = asList(new AddOperation("/claim", person.getID().toString()));
+
+        getClient(userToken).perform(patch("/api/cris/profiles/{id}", id)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk());
+
+        List<Relationship> cvShadowCopyRelations = findRelations(person, cvShadowCopy);
+        assertThat(cvShadowCopyRelations, hasSize(1));
+
+        Item cvPersonCloneItem = cvShadowCopyRelations.get(0).getLeftItem();
+        assertThat(cvPersonCloneItem.getOwningCollection(), equalTo(cvPersonCloneCollection));
+        assertThat(cvPersonCloneItem.getMetadata(), hasItem(with("dc.title", "user@example.com")));
+
+        List<Relationship> cloneRelations = findRelations(cvPersonCloneItem, isCloneOf);
+        assertThat(cloneRelations, hasSize(1));
+
+        UUID profileId = cloneRelations.get(0).getRightItem().getID();
+
+        getClient(userToken).perform(get("/api/cris/profiles/{id}/item", id))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id", is(profileId.toString())));
+
+    }
+
+    @Test
+    public void testPatchToClaimWithAlreadyClonedPerson() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EntityType personType = createEntityType("Person");
+        EntityType cvPersonCloneType = createEntityType("CvPersonClone");
+        EntityType cvPersonType = createEntityType("CvPerson");
+
+        createHasShadowCopyRelationship(cvPersonCloneType, personType);
+        createCloneRelationship(cvPersonCloneType, cvPersonType);
+
+        Collection cvPersonCloneCollection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Cv Person Clone Collection")
+            .withRelationshipType("CvPersonClone")
+            .build();
+
+        Collection personCollection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Person Collection")
+            .withRelationshipType("Person")
+            .build();
+
+        Item person = ItemBuilder.createItem(context, personCollection)
+            .withTitle("User")
+            .build();
+
+        configurationService.setProperty("claimable.entityType", "Person");
+        configurationService.setProperty("cti-vitae.clone.person-collection-id",
+            cvPersonCloneCollection.getID().toString());
+
+        context.restoreAuthSystemState();
+
+        String id = user.getID().toString();
+
+        String userToken = getAuthToken(user.getEmail(), password);
+
+        getClient(userToken).perform(post("/api/cris/profiles/")
+            .param("eperson", id)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isCreated());
+
+        List<Operation> operations = asList(new AddOperation("/claim", person.getID().toString()));
+
+        getClient(userToken).perform(patch("/api/cris/profiles/{id}", id)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk());
+
+        getClient(userToken).perform(patch("/api/cris/profiles/{id}", id)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isConflict());
+
+    }
+
+    @Test
+    public void testPatchToClaimEntityWithWrongType() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EntityType personType = createEntityType("Person");
+        EntityType cvPersonCloneType = createEntityType("CvPersonClone");
+        EntityType cvPersonType = createEntityType("CvPerson");
+
+        createHasShadowCopyRelationship(cvPersonCloneType, personType);
+        createCloneRelationship(cvPersonCloneType, cvPersonType);
+
+        Collection publicationCollection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Publication Collection")
+            .withRelationshipType("Publication")
+            .build();
+
+        Item publication = ItemBuilder.createItem(context, publicationCollection)
+            .withTitle("Publication")
+            .build();
+
+        configurationService.setProperty("claimable.entityType", "Person");
+
+        context.restoreAuthSystemState();
+
+        String id = user.getID().toString();
+
+        String userToken = getAuthToken(user.getEmail(), password);
+
+        getClient(userToken).perform(post("/api/cris/profiles/")
+            .param("eperson", id)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isCreated());
+
+        List<Operation> operations = asList(new AddOperation("/claim", publication.getID().toString()));
+
+        getClient(userToken).perform(patch("/api/cris/profiles/{id}", id)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    public void testPatchToClaimPersonWithInvalidItemId() throws Exception {
+
+        String id = user.getID().toString();
+
+        String userToken = getAuthToken(user.getEmail(), password);
+
+        getClient(userToken).perform(post("/api/cris/profiles/")
+            .param("eperson", id)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isCreated());
+
+        List<Operation> operations = asList(new AddOperation("/claim", "wrong-id"));
+
+        getClient(userToken).perform(patch("/api/cris/profiles/{id}", id)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isUnprocessableEntity());
+
+    }
+
+    @Test
+    public void testPatchToClaimPersonWithUnkownItemId() throws Exception {
+
+        String id = user.getID().toString();
+
+        String userToken = getAuthToken(user.getEmail(), password);
+
+        getClient(userToken).perform(post("/api/cris/profiles/")
+            .param("eperson", id)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isCreated());
+
+        List<Operation> operations = asList(new AddOperation("/claim", "873510e9-6d3f-4b1d-add0-bb1d7d53f07f"));
+
+        getClient(userToken).perform(patch("/api/cris/profiles/{id}", id)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isUnprocessableEntity());
+
+    }
+
+    @Test
+    public void testPatchToClaimPersonRelatedToInstitutionPerson() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EntityType personType = createEntityType("Person");
+        EntityType institutionPersonType = createEntityType("InstitutionPerson");
+        EntityType cvPersonCloneType = createEntityType("CvPersonClone");
+        EntityType cvPersonType = createEntityType("CvPerson");
+
+        RelationshipType institutionShadowCopy = createHasShadowCopyRelationship(institutionPersonType, personType);
+        RelationshipType cvShadowCopy = createHasShadowCopyRelationship(cvPersonCloneType, personType);
+        RelationshipType isCloneOf = createCloneRelationship(cvPersonCloneType, cvPersonType);
+        RelationshipType isOriginatedFrom = createIsOriginatedFromRelationship(personType, cvPersonCloneType);
+        RelationshipType isMergedIn = createIsMergedInRelationship(personType);
+
+        Collection cvPersonCloneCollection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Cv Person Clone Collection")
+            .withRelationshipType("CvPersonClone")
+            .build();
+
+        Collection personCollection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Person Collection")
+            .withRelationshipType("Person")
+            .build();
+
+        Collection institutionPersonCollection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Institution Person Collection")
+            .withRelationshipType("InstitutionPerson")
+            .build();
+
+        Item person = ItemBuilder.createItem(context, personCollection)
+            .withTitle("User")
+            .build();
+
+        Item institutionPerson = ItemBuilder.createItem(context, institutionPersonCollection)
+            .withTitle("User")
+            .build();
+
+        createRelationshipBuilder(context, institutionPerson, person, institutionShadowCopy);
+
+        configurationService.setProperty("claimable.entityType", "Person");
+        configurationService.setProperty("cti-vitae.clone.person-collection-id",
+            cvPersonCloneCollection.getID().toString());
+
+        context.restoreAuthSystemState();
+
+        String id = user.getID().toString();
+
+        String userToken = getAuthToken(user.getEmail(), password);
+
+        getClient(userToken).perform(post("/api/cris/profiles/")
+            .param("eperson", id)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isCreated());
+
+        List<Operation> operations = asList(new AddOperation("/claim", person.getID().toString()));
+
+        getClient(userToken).perform(patch("/api/cris/profiles/{id}", id)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk());
+
+        assertThat(findRelations(person, cvShadowCopy), empty());
+
+        List<Relationship> isMergedInRelations = findRelations(person, isMergedIn);
+        assertThat(isMergedInRelations, hasSize(1));
+        Item mergedInItem = isMergedInRelations.get(0).getLeftItem();
+        assertThat(mergedInItem.isArchived(), is(false));
+        assertThat(mergedInItem.isWithdrawn(), is(true));
+
+        List<Relationship> isOriginatedFromRelations = findRelations(person, isOriginatedFrom);
+        assertThat(isOriginatedFromRelations, hasSize(1));
+
+        Item cvPersonCloneItem = isOriginatedFromRelations.get(0).getRightItem();
+        assertThat(cvPersonCloneItem.getOwningCollection(), equalTo(cvPersonCloneCollection));
+        assertThat(cvPersonCloneItem.getMetadata(), hasItem(with("dc.title", "user@example.com")));
+
+        List<Relationship> cvShadowCopyRelations = findRelations(mergedInItem, cvShadowCopy);
+        assertThat(cvShadowCopyRelations, hasSize(1));
+        assertThat(cvShadowCopyRelations.get(0).getLeftItem(), equalTo(cvPersonCloneItem));
+
+        List<Relationship> cloneRelations = findRelations(cvPersonCloneItem, isCloneOf);
+        assertThat(cloneRelations, hasSize(1));
+
+        UUID profileId = cloneRelations.get(0).getRightItem().getID();
+
+        getClient(userToken).perform(get("/api/cris/profiles/{id}/item", id))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id", is(profileId.toString())));
+
+    }
+
     private String getItemIdByProfileId(String token, String id) throws SQLException, Exception {
         MvcResult result = getClient(token).perform(get("/api/cris/profiles/{id}/item", id))
             .andExpect(status().isOk())
@@ -849,6 +1167,34 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
     private <T> T readAttributeFromResponse(MvcResult result, String attribute) throws UnsupportedEncodingException {
         return JsonPath.read(result.getResponse().getContentAsString(), attribute);
+    }
+
+    private EntityType createEntityType(String entityType) {
+        return EntityTypeBuilder.createEntityTypeBuilder(context, entityType).build();
+    }
+
+    private RelationshipType createHasShadowCopyRelationship(EntityType leftType, EntityType rightType) {
+        return createRelationshipTypeBuilder(context, leftType, rightType, SHADOW_COPY.getLeftType(),
+            SHADOW_COPY.getRightType(), 0, 1, 0, 1).build();
+    }
+
+    private RelationshipType createCloneRelationship(EntityType leftType, EntityType rightType) {
+        return createRelationshipTypeBuilder(context, leftType, rightType, CLONE.getLeftType(),
+            CLONE.getRightType(), 0, 1, 0, 1).build();
+    }
+
+    private RelationshipType createIsOriginatedFromRelationship(EntityType rightType, EntityType leftType) {
+        return createRelationshipTypeBuilder(context, rightType, leftType,
+            ORIGINATED.getLeftType(), ORIGINATED.getRightType(), 0, null, 0, 1).build();
+    }
+
+    private RelationshipType createIsMergedInRelationship(EntityType entityType) {
+        return createRelationshipTypeBuilder(context, entityType, entityType, MERGED.getLeftType(),
+            MERGED.getRightType(), 0, 1, 0, null).build();
+    }
+
+    private List<Relationship> findRelations(Item item, RelationshipType type) throws SQLException {
+        return relationshipService.findByItemAndRelationshipType(context, item, type);
     }
 
     private MetadataField metadataField(String schema, String element, Optional<String> qualifier)

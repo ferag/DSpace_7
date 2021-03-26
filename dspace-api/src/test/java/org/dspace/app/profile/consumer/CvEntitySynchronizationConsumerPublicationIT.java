@@ -455,6 +455,9 @@ public class CvEntitySynchronizationConsumerPublicationIT extends AbstractIntegr
         Item cvPublicationClone = cloneWorkflowItems.get(0).getItem();
         installItemService.installItem(context, cloneWorkflowItems.get(0));
 
+        context.commit();
+        cvPublication = reloadItem(cvPublication);
+
         context.restoreAuthSystemState();
 
         addMetadata(cvPublication, "dc", "contributor", "author", "White, Walter");

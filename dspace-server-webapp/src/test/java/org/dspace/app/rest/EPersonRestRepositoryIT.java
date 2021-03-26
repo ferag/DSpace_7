@@ -503,6 +503,38 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    public void findByEmailWithNotAdminUserDefaultRoleEnabled() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Group defaultRole = GroupBuilder.createGroup(context).withName("Default role").build();
+
+        EPerson ePerson = EPersonBuilder.createEPerson(context)
+            .withNameInMetadata("John", "Doe")
+            .withEmail("Johndoe@example.com")
+            .withPassword("secret")
+            .build();
+
+        EPersonBuilder.createEPerson(context)
+            .withNameInMetadata("Jane", "Smith")
+            .withEmail("janesmith@example.com")
+            .build();
+
+        configurationService.setProperty("eperson.group.default", defaultRole.getID());
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(ePerson.getEmail(), "secret");
+        getClient(authToken).perform(get("/api/eperson/epersons/search/byEmail")
+            .param("email", ePerson.getEmail()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.metadata", matchMetadata("perucris.eperson.role", "Default role",
+                defaultRole.getID().toString(), 0)));
+
+        configurationService.setProperty("eperson.group.default", "");
+    }
+
+    @Test
     public void findByEmailWithDefaultRoleEnabledAndAppendedToExistingOnes() throws Exception {
         context.turnOffAuthorisationSystem();
 
@@ -556,6 +588,33 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.metadata['perucris.eperson.role']").doesNotExist());
+
+        configurationService.setProperty("eperson.group.default", "");
+    }
+
+    @Test
+    public void findByEmailWithDefaultRoleEnabledUnauthorized() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Group defaultRole = GroupBuilder.createGroup(context).withName("Default role").build();
+
+        EPerson ePerson = EPersonBuilder.createEPerson(context)
+            .withNameInMetadata("John", "Doe")
+            .withEmail("Johndoe@example.com")
+            .build();
+
+        EPersonBuilder.createEPerson(context)
+            .withNameInMetadata("Jane", "Smith")
+            .withEmail("janesmith@example.com")
+            .build();
+
+        configurationService.setProperty("eperson.group.default", defaultRole.getID());
+
+        context.restoreAuthSystemState();
+
+        getClient().perform(get("/api/eperson/epersons/search/byEmail")
+            .param("email", ePerson.getEmail()))
+            .andExpect(status().isNoContent());
 
         configurationService.setProperty("eperson.group.default", "");
     }

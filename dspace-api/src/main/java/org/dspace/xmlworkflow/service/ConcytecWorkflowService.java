@@ -122,10 +122,20 @@ public interface ConcytecWorkflowService {
      *
      * @param context the DSpace context
      * @param item    the item that has a clone
-     * @return the item shadow copy, if any
+     * @return the item clone, if any
      * @throws SQLException if an SQL error occurs
      */
     Item findClone(Context context, Item item) throws SQLException;
+
+    /**
+     * Find the item that is cloned by the given one.
+     *
+     * @param context   the DSpace context
+     * @param cloneItem the clone of the item to search
+     * @return the cloned item, if any
+     * @throws SQLException if an SQL error occurs
+     */
+    Item findClonedItem(Context context, Item cloneItem) throws SQLException;
 
     /**
      * Add the Concytec feedback on the given item.

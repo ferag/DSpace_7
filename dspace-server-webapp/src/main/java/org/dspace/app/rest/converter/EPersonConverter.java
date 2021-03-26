@@ -16,7 +16,6 @@ import java.util.SortedMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.rest.model.EPersonRest;
-import org.dspace.app.rest.model.GroupRest;
 import org.dspace.app.rest.model.MetadataValueRest;
 import org.dspace.app.rest.projection.Projection;
 import org.dspace.app.rest.utils.ContextUtil;
@@ -57,9 +56,6 @@ public class EPersonConverter extends DSpaceObjectConverter<EPerson, org.dspace.
     @Autowired
     private MetadataValueDTOConverter metadataValueConverter;
 
-    @Autowired
-    private ConverterService converterService;
-
     @Override
     public EPersonRest convert(EPerson obj, Projection projection) {
         EPersonRest eperson = super.convert(obj, projection);
@@ -99,9 +95,8 @@ public class EPersonConverter extends DSpaceObjectConverter<EPerson, org.dspace.
             if (Objects.isNull(group)) {
                 return;
             }
-            GroupRest groupRest = converterService.toRest(group, projection);
             MetadataValueDTO metadataValue = new MetadataValueDTO("perucris", "eperson", "role", null,
-                groupRest.getName(), groupRest.getId(), Choices.CF_ACCEPTED);
+                group.getNameWithoutTypePrefix(), UUIDUtils.toString(group.getID()), Choices.CF_ACCEPTED);
 
 
             SortedMap<String, List<MetadataValueRest>> metadataMap = eperson.getMetadata().getMap();

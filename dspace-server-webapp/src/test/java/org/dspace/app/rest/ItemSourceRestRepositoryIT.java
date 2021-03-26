@@ -115,7 +115,7 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
         Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
                                            .withName("Collection 2").build();
 
-        Thread.sleep(600L);
+        Thread.sleep(1000L);
         Item publication2 = ItemBuilder.createItem(context, col2)
                 .withTitle("Publication 2")
                 .withAuthor("Anton, Bandola")
@@ -179,7 +179,7 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
         Collection col2 = CollectionBuilder.createCollection(context, directorio)
                                            .withName("Collection 2").build();
 
-        Thread.sleep(300);
+        Thread.sleep(600L);
         Item publication2 = ItemBuilder.createItem(context, col2)
                 .withTitle("Project Title")
                 .withAuthor("Anton, Bandola")
@@ -256,7 +256,7 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
         Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
                                            .withName("Collection 2").build();
 
-        Thread.sleep(300L);
+        Thread.sleep(600L);
 
         Item publication2 = ItemBuilder.createItem(context, col2)
                 .withTitle("Publication 2")

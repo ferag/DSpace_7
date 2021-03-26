@@ -109,11 +109,15 @@ public class CvEntitySynchronizationConsumer implements Consumer {
 
         Item item = (Item) event.getSubject(context);
 
-        if (isNotArchivedCvEntity(item) || itemsAlreadyProcessed.contains(item)) {
+        if (itemsAlreadyProcessed.contains(item) || context.getCurrentUser() == null) {
             return;
         }
 
         itemsAlreadyProcessed.add(item);
+
+        if (isNotArchivedCvEntity(item)) {
+            return;
+        }
 
         try {
 
@@ -154,7 +158,7 @@ public class CvEntitySynchronizationConsumer implements Consumer {
 
             rejectPreviousCorrections(context, clone);
 
-            ItemCorrection corrections = itemCorrectionService.getAppliedCorrections(context, clone, item);
+            ItemCorrection corrections = getCvEntityCorrectionsToSynchronize(context, item, clone);
             if (corrections.isNotEmpty()) {
                 sendCorrectionRequest(context, item, clone, corrections);
             }
@@ -252,6 +256,14 @@ public class CvEntitySynchronizationConsumer implements Consumer {
     private XmlWorkflowItem findWorkflowShadowItemCopy(Context context, Item item) throws SQLException {
         Item shadowItemCopy = concytecWorkflowService.findShadowItemCopy(context, item);
         return shadowItemCopy != null ? workflowItemService.findByItem(context, shadowItemCopy) : null;
+    }
+
+    private ItemCorrection getCvEntityCorrectionsToSynchronize(Context context, Item item, Item clone) {
+        ItemCorrection corrections = itemCorrectionService.getAppliedCorrections(context, clone, item);
+        List<MetadataCorrection> correctionToSynchronize = corrections.getMetadataCorrections().stream()
+            .filter(metadataCorrection -> !metadataCorrection.getMetadataField().startsWith("perucris.flagcv"))
+            .collect(Collectors.toList());
+        return new ItemCorrection(correctionToSynchronize);
     }
 
     private ItemCorrection getProfileCorrectionToSynchronize(Context context, Item cvPersonClone, Item item) {

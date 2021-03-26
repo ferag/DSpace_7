@@ -131,6 +131,7 @@ public class CrisLayoutFieldBuilder extends AbstractBuilder<CrisLayoutField, Cri
 
     public CrisLayoutFieldBuilder withBox(CrisLayoutBox box) {
         this.field.setBox(box);
+        box.addLayoutField(this.field);
         return this;
     }
 

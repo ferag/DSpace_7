@@ -8,20 +8,19 @@
 package org.dspace.content.notification;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
-import org.dspace.authorize.factory.AuthorizeServiceFactory;
-import org.dspace.authorize.service.AuthorizeService;
-import org.dspace.authorize.service.ResourcePolicyService;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
-import org.dspace.core.Constants;
 import org.dspace.core.Context;
+import org.dspace.core.Email;
+import org.dspace.core.I18nUtil;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
@@ -29,58 +28,56 @@ import org.dspace.event.Consumer;
 import org.dspace.event.Event;
 
 /**
- * Consumer that takes care of manage resourcepolicy for Notification items
- *
+ * Consumer that takes care of send Notification via email.
+ * 
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
-public class NotificationConsumer implements Consumer {
+public class NotificationSendEmailConsumer implements Consumer {
+
+    private Set<UUID> itemsAlreadyProcessed;
 
     private ItemService itemService;
 
     private EPersonService ePersonService;
 
-    private AuthorizeService authorizeService;
-
-    private ResourcePolicyService resourcePolicyService;
-
-    private Set<Item> itemsAlreadyProcessed = new HashSet<Item>();
-
-    /**
-     * Initalise the consumer
-     *
-     * @throws Exception if error
-     */
     @Override
     public void initialize() throws Exception {
         this.itemService = ContentServiceFactory.getInstance().getItemService();
-        this.resourcePolicyService = AuthorizeServiceFactory.getInstance().getResourcePolicyService();
-        this.authorizeService = AuthorizeServiceFactory.getInstance().getAuthorizeService();
         this.ePersonService = EPersonServiceFactory.getInstance().getEPersonService();
     }
 
     @Override
     public void consume(Context context, Event event) throws Exception {
+        if (itemsAlreadyProcessed == null) {
+            itemsAlreadyProcessed = new HashSet<UUID>();
+        }
+        if (event.getEventType() != Event.INSTALL) {
+            return;
+        }
         DSpaceObject dso = event.getSubject(context);
         if ((dso instanceof Item)) {
             Item item = (Item) dso;
-            if (item.isArchived() && isNotificationEntityItem(item) && !itemsAlreadyProcessed.contains(item)) {
+            if (item.isArchived() && isNotificationEntityItem(item) && !itemsAlreadyProcessed.contains(item.getID())) {
                 context.turnOffAuthorisationSystem();
-                List<MetadataValue> list = this.itemService.getMetadataByMetadataString(
-                                                item, "perucris.notification.to");
+                List<MetadataValue> list = itemService.getMetadataByMetadataString(item, "perucris.notification.to");
                 if (!list.isEmpty()) {
                     UUID cvPersonitemUuid = UUID.fromString(list.get(0).getAuthority());
                     Item cvPersonItem = itemService.find(context, cvPersonitemUuid);
-                    List<MetadataValue> crisOwner =
-                        this.itemService.getMetadata(cvPersonItem, "cris", "owner", null, null);
+                    List<MetadataValue> crisOwner = itemService.getMetadata(cvPersonItem, "cris", "owner", null, null);
                     if (!crisOwner.isEmpty()) {
                         UUID ePersonUuid = UUID.fromString(crisOwner.get(0).getAuthority());
-                        EPerson cvOwner = this.ePersonService.find(context, ePersonUuid);
-                        this.resourcePolicyService.removeAllPolicies(context, item);
-                        this.authorizeService.addPolicy(context, item, Constants.READ, cvOwner);
+                        EPerson cvOwner = ePersonService.find(context, ePersonUuid);
+                        Locale supportedLocale = I18nUtil.getEPersonLocale(cvOwner);
+                        Email email = Email.getEmail(I18nUtil.getEmailFilename(supportedLocale, "notification_email"));
+                        email.addArgument(itemService.getMetadataFirstValue(item, "perucris", "notification", "message",
+                                Item.ANY));
+                        email.addRecipient(cvOwner.getEmail());
+                        email.addArgument(cvOwner);
+                        email.send();
                     }
 
                 }
-                itemsAlreadyProcessed.add(item);
+                itemsAlreadyProcessed.add(item.getID());
                 context.restoreAuthSystemState();
             }
 
@@ -88,26 +85,15 @@ public class NotificationConsumer implements Consumer {
     }
 
     private boolean isNotificationEntityItem(Item item) {
-        String entityType = this.itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
+        String entityType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
         return StringUtils.equals(entityType, "Notification");
     }
 
-    /**
-     * Handle the end of the event
-     *
-     * @param context The relevant DSpace Context.
-     * @throws Exception if error
-     */
     @Override
     public void end(Context context) throws Exception {
         itemsAlreadyProcessed.clear();
     }
 
-    /**
-     * Finish the event
-     *
-     * @param context The relevant DSpace Context.
-     */
     @Override
     public void finish(Context context) throws Exception {}
 

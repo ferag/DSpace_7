@@ -21,7 +21,6 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.apache.velocity.exception.ResourceNotFoundException;
 import org.dspace.app.profile.ImportResearcherProfileServiceImpl;
 import org.dspace.app.profile.importproviders.ResearcherProfileProvider;
 import org.dspace.app.profile.importproviders.model.ConfiguredResearcherProfileProvider;
@@ -73,7 +72,8 @@ public class ImportResearcherProfileServiceImplTest {
 
         ExternalDataObject externalDataObject = createExternalDataObject("1234");
 
-        ConfiguredResearcherProfileProvider configuredResearcherProfileProvider = mock(ConfiguredResearcherProfileProvider.class);
+        ConfiguredResearcherProfileProvider configuredResearcherProfileProvider =
+            mock(ConfiguredResearcherProfileProvider.class);
         when(configuredResearcherProfileProvider.getExternalDataObject()).thenReturn(Optional.of(externalDataObject));
 
         when(importProfileProvider.configureProvider(any(), any()))
@@ -100,7 +100,8 @@ public class ImportResearcherProfileServiceImplTest {
 
         ExternalDataObject externalDataObject = createExternalDataObject("4ede600c-12e4-4934-9d93-ac56cc63f150");
 
-        ConfiguredResearcherProfileProvider configuredResearcherProfileProvider = mock(ConfiguredResearcherProfileProvider.class);
+        ConfiguredResearcherProfileProvider configuredResearcherProfileProvider =
+            mock(ConfiguredResearcherProfileProvider.class);
         when(configuredResearcherProfileProvider.getExternalDataObject()).thenReturn(Optional.of(externalDataObject));
 
         when(importProfileProvider.configureProvider(any(), any()))
@@ -119,7 +120,7 @@ public class ImportResearcherProfileServiceImplTest {
 
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void resourceNotFoundThrowsException() throws AuthorizeException, SQLException {
 
         URI source = URI.create("http://localhost:8080/path_to_external/serviceId/entry/5678");
@@ -144,7 +145,8 @@ public class ImportResearcherProfileServiceImplTest {
 
         ExternalDataObject externalDataObject = createExternalDataObject("9999");
 
-        ConfiguredResearcherProfileProvider configuredResearcherProfileProvider = mock(ConfiguredResearcherProfileProvider.class);
+        ConfiguredResearcherProfileProvider configuredResearcherProfileProvider =
+            mock(ConfiguredResearcherProfileProvider.class);
         when(configuredResearcherProfileProvider.getExternalDataObject()).thenReturn(Optional.of(externalDataObject));
 
         when(importProfileProvider.configureProvider(any(), any()))
@@ -172,7 +174,8 @@ public class ImportResearcherProfileServiceImplTest {
 
         ExternalDataObject externalDataObject = createExternalDataObject("1234");
 
-        ConfiguredResearcherProfileProvider configuredResearcherProfileProvider = mock(ConfiguredResearcherProfileProvider.class);
+        ConfiguredResearcherProfileProvider configuredResearcherProfileProvider =
+            mock(ConfiguredResearcherProfileProvider.class);
         when(configuredResearcherProfileProvider.getExternalDataObject()).thenReturn(Optional.of(externalDataObject));
 
         when(importProfileProvider.configureProvider(any(), any()))
@@ -205,7 +208,8 @@ public class ImportResearcherProfileServiceImplTest {
 
         ExternalDataObject externalDataObject = createExternalDataObject("1234");
 
-        ConfiguredResearcherProfileProvider configuredResearcherProfileProvider = mock(ConfiguredResearcherProfileProvider.class);
+        ConfiguredResearcherProfileProvider configuredResearcherProfileProvider =
+            mock(ConfiguredResearcherProfileProvider.class);
         when(configuredResearcherProfileProvider.getExternalDataObject()).thenReturn(Optional.of(externalDataObject));
 
         when(importProfileProvider.configureProvider(any(), any()))

@@ -21,7 +21,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.apache.velocity.exception.ResourceNotFoundException;
 import org.dspace.app.profile.importproviders.ResearcherProfileProvider;
 import org.dspace.app.profile.service.AfterImportAction;
 import org.dspace.app.profile.service.ImportResearcherProfileService;
@@ -81,7 +80,7 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
                 .collect(Collectors.toList());
 
         if (externalObjects.isEmpty()) {
-            throw new ResourceNotFoundException("resource for uri " + source + " not found");
+            throw new IllegalArgumentException("resource for uri " + source + " not found");
         }
 
         ExternalDataObject externalDataObject = mergeExternalObjects(externalObjects);

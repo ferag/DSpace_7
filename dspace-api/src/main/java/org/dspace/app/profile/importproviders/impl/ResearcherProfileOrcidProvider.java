@@ -20,6 +20,9 @@ import org.dspace.external.model.ExternalDataObject;
 import org.dspace.external.provider.impl.OrcidV3AuthorDataProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * @author Alessandro Martelli (alessandro.martelli at 4science.it)
+ */
 public class ResearcherProfileOrcidProvider implements ResearcherProfileProvider {
 
     @Autowired

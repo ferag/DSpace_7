@@ -11,6 +11,8 @@ import java.net.URI;
 
 /**
  * The ResearcherProfileSource is a plain object used to give context to a ResearcherProfileProvider.
+ *
+ * @author Alessandro Martelli (alessandro.martelli at 4science.it)
  */
 public class ResearcherProfileSource {
 

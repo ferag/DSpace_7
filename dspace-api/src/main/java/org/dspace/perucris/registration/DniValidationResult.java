@@ -10,6 +10,9 @@ package org.dspace.perucris.registration;
 import org.dspace.perucris.externalservices.reniec.ReniecDTO;
 import org.eclipse.jetty.http.HttpStatus;
 
+/**
+ * @author Alessandro Martelli (alessandro.martelli at 4science.it)
+ */
 public class DniValidationResult {
 
     private final int statusCode;

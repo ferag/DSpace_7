@@ -10,6 +10,9 @@ package org.dspace.externalregistration.factory;
 import org.dspace.externalregistration.service.ExternalRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * @author Alessandro Martelli (alessandro.martelli at 4science.it)
+ */
 public class ExternalRegistrationServiceFactoryImpl extends ExternalRegistrationServiceFactory {
 
     @Autowired(required = true)

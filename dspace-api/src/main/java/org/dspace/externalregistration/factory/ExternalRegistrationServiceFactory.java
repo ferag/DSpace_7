@@ -14,6 +14,8 @@ import org.dspace.services.factory.DSpaceServicesFactory;
  * Abstract factory to get services for the ExternalRegistration package.
  * Use ExternalRegistrationServiceFactory.getInstance() to retrieve
  * an implementation
+ *
+ * @author Alessandro Martelli (alessandro.martelli at 4science.it)
  */
 public abstract class ExternalRegistrationServiceFactory {
 

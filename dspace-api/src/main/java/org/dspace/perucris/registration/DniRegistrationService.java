@@ -14,6 +14,8 @@ import org.dspace.core.Context;
 
 /**
  * Service to check if provided dni and date are valid to register a new ePerson account.
+ *
+ * @author Alessandro Martelli (alessandro.martelli at 4science.it)
  */
 public interface DniRegistrationService {
 

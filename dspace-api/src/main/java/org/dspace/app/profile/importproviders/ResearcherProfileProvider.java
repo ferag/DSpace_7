@@ -18,6 +18,8 @@ import org.dspace.external.model.ExternalDataObject;
 
 /**
  * Provider of Metadata for the enrichment of a Researcher Profile object.
+ *
+ * @author Alessandro Martelli (alessandro.martelli at 4science.it)
  */
 public interface ResearcherProfileProvider {
 

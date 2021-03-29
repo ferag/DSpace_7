@@ -20,6 +20,9 @@ import org.dspace.external.model.ExternalDataObject;
 import org.dspace.external.service.ExternalDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * @author Alessandro Martelli (alessandro.martelli at 4science.it)
+ */
 public class ResearcherProfileReniecProvider implements ResearcherProfileProvider {
 
     @Autowired

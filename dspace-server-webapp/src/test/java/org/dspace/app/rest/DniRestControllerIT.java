@@ -26,6 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Integration Tests against the /api/perucris/dnis endpoint
+ *
+ * @author Alessandro Martelli (alessandro.martelli at 4science.it)
  */
 public class DniRestControllerIT extends AbstractControllerIntegrationTest {
 

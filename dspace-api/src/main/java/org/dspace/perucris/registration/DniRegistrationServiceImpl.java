@@ -19,6 +19,9 @@ import org.dspace.perucris.externalservices.reniec.ReniecProvider;
 import org.eclipse.jetty.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * @author Alessandro Martelli (alessandro.martelli at 4science.it)
+ */
 public class DniRegistrationServiceImpl implements DniRegistrationService {
 
     @Autowired

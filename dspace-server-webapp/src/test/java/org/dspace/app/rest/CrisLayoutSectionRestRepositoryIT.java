@@ -12,6 +12,7 @@ import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withFacetComp
 import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withIdAndBrowseComponent;
 import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withIdAndCountersComponent;
 import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withIdAndFacetComponent;
+import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withIdAndMultiColumnTopComponent;
 import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withIdAndSearchComponent;
 import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withIdAndTextRowComponent;
 import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withIdAndTopComponent;
@@ -72,12 +73,27 @@ public class CrisLayoutSectionRestRepositoryIT extends AbstractControllerIntegra
                 hasItem(withIdAndSearchComponent("fundings_and_projects", 0, 1, "col-md-8", "project_funding"))))
 
             .andExpect(jsonPath("$._embedded.sections",
-                hasItem(withIdAndBrowseComponent("orgunits", 0, 0, "col-md-4", "ouname", "oudatecreated",
-                                                 "oudatemodified"))))
+                hasItem(withIdAndTextRowComponent("orgunits", 0, 0, "col-md-12 h2 d-flex justify-content-center p-4",
+                    "text-key"))))
+
             .andExpect(jsonPath("$._embedded.sections",
-                hasItem(withIdAndSearchComponent("orgunits", 0, 1, "col-md-8", "orgunit"))))
+                hasItem(withIdAndCountersComponent("orgunits", 1, 0, "col-md-12 py-4",
+                    Arrays.asList("RESUME.orgunit.universities", "RESUME.orgunit.ipis",
+                        "RESUME.orgunit.investigation_innovation_unities",
+                        "RESUME.orgunit.investigation_groups",
+                        "RESUME.orgunit.investigation_lines",
+                        "RESUME.orgunit.enterprises",
+                        "RESUME.orgunit.cti_funders",
+                        "RESUME.orgunit.renacyt_centres")))))
             .andExpect(jsonPath("$._embedded.sections",
-                hasItem(withIdAndFacetComponent("orgunits", 1, 0, "col-md-12", "orgunit"))))
+                hasItem(withIdAndSearchComponent("orgunits", 2, 0, "col-md-9 p-5", "orgunit"))))
+            .andExpect(jsonPath("$._embedded.sections",
+                hasItem(withIdAndMultiColumnTopComponent("orgunits", 3, 0, "col-md-8 pt-5", "orgunit",
+                    "dc.date.accessioned", "desc",
+                    Arrays.asList("dc.title", "oairecerif.acronym", "perucris.type.orgunit",
+                        "perucris.ubigeo")))))
+            .andExpect(jsonPath("$._embedded.sections",
+                hasItem(withIdAndFacetComponent("orgunits", 3, 1, "col-md-4 pt-5", "orgunit"))))
             .andExpect(jsonPath("$._embedded.sections",
                 hasItem(withIdAndBrowseComponent("infrastructure", 0, 0, "col-md-4", "eqtitle", "eqdatecreated",
                                                  "eqdatemodified"))))
@@ -86,12 +102,13 @@ public class CrisLayoutSectionRestRepositoryIT extends AbstractControllerIntegra
             .andExpect(jsonPath("$._embedded.sections",
                 hasItem(withIdAndFacetComponent("infrastructure", 1, 0, "col-md-12", "infrastructure"))))
             .andExpect(jsonPath("$._embedded.sections",
-                hasItem(withIdAndTextRowComponent("directorios", 0, 0, "col-md-12 center", "image"))))
+                hasItem(withIdAndTextRowComponent("directorios", 0, 0, "col-md-12 py-5 w-50 center", "image"))))
             .andExpect(jsonPath("$._embedded.sections",
                 hasItem(withIdAndTextRowComponent("directorios", 0, 1,
                     "col-md-12 h2 d-flex justify-content-center py-3","text-key"))))
             .andExpect(jsonPath("$._embedded.sections",
-                hasItem(withIdAndTextRowComponent("directorios", 0, 2, "col-md-12 d-flex justify-content-center py-2",
+                hasItem(withIdAndTextRowComponent("directorios", 0, 2,
+                    "col-md-12 d-flex justify-content-center py-2",
                     "text-key"))))
             .andExpect(jsonPath("$._embedded.sections",
                 hasItem(withIdAndSearchComponent("directorios", 1, 0, "col-md-12", "site"))))

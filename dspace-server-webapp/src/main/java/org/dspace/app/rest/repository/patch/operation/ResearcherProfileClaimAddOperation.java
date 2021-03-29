@@ -20,6 +20,7 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
+import org.dspace.importer.external.dspace.DSpaceItemRelationshipService;
 import org.dspace.util.UUIDUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -48,6 +49,9 @@ public class ResearcherProfileClaimAddOperation extends PatchOperation<Researche
     @Autowired
     private ItemService itemService;
 
+    @Autowired
+    private DSpaceItemRelationshipService dSpaceItemRelationshipService;
+
     @Override
     public ResearcherProfile perform(Context context, ResearcherProfile profile, Operation operation)
         throws SQLException {
@@ -64,6 +68,7 @@ public class ResearcherProfileClaimAddOperation extends PatchOperation<Researche
 
         try {
             profileItemCloneService.cloneProfile(context, profile.getItem(), personItem);
+            dSpaceItemRelationshipService.create(context, profile.getItem(), personItem);
         } catch (AuthorizeException e) {
             throw new RESTAuthorizationException(e);
         } catch (IOException e) {

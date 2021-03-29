@@ -869,6 +869,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
         RelationshipType cvShadowCopy = createHasShadowCopyRelationship(cvPersonCloneType, personType);
         RelationshipType isCloneOf = createCloneRelationship(cvPersonCloneType, cvPersonType);
+        RelationshipType isPersonOwner = createIsPersonOwnerRelationship(cvPersonType, personType);
 
         Collection cvPersonCloneCollection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Cv Person Clone Collection")
@@ -921,6 +922,10 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
         getClient(userToken).perform(get("/api/cris/profiles/{id}/item", id))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id", is(profileId.toString())));
+
+        List<Relationship> isPersonOwnerRelations = findRelations(person, isPersonOwner);
+        assertThat(isPersonOwnerRelations, hasSize(1));
+        assertThat(isPersonOwnerRelations.get(0).getLeftItem().getID(), equalTo(profileId));
 
     }
 
@@ -1079,6 +1084,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
         RelationshipType isCloneOf = createCloneRelationship(cvPersonCloneType, cvPersonType);
         RelationshipType isOriginatedFrom = createIsOriginatedFromRelationship(personType, cvPersonCloneType);
         RelationshipType isMergedIn = createIsMergedInRelationship(personType);
+        RelationshipType isPersonOwner = createIsPersonOwnerRelationship(cvPersonType, personType);
 
         Collection cvPersonCloneCollection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Cv Person Clone Collection")
@@ -1155,6 +1161,10 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id", is(profileId.toString())));
 
+        List<Relationship> isPersonOwnerRelations = findRelations(person, isPersonOwner);
+        assertThat(isPersonOwnerRelations, hasSize(1));
+        assertThat(isPersonOwnerRelations.get(0).getLeftItem().getID(), equalTo(profileId));
+
     }
 
     private String getItemIdByProfileId(String token, String id) throws SQLException, Exception {
@@ -1191,6 +1201,11 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
     private RelationshipType createIsMergedInRelationship(EntityType entityType) {
         return createRelationshipTypeBuilder(context, entityType, entityType, MERGED.getLeftType(),
             MERGED.getRightType(), 0, 1, 0, null).build();
+    }
+
+    private RelationshipType createIsPersonOwnerRelationship(EntityType rightType, EntityType leftType) {
+        return createRelationshipTypeBuilder(context, rightType, leftType, "isPersonOwner", "isOwnedByCvPerson",
+            0, null, 0, null).build();
     }
 
     private List<Relationship> findRelations(Item item, RelationshipType type) throws SQLException {

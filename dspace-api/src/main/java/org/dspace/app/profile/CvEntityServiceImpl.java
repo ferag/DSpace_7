@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import org.dspace.app.profile.service.CvEntityService;
+import org.dspace.app.profile.service.ResearcherProfileService;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
@@ -62,6 +63,9 @@ public class CvEntityServiceImpl implements CvEntityService {
     @Autowired
     private ItemCorrectionService itemCorrectionService;
 
+    @Autowired
+    private ResearcherProfileService researcherProfileService;
+
     @Override
     public CvEntity createFromItem(Context context, Item item) throws SQLException, AuthorizeException {
         Assert.notNull(item, "A item is required to create a CV entity");
@@ -106,6 +110,12 @@ public class CvEntityServiceImpl implements CvEntityService {
         EPerson currentUser = context.getCurrentUser();
         itemService.addMetadata(context, cvItem, "cris", "owner", null, null, currentUser.getName(),
             currentUser.getID().toString(), 600);
+
+        ResearcherProfile researcherProfile = researcherProfileService.findById(context, currentUser.getID());
+        if (researcherProfile != null) {
+            itemService.addMetadata(context, cvItem, "perucris", "ctivitae", "owner", null,
+                researcherProfile.getFullName(), researcherProfile.getItemId().toString(), 600);
+        }
 
         return cvItem;
     }

@@ -183,26 +183,6 @@ public class CanClaimProfileIT extends AbstractControllerIntegrationTest {
 
     }
 
-    @Test
-    public void userHasAlreadyAProfile() throws Exception {
-
-        context.turnOffAuthorisationSystem();
-        ItemBuilder.createItem(context, cvPersonCollection)
-                   .withCrisOwner(eperson.getFullName(), eperson.getID().toString())
-                   .build();
-        context.restoreAuthSystemState();
-
-        String token = getAuthToken(context.getCurrentUser().getEmail(), password);
-        getClient(token).perform(get("/api/authz/authorizations/search/object")
-                                     .param("uri", uri(collectionAProfile))
-                                     .param("eperson", context.getCurrentUser().getID().toString())
-                                     .param("feature", claimProfileFeature.getName()))
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$._embedded").doesNotExist())
-                        .andExpect(jsonPath("$.page.totalElements", equalTo(0)));
-
-    }
-
     private String uri(Item item) {
         ItemRest itemRest = itemConverter.convert(item, Projection.DEFAULT);
         String itemRestURI = utils.linkToSingleResource(itemRest, "self").getHref();

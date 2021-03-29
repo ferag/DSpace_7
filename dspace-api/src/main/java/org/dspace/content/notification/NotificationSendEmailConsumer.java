@@ -44,7 +44,7 @@ public class NotificationSendEmailConsumer implements Consumer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NotificationSendEmailConsumer.class);
 
-    private Set<UUID> itemsAlreadyProcessed;
+    private Set<UUID> itemsAlreadyProcessed = new HashSet<>();
 
     private ItemService itemService;
 

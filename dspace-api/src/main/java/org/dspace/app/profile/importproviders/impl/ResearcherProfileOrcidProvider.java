@@ -18,6 +18,8 @@ import org.dspace.content.MetadataValue;
 import org.dspace.eperson.EPerson;
 import org.dspace.external.model.ExternalDataObject;
 import org.dspace.external.provider.impl.OrcidV3AuthorDataProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -25,16 +27,21 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class ResearcherProfileOrcidProvider implements ResearcherProfileProvider {
 
+    private static Logger log = LoggerFactory.getLogger(ResearcherProfileOrcidProvider.class);
+
     @Autowired
     private OrcidV3AuthorDataProvider orcidV3AuthorDataProvider;
 
     public Optional<ConfiguredResearcherProfileProvider> configureProvider(EPerson eperson, List<URI> uriList) {
         Optional<MetadataValue> metadataIdentifier = getMetadataIdentifier(eperson);
         if (metadataIdentifier.isPresent()) {
+            log.debug("Orcid profile provider configured for ePerson " + eperson.getID().toString()
+                + " with orcid " + metadataIdentifier.get().getValue());
             ConfiguredResearcherProfileProvider configured = new ConfiguredResearcherProfileProvider(
                     new ResearcherProfileSource(metadataIdentifier.get().getValue()), this);
             return Optional.of(configured);
         }
+        log.debug("Orcid metadata identifier not found for ePerson " + eperson.getID().toString());
         return Optional.empty();
     }
 
@@ -45,6 +52,7 @@ public class ResearcherProfileOrcidProvider implements ResearcherProfileProvider
 
     private Optional<MetadataValue> getMetadataIdentifier(EPerson eperson) {
         return eperson.getMetadata().stream().filter(metadata -> {
+            log.debug("Parsing eperson metadata " + metadata.toString());
             return "perucris".equals(metadata.getMetadataField().getMetadataSchema().getName()) &&
                     "eperson".equals(metadata.getMetadataField().getElement()) &&
                     "orcid".equals(metadata.getMetadataField().getQualifier());

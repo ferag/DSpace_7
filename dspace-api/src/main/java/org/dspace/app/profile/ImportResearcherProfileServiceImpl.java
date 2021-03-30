@@ -107,13 +107,18 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
      */
     private ExternalDataObject mergeExternalObjects(List<ExternalDataObject> externalObjects) {
 
+        log.debug("Merging " + externalObjects.size() + " external objects");
+
         if (externalObjects.size() == 1) {
             return externalObjects.get(0);
         }
         Set<MetadataValueDTO> metadataSet = new HashSet<MetadataValueDTO>();
         externalObjects.stream().forEach(object -> {
+            log.debug("Merging object id=" + object.getId() + ", source=" + object.getSource());
             object.getMetadata().stream().forEach(metadataValue -> {
+                log.debug("Merging metadata " + metadataValue.toString());
                 if (!metadataSet.contains(metadataValue)) {
+                    log.debug("Adding metadata " + metadataValue.toString());
                     metadataSet.add(metadataValue);
                 }
             });

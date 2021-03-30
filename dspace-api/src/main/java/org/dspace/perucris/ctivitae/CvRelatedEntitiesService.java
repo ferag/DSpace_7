@@ -160,17 +160,16 @@ public class CvRelatedEntitiesService {
      * @param item a directorio item
      * @return
      */
-    public List<String> findCtiVitaeRelationsForDirectorioItem(Context context, Item item)
+    public List<DSpaceObject> findCtiVitaeRelationsForDirectorioItem(Context context, Item item)
         throws SQLException, AuthorizeException {
         // ids of profiles that are in relation with directorio item clone
         Set<UUID> relatedEntitiesProfiles = findCvProfileIdsOwningCloneOfItem(context, item);
 
         // Lookup of cti vitae profile ids that are in relation with directorio item and that are not
         // owners of directorio entity clone into their personal CTIVitae space.
-        List<String> ctiVitaeProfilesRelatedToDirectorioItem = findCtiVitaeRelatedProfiles(context, item)
-            .stream().map(DSpaceObject::getID)
-                .filter(id -> !relatedEntitiesProfiles.contains(id))
-                .map(UUIDUtils::toString)
+        List<DSpaceObject> ctiVitaeProfilesRelatedToDirectorioItem = findCtiVitaeRelatedProfiles(context, item)
+            .stream()
+            .filter(dso -> !relatedEntitiesProfiles.contains(dso.getID()))
                 .collect(Collectors.toList());
         return ctiVitaeProfilesRelatedToDirectorioItem;
     }

@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 import org.dspace.app.profile.ResearcherProfile;
 import org.dspace.app.profile.service.ResearcherProfileService;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataValue;
@@ -341,11 +342,11 @@ public class CvRelatedEntitiesServiceTest {
             .thenReturn(firstAuthorResearcherProfile);
         expectDirectorioToCtiVitaeStructure(publication, cvPublicationClone, cvPublication);
 
-        List<String> directorioRelatedIds =
+        List<DSpaceObject> directorioRelatedItems =
             service.findCtiVitaeRelationsForDirectorioItem(context, publication);
 
-        assertThat(directorioRelatedIds, is(
-            singletonList(ctiVitaeSecondAuthor.getID().toString())));
+        assertThat(directorioRelatedItems, is(
+            singletonList(ctiVitaeSecondAuthor)));
     }
 
     @Test(expected = SQLException.class)

@@ -26,7 +26,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.dspace.app.profile.ResearcherProfile;
@@ -43,8 +45,14 @@ import org.dspace.content.Item;
 import org.dspace.content.Relationship;
 import org.dspace.content.RelationshipType;
 import org.dspace.content.service.RelationshipService;
+import org.dspace.discovery.DiscoverQuery;
+import org.dspace.discovery.DiscoverResult;
+import org.dspace.discovery.IndexableObject;
+import org.dspace.discovery.SearchService;
+import org.dspace.discovery.SearchServiceException;
 import org.dspace.eperson.EPerson;
 import org.dspace.services.ConfigurationService;
+import org.dspace.util.UUIDUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +73,9 @@ public class CvEntityRestRepositoryIT extends AbstractControllerIntegrationTest 
 
     @Autowired
     private RelationshipService relationshipService;
+
+    @Autowired
+    private SearchService searchService;
 
     private RelationshipType institutionShadowCopy;
 
@@ -169,6 +180,26 @@ public class CvEntityRestRepositoryIT extends AbstractControllerIntegrationTest 
         assertThat(cvPublication.getMetadata(), hasItem(with("perucris.ctivitae.owner",
             researcherProfile.getFullName(), null, researcherProfile.getItemId().toString(), 0, 600)));
 
+
+        Map<String, List<String>> cvPublicationFields =
+            solrSearchFields(cvPublication.getID(), "perucris.ctivitae.owner", "perucris.ctivitae.owner_authority");
+
+        assertThat(cvPublicationFields
+            .get("perucris.ctivitae.owner").get(0), is(researcherProfile.getFullName()));
+        assertThat(cvPublicationFields
+            .get("perucris.ctivitae.owner_authority").get(0), is(researcherProfile.getItemId().toString()));
+
+        Map<String, List<String>> publicationFields =
+            solrSearchFields(publication.getID(), "search.resourceid");
+
+        assertThat(publicationFields.get("search.resourceid").get(0), is(publicationId));
+
+        try {
+            solrSearchFields(publication.getID(), "perucris.ctivitae.owner", "perucris.ctivitae.owner_authority");
+        } catch (Exception e) {
+            assertThat(e.getClass().getName(), is(SearchServiceException.class.getName()));
+        }
+
     }
 
     @Test
@@ -237,6 +268,38 @@ public class CvEntityRestRepositoryIT extends AbstractControllerIntegrationTest 
         List<Relationship> isOriginatedFromRelations = findRelations(cvPublicationClone, isOriginatedFrom);
         assertThat(isOriginatedFromRelations, hasSize(1));
         assertThat(isOriginatedFromRelations.get(0).getLeftItem(), is(equalTo(publication)));
+
+        Map<String, List<String>> cvPublicationFields =
+            solrSearchFields(cvPublication.getID(), "perucris.ctivitae.owner", "perucris.ctivitae.owner_authority");
+
+        assertThat(cvPublicationFields
+            .get("perucris.ctivitae.owner").get(0), is(researcherProfile.getFullName()));
+        assertThat(cvPublicationFields
+            .get("perucris.ctivitae.owner_authority").get(0), is(researcherProfile.getItemId().toString()));
+
+        Map<String, List<String>> publicationFields =
+            solrSearchFields(publication.getID(), "search.resourceid");
+
+        assertThat(publicationFields.get("search.resourceid").get(0), is(publicationId));
+
+        try {
+            solrSearchFields(publication.getID(), "perucris.ctivitae.owner", "perucris.ctivitae.owner_authority");
+        } catch (Exception e) {
+            assertThat(e.getClass().getName(), is(SearchServiceException.class.getName()));
+        }
+
+        Map<String, List<String>> institutionPublicationFields =
+            solrSearchFields(institutionPublication.getID(), "search.resourceid");
+
+        assertThat(institutionPublicationFields.get("search.resourceid").get(0),
+            is(institutionPublication.getID().toString()));
+
+        try {
+            solrSearchFields(institutionPublication.getID(),
+                "perucris.ctivitae.owner", "perucris.ctivitae.owner_authority");
+        } catch (Exception e) {
+            assertThat(e.getClass().getName(), is(SearchServiceException.class.getName()));
+        }
 
     }
 
@@ -344,5 +407,21 @@ public class CvEntityRestRepositoryIT extends AbstractControllerIntegrationTest 
 
     private ResearcherProfile createProfileForUser(EPerson ePerson) throws Exception {
         return researcherProfileService.createAndReturn(context, ePerson);
+    }
+
+    private Map<String, List<String>> solrSearchFields(UUID itemId, String... fields) throws SearchServiceException {
+        DiscoverResult idLookup = discoveryLookup(itemId, fields);
+        IndexableObject idxObj = idLookup.getIndexableObjects().get(0);
+        List<DiscoverResult.SearchDocument> searchDocument = idLookup.getSearchDocument(idxObj);
+        Map<String, List<String>> searchFields = searchDocument.get(0).getSearchFields();
+        return searchFields;
+    }
+
+    private DiscoverResult discoveryLookup(UUID resourceId, String... searchFields) throws SearchServiceException {
+        DiscoverQuery discoverQuery = new DiscoverQuery();
+        discoverQuery.setQuery("*:*");
+        discoverQuery.addFilterQueries("search.resourceid:" + UUIDUtils.toString(resourceId));
+        Arrays.stream(searchFields).forEach(discoverQuery::addSearchField);
+        return searchService.search(context, discoverQuery);
     }
 }

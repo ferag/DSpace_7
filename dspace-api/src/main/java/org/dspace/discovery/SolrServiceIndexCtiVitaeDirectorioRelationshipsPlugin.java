@@ -7,8 +7,11 @@
  */
 package org.dspace.discovery;
 
+import static java.util.stream.Collectors.toMap;
+
 import java.sql.SQLException;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -91,11 +94,16 @@ public class SolrServiceIndexCtiVitaeDirectorioRelationshipsPlugin implements So
     private void tryToUpdateDocument(Context context, SolrInputDocument document, Item item)
         throws SQLException, AuthorizeException {
         {
-            List<String> relatedProfiles = cvRelatedEntitiesService.
-                findCtiVitaeRelationsForDirectorioItem(context, item);
+            Map<String, String> profilesMap =
+                cvRelatedEntitiesService.
+                    findCtiVitaeRelationsForDirectorioItem(context, item)
+                    .stream()
+                    .collect(toMap(dso -> UUIDUtils.toString(dso.getID()),
+                        dso -> Optional.ofNullable(dso.getName()).orElse("")));
 
-            if (!relatedProfiles.isEmpty()) {
-                document.addField("ctivitae.owner", relatedProfiles);
+            if (!profilesMap.isEmpty()) {
+                document.addField("perucris.ctivitae.owner", new ArrayList<>(profilesMap.values()));
+                document.addField("perucris.ctivitae.owner_authority", new ArrayList<>(profilesMap.keySet()));
             }
         }
     }

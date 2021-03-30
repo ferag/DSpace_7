@@ -7,6 +7,7 @@
  */
 package org.dspace.discovery;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -31,6 +32,7 @@ import org.dspace.core.Context;
 import org.dspace.discovery.indexobject.IndexableItem;
 import org.dspace.perucris.ctivitae.CvRelatedEntitiesService;
 import org.dspace.services.ConfigurationService;
+import org.dspace.util.UUIDUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -98,14 +100,54 @@ public class SolrServiceIndexCtiVitaeDirectorioRelationshipsPluginTest {
         when(configurationService.getProperty("directorios.community-id"))
             .thenReturn(directorioCommunityId.toString());
 
-        String publicationOwnerId = UUID.randomUUID().toString();
+        UUID publicationOwnerId = UUID.randomUUID();
+        String publicationOwnerName = "owner name";
+        Item publicationOwner = mock(Item.class);
+        when(publicationOwner.getID()).thenReturn(publicationOwnerId);
+        when(publicationOwner.getName()).thenReturn(publicationOwnerName);
+
         when(cvRelatedEntitiesService.findCtiVitaeRelationsForDirectorioItem(context, item))
-            .thenReturn(singletonList(publicationOwnerId));
+            .thenReturn(singletonList(publicationOwner));
 
         plugin.additionalIndex(context, indexableItem, document);
 
-        assertThat(document.getField("ctivitae.owner").getValue(),
-            is(singletonList(publicationOwnerId)));
+        assertThat(document.getField("perucris.ctivitae.owner_authority").getValue(),
+            is(singletonList(UUIDUtils.toString(publicationOwnerId))));
+        assertThat(document.getField("perucris.ctivitae.owner").getValue(),
+            is(singletonList(publicationOwnerName)));
+    }
+
+    @Test
+    public void directorioItemUpdatedWithTwoAuthors() throws SQLException, AuthorizeException {
+
+        UUID directorioCommunityId = UUID.randomUUID();
+        Item item = item("Publication", directorioCommunityId);
+        IndexableItem indexableItem = new IndexableItem(item);
+        SolrInputDocument document = new SolrInputDocument();
+
+        when(cvRelatedEntitiesService.entityWithCvReferences("Publication"))
+            .thenReturn(true);
+
+        when(configurationService.getProperty("directorios.community-id"))
+            .thenReturn(directorioCommunityId.toString());
+
+        UUID publicationOwnerId = UUID.randomUUID();
+        String publicationOwnerName = "owner name";
+        Item publicationOwner = publicationOwner(publicationOwnerId, publicationOwnerName);
+
+        UUID secondOwnerId = UUID.randomUUID();
+        String secondOwnerName = "second owner name";
+        Item secondOwner = publicationOwner(secondOwnerId, secondOwnerName);
+
+        when(cvRelatedEntitiesService.findCtiVitaeRelationsForDirectorioItem(context, item))
+            .thenReturn(asList(publicationOwner, secondOwner));
+
+        plugin.additionalIndex(context, indexableItem, document);
+
+        assertThat(document.getField("perucris.ctivitae.owner_authority").getValue(),
+            is(asList(UUIDUtils.toString(publicationOwnerId), UUIDUtils.toString(secondOwnerId))));
+        assertThat(document.getField("perucris.ctivitae.owner").getValue(),
+            is(asList(publicationOwnerName, secondOwnerName)));
     }
 
     @Test
@@ -156,5 +198,12 @@ public class SolrServiceIndexCtiVitaeDirectorioRelationshipsPluginTest {
         Community community = mock(Community.class);
         when(community.getID()).thenReturn(uuid);
         return community;
+    }
+
+    private Item publicationOwner(UUID id, String name) {
+        Item owner = mock(Item.class);
+        when(owner.getID()).thenReturn(id);
+        when(owner.getName()).thenReturn(name);
+        return owner;
     }
 }

@@ -14,6 +14,7 @@ import static org.junit.Assert.assertTrue;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -76,6 +77,7 @@ public class CtiVitaeEntitiesIndexIT extends AbstractIntegrationTestWithDatabase
             .withRelationshipType("Person").build();
 
         cvPublications = CollectionBuilder.createCollection(context, ctiVitae)
+            .withTemplateItem()
             .withRelationshipType("CvPublication").build();
 
         cvProfiles = CollectionBuilder.createCollection(context, ctiVitae)
@@ -131,19 +133,20 @@ public class CtiVitaeEntitiesIndexIT extends AbstractIntegrationTestWithDatabase
             .withEmail("foo@bar.com").build();
 
         Item cvProfile = ItemBuilder.createItem(context, cvProfiles)
+            .withTitle("Ctivitae Profile")
             .withCrisOwner(owner.getName(), owner.getID().toString())
             .build();
 
         Item cvPublication = ItemBuilder.createItem(context, cvPublications)
             .withCrisOwner(owner.getName(), owner.getID().toString())
+            .withCtiVitaeOwner(cvProfile.getName(), cvProfile.getID().toString())
             .build();
 
         context.restoreAuthSystemState();
 
-        DiscoverResult discoverResult = discoveryLookup(cvPublication.getID(), "ctivitae.owner", "search.resourceid");
-        IndexableObject idxObj = discoverResult.getIndexableObjects().get(0);
-        assertThat(discoverResult.getSearchDocument(idxObj).get(0).getSearchFields()
-            .get("ctivitae.owner").get(0), is(cvProfile.getID().toString()));
+        checkCtiVitaeOwnerFieldValueIs(cvPublication.getID(), List.of(cvProfile.getName()),
+            List.of(cvProfile.getID()));
+//        checkCtiVitaeOwnerAuthorityFieldValueIs(cvPublication.getID(), cvProfile.getID());
 
     }
 
@@ -169,25 +172,24 @@ public class CtiVitaeEntitiesIndexIT extends AbstractIntegrationTestWithDatabase
 
         context.restoreAuthSystemState();
 
-        DiscoverResult idLookup = discoveryLookup(publication.getID(), "search.resourceid", "search.resourceid");
-        IndexableObject idxObj = idLookup.getIndexableObjects().get(0);
-        assertThat(idLookup.getSearchDocument(idxObj).get(0).getSearchFields()
-            .get("search.resourceid").get(0), is(publication.getID().toString()));
+        Map<String, List<String>> solrSearchFields = solrSearchFields(publication.getID(), "search.resourceid");
+        assertThat(solrSearchFields.get("search.resourceid").get(0), is(publication.getID().toString()));
 
         try {
-            discoveryLookup(publication.getID(), "ctivitae.owner", "search.resourceid");
+            discoveryLookup(publication.getID(), "perucris.ctivitae.owner", "perucris.ctivitae.owner_authority",
+                "search.resourceid");
         } catch (Exception e) {
             assertThat(e.getClass().getName(), is(SearchServiceException.class.getName()));
         }
     }
 
     @Test
-    public void directorioPublicationWithReferenceIndexed() throws SQLException, SearchServiceException {
+    public void directorioPublicationWithReferenceIndexed() throws SearchServiceException {
 
         context.turnOffAuthorisationSystem();
 
         Item author = ItemBuilder.createItem(context, people)
-            .withFullName("First Author").build();
+            .withTitle("First Author").build();
 
         EPerson authorEperson = EPersonBuilder.createEPerson(context)
             .withEmail("first@mailinator.com").build();
@@ -200,15 +202,26 @@ public class CtiVitaeEntitiesIndexIT extends AbstractIntegrationTestWithDatabase
 
         context.restoreAuthSystemState();
 
-        DiscoverResult discoverResult = discoveryLookup(publication.getID(), "ctivitae.owner", "search.resourceid");
-        IndexableObject idxObj = discoverResult.getIndexableObjects().get(0);
-        assertThat(discoverResult.getSearchDocument(idxObj).get(0).getSearchFields()
-            .get("search.resourceid").get(0), is(publication.getID().toString()));
-        assertThat(discoverResult.getSearchDocument(idxObj).get(0).getSearchFields()
-            .get("ctivitae.owner").get(0), is(authorCvPerson.getID().toString()));
+        DiscoverResult discoverResult = discoveryLookup(publication.getID(), "perucris.ctivitae.owner",
+            "perucris.ctivitae.owner_authority", "search.resourceid");
+
+        Map<String, List<String>> solrSearchFields = solrSearchFields(publication.getID(), "search.resourceid",
+            "perucris.ctivitae.owner", "perucris.ctivitae.owner_authority");
+
+        assertThat(solrSearchFields.get("search.resourceid").get(0), is(publication.getID().toString()));
+        assertThat(solrSearchFields.get("perucris.ctivitae.owner").get(0), is(authorCvPerson.getName()));
+        assertThat(solrSearchFields.get("perucris.ctivitae.owner_authority").get(0),
+            is(authorCvPerson.getID().toString()));
 
 
     }
+
+    private List<DiscoverResult.SearchDocument> getSearchDocument(DiscoverResult discoverResult,
+                                                                  IndexableObject idxObj) {
+        return discoverResult.getSearchDocument(idxObj);
+    }
+
+
 
     /**
      * Given a publication with two authors:
@@ -226,23 +239,22 @@ public class CtiVitaeEntitiesIndexIT extends AbstractIntegrationTestWithDatabase
      * - CTIVitae publication of third editor has a ctivitae owner reference to third editor
      * - CTIVitae publication of fourth editor has a ctivitae owner reference to fourth editor
      *
-     * @throws SQLException
      * @throws SearchServiceException
      */
     @Test
-    public void directorioPublicationWithPartialReferences() throws SQLException, SearchServiceException {
+    public void directorioPublicationWithPartialReferences() throws SearchServiceException {
 
         context.turnOffAuthorisationSystem();
 
         Item firstAuthor = ItemBuilder.createItem(context, people)
-            .withFullName("First Author").build();
+            .withTitle("First Author").build();
 
         EPerson firstAuthorEPerson = EPersonBuilder.createEPerson(context)
             .withEmail("first@mailinator.com").build();
 
         Item firstAuthorCvPerson = buildCvPerson(firstAuthor, firstAuthorEPerson);
 
-        Item firstAuthorCvPublication = buildCvPublicationOwnedBy(firstAuthorEPerson);
+        Item firstAuthorCvPublication = buildCvPublicationOwnedBy(firstAuthorEPerson, firstAuthorCvPerson);
 
         Item firstAuthorCvPublicationClone = buildClone(cvPublicationsClone);
 
@@ -250,7 +262,7 @@ public class CtiVitaeEntitiesIndexIT extends AbstractIntegrationTestWithDatabase
             firstAuthorCvPublication, cvPublicationCloneToCvPublication);
 
         Item secondAuthor = ItemBuilder.createItem(context, people)
-            .withFullName("Second Author").build();
+            .withTitle("Second Author").build();
 
         EPerson secondAuthorEPerson = EPersonBuilder.createEPerson(context)
             .withEmail("second@mailinator.com").build();
@@ -258,7 +270,7 @@ public class CtiVitaeEntitiesIndexIT extends AbstractIntegrationTestWithDatabase
         Item secondAuthorCvPerson = buildCvPerson(secondAuthor, secondAuthorEPerson);
 
         Item thirdAuthor = ItemBuilder.createItem(context, people)
-            .withFullName("Third Author").build();
+            .withTitle("Third Author").build();
 
         EPerson thirdAuthorEPerson = EPersonBuilder.createEPerson(context)
             .withEmail("third@mailinator.com").build();
@@ -266,19 +278,18 @@ public class CtiVitaeEntitiesIndexIT extends AbstractIntegrationTestWithDatabase
         Item thirdAuthorCvPerson = buildCvPerson(thirdAuthor, thirdAuthorEPerson);
 
         Item firstEditor = ItemBuilder.createItem(context, people)
-            .withFullName("First Editor").build();
+            .withTitle("First Editor").build();
 
         Item thirdEditor = ItemBuilder.createItem(context, people)
-            .withFullName("Third Editor").build();
+            .withTitle("Third Editor").build();
 
         EPerson thirdEditorEPerson = EPersonBuilder.createEPerson(context)
             .withEmail("third.editor@mailinator.com").build();
 
         Item thirdEditorCvPerson = buildCvPerson(thirdEditor, thirdEditorEPerson);
 
-        Item thirdEditorCvPublication = ItemBuilder.createItem(context, cvPublications)
-            .withCrisOwner(thirdEditorEPerson.getEmail(), UUIDUtils.toString(thirdEditorEPerson.getID()))
-            .build();
+        Item thirdEditorCvPublication = buildCvPublicationOwnedBy(thirdEditorEPerson,
+            thirdEditorCvPerson);
 
         Item thirdEditorCvPublicationClone = buildClone(cvPublicationsClone);
 
@@ -291,16 +302,15 @@ public class CtiVitaeEntitiesIndexIT extends AbstractIntegrationTestWithDatabase
             thirdEditorCvPublication, cvPublicationCloneToCvPublication);
 
         Item fourthEditor = ItemBuilder.createItem(context, people)
-            .withFullName("fourth Editor").build();
+            .withTitle("fourth Editor").build();
 
         EPerson fourthEditorEPerson = EPersonBuilder.createEPerson(context)
             .withEmail("fourth.editor@mailinator.com").build();
 
         Item fourthEditorCvPerson = buildCvPerson(fourthEditor, fourthEditorEPerson);
 
-        Item fourthEditorCvPublication = ItemBuilder.createItem(context, cvPublications)
-            .withCrisOwner(fourthEditorEPerson.getEmail(), UUIDUtils.toString(fourthEditorEPerson.getID()))
-            .build();
+        Item fourthEditorCvPublication = buildCvPublicationOwnedBy(fourthEditorEPerson,
+            fourthEditorCvPerson);
 
         Item fourthEditorCvPublicationClone = buildClone(cvPublicationsClone);
 
@@ -334,14 +344,20 @@ public class CtiVitaeEntitiesIndexIT extends AbstractIntegrationTestWithDatabase
 
         context.restoreAuthSystemState();
 
-        checkCtiVitaeOwnerFieldValueIs(publication.getID(), secondAuthorCvPerson.getID(),
-            thirdAuthorCvPerson.getID());
+        checkCtiVitaeOwnerFieldValueIs(publication.getID(),
+            List.of(secondAuthorCvPerson.getName(),
+                thirdAuthorCvPerson.getName()),
+            List.of(secondAuthorCvPerson.getID(),
+                thirdAuthorCvPerson.getID()));
+
         checkCtiVitaeOwnerFieldValueIs(firstAuthorCvPublication.getID(),
-            firstAuthorCvPerson.getID());
+            List.of(firstAuthorCvPerson.getName()), List.of(firstAuthorCvPerson.getID()));
+
         checkCtiVitaeOwnerFieldValueIs(thirdEditorCvPublication.getID(),
-            thirdEditorCvPerson.getID());
+            List.of(thirdEditorCvPerson.getName()), List.of(thirdEditorCvPerson.getID()));
+
         checkCtiVitaeOwnerFieldValueIs(fourthEditorCvPublication.getID(),
-            fourthEditorCvPerson.getID());
+            List.of(fourthEditorCvPerson.getName()), List.of(fourthEditorCvPerson.getID()));
 
     }
 
@@ -350,15 +366,17 @@ public class CtiVitaeEntitiesIndexIT extends AbstractIntegrationTestWithDatabase
             .build();
     }
 
-    private Item buildCvPublicationOwnedBy(EPerson firstAuthorEPerson) {
+    private Item buildCvPublicationOwnedBy(EPerson eperson, Item cvOwner) {
         return ItemBuilder.createItem(context, cvPublications)
-            .withCrisOwner(firstAuthorEPerson.getEmail(), UUIDUtils.toString(firstAuthorEPerson.getID()))
+            .withCrisOwner(eperson.getEmail(), UUIDUtils.toString(eperson.getID()))
+            .withCtiVitaeOwner(cvOwner.getName(), UUIDUtils.toString(cvOwner.getID()))
             .build();
     }
 
     private Item buildCvPerson(Item firstAuthor, EPerson firstAuthorEPerson) {
         Item firstAuthorCvPerson = ItemBuilder.createItem(context, cvProfiles)
             .withCrisOwner(firstAuthorEPerson.getEmail(), UUIDUtils.toString(firstAuthorEPerson.getID()))
+            .withTitle(firstAuthor.getName())
             .build();
 
         RelationshipBuilder.createRelationshipBuilder(context, firstAuthorCvPerson, firstAuthor,
@@ -366,19 +384,31 @@ public class CtiVitaeEntitiesIndexIT extends AbstractIntegrationTestWithDatabase
         return firstAuthorCvPerson;
     }
 
-    private void checkCtiVitaeOwnerFieldValueIs(UUID itemId, UUID... ids)
+    private void checkCtiVitaeOwnerFieldValueIs(UUID itemId, List<String> values,
+                                                List<UUID> authorities)
         throws SearchServiceException {
-        DiscoverResult discoverResult = discoveryLookup(itemId, "ctivitae.owner");
 
-        IndexableObject idxObj = discoverResult.getIndexableObjects().get(0);
+        Map<String, List<String>> searchFields = solrSearchFields(itemId, "perucris.ctivitae.owner",
+            "perucris.ctivitae.owner_authority");
 
-        List<String> ownderIds = Arrays.stream(ids).map(UUIDUtils::toString).collect(Collectors.toList());
+        List<String> authorityList = authorities
+            .stream().map(UUIDUtils::toString).collect(Collectors.toList());
 
-        assertThat(discoverResult.getSearchDocument(idxObj).get(0).getSearchFields()
-            .get("ctivitae.owner").size(), is(ownderIds.size()));
+        assertThat(searchFields.get("perucris.ctivitae.owner").size(), is(values.size()));
 
-        assertTrue(discoverResult.getSearchDocument(idxObj).get(0).getSearchFields()
-            .get("ctivitae.owner").containsAll(ownderIds));
+        assertTrue(searchFields.get("perucris.ctivitae.owner").containsAll(values));
+
+        assertThat(searchFields.get("perucris.ctivitae.owner_authority").size(), is(authorities.size()));
+
+        assertTrue(searchFields.get("perucris.ctivitae.owner_authority").containsAll(authorityList));
+    }
+
+    private Map<String, List<String>> solrSearchFields(UUID itemId, String... fields) throws SearchServiceException {
+        DiscoverResult idLookup = discoveryLookup(itemId, fields);
+        IndexableObject idxObj = idLookup.getIndexableObjects().get(0);
+        List<DiscoverResult.SearchDocument> searchDocument = idLookup.getSearchDocument(idxObj);
+        Map<String, List<String>> searchFields = searchDocument.get(0).getSearchFields();
+        return searchFields;
     }
 
     private DiscoverResult discoveryLookup(UUID resourceId, String... searchFields) throws SearchServiceException {

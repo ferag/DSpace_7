@@ -39,11 +39,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.jayway.jsonpath.JsonPath;
+import org.dspace.app.profile.ResearcherProfile;
+import org.dspace.app.profile.service.ResearcherProfileService;
 import org.dspace.app.rest.model.MetadataValueRest;
 import org.dspace.app.rest.model.patch.AddOperation;
 import org.dspace.app.rest.model.patch.Operation;
 import org.dspace.app.rest.model.patch.ReplaceOperation;
+import org.dspace.app.rest.repository.ResearcherProfileRestRepository;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
+import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.builder.CollectionBuilder;
 import org.dspace.builder.CommunityBuilder;
 import org.dspace.builder.CrisLayoutBoxBuilder;
@@ -62,9 +66,11 @@ import org.dspace.content.service.MetadataFieldService;
 import org.dspace.content.service.MetadataSchemaService;
 import org.dspace.content.service.RelationshipService;
 import org.dspace.eperson.EPerson;
+import org.dspace.eperson.service.GroupService;
 import org.dspace.layout.CrisLayoutBox;
 import org.dspace.layout.LayoutSecurity;
 import org.dspace.services.ConfigurationService;
+import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +97,15 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
     @Autowired
     private RelationshipService relationshipService;
+
+    @Autowired
+    private ResearcherProfileService researcherProfileService;
+
+    @Autowired
+    private GroupService groupService;
+
+    @Autowired
+    private AuthorizeService authorizeService;
 
     private EPerson user;
 
@@ -1167,6 +1182,389 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
     }
 
+    @Test
+    public void researcherProfileSecurityAnonymousTest() throws Exception {
+       context.turnOffAuthorisationSystem();
+
+       parentCommunity = CommunityBuilder.createCommunity(context).build();
+
+       Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withName("Collection 1")
+                                          .build();
+
+       EPerson researcher = EPersonBuilder.createEPerson(context)
+               .withNameInMetadata("John", "Doe")
+               .withEmail("Johndoe@example.com")
+               .withPassword(password).build();
+
+       ResearcherProfile researcherProfile = createProfileForUser(researcher);
+
+       Item CvPublication = ItemBuilder.createItem(context, col1)
+               .withTitle("CvPublication Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withRelationshipType("CvPublication")
+               .withIssueDate("2021-01-01")
+               .build();
+
+       Item CvProject = ItemBuilder.createItem(context, col1)
+               .withTitle("CvProject Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withRelationshipType("CvProject")
+               .withIssueDate("2021-02-07")
+               .build();
+
+       Item CvPatent = ItemBuilder.createItem(context, col1)
+               .withTitle("CvPatent Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withIssueDate("2020-10-11")
+               .withRelationshipType("CvPatent")
+               .build();
+
+       context.restoreAuthSystemState();
+
+       String researcherToken = getAuthToken(researcher.getEmail(), password);
+
+       getClient(researcherToken).perform(get("/api/cris/profiles/" + researcher.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(false)));
+
+       List<Operation> operations = asList(new ReplaceOperation("/visible", true));
+
+       getClient(researcherToken).perform(patch("/api/cris/profiles/" + researcher.getID())
+                                 .content(getPatchContent(operations))
+                                 .contentType(MediaType.APPLICATION_JSON_VALUE))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(true)));
+
+       getClient(researcherToken).perform(get("/api/cris/profiles/" + researcher.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(true)));
+
+       getClient().perform(get("/api/core/items/" + CvPublication.getID()))
+                  .andExpect(status().isOk())
+                  .andExpect(jsonPath("$.uuid", Matchers.is(CvPublication.getID().toString())));
+
+       getClient().perform(get("/api/core/items/" + CvProject.getID()))
+                  .andExpect(status().isOk())
+                  .andExpect(jsonPath("$.uuid", Matchers.is(CvProject.getID().toString())));
+
+       getClient().perform(get("/api/core/items/" + CvPatent.getID()))
+                  .andExpect(status().isOk())
+                  .andExpect(jsonPath("$.uuid", Matchers.is(CvPatent.getID().toString())));
+
+       // hide the profile and linked CVs
+       List<Operation> operations2 = asList(new ReplaceOperation("/visible", false));
+
+       getClient(researcherToken).perform(patch("/api/cris/profiles/" + researcher.getID())
+                                 .content(getPatchContent(operations2))
+                                 .contentType(MediaType.APPLICATION_JSON_VALUE))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(false)));
+
+       getClient(researcherToken).perform(get("/api/cris/profiles/" + researcher.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(false)));
+
+       getClient().perform(get("/api/core/items/" + CvPublication.getID()))
+                  .andExpect(status().isUnauthorized());
+
+       getClient().perform(get("/api/core/items/" + CvProject.getID()))
+                  .andExpect(status().isUnauthorized());
+
+       getClient().perform(get("/api/core/items/" + CvPatent.getID()))
+                  .andExpect(status().isUnauthorized());
+
+    }
+
+    @Test
+    public void researcherProfileSecuritySimpleLoggedUserTest() throws Exception {
+       context.turnOffAuthorisationSystem();
+
+       parentCommunity = CommunityBuilder.createCommunity(context).build();
+
+       Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withName("Collection 1")
+                                          .build();
+
+       EPerson researcher = EPersonBuilder.createEPerson(context)
+               .withNameInMetadata("John", "Doe")
+               .withEmail("Johndoe@example.com")
+               .withPassword(password).build();
+
+       ResearcherProfile researcherProfile = createProfileForUser(researcher);
+
+       Item CvPublication = ItemBuilder.createItem(context, col1)
+               .withTitle("CvPublication Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withRelationshipType("CvPublication")
+               .withIssueDate("2021-01-01")
+               .build();
+
+       Item CvProject = ItemBuilder.createItem(context, col1)
+               .withTitle("CvProject Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withRelationshipType("CvProject")
+               .withIssueDate("2021-02-07")
+               .build();
+
+       Item CvPatent = ItemBuilder.createItem(context, col1)
+               .withTitle("CvPatent Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withIssueDate("2020-10-11")
+               .withRelationshipType("CvPatent")
+               .build();
+
+       context.restoreAuthSystemState();
+
+       String researcherToken = getAuthToken(researcher.getEmail(), password);
+       String epersonToken = getAuthToken(eperson.getEmail(), password);
+
+       getClient(researcherToken).perform(get("/api/cris/profiles/" + researcher.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(false)));
+
+       List<Operation> operations = asList(new ReplaceOperation("/visible", true));
+
+       getClient(researcherToken).perform(patch("/api/cris/profiles/" + researcher.getID())
+                                 .content(getPatchContent(operations))
+                                 .contentType(MediaType.APPLICATION_JSON_VALUE))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(true)));
+
+       getClient(researcherToken).perform(get("/api/cris/profiles/" + researcher.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(true)));
+
+       getClient(epersonToken).perform(get("/api/core/items/" + CvPublication.getID()))
+                              .andExpect(status().isOk())
+                              .andExpect(jsonPath("$.uuid", Matchers.is(CvPublication.getID().toString())));
+
+       getClient(epersonToken).perform(get("/api/core/items/" + CvProject.getID()))
+                              .andExpect(status().isOk())
+                              .andExpect(jsonPath("$.uuid", Matchers.is(CvProject.getID().toString())));
+
+       getClient(epersonToken).perform(get("/api/core/items/" + CvPatent.getID()))
+                              .andExpect(status().isOk())
+                              .andExpect(jsonPath("$.uuid", Matchers.is(CvPatent.getID().toString())));
+
+       // hide the profile and linked CVs
+       List<Operation> operations2 = asList(new ReplaceOperation("/visible", false));
+
+       getClient(researcherToken).perform(patch("/api/cris/profiles/" + researcher.getID())
+                                 .content(getPatchContent(operations2))
+                                 .contentType(MediaType.APPLICATION_JSON_VALUE))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(false)));
+
+       getClient(researcherToken).perform(get("/api/cris/profiles/" + researcher.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(false)));
+
+       getClient(epersonToken).perform(get("/api/core/items/" + CvPublication.getID()))
+                              .andExpect(status().isForbidden());
+
+       getClient(epersonToken).perform(get("/api/core/items/" + CvProject.getID()))
+                              .andExpect(status().isForbidden());
+
+       getClient(epersonToken).perform(get("/api/core/items/" + CvPatent.getID()))
+                              .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void researcherProfileSecurityTest() throws Exception {
+       context.turnOffAuthorisationSystem();
+
+       parentCommunity = CommunityBuilder.createCommunity(context).build();
+
+       Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withName("Collection 1")
+                                          .build();
+
+       EPerson researcher = EPersonBuilder.createEPerson(context)
+               .withNameInMetadata("John", "Doe")
+               .withEmail("Johndoe@example.com")
+               .withPassword(password).build();
+
+       ResearcherProfile researcherProfile = createProfileForUser(researcher);
+
+       Item CvPublication = ItemBuilder.createItem(context, col1)
+               .withTitle("CvPublication Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withRelationshipType("CvPublication")
+               .withIssueDate("2021-01-01")
+               .build();
+
+       Item CvProject = ItemBuilder.createItem(context, col1)
+               .withTitle("CvProject Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withRelationshipType("CvProject")
+               .withIssueDate("2021-02-07")
+               .build();
+
+       Item CvPatent = ItemBuilder.createItem(context, col1)
+               .withTitle("CvPatent Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withIssueDate("2020-10-11")
+               .withRelationshipType("CvPatent")
+               .build();
+
+       context.restoreAuthSystemState();
+
+       String researcherToken = getAuthToken(researcher.getEmail(), password);
+
+       getClient(researcherToken).perform(get("/api/cris/profiles/" + researcher.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(false)));
+
+       List<Operation> operations = asList(new ReplaceOperation("/visible", true));
+
+       getClient(researcherToken).perform(patch("/api/cris/profiles/" + researcher.getID())
+                                 .content(getPatchContent(operations))
+                                 .contentType(MediaType.APPLICATION_JSON_VALUE))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(true)));
+
+       getClient(researcherToken).perform(get("/api/cris/profiles/" + researcher.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(true)));
+
+       getClient(researcherToken).perform(get("/api/core/items/" + CvPublication.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.uuid", Matchers.is(CvPublication.getID().toString())));
+
+       getClient(researcherToken).perform(get("/api/core/items/" + CvProject.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.uuid", Matchers.is(CvProject.getID().toString())));
+
+       getClient(researcherToken).perform(get("/api/core/items/" + CvPatent.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.uuid", Matchers.is(CvPatent.getID().toString())));
+
+       // hide the profile and linked CVs
+       List<Operation> operations2 = asList(new ReplaceOperation("/visible", false));
+
+       getClient(researcherToken).perform(patch("/api/cris/profiles/" + researcher.getID())
+                                 .content(getPatchContent(operations2))
+                                 .contentType(MediaType.APPLICATION_JSON_VALUE))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(false)));
+
+       getClient(researcherToken).perform(get("/api/cris/profiles/" + researcher.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(false)));
+
+       getClient(researcherToken).perform(get("/api/core/items/" + CvPublication.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.uuid", Matchers.is(CvPublication.getID().toString())));
+
+       getClient(researcherToken).perform(get("/api/core/items/" + CvProject.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.uuid", Matchers.is(CvProject.getID().toString())));
+
+       getClient(researcherToken).perform(get("/api/core/items/" + CvPatent.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.uuid", Matchers.is(CvPatent.getID().toString())));
+
+    }
+
+    @Test
+    public void researcherProfileSecurityAdminTest() throws Exception {
+       context.turnOffAuthorisationSystem();
+
+       parentCommunity = CommunityBuilder.createCommunity(context).build();
+
+       Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withName("Collection 1")
+                                          .build();
+
+       EPerson researcher = EPersonBuilder.createEPerson(context)
+               .withNameInMetadata("John", "Doe")
+               .withEmail("Johndoe@example.com")
+               .withPassword(password).build();
+
+       ResearcherProfile researcherProfile = createProfileForUser(researcher);
+
+       Item CvPublication = ItemBuilder.createItem(context, col1)
+               .withTitle("CvPublication Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withRelationshipType("CvPublication")
+               .withIssueDate("2021-01-01")
+               .build();
+
+       Item CvProject = ItemBuilder.createItem(context, col1)
+               .withTitle("CvProject Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withRelationshipType("CvProject")
+               .withIssueDate("2021-02-07")
+               .build();
+
+       Item CvPatent = ItemBuilder.createItem(context, col1)
+               .withTitle("CvPatent Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withIssueDate("2020-10-11")
+               .withRelationshipType("CvPatent")
+               .build();
+
+       context.restoreAuthSystemState();
+
+       String researcherToken = getAuthToken(researcher.getEmail(), password);
+       String adminToken = getAuthToken(admin.getEmail(), password);
+
+       getClient(researcherToken).perform(get("/api/cris/profiles/" + researcher.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(false)));
+
+       List<Operation> operations = asList(new ReplaceOperation("/visible", true));
+
+       getClient(researcherToken).perform(patch("/api/cris/profiles/" + researcher.getID())
+                                 .content(getPatchContent(operations))
+                                 .contentType(MediaType.APPLICATION_JSON_VALUE))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(true)));
+
+       getClient(researcherToken).perform(get("/api/cris/profiles/" + researcher.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(true)));
+
+       getClient(adminToken).perform(get("/api/core/items/" + CvPublication.getID()))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$.uuid", Matchers.is(CvPublication.getID().toString())));
+
+       getClient(adminToken).perform(get("/api/core/items/" + CvProject.getID()))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$.uuid", Matchers.is(CvProject.getID().toString())));
+
+       getClient(adminToken).perform(get("/api/core/items/" + CvPatent.getID()))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$.uuid", Matchers.is(CvPatent.getID().toString())));
+
+       // hide the profile and linked CVs
+       List<Operation> operations2 = asList(new ReplaceOperation("/visible", false));
+
+       getClient(researcherToken).perform(patch("/api/cris/profiles/" + researcher.getID())
+                                 .content(getPatchContent(operations2))
+                                 .contentType(MediaType.APPLICATION_JSON_VALUE))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(false)));
+
+       getClient(researcherToken).perform(get("/api/cris/profiles/" + researcher.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(false)));
+
+       getClient(adminToken).perform(get("/api/core/items/" + CvPublication.getID()))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$.uuid", Matchers.is(CvPublication.getID().toString())));
+
+       getClient(adminToken).perform(get("/api/core/items/" + CvProject.getID()))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$.uuid", Matchers.is(CvProject.getID().toString())));
+
+       getClient(adminToken).perform(get("/api/core/items/" + CvPatent.getID()))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$.uuid", Matchers.is(CvPatent.getID().toString())));
+
+    }
+
     private String getItemIdByProfileId(String token, String id) throws SQLException, Exception {
         MvcResult result = getClient(token).perform(get("/api/cris/profiles/{id}/item", id))
             .andExpect(status().isOk())
@@ -1222,4 +1620,9 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
             element,
             qualifier.orElse(null));
     }
+
+    private ResearcherProfile createProfileForUser(EPerson ePerson) throws Exception {
+        return researcherProfileService.createAndReturn(context, ePerson);
+    }
+
 }

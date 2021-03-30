@@ -150,6 +150,15 @@ public class EPersonServiceImpl extends DSpaceObjectServiceImpl<EPerson> impleme
     }
 
     @Override
+    public EPerson findByUsername(Context context, String username) throws SQLException {
+        EPerson eperson = this.findByEmail(context, username.toLowerCase());
+        if (eperson == null) {
+            eperson = this.findByNetid(context, username.toLowerCase());
+        }
+        return eperson;
+    }
+
+    @Override
     public List<EPerson> search(Context context, String query) throws SQLException {
         if (StringUtils.isBlank(query)) {
             //If we don't have a query, just return everything.

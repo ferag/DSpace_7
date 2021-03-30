@@ -8,12 +8,11 @@
 package org.dspace.perucris.externalservices.reniec;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -21,9 +20,12 @@ import org.apache.logging.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
+import org.dspace.content.dto.MetadataValueDTO;
 import org.dspace.content.service.ItemService;
 import org.dspace.content.vo.MetadataValueVO;
 import org.dspace.core.Context;
+import org.dspace.external.model.ExternalDataObject;
+import org.dspace.external.service.ExternalDataService;
 import org.dspace.perucris.externalservices.PeruExternalService;
 import org.dspace.perucris.externalservices.UbigeoMapping;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,7 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
     private static Logger log = LogManager.getLogger(UpdateItemWithInformationFromReniecService.class);
 
     @Autowired
-    private ReniecProvider reniecProvider;
+    private ExternalDataService externalDataService;
 
     @Autowired
     private ItemService itemService;
@@ -56,119 +58,105 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
     @Override
     public boolean updateItem(Context context, Item item) {
         String dni = itemService.getMetadataFirstValue(item, "perucris", "identifier", "dni", Item.ANY);
-        ReniecDTO informationsFromReniec = reniecProvider.getReniecObject(dni);
-        return updateCurrentItemWithInformationsFromReniec(context, item, informationsFromReniec);
+        Optional<ExternalDataObject> externalDataObject = externalDataService.getExternalDataObject("reniec", dni);
+        return updateCurrentItemWithInformationsFromReniec(context, item, externalDataObject);
     }
 
     private boolean updateCurrentItemWithInformationsFromReniec(Context context, Item currentItem,
-            ReniecDTO informationsFromReniec) {
-        if (Objects.isNull(informationsFromReniec)) {
+            Optional<ExternalDataObject> externalDataObject) {
+
+        if (externalDataObject.isEmpty()) {
             return false;
         }
-        if (!checkCurrentItemWithInformationFromReniec(currentItem, informationsFromReniec)) {
+        if (!checkCurrentItemWithInformationFromReniec(currentItem, externalDataObject.get())) {
             cleanMetadata(context, currentItem);
-            addMetadata(context, currentItem, informationsFromReniec);
+            addMetadata(context, currentItem, externalDataObject.get());
             return true;
         }
         return false;
     }
 
-    private boolean checkCurrentItemWithInformationFromReniec(Item currentItem, ReniecDTO informationsFromReniec) {
-        if (!checkMetadata(itemService.getMetadataFirstValue(currentItem, "perucris", "apellidoPaterno", null, null),
-                informationsFromReniec.getFatherLastName())) {
+    private boolean checkCurrentItemWithInformationFromReniec(Item currentItem, ExternalDataObject externalDataObject) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "apellidoPaterno", null, null)) {
             return false;
         }
-        if (!checkMetadata(itemService.getMetadataFirstValue(currentItem, "perucris", "apellidoMaterno", null, null),
-                informationsFromReniec.getMaternalLastName())) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "apellidoMaterno", null, null)) {
             return false;
         }
-        if (!checkMetadata(itemService.getMetadataFirstValue(currentItem, "perucris", "apellidoCasada", null, null),
-                informationsFromReniec.getLastNameMarried())) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "apellidoCasada", null, null)) {
             return false;
         }
-        if (!checkMetadata(itemService.getMetadataFirstValue(currentItem, "person", "givenName", null, null),
-                informationsFromReniec.getNames())) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "givenName", null, null)) {
             return false;
         }
-        if (!checkMetadataAuthority(
-            itemService.getMetadata(currentItem, "perucris", "domicilio", "ubigeoReniec", null),
-            informationsFromReniec.getHomeCode())) {
+        if (!checkMetadataAuthority(currentItem, externalDataObject, "perucris", "domicilio", "ubigeoReniec", null)) {
             return false;
         }
-        if (!checkMetadata(itemService.getMetadataFirstValue(currentItem, "perucris", "domicilio", "region", null),
-                informationsFromReniec.getRegionOfResidence())) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "domicilio", "region", null)) {
             return false;
         }
-        if (!checkMetadata(itemService.getMetadataFirstValue(currentItem, "perucris", "domicilio", "provincia", null),
-                informationsFromReniec.getProvinceOfResidence())) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "domicilio", "provincia", null)) {
             return false;
         }
-        if (!checkMetadata(itemService.getMetadataFirstValue(currentItem, "perucris", "domicilio", "distrito", null),
-                informationsFromReniec.getDistrictOfResidence())) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "domicilio", "distrito", null)) {
             return false;
         }
-        if (!checkMetadata(itemService.getMetadataFirstValue(currentItem, "perucris", "domicilio", "direccion", null),
-                informationsFromReniec.getHomeAddress())) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "domicilio", "direccion", null)) {
             return false;
         }
-        if (!checkMetadataAuthority(
-            itemService.getMetadata(currentItem, "perucris", "nacimiento", "ubigeoReniec", null),
-            informationsFromReniec.getNacimientoCode())) {
+        if (!checkMetadataAuthority(currentItem, externalDataObject, "perucris", "nacimiento", "ubigeoReniec", null)) {
             return false;
         }
-        if (!checkMetadata(itemService.getMetadataFirstValue(currentItem, "perucris", "nacimiento", "region", null),
-                informationsFromReniec.getRegionOfBirth())) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "nacimiento", "region", null)) {
             return false;
         }
-        if (!checkMetadata(itemService.getMetadataFirstValue(currentItem, "perucris", "nacimiento", "provincia", null),
-                informationsFromReniec.getProvinceOfBirth())) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "nacimiento", "provincia", null)) {
             return false;
         }
-        if (!checkMetadata(itemService.getMetadataFirstValue(currentItem, "perucris", "nacimiento", "distrito", null),
-                informationsFromReniec.getDistrictOfBirth())) {
+        if (!checkMetadata(currentItem, externalDataObject, "perucris", "nacimiento", "distrito", null)) {
             return false;
         }
-        if (!checkGender(itemService.getMetadataFirstValue(currentItem, "oairecerif", "person", "gender", null),
-            gender(informationsFromReniec.getIndexSex()))) {
+        if (!checkMetadata(currentItem, externalDataObject, "oairecerif", "person", "gender", null)) {
             return false;
         }
-        return checkBirthDate(itemService.getMetadataFirstValue(currentItem, "person", "birthDate", null, null),
-            informationsFromReniec.getBirthDate());
+        if (!checkMetadata(currentItem, externalDataObject, "person", "birthDate", null, null)) {
+            return false;
+        }
+        return true;
     }
 
-    private String gender(int indexSex) {
-        //FIXME evaluate if this mapping can / needs to be configured
-        if (!genderMap.containsKey(indexSex)) {
-            log.warn("Unknown gender returned from RENIEC: {}", indexSex);
-        }
-        return genderMap.get(indexSex);
+    private String getFirstMetadataValue(ExternalDataObject object,
+            String schema, String element, String qualifier, String language) {
+
+        Optional<MetadataValueDTO> firstValue =
+                object.getMetadata().stream().filter(m -> StringUtils.equals(m.getSchema(), schema)
+                && StringUtils.equals(m.getElement(), element)
+                && StringUtils.equals(m.getQualifier(), qualifier)
+        ).findFirst();
+
+        return firstValue.isPresent() ? firstValue.get().getValue() : null;
     }
 
-    private boolean checkMetadata(String itemMetadata, String infoFromReniec) {
-        return StringUtils.equals(itemMetadata, infoFromReniec);
+    private boolean checkMetadata(Item currentItem, ExternalDataObject externalDataObject,
+            String schema, String element, String qualifier, String language) {
+
+        return StringUtils.equals(
+                itemService.getMetadataFirstValue(currentItem, schema, element, qualifier, language),
+                getFirstMetadataValue(externalDataObject, schema, element, qualifier, language));
+
     }
 
-    private boolean checkMetadataAuthority(List<MetadataValue> itemMetadata, String authorityFromReniec) {
+    private boolean checkMetadataAuthority(Item currentItem, ExternalDataObject externalDataObject,
+            String schema, String element, String qualifier, String language) {
+
+        List<MetadataValue> itemMetadata = itemService.getMetadata(currentItem,  schema, element, qualifier, language);
         if (Objects.isNull(itemMetadata) || itemMetadata.isEmpty()) {
             return false;
         }
+
+        String authorityFromReniec = getFirstMetadataValue(externalDataObject, schema, element, qualifier, language);
+
         return StringUtils.equals(itemMetadata.get(0).getAuthority(), authorityFromReniec);
-    }
-
-    private boolean checkGender(String gender, String genderFromReniec) {
-        if (StringUtils.isBlank(gender)) {
-            return false;
-        } else {
-            return !gender.equals(genderFromReniec);
-        }
-    }
-
-    private boolean checkBirthDate(String birthDate, LocalDate birthDateFromReniec) {
-        if (birthDate != null && birthDateFromReniec != null) {
-            String bd = birthDateFromReniec.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            return bd.equals(birthDate);
-        }
-        return false;
     }
 
     private void cleanMetadata(Context context, Item currentItem) {
@@ -192,75 +180,41 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
         }
     }
 
-    private void addMetadata(Context context, Item currentItem, ReniecDTO dto) {
+    private void addMetadata(Context context, Item currentItem, ExternalDataObject externalDataObject) {
         try {
-            if (dto.getFatherLastName() != null) {
-                itemService.addMetadata(context, currentItem, "perucris", "apellidoPaterno", null, null,
-                        dto.getFatherLastName());
-            }
-            if (dto.getMaternalLastName() != null) {
-                itemService.addMetadata(context, currentItem, "perucris", "apellidoMaterno", null, null,
-                        dto.getMaternalLastName());
-            }
-            if (dto.getLastNameMarried() != null) {
-                itemService.addMetadata(context, currentItem, "perucris", "apellidoCasada", null, null,
-                        dto.getLastNameMarried());
-            }
-            if (dto.getNames() != null) {
-                itemService.addMetadata(context, currentItem, "person", "givenName", null, null,
-                        dto.getNames());
-            }
-            if (dto.getHomeCode() != null) {
-                addMappedUbigeoValue(context, currentItem, "perucris", "domicilio", "ubigeoReniec",
-                    dto.getHomeCode());
-            }
-            if (dto.getRegionOfResidence() != null) {
-                itemService.addMetadata(context, currentItem, "perucris", "domicilio", "region", null,
-                        dto.getRegionOfResidence());
-            }
-            if (dto.getProvinceOfResidence() != null) {
-                itemService.addMetadata(context, currentItem, "perucris", "domicilio", "provincia", null,
-                        dto.getProvinceOfResidence());
-            }
-            if (dto.getDistrictOfResidence() != null) {
-                itemService.addMetadata(context, currentItem, "perucris", "domicilio", "distrito", null,
-                        dto.getDistrictOfResidence());
-            }
-            if (dto.getHomeAddress() != null) {
-                itemService.addMetadata(context, currentItem, "perucris", "domicilio", "direccion", null,
-                        dto.getHomeAddress());
-            }
-            if (dto.getNacimientoCode() != null) {
-                addMappedUbigeoValue(context, currentItem, "perucris", "nacimiento", "ubigeoReniec",
-                    dto.getNacimientoCode());
-            }
-            if (dto.getRegionOfBirth() != null) {
-                itemService.addMetadata(context, currentItem, "perucris", "nacimiento", "region", null,
-                        dto.getRegionOfBirth());
-            }
-            if (dto.getProvinceOfBirth() != null) {
-                itemService.addMetadata(context, currentItem, "perucris", "nacimiento", "provincia", null,
-                        dto.getProvinceOfBirth());
-            }
-            if (dto.getDistrictOfBirth() != null) {
-                itemService.addMetadata(context, currentItem, "perucris", "nacimiento", "distrito", null,
-                        dto.getDistrictOfBirth());
-            }
-            if (Objects.nonNull(gender(dto.getIndexSex()))) {
-                itemService.addMetadata(context, currentItem, "oairecerif", "person", "gender", null,
-                            gender(dto.getIndexSex()));
-            }
-            if (dto.getBirthDate() != null) {
-                String birthDate = dto.getBirthDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                itemService.addMetadata(context, currentItem, "person", "birthDate", null, null, birthDate);
-            }
+            addMetadata(context, currentItem, externalDataObject, "perucris", "apellidoPaterno", null, null);
+            addMetadata(context, currentItem, externalDataObject, "perucris", "apellidoMaterno", null, null);
+            addMetadata(context, currentItem, externalDataObject, "perucris", "apellidoCasada", null, null);
+            addMetadata(context, currentItem, externalDataObject, "person", "givenName", null, null);
+            addMappedUbigeoValue(context, currentItem, externalDataObject, "perucris", "domicilio", "ubigeoReniec");
+            addMetadata(context, currentItem, externalDataObject, "perucris", "domicilio", "region", null);
+            addMetadata(context, currentItem, externalDataObject, "perucris", "domicilio", "provincia", null);
+            addMetadata(context, currentItem, externalDataObject, "perucris", "domicilio", "distrito", null);
+            addMetadata(context, currentItem, externalDataObject, "perucris", "domicilio", "direccion", null);
+            addMappedUbigeoValue(context, currentItem, externalDataObject, "perucris", "nacimiento", "ubigeoReniec");
+            addMetadata(context, currentItem, externalDataObject, "perucris", "nacimiento", "region", null);
+            addMetadata(context, currentItem, externalDataObject, "perucris", "nacimiento", "provincia", null);
+            addMetadata(context, currentItem, externalDataObject, "perucris", "nacimiento", "distrito", null);
+            addMetadata(context, currentItem, externalDataObject, "oairecerif", "person", "gender", null);
+            addMetadata(context, currentItem, externalDataObject, "person", "birthDate", null, null);
         } catch (SQLException | AuthorizeException e) {
             log.error(e.getMessage(), e);
         }
     }
 
-    private void addMappedUbigeoValue(Context context, Item item, String schema, String element, String qualifier,
-                                      String ubigeoValue) throws SQLException, AuthorizeException {
+    private void addMetadata(Context context, Item currentItem, ExternalDataObject externalDataObject,
+            String schema, String element, String qualifier, String language) throws SQLException {
+        final String value = getFirstMetadataValue(externalDataObject, schema, element, qualifier, language);
+        if (value != null) {
+            itemService.addMetadata(context, currentItem, schema, element, qualifier, language, value);
+        }
+    }
+
+    private void addMappedUbigeoValue(Context context, Item item, ExternalDataObject externalDataObject,
+            String schema, String element, String qualifier) throws SQLException, AuthorizeException {
+
+        String ubigeoValue = getFirstMetadataValue(externalDataObject, schema, element, qualifier, null);
+
         MetadataValueVO metadataValueVO = ubigeoMapping.convert("reniec", ubigeoValue);
         MetadataValue metadata =
             itemService.addMetadata(context, item, schema, element, qualifier, null, metadataValueVO.getValue());

@@ -155,6 +155,7 @@ public class CvEntityFlagConsumerIT extends AbstractIntegrationTestWithDatabase 
         configurationService.setProperty("researcher-profile.collection.uuid", cvCollection.getID().toString());
         configurationService.setProperty("cti-vitae.clone.person-collection-id", cvCloneCollection.getID().toString());
         configurationService.setProperty("item.enable-virtual-metadata", false);
+        configurationService.setProperty("claimable.entityType", "Person");
 
         createPersonCrisLayout();
 

@@ -9,6 +9,8 @@
     
     <bean class="org.dspace.xmlworkflow.ReplaceShadowCopyAuthorityAction"/>
     
+    <bean class="org.dspace.xmlworkflow.ClaimableRelationCreationAction"/>
+    
     <bean id="shadowCopyLookupByOrcidAction" class="org.dspace.xmlworkflow.LookupEntityAction">
         <constructor-arg name="shadowCopyMetadata" value="perucris.author.orcid" />
         <constructor-arg name="metadataToSearch" value="person.identifier.orcid" />

@@ -114,4 +114,43 @@
             <max>1</max>
         </rightCardinality>
     </type>
+     <type>
+        <leftType>Publication</leftType>
+        <rightType>CvPublicationClone</rightType>
+        <leftwardType>isOriginatedFrom</leftwardType>
+        <rightwardType>isOriginOf</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
+     <type>
+        <leftType>Project</leftType>
+        <rightType>CvProjectClone</rightType>
+        <leftwardType>isOriginatedFrom</leftwardType>
+        <rightwardType>isOriginOf</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
+     <type>
+        <leftType>Patent</leftType>
+        <rightType>CvPatentClone</rightType>
+        <leftwardType>isOriginatedFrom</leftwardType>
+        <rightwardType>isOriginOf</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+            <max>1</max>
+        </rightCardinality>
+    </type>
 </relationships>

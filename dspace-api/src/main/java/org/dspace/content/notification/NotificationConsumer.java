@@ -78,11 +78,7 @@ public class NotificationConsumer implements Consumer {
                         this.resourcePolicyService.removeAllPolicies(context, item);
                         this.authorizeService.addPolicy(context, item, Constants.READ, cvOwner);
                     }
-//                    UUID ePersonUuid = UUID.fromString(
-//                            this.itemService.getMetadataFirstValue(cvPersonItem, "cris", "owner", null, Item.ANY));
-//                    EPerson cvOwner = this.ePersonService.find(context, ePersonUuid);
-//                    this.resourcePolicyService.removeAllPolicies(context, item);
-//                    this.authorizeService.addPolicy(context, item, Constants.READ, cvOwner);
+
                 }
                 itemsAlreadyProcessed.add(item);
                 context.restoreAuthSystemState();

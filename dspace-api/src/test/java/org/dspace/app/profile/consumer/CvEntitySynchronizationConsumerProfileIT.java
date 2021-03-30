@@ -15,6 +15,7 @@ import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.CORRECTION;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.SHADOW_COPY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -93,6 +94,8 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
 
     private RelationshipType isCloneOf;
 
+    private RelationshipType isPersonOwner;
+
     private Community directorioCommunity;
 
     private Community ctiVitaeCommunity;
@@ -126,7 +129,7 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         isCorrectionOf = createIsCorrectionOfRelationship(personType);
         cloneIsCorrectionOf = createIsCorrectionOfRelationship(cvPersonCloneType);
         isCloneOf = createCloneRelationship(cvPersonCloneType, cvPersonType);
-        createRelationshipTypeBuilder(context, cvPersonType, personType, "isPersonOwner",
+        isPersonOwner = createRelationshipTypeBuilder(context, cvPersonType, personType, "isPersonOwner",
             "isOwnedByCvPerson", 0, null, 0, null).build();
 
         submitter = createEPerson("submitter@example.com");
@@ -176,6 +179,7 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         configurationService.setProperty("researcher-profile.collection.uuid", cvCollection.getID().toString());
         configurationService.setProperty("cti-vitae.clone.person-collection-id", cvCloneCollection.getID().toString());
         configurationService.setProperty("item.enable-virtual-metadata", false);
+        configurationService.setProperty("claimable.entityType", "Person");
 
         context.restoreAuthSystemState();
 
@@ -1141,6 +1145,10 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         assertThat(person.getMetadata(), hasItem(with("dc.title", "Test profile")));
         assertThat(person.getMetadata(), hasItem(with("person.birthDate", "1992-06-26")));
 
+        List<Relationship> isPersonOwnerRelations = findRelations(profile, isPersonOwner);
+        assertThat(isPersonOwnerRelations, hasSize(1));
+        assertThat(isPersonOwnerRelations.get(0).getRightItem(), equalTo(person));
+
     }
 
     @Test
@@ -1187,6 +1195,10 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         assertThat(person.getMetadata(), hasItem(with("dc.title", "Test profile")));
         assertThat(person.getMetadata(), hasItem(with("person.birthDate", "1992-06-26")));
         assertThat(getMetadata(person, "crisrp", "education", null), empty());
+
+        List<Relationship> isPersonOwnerRelations = findRelations(profile, isPersonOwner);
+        assertThat(isPersonOwnerRelations, hasSize(1));
+        assertThat(isPersonOwnerRelations.get(0).getRightItem(), equalTo(person));
 
     }
 

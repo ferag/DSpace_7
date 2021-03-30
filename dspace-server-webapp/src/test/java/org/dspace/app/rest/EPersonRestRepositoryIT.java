@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -32,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -71,9 +73,14 @@ import org.dspace.eperson.service.AccountService;
 import org.dspace.eperson.service.EPersonService;
 import org.dspace.eperson.service.GroupService;
 import org.dspace.eperson.service.RegistrationDataService;
+import org.dspace.perucris.externalservices.reniec.ReniecDTO;
+import org.dspace.perucris.externalservices.reniec.ReniecProvider;
+import org.dspace.perucris.externalservices.reniec.ReniecRestConnector;
+import org.dspace.perucris.registration.DniRegistrationServiceImpl;
 import org.dspace.services.ConfigurationService;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -93,6 +100,15 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
 
     @Autowired
     private ConfigurationService configurationService;
+
+    @Autowired
+    private DniRegistrationServiceImpl dniRegistrationService;
+
+    @Autowired
+    ReniecProvider reniecProvider;
+
+    @Autowired
+    private ReniecRestConnector reniecRestConnector;
 
     @Test
     public void createTest() throws Exception {
@@ -2929,6 +2945,96 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
             context.restoreAuthSystemState();
             EPersonBuilder.deleteEPerson(idRef.get());
         }
+    }
+
+    @Test
+    public void postEPersonWithDniAndDateProperties() throws Exception {
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        EPersonRest ePersonRest = new EPersonRest();
+        MetadataRest metadataRest = new MetadataRest();
+        ePersonRest.setCanLogIn(true);
+        ePersonRest.setMetadata(metadataRest);
+        ePersonRest.setPassword("somePassword");
+        AtomicReference<UUID> idRef = new AtomicReference<UUID>();
+
+        ReniecProvider originalReniecProvider = dniRegistrationService.getReniecProvider();
+        ReniecProvider reniecProvider = Mockito.mock(ReniecProvider.class);
+
+        dniRegistrationService.setReniecProvider(reniecProvider);
+        ReniecDTO reniecDTO = new ReniecDTO();
+        reniecDTO.setBirthDate(LocalDate.of(1982, 11, 9));
+        reniecDTO.setFatherLastName("Doe");
+        reniecDTO.setNames("John");
+
+        mapper.setAnnotationIntrospector(new IgnoreJacksonWriteOnlyAccess());
+        try {
+
+            getClient().perform(post("/api/eperson/epersons")
+                    .param("dni", "41918999")
+                    .content(mapper.writeValueAsBytes(ePersonRest))
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isUnauthorized());
+
+            getClient().perform(post("/api/eperson/epersons")
+                    .param("date", "1982-11-09")
+                    .content(mapper.writeValueAsBytes(ePersonRest))
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isUnauthorized());
+
+            when(reniecProvider.getReniecObject("41918999")).thenReturn(null);
+
+            getClient().perform(post("/api/eperson/epersons")
+                    .param("dni", "41918999")
+                    .param("date", "1982-11-09")
+                    .content(mapper.writeValueAsBytes(ePersonRest))
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isBadRequest());
+
+            when(reniecProvider.getReniecObject("41918999")).thenReturn(reniecDTO);
+
+            getClient().perform(post("/api/eperson/epersons")
+                    .param("dni", "41918999")
+                    .param("date", "2000-01-01")
+                    .content(mapper.writeValueAsBytes(ePersonRest))
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isBadRequest());
+
+            getClient().perform(post("/api/eperson/epersons")
+                                                               .param("dni", "41918999")
+                                                               .param("date", "1982-11-09")
+                                                               .content(mapper.writeValueAsBytes(ePersonRest))
+                                                               .contentType(MediaType.APPLICATION_JSON))
+                                                  .andExpect(status().isCreated())
+                                                  .andExpect(jsonPath("$", Matchers.allOf(
+                                                      hasJsonPath("$.uuid", not(empty())),
+                                                      hasJsonPath("$.type", is("eperson")),
+                                                      hasJsonPath("$._links.self.href", not(empty())),
+                                                      hasJsonPath("$.metadata", Matchers.allOf(
+                                                          matchMetadata("eperson.firstname", "John"),
+                                                          matchMetadata("eperson.lastname", "Doe")
+                                                      ))))).andDo(result -> idRef
+                            .set(UUID.fromString(read(result.getResponse().getContentAsString(), "$.id"))));
+
+            String epersonUuid = String.valueOf(idRef.get());
+            EPerson createdEPerson = ePersonService.find(context, UUID.fromString(epersonUuid));
+            assertTrue(ePersonService.checkPassword(context, createdEPerson, "somePassword"));
+
+            getClient().perform(post("/api/eperson/epersons")
+                    .param("dni", "41918999")
+                    .param("date", "1982-11-09")
+                    .content(mapper.writeValueAsBytes(ePersonRest))
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isBadRequest());
+
+        } finally {
+            context.turnOffAuthorisationSystem();
+            context.restoreAuthSystemState();
+            EPersonBuilder.deleteEPerson(idRef.get());
+            dniRegistrationService.setReniecProvider(originalReniecProvider);
+        }
+
     }
 
     @Test

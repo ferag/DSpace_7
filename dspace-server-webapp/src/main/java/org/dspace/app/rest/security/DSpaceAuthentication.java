@@ -37,6 +37,12 @@ public class DSpaceAuthentication implements Authentication {
         this.authorities = authorities;
     }
 
+    public DSpaceAuthentication(EPerson ePerson, List<GrantedAuthority> authorities, String username) {
+        this.previousLoginDate = ePerson.getPreviousActive();
+        this.username = username;
+        this.authorities = authorities;
+    }
+
     public DSpaceAuthentication(String username, String password, List<GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;

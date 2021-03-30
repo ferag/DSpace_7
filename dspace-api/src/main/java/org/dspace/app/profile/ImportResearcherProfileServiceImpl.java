@@ -22,6 +22,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.dspace.app.profile.importproviders.ResearcherProfileProvider;
+import org.dspace.app.profile.importproviders.model.ConfiguredResearcherProfileProvider;
 import org.dspace.app.profile.service.AfterImportAction;
 import org.dspace.app.profile.service.ImportResearcherProfileService;
 import org.dspace.authorize.AuthorizeException;
@@ -31,6 +32,7 @@ import org.dspace.content.WorkspaceItem;
 import org.dspace.content.dto.MetadataValueDTO;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.core.Context;
+import org.dspace.eperson.EPerson;
 import org.dspace.external.model.ExternalDataObject;
 import org.dspace.external.service.ExternalDataService;
 import org.dspace.services.RequestService;
@@ -64,23 +66,24 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
     }
 
     @Override
-    public Item importProfile(Context context, URI source, Collection collection)
+    public Item importProfile(Context context, EPerson eperson, URI source, Collection collection)
         throws AuthorizeException, SQLException {
 
         requestService.getCurrentRequest().setAttribute("context", context);
 
         final List<URI> uriList = new ArrayList<URI>();
-        uriList.add(source);
+        if (source != null) {
+            uriList.add(source);
+        }
 
-        List<ExternalDataObject> externalObjects = importProfileProviders.stream()
-                .map(provider -> provider.configureProvider(context.getCurrentUser(), uriList))
-                .filter(Optional::isPresent).map(Optional::get)
+        List<ExternalDataObject> externalObjects =
+                getConfiguredProfileProvider(eperson, uriList).stream()
                 .map(configuredProvider -> configuredProvider.getExternalDataObject())
                 .filter(Optional::isPresent).map(Optional::get)
                 .collect(Collectors.toList());
 
         if (externalObjects.isEmpty()) {
-            throw new IllegalArgumentException("resource for uri " + source + " not found");
+            throw new IllegalArgumentException("No external profile metadata found for the eperson " + eperson.getID());
         }
 
         ExternalDataObject externalDataObject = mergeExternalObjects(externalObjects);
@@ -90,6 +93,19 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
 
     public void setAfterImportActionList(List<AfterImportAction> afterImportActionList) {
         this.afterImportActionList = afterImportActionList;
+    }
+
+    /**
+     * Return the list of configured researcher profile metadata provider for the eperson and the given uriList.
+     * @param eperson
+     * @param uriList
+     * @return
+     */
+    public List<ConfiguredResearcherProfileProvider> getConfiguredProfileProvider(EPerson eperson, List<URI> uriList) {
+        return importProfileProviders.stream()
+                .map(provider -> provider.configureProvider(eperson, uriList))
+                .filter(Optional::isPresent).map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     /**

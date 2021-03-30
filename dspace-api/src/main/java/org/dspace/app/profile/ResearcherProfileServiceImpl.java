@@ -14,6 +14,7 @@ import static org.dspace.eperson.Group.ANONYMOUS;
 
 import java.net.URI;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -21,6 +22,7 @@ import java.util.UUID;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.dspace.app.exception.ResourceConflictException;
+import org.dspace.app.profile.importproviders.model.ConfiguredResearcherProfileProvider;
 import org.dspace.app.profile.service.AfterProfileDeleteAction;
 import org.dspace.app.profile.service.ImportResearcherProfileService;
 import org.dspace.app.profile.service.ResearcherProfileService;
@@ -119,6 +121,12 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
             throw new IllegalStateException("No collection found for researcher profiles");
         }
 
+        List<ConfiguredResearcherProfileProvider> configuredProfileProvider =
+                importResearcherProfileService.getConfiguredProfileProvider(ePerson, new ArrayList<URI>());
+        if (!configuredProfileProvider.isEmpty()) {
+            return this.createFromSource(context, ePerson, null);
+        }
+
         context.turnOffAuthorisationSystem();
         Item item = createProfileItem(context, ePerson, collection);
         context.restoreAuthSystemState();
@@ -141,7 +149,7 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
         }
 
         context.turnOffAuthorisationSystem();
-        Item item = importResearcherProfileService.importProfile(context, source, collection);
+        Item item = importResearcherProfileService.importProfile(context, ePerson, source, collection);
         itemService.addMetadata(context, item, "cris", "owner", null, null, ePerson.getName(),
                 ePerson.getID().toString(), CF_ACCEPTED);
 

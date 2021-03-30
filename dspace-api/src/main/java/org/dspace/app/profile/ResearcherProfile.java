@@ -39,6 +39,10 @@ public class ResearcherProfile {
         return UUIDUtils.fromString(crisOwner.getAuthority());
     }
 
+    public UUID getItemId() {
+        return getItem().getID();
+    }
+
     public String getFullName() {
         return crisOwner.getValue();
     }

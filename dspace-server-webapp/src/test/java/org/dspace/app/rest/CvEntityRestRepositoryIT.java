@@ -29,6 +29,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
+import org.dspace.app.profile.ResearcherProfile;
 import org.dspace.app.profile.service.ResearcherProfileService;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
 import org.dspace.authorize.AuthorizeException;
@@ -83,6 +84,8 @@ public class CvEntityRestRepositoryIT extends AbstractControllerIntegrationTest 
 
     private Collection cvCollection;
 
+    private ResearcherProfile researcherProfile;
+
     @Before
     public void before() throws Exception {
 
@@ -118,7 +121,7 @@ public class CvEntityRestRepositoryIT extends AbstractControllerIntegrationTest 
         Collection profileCollection = createCollection("CvPerson");
         configurationService.setProperty("researcher-profile.collection.uuid", profileCollection.getID().toString());
 
-        createProfileForUser(eperson);
+        researcherProfile = createProfileForUser(eperson);
 
         context.restoreAuthSystemState();
     }
@@ -163,6 +166,8 @@ public class CvEntityRestRepositoryIT extends AbstractControllerIntegrationTest 
         assertThat(cvPublication.getMetadata(), hasItem(with("dc.date.issued", "2021-03-17")));
         assertThat(cvPublication.getMetadata(), hasItem(with("cris.owner", eperson.getName(), null,
             eperson.getID().toString(), 0, 600)));
+        assertThat(cvPublication.getMetadata(), hasItem(with("perucris.ctivitae.owner",
+            researcherProfile.getFullName(), null, researcherProfile.getItemId().toString(), 0, 600)));
 
     }
 
@@ -224,6 +229,10 @@ public class CvEntityRestRepositoryIT extends AbstractControllerIntegrationTest 
         assertThat(cvPublication.getOwningCollection(), is(equalTo(cvCollection)));
         assertThat(cvPublication.getMetadata(), hasItem(with("dc.title", "Test publication")));
         assertThat(cvPublication.getMetadata(), hasItem(with("dc.date.issued", "2021-03-17")));
+        assertThat(cvPublication.getMetadata(), hasItem(with("cris.owner", eperson.getName(), null,
+            eperson.getID().toString(), 0, 600)));
+        assertThat(cvPublication.getMetadata(), hasItem(with("perucris.ctivitae.owner",
+            researcherProfile.getFullName(), null, researcherProfile.getItemId().toString(), 0, 600)));
 
         List<Relationship> isOriginatedFromRelations = findRelations(cvPublicationClone, isOriginatedFrom);
         assertThat(isOriginatedFromRelations, hasSize(1));
@@ -333,7 +342,7 @@ public class CvEntityRestRepositoryIT extends AbstractControllerIntegrationTest 
         return relationshipService.findByItemAndRelationshipType(context, item, type);
     }
 
-    private void createProfileForUser(EPerson ePerson) throws Exception {
-        researcherProfileService.createAndReturn(context, ePerson);
+    private ResearcherProfile createProfileForUser(EPerson ePerson) throws Exception {
+        return researcherProfileService.createAndReturn(context, ePerson);
     }
 }

@@ -1597,4 +1597,10 @@
 		<qualifier>dcdescription</qualifier>
     </dc-type>
     
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ctivitae</element>
+        <qualifier>owner</qualifier>
+    </dc-type>
+    
 </dspace-dc-types>

@@ -1535,23 +1535,4 @@ public class SolrServiceImpl implements SearchService, IndexingService {
         return queryResponse;
     }
 
-    @Override
-    public void updateCtiVitaeReferences(Context context,
-                                         UUID itemID,
-                                         List<String> ctiVitaeReferencesToAdd) {
-        UpdateRequest req = new UpdateRequest();
-        SolrInputDocument solrInputDocument = new SolrInputDocument();
-        solrInputDocument.addField(SearchUtils.RESOURCE_UNIQUE_ID, "Item-" + itemID);
-        solrInputDocument.addField("ctivitae.owner",
-            Collections.singletonMap("set", ctiVitaeReferencesToAdd));
-        req.add(solrInputDocument);
-
-        try {
-            SolrClient solrClient =  solrSearchCore.getSolr();
-            solrClient.request(req);
-            solrClient.commit();
-        } catch (SolrServerException | IOException e) {
-            log.error(e.getMessage(), e);
-        }
-    }
 }

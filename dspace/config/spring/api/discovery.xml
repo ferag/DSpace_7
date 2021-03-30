@@ -35,7 +35,6 @@
     <bean id="SolrServiceIndexCollectionSubmittersPlugin" class="org.dspace.discovery.SolrServiceIndexCollectionSubmittersPlugin" scope="prototype"/>
 	<bean id="solrServiceIndexCollectionAdministratorsPlugin" class="org.dspace.discovery.SolrServiceIndexCollectionAdministratorsPlugin"/>
     <bean id="solrServiceIndexRelationshipsPlugin" class="org.dspace.discovery.SolrServiceIndexRelationshipsPlugin"/>
-    <bean id="solrServiceIndexCtiVitaeEntitiesPlugin" class="org.dspace.discovery.SolrServiceIndexCtiVitaeEntitiesPlugin"/>
     <bean id="solrServiceIndexCtiVitaeDirectorioRelationshipsPlugin" class="org.dspace.discovery.SolrServiceIndexCtiVitaeDirectorioRelationshipsPlugin"/>
 
     <alias name="solrServiceResourceIndexPlugin" alias="org.dspace.discovery.SolrServiceResourceRestrictionPlugin"/>

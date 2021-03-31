@@ -1201,21 +1201,21 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
        Item CvPublication = ItemBuilder.createItem(context, col1)
                .withTitle("CvPublication Title")
-               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
                .withRelationshipType("CvPublication")
                .withIssueDate("2021-01-01")
                .build();
 
        Item CvProject = ItemBuilder.createItem(context, col1)
                .withTitle("CvProject Title")
-               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
                .withRelationshipType("CvProject")
                .withIssueDate("2021-02-07")
                .build();
 
        Item CvPatent = ItemBuilder.createItem(context, col1)
                .withTitle("CvPatent Title")
-               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
                .withIssueDate("2020-10-11")
                .withRelationshipType("CvPatent")
                .build();
@@ -1295,21 +1295,21 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
        Item CvPublication = ItemBuilder.createItem(context, col1)
                .withTitle("CvPublication Title")
-               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
                .withRelationshipType("CvPublication")
                .withIssueDate("2021-01-01")
                .build();
 
        Item CvProject = ItemBuilder.createItem(context, col1)
                .withTitle("CvProject Title")
-               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
                .withRelationshipType("CvProject")
                .withIssueDate("2021-02-07")
                .build();
 
        Item CvPatent = ItemBuilder.createItem(context, col1)
                .withTitle("CvPatent Title")
-               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
                .withIssueDate("2020-10-11")
                .withRelationshipType("CvPatent")
                .build();
@@ -1389,21 +1389,21 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
        Item CvPublication = ItemBuilder.createItem(context, col1)
                .withTitle("CvPublication Title")
-               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
                .withRelationshipType("CvPublication")
                .withIssueDate("2021-01-01")
                .build();
 
        Item CvProject = ItemBuilder.createItem(context, col1)
                .withTitle("CvProject Title")
-               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
                .withRelationshipType("CvProject")
                .withIssueDate("2021-02-07")
                .build();
 
        Item CvPatent = ItemBuilder.createItem(context, col1)
                .withTitle("CvPatent Title")
-               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
                .withIssueDate("2020-10-11")
                .withRelationshipType("CvPatent")
                .build();
@@ -1486,21 +1486,21 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
        Item CvPublication = ItemBuilder.createItem(context, col1)
                .withTitle("CvPublication Title")
-               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
                .withRelationshipType("CvPublication")
                .withIssueDate("2021-01-01")
                .build();
 
        Item CvProject = ItemBuilder.createItem(context, col1)
                .withTitle("CvProject Title")
-               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
                .withRelationshipType("CvProject")
                .withIssueDate("2021-02-07")
                .build();
 
        Item CvPatent = ItemBuilder.createItem(context, col1)
                .withTitle("CvPatent Title")
-               .withCrisOwner(researcher.getName(), researcherProfile.getItem().getID().toString())
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
                .withIssueDate("2020-10-11")
                .withRelationshipType("CvPatent")
                .build();

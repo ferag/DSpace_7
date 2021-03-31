@@ -190,12 +190,11 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
             return;
         }
 
-        Item item = profile.getItem();
         EPerson owner = ePersonService.find(context, profile.getId());
         Group anonymous = groupService.findByName(context, ANONYMOUS);
-        addVisibility(context, item, anonymous, owner, visible);
+        addVisibility(context, profile.getItem(), anonymous, owner, visible);
         try {
-            Iterator<Item> itemIterator = findItems(context, item.getID());
+            Iterator<Item> itemIterator = findItems(context, profile.getId());
             while (itemIterator.hasNext()) {
                 addVisibility(context, itemIterator.next(), anonymous, owner, visible);
             }

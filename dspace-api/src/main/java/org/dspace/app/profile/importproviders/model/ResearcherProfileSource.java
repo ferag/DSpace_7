@@ -58,4 +58,9 @@ public class ResearcherProfileSource {
     public String getId() {
         return id;
     }
+
+    public String toString() {
+        return "ResearcherProfileSource(source=" + this.getSource() + ", id=" + this.getId() + ")";
+    }
+
 }

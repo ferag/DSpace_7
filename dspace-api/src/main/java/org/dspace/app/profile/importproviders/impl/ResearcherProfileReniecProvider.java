@@ -18,12 +18,16 @@ import org.dspace.content.MetadataValue;
 import org.dspace.eperson.EPerson;
 import org.dspace.external.model.ExternalDataObject;
 import org.dspace.external.service.ExternalDataService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Alessandro Martelli (alessandro.martelli at 4science.it)
  */
 public class ResearcherProfileReniecProvider implements ResearcherProfileProvider {
+
+    private static Logger log = LoggerFactory.getLogger(ResearcherProfileReniecProvider.class);
 
     @Autowired
     private ExternalDataService externalDataService;
@@ -39,12 +43,16 @@ public class ResearcherProfileReniecProvider implements ResearcherProfileProvide
     }
 
     public Optional<ConfiguredResearcherProfileProvider> configureProvider(EPerson eperson, List<URI> uriList) {
+
         Optional<MetadataValue> metadataIdentifier = getMetadataIdentifier(eperson);
         if (metadataIdentifier.isPresent()) {
+            log.debug("Reniec profile provider configured for ePerson " + eperson.getID().toString()
+                + " with dni " + metadataIdentifier.get().getValue());
             ConfiguredResearcherProfileProvider configured = new ConfiguredResearcherProfileProvider(
                     new ResearcherProfileSource(getSourceIdentifier(), metadataIdentifier.get().getValue()), this);
             return Optional.of(configured);
         }
+        log.debug("Reniec metadata identifier not found for ePerson " + eperson.getID().toString());
         return Optional.empty();
     }
 
@@ -55,6 +63,7 @@ public class ResearcherProfileReniecProvider implements ResearcherProfileProvide
 
     private Optional<MetadataValue> getMetadataIdentifier(EPerson eperson) {
         return eperson.getMetadata().stream().filter(metadata -> {
+            log.debug("Parsing eperson metadata " + metadata.toString());
             return "perucris".equals(metadata.getMetadataField().getMetadataSchema().getName()) &&
                     "eperson".equals(metadata.getMetadataField().getElement()) &&
                     "dni".equals(metadata.getMetadataField().getQualifier());

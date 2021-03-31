@@ -17,12 +17,16 @@ import org.dspace.app.profile.importproviders.model.ResearcherProfileSource;
 import org.dspace.eperson.EPerson;
 import org.dspace.external.model.ExternalDataObject;
 import org.dspace.external.service.ExternalDataService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Alessandro Martelli (alessandro.martelli at 4science.it)
  */
 public class ResearcherProfileDspaceProvider implements ResearcherProfileProvider {
+
+    private static Logger log = LoggerFactory.getLogger(ResearcherProfileDspaceProvider.class);
 
     @Autowired
     private ExternalDataService externalDataService;
@@ -41,11 +45,13 @@ public class ResearcherProfileDspaceProvider implements ResearcherProfileProvide
         for (URI uri : uriList) {
             ResearcherProfileSource source = new ResearcherProfileSource(uri);
             if (source.getSource().equals(getSourceIdentifier())) {
+                log.debug("Matching ResearcherProfileSource found for uri=" + uri + ", " + source.toString());
                 ConfiguredResearcherProfileProvider configured =
                         new ConfiguredResearcherProfileProvider(source, this);
                 return Optional.of(configured);
             }
         }
+        log.debug("No Dspace item found for the provided uriList");
         return Optional.empty();
     }
 

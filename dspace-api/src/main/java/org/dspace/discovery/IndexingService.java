@@ -67,4 +67,5 @@ public interface IndexingService {
     void updateMetrics(Context context, CrisMetrics metric);
 
     public QueryResponse retriveSolrDocByUniqueID(String uniqueID);
+
 }

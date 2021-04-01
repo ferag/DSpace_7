@@ -10,6 +10,7 @@ package org.dspace.discovery;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.doThrow;
@@ -27,11 +28,11 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.Item;
+import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.discovery.indexobject.IndexableItem;
 import org.dspace.perucris.ctivitae.CvRelatedEntitiesService;
-import org.dspace.services.ConfigurationService;
 import org.dspace.util.UUIDUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,12 +49,12 @@ public class SolrServiceIndexCtiVitaeDirectorioRelationshipsPluginTest {
     private SolrServiceIndexCtiVitaeDirectorioRelationshipsPlugin plugin;
     private CvRelatedEntitiesService cvRelatedEntitiesService = mock(CvRelatedEntitiesService.class);
     private ItemService itemService = mock(ItemService.class);
-    private ConfigurationService configurationService = mock(ConfigurationService.class);
+    private CollectionService collectionService = mock(CollectionService.class);
 
     @Before
     public void setUp() throws Exception {
         plugin = new SolrServiceIndexCtiVitaeDirectorioRelationshipsPlugin(
-            cvRelatedEntitiesService, itemService, configurationService);
+            cvRelatedEntitiesService, itemService, collectionService);
     }
 
     @Test
@@ -72,14 +73,16 @@ public class SolrServiceIndexCtiVitaeDirectorioRelationshipsPluginTest {
     @Test
     public void notInDirectorioCollection() throws SQLException {
 
-        IndexableItem indexableItem = new IndexableItem(item("Publication",
-            UUID.randomUUID()));
+        Item item = item("Publication",
+            UUID.randomUUID());
+        IndexableItem indexableItem = new IndexableItem(item);
         SolrInputDocument document = new SolrInputDocument();
 
         when(cvRelatedEntitiesService.entityWithCvReferences("Publication"))
             .thenReturn(true);
 
-        when(configurationService.getProperty("directorios.community-id")).thenReturn(UUID.randomUUID().toString());
+        when(collectionService.isDirectorioCollection(context, item.getOwningCollection()))
+            .thenReturn(false);
 
         plugin.additionalIndex(context, indexableItem, document);
 
@@ -97,8 +100,8 @@ public class SolrServiceIndexCtiVitaeDirectorioRelationshipsPluginTest {
         when(cvRelatedEntitiesService.entityWithCvReferences("Publication"))
             .thenReturn(true);
 
-        when(configurationService.getProperty("directorios.community-id"))
-            .thenReturn(directorioCommunityId.toString());
+        when(collectionService.isDirectorioCollection(context, item.getOwningCollection()))
+            .thenReturn(true);
 
         UUID publicationOwnerId = UUID.randomUUID();
         String publicationOwnerName = "owner name";
@@ -128,8 +131,8 @@ public class SolrServiceIndexCtiVitaeDirectorioRelationshipsPluginTest {
         when(cvRelatedEntitiesService.entityWithCvReferences("Publication"))
             .thenReturn(true);
 
-        when(configurationService.getProperty("directorios.community-id"))
-            .thenReturn(directorioCommunityId.toString());
+        when(collectionService.isDirectorioCollection(context, item.getOwningCollection()))
+            .thenReturn(true);
 
         UUID publicationOwnerId = UUID.randomUUID();
         String publicationOwnerName = "owner name";
@@ -144,10 +147,13 @@ public class SolrServiceIndexCtiVitaeDirectorioRelationshipsPluginTest {
 
         plugin.additionalIndex(context, indexableItem, document);
 
-        assertThat(document.getField("perucris.ctivitae.owner_authority").getValue(),
-            is(asList(UUIDUtils.toString(publicationOwnerId), UUIDUtils.toString(secondOwnerId))));
-        assertThat(document.getField("perucris.ctivitae.owner").getValue(),
-            is(asList(publicationOwnerName, secondOwnerName)));
+        List<String> ownerAuthorities = (List<String>) document
+            .getField("perucris.ctivitae.owner_authority").getValue();
+        List<String> owners = (List<String>) document.getField("perucris.ctivitae.owner").getValue();
+        assertThat(ownerAuthorities,
+            containsInAnyOrder(UUIDUtils.toString(publicationOwnerId), UUIDUtils.toString(secondOwnerId)));
+        assertThat(owners,
+            containsInAnyOrder(publicationOwnerName, secondOwnerName));
     }
 
     @Test
@@ -161,10 +167,8 @@ public class SolrServiceIndexCtiVitaeDirectorioRelationshipsPluginTest {
         when(cvRelatedEntitiesService.entityWithCvReferences("Publication"))
             .thenReturn(true);
 
-        when(configurationService.getProperty("directorios.community-id"))
-            .thenReturn(directorioCommunityId.toString());
-
-        String publicationOwnerId = UUID.randomUUID().toString();
+        when(collectionService.isDirectorioCollection(context, item.getOwningCollection()))
+            .thenReturn(true);
 
         doThrow(new SQLException("sql exception"))
             .when(cvRelatedEntitiesService)
@@ -175,11 +179,11 @@ public class SolrServiceIndexCtiVitaeDirectorioRelationshipsPluginTest {
         assertNull(document.getField("cti.owner"));
     }
 
-    private Item item(String relationshipType, UUID... owningCommunities) throws SQLException {
+    private Item item(String relationshipType, UUID... owningCollectionsCommunities) throws SQLException {
         Item item = mock(Item.class);
         when(itemService.getMetadata(item, "relationship.type"))
             .thenReturn(relationshipType);
-        Collection collection = collection(owningCommunities);
+        Collection collection = collection(owningCollectionsCommunities);
         when(item.getOwningCollection())
             .thenReturn(collection);
         return item;

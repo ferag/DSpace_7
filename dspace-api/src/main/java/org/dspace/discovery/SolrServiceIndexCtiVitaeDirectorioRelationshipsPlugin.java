@@ -18,11 +18,11 @@ import java.util.Optional;
 import org.apache.solr.common.SolrInputDocument;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
+import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.discovery.indexobject.IndexableItem;
 import org.dspace.perucris.ctivitae.CvRelatedEntitiesService;
-import org.dspace.services.ConfigurationService;
 import org.dspace.util.UUIDUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,16 +45,16 @@ public class SolrServiceIndexCtiVitaeDirectorioRelationshipsPlugin implements So
 
     private final CvRelatedEntitiesService cvRelatedEntitiesService;
     private final ItemService itemService;
-    private final ConfigurationService configurationService;
+    private final CollectionService collectionService;
 
     @Autowired
     public SolrServiceIndexCtiVitaeDirectorioRelationshipsPlugin(
         CvRelatedEntitiesService cvRelatedEntitiesService, ItemService itemService,
-        ConfigurationService configurationService) {
+        CollectionService collectionService) {
 
         this.cvRelatedEntitiesService = cvRelatedEntitiesService;
         this.itemService = itemService;
-        this.configurationService = configurationService;
+        this.collectionService = collectionService;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class SolrServiceIndexCtiVitaeDirectorioRelationshipsPlugin implements So
         Optional<Item> item = Optional.empty();
 
         try {
-            item = item(indexableObject);
+            item = item(context, indexableObject);
         } catch (SQLException e) {
             LOGGER.error("An error occurred during ctivitae item related indexing", e);
         }
@@ -77,7 +77,7 @@ public class SolrServiceIndexCtiVitaeDirectorioRelationshipsPlugin implements So
         });
     }
 
-    private Optional<Item> item(IndexableObject indexableObject) throws SQLException {
+    private Optional<Item> item(Context context, IndexableObject indexableObject) throws SQLException {
         if (!(indexableObject instanceof IndexableItem)) {
             return Optional.empty();
         }
@@ -85,7 +85,7 @@ public class SolrServiceIndexCtiVitaeDirectorioRelationshipsPlugin implements So
         if (Objects.isNull(indexedObject)) {
             return Optional.empty();
         }
-        if (notADirectorioItem(indexedObject)) {
+        if (notADirectorioItem(context, indexedObject)) {
             return Optional.empty();
         }
         return Optional.of(indexedObject);
@@ -108,15 +108,13 @@ public class SolrServiceIndexCtiVitaeDirectorioRelationshipsPlugin implements So
         }
     }
 
-    private boolean notADirectorioItem(Item item) throws SQLException {
+    private boolean notADirectorioItem(Context context, Item item) throws SQLException {
 
         if (!cvRelatedEntitiesService.entityWithCvReferences(itemService.getMetadata(item,
             "relationship.type"))) {
             return true;
         }
-        String directorioCommunityId = configurationService.getProperty("directorios.community-id");
-        return item.getOwningCollection().getCommunities()
-            .stream()
-            .noneMatch(c -> UUIDUtils.toString(c.getID()).equals(directorioCommunityId));
+        boolean directorioCollection = collectionService.isDirectorioCollection(context, item.getOwningCollection());
+        return !directorioCollection;
     }
 }

@@ -37,12 +37,15 @@ import org.dspace.content.service.WorkspaceItemService;
 import org.dspace.core.Context;
 import org.dspace.discovery.DiscoverQuery;
 import org.dspace.discovery.DiscoverResult;
+import org.dspace.discovery.DiscoverResultIterator;
 import org.dspace.discovery.IndexableObject;
 import org.dspace.discovery.SearchService;
 import org.dspace.discovery.SearchServiceException;
 import org.dspace.discovery.indexobject.IndexableCollection;
+import org.dspace.discovery.indexobject.IndexableItem;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.service.EPersonService;
 import org.dspace.eperson.service.GroupService;
 import org.dspace.services.ConfigurationService;
 import org.dspace.util.UUIDUtils;
@@ -82,6 +85,9 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
 
     @Autowired
     private GroupService groupService;
+
+    @Autowired
+    private EPersonService ePersonService;
 
     @Autowired
     private AuthorizeService authorizeService;
@@ -184,15 +190,41 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
             return;
         }
 
-        Item item = profile.getItem();
+        EPerson owner = ePersonService.find(context, profile.getId());
         Group anonymous = groupService.findByName(context, ANONYMOUS);
+        addVisibility(context, profile.getItem(), anonymous, owner, visible);
+        try {
+            Iterator<Item> itemIterator = findItems(context, profile.getId());
+            while (itemIterator.hasNext()) {
+                addVisibility(context, itemIterator.next(), anonymous, owner, visible);
+            }
+        } catch (SearchServiceException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
 
+    private void addVisibility(Context context, Item item, Group anonymous,EPerson owner, boolean visible)
+            throws SQLException, AuthorizeException {
         if (visible) {
             authorizeService.addPolicy(context, item, READ, anonymous);
         } else {
             authorizeService.removeGroupPolicies(context, item, anonymous);
+            authorizeService.addPolicy(context, item, READ, owner);
         }
+    }
 
+    private Iterator<Item> findItems(Context context, UUID ownerUuid)
+            throws SQLException, SearchServiceException {
+        DiscoverQuery discoverQuery = new DiscoverQuery();
+        discoverQuery.setDSpaceObjectFilter(IndexableItem.TYPE);
+        setFilter(discoverQuery, ownerUuid);
+        return new DiscoverResultIterator<Item, UUID>(context, discoverQuery);
+    }
+
+    private void setFilter(DiscoverQuery discoverQuery, UUID ownerUuid) {
+        String filter = "relationship.type:CvPublication OR relationship.type:CvProject OR relationship.type:CvPatent";
+        discoverQuery.addFilterQueries(filter);
+        discoverQuery.addFilterQueries("cris.owner_authority:" + ownerUuid.toString());
     }
 
     private Item findResearcherProfileItemById(Context context, UUID id) throws SQLException, AuthorizeException {

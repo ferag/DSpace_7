@@ -118,6 +118,16 @@ public interface ConcytecWorkflowService {
     Item findMergeOfItem(Context context, Item item) throws SQLException;
 
     /**
+     * Find the items where the given item is merge of.
+     *
+     * @param context the DSpace context
+     * @param item    the item to search for
+     * @return the item where the given item is merged in
+     * @throws SQLException
+     */
+    List<Item> findMergedInItems(Context context, Item item) throws SQLException;
+
+    /**
      * Find the clone of given item.
      *
      * @param context the DSpace context

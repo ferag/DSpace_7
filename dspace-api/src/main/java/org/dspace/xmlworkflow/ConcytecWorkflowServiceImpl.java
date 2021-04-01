@@ -279,6 +279,17 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
         return relationships.get(0).getRightItem();
     }
 
+    @Override
+    public List<Item> findMergedInItems(Context context, Item item) throws SQLException {
+        List<Relationship> relationships = findItemMergeRelationships(context, item, false);
+
+        if (CollectionUtils.isEmpty(relationships)) {
+            return Collections.emptyList();
+        }
+
+        return relationships.stream().map(Relationship::getLeftItem).collect(Collectors.toList());
+    }
+
     private List<Relationship> findItemShadowRelationships(Context context, Item item, boolean isLeft)
         throws SQLException {
         List<RelationshipType> shadowRelationshipTypes = findShadowRelationshipTypes(context, item, isLeft);

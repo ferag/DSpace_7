@@ -30,6 +30,7 @@ import org.dspace.content.Item;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.core.Context;
+import org.dspace.eperson.EPerson;
 import org.dspace.external.model.ExternalDataObject;
 import org.dspace.external.service.ExternalDataService;
 import org.dspace.services.RequestService;
@@ -62,7 +63,11 @@ public class ImportResearcherProfileServiceImplTest {
         importResearcherProfileService.setImportProfileProviders(singletonList(
             importProfileProvider
         ));
+        EPerson user = mock(EPerson.class);
+        when(user.getID()).thenReturn(UUID.randomUUID());
+        when(context.getCurrentUser()).thenReturn(user);
     }
+
 
     @Test
     public void itemInstalled() throws AuthorizeException, SQLException {
@@ -84,8 +89,8 @@ public class ImportResearcherProfileServiceImplTest {
         when(externalDataService.createWorkspaceItemFromExternalDataObject(context, externalDataObject, collection))
             .thenReturn(workspaceItem);
 
-        importResearcherProfileService.importProfile(context, source,
-            collection);
+        importResearcherProfileService.importProfile(context, context.getCurrentUser(), source,
+                collection);
 
         verify(installItemService).installItem(context, workspaceItem);
         verify(currentRequest).setAttribute("context", context);
@@ -112,7 +117,7 @@ public class ImportResearcherProfileServiceImplTest {
         when(externalDataService.createWorkspaceItemFromExternalDataObject(context, externalDataObject, collection))
             .thenReturn(workspaceItem);
 
-        importResearcherProfileService.importProfile(context, source,
+        importResearcherProfileService.importProfile(context, context.getCurrentUser(), source,
             collection);
 
         verify(installItemService).installItem(context, workspaceItem);
@@ -126,11 +131,14 @@ public class ImportResearcherProfileServiceImplTest {
         URI source = URI.create("http://localhost:8080/path_to_external/serviceId/entry/5678");
         Collection collection = mock(Collection.class);
 
-        when(externalDataService.getExternalDataObject("serviceId", "5678"))
-            .thenReturn(Optional.empty());
+        ConfiguredResearcherProfileProvider configuredResearcherProfileProvider =
+            mock(ConfiguredResearcherProfileProvider.class);
+        when(configuredResearcherProfileProvider.getExternalDataObject()).thenReturn(Optional.empty());
 
+        when(importProfileProvider.configureProvider(any(), any()))
+            .thenReturn(Optional.of(configuredResearcherProfileProvider));
 
-        importResearcherProfileService.importProfile(context, source,
+        importResearcherProfileService.importProfile(context, context.getCurrentUser(), source,
             collection);
 
         verifyNoInteractions(installItemService);
@@ -156,7 +164,7 @@ public class ImportResearcherProfileServiceImplTest {
             .when(externalDataService)
             .createWorkspaceItemFromExternalDataObject(context, externalDataObject, collection);
 
-        importResearcherProfileService.importProfile(context, source,
+        importResearcherProfileService.importProfile(context, context.getCurrentUser(), source,
             collection);
 
         verifyNoInteractions(installItemService);
@@ -190,7 +198,7 @@ public class ImportResearcherProfileServiceImplTest {
         when(installItemService.installItem(context, workspaceItem))
             .thenReturn(item);
 
-        importResearcherProfileService.importProfile(context, source,
+        importResearcherProfileService.importProfile(context, context.getCurrentUser(), source,
             collection);
 
         verify(afterImportAction).applyTo(context, item, externalDataObject);
@@ -226,7 +234,7 @@ public class ImportResearcherProfileServiceImplTest {
 
         doThrow(new SQLException("SqlException")).when(afterImportAction).applyTo(context, item, externalDataObject);
 
-        importResearcherProfileService.importProfile(context, source,
+        importResearcherProfileService.importProfile(context, context.getCurrentUser(), source,
             collection);
     }
 

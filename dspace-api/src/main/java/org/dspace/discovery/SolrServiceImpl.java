@@ -79,6 +79,7 @@ import org.dspace.discovery.indexobject.factory.IndexObjectFactoryFactory;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.GroupService;
+import org.dspace.perucris.ctivitae.CvRelatedEntitiesService;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,6 +120,8 @@ public class SolrServiceImpl implements SearchService, IndexingService {
     protected SolrSearchCore solrSearchCore;
     @Autowired
     protected ConfigurationService configurationService;
+    @Autowired
+    private CvRelatedEntitiesService cvRelatedEntitiesService;
 
     protected SolrServiceImpl() {
 
@@ -1531,4 +1534,5 @@ public class SolrServiceImpl implements SearchService, IndexingService {
         }
         return queryResponse;
     }
+
 }

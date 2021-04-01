@@ -189,6 +189,7 @@ public class CvRelatedEntitiesService {
         //FIXME: since relation is always the same, evaluate a way of caching it
         //FIXME: improve handling of scenario when an exception occurs duritn relationshipType lookup
         List<RelationshipType> relationshipTypes;
+
         try {
             relationshipTypes = relationshipTypeService.findByItemAndTypeNames(context,
                 person, false, "isPersonOwner", "isOwnedByCvPerson");

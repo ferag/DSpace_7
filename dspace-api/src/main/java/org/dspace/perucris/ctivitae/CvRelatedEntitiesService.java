@@ -180,7 +180,10 @@ public class CvRelatedEntitiesService {
 
     private Optional<Item> cvRelatedPerson(Context context, String id) throws SQLException {
         Item person = itemService.find(context, UUIDUtils.fromString(id));
-
+        if (Objects.isNull(person)) {
+            LOGGER.warn("Person with id {} not found", id);
+            return Optional.empty();
+        }
         return personOwner(context, person);
     }
 

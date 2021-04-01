@@ -12,6 +12,7 @@ import static org.dspace.core.Constants.READ;
 import static org.dspace.core.Constants.WRITE;
 import static org.dspace.eperson.Group.ANONYMOUS;
 
+import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -184,8 +185,11 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
             return;
         }
 
-        List<MetadataValue> metadata = itemService.getMetadata(profileItem, "cris", "owner", null, Item.ANY);
-        itemService.removeMetadataValues(context, profileItem, metadata);
+        if (isHardDeleteEnabled()) {
+            deleteItem(context, profileItem);
+        } else {
+            removeCrisOwnerMetadata(context, profileItem);
+        }
 
         if (Objects.nonNull(afterProfileDeleteActionList)) {
             for (AfterProfileDeleteAction action : afterProfileDeleteActionList) {
@@ -312,6 +316,26 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
             return "relationship.type".equals(metadataValue.getMetadataField().toString('.')) &&
                 relationshipType.equals(metadataValue.getValue());
         });
+    }
+
+    private boolean isHardDeleteEnabled() {
+        return configurationService.getBooleanProperty("researcher-profile.hard-delete.enabled");
+    }
+
+    private void removeCrisOwnerMetadata(Context context, Item profileItem) throws SQLException {
+        List<MetadataValue> metadata = itemService.getMetadata(profileItem, "cris", "owner", null, Item.ANY);
+        itemService.removeMetadataValues(context, profileItem, metadata);
+    }
+
+    private void deleteItem(Context context, Item profileItem) throws SQLException, AuthorizeException {
+        try {
+            context.turnOffAuthorisationSystem();
+            itemService.delete(context, profileItem);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            context.restoreAuthSystemState();
+        }
     }
 
     private String getProfileType() {

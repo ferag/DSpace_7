@@ -548,6 +548,9 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
             // the system is in an illegal state as the submission definition is not valid
             throw new IllegalStateException("Error reading the item submission configuration: " + e.getMessage(),
                 e);
+        } catch (IllegalStateException e) {
+            log.warn("Unable to load form name definition for collection " + collection.getID());
+            return "";
         }
     }
 

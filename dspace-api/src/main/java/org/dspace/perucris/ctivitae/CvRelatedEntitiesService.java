@@ -187,16 +187,23 @@ public class CvRelatedEntitiesService {
     private Optional<Item> personOwner(Context context, Item person) throws SQLException {
 
         //FIXME: since relation is always the same, evaluate a way of caching it
-        List<RelationshipType> relationshipType = relationshipTypeService.findByItemAndTypeNames(context,
-            person, false, "isPersonOwner", "isOwnedByCvPerson");
+        //FIXME: improve handling of scenario when an exception occurs duritn relationshipType lookup
+        List<RelationshipType> relationshipTypes;
+        try {
+            relationshipTypes = relationshipTypeService.findByItemAndTypeNames(context,
+                person, false, "isPersonOwner", "isOwnedByCvPerson");
+        } catch (Exception e) {
+            LOGGER.warn("Exception while looking up isPersonOwner relation for item " + person.getID());
+            return Optional.empty();
+        }
 
-        if (Objects.isNull(relationshipType) || relationshipType.isEmpty()) {
+        if (Objects.isNull(relationshipTypes) || relationshipTypes.isEmpty()) {
             LOGGER.warn("Unable to find relationship type isPersonOwner for {}", person.getID().toString());
             return Optional.empty();
         }
 
         List<Relationship> relationships = relationshipService.findByItemAndRelationshipType(context,
-            person, relationshipType.get(0), false);
+            person, relationshipTypes.get(0), false);
 
         if (relationships.isEmpty()) {
             return Optional.empty();

@@ -122,15 +122,28 @@ public class VocabularyRestRepositoryIT extends AbstractControllerIntegrationTes
                      VocabularyMatcher.matchProperties("srsc", "srsc", false, true),
                      VocabularyMatcher.matchProperties("common_types", "common_types", true, false),
                      VocabularyMatcher.matchProperties("common_iso_languages", "common_iso_languages", true , false),
+                     VocabularyMatcher.matchProperties("common_iso_countries", "common_iso_countries", true , false),
                      VocabularyMatcher.matchProperties("SolrAuthorAuthority", "SolrAuthorAuthority", false , false),
                      VocabularyMatcher.matchProperties("patent_types", "patent_types", true , false),
                      VocabularyMatcher.matchProperties("types", "types", false , true),
                      VocabularyMatcher.matchProperties("gender", "gender", true , false),
-                     VocabularyMatcher.matchProperties("truefalse", "truefalse", true , false)
+                     VocabularyMatcher.matchProperties("truefalse", "truefalse", true , false),
+                     VocabularyMatcher.matchProperties("peru_ciiu", "peru_ciiu", false , true),
+                     VocabularyMatcher.matchProperties("peru_ubigeo", "peru_ubigeo", false , true),
+                     VocabularyMatcher.matchProperties("renati_types", "renati_types", true , false),
+                     VocabularyMatcher.matchProperties("renati_levels", "renati_levels", true , false),
+                     VocabularyMatcher.matchProperties("peru_patent_types", "peru_patent_types", true , false),
+                     VocabularyMatcher.matchProperties("peru_oairecerif_access", "peru_oairecerif_access", true,
+                         false),
+                     VocabularyMatcher.matchProperties("ocde_subjects", "ocde_subjects", false , true),
+                     VocabularyMatcher.matchProperties("coar_versions", "coar_versions", true , false),
+                     VocabularyMatcher.matchProperties("project_status", "project_status", true , false),
+                     VocabularyMatcher.matchProperties("project_types", "project_types", true , false),
+                     VocabularyMatcher.matchProperties("project_types_other", "project_types_other", true , false)
                  )))
         .andExpect(jsonPath("$._links.self.href",
             Matchers.containsString("api/submission/vocabularies")))
-        .andExpect(jsonPath("$.page.totalElements", is(8)));
+        .andExpect(jsonPath("$.page.totalElements", is(20)));
     }
 
     @Test

@@ -21,6 +21,7 @@ import java.util.function.Predicate;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.tools.ant.util.StringUtils;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
@@ -196,7 +197,8 @@ public class ShadowCopyAction extends ProcessingAction {
             throw new WorkflowException("No Directorio's root community configured");
         }
 
-        Predicate<Collection> relationshipTypePredicate = (collection) -> hasSameRelatioshipType(collection, item);
+        String itemType = getEntityTypeWithoutInstitutionOrCvPrefixes(item);
+        Predicate<Collection> relationshipTypePredicate = (collection) -> hasSameRelatioshipType(collection, itemType);
         List<Collection> collections = communityService.getCollections(context, directorio, relationshipTypePredicate);
         if (CollectionUtils.isEmpty(collections)) {
             throw new WorkflowException("No directorio collection found for the shadow copy of item " + item.getID());
@@ -205,10 +207,22 @@ public class ShadowCopyAction extends ProcessingAction {
         return collections.get(0);
     }
 
-    private boolean hasSameRelatioshipType(Collection collection, Item item) {
-        String collectionType = collectionService.getMetadataFirstValue(collection, "relationship", "type", null, ANY);
+    private String getEntityTypeWithoutInstitutionOrCvPrefixes(Item item) {
         String itemType = itemService.getMetadataFirstValue(item, "relationship", "type", null, ANY);
-        return Objects.equals(collectionType, itemType) || Objects.equals("Institution" + collectionType, itemType);
+        if (itemType == null) {
+            return null;
+        }
+
+        itemType = StringUtils.removePrefix(itemType, "Institution");
+        itemType = StringUtils.removePrefix(itemType, "Cv");
+        itemType = StringUtils.removeSuffix(itemType, "Clone");
+
+        return itemType;
+    }
+
+    private boolean hasSameRelatioshipType(Collection collection, String relationshipType) {
+        String collectionType = collectionService.getMetadataFirstValue(collection, "relationship", "type", null, ANY);
+        return Objects.equals(relationshipType, collectionType);
     }
 
     private WorkspaceItem createItemCopyCorrection(Context context, UUID itemCopyId)

@@ -9,6 +9,8 @@ package org.dspace.app.rest.repository;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -34,7 +36,6 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.MetadataField;
 import org.dspace.content.service.MetadataFieldService;
-import org.dspace.content.service.SiteService;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
@@ -43,6 +44,8 @@ import org.dspace.eperson.service.AccountService;
 import org.dspace.eperson.service.EPersonService;
 import org.dspace.eperson.service.GroupService;
 import org.dspace.eperson.service.RegistrationDataService;
+import org.dspace.perucris.registration.DniRegistrationService;
+import org.dspace.perucris.registration.DniValidationResult;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -83,6 +86,9 @@ public class EPersonRestRepository extends DSpaceObjectRestRepository<EPerson, E
     @Autowired
     private GroupService groupService;
 
+    @Autowired
+    private DniRegistrationService dniRegistrationService;
+
     private final EPersonService es;
 
 
@@ -111,6 +117,19 @@ public class EPersonRestRepository extends DSpaceObjectRestRepository<EPerson, E
             } catch (SQLException e) {
                 log.error("Something went wrong in the creation of an EPerson with token: " + token, e);
                 throw new RuntimeException("Something went wrong in the creation of an EPerson with token: " + token);
+            }
+        }
+        String dni = req.getParameter("dni");
+        String date = req.getParameter("date");
+        // If dni and date are available, we'll swap to the execution that is dni based
+        if (StringUtils.isNotBlank(dni) && StringUtils.isNotBlank(date)) {
+            try {
+                return createAndReturn(context, epersonRest, dni, date);
+            } catch (SQLException e) {
+                log.error(
+                        "Something went wrong in the creation of an EPerson with dni and date: " + dni + ":" + date, e);
+                throw new RuntimeException(
+                        "Something went wrong in the creation of an EPerson with dni and date: " + dni + ":" + date);
             }
         }
         // If no token is present, we simply do the admin execution
@@ -206,6 +225,54 @@ public class EPersonRestRepository extends DSpaceObjectRestRepository<EPerson, E
         return converter.toRest(ePerson, utils.obtainProjection());
     }
 
+    /**
+     * This method will perform checks on whether or not the given Request was valid for the creation of an EPerson
+     * with a dni and date.
+     * It'll check that the dni is not present yet, tha the dni exists and match with the provided birthdate.
+     * It'll check if all of those constraints hold true and if we're allowed to register new accounts.
+     * If this is the case, we'll create an EPerson without any authorization checks.
+     * @param context       The DSpace context
+     * @param epersonRest   The EPersonRest given to be created
+     * @param dni           The dni to be used
+     * @param date          The date to be used
+     * @return              The EPersonRest after the creation of the EPerson object
+     * @throws AuthorizeException   If something goes wrong
+     * @throws SQLException         If something goes wrong
+     */
+    private EPersonRest createAndReturn(Context context, EPersonRest epersonRest, String dni, String date)
+        throws AuthorizeException, SQLException {
+        if (!AuthorizeUtil.authorizeNewAccountRegistration(context, requestService
+            .getCurrentRequest().getHttpServletRequest())) {
+            throw new DSpaceBadRequestException(
+                "Registration is disabled, you are not authorized to create a new Authorization");
+        }
+
+        DniValidationResult validationResult = dniRegistrationService.validateDni(context, dni,  LocalDate.parse(date));
+        if (validationResult.isError()) {
+            throw new DSpaceBadRequestException("The dni and date provided are invalid");
+        }
+
+        // TODO patch the epersonRest with data coming from reniec
+        epersonRest.getMetadata().put("eperson.firstname",
+                new MetadataValueRest(validationResult.getReniecDto().getNames()));
+        epersonRest.getMetadata().put("eperson.lastname",
+                new MetadataValueRest(validationResult.getReniecDto().getFatherLastName()));
+        epersonRest.setNetid(dni);
+
+        checkRequiredProperties(epersonRest);
+        // We'll turn off authorisation system because this call isn't admin based as it's token based
+        context.turnOffAuthorisationSystem();
+        EPerson ePerson = createEPersonFromRestObject(context, epersonRest);
+        List<Group> groups = new ArrayList<>();
+        addEPersonToGroups(context, ePerson, groups);
+        context.restoreAuthSystemState();
+        // Restoring authorisation state right after the creation call
+        if (context.getCurrentUser() == null) {
+            context.setCurrentUser(ePerson);
+        }
+        return converter.toRest(ePerson, utils.obtainProjection());
+    }
+
     private void checkRequiredProperties(EPersonRest epersonRest) {
         MetadataRest metadataRest = epersonRest.getMetadata();
         if (metadataRest != null) {
@@ -265,6 +332,29 @@ public class EPersonRestRepository extends DSpaceObjectRestRepository<EPerson, E
         try {
             Context context = obtainContext();
             eperson = es.findByEmail(context, email);
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        if (eperson == null) {
+            return null;
+        }
+        return converter.toRest(eperson, utils.obtainProjection());
+    }
+
+    /**
+     * Find the eperson with the provided username if any. The search is delegated to the
+     * {@link EPersonService#findByUsername(Context, String)} method
+     *
+     * @param username
+     *            is the *required* username
+     * @return a Page of EPersonRest instances matching the user query
+     */
+    @SearchRestMethod(name = "byUsername")
+    public EPersonRest findByUsername(@Parameter(value = "username", required = true) String username) {
+        EPerson eperson = null;
+        try {
+            Context context = obtainContext();
+            eperson = es.findByUsername(context, username);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

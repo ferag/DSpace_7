@@ -329,6 +329,58 @@
                         </bean>
                     </list>
                 </entry>
+                <entry key="cvpublication">
+                    <list>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="FULL" />
+                            <property name="security">
+                                <value type="org.dspace.content.security.CrisSecurity">
+                                    ADMIN_OWNER
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="cvpublication-edit" />
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="cvproject">
+                    <list>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="FULL" />
+                            <property name="security">
+                                <value type="org.dspace.content.security.CrisSecurity">
+                                    ADMIN_OWNER
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="cvproject-edit" />
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="cvpatent">
+                    <list>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="FULL" />
+                            <property name="security">
+                                <value type="org.dspace.content.security.CrisSecurity">
+                                    ADMIN_OWNER
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="cvpatent-edit" />
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="notification">
+                    <list>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="FULL" />
+                            <property name="security">
+                                <value type="org.dspace.content.security.CrisSecurity">
+                                    ADMIN
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="notification" />
+                        </bean>
+                    </list>
+                </entry>
             </map>
         </property>
     </bean>

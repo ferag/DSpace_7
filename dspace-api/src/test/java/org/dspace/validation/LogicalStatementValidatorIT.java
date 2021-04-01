@@ -25,10 +25,12 @@ import org.dspace.AbstractIntegrationTestWithDatabase;
 import org.dspace.app.util.SubmissionConfig;
 import org.dspace.app.util.SubmissionConfigReader;
 import org.dspace.app.util.SubmissionConfigReaderException;
+import org.dspace.builder.ItemBuilder;
 import org.dspace.builder.WorkspaceItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.WorkspaceItem;
+import org.dspace.content.edit.EditItem;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.logic.DefaultFilter;
 import org.dspace.content.logic.Filter;
@@ -304,6 +306,55 @@ public class LogicalStatementValidatorIT extends AbstractIntegrationTestWithData
                 "/section/person/perucris.identifier.renacyt",
                 "/section/person/person.identifier.scopus-author-id",
                 "/section/person/person.identifier.rid"));
+
+    }
+
+    @Test
+    public void testCvEditPeruvianWithUbigeoValidation() throws Exception {
+
+        LogicalStatementValidator validator = getValidatorByName("peruvianHasUbigeoSet");
+
+        context.turnOffAuthorisationSystem();
+
+        Collection personCollection = createCollection(context, community)
+            .withRelationshipType("CvPerson")
+            .withSubmissionDefinition("cvperson")
+            .withAdminGroup(eperson)
+            .build();
+
+        ItemBuilder.createItem(context, personCollection)
+            .withMetadata("perucris" , "address" ,"addressCountry" ,
+                "US")
+        .build();
+
+        EditItem usResident = EditItem.none(context, ItemBuilder.createItem(context, personCollection)
+            .withMetadata("perucris" , "address" ,"addressCountry" ,
+                "US")
+            .build());
+
+        EditItem peruvianWithUbigeo = EditItem.none(context, ItemBuilder.createItem(context, personCollection)
+            .withMetadata("perucris" , "address" ,"addressCountry" ,
+                "PE")
+            .withMetadata("perucris", "ubigeo", null, "123456")
+            .build());
+
+        EditItem peruvianWithoutUbigeo = EditItem.none(context, ItemBuilder.createItem(context, personCollection)
+            .withMetadata("perucris" , "address" ,"addressCountry" ,
+                "PE")
+            .build());
+
+
+        context.restoreAuthSystemState();
+
+        SubmissionConfig submissionConfig = getSubmissionConfig(personCollection);
+        assertThat(validator.validate(context, usResident, submissionConfig), empty());
+        assertThat(validator.validate(context, peruvianWithUbigeo, submissionConfig), empty());
+
+        List<ValidationError> errors = validator.validate(context, peruvianWithoutUbigeo, submissionConfig);
+        assertThat(errors, hasSize(1));
+        assertThat(errors.get(0).getMessage(), equalTo("error.validation.ubigeoRequired"));
+        assertThat(errors.get(0).getPaths(),
+            contains("/sections/cv-person/perucris.ubigeo"));
 
     }
 

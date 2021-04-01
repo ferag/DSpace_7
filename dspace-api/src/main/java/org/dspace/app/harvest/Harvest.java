@@ -185,7 +185,7 @@ public class Harvest {
             metadataKey = line.getOptionValue('m');
         }
         if (line.hasOption('f')) {
-            forceSynch = toBoolean(line.getOptionValue("iv", "true"));
+            forceSynch = toBoolean(line.getOptionValue("f", "true"));
         }
         if (line.hasOption("iv")) {
             itemValidation = toBoolean(line.getOptionValue("iv", "true"));

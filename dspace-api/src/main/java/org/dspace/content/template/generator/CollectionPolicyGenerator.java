@@ -13,6 +13,7 @@ import java.util.function.Function;
 import org.dspace.authorize.ResourcePolicy;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
+import org.dspace.content.vo.MetadataValueVO;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.slf4j.Logger;
@@ -37,13 +38,14 @@ public class CollectionPolicyGenerator implements TemplateValueGenerator {
 
 
     @Override
-    public String generator(Context context, Item targetItem, Item templateItem, String extraParams) {
+    public MetadataValueVO generator(Context context, Item targetItem, Item templateItem, String extraParams) {
         try {
-            return findValue(context, templateItem.getTemplateItemOf(), extraParams.split("\\."));
+            return new MetadataValueVO(
+                findValue(context, templateItem.getTemplateItemOf(), extraParams.split("\\.")));
         } catch (Exception e) {
             log.error("Error while evaluating resource policies for collection {}: {}",
                 templateItem.getTemplateItemOf().getID(), e.getMessage(), e);
-            return "";
+            return new MetadataValueVO("");
         }
     }
 

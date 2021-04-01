@@ -21,6 +21,10 @@ public class CrisLayoutSearchComponent implements CrisLayoutSectionComponent {
 
     private String searchType;
 
+    private Integer initialStatements = 3;
+
+    private boolean displayTitle = true;
+
     /**
      * @return the discoveryConfigurationName
      */
@@ -59,5 +63,31 @@ public class CrisLayoutSearchComponent implements CrisLayoutSectionComponent {
      */
     public void setSearchType(String searchType) {
         this.searchType = searchType;
+    }
+
+    public Integer getInitialStatements() {
+        return initialStatements;
+    }
+
+    public boolean isDisplayTitle() {
+        return displayTitle;
+    }
+
+    /**
+     * define wether or not for this search component title has to be displayed
+     * @param displayTitle
+     */
+    public void setDisplayTitle(boolean displayTitle) {
+        this.displayTitle = displayTitle;
+    }
+
+    /**
+     * Number of search statements to be displayed initially in search component. default is 3
+     * @param initialStatements
+     */
+    public void setInitialStatements(Integer initialStatements) {
+        if (initialStatements > 0) {
+            this.initialStatements = initialStatements;
+        }
     }
 }

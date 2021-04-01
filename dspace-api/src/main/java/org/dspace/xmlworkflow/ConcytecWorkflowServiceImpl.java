@@ -147,6 +147,21 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
     }
 
     @Override
+    public Item findClonedItem(Context context, Item cloneItem) throws SQLException {
+        List<Relationship> cloneRelationships = findItemCloneRelationships(context, cloneItem, true);
+
+        if (CollectionUtils.isEmpty(cloneRelationships)) {
+            return null;
+        }
+
+        if (cloneRelationships.size() > 1) {
+            throw new IllegalStateException("The item " + cloneItem.getID() + " is the clone of more than one item");
+        }
+
+        return cloneRelationships.get(0).getRightItem();
+    }
+
+    @Override
     public void addConcytecFeedback(Context context, Item item, ConcytecFeedback feedback) throws SQLException {
         addConcytecFeedback(context, item, feedback.name());
     }
@@ -262,6 +277,17 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
         }
 
         return relationships.get(0).getRightItem();
+    }
+
+    @Override
+    public List<Item> findMergedInItems(Context context, Item item) throws SQLException {
+        List<Relationship> relationships = findItemMergeRelationships(context, item, false);
+
+        if (CollectionUtils.isEmpty(relationships)) {
+            return Collections.emptyList();
+        }
+
+        return relationships.stream().map(Relationship::getLeftItem).collect(Collectors.toList());
     }
 
     private List<Relationship> findItemShadowRelationships(Context context, Item item, boolean isLeft)

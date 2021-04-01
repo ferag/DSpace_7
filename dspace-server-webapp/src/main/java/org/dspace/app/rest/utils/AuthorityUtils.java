@@ -44,6 +44,10 @@ public class AuthorityUtils {
     private ConverterService converter;
 
 
+    public boolean isChoice(String formName, String schema, String element, String qualifier) {
+        return cas.isChoicesConfigured(org.dspace.core.Utils.standardize(schema, element, qualifier, "_"), formName);
+    }
+
     public boolean isChoice(String schema, String element, String qualifier) {
         return cas.isChoicesConfigured(org.dspace.core.Utils.standardize(schema, element, qualifier, "_"), null);
     }

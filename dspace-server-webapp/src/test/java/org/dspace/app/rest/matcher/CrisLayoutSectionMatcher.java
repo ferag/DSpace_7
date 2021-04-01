@@ -71,6 +71,29 @@ public final class CrisLayoutSectionMatcher {
     }
 
     /**
+     * Matcher to verify that the section with the given id has a top component at
+     * the position pos of the row row with the given attributes.
+     *
+     * @param id              the section id to match
+     * @param row             the row index of the top component to match
+     * @param pos             the index of the top component in the given row
+     * @param style           the component style
+     * @param discoveryConfig the discovery configuration name of the top component
+     * @param sortField       the sort field of the top component to match
+     * @param order           the order of the top component to match
+     * @return the Matcher instance
+     */
+    public static Matcher<? super Object> withIdAndMultiColumnTopComponent(String id, int row, int pos, String style,
+                                                                           String discoveryConfig, String sortField,
+                                                                           String order, List<String> fields) {
+
+        return allOf(
+            hasJsonPath("$.id", is(id)),
+            withMultiColumnTopComponent(row, pos, style, discoveryConfig, sortField, order, fields)
+        );
+    }
+
+    /**
      * Matcher to verify that the section with the given id has a search component
      * at the position pos of the row row with the given attributes.
      * 
@@ -149,6 +172,39 @@ public final class CrisLayoutSectionMatcher {
             hasJsonPath("$.componentRows[" + row + "][" + pos + "].sortField", is(sortField)),
             hasJsonPath("$.componentRows[" + row + "][" + pos + "].order", is(order)));
     }
+
+    /**
+     * Matcher to verify that the current section has a multicolumn top component at the
+     * position pos of the row row with the given attributes.
+     *
+     * @param id              the section id to match
+     * @param row             the row index of the top component to match
+     * @param pos             the index of the top component in the given row
+     * @param style           the component style
+     * @param discoveryConfig the discovery configuration name of the top component
+     * @param sortField       the sort field of the top component to match
+     * @param order           the order of the top component to match
+     * @param metadataFields  the list of metadata displayed in each column
+     * @return the Matcher instance
+     */
+    public static Matcher<? super Object> withMultiColumnTopComponent(int row, int pos, String style,
+                                                           String discoveryConfig, String sortField,
+                                                                      String order,
+                                                                      List<String> metadataFields) {
+
+        List<Matcher<? super Object>> matchers = new ArrayList<>();
+        matchers.add(hasJsonPath("$.componentRows[" + row + "][" + pos + "].componentType", is("multi-column-top")));
+        matchers.add(hasJsonPath("$.componentRows[" + row + "][" + pos + "].style", is(style)));
+        matchers.add(hasJsonPath("$.componentRows[" + row + "][" + pos + "].discoveryConfigurationName",
+            is(discoveryConfig)));
+        matchers.add(hasJsonPath("$.componentRows[" + row + "][" + pos + "].sortField", is(sortField)));
+        matchers.add(hasJsonPath("$.componentRows[" + row + "][" + pos + "].order", is(order)));
+        for (int i = 0; i < metadataFields.size(); i++) {
+            matchers.add(withColumnComponent(row, pos, i, metadataFields.get(i)));
+        }
+        return allOf(matchers);
+    }
+
 
     /**
      * Matcher to verify that the current section has a search component at the
@@ -281,5 +337,22 @@ public final class CrisLayoutSectionMatcher {
                                                                String discoveryConfiguration) {
         return hasJsonPath("$.componentRows[" + row + "][" + pos + "].counterSettingsList[" + counterPos + "]" +
             ".discoveryConfigurationName", is(discoveryConfiguration));
+    }
+
+    /**
+     * Matcher to verify that the multi top column on pos pos of row row
+     * at the position columnPosition within column list
+     * has the given metadataField configuration.
+     *
+     * @param row
+     * @param pos
+     * @param columnPosition
+     * @param metadataField
+     * @return
+     */
+    public static Matcher<? super Object> withColumnComponent(int row, int pos, int columnPosition,
+                                                              String metadataField) {
+        return hasJsonPath("$.componentRows[" + row + "][" + pos + "].columnList[" + columnPosition + "]" +
+            ".metadataField", is(metadataField));
     }
 }

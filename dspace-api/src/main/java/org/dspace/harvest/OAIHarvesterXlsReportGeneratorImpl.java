@@ -32,12 +32,12 @@ import org.dspace.harvest.service.OAIHarvesterReportGenerator;
 public class OAIHarvesterXlsReportGeneratorImpl implements OAIHarvesterReportGenerator {
 
     @Override
-    public InputStream generate(OAIHarvesterReport report) {
+    public InputStream generate(OAIHarvesterReport report, HarvestedCollection harvestRow) {
         try (Workbook workbook = new HSSFWorkbook(); ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 
             Sheet sheet = workbook.createSheet("errors");
-            addRow(sheet, 0, "Record identifier", "Error", "Action");
-            addErrors(sheet, report.getErrors());
+            addRow(sheet, 0, "Record identifier", "Record link", "Error", "Action");
+            addErrors(sheet, report, harvestRow.getOaiSource());
 
             workbook.write(baos);
             return new ByteArrayInputStream(baos.toByteArray());
@@ -47,23 +47,32 @@ public class OAIHarvesterXlsReportGeneratorImpl implements OAIHarvesterReportGen
         }
     }
 
-    private void addErrors(Sheet sheet, Map<String, ErrorDetails> errors) {
+    private void addErrors(Sheet sheet, OAIHarvesterReport report, String oaiSource) {
         int currentRow = 1;
+
+        Map<String, ErrorDetails> errors = report.getErrors();
         for (Entry<String, ErrorDetails> entry : errors.entrySet()) {
             String recordIdentifier = entry.getKey();
             ErrorDetails errorDetails = entry.getValue();
+            String recordLink = formatLink(oaiSource, recordIdentifier, report.getMetadataFormat());
             for (String message : errorDetails.getMessages()) {
-                addRow(sheet, currentRow++, recordIdentifier, message, errorDetails.getAction());
+                addRow(sheet, currentRow++, recordIdentifier, recordLink, message, errorDetails.getAction());
             }
         }
+
     }
 
-    private Row addRow(Sheet sheet, int rowIndex, String identifier, String error, String action) {
+    private Row addRow(Sheet sheet, int rowIndex, String identifier, String link, String error, String action) {
         Row row = sheet.createRow(rowIndex);
         row.createCell(0).setCellValue(identifier);
-        row.createCell(1).setCellValue(error);
-        row.createCell(2).setCellValue(action);
+        row.createCell(1).setCellValue(link);
+        row.createCell(2).setCellValue(error);
+        row.createCell(3).setCellValue(action);
         return row;
+    }
+
+    private String formatLink(String oaiSource, String recordIdentifier, String metadataFormat) {
+        return String.format(OAIHarvester.RECORD_LINK_FORMAT, oaiSource, recordIdentifier, metadataFormat);
     }
 
     @Override

@@ -8,15 +8,20 @@
 package org.dspace.perucris.externalservices.sunat;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
+import org.dspace.content.MetadataValue;
 import org.dspace.content.service.ItemService;
+import org.dspace.content.vo.MetadataValueVO;
 import org.dspace.core.Context;
 import org.dspace.perucris.externalservices.PeruExternalService;
+import org.dspace.perucris.externalservices.UbigeoMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -34,6 +39,9 @@ public class UpdateItemWithInformationFromSunatService implements PeruExternalSe
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private UbigeoMapping ubigeoMapping;
 
     @Override
     public boolean updateItem(Context context, Item item) {
@@ -55,8 +63,8 @@ public class UpdateItemWithInformationFromSunatService implements PeruExternalSe
             "organization", "legalName", null)) {
             updated = true;
         }
-        if (checkMetadataAndUpdateIfNotMatch(context, currentItem, infoFromSunat.getUbigeoSunat(),
-            "perucris", "ubigeoSunat", null)) {
+        if (checkUbigeoAndUpdateIfNotMatch(context, currentItem, infoFromSunat.getUbigeoSunat(),
+            "perucris", "ubigeo", "ubigeoSunat")) {
             updated = true;
         }
         if (checkMetadataAndUpdateIfNotMatch(context, currentItem, infoFromSunat.getAddressLocality(),
@@ -87,6 +95,29 @@ public class UpdateItemWithInformationFromSunatService implements PeruExternalSe
         return false;
     }
 
+    private boolean checkUbigeoAndUpdateIfNotMatch(Context context, Item currentItem, String infoFromSunat,
+                                                   String schema, String element, String qualifier) {
+        if (StringUtils.isNotBlank(infoFromSunat)) {
+            if (!checkCurrentItemAuthorityWithInformationFromSunat(currentItem, schema, element,
+                qualifier, infoFromSunat)) {
+                removeOldMetadata(context, currentItem, schema, element, qualifier);
+                addNewMappedUbigeo(context, currentItem, schema, element, qualifier, infoFromSunat);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkCurrentItemAuthorityWithInformationFromSunat(Item currentItem,
+                                                                      String schema, String element,
+                                                                      String qualifier, String infoFromSunat) {
+        List<MetadataValue> value = itemService.getMetadata(currentItem, schema, element, qualifier, Item.ANY);
+        if (Objects.isNull(value) || value.isEmpty()) {
+            return false;
+        }
+        return StringUtils.equals(value.get(0).getAuthority(), infoFromSunat);
+    }
+
     private void removeOldMetadata(Context context, Item currentItem, String schema, String element, String qualifier) {
         try {
             itemService.clearMetadata(context, currentItem, schema, element, qualifier, Item.ANY);
@@ -100,6 +131,20 @@ public class UpdateItemWithInformationFromSunatService implements PeruExternalSe
         try {
             itemService.addMetadata(c, currentItem, schema, element, qualifier, null, infoFromSunat);
         } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    private void addNewMappedUbigeo(Context c, Item currentItem, String schema, String element, String qualifier,
+                                String sunatUbigeo) {
+        MetadataValueVO metadataValue = ubigeoMapping.convert("sunat", sunatUbigeo);
+        try {
+            MetadataValue addedValue =
+                itemService.addMetadata(c, currentItem, schema, element, qualifier, null, metadataValue.getValue());
+            addedValue.setAuthority(metadataValue.getAuthority());
+            addedValue.setConfidence(metadataValue.getConfidence());
+            itemService.update(c, currentItem);
+        } catch (SQLException | AuthorizeException e) {
             log.error(e.getMessage(), e);
         }
     }

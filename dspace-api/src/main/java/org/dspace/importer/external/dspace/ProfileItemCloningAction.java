@@ -7,12 +7,18 @@
  */
 package org.dspace.importer.external.dspace;
 
+import static java.util.Arrays.asList;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.MERGED;
 
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
+import org.dspace.app.exception.ResourceConflictException;
 import org.dspace.app.profile.service.AfterImportAction;
+import org.dspace.app.profile.service.ProfileItemCloneService;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
@@ -21,7 +27,6 @@ import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
-import org.dspace.discovery.SearchServiceException;
 import org.dspace.external.model.ExternalDataObject;
 import org.dspace.services.ConfigurationService;
 import org.dspace.util.UUIDUtils;
@@ -36,7 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * 
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  */
-public class ProfileItemCloningAction implements AfterImportAction {
+public class ProfileItemCloningAction implements AfterImportAction, ProfileItemCloneService {
 
     @Autowired
     private ItemService itemService;
@@ -63,10 +68,15 @@ public class ProfileItemCloningAction implements AfterImportAction {
     public void applyTo(Context context, Item profileItem, ExternalDataObject externalDataObject)
         throws SQLException, AuthorizeException {
 
-        String externalId = externalDataObject.getId();
-        Item personItem = itemService.find(context, UUID.fromString(externalId));
+        Optional<UUID> uuid = uuid(externalDataObject);
+        // in case external data object hasn't the uuid, it is not sourced from DSpace, no cloning action needed.
+        if (uuid.isEmpty()) {
+            return;
+        }
+        Item personItem = itemService.find(context, uuid.get());
         if (personItem == null) {
-            throw new IllegalArgumentException("No item found from external data object with id: " + externalId);
+            throw new IllegalArgumentException("No item found from external data object with id: " +
+                UUIDUtils.toString(uuid.get()));
         }
 
         try {
@@ -77,21 +87,41 @@ public class ProfileItemCloningAction implements AfterImportAction {
 
     }
 
-    private void cloneProfile(Context context, Item profileItem, Item personItem) throws Exception {
+    @Override
+    public void cloneProfile(Context context, Item profileItem, Item personItem)
+        throws SQLException, AuthorizeException, IOException {
 
-        Item profileItemClone = createProfileItemClone(context, profileItem);
+        if (unClaimableEntityType(personItem)) {
+            throw new IllegalArgumentException("The given item is not claimable: " + personItem.getID());
+        }
 
-        Item institutionItem = concytecWorkflowService.findCopiedItem(context, personItem);
-        if (institutionItem != null) {
-            Item personItemCopy = createCopyAndMergeIn(context, personItem, profileItemClone);
-            concytecWorkflowService.createShadowRelationship(context, profileItemClone, personItemCopy);
-        } else {
-            concytecWorkflowService.createShadowRelationship(context, profileItemClone, personItem);
+        Item preExistingClone = concytecWorkflowService.findClone(context, profileItem);
+        if (preExistingClone != null) {
+            throw new ResourceConflictException("The given profile item is already cloned", preExistingClone);
+        }
+
+        try {
+
+            context.turnOffAuthorisationSystem();
+
+            Item profileItemClone = createProfileItemClone(context, profileItem);
+
+            Item institutionItem = concytecWorkflowService.findCopiedItem(context, personItem);
+            if (institutionItem != null) {
+                Item personItemCopy = createCopyAndMergeIn(context, personItem, profileItemClone);
+                concytecWorkflowService.createShadowRelationship(context, profileItemClone, personItemCopy);
+            } else {
+                concytecWorkflowService.createShadowRelationship(context, profileItemClone, personItem);
+            }
+
+        } finally {
+            context.restoreAuthSystemState();
         }
 
     }
 
-    private Item createCopyAndMergeIn(Context context, Item personItem, Item profileItemClone) throws Exception {
+    private Item createCopyAndMergeIn(Context context, Item personItem, Item profileItemClone)
+        throws SQLException, AuthorizeException {
 
         WorkspaceItem workspaceItemCopy = itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context,
             personItem.getID(), MERGED.getLeftType());
@@ -104,7 +134,7 @@ public class ProfileItemCloningAction implements AfterImportAction {
         return itemCopy;
     }
 
-    private Item createProfileItemClone(Context ctx, Item item) throws Exception {
+    private Item createProfileItemClone(Context ctx, Item item) throws SQLException, AuthorizeException, IOException {
         Collection collection = findProfileCloneCollection(ctx);
         if (collection == null) {
             throw new IllegalStateException("No collection found for researcher profile clones");
@@ -114,9 +144,29 @@ public class ProfileItemCloningAction implements AfterImportAction {
         return installItemService.installItem(ctx, workspaceItem);
     }
 
-    private Collection findProfileCloneCollection(Context context) throws SQLException, SearchServiceException {
+    private Collection findProfileCloneCollection(Context context) throws SQLException {
         return collectionService.find(context,
-            UUIDUtils.fromString(configurationService.getProperty("cti-vitae.clone.profile-collection-id")));
+            UUIDUtils.fromString(configurationService.getProperty("cti-vitae.clone.person-collection-id")));
     }
 
+    private boolean unClaimableEntityType(Item item) {
+        List<String> claimableEntityTypes = asList(configurationService.getArrayProperty("claimable.entityType"));
+        return itemService.getMetadataByMetadataString(item, "relationship.type").stream()
+            .noneMatch(mv -> claimableEntityTypes.contains(mv.getValue()));
+    }
+
+
+    /**
+     * UUID is defined for DSpace objects, thus it is set in ExternalDataObject passed as
+     * param only if object comes from DSpace or it has DSpace as part of its sources.
+     * @param externalDataObject
+     * @return
+     */
+    private Optional<UUID> uuid(ExternalDataObject externalDataObject) {
+        MergedExternalDataObject mergedExternalDataObject = MergedExternalDataObject.from(externalDataObject);
+        if (!mergedExternalDataObject.isMerged()) {
+            return Optional.ofNullable(UUIDUtils.fromString(externalDataObject.getId()));
+        }
+        return mergedExternalDataObject.getDSpaceObjectUUID();
+    }
 }

@@ -7,6 +7,7 @@
  */
 package org.dspace.authenticate;
 
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -20,7 +21,6 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
@@ -39,7 +39,6 @@ import org.dspace.authenticate.factory.AuthenticateServiceFactory;
 import org.dspace.authenticate.model.OIDCProfileElementsResponse;
 import org.dspace.authenticate.model.OIDCTokenResponse;
 import org.dspace.authenticate.service.AuthenticationService;
-import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.MetadataField;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.MetadataFieldService;
@@ -50,10 +49,14 @@ import org.dspace.eperson.Group;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
 import org.dspace.eperson.service.GroupService;
+import org.dspace.externalregistration.factory.ExternalRegistrationServiceFactory;
+import org.dspace.externalregistration.service.ExternalRegistrationService;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+
 
 
 /**
@@ -79,6 +82,8 @@ public class OIDCAuthentication implements AuthenticationMethod {
         .getInstance().getConfigurationService();
     protected AuthenticationService authenticationService = AuthenticateServiceFactory.getInstance()
             .getAuthenticationService();
+    protected ExternalRegistrationService externalRegistrationService = ExternalRegistrationServiceFactory.getInstance()
+            .getExternalRegistrationService();
 
     private static final Logger log = LoggerFactory.getLogger(OIDCAuthentication.class);
 
@@ -192,6 +197,7 @@ public class OIDCAuthentication implements AuthenticationMethod {
             log.warn("Unable to authenticate using OpenID Connect because the request object is null.");
             return BAD_ARGS;
         }
+
         Boolean isUserAuthenticated = (Boolean) request.getAttribute("oidc.isuserauthenticate");
         if (isUserAuthenticated == null || isUserAuthenticated == false) {
             attachUserDataToRequest(request,context);
@@ -236,7 +242,12 @@ public class OIDCAuthentication implements AuthenticationMethod {
             }
 
             // attempt registration with the data available
-            return createEPersonFromExternalProvider(request, context, tokens, userData);
+            if (externalRegistrationService.canRegister(userData)) {
+                return externalRegistrationService.registerEPerson(context, request, tokens, userData);
+            } else {
+                return null;
+            }
+
         }
 
         String ePersonId = userData.getSub();
@@ -415,129 +426,9 @@ public class OIDCAuthentication implements AuthenticationMethod {
         return "oidc";
     }
 
-    private EPerson createEPersonFromExternalProvider(HttpServletRequest request,
-            Context context, OIDCTokenResponse tokens, OIDCProfileElementsResponse userData) throws SQLException {
-        EPerson eperson = null;
-        try {
-            context.turnOffAuthorisationSystem();
-            eperson = ePersonService.create(context);
-            if (StringUtils.isNotEmpty(userData.getEmail())) {
-                eperson.setEmail(userData.getEmail());
-            }
-            if (StringUtils.isNotEmpty(userData.getGivenName())) {
-                eperson.setFirstName(context, userData.getGivenName());
-            }
-            if (StringUtils.isNotEmpty(userData.getFamilyName())) {
-                eperson.setLastName(context, userData.getFamilyName());
-            }
-            if (StringUtils.isNotEmpty(userData.getBirthdate())) {
-                List<String> vals = new ArrayList<String>();
-                vals.add(userData.getBirthdate());
-                ePersonService.addMetadata(context, eperson, "perucris", "eperson", "birthdate", null, vals);
-            }
-
-            // Populate external Id.
-            if (userData.getReniecDni() != null) {
-                List<String> vals = new ArrayList<String>();
-                vals.add(userData.getReniecDni());
-                ePersonService.addMetadata(context, eperson, "perucris", "eperson", "dni", null, vals);
-                eperson.setNetid(userData.getReniecDni());
-
-            } else if (userData.getOrcid() != null) {
-                List<String> vals = new ArrayList<String>();
-                vals.add(userData.getOrcid());
-                ePersonService.addMetadata(context, eperson, "perucris", "eperson", "orcid", null, vals);
-                eperson.setNetid(userData.getOrcid());
-
-            } else {
-                throw new IllegalStateException();
-            }
-
-            // Create initial grant
-            ClientModel clientModel = new ClientModel();
-            clientModel.setClientName(tokens.getRelationshipClientName());
-            clientModel.setClientId(tokens.getRelationshipClientId());
-            clientModel.setId(UUID.randomUUID().toString());
-            clientModel.setScopes(tokens.getScope().replace(" ", ","));
-            clientModel.setIssuedAt(tokens.getRelationshipIssuedAt());
-            clientModel.setExpireAt(tokens.getRelationshipExpireAt());
-            ObjectMapper mapper = new ObjectMapper();
-            String client = mapper.writeValueAsString(clientModel);
-            ePersonService.addMetadata(context, eperson, "perucris", "oidc", "granted", null, client);
-
-            eperson.setCanLogIn(true);
-            authenticationService.initEPerson(context, request, eperson);
-            ePersonService.update(context, eperson);
-
-            context.dispatchEvents();
-            context.setCurrentUser(eperson);
 
 
-        } catch (AuthorizeException | JsonProcessingException e) {
-            throw new IllegalStateException();
-        } finally {
-            context.restoreAuthSystemState();
-        }
-        return eperson;
-    }
 
-    static class ClientModel {
 
-        private String id;
-        private String clientName;
-        private String scopes;
-        private String clientId;
-        private Long issuedAt;
-        private Long expireAt;
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getClientName() {
-            return clientName;
-        }
-
-        public void setClientName(String clientName) {
-            this.clientName = clientName;
-        }
-
-        public String getScopes() {
-            return scopes;
-        }
-
-        public void setScopes(String scopes) {
-            this.scopes = scopes;
-        }
-
-        public String getClientId() {
-            return clientId;
-        }
-
-        public void setClientId(String clientId) {
-            this.clientId = clientId;
-        }
-
-        public Long getIssuedAt() {
-            return issuedAt;
-        }
-
-        public void setIssuedAt(Long issuedAt) {
-            this.issuedAt = issuedAt;
-        }
-
-        public Long getExpireAt() {
-            return expireAt;
-        }
-
-        public void setExpireAt(Long expireAt) {
-            this.expireAt = expireAt;
-        }
-
-    }
 
 }

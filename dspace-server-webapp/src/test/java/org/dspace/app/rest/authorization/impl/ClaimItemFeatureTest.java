@@ -35,6 +35,7 @@ import org.dspace.content.service.RelationshipService;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.services.ConfigurationService;
+import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,12 +50,13 @@ public class ClaimItemFeatureTest {
     private final ResearcherProfileService researcherProfileService = mock(ResearcherProfileService.class);
     private final ConfigurationService configurationService = mock(ConfigurationService.class);
     private final RelationshipService relationshipService = mock(RelationshipService.class);
+    private final ConcytecWorkflowService concytecWorkflowService = mock(ConcytecWorkflowService.class);
 
 
     @Before
     public void setUp() throws Exception {
         claimItemFeature = new ClaimItemFeature(itemService, researcherProfileService, configurationService,
-                                                relationshipService);
+            relationshipService, concytecWorkflowService);
     }
 
     @Test
@@ -67,20 +69,92 @@ public class ClaimItemFeatureTest {
     }
 
     @Test
-    public void epersonHasAlreadyAProfile() throws Exception {
+    public void epersonHasAlreadyAClonedProfile() throws Exception {
+
+        UUID itemCollectionId = UUID.randomUUID();
         UUID ePersonId = UUID.randomUUID();
+
+        when(configurationService.getArrayProperty("claimable.entityType"))
+            .thenReturn(new String[] { "Person" });
+        when(configurationService.getArrayProperty("claimable.collection.uuid"))
+            .thenReturn(new String[] { itemCollectionId.toString(), UUID.randomUUID().toString() });
+        when(configurationService.getArrayProperty("claimable.relation.rightwardType"))
+            .thenReturn(new String[] { "isOwnedBy", "testType" });
+
         EPerson eperson = buildEPerson(ePersonId);
+
+        ResearcherProfile existingProfile = mock(ResearcherProfile.class);
+        Item profileItem = mock(Item.class);
+        when(existingProfile.getItem()).thenReturn(profileItem);
+        when(concytecWorkflowService.findClone(context, profileItem)).thenReturn(mock(Item.class));
+
+        when(researcherProfileService.findById(context, ePersonId)).thenReturn(existingProfile);
+
+        String id = UUID.randomUUID().toString();
+        Item item = buildDspaceItem(id, UUID.randomUUID(), itemCollectionId);
+
+        ItemRest object = buildItemRest(id);
+
         when(context.getCurrentUser()).thenReturn(eperson);
+
+        when(itemService.find(context, UUID.fromString(id))).thenReturn(item);
+
+        MetadataValue personMetadata = metadataValue("Person");
+        when(itemService.getMetadataByMetadataString(item, "relationship.type"))
+            .thenReturn(Collections.singletonList(personMetadata));
+
+        final Item relatedItem = itemWithOwner(null);
+        Relationship itemExistingRelationship = itemCurrentRelationship(item, "isOwnedBy", relatedItem);
+
+        when(relationshipService.findByItem(context, item))
+            .thenReturn(Arrays.asList(itemExistingRelationship));
+
+        boolean authorized = claimItemFeature.isAuthorized(context, object);
+
+        assertFalse(authorized);
+    }
+
+    @Test
+    public void epersonHasNotClonedProfile() throws SQLException, AuthorizeException {
+        UUID itemCollectionId = UUID.randomUUID();
+        UUID ePersonId = UUID.randomUUID();
+
+        when(configurationService.getArrayProperty("claimable.entityType"))
+            .thenReturn(new String[] { "Person" });
+        when(configurationService.getArrayProperty("claimable.collection.uuid"))
+            .thenReturn(new String[] { itemCollectionId.toString(), UUID.randomUUID().toString() });
+        when(configurationService.getArrayProperty("claimable.relation.rightwardType"))
+            .thenReturn(new String[] { "isOwnedBy", "testType" });
+
+        EPerson eperson = buildEPerson(ePersonId);
 
         ResearcherProfile existingProfile = mock(ResearcherProfile.class);
         when(researcherProfileService.findById(context, ePersonId))
             .thenReturn(existingProfile);
 
         String id = UUID.randomUUID().toString();
+        Item item = buildDspaceItem(id, UUID.randomUUID(), itemCollectionId);
+
         ItemRest object = buildItemRest(id);
+
+        when(context.getCurrentUser()).thenReturn(eperson);
+
+        when(itemService.find(context, UUID.fromString(id)))
+            .thenReturn(item);
+
+        MetadataValue personMetadata = metadataValue("Person");
+        when(itemService.getMetadataByMetadataString(item, "relationship.type"))
+            .thenReturn(Collections.singletonList(personMetadata));
+
+        final Item relatedItem = itemWithOwner(null);
+        Relationship itemExistingRelationship = itemCurrentRelationship(item, "isOwnedBy", relatedItem);
+
+        when(relationshipService.findByItem(context, item))
+            .thenReturn(Arrays.asList(itemExistingRelationship));
+
         boolean authorized = claimItemFeature.isAuthorized(context, object);
 
-        assertFalse(authorized);
+        assertTrue(authorized);
     }
 
     @Test

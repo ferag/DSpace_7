@@ -8,6 +8,8 @@
 package org.dspace.app.rest.security;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -17,11 +19,13 @@ import java.util.stream.Collectors;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
+import org.dspace.services.RequestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
@@ -43,6 +47,9 @@ public class EPersonRestAuthenticationProviderTest {
     @Mock
     private AuthorizeService authorizeService;
 
+    @Mock
+    private RequestService requestService;
+
     @Test
     public void testGetGrantedAuthoritiesAdmin() throws Exception {
         when(authorizeService.isAdmin(context, ePerson)).thenReturn(true);
@@ -63,6 +70,22 @@ public class EPersonRestAuthenticationProviderTest {
         assertThat(authorities.stream().map(a -> a.getAuthority()).collect(Collectors.toList()), containsInAnyOrder(
             WebSecurityConfiguration.AUTHENTICATED_GRANT));
 
+    }
+
+    @Test
+    public void testCreateAuthenticationWithNetid() throws Exception {
+
+        String netid = "netid";
+
+        when(context.getCurrentUser()).thenReturn(ePerson);
+        when(ePerson.getEmail()).thenReturn(null);
+        when(ePerson.getNetid()).thenReturn(netid);
+        when(authorizeService.isAdmin(context, ePerson)).thenReturn(false);
+
+        Authentication authentication = ePersonRestAuthenticationProvider.createAuthentication("password", context);
+
+        assertNotNull(authentication);
+        assertEquals(authentication.getName(), netid);
     }
 
 }

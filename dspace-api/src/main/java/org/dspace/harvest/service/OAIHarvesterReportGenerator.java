@@ -9,6 +9,7 @@ package org.dspace.harvest.service;
 
 import java.io.InputStream;
 
+import org.dspace.harvest.HarvestedCollection;
 import org.dspace.harvest.model.OAIHarvesterReport;
 
 /**
@@ -22,10 +23,11 @@ public interface OAIHarvesterReportGenerator {
     /**
      * Generate a report in a specific format and returns an inputstream to read it.
      *
-     * @param  report the report to generate
-     * @return        the input stream related to the generated report
+     * @param report     the report to generate
+     * @param harvestRow the harvested collection
+     * @return the input stream related to the generated report
      */
-    InputStream generate(OAIHarvesterReport report);
+    InputStream generate(OAIHarvesterReport report, HarvestedCollection harvestRow);
 
     /**
      * Returns the mime type related to the generated report.

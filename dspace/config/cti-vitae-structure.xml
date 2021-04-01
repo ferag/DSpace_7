@@ -17,7 +17,37 @@
             <provenance/>
         </collection>
         <collection>
-            <name>notification</name>
+            <name>Publications</name>
+            <entity-type>CvPublication</entity-type>
+            <description/>
+            <intro/>
+            <copyright/>
+            <sidebar/>
+            <license/>
+            <provenance/>
+        </collection>
+        <collection>
+            <name>Patents</name>
+            <entity-type>CvPatent</entity-type>
+            <description/>
+            <intro/>
+            <copyright/>
+            <sidebar/>
+            <license/>
+            <provenance/>
+        </collection>
+        <collection>
+            <name>Projects</name>
+            <entity-type>CvProject</entity-type>
+            <description/>
+            <intro/>
+            <copyright/>
+            <sidebar/>
+            <license/>
+            <provenance/>
+        </collection>
+        <collection>
+            <name>Notifications</name>
             <entity-type>Notification</entity-type>
             <submission-type>notification</submission-type>
             <description/>

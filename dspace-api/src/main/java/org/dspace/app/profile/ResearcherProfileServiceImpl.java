@@ -14,13 +14,18 @@ import static org.dspace.eperson.Group.ANONYMOUS;
 
 import java.net.URI;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.exception.ResourceConflictException;
+import org.dspace.app.profile.importproviders.model.ConfiguredResearcherProfileProvider;
 import org.dspace.app.profile.service.AfterProfileDeleteAction;
 import org.dspace.app.profile.service.ImportResearcherProfileService;
 import org.dspace.app.profile.service.ResearcherProfileService;
@@ -125,6 +130,12 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
             throw new IllegalStateException("No collection found for researcher profiles");
         }
 
+        List<ConfiguredResearcherProfileProvider> configuredProfileProvider =
+            importResearcherProfileService.getConfiguredProfileProvider(ePerson, new ArrayList<URI>());
+        if (!configuredProfileProvider.isEmpty()) {
+            return this.createFromSource(context, ePerson, null);
+        }
+
         context.turnOffAuthorisationSystem();
         Item item = createProfileItem(context, ePerson, collection);
         context.restoreAuthSystemState();
@@ -133,7 +144,7 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
 
     @Override
     public ResearcherProfile createFromSource(Context context, EPerson ePerson, URI source)
-            throws SQLException, AuthorizeException, SearchServiceException {
+        throws SQLException, AuthorizeException, SearchServiceException {
 
         Item profileItem = findResearcherProfileItemById(context, ePerson.getID());
         if (profileItem != null) {
@@ -147,9 +158,10 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
         }
 
         context.turnOffAuthorisationSystem();
-        Item item = importResearcherProfileService.importProfile(context, source, collection);
+        Item item = importResearcherProfileService.importProfile(context, ePerson, source, collection);
         itemService.addMetadata(context, item, "cris", "owner", null, null, ePerson.getName(),
-                ePerson.getID().toString(), CF_ACCEPTED);
+            ePerson.getID().toString(), CF_ACCEPTED);
+        fillDefaultMetadata(context, ePerson, item);
 
         setPolicies(context, ePerson, item);
         context.restoreAuthSystemState();
@@ -203,8 +215,16 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
         }
     }
 
+    private void addIfNotPresent(Context context, Item item, String schema, String element,
+                                 String qualifier, String value) throws SQLException {
+        String metadataFirstValue = metadataFirstValue(item, "dc", "title");
+        if (Objects.isNull(metadataFirstValue)) {
+            itemService.addMetadata(context, item, schema, element, qualifier, null, value);
+        }
+    }
+
     private void addVisibility(Context context, Item item, Group anonymous,EPerson owner, boolean visible)
-            throws SQLException, AuthorizeException {
+        throws SQLException, AuthorizeException {
         if (visible) {
             authorizeService.addPolicy(context, item, READ, anonymous);
         } else {
@@ -214,7 +234,7 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
     }
 
     private Iterator<Item> findItems(Context context, UUID ownerUuid)
-            throws SQLException, SearchServiceException {
+        throws SQLException, SearchServiceException {
         DiscoverQuery discoverQuery = new DiscoverQuery();
         discoverQuery.setDSpaceObjectFilter(IndexableItem.TYPE);
         setFilter(discoverQuery, ownerUuid);
@@ -296,6 +316,28 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
 
     private String getProfileType() {
         return configurationService.getProperty("researcher-profile.type", "CvPerson");
+    }
+
+    private void fillDefaultMetadata(Context context, EPerson ePerson, Item item) throws SQLException {
+        String title = titleFromCreatedItem(item);
+        if (StringUtils.isNotBlank(title)) {
+            addIfNotPresent(context, item, "dc", "title", null, title);
+        }
+        addIfNotPresent(context, item, "dc", "title", null, ePerson.getFullName());
+        addIfNotPresent(context, item, "cris", "sourceId", null, ePerson.getID().toString());
+    }
+
+    private String titleFromCreatedItem(Item item) {
+        return Stream.of(
+            metadataFirstValue(item, "person", "familyName"),
+            metadataFirstValue(item,"person", "givenName"))
+            .filter(StringUtils::isNotBlank)
+            .collect(Collectors.joining(" ")).trim();
+    }
+
+    private String metadataFirstValue(Item item, String person, String familyName) {
+        return itemService.getMetadataFirstValue(item, person, familyName,
+            null, null);
     }
 
 }

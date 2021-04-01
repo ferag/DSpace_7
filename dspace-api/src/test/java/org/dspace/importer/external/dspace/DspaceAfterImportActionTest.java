@@ -8,9 +8,13 @@
 package org.dspace.importer.external.dspace;
 
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.sql.SQLException;
@@ -56,7 +60,7 @@ public class DspaceAfterImportActionTest {
         Item item = item(itemId);
 
         Item relatedItem = item(externalObjectId);
-        ExternalDataObject externalDataObject = externalDataObject(externalObjectId);
+        ExternalDataObject externalDataObject = externalDataObject(externalObjectId.toString());
 
         when(itemService.find(context, externalObjectId))
             .thenReturn(relatedItem);
@@ -74,7 +78,7 @@ public class DspaceAfterImportActionTest {
         UUID externalObjectId = UUID.randomUUID();
 
         Item item = item(itemId);
-        ExternalDataObject externalDataObject = externalDataObject(externalObjectId);
+        ExternalDataObject externalDataObject = externalDataObject(externalObjectId.toString());
 
         Item relatedItem = item(externalObjectId);
 
@@ -94,7 +98,7 @@ public class DspaceAfterImportActionTest {
         UUID externalObjectId = UUID.randomUUID();
 
         Item item = item(itemId);
-        ExternalDataObject externalDataObject = externalDataObject(externalObjectId);
+        ExternalDataObject externalDataObject = externalDataObject(externalObjectId.toString());
 
         Item relatedItem = item(externalObjectId);
 
@@ -108,9 +112,77 @@ public class DspaceAfterImportActionTest {
 
     }
 
-    private ExternalDataObject externalDataObject(UUID uuid) {
+    @Test
+    public void notADspaceExternalObject() throws SQLException, AuthorizeException {
+        UUID itemId = UUID.randomUUID();
+        String externalObjectId = "0000-1111-2222-3333";
+        Item item = item(itemId);
+
+        ExternalDataObject externalDataObject = externalDataObject(externalObjectId);
+
+        dspaceAfterImportAction.applyTo(context, item, externalDataObject);
+
+        verify(itemService, never()).find(eq(context), any());
+        verifyNoInteractions(dSpaceItemRelationshipService);
+    }
+
+    @Test
+    public void notFoundDspaceExternalObject() throws SQLException, AuthorizeException {
+        UUID itemId = UUID.randomUUID();
+        UUID externalObjectId = UUID.randomUUID();
+        Item item = item(itemId);
+
+        ExternalDataObject externalDataObject = externalDataObject(externalObjectId.toString());
+
+        when(itemService.find(context, externalObjectId))
+            .thenReturn(null);
+
+        dspaceAfterImportAction.applyTo(context, item, externalDataObject);
+
+        verifyNoInteractions(dSpaceItemRelationshipService);
+    }
+
+    @Test
+    public void mergeWithDSpaceSourceRelationshipCreated() throws SQLException, AuthorizeException {
+
+        UUID itemId = UUID.randomUUID();
+        UUID externalObjectId = UUID.randomUUID();
+        Item item = item(itemId);
+
+        Item relatedItem = item(externalObjectId);
+        ExternalDataObject externalDataObject = new ExternalDataObject();
+        externalDataObject.setId("merged::123123+" + externalObjectId.toString());
+        externalDataObject.setSource("merged::reniec+DSPACE");
+
+        when(itemService.find(context, externalObjectId))
+            .thenReturn(relatedItem);
+
+        dspaceAfterImportAction.applyTo(context, item, externalDataObject);
+
+        verify(dSpaceItemRelationshipService).create(context, item, relatedItem);
+
+    }
+
+    @Test
+    public void mergeWithoutDSpaceSourceRelationshipNotCreated() throws SQLException, AuthorizeException {
+
+        UUID itemId = UUID.randomUUID();
+        Item item = item(itemId);
+
+        ExternalDataObject externalDataObject = new ExternalDataObject();
+        externalDataObject.setId("merged::123123+0000-1111-2222-3333");
+        externalDataObject.setSource("merged::reniec+orcid");
+
+        dspaceAfterImportAction.applyTo(context, item, externalDataObject);
+
+        verifyNoInteractions(dSpaceItemRelationshipService);
+        verify(itemService, never()).find(eq(context), any());
+
+    }
+
+    private ExternalDataObject externalDataObject(String externalDataObjectId) {
         ExternalDataObject externalDataObject = mock(ExternalDataObject.class);
-        when(externalDataObject.getId()).thenReturn(uuid.toString());
+        when(externalDataObject.getId()).thenReturn(externalDataObjectId);
         return externalDataObject;
     }
 

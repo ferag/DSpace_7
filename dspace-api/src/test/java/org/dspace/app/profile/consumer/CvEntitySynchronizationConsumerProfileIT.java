@@ -8,6 +8,8 @@
 package org.dspace.app.profile.consumer;
 
 import static org.dspace.app.matcher.MetadataValueMatcher.with;
+import static org.dspace.builder.CrisLayoutBoxBuilder.createBuilder;
+import static org.dspace.builder.CrisLayoutFieldBuilder.createMetadataField;
 import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
 import static org.dspace.core.CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.CLONE;
@@ -39,15 +41,19 @@ import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.EntityType;
 import org.dspace.content.Item;
+import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.Relationship;
 import org.dspace.content.RelationshipType;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.content.service.ItemService;
+import org.dspace.content.service.MetadataFieldService;
 import org.dspace.content.service.RelationshipService;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.dspace.layout.CrisLayoutBox;
+import org.dspace.layout.LayoutSecurity;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 import org.dspace.utils.DSpace;
@@ -108,6 +114,8 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
 
     private Collection cvCloneCollection;
 
+    private MetadataFieldService metadataFieldService;
+
     @Before
     public void before() throws Exception {
 
@@ -118,6 +126,7 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         configurationService = DSpaceServicesFactory.getInstance().getConfigurationService();
         researcherProfileService = new DSpace().getSingletonService(ResearcherProfileService.class);
         installItemService = ContentServiceFactory.getInstance().getInstallItemService();
+        metadataFieldService = ContentServiceFactory.getInstance().getMetadataFieldService();
 
         context.turnOffAuthorisationSystem();
 
@@ -180,6 +189,17 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         configurationService.setProperty("cti-vitae.clone.person-collection-id", cvCloneCollection.getID().toString());
         configurationService.setProperty("item.enable-virtual-metadata", false);
         configurationService.setProperty("claimable.entityType", "Person");
+
+        CrisLayoutBox publicBox = createBuilder(context, personType, false, false)
+            .withSecurity(LayoutSecurity.PUBLIC).build();
+
+        createMetadataField(context, metadataField("dc", "title", null), 1, 1)
+            .withBox(publicBox)
+            .build();
+
+        createMetadataField(context, metadataField("person", "birthDate", null), 2, 1)
+            .withBox(publicBox)
+            .build();
 
         context.restoreAuthSystemState();
 
@@ -1431,5 +1451,9 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
             .withEmail(email)
             .withPassword(password)
             .build();
+    }
+
+    private MetadataField metadataField(String schema, String element, String qualifier) throws SQLException {
+        return metadataFieldService.findByElement(context, schema, element, qualifier);
     }
 }

@@ -754,6 +754,8 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
     @Test
     public void testAutomaticProfileClaimByEmail() throws Exception {
 
+        configurationService.setProperty("researcher-profile.hard-delete.enabled", false);
+
         String id = user.getID().toString();
 
         String adminToken = getAuthToken(admin.getEmail(), password);

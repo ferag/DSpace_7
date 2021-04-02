@@ -36,9 +36,15 @@ public class DeleteCvEntititesAction implements BeforeProfileHardDeleteAction {
 
     @Override
     public void apply(Context context, Item profileItem) throws SQLException, AuthorizeException {
-        cvEntityService.deleteByProfileItem(context, profileItem);
-        concytecWorkflowService.deleteClone(context, profileItem);
-    }
 
+        try {
+            context.turnOffAuthorisationSystem();
+            cvEntityService.deleteByProfileItem(context, profileItem);
+            concytecWorkflowService.deleteClone(context, profileItem);
+        } finally {
+            context.restoreAuthSystemState();
+        }
+
+    }
 
 }

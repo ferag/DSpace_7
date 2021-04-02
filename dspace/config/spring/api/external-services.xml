@@ -106,6 +106,9 @@
         <property name="clientSecret" value="${orcid.clientsecret}" />
         <property name="OAUTHUrl" value="${orcid.oauth.url}" />
         <property name="orcidRestConnector" ref="orcidRestConnector"/>
+        <property name="supportedEntityTypes">
+            <list/>
+        </property>
     </bean>
 
 </beans>

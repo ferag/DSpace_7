@@ -108,7 +108,7 @@
                     </xsl:call-template>
                     
                     <xsl:call-template name="print-values">
-                        <xsl:with-param name="label" select="'Tema(s)'" />
+                        <xsl:with-param name="label" select="'Materia(s)'" />
                         <xsl:with-param name="values" select="Subject" />
                     </xsl:call-template>
                     

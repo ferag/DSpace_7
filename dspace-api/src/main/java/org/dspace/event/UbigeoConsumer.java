@@ -93,9 +93,11 @@ public class UbigeoConsumer implements Consumer {
             try {
                 if (StringUtils.isNoneBlank(itemService.getMetadataFirstValue(item, schema, element, qualifier,null))) {
                     itemService.replaceMetadata(context, item, schema, element, qualifier,
-                                                null, choice.label, null, Choices.CF_ACCEPTED, 0);
+                                                null, choice.label, vocabularyId, Choices.CF_ACCEPTED, 0);
+                } else {
+                    itemService.addMetadata(context, item, schema, element, qualifier, null, choice.label, vocabularyId,
+                            Choices.CF_ACCEPTED);
                 }
-                itemService.addMetadata(context, item, schema, element, qualifier, null, choice.label);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

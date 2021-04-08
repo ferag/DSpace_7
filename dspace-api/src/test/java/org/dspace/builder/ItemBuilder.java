@@ -163,6 +163,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "perucris", "ctivitae", "owner", null, value, authority, CF_ACCEPTED);
     }
 
+    public ItemBuilder withCtiVitaeOwner(Item owner) {
+        return withCtiVitaeOwner(owner.getName(), owner.getID().toString());
+    }
+
     public ItemBuilder withDoiIdentifier(String doi) {
         return addMetadataValue(item, "dc", "identifier", "doi", doi);
     }

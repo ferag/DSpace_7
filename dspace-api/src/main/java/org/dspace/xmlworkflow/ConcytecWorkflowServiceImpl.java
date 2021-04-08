@@ -15,6 +15,7 @@ import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.REINSTATE;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.SHADOW_COPY;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.WITHDRAW;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
@@ -27,11 +28,17 @@ import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.Relationship;
 import org.dspace.content.RelationshipType;
+import org.dspace.content.WorkspaceItem;
 import org.dspace.content.service.ItemService;
 import org.dspace.content.service.RelationshipService;
 import org.dspace.content.service.RelationshipTypeService;
 import org.dspace.core.Context;
+import org.dspace.versioning.ItemCorrectionService;
+import org.dspace.workflow.WorkflowException;
 import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
+import org.dspace.xmlworkflow.service.XmlWorkflowService;
+import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
+import org.dspace.xmlworkflow.storedcomponents.service.XmlWorkflowItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +60,15 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private ItemCorrectionService itemCorrectionService;
+
+    @Autowired
+    private XmlWorkflowItemService xmlWorkflowItemService;
+
+    @Autowired
+    private XmlWorkflowService xmlWorkflowService;
 
     @Override
     public Relationship createShadowRelationship(Context context, Item item, Item shadowItemCopy)
@@ -398,6 +414,56 @@ public class ConcytecWorkflowServiceImpl implements ConcytecWorkflowService {
         }
 
         return relationships.get(0);
+    }
+
+    @Override
+    public void deleteClone(Context context, Item item) throws SQLException, AuthorizeException {
+
+        Item cloneItem = findClone(context, item);
+        if (cloneItem == null) {
+            return;
+        }
+
+        Item directorioItem = findShadowItemCopy(context, cloneItem);
+        if (directorioItem != null && directorioItem.isArchived()) {
+            requestItemWithdrawn(context, directorioItem);
+        } else if (directorioItem != null && !directorioItem.isWithdrawn()) {
+            deleteInProgressItem(context, directorioItem);
+        }
+
+        if (cloneItem.isArchived()) {
+            deleteItem(context, cloneItem);
+        } else {
+            deleteInProgressItem(context, cloneItem);
+        }
+
+    }
+
+    private void deleteInProgressItem(Context context, Item directorioItem) throws SQLException, AuthorizeException {
+        try {
+            XmlWorkflowItem workflowItem = xmlWorkflowItemService.findByItem(context, directorioItem);
+            xmlWorkflowService.deleteWorkflowByWorkflowItem(context, workflowItem, context.getCurrentUser());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void requestItemWithdrawn(Context context, Item item) throws SQLException, AuthorizeException {
+        try {
+            WorkspaceItem withdrawItem = itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context,
+                item.getID(), WITHDRAW.getLeftType());
+            xmlWorkflowService.start(context, withdrawItem);
+        } catch (IOException | WorkflowException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void deleteItem(Context context, Item item) throws SQLException, AuthorizeException {
+        try {
+            itemService.delete(context, item);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

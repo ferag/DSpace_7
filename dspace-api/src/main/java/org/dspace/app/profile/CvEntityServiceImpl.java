@@ -114,7 +114,7 @@ public class CvEntityServiceImpl implements CvEntityService {
         ResearcherProfile researcherProfile = researcherProfileService.findById(context, currentUser.getID());
         if (researcherProfile != null) {
             itemService.addMetadata(context, cvItem, "perucris", "ctivitae", "owner", null,
-                researcherProfile.getFullName(), researcherProfile.getItemId().toString(), 600);
+                researcherProfile.getItemFullName(), researcherProfile.getItemId().toString(), 600);
         }
 
         return cvItem;

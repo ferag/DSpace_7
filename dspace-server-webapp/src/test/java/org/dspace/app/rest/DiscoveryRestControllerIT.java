@@ -50,14 +50,19 @@ import org.dspace.builder.ClaimedTaskBuilder;
 import org.dspace.builder.CollectionBuilder;
 import org.dspace.builder.CommunityBuilder;
 import org.dspace.builder.EPersonBuilder;
+import org.dspace.builder.EntityTypeBuilder;
 import org.dspace.builder.GroupBuilder;
 import org.dspace.builder.ItemBuilder;
+import org.dspace.builder.RelationshipBuilder;
+import org.dspace.builder.RelationshipTypeBuilder;
 import org.dspace.builder.WorkflowItemBuilder;
 import org.dspace.builder.WorkspaceItemBuilder;
 import org.dspace.content.Bitstream;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
+import org.dspace.content.EntityType;
 import org.dspace.content.Item;
+import org.dspace.content.RelationshipType;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.core.CrisConstants;
 import org.dspace.discovery.SearchService;
@@ -5077,6 +5082,57 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
             .andExpect(jsonPath("$.type", is("discover")))
             .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(0)));
 
+    }
+
+    @Test
+    public void searchObjectsByCvPersonTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        parentCommunity = CommunityBuilder.createCommunity(context).build();
+
+        Collection col = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withName("Test Collection")
+                                          .build();
+
+
+        EPerson user = EPersonBuilder.createEPerson(context)
+                .withNameInMetadata("Dima", "Chornenkiy")
+                .withEmail("dima.chornenkiy@example.com")
+                .withPassword(password).build();
+
+        Item ePersonItem = ItemBuilder.createItem(context, col)
+                .withTitle("Person Item Title")
+                .withRelationshipType("Person").build();
+
+        Item cvPersonItem = ItemBuilder.createItem(context, col)
+                 .withTitle("CvPerson Title")
+                 .withCrisOwner(user.getName(), user.getID().toString())
+                 .withRelationshipType("CvPerson")
+                 .build();
+
+        EntityType cvPerson = EntityTypeBuilder.createEntityTypeBuilder(context, "CvPerson").build();
+        EntityType person = EntityTypeBuilder.createEntityTypeBuilder(context, "Person").build();
+
+        RelationshipType cvPersonToPerson = RelationshipTypeBuilder.createRelationshipTypeBuilder(context,
+                                            cvPerson, person,"isPersonOwner", "isOwnedByCvPerson", 0, 1, 0, 1).build();
+
+        RelationshipBuilder.createRelationshipBuilder(context, cvPersonItem, ePersonItem, cvPersonToPerson).build();
+
+        context.restoreAuthSystemState();
+
+        String adminToken = getAuthToken(admin.getEmail(), password);
+
+        getClient(adminToken).perform(get("/api/discover/search/objects")
+                             .param("configuration", "RELATION.CvPerson.hrprofiles")
+                             .param("scope", cvPersonItem.getID().toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.scope", is(cvPersonItem.getID().toString())))
+                .andExpect(jsonPath("$.configuration", is("RELATION.CvPerson.hrprofiles")))
+                .andExpect(jsonPath("$._embedded.searchResult._embedded.objects[0]._embedded.indexableObject.id",
+                                 is(ePersonItem.getID().toString())))
+                .andExpect(jsonPath("$._embedded.searchResult._embedded.objects[0]._embedded.indexableObject.name",
+                                 is(ePersonItem.getName())))
+                .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(1)));
     }
 
     private EPerson createEPerson(String email) {

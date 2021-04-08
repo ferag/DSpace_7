@@ -109,7 +109,7 @@ public class ResearcherProfileValueGeneratorTest {
 
     private ResearcherProfile buildResearcherProfile(String itemId, String fullname) {
         ResearcherProfile researcherProfile = mock(ResearcherProfile.class);
-        when(researcherProfile.getFullName()).thenReturn(fullname);
+        when(researcherProfile.getItemFullName()).thenReturn(fullname);
         when(researcherProfile.getItemId()).thenReturn(UUID.fromString(itemId));
         return researcherProfile;
     }

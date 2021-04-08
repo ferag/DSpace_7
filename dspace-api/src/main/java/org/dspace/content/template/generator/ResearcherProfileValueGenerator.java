@@ -38,7 +38,7 @@ public class ResearcherProfileValueGenerator implements TemplateValueGenerator {
     @Override
     public MetadataValueVO generator(Context context, Item targetItem, Item templateItem, String extraParams) {
         return findCurrentUserProfile(context)
-            .map(profile -> new MetadataValueVO(profile.getFullName(), profile.getItemId().toString()))
+            .map(profile -> new MetadataValueVO(profile.getItemFullName(), profile.getItemId().toString()))
             .orElseGet(() -> new MetadataValueVO(""));
     }
 

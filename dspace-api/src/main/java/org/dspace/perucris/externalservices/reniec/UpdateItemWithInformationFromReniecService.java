@@ -57,9 +57,16 @@ public class UpdateItemWithInformationFromReniecService implements PeruExternalS
 
     @Override
     public boolean updateItem(Context context, Item item) {
-        String dni = itemService.getMetadataFirstValue(item, "perucris", "identifier", "dni", Item.ANY);
-        Optional<ExternalDataObject> externalDataObject = externalDataService.getExternalDataObject("reniec", dni);
-        return updateCurrentItemWithInformationsFromReniec(context, item, externalDataObject);
+
+        try {
+            String dni = itemService.getMetadataFirstValue(item, "perucris", "identifier", "dni", Item.ANY);
+            Optional<ExternalDataObject> externalDataObject = externalDataService.getExternalDataObject("reniec", dni);
+            return updateCurrentItemWithInformationsFromReniec(context, item, externalDataObject);
+
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage(), e);
+            return false;
+        }
     }
 
     private boolean updateCurrentItemWithInformationsFromReniec(Context context, Item currentItem,

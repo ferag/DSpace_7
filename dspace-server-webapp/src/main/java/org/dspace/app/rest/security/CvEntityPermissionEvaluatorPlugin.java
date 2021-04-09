@@ -6,14 +6,16 @@
  * http://www.dspace.org/license/
  */
 package org.dspace.app.rest.security;
-
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
+import org.dspace.app.profile.ResearcherProfile;
+import org.dspace.app.profile.service.ResearcherProfileService;
 import org.dspace.app.rest.utils.ContextUtil;
-import org.dspace.authorize.service.AuthorizeService;
+import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.content.factory.ContentServiceFactory;
@@ -33,17 +35,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 /**
- * DSpaceObjectPermissionEvaluatorPlugin will check persmissions based on the DSpace {@link AuthorizeService}.
- * This service will validate if the authenticated user is allowed to perform an action on the given DSpace Object
- * based on the resource policies attached to that DSpace object.
+ * class that evaluate READ permissions
+ * over a CvPublication, CvProject and CvPatent items.
+ * 
+ * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
 @Component
-public class AuthorizeServicePermissionEvaluatorPlugin extends RestObjectPermissionEvaluatorPlugin {
+public class CvEntityPermissionEvaluatorPlugin extends RestObjectPermissionEvaluatorPlugin {
 
-    private static final Logger log = LoggerFactory.getLogger(AuthorizeServicePermissionEvaluatorPlugin.class);
+    private static final Logger log = LoggerFactory.getLogger(CvEntityPermissionEvaluatorPlugin.class);
 
     @Autowired
-    private AuthorizeService authorizeService;
+    private ItemService itemService;
 
     @Autowired
     private RequestService requestService;
@@ -55,14 +58,13 @@ public class AuthorizeServicePermissionEvaluatorPlugin extends RestObjectPermiss
     private ContentServiceFactory contentServiceFactory;
 
     @Autowired
-    private ItemService itemService;
+    private ResearcherProfileService researcherProfileService;
 
     @Override
     public boolean hasDSpacePermission(Authentication authentication, Serializable targetId, String targetType,
-                                       DSpaceRestPermission permission) {
-
+            DSpaceRestPermission permission) {
         DSpaceRestPermission restPermission = DSpaceRestPermission.convert(permission);
-        if (restPermission == null) {
+        if (restPermission == null || !DSpaceRestPermission.READ.equals(restPermission)) {
             return false;
         }
 
@@ -91,29 +93,31 @@ public class AuthorizeServicePermissionEvaluatorPlugin extends RestObjectPermiss
                         return true;
                     }
 
-                    // If the item is still inprogress we can process here only the READ permission.
-                    // Other actions need to be evaluated against the wrapper object (workspace or workflow item)
                     if (dSpaceObject instanceof Item) {
-                        if (isCvEntity((Item)dSpaceObject)) {
-                            // cv* type items are managed in a specific plagin :
-                            // org.dspace.app.rest.security.CvEntityPermissionEvaluatorPlugin
-                            return false;
-                        }
-                        if (!DSpaceRestPermission.READ.equals(restPermission)
-                            && !((Item) dSpaceObject).isArchived() && !((Item) dSpaceObject).isWithdrawn()) {
-                            return false;
+                        Item item = (Item)dSpaceObject;
+                        if (isCvEntity(item)) {
+                            UUID researcherUuid = UUID.fromString(
+                                 itemService.getMetadata(item, "cris", "owner", null, Item.ANY).get(0).getAuthority());
+                            try {
+                                ResearcherProfile profile = researcherProfileService.findById(context, researcherUuid);
+                                if (profile.isVisible()) {
+                                    return true;
+                                }
+                                if (Objects.nonNull(ePerson) && profile.getId().equals(ePerson.getID())) {
+                                    return true;
+                                }
+                            } catch (SQLException | AuthorizeException e) {
+                                throw new RuntimeException(e.getMessage(), e);
+                            }
                         }
                     }
-
-                    return authorizeService.authorizeActionBoolean(context, ePerson, dSpaceObject,
-                        restPermission.getDspaceApiActionId(), true);
+                    return false;
                 }
             }
 
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
-
         return false;
     }
 

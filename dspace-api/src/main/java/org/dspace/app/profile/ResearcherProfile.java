@@ -12,6 +12,7 @@ import static org.dspace.eperson.Group.ANONYMOUS;
 
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
 import org.dspace.util.UUIDUtils;
@@ -45,6 +46,10 @@ public class ResearcherProfile {
 
     public String getFullName() {
         return crisOwner.getValue();
+    }
+
+    public String getItemFullName() {
+        return StringUtils.isNotBlank(getItem().getName()) ? getItem().getName() : crisOwner.getValue();
     }
 
     public boolean isVisible() {

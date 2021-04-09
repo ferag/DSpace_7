@@ -12,21 +12,25 @@ import static org.dspace.core.Constants.READ;
 import static org.dspace.core.Constants.WRITE;
 import static org.dspace.eperson.Group.ANONYMOUS;
 
+import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.exception.ResourceConflictException;
 import org.dspace.app.profile.importproviders.model.ConfiguredResearcherProfileProvider;
 import org.dspace.app.profile.service.AfterProfileDeleteAction;
+import org.dspace.app.profile.service.BeforeProfileHardDeleteAction;
 import org.dspace.app.profile.service.ImportResearcherProfileService;
 import org.dspace.app.profile.service.ResearcherProfileService;
 import org.dspace.authorize.AuthorizeException;
@@ -102,6 +106,22 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
 
     @Autowired(required = false)
     private List<AfterProfileDeleteAction> afterProfileDeleteActionList;
+
+    @Autowired(required = false)
+    private List<BeforeProfileHardDeleteAction> beforeProfileHardDeleteActionList;
+
+    @PostConstruct
+    public void postConstruct() {
+
+        if (afterProfileDeleteActionList == null) {
+            afterProfileDeleteActionList = Collections.emptyList();
+        }
+
+        if (beforeProfileHardDeleteActionList == null) {
+            beforeProfileHardDeleteActionList = Collections.emptyList();
+        }
+
+    }
 
     @Override
     public ResearcherProfile findById(Context context, UUID id) throws SQLException, AuthorizeException {
@@ -184,13 +204,14 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
             return;
         }
 
-        List<MetadataValue> metadata = itemService.getMetadata(profileItem, "cris", "owner", null, Item.ANY);
-        itemService.removeMetadataValues(context, profileItem, metadata);
+        if (isHardDeleteEnabled()) {
+            deleteItem(context, profileItem);
+        } else {
+            removeCrisOwnerMetadata(context, profileItem);
+        }
 
-        if (Objects.nonNull(afterProfileDeleteActionList)) {
-            for (AfterProfileDeleteAction action : afterProfileDeleteActionList) {
-                action.apply(context, profileItem);
-            }
+        for (AfterProfileDeleteAction action : afterProfileDeleteActionList) {
+            action.apply(context, profileItem);
         }
     }
 
@@ -312,6 +333,33 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
             return "relationship.type".equals(metadataValue.getMetadataField().toString('.')) &&
                 relationshipType.equals(metadataValue.getValue());
         });
+    }
+
+    private boolean isHardDeleteEnabled() {
+        return configurationService.getBooleanProperty("researcher-profile.hard-delete.enabled");
+    }
+
+    private void removeCrisOwnerMetadata(Context context, Item profileItem) throws SQLException {
+        List<MetadataValue> metadata = itemService.getMetadata(profileItem, "cris", "owner", null, Item.ANY);
+        itemService.removeMetadataValues(context, profileItem, metadata);
+    }
+
+    private void deleteItem(Context context, Item profileItem) throws SQLException, AuthorizeException {
+        try {
+
+            context.turnOffAuthorisationSystem();
+
+            for (BeforeProfileHardDeleteAction action : beforeProfileHardDeleteActionList) {
+                action.apply(context, profileItem);
+            }
+
+            itemService.delete(context, profileItem);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            context.restoreAuthSystemState();
+        }
     }
 
     private String getProfileType() {

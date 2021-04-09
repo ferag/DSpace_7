@@ -1567,7 +1567,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
     }
 
     @Test
-    public void cvSecurityWithResearcherProfileNotVisibleTest() throws Exception {
+    public void cvOwnerAuthorizedToSeeNotVisibleDataTest() throws Exception {
        context.turnOffAuthorisationSystem();
 
        parentCommunity = CommunityBuilder.createCommunity(context).build();

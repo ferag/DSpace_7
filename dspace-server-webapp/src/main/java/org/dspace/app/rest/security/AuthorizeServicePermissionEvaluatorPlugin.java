@@ -119,10 +119,7 @@ public class AuthorizeServicePermissionEvaluatorPlugin extends RestObjectPermiss
 
     private boolean isCvEntity(Item item) {
         String entityType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
-        boolean isCvPublication = StringUtils.equals(entityType, "CvPublication");
-        boolean isCvProject = StringUtils.equals(entityType, "CvProject");
-        boolean isCvPatent = StringUtils.equals(entityType, "CvPatent");
-        return (isCvPublication || isCvProject || isCvPatent);
+        return StringUtils.equalsAny(entityType, "CvPublication", "CvPatent", "CvProject");
     }
 
 }

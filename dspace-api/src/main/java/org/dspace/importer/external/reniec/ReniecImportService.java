@@ -50,6 +50,9 @@ public class ReniecImportService extends AbstractImportMetadataSourceService<Ren
     @Override
     public ImportRecord getRecord(String id) throws MetadataSourceException {
         ReniecDTO reniecDTO = this.reniecProvider.getReniecObject(id);
+        if (reniecDTO == null) {
+            return null;
+        }
         return transformSourceRecords(reniecDTO);
     }
 

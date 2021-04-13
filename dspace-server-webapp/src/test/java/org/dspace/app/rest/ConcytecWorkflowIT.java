@@ -88,6 +88,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.data.rest.webmvc.RestMediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -2958,10 +2959,10 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     }
 
     private void performActionOnPoolTaskViaRest(EPerson user, PoolTask task) throws Exception {
-        getClient(getAuthToken(user.getEmail(), password))
-            .perform(post(BASE_REST_SERVER_URL + "/api/workflow/pooltasks/{id}", task.getID())
-            .contentType("application/x-www-form-urlencoded"))
-            .andExpect(status().isNoContent());
+        getClient(getAuthToken(user.getEmail(), password)).perform(post("/api/workflow/claimedtasks")
+            .contentType(RestMediaTypes.TEXT_URI_LIST)
+            .content("/api/workflow/pooltasks/" + task.getID()))
+            .andExpect(status().isCreated());
     }
 
     private WorkspaceItem requestForItemCorrection(EPerson user, Item item) throws Exception {

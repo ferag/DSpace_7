@@ -2805,7 +2805,7 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                        FacetEntryMatcher.authorFacet(false),
                        FacetEntryMatcher.entityTypeFacet(false),
                        FacetEntryMatcher.subjectFacet(false),
-                       FacetEntryMatcher.dateIssuedFacet(false),
+//                      FacetEntryMatcher.dateIssuedFacet(false),
                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
                                                                                         )))
                    //There always needs to be a self link available
@@ -2959,7 +2959,7 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                        FacetEntryMatcher.typeFacet(false),
                        FacetEntryMatcher.authorFacet(false),
                        FacetEntryMatcher.subjectFacet(false),
-                       FacetEntryMatcher.dateIssuedFacet(false),
+//                      FacetEntryMatcher.dateIssuedFacet(false),
                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
                        FacetEntryMatcher.entityTypeFacet(false)
                                                                                         )))
@@ -3275,7 +3275,7 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                        FacetEntryMatcher.authorFacet(false),
                        FacetEntryMatcher.entityTypeFacet(false),
                        FacetEntryMatcher.subjectFacet(false),
-                       FacetEntryMatcher.dateIssuedFacet(false),
+//                       FacetEntryMatcher.dateIssuedFacet(false),
                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
                                                                                         )))
                    //There always needs to be a self link available
@@ -3432,7 +3432,7 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                        FacetEntryMatcher.authorFacet(false),
                        FacetEntryMatcher.entityTypeFacet(false),
                        FacetEntryMatcher.subjectFacet(false),
-                       FacetEntryMatcher.dateIssuedFacet(false),
+//                       FacetEntryMatcher.dateIssuedFacet(false),
                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
                                                                                         )))
                    //There always needs to be a self link available
@@ -3586,7 +3586,7 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                        FacetEntryMatcher.typeFacet(false),
                        FacetEntryMatcher.authorFacet(false),
                        FacetEntryMatcher.subjectFacet(false),
-                       FacetEntryMatcher.dateIssuedFacet(false),
+//                     FacetEntryMatcher.dateIssuedFacet(false),
                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
                        FacetEntryMatcher.entityTypeFacet(false)
                                                                                         )))
@@ -6155,24 +6155,24 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
 
         context.restoreAuthSystemState();
 
-        getClient().perform(get("/api/discover/facets/dateIssued")
+        getClient().perform(get("/api/discover/facets/author")
                    .param("dsoType", "Item"))
                    .andExpect(status().isOk())
                    .andExpect(jsonPath("$.type", is("discover")))
-                   .andExpect(jsonPath("$.name", is("dateIssued")))
-                   .andExpect(jsonPath("$.facetType", is("date")))
+                   .andExpect(jsonPath("$.name", is("author")))
+                   .andExpect(jsonPath("$.facetType", is("text")))
                    .andExpect(jsonPath("$.scope", is(emptyOrNullString())))
                    .andExpect(jsonPath("$._links.self.href",
                         containsString(
-                            "api/discover/facets/dateIssued?dsoType=Item&configuration=defaultConfiguration")))
-                   .andExpect(jsonPath("$._embedded.values[0].label", is("2017 - 2020")))
-                   .andExpect(jsonPath("$._embedded.values[0].count", is(3)))
-                   .andExpect(jsonPath("$._embedded.values[0]._links.search.href",
-                        containsString(
-                            "api/discover/search/objects?dsoType=Item&configuration=defaultConfiguration"
-                                + "&f.dateIssued=[2017 TO 2020],equals")))
-                   .andExpect(jsonPath("$._embedded.values").value(Matchers.hasSize(1)));
-
+                            "api/discover/facets/author?dsoType=Item&configuration=defaultConfiguration")))
+                   .andExpect(jsonPath("$._embedded.values", Matchers.containsInAnyOrder(
+                       SearchResultMatcher.matchEmbeddedFacetValues("Anton, Senek", 1, "discover",
+                    "discover/search/objects?dsoType=Item&configuration=defaultConfiguration&f.author=Anton, Senek"),
+                       SearchResultMatcher.matchEmbeddedFacetValues("Doe, Jane", 1, "discover",
+                    "discover/search/objects?dsoType=Item&configuration=defaultConfiguration&f.author=Doe, Jane"),
+                       SearchResultMatcher.matchEmbeddedFacetValues("Smith, Donald", 1, "discover",
+                    "discover/search/objects?dsoType=Item&configuration=defaultConfiguration&f.author=Smith, Donald"))
+                    ));
     }
 
     private EPerson createEPerson(String email) {

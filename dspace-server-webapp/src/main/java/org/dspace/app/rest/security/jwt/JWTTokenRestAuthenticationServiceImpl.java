@@ -87,6 +87,7 @@ public class JWTTokenRestAuthenticationServiceImpl implements RestAuthentication
 
             // Add newly generated auth token to the response
             addTokenToResponse(response, token, addCookie);
+            context.commit();
 
             // Reset our CSRF token, generating a new one
             resetCSRFToken(request, response);

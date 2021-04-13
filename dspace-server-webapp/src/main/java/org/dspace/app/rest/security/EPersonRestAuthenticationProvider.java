@@ -136,7 +136,7 @@ public class EPersonRestAuthenticationProvider implements AuthenticationProvider
         if (ePerson != null && (StringUtils.isNotBlank(username))) {
             //Pass the eperson ID to the request service
             requestService.setCurrentUserId(ePerson.getID());
-            return new DSpaceAuthentication(ePerson, getGrantedAuthorities(context));
+            return new DSpaceAuthentication(ePerson, getGrantedAuthorities(context), username);
 
         } else {
             log.info(

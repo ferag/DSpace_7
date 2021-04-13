@@ -134,7 +134,7 @@ public class VocabularyRestRepositoryIT extends AbstractControllerIntegrationTes
     @Test
     public void findAllTest() throws Exception {
         String token = getAuthToken(admin.getEmail(), password);
-        getClient(token).perform(get("/api/submission/vocabularies"))
+        getClient(token).perform(get("/api/submission/vocabularies").param("size", "30"))
                  .andExpect(status().isOk())
                  .andExpect(jsonPath("$._embedded.vocabularies", Matchers.containsInAnyOrder(
                      VocabularyMatcher.matchProperties("srsc", "srsc", false, true),
@@ -151,17 +151,18 @@ public class VocabularyRestRepositoryIT extends AbstractControllerIntegrationTes
                      VocabularyMatcher.matchProperties("renati_types", "renati_types", true , false),
                      VocabularyMatcher.matchProperties("renati_levels", "renati_levels", true , false),
                      VocabularyMatcher.matchProperties("peru_patent_types", "peru_patent_types", true , false),
-                     VocabularyMatcher.matchProperties("peru_oairecerif_access", "peru_oairecerif_access", true,
-                         false),
+                     VocabularyMatcher.matchProperties("peru_oairecerif_access", "peru_oairecerif_access", true, false),
                      VocabularyMatcher.matchProperties("ocde_subjects", "ocde_subjects", false , true),
                      VocabularyMatcher.matchProperties("coar_versions", "coar_versions", true , false),
                      VocabularyMatcher.matchProperties("project_status", "project_status", true , false),
                      VocabularyMatcher.matchProperties("project_types", "project_types", true , false),
-                     VocabularyMatcher.matchProperties("project_types_other", "project_types_other", true , false)
+                     VocabularyMatcher.matchProperties("project_types_other", "project_types_other", true , false),
+                     VocabularyMatcher.matchProperties("SRPublisher", "SRPublisher", false , false),
+                     VocabularyMatcher.matchProperties("SRJournalTitle", "SRJournalTitle", false , false)
                  )))
         .andExpect(jsonPath("$._links.self.href",
             Matchers.containsString("api/submission/vocabularies")))
-        .andExpect(jsonPath("$.page.totalElements", is(20)));
+            .andExpect(jsonPath("$.page.totalElements", is(22)));
     }
 
     @Test

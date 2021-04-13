@@ -8,6 +8,7 @@
 package org.dspace.app.rest;
 
 import static com.jayway.jsonpath.JsonPath.read;
+import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
 import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.REINSTATE;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.WITHDRAW;
@@ -51,10 +52,12 @@ import org.dspace.xmlworkflow.storedcomponents.PoolTask;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.dspace.xmlworkflow.storedcomponents.service.PoolTaskService;
 import org.dspace.xmlworkflow.storedcomponents.service.XmlWorkflowItemService;
+import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.RestMediaTypes;
 import org.springframework.http.MediaType;
 
 /**
@@ -418,10 +421,11 @@ public class SubmissionDeduplicationRestIT extends AbstractControllerIntegration
     }
 
     private void performActionOnPoolTaskViaRest(EPerson user, PoolTask task) throws Exception {
-        getClient(getAuthToken(user.getEmail(), password))
-            .perform(post(BASE_REST_SERVER_URL + "/api/workflow/pooltasks/{id}", task.getID())
-                .contentType("application/x-www-form-urlencoded"))
-            .andExpect(status().isNoContent());
+        getClient(getAuthToken(user.getEmail(), password)).perform(post("/api/workflow/claimedtasks")
+            .contentType(RestMediaTypes.TEXT_URI_LIST)
+            .content("/api/workflow/pooltasks/" + task.getID()))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$", Matchers.allOf(hasJsonPath("$.type", is("claimedtask")))));
     }
 
     private WorkspaceItem requestForItemCorrection(EPerson user, Item item) throws Exception {

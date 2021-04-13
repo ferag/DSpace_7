@@ -702,8 +702,8 @@ public class SubmissionFormsControllerIT extends AbstractControllerIntegrationTe
                  .andExpect(status().isOk())
                  .andExpect(content().contentType(contentType))
                  .andExpect(
-                    jsonPath("$._embedded.submissionforms[0].id", is("traditionalpageone-cris-dc-contributor-author")))
-                 .andExpect(jsonPath("$._embedded.submissionforms[1].id", is("patent")))
+                    jsonPath("$._embedded.submissionforms[0].id", is("publication_references")))
+                 .andExpect(jsonPath("$._embedded.submissionforms[1].id", is("patent_references")))
                  .andExpect(jsonPath("$._links.first.href", Matchers.allOf(
                          Matchers.containsString("/api/config/submissionforms?"),
                          Matchers.containsString("page=0"), Matchers.containsString("size=2"))))
@@ -715,10 +715,10 @@ public class SubmissionFormsControllerIT extends AbstractControllerIntegrationTe
                          Matchers.containsString("page=1"), Matchers.containsString("size=2"))))
                  .andExpect(jsonPath("$._links.last.href", Matchers.allOf(
                          Matchers.containsString("/api/config/submissionforms?"),
-                         Matchers.containsString("page=12"), Matchers.containsString("size=2"))))
+                         Matchers.containsString("page=25"), Matchers.containsString("size=2"))))
                  .andExpect(jsonPath("$.page.size", is(2)))
-                 .andExpect(jsonPath("$.page.totalElements", equalTo(25)))
-                 .andExpect(jsonPath("$.page.totalPages", equalTo(13)))
+                 .andExpect(jsonPath("$.page.totalElements", equalTo(51)))
+                 .andExpect(jsonPath("$.page.totalPages", equalTo(26)))
                  .andExpect(jsonPath("$.page.number", is(0)));
 
         getClient(tokenAdmin).perform(get("/api/config/submissionforms")
@@ -726,8 +726,9 @@ public class SubmissionFormsControllerIT extends AbstractControllerIntegrationTe
                  .param("page", "1"))
                  .andExpect(status().isOk())
                  .andExpect(content().contentType(contentType))
-                 .andExpect(jsonPath("$._embedded.submissionforms[0].id", is("publication_references")))
-                 .andExpect(jsonPath("$._embedded.submissionforms[1].id", is("patent_references")))
+                 .andExpect(jsonPath("$._embedded.submissionforms[0].id", is("cv-publication_references")))
+                 .andExpect(jsonPath("$._embedded.submissionforms[1].id",
+                     is("publication_references-dc-relation-project")))
                  .andExpect(jsonPath("$._links.first.href", Matchers.allOf(
                          Matchers.containsString("/api/config/submissionforms?"),
                          Matchers.containsString("page=0"), Matchers.containsString("size=2"))))
@@ -742,10 +743,10 @@ public class SubmissionFormsControllerIT extends AbstractControllerIntegrationTe
                          Matchers.containsString("page=2"), Matchers.containsString("size=2"))))
                  .andExpect(jsonPath("$._links.last.href", Matchers.allOf(
                          Matchers.containsString("/api/config/submissionforms?"),
-                         Matchers.containsString("page=12"), Matchers.containsString("size=2"))))
+                         Matchers.containsString("page=25"), Matchers.containsString("size=2"))))
                  .andExpect(jsonPath("$.page.size", is(2)))
-                 .andExpect(jsonPath("$.page.totalElements", equalTo(25)))
-                 .andExpect(jsonPath("$.page.totalPages", equalTo(13)))
+                 .andExpect(jsonPath("$.page.totalElements", equalTo(51)))
+                 .andExpect(jsonPath("$.page.totalPages", equalTo(26)))
                  .andExpect(jsonPath("$.page.number", is(1)));
     }
 }

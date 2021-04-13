@@ -279,7 +279,7 @@ public class ClaimedTaskRestRepository extends DSpaceRestRepository<ClaimedTaskR
         } catch (WorkflowConfigurationException | MessagingException | WorkflowException | IOException e) {
             throw new UnprocessableEntityException(e.getMessage(), e);
         }
-        return converter.toRest(claimedTask, utils.obtainProjection());
+        return claimedTask != null ? converter.toRest(claimedTask, utils.obtainProjection()) : null;
     }
 
     @Override

@@ -157,7 +157,7 @@ public class CvEntityUpdateConsumer implements Consumer {
     }
 
     private boolean isCvEntityClone(Item item) {
-        String entityType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
+        String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
         return isNotBlank(entityType) && entityType.startsWith("Cv") && entityType.endsWith("Clone");
     }
 

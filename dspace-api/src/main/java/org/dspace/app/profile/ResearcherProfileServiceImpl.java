@@ -263,7 +263,7 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
     }
 
     private void setFilter(DiscoverQuery discoverQuery, UUID ownerUuid) {
-        String filter = "relationship.type:CvPublication OR relationship.type:CvProject OR relationship.type:CvPatent";
+        String filter = "dspace.entity.type:CvPublication OR dspace.entity.type:CvProject OR dspace.entity.type:CvPatent";
         discoverQuery.addFilterQueries(filter);
         discoverQuery.addFilterQueries("cris.owner_authority:" + ownerUuid.toString());
     }

@@ -151,7 +151,7 @@ public class ProfileItemCloningAction implements AfterImportAction, ProfileItemC
 
     private boolean unClaimableEntityType(Item item) {
         List<String> claimableEntityTypes = asList(configurationService.getArrayProperty("claimable.entityType"));
-        return itemService.getMetadataByMetadataString(item, "relationship.type").stream()
+        return itemService.getMetadataByMetadataString(item, "dspace.entity.type").stream()
             .noneMatch(mv -> claimableEntityTypes.contains(mv.getValue()));
     }
 

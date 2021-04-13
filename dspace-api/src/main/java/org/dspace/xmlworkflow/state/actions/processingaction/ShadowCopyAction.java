@@ -198,8 +198,8 @@ public class ShadowCopyAction extends ProcessingAction {
         }
 
         String itemType = getEntityTypeWithoutInstitutionOrCvPrefixes(item);
-        Predicate<Collection> relationshipTypePredicate = (collection) -> hasSameRelatioshipType(collection, itemType);
-        List<Collection> collections = communityService.getCollections(context, directorio, relationshipTypePredicate);
+        Predicate<Collection> entityTypePredicate = (collection) -> hasSameEntityType(collection, itemType);
+        List<Collection> collections = communityService.getCollections(context, directorio, entityTypePredicate);
         if (CollectionUtils.isEmpty(collections)) {
             throw new WorkflowException("No directorio collection found for the shadow copy of item " + item.getID());
         }
@@ -208,7 +208,7 @@ public class ShadowCopyAction extends ProcessingAction {
     }
 
     private String getEntityTypeWithoutInstitutionOrCvPrefixes(Item item) {
-        String itemType = itemService.getMetadataFirstValue(item, "relationship", "type", null, ANY);
+        String itemType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", ANY);
         if (itemType == null) {
             return null;
         }
@@ -220,9 +220,9 @@ public class ShadowCopyAction extends ProcessingAction {
         return itemType;
     }
 
-    private boolean hasSameRelatioshipType(Collection collection, String relationshipType) {
-        String collectionType = collectionService.getMetadataFirstValue(collection, "relationship", "type", null, ANY);
-        return Objects.equals(relationshipType, collectionType);
+    private boolean hasSameEntityType(Collection collection, String entityType) {
+        String collectionType = collectionService.getMetadataFirstValue(collection, "dspace", "entity", "type", ANY);
+        return Objects.equals(entityType, collectionType);
     }
 
     private WorkspaceItem createItemCopyCorrection(Context context, UUID itemCopyId)

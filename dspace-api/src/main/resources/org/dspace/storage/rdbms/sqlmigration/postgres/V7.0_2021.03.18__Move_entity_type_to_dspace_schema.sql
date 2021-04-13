@@ -15,7 +15,7 @@
 -- ===============================================================
 
 -------------------------------------------------------------------------------------------------------
--- Move all 'relationship.type' metadata fields to 'dspace.entity.type'. Remove 'relationship' schema.
+-- Move all 'dspace.entity.type' metadata fields to 'dspace.entity.type'. Remove 'relationship' schema.
 -------------------------------------------------------------------------------------------------------
 -- Special case: we need to the 'dspace' schema to already exist. If users don't already have it we must create it
 -- manually via SQL, as by default it won't be created until database updates are finished.
@@ -35,7 +35,7 @@ INSERT INTO metadatafieldregistry (metadata_schema_id, element, qualifier)
        AND element = 'entity' AND qualifier='type');
 
 
--- Moves all 'relationship.type' field values to new 'dspace.entity.type' field
+-- Moves all 'dspace.entity.type' field values to new 'dspace.entity.type' field
 UPDATE metadatavalue
   SET metadata_field_id =
      (SELECT metadata_field_id FROM metadatafieldregistry
@@ -47,7 +47,7 @@ UPDATE metadatavalue
       AND element = 'type' AND qualifier is NULL);
 
 
--- Delete 'relationship.type' field from registry
+-- Delete 'dspace.entity.type' field from registry
 DELETE FROM metadatafieldregistry
   WHERE metadata_schema_id = (SELECT metadata_schema_id FROM metadataschemaregistry WHERE short_id = 'relationship')
   AND element = 'type' AND qualifier is NULL;

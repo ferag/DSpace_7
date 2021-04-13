@@ -859,7 +859,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
             .andExpect(jsonPath("$.type", is("item")))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", user.getName(), user.getID().toString(), 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.name", "Giuseppe Garibaldi", 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "CvPerson", 0)))
+            .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("person.birthDate", "1807-07-04", 0)));
 
         getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", user.getID()))

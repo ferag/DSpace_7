@@ -292,7 +292,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(shadowItemMetadata, hasSize(10));
         assertThat(shadowItemMetadata, hasItem(with("dc.title", ITEM_TITLE)));
         assertThat(shadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
-        assertThat(shadowItemMetadata, hasItem(with("relationship.type", "Publication")));
+        assertThat(shadowItemMetadata, hasItem(with("dspace.entity.type", "Publication")));
         assertThat(shadowItemMetadata, hasItem(with("oairecerif.author.affiliation", "4Science")));
         assertThat(shadowItemMetadata, hasItem(with("dc.contributor.editor", "Test editor")));
         assertThat(shadowItemMetadata, hasItem(with("dc.contributor.author", "Mario Rossi", null,
@@ -342,7 +342,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(shadowItemMetadata, hasSize(10));
         assertThat(shadowItemMetadata, hasItem(with("dc.title", ITEM_TITLE)));
         assertThat(shadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
-        assertThat(shadowItemMetadata, hasItem(with("relationship.type", "Publication")));
+        assertThat(shadowItemMetadata, hasItem(with("dspace.entity.type", "Publication")));
         assertThat(shadowItemMetadata, hasItem(with("oairecerif.author.affiliation", "4Science")));
         assertThat(shadowItemMetadata, hasItem(with("dc.contributor.editor", "Test editor")));
         assertThat(shadowItemMetadata, hasItem(with("dc.contributor.author", "Mario Rossi", null,
@@ -388,7 +388,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         assertThat(shadowItemMetadata, hasItem(with("dc.title", ITEM_TITLE)));
         assertThat(shadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
-        assertThat(shadowItemMetadata, hasItem(with("relationship.type", "Publication")));
+        assertThat(shadowItemMetadata, hasItem(with("dspace.entity.type", "Publication")));
         assertThat(shadowItemMetadata, hasItem(with("oairecerif.author.affiliation", "4Science")));
         assertThat(shadowItemMetadata, hasItem(with("dc.contributor.editor", "Test editor")));
         assertThat(shadowItemMetadata, hasItem(with("dc.contributor.author", "Mario Rossi", null,
@@ -440,7 +440,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(shadowItemCopy.getMetadata(), hasSize(10));
         assertThat(shadowItemMetadata, hasItem(with("dc.title", ITEM_TITLE)));
         assertThat(shadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
-        assertThat(shadowItemMetadata, hasItem(with("relationship.type", "Publication")));
+        assertThat(shadowItemMetadata, hasItem(with("dspace.entity.type", "Publication")));
         assertThat(shadowItemMetadata, hasItem(with("oairecerif.author.affiliation", "4Science")));
         assertThat(shadowItemMetadata, hasItem(with("dc.contributor.editor", "Test editor")));
         assertThat(shadowItemMetadata, hasItem(with("dc.contributor.author", "Mario Rossi", null,
@@ -522,7 +522,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(getFirstMetadata(correctionItemShadowCopy, "dc.contributor.editor"), nullValue());
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.title", "Submission Item new title")));
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
-        assertThat(correctionShadowItemMetadata, hasItem(with("relationship.type", "Publication")));
+        assertThat(correctionShadowItemMetadata, hasItem(with("dspace.entity.type", "Publication")));
         assertThat(correctionShadowItemMetadata, hasItem(with("oairecerif.author.affiliation", "4Science")));
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.contributor.author", "Mario Rossi", null,
             "will be referenced::SHADOW::9bab4959-c210-4b6d-9d94-ff75cade84c3", 0, 600)));
@@ -606,7 +606,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(getFirstMetadata(correctionItemShadowCopy, "dc.contributor.editor"), nullValue());
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.title", "Submission Item new title")));
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
-        assertThat(correctionShadowItemMetadata, hasItem(with("relationship.type", "Publication")));
+        assertThat(correctionShadowItemMetadata, hasItem(with("dspace.entity.type", "Publication")));
         assertThat(correctionShadowItemMetadata, hasItem(with("oairecerif.author.affiliation", "4Science")));
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.contributor.author", "Mario Rossi", null,
             "will be referenced::SHADOW::9bab4959-c210-4b6d-9d94-ff75cade84c3", 0, 600)));
@@ -690,7 +690,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(getFirstMetadata(correctionItemShadowCopy, "dc.contributor.editor"), nullValue());
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.title", "Submission Item new title")));
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
-        assertThat(correctionShadowItemMetadata, hasItem(with("relationship.type", "Publication")));
+        assertThat(correctionShadowItemMetadata, hasItem(with("dspace.entity.type", "Publication")));
         assertThat(correctionShadowItemMetadata, hasItem(with("oairecerif.author.affiliation", "4Science")));
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.contributor.author", "Mario Rossi", null,
             "will be referenced::SHADOW::9bab4959-c210-4b6d-9d94-ff75cade84c3", 0, 600)));
@@ -911,7 +911,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(getFirstMetadata(correctionItemShadowCopy, "dc.contributor.editor"), nullValue());
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.title", "Test publication new title")));
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.date.issued", "2021-01-04")));
-        assertThat(correctionShadowItemMetadata, hasItem(with("relationship.type", "Publication")));
+        assertThat(correctionShadowItemMetadata, hasItem(with("dspace.entity.type", "Publication")));
 
         assertThat(correctionShadowItemMetadata, hasItem(with("cris.policy.group", directorioReviewGroup.getName(),
             null, directorioReviewGroup.getID().toString(), 0, 600)));

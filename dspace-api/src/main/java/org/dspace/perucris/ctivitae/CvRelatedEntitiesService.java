@@ -231,7 +231,7 @@ public class CvRelatedEntitiesService {
     }
 
     private List<String> itemRelatedPersonIds(Item item) {
-        String entityType = itemService.getMetadata(item, "relationship.type");
+        String entityType = itemService.getMetadata(item, "dspace.entity.type");
         List<String> me = entityToMetadataMap.get(entityType);
         return me.stream()
             .map(md -> itemService.getMetadataByMetadataString(item, md))

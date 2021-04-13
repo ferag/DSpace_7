@@ -38,7 +38,7 @@ public class CvEntity {
 
     private boolean hasCvEntityType(Item item) {
         return item.getMetadata().stream()
-            .filter(metadataValue -> "relationship.type".equals(metadataValue.getMetadataField().toString('.')))
+            .filter(metadataValue -> "dspace.entity.type".equals(metadataValue.getMetadataField().toString('.')))
             .map(metadataValue -> metadataValue.getValue())
             .allMatch(value -> value != null && value.startsWith("Cv") && !value.endsWith("Clone"));
     }

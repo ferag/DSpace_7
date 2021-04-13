@@ -85,12 +85,12 @@ public class ItemSearchByShadowCopyRelation implements ItemSearcher, ItemReferen
     }
 
     private Iterator<Item> findItemsWithAuthority(Context context, String authority, Item item) {
-        String relationshipType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
-        if (relationshipType == null) {
-            throw new IllegalArgumentException("The given item has no relationship.type: " + item.getID());
+        String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
+        if (entityType == null) {
+            throw new IllegalArgumentException("The given item has no dspace.entity.type: " + item.getID());
         }
 
-        return itemService.findByAuthorityControlledMetadataFields(context, authority, relationshipType);
+        return itemService.findByAuthorityControlledMetadataFields(context, authority, entityType);
     }
 
 }

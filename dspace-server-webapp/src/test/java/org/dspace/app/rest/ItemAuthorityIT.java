@@ -519,8 +519,8 @@ public class ItemAuthorityIT extends AbstractControllerIntegrationTest {
         choiceAuthorityService.clearCache();
     }
 
-    private void setCommunityIdInQuery(UUID directorioCommunityId, String relationshipType) {
-        List<String> filterQueries = directorioCommunityFilter.getFilterQueries(relationshipType);
+    private void setCommunityIdInQuery(UUID directorioCommunityId, String entityType) {
+        List<String> filterQueries = directorioCommunityFilter.getFilterQueries(entityType);
         for (int i = 0; i < filterQueries.size(); i++) {
             String s = filterQueries.get(i);
             if (s.contains("location.comm")) {

@@ -1476,8 +1476,8 @@ prevent the generation of resource policy entry values with null dspace_object a
 
         String itemId = item.getID().toString();
 
-        String relationshipType = getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
-        if (relationshipType == null) {
+        String entityType = getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
+        if (entityType == null) {
             return;
         }
 
@@ -1486,7 +1486,7 @@ prevent the generation of resource policy entry values with null dspace_object a
             return;
         }
 
-        Iterator<Item> items = findByAuthorityControlledMetadataFields(context, itemId, relationshipType);
+        Iterator<Item> items = findByAuthorityControlledMetadataFields(context, itemId, entityType);
         String authorityToSet = AuthorityValueService.REFERENCE + "SHADOW::" + institutionItem.getID();
 
         while (items.hasNext()) {

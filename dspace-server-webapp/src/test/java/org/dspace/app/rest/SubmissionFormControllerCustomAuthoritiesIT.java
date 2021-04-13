@@ -61,15 +61,15 @@ public class SubmissionFormControllerCustomAuthoritiesIT extends AbstractControl
                 "org.dspace.content.authority.DisabledAuthority = DisabledAuthority"
             });
 
-        configurationService.setProperty("cris.ItemAuthority.AuthorAuthority.relationshipType", "Person");
-        configurationService.setProperty("cris.ItemAuthority.EditorAuthority.relationshipType", "Person");
-        configurationService.setProperty("cris.ItemAuthority.AdvisorAuthority.relationshipType", "Person");
+        configurationService.setProperty("cris.ItemAuthority.AuthorAuthority.entityType", "Person");
+        configurationService.setProperty("cris.ItemAuthority.EditorAuthority.entityType", "Person");
+        configurationService.setProperty("cris.ItemAuthority.AdvisorAuthority.entityType", "Person");
         configurationService
-            .setProperty("cris.ItemAuthority.InstitutionAuthorAuthority.relationshipType", "InstitutionPerson");
+            .setProperty("cris.ItemAuthority.InstitutionAuthorAuthority.entityType", "InstitutionPerson");
         configurationService
-            .setProperty("cris.ItemAuthority.InstitutionEditorAuthority.relationshipType", "InstitutionPerson");
+            .setProperty("cris.ItemAuthority.InstitutionEditorAuthority.entityType", "InstitutionPerson");
         configurationService
-            .setProperty("cris.ItemAuthority.InstitutionAdvisorAuthority.relationshipType", "InstitutionPerson");
+            .setProperty("cris.ItemAuthority.InstitutionAdvisorAuthority.entityType", "InstitutionPerson");
 
         configurationService.setProperty("choices.plugin.dc.contributor.author", "AuthorAuthority");
         configurationService.setProperty("choices.presentation.dc.contributor.author", "suggest");

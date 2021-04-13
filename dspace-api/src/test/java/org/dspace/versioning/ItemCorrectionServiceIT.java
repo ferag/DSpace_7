@@ -129,7 +129,7 @@ public class ItemCorrectionServiceIT extends AbstractIntegrationTestWithDatabase
 
         List<MetadataValue> correctionValues = correctionItem.getMetadata();
         assertThat(correctionValues, hasItem(with("dc.title", "Test publication")));
-        assertThat(correctionValues, hasItem(with("relationship.type", "Publication")));
+        assertThat(correctionValues, hasItem(with("dspace.entity.type", "Publication")));
         assertThat(correctionValues, hasItem(with("dc.date.issued", "2020-01-01")));
         assertThat(correctionValues, hasItem(with("dc.contributor.author", "White, Walter", null,
             "6238d077-059a-4207-a075-c9ec79709945", 0, 600)));
@@ -184,7 +184,7 @@ public class ItemCorrectionServiceIT extends AbstractIntegrationTestWithDatabase
 
         List<MetadataValue> values = item.getMetadata();
         assertThat(values, hasItem(with("dc.title", "Test publication correction")));
-        assertThat(values, hasItem(with("relationship.type", "Publication")));
+        assertThat(values, hasItem(with("dspace.entity.type", "Publication")));
         assertThat(values, hasItem(with("dc.date.issued", "2020-01-01")));
         assertThat(values, hasItem(with("dc.contributor.author", "Jesse Pinkman", null, null, 0, 400)));
         assertThat(values, hasItem(with("dc.subject", "test subject")));
@@ -266,7 +266,7 @@ public class ItemCorrectionServiceIT extends AbstractIntegrationTestWithDatabase
 
         List<MetadataValue> values = item.getMetadata();
         assertThat(values, hasItem(with("dc.title", "Test publication")));
-        assertThat(values, hasItem(with("relationship.type", "Publication")));
+        assertThat(values, hasItem(with("dspace.entity.type", "Publication")));
         assertThat(values, hasItem(with("dc.contributor.author", "Mario Rossi")));
         assertThat(values, hasItem(with("oairecerif.author.affiliation", PLACEHOLDER_PARENT_METADATA_VALUE)));
         assertThat(values, hasItem(with("dc.subject", "test subject")));

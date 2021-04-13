@@ -100,7 +100,7 @@ public class ClaimItemFeatureTest {
         when(itemService.find(context, UUID.fromString(id))).thenReturn(item);
 
         MetadataValue personMetadata = metadataValue("Person");
-        when(itemService.getMetadataByMetadataString(item, "relationship.type"))
+        when(itemService.getMetadataByMetadataString(item, "dspace.entity.type"))
             .thenReturn(Collections.singletonList(personMetadata));
 
         final Item relatedItem = itemWithOwner(null);
@@ -143,7 +143,7 @@ public class ClaimItemFeatureTest {
             .thenReturn(item);
 
         MetadataValue personMetadata = metadataValue("Person");
-        when(itemService.getMetadataByMetadataString(item, "relationship.type"))
+        when(itemService.getMetadataByMetadataString(item, "dspace.entity.type"))
             .thenReturn(Collections.singletonList(personMetadata));
 
         final Item relatedItem = itemWithOwner(null);
@@ -201,7 +201,7 @@ public class ClaimItemFeatureTest {
             .thenReturn(null);
 
         MetadataValue personMetadata = metadataValue("Person");
-        when(itemService.getMetadataByMetadataString(item, "relationship.type"))
+        when(itemService.getMetadataByMetadataString(item, "dspace.entity.type"))
             .thenReturn(Collections.singletonList(personMetadata));
 
 
@@ -234,7 +234,7 @@ public class ClaimItemFeatureTest {
             .thenReturn(null);
 
         MetadataValue personMetadata = metadataValue("Person");
-        when(itemService.getMetadataByMetadataString(item, "relationship.type"))
+        when(itemService.getMetadataByMetadataString(item, "dspace.entity.type"))
             .thenReturn(Collections.singletonList(personMetadata));
 
 
@@ -261,7 +261,7 @@ public class ClaimItemFeatureTest {
         when(itemService.find(context, UUID.fromString(id)))
             .thenReturn(item);
         MetadataValue publication = metadataValue("Publication");
-        when(itemService.getMetadataByMetadataString(item, "relationship.type"))
+        when(itemService.getMetadataByMetadataString(item, "dspace.entity.type"))
             .thenReturn(Collections.singletonList(publication));
 
         ItemRest object = buildItemRest(id);
@@ -299,7 +299,7 @@ public class ClaimItemFeatureTest {
             .thenReturn(null);
 
         MetadataValue personMetadata = metadataValue("Person");
-        when(itemService.getMetadataByMetadataString(item, "relationship.type"))
+        when(itemService.getMetadataByMetadataString(item, "dspace.entity.type"))
             .thenReturn(Collections.singletonList(personMetadata));
 
         Item relatedItem = itemWithOwner("owner");
@@ -341,7 +341,7 @@ public class ClaimItemFeatureTest {
             .thenReturn(null);
 
         MetadataValue personMetadata = metadataValue("Person");
-        when(itemService.getMetadataByMetadataString(item, "relationship.type"))
+        when(itemService.getMetadataByMetadataString(item, "dspace.entity.type"))
             .thenReturn(Collections.singletonList(personMetadata));
 
         final Item relatedItem = itemWithOwner(null);

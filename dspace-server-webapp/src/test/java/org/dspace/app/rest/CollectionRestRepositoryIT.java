@@ -3512,12 +3512,12 @@ public class CollectionRestRepositoryIT extends AbstractControllerIntegrationTes
         return createCollection(community, name, null, admins);
     }
 
-    private Collection createCollection(Community community, String name, String relationshipType, EPerson... admins)
+    private Collection createCollection(Community community, String name, String entityType, EPerson... admins)
         throws SQLException, AuthorizeException {
         CollectionBuilder collectionBuilder = CollectionBuilder.createCollection(context, community)
             .withName(name)
             .withAdminGroup(admins);
-        Optional.ofNullable(relationshipType).ifPresent(collectionBuilder::withEntityType);
+        Optional.ofNullable(entityType).ifPresent(collectionBuilder::withEntityType);
         return collectionBuilder.build();
     }
 

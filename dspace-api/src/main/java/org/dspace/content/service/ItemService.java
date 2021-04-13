@@ -743,15 +743,15 @@ public interface ItemService
 
     /**
      * Search all the items that have an authority controller metadata fields
-     * related to the given relationship.type with the given authority value.
+     * related to the given dspace.entity.type with the given authority value.
      * 
-     * @param context          the DSpace context
-     * @param authority        the authority value to match
-     * @param relationshipType the relationship type related to the metadata fields
+     * @param context    the DSpace context
+     * @param authority  the authority value to match
+     * @param entityType the entity type related to the metadata fields
      * @return an iterator over the founded items
      */
     public Iterator<Item> findByAuthorityControlledMetadataFields(Context context, String authority,
-        String relationshipType);
+        String entityType);
 
     /**
      * Get an item instance, whose state may be lazily fetched. If the requested

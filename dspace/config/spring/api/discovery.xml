@@ -952,7 +952,7 @@
                 <property name="metadataFields">
                     <list>
                         <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
-                            <property name="field" value="relationship.type"/>
+                            <property name="field" value="dspace.entity.type"/>
                             <property name="snippets" value="5"/>
                         </bean>
                     </list>
@@ -1097,7 +1097,7 @@
                 <property name="metadataFields">
                     <list>
                         <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
-                            <property name="field" value="relationship.type"/>
+                            <property name="field" value="dspace.entity.type"/>
                             <property name="snippets" value="5"/>
                         </bean>
                     </list>
@@ -1157,7 +1157,7 @@
                 <property name="metadataFields">
                     <list>
                         <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
-                            <property name="field" value="relationship.type"/>
+                            <property name="field" value="dspace.entity.type"/>
                             <property name="snippets" value="5"/>
                         </bean>
                     </list>
@@ -1304,7 +1304,7 @@
                 <property name="metadataFields">
                     <list>
                         <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
-                            <property name="field" value="relationship.type"/>
+                            <property name="field" value="dspace.entity.type"/>
                             <property name="snippets" value="5"/>
                         </bean>
                     </list>
@@ -2028,7 +2028,7 @@
                 <property name="metadataFields">
                     <list>
                         <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
-                            <property name="field" value="relationship.type"/>
+                            <property name="field" value="dspace.entity.type"/>
                             <property name="snippets" value="5"/>
                         </bean>
                     </list>
@@ -2086,7 +2086,7 @@
                 <property name="metadataFields">
                     <list>
                         <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
-                            <property name="field" value="relationship.type"/>
+                            <property name="field" value="dspace.entity.type"/>
                             <property name="snippets" value="5"/>
                         </bean>
                     </list>

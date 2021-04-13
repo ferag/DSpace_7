@@ -16,7 +16,7 @@
                 <value>dc.date.accessioned</value>
                 <value>dc.description.provenance</value>
                 <value>dc.date.available</value>
-                <value>relationship.type</value>
+                <value>dspace.entity.type</value>
                 <value>dc.identifier.uri</value>
                 <value>perucris.concytec.feedback</value>
             </set>
@@ -30,7 +30,7 @@
             <set>
 				<value>dc.date.accessioned</value>
 				<value>dc.date.available</value>
-                <value>relationship.type</value>
+                <value>dspace.entity.type</value>
             </set>
         </property>
         

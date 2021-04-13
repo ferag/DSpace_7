@@ -1046,7 +1046,6 @@
 
 
 	<bean name="mapConverterAccessRight" class="org.dspace.util.SimpleMapConverter" init-method="init">
-	    <constructor-arg value="mapConverterAccessRight" />
 	    <property name="converterNameFile" value="mapConverter-accessRight.properties" />
 	    <property name="configurationService" ref="org.dspace.services.ConfigurationService" />
 	    <property name="defaultValue" value=""/>

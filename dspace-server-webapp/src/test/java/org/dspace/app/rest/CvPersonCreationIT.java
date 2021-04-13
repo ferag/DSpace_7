@@ -251,7 +251,7 @@ public class CvPersonCreationIT extends AbstractControllerIntegrationTest {
             .andExpect(jsonPath("$.type", is("item")))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", user.getName(), user.getID().toString(), 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.name", "Giuseppe Verdi", 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "CvPerson", 0)))
+            .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("person.birthDate", "1813-10-10", 0)));
 
         String profileItemId = getItemIdByProfileId(authToken, user.getID().toString());
@@ -418,7 +418,7 @@ public class CvPersonCreationIT extends AbstractControllerIntegrationTest {
             .andExpect(jsonPath("$.type", is("item")))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", user.getName(), userID.toString(), 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.name", "Mario Rossi", 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "CvPerson", 0)))
+            .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("person.birthDate", "1982-12-17", 0)));
 
         String profileItemId = getItemIdByProfileId(authToken, userID.toString());
@@ -511,7 +511,7 @@ public class CvPersonCreationIT extends AbstractControllerIntegrationTest {
             .andExpect(jsonPath("$.type", is("item")))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", user.getName(), user.getID().toString(), 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.name", "Giuseppe Verdi", 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "CvPerson", 0)))
+            .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("person.birthDate", "1813-10-10", 0)));
 
         String profileItemId = getItemIdByProfileId(authToken, user.getID().toString());

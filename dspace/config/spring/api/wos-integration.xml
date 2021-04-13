@@ -273,10 +273,9 @@
         <constructor-arg value="dc.contributor.editor"/>
     </bean>
 
-    <bean id="wosRidContrib" class="org.dspace.importer.external.metadatamapping.contributor.SimpleXpathMetadatumAndAttributeContributor">
+    <bean id="wosRidContrib" class="org.dspace.importer.external.metadatamapping.contributor.WosIdentifierRidContributor">
         <property name="field" ref="wos.rid"/>
-        <property name="attribute" value="r_id"/>
-        <property name="query" value="static_data/summary/names/name"/>
+        <property name="query" value="static_data/contributors/contributor"/>
         <property name="prefixToNamespaceMapping" ref="wosNs"/>
     </bean>
 

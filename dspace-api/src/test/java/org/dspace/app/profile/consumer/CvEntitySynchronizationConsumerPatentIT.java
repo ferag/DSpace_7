@@ -141,7 +141,7 @@ public class CvEntitySynchronizationConsumerPatentIT extends AbstractIntegration
             .createCollection(context, directorioCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Patents")
-            .withRelationshipType("Patent")
+            .withEntityType("Patent")
             .withSubmitterGroup(submitter)
             .withRoleGroup("editor", directorioEditorGroup)
             .build();
@@ -156,13 +156,13 @@ public class CvEntitySynchronizationConsumerPatentIT extends AbstractIntegration
 
         cvCollection = CollectionBuilder.createCollection(context, ctiVitaeCommunity)
             .withName("Patents")
-            .withRelationshipType("CvPatent")
+            .withEntityType("CvPatent")
             .withSubmitterGroup(submitter)
             .build();
 
         cvCloneCollection = CollectionBuilder.createCollection(context, ctiVitaeCloneCommunity)
             .withName("Patents")
-            .withRelationshipType("CvPatentClone")
+            .withEntityType("CvPatentClone")
             .withWorkflow("institutionWorkflow")
             .build();
 

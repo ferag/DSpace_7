@@ -111,7 +111,7 @@ public class SubmissionDeduplicationRestIT extends AbstractControllerIntegration
 
         institutionCollection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Institution collection")
-            .withRelationshipType("InstitutionPublication")
+            .withEntityType("InstitutionPublication")
             .withSubmissionDefinition("institution-publication")
             .withSubmitterGroup(submitter)
             .withWorkflowGroup(2, editor)
@@ -119,7 +119,7 @@ public class SubmissionDeduplicationRestIT extends AbstractControllerIntegration
 
         collection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Collection")
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withSubmissionDefinition("publication")
             .withSubmitterGroup(submitter)
             .withWorkflowGroup(2, editor)

@@ -63,7 +63,7 @@ public class LogicalStatementValidatorIT extends AbstractIntegrationTestWithData
         context.turnOffAuthorisationSystem();
         community = createCommunity(context).build();
         collection = createCollection(context, community)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withSubmissionDefinition("publication")
             .withAdminGroup(eperson)
             .build();
@@ -177,7 +177,7 @@ public class LogicalStatementValidatorIT extends AbstractIntegrationTestWithData
         context.turnOffAuthorisationSystem();
 
         Collection personCollection = createCollection(context, community)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmissionDefinition("traditional")
             .withAdminGroup(eperson)
             .build();
@@ -247,7 +247,7 @@ public class LogicalStatementValidatorIT extends AbstractIntegrationTestWithData
         context.turnOffAuthorisationSystem();
 
         Collection personCollection = createCollection(context, community)
-            .withRelationshipType("InstitutionPerson")
+            .withEntityType("InstitutionPerson")
             .withSubmissionDefinition("traditional")
             .withAdminGroup(eperson)
             .build();
@@ -317,7 +317,7 @@ public class LogicalStatementValidatorIT extends AbstractIntegrationTestWithData
         context.turnOffAuthorisationSystem();
 
         Collection personCollection = createCollection(context, community)
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withSubmissionDefinition("cvperson")
             .withAdminGroup(eperson)
             .build();

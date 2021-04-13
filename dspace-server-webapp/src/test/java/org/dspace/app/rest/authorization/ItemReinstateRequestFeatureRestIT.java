@@ -70,7 +70,7 @@ public class ItemReinstateRequestFeatureRestIT extends AbstractControllerIntegra
 
         collection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Test collection")
-            .withRelationshipType("InstitutionPublication")
+            .withEntityType("InstitutionPublication")
             .build();
 
         context.restoreAuthSystemState();
@@ -193,7 +193,7 @@ public class ItemReinstateRequestFeatureRestIT extends AbstractControllerIntegra
 
         Collection collection = CollectionBuilder.createCollection(context, community)
             .withName("Test collection")
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .build();
 
         Item item = ItemBuilder.createItem(context, collection)

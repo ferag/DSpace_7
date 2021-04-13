@@ -138,19 +138,19 @@ public class CvPersonCreationIT extends AbstractControllerIntegrationTest {
 
         personCollection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("People")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmitterGroup(user)
             .build();
 
         cvCollection = CollectionBuilder.createCollection(context, ctiVitaeCommunity)
             .withName("Profiles")
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withSubmitterGroup(user)
             .build();
 
         cvCloneCollection = CollectionBuilder.createCollection(context, ctiVitaeCloneCommunity)
             .withName("Profiles")
-            .withRelationshipType("CvPersonClone")
+            .withEntityType("CvPersonClone")
             .build();
 
         createRelationshipTypeBuilder(context, cvPersonEntityType, personEntityType, "isPersonOwner",
@@ -452,7 +452,7 @@ public class CvPersonCreationIT extends AbstractControllerIntegrationTest {
 
         Collection institutionPersonCollection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("People")
-            .withRelationshipType("InstitutionPerson")
+            .withEntityType("InstitutionPerson")
             .withSubmitterGroup(user)
             .build();
 

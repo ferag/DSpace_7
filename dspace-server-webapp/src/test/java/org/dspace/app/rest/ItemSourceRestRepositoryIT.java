@@ -107,7 +107,7 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
                 .withTitle("Test Publication Title")
                 .withAuthor("Roman, Bandola")
                 .withIssueDate("2019-01-01")
-                .withRelationshipType("Publication")
+                .withEntityType("Publication")
                 .build();
 
         parentCommunity = CommunityBuilder.createCommunity(context)
@@ -120,14 +120,14 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
                 .withTitle("Publication 2")
                 .withAuthor("Anton, Bandola")
                 .withIssueDate("2019-01-01")
-                .withRelationshipType("InstitutionPublication").build();
+                .withEntityType("InstitutionPublication").build();
 
         Thread.sleep(1000L);
         Item publication3 = ItemBuilder.createItem(context, col2)
                 .withTitle("Test Publication Title")
                 .withAuthor("Roman, Bandola")
                 .withIssueDate("2020-03-08")
-                .withRelationshipType("InstitutionPublication").build();
+                .withEntityType("InstitutionPublication").build();
 
         RelationshipType relationshipType = RelationshipTypeBuilder.createRelationshipTypeBuilder(
                                             context, publicationType, institutionPublicationType,
@@ -173,7 +173,7 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
         Item publication1 = ItemBuilder.createItem(context, col1)
                 .withTitle("Project Title")
                 .withIssueDate("2020-03-17")
-                .withRelationshipType("InstitutionProject")
+                .withEntityType("InstitutionProject")
                 .build();
 
         Collection col2 = CollectionBuilder.createCollection(context, directorio)
@@ -184,7 +184,7 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
                 .withTitle("Project Title")
                 .withAuthor("Anton, Bandola")
                 .withIssueDate("2020-05-01")
-                .withRelationshipType("Project").build();
+                .withEntityType("Project").build();
 
         RelationshipType relationshipType = RelationshipTypeBuilder.createRelationshipTypeBuilder(
                                             context, institutionProjectType, projectType,
@@ -222,7 +222,7 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
                                        .withTitle("Test Publication Title")
                                        .withAuthor("Roman, Bandola")
                                        .withIssueDate("2019-01-01")
-                                       .withRelationshipType("Publication")
+                                       .withEntityType("Publication")
                                        .build();
 
         context.restoreAuthSystemState();
@@ -248,7 +248,7 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
                 .withTitle("Test Publication Title")
                 .withAuthor("Roman, Bandola")
                 .withIssueDate("2019-01-01")
-                .withRelationshipType("Publication")
+                .withEntityType("Publication")
                 .build();
 
         parentCommunity = CommunityBuilder.createCommunity(context)
@@ -262,13 +262,13 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
                 .withTitle("Publication 2")
                 .withAuthor("Anton, Bandola")
                 .withIssueDate("2019-01-01")
-                .withRelationshipType("InstitutionPublication").build();
+                .withEntityType("InstitutionPublication").build();
 
         Item publication3 = ItemBuilder.createItem(context, col2)
                 .withTitle("Test Publication Title")
                 .withAuthor("Roman, Bandola")
                 .withIssueDate("2020-03-08")
-                .withRelationshipType("InstitutionPublication").build();
+                .withEntityType("InstitutionPublication").build();
 
         RelationshipType relationshipType = RelationshipTypeBuilder.createRelationshipTypeBuilder(
                                             context, publicationType, institutionPublicationType,
@@ -312,7 +312,7 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
                 .withAuthor("Roman, Bandola")
                 .withAuthor("Anton, Mostoviy")
                 .withIssueDate("2019-01-01")
-                .withRelationshipType("Publication")
+                .withEntityType("Publication")
                 .build();
 
         parentCommunity = CommunityBuilder.createCommunity(context)
@@ -325,14 +325,14 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
                 .withTitle("Publication 2")
                 .withAuthor("Roman, Bandola")
                 .withIssueDate("2019-01-01")
-                .withRelationshipType("InstitutionPublication").build();
+                .withEntityType("InstitutionPublication").build();
 
         Thread.sleep(600);
         Item publication3 = ItemBuilder.createItem(context, col2)
                 .withTitle("Test Publication Title")
                 .withAuthor("Anton, Mostoviy")
                 .withIssueDate("2020-03-08")
-                .withRelationshipType("InstitutionPublication").build();
+                .withEntityType("InstitutionPublication").build();
 
         RelationshipType relationshipType = RelationshipTypeBuilder.createRelationshipTypeBuilder(
                                             context, publicationType, institutionPublicationType,

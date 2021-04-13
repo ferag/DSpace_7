@@ -220,7 +220,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .createCollection(context, directorioSubCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Publications")
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", directorioReviewGroup)
             .withRoleGroup("editor", directorioEditorGroup)
@@ -237,7 +237,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         institutionCollection = createCollection(context, parentCommunity, "123456789/institution-workflow-test")
             .withName("Institution collection")
-            .withRelationshipType("InstitutionPublication")
+            .withEntityType("InstitutionPublication")
             .withSubmissionDefinition("traditional")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", reviewGroup)
@@ -959,7 +959,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .createCollection(context, directorioCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Persons")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmitterGroup(submitter)
             .withRoleGroup("editor", directorioEditorGroup)
             .build();
@@ -967,7 +967,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Collection institutionPersons = createCollection(context, parentCommunity)
             .withWorkflow("institutionWorkflow")
             .withName("Institution person collection")
-            .withRelationshipType("InstitutionPerson")
+            .withEntityType("InstitutionPerson")
             .withSubmissionDefinition("traditional")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", reviewGroup)
@@ -1684,7 +1684,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .createCollection(context, directorioCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Persons")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmitterGroup(submitter)
             .withRoleGroup("editor", directorioEditorGroup)
             .build();
@@ -2006,7 +2006,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .createCollection(context, directorioCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Persons")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmitterGroup(submitter)
             .withRoleGroup("editor", directorioEditorGroup)
             .build();
@@ -2023,7 +2023,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Collection institutionPersons = createCollection(context, parentCommunity)
             .withWorkflow("institutionWorkflow")
             .withName("Institution person collection")
-            .withRelationshipType("InstitutionPerson")
+            .withEntityType("InstitutionPerson")
             .withSubmissionDefinition("traditional")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", reviewGroup)
@@ -2244,7 +2244,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .createCollection(context, directorioCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Persons")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmitterGroup(submitter)
             .withRoleGroup("editor", directorioEditorGroup)
             .build();
@@ -2252,7 +2252,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Collection institutionPersons = createCollection(context, parentCommunity)
             .withWorkflow("institutionWorkflow")
             .withName("Institution person collection")
-            .withRelationshipType("InstitutionPerson")
+            .withEntityType("InstitutionPerson")
             .withSubmissionDefinition("traditional")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", reviewGroup)
@@ -2347,7 +2347,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         CollectionBuilder.createCollection(context, directorioCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Persons")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmitterGroup(submitter)
             .withRoleGroup("editor", directorioEditorGroup)
             .build();
@@ -2355,7 +2355,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Collection institutionPersons = createCollection(context, parentCommunity)
             .withWorkflow("institutionWorkflow")
             .withName("Institution person collection")
-            .withRelationshipType("InstitutionPerson")
+            .withEntityType("InstitutionPerson")
             .withSubmissionDefinition("traditional")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", reviewGroup)
@@ -2363,13 +2363,13 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         Collection cvPersons = createCollection(context, parentCommunity)
             .withName("CV person collection")
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withSubmitterGroup(submitter)
             .build();
 
         Collection cvPersonClones = createCollection(context, parentCommunity)
             .withName("CV person clone collection")
-            .withRelationshipType("CvPersonClone")
+            .withEntityType("CvPersonClone")
             .withWorkflow("institutionWorkflow")
             .withSubmitterGroup(submitter)
             .build();
@@ -2467,7 +2467,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         CollectionBuilder.createCollection(context, directorioCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Persons")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmitterGroup(submitter)
             .withRoleGroup("editor", directorioEditorGroup)
             .build();
@@ -2475,7 +2475,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Collection institutionPersons = createCollection(context, parentCommunity)
             .withWorkflow("institutionWorkflow")
             .withName("Institution person collection")
-            .withRelationshipType("InstitutionPerson")
+            .withEntityType("InstitutionPerson")
             .withSubmissionDefinition("traditional")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", reviewGroup)
@@ -2483,13 +2483,13 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         Collection cvPersons = createCollection(context, parentCommunity)
             .withName("CV person collection")
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withSubmitterGroup(submitter)
             .build();
 
         Collection cvPersonClones = createCollection(context, parentCommunity)
             .withName("CV person clone collection")
-            .withRelationshipType("CvPersonClone")
+            .withEntityType("CvPersonClone")
             .withWorkflow("institutionWorkflow")
             .withSubmitterGroup(submitter)
             .build();
@@ -2583,7 +2583,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         CollectionBuilder.createCollection(context, directorioCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Persons")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmitterGroup(submitter)
             .withRoleGroup("editor", directorioEditorGroup)
             .build();
@@ -2591,7 +2591,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Collection institutionPersons = createCollection(context, parentCommunity)
             .withWorkflow("institutionWorkflow")
             .withName("Institution person collection")
-            .withRelationshipType("InstitutionPerson")
+            .withEntityType("InstitutionPerson")
             .withSubmissionDefinition("traditional")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", reviewGroup)
@@ -2599,13 +2599,13 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         Collection cvPersons = createCollection(context, parentCommunity)
             .withName("CV person collection")
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withSubmitterGroup(submitter)
             .build();
 
         Collection cvPersonClones = createCollection(context, parentCommunity)
             .withName("CV person clone collection")
-            .withRelationshipType("CvPersonClone")
+            .withEntityType("CvPersonClone")
             .withWorkflow("institutionWorkflow")
             .withSubmitterGroup(submitter)
             .build();
@@ -2699,7 +2699,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         CollectionBuilder.createCollection(context, directorioCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Persons")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmitterGroup(submitter)
             .withRoleGroup("editor", directorioEditorGroup)
             .build();
@@ -2707,7 +2707,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Collection institutionPersons = createCollection(context, parentCommunity)
             .withWorkflow("institutionWorkflow")
             .withName("Institution person collection")
-            .withRelationshipType("InstitutionPerson")
+            .withEntityType("InstitutionPerson")
             .withSubmissionDefinition("traditional")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", reviewGroup)
@@ -2715,13 +2715,13 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         Collection cvPersons = createCollection(context, parentCommunity)
             .withName("CV person collection")
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withSubmitterGroup(submitter)
             .build();
 
         Collection cvPersonClones = createCollection(context, parentCommunity)
             .withName("CV person clone collection")
-            .withRelationshipType("CvPersonClone")
+            .withEntityType("CvPersonClone")
             .withWorkflow("institutionWorkflow")
             .withSubmitterGroup(submitter)
             .build();

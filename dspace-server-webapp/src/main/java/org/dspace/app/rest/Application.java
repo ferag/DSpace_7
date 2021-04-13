@@ -162,13 +162,14 @@ public class Application extends SpringBootServletInitializer {
                             // for our Access-Control-Allow-Origin header
                             .allowCredentials(corsAllowCredentials).allowedOrigins(corsAllowedOrigins)
                             // Allow list of request preflight headers allowed to be sent to us from the client
-                            .allowedHeaders("Authorization", "Content-Type", "X-Requested-With", "accept", "Origin",
-                                            "Access-Control-Request-Method", "Access-Control-Request-Headers",
-                                            "X-On-Behalf-Of")
+                            .allowedHeaders("Accept", "Authorization", "Content-Type", "X-Requested-With", "accept",
+                                "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers",
+                                "X-On-Behalf-Of", "X-XSRF-TOKEN")
                             // Allow list of response headers allowed to be sent by us (the server)
                             .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials",
-                                    "Authorization", "expires", "Location", "Content-Disposition", "WWW-Authenticate",
-                                    "Set-Cookie", "X-Requested-With", oidcLogoutSuccessHandler.getOidcLogoutHeader());
+                                "Authorization", "DSPACE-XSRF-TOKEN", "expires", "Location", "Content-Disposition",
+                                "WWW-Authenticate", "Set-Cookie", "X-Requested-With",
+                                oidcLogoutSuccessHandler.getOidcLogoutHeader());
                 }
             }
 

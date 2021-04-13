@@ -89,7 +89,7 @@ public class ItemCorrectionServiceIT extends AbstractIntegrationTestWithDatabase
         community = createCommunity(context).build();
 
         collection = createCollection(context, community)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withSubmissionDefinition("publication")
             .withWorkflowGroup(1, admin)
             .build();

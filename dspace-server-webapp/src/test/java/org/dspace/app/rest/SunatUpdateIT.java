@@ -42,11 +42,11 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                                           .withName("Parent Community").build();
 
         Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withRelationshipType("OrgUnit")
+                                           .withEntityType("OrgUnit")
                                            .withName("Collection 1").build();
 
         Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withRelationshipType("OrgUnit")
+                                           .withEntityType("OrgUnit")
                                            .withName("Collection 2").build();
 
         Item orgUnitA = ItemBuilder.createItem(context, col1)
@@ -125,11 +125,11 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                                           .withName("Parent Community").build();
 
         Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withRelationshipType("OrgUnit")
+                                           .withEntityType("OrgUnit")
                                            .withName("Collection 1").build();
 
         Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withRelationshipType("OrgUnit")
+                                           .withEntityType("OrgUnit")
                                            .withName("Collection 2").build();
 
         Item orgUnitA = ItemBuilder.createItem(context, col1)
@@ -212,11 +212,11 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                                           .withName("Parent Community").build();
 
         Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withRelationshipType("OrgUnit")
+                                           .withEntityType("OrgUnit")
                                            .withName("Collection 1").build();
 
         Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withRelationshipType("OrgUnit")
+                                           .withEntityType("OrgUnit")
                                            .withName("Collection 2").build();
 
         Item orgUnitA = ItemBuilder.createItem(context, col1)

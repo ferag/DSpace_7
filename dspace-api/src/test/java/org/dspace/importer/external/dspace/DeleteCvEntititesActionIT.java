@@ -171,7 +171,7 @@ public class DeleteCvEntititesActionIT extends AbstractIntegrationTestWithDataba
             .createCollection(context, directorioCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Persons")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmitterGroup(submitter)
             .withRoleGroup("editor", directorioGroup)
             .withRoleGroup("reviewer", directorioGroup)
@@ -181,7 +181,7 @@ public class DeleteCvEntititesActionIT extends AbstractIntegrationTestWithDataba
             .createCollection(context, directorioCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Publications")
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withSubmitterGroup(submitter)
             .withRoleGroup("editor", directorioGroup)
             .withRoleGroup("reviewer", directorioGroup)
@@ -197,25 +197,25 @@ public class DeleteCvEntititesActionIT extends AbstractIntegrationTestWithDataba
 
         cvPersonCollection = CollectionBuilder.createCollection(context, ctiVitaeCommunity)
             .withName("Profiles")
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withSubmitterGroup(submitter)
             .build();
 
         cvPersonCloneCollection = CollectionBuilder.createCollection(context, ctiVitaeCloneCommunity)
             .withName("Profiles")
-            .withRelationshipType("CvPersonClone")
+            .withEntityType("CvPersonClone")
             .withWorkflow("institutionWorkflow")
             .build();
 
         cvPublicationCollection = CollectionBuilder.createCollection(context, ctiVitaeCommunity)
             .withName("Publications")
-            .withRelationshipType("CvPublication")
+            .withEntityType("CvPublication")
             .withSubmitterGroup(submitter)
             .build();
 
         cvPublicationCloneCollection = CollectionBuilder.createCollection(context, ctiVitaeCloneCommunity)
             .withName("Publications")
-            .withRelationshipType("CvPublicationClone")
+            .withEntityType("CvPublicationClone")
             .withWorkflow("institutionWorkflow")
             .build();
 

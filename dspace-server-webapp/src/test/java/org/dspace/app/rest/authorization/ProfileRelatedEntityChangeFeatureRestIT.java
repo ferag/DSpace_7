@@ -322,7 +322,7 @@ public class ProfileRelatedEntityChangeFeatureRestIT extends AbstractControllerI
 
     private Collection createCollection(String relationshipType) {
         return CollectionBuilder.createCollection(context, parentCommunity)
-            .withRelationshipType(relationshipType)
+            .withEntityType(relationshipType)
             .build();
     }
 

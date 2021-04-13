@@ -28,7 +28,6 @@ import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
-import org.dspace.core.Context.Mode;
 import org.dspace.discovery.DiscoverQuery;
 import org.dspace.discovery.DiscoverResult;
 import org.dspace.discovery.DiscoverResultItemIterator;
@@ -92,15 +91,12 @@ public class ItemSearcherByMetadata implements ItemSearcher, ItemReferenceResolv
             return;
         }
 
-        Mode originalMode = context.getCurrentMode();
         try {
             context.turnOffAuthorisationSystem();
-            context.setMode(Mode.BATCH_EDIT);
             resolveReferences(context, metadataValues, item);
         } catch (SQLException | AuthorizeException e) {
             throw new RuntimeException("An error occurs resolving references", e);
         } finally {
-            context.setMode(originalMode);
             context.restoreAuthSystemState();
         }
 
@@ -154,9 +150,9 @@ public class ItemSearcherByMetadata implements ItemSearcher, ItemReferenceResolv
     private Iterator<Item> findItemsToResolve(Context context, List<String> authorities, Item item)
         throws SQLException {
 
-        String relationshipType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
+        String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
 
-        String query = choiceAuthorityService.getAuthorityControlledFieldsByRelationshipType(relationshipType).stream()
+        String query = choiceAuthorityService.getAuthorityControlledFieldsByEntityType(entityType).stream()
             .map(field -> getFieldFilter(field, authorities))
             .collect(Collectors.joining(" OR "));
 

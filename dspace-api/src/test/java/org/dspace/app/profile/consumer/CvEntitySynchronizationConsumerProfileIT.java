@@ -159,7 +159,7 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
             .createCollection(context, directorioCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Persons")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmitterGroup(submitter)
             .withRoleGroup("editor", directorioEditorGroup)
             .build();
@@ -174,13 +174,13 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
 
         cvCollection = CollectionBuilder.createCollection(context, ctiVitaeCommunity)
             .withName("Profiles")
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withSubmitterGroup(submitter)
             .build();
 
         cvCloneCollection = CollectionBuilder.createCollection(context, ctiVitaeCloneCommunity)
             .withName("Profiles")
-            .withRelationshipType("CvPersonClone")
+            .withEntityType("CvPersonClone")
             .withWorkflow("institutionWorkflow")
             .build();
 

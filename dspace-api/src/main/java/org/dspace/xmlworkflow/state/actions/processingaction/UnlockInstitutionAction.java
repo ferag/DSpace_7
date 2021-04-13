@@ -28,7 +28,6 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.core.Context;
-import org.dspace.core.Context.Mode;
 import org.dspace.discovery.SearchServiceException;
 import org.dspace.versioning.ItemCorrectionService;
 import org.dspace.workflow.WorkflowException;
@@ -280,18 +279,8 @@ public class UnlockInstitutionAction extends ProcessingAction {
 
     private void replaceAuthoritiesWithItemId(Context context, Item itemToReplace, Item item)
         throws SQLException, AuthorizeException {
-        Mode originalMode = context.getCurrentMode();
-        try {
-            context.setMode(Mode.BATCH_EDIT);
-            replaceAuthorities(context, item, itemToReplace.getID().toString());
-        } finally {
-            context.setMode(originalMode);
-        }
-    }
+        String authority = itemToReplace.getID().toString();
 
-
-    private void replaceAuthorities(Context context, Item item, String authority)
-        throws SQLException, AuthorizeException {
         Iterator<Item> itemIterator = findItemsWithAuthority(context, authority, item);
 
         while (itemIterator.hasNext()) {

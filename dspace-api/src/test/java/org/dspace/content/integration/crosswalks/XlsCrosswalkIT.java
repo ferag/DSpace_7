@@ -119,7 +119,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item firstItem = createFullPersonItem();
 
         Item secondItem = createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("Edward Red")
             .withGivenName("Edward")
             .withFamilyName("Red")
@@ -132,8 +132,8 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item thirdItem = createItem(context, collection)
+            .withEntityType("Person")
             .withTitle("Adam White")
-            .withRelationshipType("Person")
             .withGivenName("Adam")
             .withFamilyName("White")
             .withBirthDate("1962-03-23")
@@ -200,7 +200,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item item = createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("Walter White")
             .withVariantName("Heisenberg")
             .withVariantName("W.W.")
@@ -265,7 +265,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item firstItem = createFullPublicationItem();
 
         Item secondItem = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withTitle("Second Publication")
             .withDoiIdentifier("doi:222.222/publication")
             .withType("Controlled Vocabulary for Resource Type Genres::learning object")
@@ -280,7 +280,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item thirdItem = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withTitle("Another Publication")
             .withDoiIdentifier("doi:333.333/publication")
             .withType("Controlled Vocabulary for Resource Type Genres::clinical trial")
@@ -345,7 +345,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item firstItem = createFullProjectItem();
 
         Item secondItem = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Project")
+            .withEntityType("Project")
             .withAcronym("STP")
             .withTitle("Second Test Project")
             .withOpenaireId("55-66-77")
@@ -365,7 +365,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item thirdItem = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Project")
+            .withEntityType("Project")
             .withAcronym("TTP")
             .withTitle("Third Test Project")
             .withOpenaireId("88-22-33")
@@ -433,7 +433,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item firstItem = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("OrgUnit")
+            .withEntityType("OrgUnit")
             .withAcronym("TOU")
             .withTitle("Test OrgUnit")
             .withOrgUnitLegalName("Test OrgUnit LegalName")
@@ -458,7 +458,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item secondItem = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("OrgUnit")
+            .withEntityType("OrgUnit")
             .withAcronym("ATOU")
             .withTitle("Another Test OrgUnit")
             .withType("Private non-profit")
@@ -470,7 +470,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item thirdItem = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("OrgUnit")
+            .withEntityType("OrgUnit")
             .withAcronym("TTOU")
             .withTitle("Third Test OrgUnit")
             .withType("Private non-profit")
@@ -523,7 +523,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item firstItem = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Equipment")
+            .withEntityType("Equipment")
             .withAcronym("FT-EQ")
             .withType("Type")
             .withTitle("First Test Equipment")
@@ -545,7 +545,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item secondItem = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Equipment")
+            .withEntityType("Equipment")
             .withAcronym("ST-EQ")
             .withTitle("Second Test Equipment")
             .withInternalId("ID-02")
@@ -560,7 +560,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item thirdItem = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Equipment")
+            .withEntityType("Equipment")
             .withAcronym("TT-EQ")
             .withTitle("Third Test Equipment")
             .withInternalId("ID-03")
@@ -605,7 +605,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item firstItem = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withAcronym("T-FU")
             .withTitle("Test Funding")
             .withType("Gift")
@@ -624,7 +624,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item secondItem = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withAcronym("AT-FU")
             .withTitle("Another Test Funding")
             .withType("Grant")
@@ -640,7 +640,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item thirdItem = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withAcronym("TT-FU")
             .withTitle("Third Test Funding")
             .withType("Grant")
@@ -692,7 +692,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     private Item createFullPersonItem() {
         return createItem(context, collection)
             .withTitle("John Smith")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withFullName("John Smith")
             .withVernacularName("JOHN SMITH")
             .withVariantName("J.S.")
@@ -749,7 +749,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
     private Item createFullPublicationItem() {
         return ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withTitle("Test Publication")
             .withAlternativeTitle("Alternative publication title")
             .withRelationPublication("Published in publication")
@@ -786,7 +786,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
     private Item createFullProjectItem() {
         return ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Project")
+            .withEntityType("Project")
             .withAcronym("TP")
             .withTitle("Test Project")
             .withOpenaireId("11-22-33")

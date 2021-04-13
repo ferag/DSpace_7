@@ -46,7 +46,7 @@ public class OrcidV3AuthorDataProviderTest {
 
         ExternalDataObject obj = this.orcidV3AuthorDataProvider.convertToExternalDataObject(this.orcidPerson);
 
-        assertEquals(obj.getMetadata().size(), 6);
+        assertEquals(obj.getMetadata().size(), 7);
     }
 
     @Test
@@ -74,6 +74,14 @@ public class OrcidV3AuthorDataProviderTest {
         assertTrue(findMetadataValue(obj.getMetadata(), "dc", "description", null,
                 "Sofia Maria Hernandez Garcia is the researcher that is used as an example ORCID record holder.")
                 .isPresent());
+    }
+
+    @Test
+    public void orcidMetadataProvider_shouldProvideAddressMetadata() {
+
+        ExternalDataObject obj = this.orcidV3AuthorDataProvider.convertToExternalDataObject(this.orcidPerson);
+
+        assertTrue(findMetadataValue(obj.getMetadata(), "perucris", "address", "addressCountry", "GB").isPresent());
     }
 
     @Test

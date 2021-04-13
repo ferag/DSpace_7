@@ -150,6 +150,22 @@ public class OrcidV3AuthorDataProvider extends AbstractExternalDataProvider {
                 externalDataObject.setDisplayValue(firstName);
                 externalDataObject.setValue(firstName);
             }
+
+            if (person.getBiography() != null) {
+                externalDataObject.addMetadata(new MetadataValueDTO("dc", "description", null, null,
+                        person.getBiography().getContent()));
+            }
+
+            if (person.getEmails() != null && !person.getEmails().getEmails().isEmpty()) {
+                externalDataObject.addMetadata(new MetadataValueDTO("person", "email", null, null,
+                        person.getEmails().getEmails().get(0).getEmail()));
+            }
+
+            if (person.getAddresses() != null && !person.getAddresses().getAddress().isEmpty()) {
+                externalDataObject.addMetadata(new MetadataValueDTO("perucris", "address", "addressCountry", null,
+                        person.getAddresses().getAddress().get(0).getCountry().getValue().toString()));
+            }
+
         } else if (person.getPath() != null ) {
             externalDataObject.setId(StringUtils.substringBetween(person.getPath(),"/","/person"));
         }

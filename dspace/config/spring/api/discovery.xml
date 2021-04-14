@@ -139,7 +139,6 @@
                 <entry key="RESUME.orgunit.renacyt_centres" value-ref="resumeOrgunitRenacytCentres"/>
                 <!-- Notification Related items -->
                 <entry key="RELATION.CvPerson.notifications" value-ref="relationCvPersonToNotificationConfiguration"/>
-                <entry key="RELATION.Project.researchoutputs" value-ref="relatioProjectPublicationConfiguration"/>
                 <!-- Edit Configurations -->
                 <entry key="editCommunity" value-ref="editCommunityConfiguration"/>
                 <entry key="editCollection" value-ref="editCollectionConfiguration"/>

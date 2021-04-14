@@ -347,8 +347,7 @@ public class CvPersonCreationIT extends AbstractControllerIntegrationTest {
             .andExpect(status().isNotFound());
 
         getClient(authToken).perform(get("/api/core/items/" + profileItemId + "/relationships"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.page.totalPages", is(0)));
+            .andExpect(status().isNotFound());
 
     }
 

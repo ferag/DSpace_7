@@ -139,6 +139,10 @@
                 <entry key="RESUME.orgunit.renacyt_centres" value-ref="resumeOrgunitRenacytCentres"/>
                 <!-- Notification Related items -->
                 <entry key="RELATION.CvPerson.notifications" value-ref="relationCvPersonToNotificationConfiguration"/>
+                <entry key="RELATION.Project.researchoutputs" value-ref="relatioProjectPublicationConfiguration"/>
+                <!-- Edit Configurations -->
+                <entry key="editCommunity" value-ref="editCommunityConfiguration"/>
+                <entry key="editCollection" value-ref="editCollectionConfiguration"/>
             </map>
         </property>
         <property name="toIgnoreMetadataFields">
@@ -186,6 +190,28 @@
     <!--The default configuration settings for discovery-->
     <bean id="defaultConfiguration" class="org.dspace.discovery.configuration.DiscoveryConfiguration" scope="prototype" parent="commonConfiguration">
         <property name="id" value="defaultConfiguration"/>
+    </bean>
+
+    <!--The edit community configuration settings for discovery-->
+    <bean id="editCommunityConfiguration" class="org.dspace.discovery.configuration.DiscoveryConfiguration" scope="prototype" parent="commonConfiguration">
+        <property name="id" value="editCommunityConfiguration"/>
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find communities-->
+                <value>search.resourcetype:Community</value>
+            </list>
+        </property>
+    </bean>
+
+    <!--The edit collection configuration settings for discovery-->
+    <bean id="editCollectionConfiguration" class="org.dspace.discovery.configuration.DiscoveryConfiguration" scope="prototype" parent="commonConfiguration">
+        <property name="id" value="editCollectionConfiguration"/>
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find communities-->
+                <value>search.resourcetype:Collection</value>
+            </list>
+        </property>
     </bean>
 
     <!--The configuration settings for discovery of withdrawn and indiscoverable items (admin only)-->

@@ -862,12 +862,6 @@
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
-	    <qualifier>perucrisidentifierdni</qualifier>
-    </dc-type>
-    
-    <dc-type>
-        <schema>perucris</schema>
-        <element>flagcv</element>
 	    <qualifier>perucrisidentifierpassport</qualifier>
     </dc-type>
     
@@ -875,12 +869,6 @@
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>perucrisidentifierimmigrationCard</qualifier>
-    </dc-type>
-    
-    <dc-type>
-        <schema>perucris</schema>
-        <element>flagcv</element>
-	    <qualifier>personidentifierorcid</qualifier>
     </dc-type>
     
     <dc-type>

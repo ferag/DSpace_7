@@ -115,14 +115,12 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
         Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
                                            .withName("Collection 2").build();
 
-        Thread.sleep(1000L);
         Item publication2 = ItemBuilder.createItem(context, col2)
                 .withTitle("Publication 2")
                 .withAuthor("Anton, Bandola")
                 .withIssueDate("2019-01-01")
                 .withRelationshipType("InstitutionPublication").build();
 
-        Thread.sleep(1000L);
         Item publication3 = ItemBuilder.createItem(context, col2)
                 .withTitle("Test Publication Title")
                 .withAuthor("Roman, Bandola")
@@ -179,7 +177,6 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
         Collection col2 = CollectionBuilder.createCollection(context, directorio)
                                            .withName("Collection 2").build();
 
-        Thread.sleep(600L);
         Item publication2 = ItemBuilder.createItem(context, col2)
                 .withTitle("Project Title")
                 .withAuthor("Anton, Bandola")
@@ -256,8 +253,6 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
         Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
                                            .withName("Collection 2").build();
 
-        Thread.sleep(600L);
-
         Item publication2 = ItemBuilder.createItem(context, col2)
                 .withTitle("Publication 2")
                 .withAuthor("Anton, Bandola")
@@ -320,14 +315,12 @@ public class ItemSourceRestRepositoryIT extends AbstractControllerIntegrationTes
         Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
                                            .withName("Collection 2").build();
 
-        Thread.sleep(600);
         Item publication2 = ItemBuilder.createItem(context, col2)
                 .withTitle("Publication 2")
                 .withAuthor("Roman, Bandola")
                 .withIssueDate("2019-01-01")
                 .withRelationshipType("InstitutionPublication").build();
 
-        Thread.sleep(600);
         Item publication3 = ItemBuilder.createItem(context, col2)
                 .withTitle("Test Publication Title")
                 .withAuthor("Anton, Mostoviy")

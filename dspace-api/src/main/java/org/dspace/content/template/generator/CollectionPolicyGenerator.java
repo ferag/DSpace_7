@@ -16,6 +16,7 @@ import org.dspace.content.Item;
 import org.dspace.content.vo.MetadataValueVO;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
+import org.dspace.util.UUIDUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,8 +41,8 @@ public class CollectionPolicyGenerator implements TemplateValueGenerator {
     @Override
     public MetadataValueVO generator(Context context, Item targetItem, Item templateItem, String extraParams) {
         try {
-            return new MetadataValueVO(
-                findValue(context, templateItem.getTemplateItemOf(), extraParams.split("\\.")));
+            return
+                findValue(context, templateItem.getTemplateItemOf(), extraParams.split("\\."));
         } catch (Exception e) {
             log.error("Error while evaluating resource policies for collection {}: {}",
                 templateItem.getTemplateItemOf().getID(), e.getMessage(), e);
@@ -49,24 +50,28 @@ public class CollectionPolicyGenerator implements TemplateValueGenerator {
         }
     }
 
-    private String findValue(Context context, Collection owningCollection,
-                             String[] params) throws SQLException {
+    private MetadataValueVO findValue(Context context, Collection owningCollection,
+                                      String[] params) throws SQLException {
         int action = Constants.getActionID(params[0].toUpperCase());
-        Function<ResourcePolicy, String> mapper = mapper(params[1]);
+        Function<ResourcePolicy, MetadataValueVO> mapper = mapper(params[1]);
         return owningCollection.getResourcePolicies()
             .stream()
             .filter(rp -> rp.getAction() == action)
             .findFirst()
             .map(mapper)
-            .orElse("");
+            .orElse(new MetadataValueVO(""));
     }
 
-    private Function<ResourcePolicy, String> mapper(String param) {
+    private Function<ResourcePolicy, MetadataValueVO> mapper(String param) {
         switch (param.toUpperCase()) {
             case "EPERSON":
-                return resourcePolicy -> resourcePolicy.getEPerson().getName();
+                return resourcePolicy -> new MetadataValueVO(
+                    resourcePolicy.getEPerson().getName(),
+                    UUIDUtils.toString(resourcePolicy.getEPerson().getID()));
             case "EPERSONGROUP":
-                return resourcePolicy -> resourcePolicy.getGroup().getName();
+                return resourcePolicy -> new MetadataValueVO(
+                    resourcePolicy.getGroup().getName(),
+                    UUIDUtils.toString(resourcePolicy.getGroup().getID()));
             default:
                 throw new IllegalArgumentException("Unable to find mapper for : " + param);
         }

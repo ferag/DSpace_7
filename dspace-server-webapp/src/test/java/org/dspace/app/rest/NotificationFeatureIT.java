@@ -308,4 +308,73 @@ public class NotificationFeatureIT extends AbstractControllerIntegrationTest {
                                                      this.notification, "Notification 1", "2021-02-17")));
     }
 
+    @Test
+    public void findSameNotificationToMultipleEPersonTest() throws Exception {
+       context.turnOffAuthorisationSystem();
+
+       parentCommunity = CommunityBuilder.createCommunity(context).build();
+       Collection colCvPerson = CollectionBuilder.createCollection(context, parentCommunity)
+                                                 .withName("PersonCv Collection")
+                                                 .withRelationshipType("CvPerson").build();
+
+       Collection colPerson = CollectionBuilder.createCollection(context, parentCommunity)
+                                                 .withName("Person Collection")
+                                                 .withRelationshipType("Person").build();
+
+       Community notificationCommunity = CommunityBuilder.createCommunity(context).build();
+       Collection colNotification = CollectionBuilder.createCollection(context, notificationCommunity)
+                                                     .withName("Notification Collection")
+                                                     .withRelationshipType("Notification").build();
+
+       EPerson user = EPersonBuilder.createEPerson(context)
+               .withNameInMetadata("John", "Doe")
+               .withEmail("Johndoe@example.com")
+               .withPassword(password).build();
+
+       EPerson user2 = EPersonBuilder.createEPerson(context)
+               .withNameInMetadata("Anton", "Beket")
+               .withEmail("antonbeket@example.com")
+               .withPassword(password).build();
+
+       ePersonItem = ItemBuilder.createItem(context, colPerson)
+               .withTitle("Person Item Title")
+               .withRelationshipType("Person").build();
+
+       ePerson2Item = ItemBuilder.createItem(context, colPerson)
+               .withTitle("Person2 Item Title")
+               .withRelationshipType("Person").build();
+
+       cvPersonItem = ItemBuilder.createItem(context, colCvPerson)
+                .withTitle("CvPerson")
+                .withCrisOwner(user.getName(), user.getID().toString())
+                .withRelationshipType("CvPerson").build();
+
+       cvPerson2Item = ItemBuilder.createItem(context, colCvPerson)
+               .withTitle("CvPerson")
+               .withCrisOwner(user2.getName(), user2.getID().toString())
+               .withRelationshipType("CvPerson").build();
+
+       notification = ItemBuilder.createItem(context, colNotification)
+                .withTitle("Notification For User1 and User2")
+                .withIssueDate("2021-03-21")
+                .withNotificationTo("Test notification", cvPersonItem.getID().toString())
+                .withNotificationTo("Test notification", cvPerson2Item.getID().toString())
+                .withRelationshipType("Notification").build();
+
+       context.restoreAuthSystemState();
+
+       String tokenUser = getAuthToken(user.getEmail(), password);
+       String tokenUser2 = getAuthToken(user2.getEmail(), password);
+
+       getClient(tokenUser).perform(get("/api/core/items/" + notification.getID()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", ItemMatcher.matchItemWithTitleAndDateIssued(notification,
+                                    "Notification For User1 and User2", "2021-03-21")));
+
+       getClient(tokenUser2).perform(get("/api/core/items/" + notification.getID()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", ItemMatcher.matchItemWithTitleAndDateIssued(notification,
+                                    "Notification For User1 and User2", "2021-03-21")));
+    }
+
 }

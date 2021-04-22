@@ -72,7 +72,9 @@ public class NotificationSendEmailConsumer implements Consumer {
                 List<MetadataValue> list = itemService.getMetadataByMetadataString(item, "perucris.notification.to");
                 try {
                     if (!list.isEmpty()) {
-                        sendEmail(context, item, list);
+                        for (MetadataValue mv : list) {
+                            sendEmail(context, item, mv);
+                        }
                     }
                 } catch (Exception e) {
                     LOGGER.error("Error while sending notification : {}", e.getMessage(), e);
@@ -85,9 +87,9 @@ public class NotificationSendEmailConsumer implements Consumer {
         }
     }
 
-    private void sendEmail(Context context, Item item, List<MetadataValue> list)
+    private void sendEmail(Context context, Item item, MetadataValue metadataValue)
         throws SQLException, IOException, MessagingException {
-        UUID cvPersonitemUuid = UUID.fromString(list.get(0).getAuthority());
+        UUID cvPersonitemUuid = UUID.fromString(metadataValue.getAuthority());
         Item cvPersonItem = itemService.find(context, cvPersonitemUuid);
         List<MetadataValue> crisOwner = itemService.getMetadata(cvPersonItem, "cris", "owner", null, null);
         if (!crisOwner.isEmpty()) {

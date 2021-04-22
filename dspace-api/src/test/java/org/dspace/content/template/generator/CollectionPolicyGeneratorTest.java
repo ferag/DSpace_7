@@ -93,7 +93,8 @@ public class CollectionPolicyGeneratorTest {
 
     @Test
     public void ePersonPolicy() {
-        EPerson eperson = eperson("epersonName");
+        UUID id = UUID.randomUUID();
+        EPerson eperson = eperson(id, "epersonName");
         List<ResourcePolicy> resourcePolicies = resourcePolicy(Constants.DEFAULT_ITEM_READ, eperson, null);
         Collection collection = collection(UUID.randomUUID(), resourcePolicies);
 
@@ -104,11 +105,13 @@ public class CollectionPolicyGeneratorTest {
             .generator(context, item(), itemTemplateOf(collection), "default_item_read.eperson");
 
         assertThat(generated.getValue(), is("epersonName"));
+        assertThat(generated.getAuthority(), is(id.toString()));
     }
 
     @Test
     public void groupPolicy() throws SQLException {
-        Group group = group("groupName");
+        UUID id = UUID.randomUUID();
+        Group group = group(id, "groupName");
         List<ResourcePolicy> resourcePolicies = resourcePolicy(Constants.DEFAULT_ITEM_READ, null, group);
         Collection collection = collection(UUID.randomUUID(), resourcePolicies);
 
@@ -119,17 +122,20 @@ public class CollectionPolicyGeneratorTest {
             .generator(context, item(), itemTemplateOf(collection),"default_item_read.epersongroup");
 
         assertThat(generated.getValue(), is("groupName"));
+        assertThat(generated.getAuthority(), is(id.toString()));
     }
 
-    private Group group(String name) {
+    private Group group(UUID id, String name) {
         Group group = mock(Group.class);
         when(group.getName()).thenReturn(name);
+        when(group.getID()).thenReturn(id);
         return group;
     }
 
-    private EPerson eperson(String name) {
+    private EPerson eperson(UUID id, String name) {
         EPerson ePerson = mock(EPerson.class);
         when(ePerson.getName()).thenReturn(name);
+        when(ePerson.getID()).thenReturn(id);
         return ePerson;
     }
 

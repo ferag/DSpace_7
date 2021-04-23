@@ -3072,6 +3072,7 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
         ePersonRest.setCanLogIn(true);
         ePersonRest.setMetadata(metadataRest);
         ePersonRest.setPassword("somePassword");
+
         AtomicReference<UUID> idRef = new AtomicReference<UUID>();
 
         ReniecProvider originalReniecProvider = dniRegistrationService.getReniecProvider();
@@ -3086,12 +3087,14 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
         mapper.setAnnotationIntrospector(new IgnoreJacksonWriteOnlyAccess());
         try {
 
+            // missing date
             getClient().perform(post("/api/eperson/epersons")
                     .param("dni", "41918999")
                     .content(mapper.writeValueAsBytes(ePersonRest))
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isUnauthorized());
 
+            // missing dni
             getClient().perform(post("/api/eperson/epersons")
                     .param("date", "1982-11-09")
                     .content(mapper.writeValueAsBytes(ePersonRest))
@@ -3100,6 +3103,7 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
 
             when(reniecProvider.getReniecObject("41918999")).thenReturn(null);
 
+            // service unavailable
             getClient().perform(post("/api/eperson/epersons")
                     .param("dni", "41918999")
                     .param("date", "1982-11-09")
@@ -3109,12 +3113,34 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
 
             when(reniecProvider.getReniecObject("41918999")).thenReturn(reniecDTO);
 
+            // wrong date
             getClient().perform(post("/api/eperson/epersons")
                     .param("dni", "41918999")
                     .param("date", "2000-01-01")
                     .content(mapper.writeValueAsBytes(ePersonRest))
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isBadRequest());
+
+            // missing email
+            getClient().perform(post("/api/eperson/epersons")
+                    .param("dni", "41918999")
+                    .param("date", "1982-11-09")
+                    .content(mapper.writeValueAsBytes(ePersonRest))
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isBadRequest());
+
+            ePersonRest.setEmail("test@email.com");
+
+            // already used email
+            getClient().perform(post("/api/eperson/epersons")
+                    .param("dni", "41918999")
+                    .param("date", "1982-11-09")
+                    .content(mapper.writeValueAsBytes(ePersonRest))
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isBadRequest());
+
+            // success case
+            ePersonRest.setEmail("user@email.com");
 
             getClient().perform(post("/api/eperson/epersons")
                                                                .param("dni", "41918999")
@@ -3125,6 +3151,7 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
                                                   .andExpect(jsonPath("$", Matchers.allOf(
                                                       hasJsonPath("$.uuid", not(empty())),
                                                       hasJsonPath("$.type", is("eperson")),
+                                                      hasJsonPath("$.email", is("user@email.com")),
                                                       hasJsonPath("$._links.self.href", not(empty())),
                                                       hasJsonPath("$.metadata", Matchers.allOf(
                                                           matchMetadata("eperson.firstname", "John"),

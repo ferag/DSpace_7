@@ -42,7 +42,7 @@ public class ExternalRegistrationServiceImpl implements ExternalRegistrationServ
 
     @Override
     public boolean canRegister(OIDCProfileElementsResponse userData) {
-        return getProvider(userData) != null;
+        return getProvider(userData).isPresent();
     }
 
 

@@ -230,10 +230,10 @@ public class OIDCAuthentication implements AuthenticationMethod {
         if (!tokens.isRelationshipVerified()) {
             // check whether an user with the same external ids already exists
             // it means that a registration with the same token has already occurred.
-            if (userData.getReniecDni() != null) {
+            if (StringUtils.isNotBlank(userData.getReniecDni())) {
                 final MetadataField field = metadataFieldService.findByString(context, "perucris.eperson.dni", '.');
                 eperson = ePersonService.findByEid(context, field, userData.getReniecDni());
-            } else if (userData.getOrcid() != null) {
+            } else if (StringUtils.isNotBlank(userData.getOrcid())) {
                 final MetadataField field = metadataFieldService.findByString(context, "perucris.eperson.orcid", '.');
                 eperson = ePersonService.findByEid(context, field, userData.getOrcid());
             }

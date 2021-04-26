@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE relationships SYSTEM "relationship-types.dtd">
+
+<relationships>
+    <type>
+        <leftType>Notification</leftType>
+        <rightType>CvPerson</rightType>
+        <leftwardType>isNotificationHiddenFor</leftwardType>
+        <rightwardType>notDisplayingNotification</rightwardType>
+        <leftCardinality>
+            <min>0</min>
+        </leftCardinality>
+        <rightCardinality>
+            <min>0</min>
+        </rightCardinality>
+    </type>
+</relationships>

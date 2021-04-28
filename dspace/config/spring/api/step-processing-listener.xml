@@ -17,11 +17,6 @@
                         <ref bean="scopusLiveImportDataProvider"/>
                     </list>
                 </entry>
-                <entry key="dc.identifier.arxiv">
-                    <list>
-                        <ref bean="arxivLiveImportDataProvider"/>
-                    </list>
-                </entry>
 	        </map>           
         </property>
     </bean>

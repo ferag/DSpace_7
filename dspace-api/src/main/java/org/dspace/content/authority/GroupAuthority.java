@@ -49,13 +49,7 @@ public class GroupAuthority implements ChoiceAuthority {
         if (limit <= 0) {
             limit = 20;
         }
-        List<Group> groups = null;
-        try {
-            groups = groupService.search(context, text, start, limit);
-        } catch (SQLException e) {
-            log.error(e.getMessage(), e);
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        List<Group> groups = getGroups(context, text, start, limit);
         List<Choice> choiceList = new ArrayList<Choice>();
         for (Group group : groups) {
             choiceList.add(new Choice(group.getID().toString(), group.getName(), group.getName()));
@@ -93,4 +87,14 @@ public class GroupAuthority implements ChoiceAuthority {
     public void setPluginInstanceName(String name) {
         this.authorityName = name;
     }
+
+    protected List<Group> getGroups(Context context, String text, int start, int limit) {
+        try {
+            return groupService.search(context, text, start, limit);
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
 }

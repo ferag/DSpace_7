@@ -25,11 +25,7 @@ public class CvPersonSecurityGroupAuthority extends GroupAuthority {
     private static final Logger log = Logger.getLogger(CvPersonSecurityGroupAuthority.class);
 
     @Override
-    public Choices getMatches(String text, int start, int limit, String locale) {
-        Context context = new Context();
-        if (limit <= 0) {
-            limit = 20;
-        }
+    protected List<Group> getGroups(Context context, String text, int start, int limit) {
         String groupUuid = configurationService.getProperty("cti-vitae.security-policy.parent-group-id");
         Group specialGroup = null;
         List<Group> groups = null;
@@ -45,13 +41,7 @@ public class CvPersonSecurityGroupAuthority extends GroupAuthority {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);
         }
-        List<Choice> choiceList = new ArrayList<Choice>();
-        for (Group group : groups) {
-            choiceList.add(new Choice(group.getID().toString(), group.getName(), group.getName()));
-        }
-        Choice[] results = new Choice[choiceList.size()];
-        results = choiceList.toArray(results);
-        return new Choices(results, start, groups.size(), Choices.CF_AMBIGUOUS, groups.size() > (start + limit), 0);
+        return groups;
     }
 
     private List<Group> filterGroups(Context context, Group parent, List<Group> groups)
@@ -64,4 +54,5 @@ public class CvPersonSecurityGroupAuthority extends GroupAuthority {
         }
         return filteredGroups;
     }
+
 }

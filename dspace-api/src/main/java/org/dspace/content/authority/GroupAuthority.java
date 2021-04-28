@@ -17,6 +17,8 @@ import org.dspace.core.Context;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.GroupService;
+import org.dspace.services.ConfigurationService;
+import org.dspace.services.factory.DSpaceServicesFactory;
 import org.dspace.util.UUIDUtils;
 
 /**
@@ -32,7 +34,9 @@ public class GroupAuthority implements ChoiceAuthority {
      **/
     private String authorityName;
 
-    private GroupService groupService = EPersonServiceFactory.getInstance().getGroupService();
+    protected GroupService groupService = EPersonServiceFactory.getInstance().getGroupService();
+
+    protected ConfigurationService configurationService = DSpaceServicesFactory.getInstance().getConfigurationService();
 
     @Override
     public Choices getBestMatch(String text, String locale) {
@@ -41,11 +45,10 @@ public class GroupAuthority implements ChoiceAuthority {
 
     @Override
     public Choices getMatches(String text, int start, int limit, String locale) {
-        Context context = null;
+        Context context = new Context();
         if (limit <= 0) {
             limit = 20;
         }
-        context = new Context();
         List<Group> groups = null;
         try {
             groups = groupService.search(context, text, start, limit);

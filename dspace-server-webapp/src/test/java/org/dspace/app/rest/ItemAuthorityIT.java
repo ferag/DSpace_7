@@ -510,6 +510,121 @@ public class ItemAuthorityIT extends AbstractControllerIntegrationTest {
                        .andExpect(jsonPath("$.externalSource", Matchers.is(exptectedMap)));
     }
 
+    @Test
+    public void cvPersonSecurityGroupAuthorityTest() throws Exception {
+       context.turnOffAuthorisationSystem();
+
+       Group mainGroup = GroupBuilder.createGroup(context)
+                                     .withName("Main group")
+                                     .build();
+
+       configurationService.setProperty("cti-vitae.security-policy.parent-group-id", mainGroup.getID());
+
+       Group groupA = GroupBuilder.createGroup(context)
+                                  .withName("SubGroup A")
+                                  .withParent(mainGroup)
+                                  .build();
+
+       Group groupB = GroupBuilder.createGroup(context)
+                                  .withName("SubGroup B")
+                                  .withParent(mainGroup)
+                                  .build();
+
+       GroupBuilder.createGroup(context)
+                   .withName("Test group C")
+                   .withParent(mainGroup)
+                   .build();
+
+       GroupBuilder.createGroup(context)
+                   .withName("SubGroup Admin D")
+                   .build();
+
+       context.restoreAuthSystemState();
+
+       String tokenAdmin = getAuthToken(admin.getEmail(), password);
+       getClient(tokenAdmin).perform(get("/api/submission/vocabularies/CvPersonSecurityGroupAuthority/entries")
+                            .param("filter", "SubGroup"))
+                       .andExpect(status().isOk())
+                       .andExpect(jsonPath("$._embedded.entries", Matchers.containsInAnyOrder(
+                               ItemAuthorityMatcher.matchItemAuthorityProperties(groupA.getID().toString(),
+                                                    groupA.getName(), groupA.getName(), "vocabularyEntry"),
+                               ItemAuthorityMatcher.matchItemAuthorityProperties(groupB.getID().toString(),
+                                                    groupB.getName(), groupB.getName(), "vocabularyEntry")
+                               )))
+                       .andExpect(jsonPath("$.page.totalElements", Matchers.is(2)));
+    }
+
+    @Test
+    public void cvPersonSecurityGroupAuthorityNoGroupFoundTest() throws Exception {
+       context.turnOffAuthorisationSystem();
+
+       Group mainGroup = GroupBuilder.createGroup(context)
+                                     .withName("Main group")
+                                     .build();
+
+       configurationService.setProperty("cti-vitae.security-policy.parent-group-id", mainGroup.getID());
+
+       GroupBuilder.createGroup(context)
+                   .withName("SubGroup A")
+                   .withParent(mainGroup)
+                   .build();
+
+       GroupBuilder.createGroup(context)
+                   .withName("Test group B")
+                   .withParent(mainGroup)
+                   .build();
+
+       GroupBuilder.createGroup(context)
+                   .withName("SubGroup Admin C")
+                   .build();
+
+       context.restoreAuthSystemState();
+
+       String tokenAdmin = getAuthToken(admin.getEmail(), password);
+       getClient(tokenAdmin).perform(get("/api/submission/vocabularies/CvPersonSecurityGroupAuthority/entries")
+                            .param("filter", "SubGroup Admin C"))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$._embedded.entries").isEmpty())
+                            .andExpect(jsonPath("$.page.totalElements", Matchers.is(0)));
+    }
+
+    @Test
+    public void cvPersonSecurityGroupAuthorityWithEnptySecurityPropertyTest() throws Exception {
+       context.turnOffAuthorisationSystem();
+
+       Group mainGroup = GroupBuilder.createGroup(context)
+                                     .withName("Main group")
+                                     .build();
+
+       Group groupA = GroupBuilder.createGroup(context)
+                                  .withName("SubGroup A")
+                                  .withParent(mainGroup)
+                                  .build();
+
+       GroupBuilder.createGroup(context)
+                   .withName("Test group B")
+                   .withParent(mainGroup)
+                   .build();
+
+       Group groupC = GroupBuilder.createGroup(context)
+                                  .withName("SubGroup Admin C")
+                                  .build();
+
+       context.restoreAuthSystemState();
+
+       String tokenAdmin = getAuthToken(admin.getEmail(), password);
+       getClient(tokenAdmin).perform(get("/api/submission/vocabularies/CvPersonSecurityGroupAuthority/entries")
+                            .param("filter", "SubGroup"))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$._embedded.entries", Matchers.containsInAnyOrder(
+                                    ItemAuthorityMatcher.matchItemAuthorityProperties(groupA.getID().toString(),
+                                                         groupA.getName(), groupA.getName(), "vocabularyEntry"),
+                                    ItemAuthorityMatcher.matchItemAuthorityProperties(groupC.getID().toString(),
+                                                         groupC.getName(), groupC.getName(), "vocabularyEntry")
+                                    )))
+                            .andExpect(jsonPath("$.page.totalElements", Matchers.is(2)));
+    }
+
     @Override
     @After
     // We need to cleanup the authorities cache once than the configuration has been restored

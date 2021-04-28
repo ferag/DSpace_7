@@ -22,6 +22,7 @@ import org.dspace.content.MetadataValue;
 import org.dspace.content.Relationship;
 import org.dspace.content.RelationshipType;
 import org.dspace.content.service.ItemService;
+import org.dspace.content.service.MetadataFieldService;
 import org.dspace.content.service.RelationshipService;
 import org.dspace.content.service.RelationshipTypeService;
 import org.dspace.core.Context;
@@ -42,6 +43,9 @@ public class ItemSourceServiceImpl implements ItemSourceService {
     @Autowired
     private RelationshipService relationshipService;
 
+    @Autowired
+    private MetadataFieldService metadataFieldService;
+
     @Override
     public ItemSource getItemSource(Context context, Item item) {
         ItemSource itemSource = new ItemSource();
@@ -54,6 +58,7 @@ public class ItemSourceServiceImpl implements ItemSourceService {
 
             relationshipTypes.addAll(relationshipTypeService.findByLeftwardOrRightwardTypeName(context,
                     ConcytecWorkflowRelation.SHADOW_COPY.getLeftType()));
+            Set<MetadataField> denyFields = getDenyFields(context);
             for (RelationshipType relationshipType : relationshipTypes) {
                 List<Relationship> relationships = relationshipService.findByItemAndRelationshipType(context, item,
                         relationshipType);
@@ -67,7 +72,7 @@ public class ItemSourceServiceImpl implements ItemSourceService {
                     source.setRelationshipType(type);
                     source.setSource(relatedItem.getOwningCollection().getCommunities().get(0).getName());
                     source.setItemUuid(relatedItem.getID());
-                    List<String> metadata = getMatchingMetadata(item, relatedItem);
+                    List<String> metadata = getMatchingMetadata(item, relatedItem, denyFields);
                     source.setMetadata(metadata);
                     itemSource.addSource(source);
                 }
@@ -78,7 +83,8 @@ public class ItemSourceServiceImpl implements ItemSourceService {
         return itemSource;
     }
 
-    private List<String> getMatchingMetadata(Item item1, Item item2) {
+    private List<String> getMatchingMetadata(Item item1, Item item2, Set<MetadataField> denyFields)
+            throws SQLException {
         Set<MetadataField> fields = new HashSet<>();
         item1.getMetadata().stream().forEach(metadata -> {
             fields.add(metadata.getMetadataField());
@@ -88,6 +94,7 @@ public class ItemSourceServiceImpl implements ItemSourceService {
             fields.add(metadata.getMetadataField());
         });
 
+        fields.removeAll(denyFields);
         List<String> results = new ArrayList<String>();
 
         fields.stream().forEach(field -> {
@@ -121,4 +128,12 @@ public class ItemSourceServiceImpl implements ItemSourceService {
         return itemService.getMetadata(item, field.getMetadataSchema().getName(), field.getElement(),
                 field.getQualifier(), null);
     }
+
+    public Set<MetadataField> getDenyFields(Context context) throws SQLException {
+        Set<MetadataField> denyFields = new HashSet<MetadataField>();
+        denyFields.add(metadataFieldService.findByString(context, "dc.date.accessioned", '.'));
+        denyFields.add(metadataFieldService.findByString(context, "dc.date.available", '.'));
+        return denyFields;
+    }
+
 }

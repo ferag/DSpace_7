@@ -4023,7 +4023,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
      </row>
    </form>
-  </form>
+<!--  </form>-->
 
    <form name="directorio-publication-dc-contributor-author">
      <row>
@@ -4221,7 +4221,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
        </field>
      </row>
    </form>
-	</form>
+<!--	</form>-->
  </form-definitions>
 
 

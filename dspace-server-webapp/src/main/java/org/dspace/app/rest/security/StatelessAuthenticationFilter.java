@@ -40,7 +40,8 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 /**
  * Custom Spring authentication filter for Stateless authentication, intercepts requests to check for valid
- * authentication
+ * authentication. This runs before *every* request in the DSpace backend to see if any authentication data
+ * is passed in that request. If so, it authenticates the EPerson in the current Context.
  *
  * @author Frederic Van Reet (frederic dot vanreet at atmire dot com)
  * @author Tom Desair (tom dot desair at atmire dot com)
@@ -95,6 +96,7 @@ public class StatelessAuthenticationFilter extends BasicAuthenticationFilter {
             log.error("Access is denied (status:{})", HttpServletResponse.SC_FORBIDDEN, e);
             return;
         }
+        // If we have a valid Authentication, save it to Spring Security
         if (authentication != null) {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             if (StringUtils.contains(req.getRequestURI(), "/api/authn/login")) {
@@ -126,7 +128,7 @@ public class StatelessAuthenticationFilter extends BasicAuthenticationFilter {
 
             Context context = ContextUtil.obtainContext(request);
 
-            EPerson eperson = restAuthenticationService.getAuthenticatedEPerson(request, context);
+            EPerson eperson = restAuthenticationService.getAuthenticatedEPerson(request, res, context);
             if (eperson != null) {
                 //Pass the eperson ID to the request service
                 requestService.setCurrentUserId(eperson.getID());

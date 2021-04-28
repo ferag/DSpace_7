@@ -17,6 +17,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.InputStream;
@@ -84,6 +86,10 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
         "org.dspace.authenticate.IPAuthentication",
         "org.dspace.authenticate.ShibAuthentication"
     };
+
+    // see proxies.trusted.ipranges in local.cfg
+    public static final String TRUSTED_IP = "7.7.7.7";
+    public static final String UNTRUSTED_IP = "8.8.8.8";
 
     @Before
     public void setup() throws Exception {
@@ -162,35 +168,111 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
 
     @Test
     public void testStatusShibAuthenticatedWithCookie() throws Exception {
-        //Enable Shibboleth login
+        //Enable Shibboleth login only
         configurationService.setProperty("plugin.sequence.org.dspace.authenticate.AuthenticationMethod", SHIB_ONLY);
 
-        //Simulate that a shibboleth authentication has happened
-        String token = getClient().perform(post("/api/authn/login")
+        String uiURL = configurationService.getProperty("dspace.ui.url");
+
+        // In order to fully simulate a Shibboleth authentication, we'll call
+        // /api/authn/shibboleth?redirectUrl=[UI-URL] , with valid Shibboleth request attributes.
+        // In this situation, we are mocking how Shibboleth works from our UI (see also ShibbolethRestController):
+        // (1) The UI sends the user to Shibboleth to login
+        // (2) After a successful login, Shibboleth redirects user to /api/authn/shibboleth?redirectUrl=[url]
+        // (3) That triggers generation of the auth token (JWT), and redirects the user to 'redirectUrl', sending along
+        //     a temporary cookie containing the auth token.
+        // In below call, we're sending a GET request (as that's what a redirect is), with a Referer of a "fake"
+        // Shibboleth server to simulate this request coming back from Shibboleth (after a successful login).
+        // We are then verifying the user will be redirected to the 'redirectUrl' with a single-use auth cookie
+        // (NOTE: Additional tests of this /api/authn/shibboleth endpoint can be found in ShibbolethRestControllerIT)
+        Cookie authCookie = getClient().perform(get("/api/authn/shibboleth")
+                .header("Referer", "https://myshib.example.com")
+                .param("redirectUrl", uiURL)
                 .requestAttr("SHIB-MAIL", eperson.getEmail())
                 .requestAttr("SHIB-SCOPED-AFFILIATION", "faculty;staff"))
-            .andExpect(status().isOk())
-            .andReturn().getResponse().getHeader(AUTHORIZATION_HEADER).replace("Bearer ", "");
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(uiURL))
+                // Verify that the CSRF token has NOT been changed. Creating the auth cookie should NOT change our CSRF
+                // token. The CSRF token should only change when we call /login with the cookie (see later in this test)
+                .andExpect(cookie().doesNotExist("DSPACE-XSRF-COOKIE"))
+                .andExpect(header().doesNotExist("DSPACE-XSRF-TOKEN"))
+                .andExpect(cookie().exists(AUTHORIZATION_COOKIE))
+                .andReturn().getResponse().getCookie(AUTHORIZATION_COOKIE);
 
-        Cookie[] cookies = new Cookie[1];
-        cookies[0] = new Cookie(AUTHORIZATION_COOKIE, token);
+        // Verify the temporary cookie now exists & obtain its token for use below
+        assertNotNull(authCookie);
+        String token = authCookie.getValue();
 
-        //Check if we are authenticated with a status request with authorization cookie
-        getClient().perform(get("/api/authn/status")
-                .secure(true)
-                .cookie(cookies))
+        // This step is _not required_ to successfully authenticate, but it mocks the behavior of our UI & HAL Browser.
+        // We'll send a "/status" request to the REST API with our auth cookie. This should return that we have a
+        // *valid* authentication (as auth cookie is valid), however the cookie will remain. To complete the login
+        // process we MUST call the "/login" endpoint (see the next step in this test).
+        // (NOTE that this call has an "Origin" matching the UI, to better mock that the request came from there &
+        // to verify the temporary auth cookie is valid for the UI's origin.)
+        getClient().perform(get("/api/authn/status").header("Origin", uiURL)
+                                                              .secure(true)
+                                                              .cookie(authCookie))
                 .andExpect(status().isOk())
-                //We expect the content type to be "application/hal+json;charset=UTF-8"
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.okay", is(true)))
+                .andExpect(jsonPath("$.authenticated", is(true)))
+                .andExpect(jsonPath("$.type", is("status")))
+                // Verify that the CSRF token has NOT been changed... status checks won't change the token
+                // (only login/logout will)
+                .andExpect(cookie().doesNotExist("DSPACE-XSRF-COOKIE"))
+                .andExpect(header().doesNotExist("DSPACE-XSRF-TOKEN"));
+
+        // To complete the authentication process, we pass our auth cookie to the "/login" endpoint.
+        // This is where the temporary cookie will be read, verified & destroyed. After this point, the UI will
+        // only use the 'Authorization' header for all future requests.
+        // (NOTE that this call has an "Origin" matching the UI, to better mock that the request came from there &
+        // to verify the temporary auth cookie is valid for the UI's origin.)
+        getClient().perform(post("/api/authn/login").header("Origin", uiURL)
+                                                              .secure(true)
+                                                              .cookie(authCookie))
+                .andExpect(status().isOk())
+                // Verify the Auth cookie has been destroyed
+                .andExpect(cookie().value(AUTHORIZATION_COOKIE, ""))
+                // Verify token is now sent back in the Authorization header as the Bearer token
+                .andExpect(header().string(AUTHORIZATION_HEADER, "Bearer " + token))
+                // Verify that the CSRF token has been changed
+                // (as both cookie and header should be sent back)
+                .andExpect(cookie().exists("DSPACE-XSRF-COOKIE"))
+                .andExpect(header().exists("DSPACE-XSRF-TOKEN"));
+
+        // Now that the auth cookie is cleared, all future requests (from UI)
+        // should be made via the Authorization header. So, this tests the token is still valid if sent via header.
+        getClient(token).perform(get("/api/authn/status").header("Origin", uiURL))
+                .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$.okay", is(true)))
                 .andExpect(jsonPath("$.authenticated", is(true)))
                 .andExpect(jsonPath("$.type", is("status")));
 
-        //Logout
-        getClient(token).perform(post("/api/authn/logout"))
+        //Logout, invalidating the token
+        getClient(token).perform(post("/api/authn/logout").header("Origin", uiURL))
                         .andExpect(status().isNoContent());
     }
 
+    @Test
+    public void testShibbolethEndpointCannotBeUsedWithShibDisabled() throws Exception {
+        // Enable only password login
+        configurationService.setProperty("plugin.sequence.org.dspace.authenticate.AuthenticationMethod", PASS_ONLY);
+
+        String uiURL = configurationService.getProperty("dspace.ui.url");
+
+        // Verify /api/authn/shibboleth endpoint does not work
+        // NOTE: this is the same call as in testStatusShibAuthenticatedWithCookie())
+        getClient().perform(get("/api/authn/shibboleth")
+                .header("Referer", "https://myshib.example.com")
+                .param("redirectUrl", uiURL)
+                .requestAttr("SHIB-MAIL", eperson.getEmail())
+                .requestAttr("SHIB-SCOPED-AFFILIATION", "faculty;staff"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    // NOTE: This test is similar to testStatusShibAuthenticatedWithCookie(), but proves the same process works
+    // for Password Authentication in theory (NOTE: at this time, there's no way to create an auth cookie via the
+    // Password Authentication process).
     @Test
     public void testStatusPasswordAuthenticatedWithCookie() throws Exception {
         // Login via password to retrieve a valid token
@@ -199,21 +281,49 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
         // Remove "Bearer " from that token, so that we are left with the token itself
         token = token.replace("Bearer ", "");
 
-        // Save token to an Authorization cookie
-        Cookie[] cookies = new Cookie[1];
-        cookies[0] = new Cookie(AUTHORIZATION_COOKIE, token);
+        // Fake the creation of an auth cookie, just for testing. (Currently, it's not possible to create an auth cookie
+        // via Password auth, but this test proves it would work if enabled)
+        Cookie authCookie = new Cookie(AUTHORIZATION_COOKIE, token);
 
-        //Check if we are authenticated with a status request using authorization cookie
-        getClient().perform(get("/api/authn/status")
-                                .secure(true)
-                                .cookie(cookies))
+        // Now, similar to how both the UI & Hal Browser authentication works, send a "/status" request to the REST API
+        // with our auth cookie. This should return that we *have a valid* authentication (in the auth cookie).
+        // However, this is just a validation check, so this auth cookie will remain. To complete the login process
+        // we'll need to call the "/login" endpoint (see the next step in this test).
+        getClient().perform(get("/api/authn/status").secure(true).cookie(authCookie))
                    .andExpect(status().isOk())
-                   //We expect the content type to be "application/hal+json"
                    .andExpect(content().contentType(contentType))
                    .andExpect(jsonPath("$.okay", is(true)))
                    .andExpect(jsonPath("$.authenticated", is(true)))
-                   .andExpect(jsonPath("$.type", is("status")));
-        //Logout
+                   .andExpect(jsonPath("$.type", is("status")))
+                   // Verify that the CSRF token has NOT been changed... status checks won't change the token
+                   // (only login/logout will)
+                   .andExpect(cookie().doesNotExist("DSPACE-XSRF-COOKIE"))
+                   .andExpect(header().doesNotExist("DSPACE-XSRF-TOKEN"));
+
+        // To complete the authentication process, we pass our auth cookie to the "/login" endpoint.
+        // This is where the temporary cookie will be read, verified & destroyed. After this point, the UI will
+        // only use the Authorization header for all future requests.
+        getClient().perform(post("/api/authn/login").secure(true).cookie(authCookie))
+                    .andExpect(status().isOk())
+                    // Verify the Auth cookie has been destroyed
+                    .andExpect(cookie().value(AUTHORIZATION_COOKIE, ""))
+                    // Verify token is now sent back in the Authorization header
+                    .andExpect(header().string(AUTHORIZATION_HEADER, "Bearer " + token))
+                    // Verify that the CSRF token has been changed
+                    // (as both cookie and header should be sent back)
+                    .andExpect(cookie().exists("DSPACE-XSRF-COOKIE"))
+                    .andExpect(header().exists("DSPACE-XSRF-TOKEN"));
+
+        // Now that the auth cookie is cleared, all future requests (from UI)
+        // should be made via the Authorization header. So, this tests the token is still valid if sent via header.
+        getClient(token).perform(get("/api/authn/status"))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(contentType))
+                    .andExpect(jsonPath("$.okay", is(true)))
+                    .andExpect(jsonPath("$.authenticated", is(true)))
+                    .andExpect(jsonPath("$.type", is("status")));
+
+        // Logout, invalidating the token
         getClient(token).perform(post("/api/authn/logout"))
                         .andExpect(status().isNoContent());
     }
@@ -976,6 +1086,52 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
     }
 
     @Test
+    public void testShortLivedTokenUsingGet() throws Exception {
+        String token = getAuthToken(eperson.getEmail(), password);
+
+        // Verify the main session salt doesn't change
+        String salt = eperson.getSessionSalt();
+
+        getClient(token).perform(
+            get("/api/authn/shortlivedtokens")
+                .with(ip(TRUSTED_IP))
+        )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.token", notNullValue()))
+            .andExpect(jsonPath("$.type", is("shortlivedtoken")))
+            .andExpect(jsonPath("$._links.self.href", Matchers.containsString("/api/authn/shortlivedtokens")))
+            // Verify generating short-lived token doesn't change our CSRF token
+            // (so, neither the CSRF cookie nor header are sent back)
+            .andExpect(cookie().doesNotExist("DSPACE-XSRF-COOKIE"))
+            .andExpect(header().doesNotExist("DSPACE-XSRF-TOKEN"));
+
+        assertEquals(salt, eperson.getSessionSalt());
+    }
+
+    @Test
+    public void testShortLivedTokenUsingGetFromUntrustedIpShould403() throws Exception {
+        String token = getAuthToken(eperson.getEmail(), password);
+
+        getClient(token).perform(
+            get("/api/authn/shortlivedtokens")
+                .with(ip(UNTRUSTED_IP))
+        )
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void testShortLivedTokenUsingGetFromUntrustedIpWithForwardHeaderShould403() throws Exception {
+        String token = getAuthToken(eperson.getEmail(), password);
+
+        getClient(token).perform(
+            get("/api/authn/shortlivedtokens")
+                .with(ip(UNTRUSTED_IP))
+                .header("X-Forwarded-For", TRUSTED_IP) // this should not affect the test result
+        )
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
     public void testShortLivedTokenWithCSRFSentViaParam() throws Exception {
         String token = getAuthToken(eperson.getEmail(), password);
 
@@ -992,6 +1148,15 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
     @Test
     public void testShortLivedTokenNotAuthenticated() throws Exception {
         getClient().perform(post("/api/authn/shortlivedtokens"))
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void testShortLivedTokenNotAuthenticatedUsingGet() throws Exception {
+        getClient().perform(
+            get("/api/authn/shortlivedtokens")
+                .with(ip(TRUSTED_IP))
+        )
             .andExpect(status().isUnauthorized());
     }
 
@@ -1071,6 +1236,17 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
         String shortLivedToken = getShortLivedToken(eperson);
 
         getClient().perform(post("/api/authn/shortlivedtokens?authentication-token=" + shortLivedToken))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void testGenerateShortLivedTokenWithShortLivedTokenUsingGet() throws Exception {
+        String shortLivedToken = getShortLivedToken(eperson);
+
+        getClient().perform(
+            get("/api/authn/shortlivedtokens?authentication-token=" + shortLivedToken)
+                .with(ip(TRUSTED_IP))
+        )
             .andExpect(status().isForbidden());
     }
 

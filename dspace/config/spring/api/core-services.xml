@@ -64,6 +64,10 @@
 
     <bean id= "org.dspace.app.profile.service.ResearcherProfileService" class="org.dspace.app.profile.ResearcherProfileServiceImpl"/>
     <bean id= "org.dspace.app.profile.service.CvEntityService" class="org.dspace.app.profile.CvEntityServiceImpl"/>
+<!--    <bean class="org.dspace.app.profile.ResearcherProfileServiceImpl"/>-->
+    <bean class="org.dspace.app.profile.ProfileSynchronizationWithOrcidConfiguratorImpl"/>
+
+    <bean class="org.dspace.app.profile.OrcidMetadataCopyingAction"/>
 
     <!-- Ensure PluginService is initialized properly via init() method -->
     <bean class="org.dspace.core.LegacyPluginServiceImpl" init-method="init"/>

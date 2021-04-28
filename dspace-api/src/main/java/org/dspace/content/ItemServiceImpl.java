@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -20,12 +21,17 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
+import org.dspace.app.orcid.OrcidHistory;
+import org.dspace.app.orcid.OrcidQueue;
+import org.dspace.app.orcid.service.OrcidHistoryService;
+import org.dspace.app.orcid.service.OrcidQueueService;
 import org.dspace.app.util.AuthorizeUtil;
 import org.dspace.authority.service.AuthorityValueService;
 import org.dspace.authorize.AuthorizeConfiguration;
@@ -134,6 +140,12 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
 
     @Autowired(required = true)
     private ConcytecWorkflowService concytecWorkflowService;
+
+    @Autowired(required = true)
+    private OrcidHistoryService orcidHistoryService;
+
+    @Autowired(required = true)
+    private OrcidQueueService orcidQueueService;
 
     protected ItemServiceImpl() {
         super();
@@ -720,6 +732,8 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
         // remove version attached to the item
         removeVersion(context, item);
 
+        removeOrcidSynchronizationStuff(context, item);
+
         // Also delete the item if it appears in a harvested collection.
         HarvestedItem hi = harvestedItemService.find(context, item);
 
@@ -1079,6 +1093,13 @@ prevent the generation of resource policy entry values with null dspace_object a
         } else {
             return itemDAO.findByMetadataField(context, mdf, value, true);
         }
+    }
+
+    @Override
+    public Iterator<Item> findArchivedByMetadataField(Context context, String metadataField, String value)
+        throws SQLException, AuthorizeException {
+        String[] mdValueByField = getMDValueByField(metadataField);
+        return findArchivedByMetadataField(context, mdValueByField[0], mdValueByField[1], mdValueByField[2], value);
     }
 
     @Override
@@ -1511,6 +1532,48 @@ prevent the generation of resource policy entry values with null dspace_object a
     @Override
     public Item getReference(Context context, UUID id) throws SQLException {
         return itemDAO.getReference(context, id);
+    }
+    @Override
+    public MetadataValue addMetadata(Context context, Item dso, String schema, String element, String qualifier,
+            String lang, String value, String authority, int confidence, int place) throws SQLException {
+
+        // We will not verify that they are valid entries in the registry
+        // until update() is called.
+        MetadataField metadataField = metadataFieldService.findByElement(context, schema, element, qualifier);
+        if (metadataField == null) {
+            throw new SQLException(
+                "bad_dublin_core schema=" + schema + "." + element + "." + qualifier + ". Metadata field does not " +
+                "exist!");
+        }
+
+        final Supplier<Integer> placeSupplier =  () -> place;
+
+        return addMetadata(context, dso, metadataField, lang, Arrays.asList(value),
+                Arrays.asList(authority), Arrays.asList(confidence), placeSupplier)
+                .stream().findFirst().orElse(null);
+    }
+
+
+    private void removeOrcidSynchronizationStuff(Context context, Item item) throws SQLException, AuthorizeException {
+
+        try {
+
+            context.turnOffAuthorisationSystem();
+
+            List<OrcidHistory> orcidHistories = orcidHistoryService.findByOwner(context, item);
+            for (OrcidHistory orcidHistory : orcidHistories) {
+                orcidHistoryService.delete(context, orcidHistory);
+            }
+
+            List<OrcidQueue> orcidQueues = orcidQueueService.findByOwnerId(context, item.getID());
+            for (OrcidQueue orcidQueue : orcidQueues) {
+                orcidQueueService.delete(context, orcidQueue);
+            }
+
+        } finally {
+            context.restoreAuthSystemState();
+        }
+
     }
 
 }

@@ -553,6 +553,20 @@ public interface ItemService
     public Iterator<Item> findArchivedByMetadataField(Context context, String schema, String element,
         String qualifier, String value) throws SQLException, AuthorizeException;
 
+    /**
+     * Returns an iterator of in archive items possessing the passed metadata field, or only
+     * those matching the passed value, if value is not Item.ANY
+     *
+     * @param context   DSpace context object
+     * @param metadataField    metadata
+     * @param value     field value or Item.ANY to match any value
+     * @return an iterator over the items matching that authority value
+     * @throws SQLException       if database error
+     * @throws AuthorizeException if authorization error
+     */
+    public Iterator<Item> findArchivedByMetadataField(Context context, String metadataField, String value)
+        throws SQLException, AuthorizeException;
+
     public Iterator<Item> findUnfilteredByMetadataField(Context context, String schema, String element,
         String qualifier, String value) throws SQLException, AuthorizeException;
 
@@ -744,7 +758,7 @@ public interface ItemService
     /**
      * Search all the items that have an authority controller metadata fields
      * related to the given dspace.entity.type with the given authority value.
-     * 
+     *
      * @param context    the DSpace context
      * @param authority  the authority value to match
      * @param entityType the entity type related to the metadata fields
@@ -758,7 +772,7 @@ public interface ItemService
      * instance does not exist in the database, the
      * <code>EntityNotFoundException</code> is thrown when the instance state is
      * first accessed.
-     * 
+     *
      * @param context the DSpace context
      * @param id      the item id
      * @return the item proxy

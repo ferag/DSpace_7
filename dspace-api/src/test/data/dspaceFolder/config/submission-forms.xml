@@ -46,9 +46,11 @@
 	         <required></required>
 	       </field>
        </row>
-   </form>      
-   
+   </form>
+
    <form name="traditionalpageone">
+            <!-- NOTE: this Author <row> is customized from the default submission-forms.xml in order to make it
+                 easier to test Entity functionality -->
             <row>
                 <relation-field>
                     <relationship-type>isAuthorOfPublication</relationship-type>
@@ -1003,7 +1005,8 @@ it, please enter the types and the actual numbers or codes.</hint>
        </field>
      </row>
 	</form>
-	
+
+
     <form name="cv-publication-dc-contributor-author">
       <row>
         <field>
@@ -2336,7 +2339,7 @@ it, please enter the types and the actual numbers or codes.</hint>
         </field>
       </row>
     </form>
-	
+
 	<form name="traditionalpagetwo">
      <row>
        <field>
@@ -2891,6 +2894,7 @@ it, please enter the types and the actual numbers or codes.</hint>
       </row>
     </form>
 
+
    <form name="institution-publication-dc-contributor-editor">
      <row>
        <field>
@@ -3354,7 +3358,7 @@ it, please enter the types and the actual numbers or codes.</hint>
        </field>
      </row>
    </form>
-    
+
    <!-- Form patent [START] -->
    <form name="patent">
      <row>
@@ -3981,7 +3985,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
    </form>
-    
+
    <form name="sampleauthority">
      <row>
         <field>
@@ -4019,6 +4023,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
      </row>
    </form>
+  </form>
 
    <form name="directorio-publication-dc-contributor-author">
      <row>
@@ -4151,7 +4156,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
          <required>You must enter at least the year.</required>
        </field>
      </row>
-	</form> 
+	</form>
 	   <form name="onlyTitle">
      <row>
        <field>
@@ -4216,6 +4221,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
        </field>
      </row>
    </form>
+	</form>
  </form-definitions>
 
 
@@ -5840,6 +5846,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <stored-value>Certificate of plant breeder's right</stored-value>
       </pair>
     </value-pairs>
+
  </form-value-pairs>
 
 </input-forms>

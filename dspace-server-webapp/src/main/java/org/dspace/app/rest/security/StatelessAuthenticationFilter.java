@@ -100,7 +100,7 @@ public class StatelessAuthenticationFilter extends BasicAuthenticationFilter {
         if (authentication != null) {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             if (StringUtils.contains(req.getRequestURI(), "/api/authn/login")) {
-                restAuthenticationService.invalidateAuthenticationCookie(res);
+                restAuthenticationService.invalidateAuthenticationCookie(req, res);
             }
         }
         chain.doFilter(req, res);

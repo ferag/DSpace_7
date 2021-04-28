@@ -7036,6 +7036,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>policy</dc-element>
           <dc-qualifier>group</dc-qualifier>
           <label>Allow access to group</label>
+          <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
           <hint />

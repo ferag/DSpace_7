@@ -15,14 +15,12 @@ import static org.dspace.eperson.Group.ANONYMOUS;
 import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import javax.annotation.PostConstruct;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
@@ -30,9 +28,9 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.exception.ResourceConflictException;
-import org.dspace.app.profile.service.AfterResearcherProfileCreationAction;
 import org.dspace.app.profile.importproviders.model.ConfiguredResearcherProfileProvider;
 import org.dspace.app.profile.service.AfterProfileDeleteAction;
+import org.dspace.app.profile.service.AfterResearcherProfileCreationAction;
 import org.dspace.app.profile.service.BeforeProfileHardDeleteAction;
 import org.dspace.app.profile.service.ImportResearcherProfileService;
 import org.dspace.app.profile.service.ResearcherProfileService;
@@ -124,19 +122,14 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
             beforeProfileHardDeleteActionList = Collections.emptyList();
         }
 
-    }
-
-    @Autowired(required = false)
-    private List<AfterResearcherProfileCreationAction> afterCreationActions;
-
-    @PostConstruct
-    public void postConstruct() {
-
         if (afterCreationActions == null) {
             afterCreationActions = Collections.emptyList();
         }
 
     }
+
+    @Autowired(required = false)
+    private List<AfterResearcherProfileCreationAction> afterCreationActions;
 
     @Override
     public ResearcherProfile findById(Context context, UUID id) throws SQLException, AuthorizeException {

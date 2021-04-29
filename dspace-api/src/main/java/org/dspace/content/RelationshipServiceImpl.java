@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -230,7 +231,11 @@ public class RelationshipServiceImpl implements RelationshipService {
 
     private boolean isRelationshipValidToCreate(Context context, Relationship relationship) throws SQLException {
         RelationshipType relationshipType = relationship.getRelationshipType();
-
+        if (relationshipType.getLeftType() == null && relationshipType.getRightType() == null) {
+            log.warn("The relationship has been deemed invalid since both left and right type " +
+                         "of relationship type are null");
+            return false;
+        }
         if (!verifyEntityTypes(relationship.getLeftItem(), relationshipType.getLeftType())) {
             log.warn("The relationship has been deemed invalid since the leftItem" +
                          " and leftType do no match on entityType");
@@ -289,6 +294,10 @@ public class RelationshipServiceImpl implements RelationshipService {
     }
 
     private boolean verifyEntityTypes(Item itemToProcess, EntityType entityTypeToProcess) {
+        // null means every entity type is fine
+        if (Objects.isNull(entityTypeToProcess)) {
+            return true;
+        }
         List<MetadataValue> list = itemService.getMetadata(itemToProcess, "dspace", "entity",
                 "type", Item.ANY, false);
         if (list.isEmpty()) {

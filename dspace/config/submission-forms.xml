@@ -6861,16 +6861,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>identifier</dc-element>
-          <dc-qualifier>dni</dc-qualifier>
-          <label>DNI</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint />
-        </field>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>identifier</dc-element>
           <dc-qualifier>passport</dc-qualifier>
           <label>Passport</label>
           <input-type>onebox</input-type>
@@ -6883,18 +6873,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>identifier</dc-element>
           <dc-qualifier>immigrationCard</dc-qualifier>
           <label>Immigration Card</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>person</dc-schema>
-          <dc-element>identifier</dc-element>
-          <dc-qualifier>orcid</dc-qualifier>
-          <label>ORCID</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -7048,6 +7026,17 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Send changes to Directorio</label>
           <input-type value-pairs-name="truefalse">dropdown</input-type>
           <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>cris</dc-schema>
+          <dc-element>policy</dc-element>
+          <dc-qualifier>group</dc-qualifier>
+          <label>Allow access to group</label>
+          <repeatable>true</repeatable>
           <required />
           <hint />
         </field>
@@ -9680,6 +9669,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
 				<dc-qualifier>to</dc-qualifier>
 				<label>Profile to be notified</label>
 				<input-type>onebox</input-type>
+				<repeatable>true</repeatable>
 				<hint></hint>
 				<required>You must enter a Profile</required>
 			</field>

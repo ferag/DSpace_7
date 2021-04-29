@@ -8,12 +8,19 @@
 package org.dspace.app.profile;
 
 import static java.lang.String.format;
+import static java.util.Spliterator.ORDERED;
+import static java.util.Spliterators.spliteratorUnknownSize;
+import static java.util.stream.StreamSupport.stream;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.MERGED;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.dspace.app.profile.service.CvEntityService;
+import org.dspace.app.profile.service.ResearcherProfileService;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
@@ -62,6 +69,9 @@ public class CvEntityServiceImpl implements CvEntityService {
     @Autowired
     private ItemCorrectionService itemCorrectionService;
 
+    @Autowired
+    private ResearcherProfileService researcherProfileService;
+
     @Override
     public CvEntity createFromItem(Context context, Item item) throws SQLException, AuthorizeException {
         Assert.notNull(item, "A item is required to create a CV entity");
@@ -77,11 +87,39 @@ public class CvEntityServiceImpl implements CvEntityService {
 
             linkCvCloneToItem(context, item, cvCloneItem);
 
-            return new CvEntity(cvItem);
+            return buildCvEntity(cvItem);
 
         } finally {
             context.restoreAuthSystemState();
         }
+    }
+
+    @Override
+    public List<CvEntity> findByProfileItem(Context context, Item profileItem) throws SQLException, AuthorizeException {
+        Assert.notNull(profileItem, "An item is required to search related CV entities");
+
+        Iterator<Item> itemIterator = itemService.findByAuthorityValue(context, "perucris", "ctivitae", "owner",
+            profileItem.getID().toString());
+
+        return stream(spliteratorUnknownSize(itemIterator, ORDERED), false)
+            .filter(this::hasCvEntityType)
+            .map(this::buildCvEntity)
+            .collect(Collectors.toList());
+
+    }
+
+    @Override
+    public void deleteByProfileItem(Context context, Item profileItem) throws SQLException, AuthorizeException {
+        List<CvEntity> cvEntities = findByProfileItem(context, profileItem);
+        for (CvEntity cvEntity : cvEntities) {
+            delete(context, cvEntity);
+        }
+    }
+
+    @Override
+    public void delete(Context context, CvEntity cvEntity) throws SQLException, AuthorizeException {
+        concytecWorkflowService.deleteClone(context, cvEntity.getItem());
+        deleteItem(context, cvEntity.getItem());
     }
 
     private Item createCvCloneItem(Context context, Item item) throws SQLException, AuthorizeException {
@@ -106,6 +144,12 @@ public class CvEntityServiceImpl implements CvEntityService {
         EPerson currentUser = context.getCurrentUser();
         itemService.addMetadata(context, cvItem, "cris", "owner", null, null, currentUser.getName(),
             currentUser.getID().toString(), 600);
+
+        ResearcherProfile researcherProfile = researcherProfileService.findById(context, currentUser.getID());
+        if (researcherProfile != null) {
+            itemService.addMetadata(context, cvItem, "perucris", "ctivitae", "owner", null,
+                researcherProfile.getItemFullName(), researcherProfile.getItemId().toString(), 600);
+        }
 
         return cvItem;
     }
@@ -162,6 +206,23 @@ public class CvEntityServiceImpl implements CvEntityService {
         concytecWorkflowService.createOriginatedFromRelationship(context, item, cloneItem);
 
         return itemCopy;
+    }
+
+    private CvEntity buildCvEntity(Item item) {
+        return new CvEntity(item);
+    }
+
+    private boolean hasCvEntityType(Item item) {
+        String entityType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
+        return entityType != null && entityType.startsWith("Cv") && !entityType.endsWith("Clone");
+    }
+
+    private void deleteItem(Context context, Item item) throws SQLException, AuthorizeException {
+        try {
+            itemService.delete(context, item);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

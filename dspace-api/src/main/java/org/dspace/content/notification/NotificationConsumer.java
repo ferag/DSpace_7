@@ -65,24 +65,25 @@ public class NotificationConsumer implements Consumer {
             Item item = (Item) dso;
             if (item.isArchived() && isNotificationEntityItem(item) && !itemsAlreadyProcessed.contains(item)) {
                 context.turnOffAuthorisationSystem();
-                List<MetadataValue> list = this.itemService.getMetadataByMetadataString(
-                                                item, "perucris.notification.to");
+                boolean isTheFirstRecipient = true;
+                List<MetadataValue> list = itemService.getMetadataByMetadataString(item, "perucris.notification.to");
                 if (!list.isEmpty()) {
-                    UUID cvPersonitemUuid = UUID.fromString(list.get(0).getAuthority());
-                    Item cvPersonItem = itemService.find(context, cvPersonitemUuid);
-                    List<MetadataValue> crisOwner =
-                        this.itemService.getMetadata(cvPersonItem, "cris", "owner", null, null);
-                    if (!crisOwner.isEmpty()) {
-                        UUID ePersonUuid = UUID.fromString(crisOwner.get(0).getAuthority());
-                        EPerson cvOwner = this.ePersonService.find(context, ePersonUuid);
-                        this.resourcePolicyService.removeAllPolicies(context, item);
-                        this.authorizeService.addPolicy(context, item, Constants.READ, cvOwner);
+                    for (MetadataValue metadataValue : list) {
+                        UUID cvPersonitemUuid = UUID.fromString(metadataValue.getAuthority());
+                        Item cvPersonItem = itemService.find(context, cvPersonitemUuid);
+                        List<MetadataValue> crisOwner = itemService.getMetadata(cvPersonItem, "cris", "owner",
+                                null, null);
+                        if (!crisOwner.isEmpty()) {
+                            UUID ePersonUuid = UUID.fromString(crisOwner.get(0).getAuthority());
+                            EPerson cvOwner = this.ePersonService.find(context, ePersonUuid);
+                            if (isTheFirstRecipient) {
+                                resourcePolicyService.removeAllPolicies(context, item);
+                                isTheFirstRecipient = false;
+                            }
+                            authorizeService.addPolicy(context, item, Constants.READ, cvOwner);
+                        }
+
                     }
-//                    UUID ePersonUuid = UUID.fromString(
-//                            this.itemService.getMetadataFirstValue(cvPersonItem, "cris", "owner", null, Item.ANY));
-//                    EPerson cvOwner = this.ePersonService.find(context, ePersonUuid);
-//                    this.resourcePolicyService.removeAllPolicies(context, item);
-//                    this.authorizeService.addPolicy(context, item, Constants.READ, cvOwner);
                 }
                 itemsAlreadyProcessed.add(item);
                 context.restoreAuthSystemState();

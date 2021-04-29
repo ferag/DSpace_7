@@ -129,14 +129,15 @@ public class EPersonRestAuthenticationProvider implements AuthenticationProvider
         return output;
     }
 
-    private Authentication createAuthentication(final String password, final Context context) {
+    protected Authentication createAuthentication(final String password, final Context context) {
         EPerson ePerson = context.getCurrentUser();
 
-        if (ePerson != null && StringUtils.isNotBlank(ePerson.getEmail())) {
+        String username = StringUtils.isNotBlank(ePerson.getEmail()) ? ePerson.getEmail() : ePerson.getNetid();
+        if (ePerson != null && (StringUtils.isNotBlank(username))) {
             //Pass the eperson ID to the request service
             requestService.setCurrentUserId(ePerson.getID());
 
-            return new DSpaceAuthentication(ePerson, getGrantedAuthorities(context, ePerson));
+            return new DSpaceAuthentication(ePerson, getGrantedAuthorities(context, ePerson), username);
 
         } else {
             log.info(

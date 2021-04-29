@@ -8,6 +8,7 @@
 package org.dspace.importer.external.dspace;
 
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.dspace.app.profile.service.AfterImportAction;
@@ -16,6 +17,7 @@ import org.dspace.content.Item;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.external.model.ExternalDataObject;
+import org.dspace.util.UUIDUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -42,7 +44,25 @@ public class DspaceAfterImportAction implements AfterImportAction {
     public void applyTo(Context context, Item item, ExternalDataObject externalDataObject)
         throws SQLException, AuthorizeException {
 
-        Item rightItem = itemService.find(context, UUID.fromString(externalDataObject.getId()));
-        dSpaceItemRelationshipService.create(context, item, rightItem);
+        Optional<Item> rightItem = rightItem(context, externalDataObject);
+        if (rightItem.isPresent()) {
+            dSpaceItemRelationshipService.create(context, item, rightItem.get());
+        }
+    }
+
+    private Optional<Item> rightItem(Context context, ExternalDataObject externalDataObject) throws SQLException {
+        Optional<UUID> uuid = uuid(externalDataObject);
+        if (uuid.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(itemService.find(context, uuid.get()));
+    }
+
+    private Optional<UUID> uuid(ExternalDataObject externalDataObject) {
+        MergedExternalDataObject mergedExternalDataObject = MergedExternalDataObject.from(externalDataObject);
+        if (!mergedExternalDataObject.isMerged()) {
+            return Optional.ofNullable(UUIDUtils.fromString(externalDataObject.getId()));
+        }
+        return mergedExternalDataObject.getDSpaceObjectUUID();
     }
 }

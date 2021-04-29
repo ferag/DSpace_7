@@ -80,6 +80,18 @@ public interface EPersonService extends DSpaceObjectService<EPerson>, DSpaceObje
         throws SQLException;
 
     /**
+     * Find the eperson by their username. It checks the email and the netid eperson fields.
+     *
+     * @param context The relevant DSpace Context.
+     * @param username   EPerson's username to search by
+     * @return EPerson, or {@code null} if none such exists.
+     * @throws SQLException An exception that provides information on a database access error or other errors.
+     */
+    public EPerson findByUsername(Context context, String username)
+        throws SQLException;
+
+
+    /**
      * Find the epeople that match the search query across firstname, lastname or email.
      *
      * @param context The relevant DSpace Context.

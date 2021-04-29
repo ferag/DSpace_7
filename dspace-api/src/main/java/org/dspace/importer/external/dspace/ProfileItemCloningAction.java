@@ -13,6 +13,7 @@ import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.MERGED;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.dspace.app.exception.ResourceConflictException;
@@ -67,10 +68,15 @@ public class ProfileItemCloningAction implements AfterImportAction, ProfileItemC
     public void applyTo(Context context, Item profileItem, ExternalDataObject externalDataObject)
         throws SQLException, AuthorizeException {
 
-        String externalId = externalDataObject.getId();
-        Item personItem = itemService.find(context, UUID.fromString(externalId));
+        Optional<UUID> uuid = uuid(externalDataObject);
+        // in case external data object hasn't the uuid, it is not sourced from DSpace, no cloning action needed.
+        if (uuid.isEmpty()) {
+            return;
+        }
+        Item personItem = itemService.find(context, uuid.get());
         if (personItem == null) {
-            throw new IllegalArgumentException("No item found from external data object with id: " + externalId);
+            throw new IllegalArgumentException("No item found from external data object with id: " +
+                UUIDUtils.toString(uuid.get()));
         }
 
         try {
@@ -149,4 +155,18 @@ public class ProfileItemCloningAction implements AfterImportAction, ProfileItemC
             .noneMatch(mv -> claimableEntityTypes.contains(mv.getValue()));
     }
 
+
+    /**
+     * UUID is defined for DSpace objects, thus it is set in ExternalDataObject passed as
+     * param only if object comes from DSpace or it has DSpace as part of its sources.
+     * @param externalDataObject
+     * @return
+     */
+    private Optional<UUID> uuid(ExternalDataObject externalDataObject) {
+        MergedExternalDataObject mergedExternalDataObject = MergedExternalDataObject.from(externalDataObject);
+        if (!mergedExternalDataObject.isMerged()) {
+            return Optional.ofNullable(UUIDUtils.fromString(externalDataObject.getId()));
+        }
+        return mergedExternalDataObject.getDSpaceObjectUUID();
+    }
 }

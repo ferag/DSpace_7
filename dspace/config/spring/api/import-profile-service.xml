@@ -13,6 +13,14 @@
             <list>
                 <ref bean="dspaceAfterImportAction"/>
                 <ref bean="profileItemCloningAction"/>
+                <ref bean="setOrcidAndDniAction"/>
+            </list>
+        </property>
+        <property name="importProfileProviders">
+            <list>
+                <ref bean="researcherProfileDspaceProvider"/>
+                <ref bean="researcherProfileReniecProvider"/>
+                <ref bean="researcherProfileOrcidProvider"/>
             </list>
         </property>
     </bean>
@@ -21,6 +29,7 @@
         <property name="externalDataProviders">
             <list>
                 <ref bean="dspaceLiveImportDataProvider"/>
+                <ref bean="reniecLiveImportDataProvider"/>
             </list>
         </property>
     </bean>
@@ -36,6 +45,37 @@
         </property>
     </bean>
 
+    <bean id="reniecLiveImportDataProvider" class="org.dspace.external.provider.impl.LiveImportDataProvider">
+        <property name="metadataSource" ref="reniecImportService"/>
+        <property name="sourceIdentifier" value="reniec"/>
+        <property name="recordIdMetadata" value="perucris.identifier.dni"/>
+        <property name="supportedEntityTypes">
+            <list>
+                <value>CvPerson</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="reniecImportService" class="org.dspace.importer.external.reniec.ReniecImportService"/>
+
+    <bean id="reniecMetadataFieldMapping"
+          class="org.dspace.importer.external.reniec.ReniecMetadataFieldMapping">
+        <property name="identifierMetadata" value="perucris.identifier.dni"/>
+    </bean>
+
+
+    <!-- researcher profile import providers -->
+    <bean id="researcherProfileDspaceProvider" class="org.dspace.app.profile.importproviders.impl.ResearcherProfileDspaceProvider">
+        <property name="sourceIdentifier" value="dspace"/>
+    </bean>
+
+    <bean id="researcherProfileReniecProvider" class="org.dspace.app.profile.importproviders.impl.ResearcherProfileReniecProvider">
+        <property name="sourceIdentifier" value="reniec"/>
+    </bean>
+
+    <bean id="researcherProfileOrcidProvider" class="org.dspace.app.profile.importproviders.impl.ResearcherProfileOrcidProvider"></bean>
+    
+
     <bean id="dspaceImportService" class="org.dspace.importer.external.dspace.DSpaceImportService"/>
 
     <bean id="dspaceInternalMetadataFieldMapping"
@@ -49,6 +89,7 @@
     </bean>
     
     <bean id="profileItemCloningAction" class="org.dspace.importer.external.dspace.ProfileItemCloningAction" />
+    <bean id="setOrcidAndDniAction" class="org.dspace.importer.external.dspace.SetOrcidAndDniAction" />
 
     <bean id="dspaceItemRelationshipService" class="org.dspace.importer.external.dspace.DSpaceItemRelationshipService">
 
@@ -59,6 +100,7 @@
     </bean>
 
     <bean id="removeRelationAction" class="org.dspace.importer.external.dspace.RemoveDSpaceRelationAction"/>
+    <bean id="deleteCvEntititesAction" class="org.dspace.importer.external.dspace.DeleteCvEntititesAction"/>
     
     <util:map id="profileSynchronizationMap" map-class="java.util.HashMap" key-type="java.lang.String" value-type="java.util.List"> 
 	   <entry key="perucris.cvPerson.syncEducation" >
@@ -111,10 +153,8 @@
 			   <value>perucris.subject.ocde</value>
 			   <value>perucris.subject.minam</value>
 			   <value>perucris.subject.ins</value>
-			   <value>perucris.identifier.dni</value>
 			   <value>perucris.identifier.passport</value>
 			   <value>perucris.identifier.immigrationCard</value>
-			   <value>person.identifier.orcid</value>
 			   <value>perucris.identifier.dina</value>
 			   <value>perucris.identifier.renacyt</value>
 			   <value>person.identifier.scopus-author-id</value>
@@ -133,6 +173,7 @@
     
 
     <!-- TODO: set orcid import -->
+    
 
 </beans>
 

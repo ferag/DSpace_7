@@ -118,6 +118,16 @@ public interface ConcytecWorkflowService {
     Item findMergeOfItem(Context context, Item item) throws SQLException;
 
     /**
+     * Find the items where the given item is merge of.
+     *
+     * @param context the DSpace context
+     * @param item    the item to search for
+     * @return the item where the given item is merged in
+     * @throws SQLException
+     */
+    List<Item> findMergedInItems(Context context, Item item) throws SQLException;
+
+    /**
      * Find the clone of given item.
      *
      * @param context the DSpace context
@@ -136,6 +146,19 @@ public interface ConcytecWorkflowService {
      * @throws SQLException if an SQL error occurs
      */
     Item findClonedItem(Context context, Item cloneItem) throws SQLException;
+
+    /**
+     * Delete the clone related to the given item and create a withdrawal request
+     * for the relative items on directorio, if present and if already archived. If
+     * the items on the directory side are still in workflow they are completely
+     * deleted. If the given item as no clone no action is performed.
+     * 
+     * @param context     the DSpace context
+     * @param profileItem the profile item to search for
+     * @throws SQLException       if an SQL error occurs
+     * @throws AuthorizeException if an authorization error occurs
+     */
+    void deleteClone(Context context, Item item) throws SQLException, AuthorizeException;
 
     /**
      * Add the Concytec feedback on the given item.

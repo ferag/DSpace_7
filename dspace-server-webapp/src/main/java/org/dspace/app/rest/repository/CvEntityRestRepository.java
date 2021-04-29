@@ -105,6 +105,25 @@ public class CvEntityRestRepository extends DSpaceRestRepository<CvEntityRest, U
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
+    protected void delete(Context context, UUID id) throws AuthorizeException {
+        try {
+            Item item = itemService.find(context, id);
+            if (item == null) {
+                throw new ResourceNotFoundException(CvEntityRest.CATEGORY + "." + CvEntityRest.NAME +
+                    " with id: " + id + " not found");
+            }
+            if (itemService.isInProgressSubmission(context, item)) {
+                throw new UnprocessableEntityException("The CvEntity cannot be deleted. "
+                    + "It's part of a in-progress submission.");
+            }
+            cvEntityService.delete(context, new CvEntity(item));
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @Override
     public Class<CvEntityRest> getDomainClass() {
         return CvEntityRest.class;
     }

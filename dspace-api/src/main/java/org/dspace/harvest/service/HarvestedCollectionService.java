@@ -53,7 +53,7 @@ public interface HarvestedCollectionService {
      * @return is collection harvestable?
      * @throws SQLException if database error
      */
-    public boolean isHarvestable(Context context, Collection collection) throws SQLException;
+    public boolean isHarvestable(Context context, Collection collection, boolean local) throws SQLException;
 
     /**
      * Returns whether this harvest instance is actually harvestable, i.e. whether its settings
@@ -64,7 +64,7 @@ public interface HarvestedCollectionService {
      * @return is collection harvestable?
      * @throws SQLException if database error
      */
-    public boolean isHarvestable(HarvestedCollection harvestedCollection) throws SQLException;
+    public boolean isHarvestable(HarvestedCollection harvestedCollection, boolean local) throws SQLException;
 
     /**
      * Returns whether the specified collection is ready for immediate harvest.
@@ -74,7 +74,7 @@ public interface HarvestedCollectionService {
      * @return is collection ready for immediate harvest?
      * @throws SQLException if database error
      */
-    public boolean isReady(Context context, Collection collection) throws SQLException;
+    public boolean isReady(Context context, Collection collection, boolean local) throws SQLException;
 
     /**
      * Returns whether the specified collection is ready for immediate harvest.
@@ -83,7 +83,7 @@ public interface HarvestedCollectionService {
      * @return is collection ready for immediate harvest?
      * @throws SQLException if database error
      */
-    public boolean isReady(HarvestedCollection harvestedCollection) throws SQLException;
+    public boolean isReady(HarvestedCollection harvestedCollection, boolean local) throws SQLException;
 
     /**
      * Find all collections that are set up for harvesting

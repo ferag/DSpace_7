@@ -152,12 +152,12 @@ public class SolrServiceIndexRelationshipsPlugin implements SolrServiceIndexPlug
             LEFT(Relationship::getLeftItem,
                 RelationshipType::getLeftwardType,
                 Relationship::getRightItem,
-                Relationship::getLeftPlace),
+                Relationship::getRightPlace),
 
             RIGHT(Relationship::getRightItem,
                 RelationshipType::getRightwardType,
                 Relationship::getLeftItem,
-                Relationship::getRightPlace);
+                Relationship::getLeftPlace);
 
             private final Function<Relationship, Item> sourceItem;
             private final Function<RelationshipType, String> type;

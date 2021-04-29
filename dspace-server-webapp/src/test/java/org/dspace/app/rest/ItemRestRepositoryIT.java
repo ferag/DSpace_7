@@ -1358,6 +1358,39 @@ public class ItemRestRepositoryIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    public void deleteCvEntityBadRequestTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        parentCommunity = CommunityBuilder.createCommunity(context)
+                                          .withName("Parent Community")
+                                          .build();
+
+        Collection col = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withName("Test Collection").build();
+
+        Item cvPerson = ItemBuilder.createItem(context, col)
+                                   .withTitle("CvPerson title")
+                                   .withIssueDate("2021-03-21")
+                                   .withEntityType("CvPerson")
+                                   .build();
+
+        Item cvPatent = ItemBuilder.createItem(context, col)
+                .withTitle("CvPatent title")
+                .withIssueDate("2021-01-21")
+                .withEntityType("CvPatent")
+                .build();
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        getClient(authToken).perform(delete("/api/core/items/" + cvPerson.getID()))
+                            .andExpect(status().isBadRequest());
+
+        getClient(authToken).perform(delete("/api/core/items/" + cvPatent.getID()))
+                            .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
     public void deleteOneWorkspaceTest() throws Exception {
         context.turnOffAuthorisationSystem();
 

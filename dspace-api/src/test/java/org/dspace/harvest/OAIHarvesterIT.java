@@ -181,7 +181,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             .build();
         context.restoreAuthSystemState();
 
-        harvester.runHarvest(context, harvestRow, getDefaultOptions());
+        harvester.runHarvest(context, harvestRow, getDefaultOptions(), eperson);
 
         verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
         verify(mockClient).identify(BASE_URL);
@@ -231,7 +231,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             .build();
         context.restoreAuthSystemState();
 
-        harvester.runHarvest(context, harvestRow, getDefaultOptions());
+        harvester.runHarvest(context, harvestRow, getDefaultOptions(), eperson);
 
         verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
         verify(mockClient).identify(BASE_URL);
@@ -281,7 +281,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             .build();
         context.restoreAuthSystemState();
 
-        harvester.runHarvest(context, harvestRow, getDefaultOptions());
+        harvester.runHarvest(context, harvestRow, getDefaultOptions(), eperson);
 
         verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
         verify(mockClient).identify(BASE_URL);
@@ -326,7 +326,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             .build();
         context.restoreAuthSystemState();
 
-        harvester.runHarvest(context, harvestRow, getDefaultOptions());
+        harvester.runHarvest(context, harvestRow, getDefaultOptions(), eperson);
 
         verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
         verify(mockClient).identify(BASE_URL);
@@ -359,7 +359,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             .build();
         context.restoreAuthSystemState();
 
-        harvester.runHarvest(context, harvestRow, getDefaultOptions());
+        harvester.runHarvest(context, harvestRow, getDefaultOptions(), eperson);
 
         verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
         verify(mockClient).identify(BASE_URL);
@@ -394,7 +394,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             .build();
         context.restoreAuthSystemState();
 
-        harvester.runHarvest(context, harvestRow, getDefaultOptions());
+        harvester.runHarvest(context, harvestRow, getDefaultOptions(), eperson);
 
         verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
         verify(mockClient).identify(BASE_URL);
@@ -438,7 +438,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
 
         context.restoreAuthSystemState();
 
-        harvester.runHarvest(context, harvestRow, getDefaultOptions());
+        harvester.runHarvest(context, harvestRow, getDefaultOptions(), eperson);
 
         verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
         verify(mockClient).identify(BASE_URL);
@@ -494,7 +494,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
 
         context.restoreAuthSystemState();
 
-        harvester.runHarvest(context, harvestRow, getDefaultOptions());
+        harvester.runHarvest(context, harvestRow, getDefaultOptions(), eperson);
 
         verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
         verify(mockClient).identify(BASE_URL);
@@ -537,7 +537,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
 
         context.restoreAuthSystemState();
 
-        harvester.runHarvest(context, harvestRow, getDefaultOptions());
+        harvester.runHarvest(context, harvestRow, getDefaultOptions(), eperson);
 
         verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
         verify(mockClient).identify(BASE_URL);
@@ -587,7 +587,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
 
         context.restoreAuthSystemState();
 
-        harvester.runHarvest(context, harvestRow, getOptionsWithForceSynchronization());
+        harvester.runHarvest(context, harvestRow, getOptionsWithForceSynchronization(), eperson);
 
         verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
         verify(mockClient).identify(BASE_URL);
@@ -629,7 +629,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
 
         context.restoreAuthSystemState();
 
-        harvester.runHarvest(context, harvestRow, getDefaultOptions());
+        harvester.runHarvest(context, harvestRow, getDefaultOptions(), eperson);
 
         List<Item> items = IteratorUtils.toList(itemService.findAllByCollection(context, collection));
         assertThat(items, hasSize(1));
@@ -675,7 +675,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
         context.restoreAuthSystemState();
 
         // create the item
-        harvester.runHarvest(context, harvestRow, getDefaultOptions());
+        harvester.runHarvest(context, harvestRow, getDefaultOptions(), eperson);
 
         List<Item> items = IteratorUtils.toList(itemService.findAllByCollection(context, collection));
         assertThat(items, hasSize(1));
@@ -705,7 +705,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
         assertThat(harvestRow.getHarvestMessage(), equalTo("Imported 1 records with success"));
 
         // update the item
-        harvester.runHarvest(context, harvestRow, getDefaultOptions());
+        harvester.runHarvest(context, harvestRow, getDefaultOptions(), eperson);
 
         items = IteratorUtils.toList(itemService.findAllByCollection(context, collection));
         assertThat(items, hasSize(1));
@@ -767,7 +767,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             context.restoreAuthSystemState();
 
             // import the publication and create the person with the CrisConsumer
-            harvester.runHarvest(context, publicationHarvest, getDefaultOptions());
+            harvester.runHarvest(context, publicationHarvest, getDefaultOptions(), eperson);
 
             List<Item> publications = IteratorUtils.toList(itemService.findAllByCollection(context, collection));
             assertThat(publications, hasSize(1));
@@ -804,7 +804,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             assertThat(values, hasItems(with("relationship.type", "Person")));
 
             // import the author person
-            harvester.runHarvest(context, personHarvest, getDefaultOptions());
+            harvester.runHarvest(context, personHarvest, getDefaultOptions(), eperson);
 
             Item updatedAuthor = findItemByOaiID("oai:test-harvest:Persons/123", personCollection);
             assertThat(updatedAuthor.getID(), equalTo(authorPerson.getID()));
@@ -860,7 +860,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
 
             context.restoreAuthSystemState();
 
-            harvester.runHarvest(context, personHarvest, getDefaultOptions());
+            harvester.runHarvest(context, personHarvest, getDefaultOptions(), eperson);
 
             Item person = findItemByOaiID("oai:test-harvest:Persons/123", personCollection);
 
@@ -874,7 +874,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             assertThat(values, hasItems(with("person.givenName", "Paolo")));
             assertThat(values, hasItems(with("person.familyName", "Manghi")));
 
-            harvester.runHarvest(context, publicationHarvest, getDefaultOptions());
+            harvester.runHarvest(context, publicationHarvest, getDefaultOptions(), eperson);
 
             Item publication = findItemByOaiID("oai:test-harvest:Publications/3", collection);
             values = publication.getMetadata();
@@ -923,7 +923,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             .build();
         context.restoreAuthSystemState();
 
-        harvester.runHarvest(context, harvestRow, getDefaultOptions());
+        harvester.runHarvest(context, harvestRow, getDefaultOptions(), eperson);
 
         verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
         verify(mockClient).identify(BASE_URL);
@@ -962,7 +962,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             .build();
         context.restoreAuthSystemState();
 
-        harvester.runHarvest(context, harvestRow, getDefaultOptions());
+        harvester.runHarvest(context, harvestRow, getDefaultOptions(), eperson);
 
         verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
         verify(mockClient).identify(BASE_URL);
@@ -1001,7 +1001,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             .build();
         context.restoreAuthSystemState();
 
-        harvester.runHarvest(context, harvestRow, getDefaultOptions());
+        harvester.runHarvest(context, harvestRow, getDefaultOptions(), eperson);
 
         verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
         verify(mockClient).identify(BASE_URL);
@@ -1032,7 +1032,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             .build();
         context.restoreAuthSystemState();
 
-        harvester.runHarvest(context, harvestRow, getOptionsWithItemValidationEnabled());
+        harvester.runHarvest(context, harvestRow, getOptionsWithItemValidationEnabled(), eperson);
 
         verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
         verify(mockClient).identify(BASE_URL);
@@ -1074,7 +1074,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             .build();
         context.restoreAuthSystemState();
 
-        harvester.runHarvest(context, harvestRow, getOptionsWithSubmissionNotEnabled());
+        harvester.runHarvest(context, harvestRow, getOptionsWithSubmissionNotEnabled(), eperson);
 
         verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
         verify(mockClient).identify(BASE_URL);
@@ -1108,7 +1108,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             .build();
         context.restoreAuthSystemState();
 
-        harvester.runHarvest(context, harvestRow, getOptionsWithRecordValidationEnabled());
+        harvester.runHarvest(context, harvestRow, getOptionsWithRecordValidationEnabled(), eperson);
 
         verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
         verify(mockClient).identify(BASE_URL);
@@ -1138,7 +1138,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             .build();
         context.restoreAuthSystemState();
 
-        harvester.runHarvest(context, harvestRow, getOptionsWithRecordValidationEnabled());
+        harvester.runHarvest(context, harvestRow, getOptionsWithRecordValidationEnabled(), eperson);
 
         verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
         verify(mockClient).identify(BASE_URL);
@@ -1186,7 +1186,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             .build();
         context.restoreAuthSystemState();
 
-        harvester.runHarvest(context, harvestRow, getOptionsWithRecordAndItemValidationEnabled());
+        harvester.runHarvest(context, harvestRow, getOptionsWithRecordAndItemValidationEnabled(), eperson);
 
         verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
         verify(mockClient).identify(BASE_URL);
@@ -1229,7 +1229,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
                 .build();
             context.restoreAuthSystemState();
 
-            harvester.runHarvest(context, harvestRow, getDefaultOptions());
+            harvester.runHarvest(context, harvestRow, getDefaultOptions(), eperson);
 
             verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
             verify(mockClient).identify(BASE_URL);
@@ -1276,7 +1276,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
                 .build();
             context.restoreAuthSystemState();
 
-            harvester.runHarvest(context, harvestRow, getDefaultOptions());
+            harvester.runHarvest(context, harvestRow, getDefaultOptions(), eperson);
 
             verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
             verify(mockClient, times(2)).identify(BASE_URL);
@@ -1344,7 +1344,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
                 .build();
             context.restoreAuthSystemState();
 
-            harvester.runHarvest(context, harvestRow, getDefaultOptions());
+            harvester.runHarvest(context, harvestRow, getDefaultOptions(), eperson);
 
             verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
             verify(mockClient).identify(BASE_URL);
@@ -1400,7 +1400,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
                 .build();
             context.restoreAuthSystemState();
 
-            harvester.runHarvest(context, harvestRow, getOptionsWithRecordAndItemValidationEnabled());
+            harvester.runHarvest(context, harvestRow, getOptionsWithRecordAndItemValidationEnabled(), eperson);
 
             verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("cerif").getURI());
             verify(mockClient).identify(BASE_URL);
@@ -1475,7 +1475,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
                 .build();
             context.restoreAuthSystemState();
 
-            harvester.runHarvest(context, harvestRow, getDefaultOptions());
+            harvester.runHarvest(context, harvestRow, getDefaultOptions(), eperson);
 
             List<Item> items = IteratorUtils.toList(itemService.findAllByCollection(context, collection));
             assertThat(items, emptyCollectionOf(Item.class));
@@ -1510,7 +1510,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             .build();
         context.restoreAuthSystemState();
 
-        harvester.runHarvest(context, harvestRow, getDefaultOptions());
+        harvester.runHarvest(context, harvestRow, getDefaultOptions(), eperson);
 
         verify(mockClient).resolveNamespaceToPrefix(BASE_URL, getMetadataFormatNamespace("perucris-cerif").getURI());
         verify(mockClient).identify(BASE_URL);
@@ -1563,7 +1563,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
                 .build();
             context.restoreAuthSystemState();
 
-            harvester.runHarvest(context, harvestRow, getOptionsWithRecordValidationEnabled());
+            harvester.runHarvest(context, harvestRow, getOptionsWithRecordValidationEnabled(), eperson);
 
             verify(mockClient).resolveNamespaceToPrefix(BASE_URL,
                 getMetadataFormatNamespace("perucris-cerif").getURI());
@@ -1649,27 +1649,27 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
     }
 
     private OAIHarvesterOptions getDefaultOptions() {
-        return new OAIHarvesterOptions(UUID.randomUUID(), null, null, null, true);
+        return new OAIHarvesterOptions(UUID.randomUUID(), null, null, null, true, true);
     }
 
     private OAIHarvesterOptions getOptionsWithForceSynchronization() {
-        return new OAIHarvesterOptions(randomUUID(), true, null, null, true);
+        return new OAIHarvesterOptions(randomUUID(), true, null, null, true, true);
     }
 
     private OAIHarvesterOptions getOptionsWithItemValidationEnabled() {
-        return new OAIHarvesterOptions(randomUUID(), null, null, true, true);
+        return new OAIHarvesterOptions(randomUUID(), null, null, true, true, true);
     }
 
     private OAIHarvesterOptions getOptionsWithRecordValidationEnabled() {
-        return new OAIHarvesterOptions(randomUUID(), null, true, null, true);
+        return new OAIHarvesterOptions(randomUUID(), null, true, null, true, true);
     }
 
     private OAIHarvesterOptions getOptionsWithRecordAndItemValidationEnabled() {
-        return new OAIHarvesterOptions(randomUUID(), null, true, true, true);
+        return new OAIHarvesterOptions(randomUUID(), null, true, true, true, true);
     }
 
     private OAIHarvesterOptions getOptionsWithSubmissionNotEnabled() {
-        return new OAIHarvesterOptions(randomUUID(), null, null, null, false);
+        return new OAIHarvesterOptions(randomUUID(), null, null, null, false, true);
     }
 
     private void deletePoolTask(PoolTask poolTask) {

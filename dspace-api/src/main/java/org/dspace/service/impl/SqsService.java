@@ -1,3 +1,10 @@
+/**
+ * The contents of this file are subject to the license and copyright
+ * detailed in the LICENSE and NOTICE files at the root of the source
+ * tree and available online at
+ *
+ * http://www.dspace.org/license/
+ */
 package org.dspace.service.impl;
 
 import java.util.UUID;
@@ -17,15 +24,6 @@ import software.amazon.awssdk.services.sqs.model.SendMessageResponse;
 
 public class SqsService {
 
-    /*
-
-sqs.accesskey=AKIAX2YFANB47UCDYT7E
-sqs.accesssecret=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
-sqs.data_queue_uri=https://sqs.eu-west-1.amazonaws.com/538492037241/orchestrator-data-queue.fifo
-sqs.command_queue_uri=https://sqs.eu-west-1.amazonaws.com/538492037241/orchestrator-command-queue.fifo
-sqs.heartbeat_queue_uri=https://sqs.eu-west-1.amazonaws.com/538492037241/orchestrator-heartbeat-queue.fifo
-
-    */
 
     private static ConfigurationService configurationService =
         DSpaceServicesFactory.getInstance().getConfigurationService();
@@ -130,7 +128,11 @@ sqs.heartbeat_queue_uri=https://sqs.eu-west-1.amazonaws.com/538492037241/orchest
         for (String arg : args) {
             plainCommand += (arg + " ");
         }
-        String messageBody = "{\"serviceId\":" + serviceId + ",\"plainCommand\":\"" + plainCommand + "\"}";
+        String securityToken = configurationService.getProperty("dspace.serviceid.securitytoken");
+
+        String messageBody = "{\"serviceId\":" + serviceId
+                + ",\"plainCommand\":\"" + plainCommand
+                + "\"securityToken\":" + securityToken + "\"}";
         System.out.println("Enqueue: " + messageBody);
         /*
          * The message group ID is the tag that specifies that a message belongs to a specific message group.
@@ -163,7 +165,11 @@ sqs.heartbeat_queue_uri=https://sqs.eu-west-1.amazonaws.com/538492037241/orchest
 
     private static SqsAsyncClient getSqsClient() {
 
+
         if (sqsClient == null) {
+
+            String sqsRegionName = configurationService.getProperty("dspace.sqs.region");
+
 
             AwsCredentials awsCredentials = new AwsCredentials() {
 
@@ -183,7 +189,7 @@ sqs.heartbeat_queue_uri=https://sqs.eu-west-1.amazonaws.com/538492037241/orchest
             sqsClient = SqsAsyncClient
                 .builder()
                 .httpClient(AwsCrtAsyncHttpClient.builder().build())
-                .region(Region.EU_WEST_1)
+                .region(Region.of(sqsRegionName))
                 .credentialsProvider(awsCredentialsProvider)
                 .build();
 
@@ -192,8 +198,9 @@ sqs.heartbeat_queue_uri=https://sqs.eu-west-1.amazonaws.com/538492037241/orchest
     }
 
     private static String getSqsPayload(String taskId, String phase, String exitStatus) {
-        return "{\"taskId\":\"" + taskId + "\",\"taskPhaseEnum\":\"" +
-            phase + "\",\"exitStatusEnum\":\"" + exitStatus + "\"}";
+        return "{\"taskId\":\"" + taskId
+                + "\",\"taskPhaseEnum\":\"" + phase
+                + "\",\"exitStatusEnum\":\"" + exitStatus + "\"}";
     }
 
 

@@ -34,6 +34,8 @@ public abstract class PatchOperation<T extends Object> {
         if (value != null) {
             LateObjectEvaluator object = (LateObjectEvaluator) value;
             list = (T[]) object.evaluate(getArrayClassForEvaluation());
+        } else {
+            return results;
         }
 
         for (T t : list) {

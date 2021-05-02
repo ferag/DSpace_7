@@ -2192,7 +2192,7 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>perucris.ctivitae.owner_authority:{0}</value>
-                <value>-relation.isProjectssHiddenFor:{0}</value>
+                <value>-relation.isProjectsHiddenFor:{0}</value>
                 <value>(search.entitytype: CvProject OR search.entitytype: Project )</value>
                 <value>search.resourcetype:Item</value>
             </list>

@@ -52,19 +52,19 @@ public class NotificationFeatureIT extends AbstractControllerIntegrationTest {
 
        this.cvPersonItem = ItemBuilder.createItem(context, colCvPerson)
                 .withTitle("CvPerson Title")
-                .withRelationshipType("CvPerson")
+                .withEntityType("CvPerson")
                 .build();
 
        this.notification = ItemBuilder.createItem(context, colNotification)
                 .withTitle("Notification 1")
                 .withNotificationTo("test notification", cvPersonItem.getID().toString())
-                .withRelationshipType("Notification")
+                .withEntityType("Notification")
                 .build();
 
        this.notification2 = ItemBuilder.createItem(context, colNotification)
                 .withTitle("Notification 2")
                 .withNotificationTo("test notification 2", cvPersonItem.getID().toString())
-                .withRelationshipType("Notification")
+                .withEntityType("Notification")
                 .build();
 
        context.restoreAuthSystemState();
@@ -90,16 +90,16 @@ public class NotificationFeatureIT extends AbstractControllerIntegrationTest {
        parentCommunity = CommunityBuilder.createCommunity(context).build();
        Collection colPersonCv = CollectionBuilder.createCollection(context, parentCommunity)
                                                  .withName("CvPerson Collection")
-                                                 .withRelationshipType("CvPerson").build();
+                                                 .withEntityType("CvPerson").build();
 
        Collection colPerson = CollectionBuilder.createCollection(context, parentCommunity)
                                                .withName("Person Collection")
-                                               .withRelationshipType("Person").build();
+                                               .withEntityType("Person").build();
 
        Community notificationCommunity = CommunityBuilder.createCommunity(context).build();
        Collection colNotification = CollectionBuilder.createCollection(context, notificationCommunity)
                                                      .withName("Notification Collection")
-                                                     .withRelationshipType("Notification").build();
+                                                     .withEntityType("Notification").build();
 
        EPerson user = EPersonBuilder.createEPerson(context)
                .withNameInMetadata("John", "Doe")
@@ -108,19 +108,19 @@ public class NotificationFeatureIT extends AbstractControllerIntegrationTest {
 
        this.ePersonItem = ItemBuilder.createItem(context, colPerson)
                .withTitle("Person Item Title")
-               .withRelationshipType("Person").build();
+               .withEntityType("Person").build();
 
        this.cvPersonItem = ItemBuilder.createItem(context, colPersonCv)
                 .withTitle("CvPerson")
                 .withCrisOwner(user.getName(), user.getID().toString())
-                .withRelationshipType("CvPerson")
+                .withEntityType("CvPerson")
                 .build();
 
        this.notification = ItemBuilder.createItem(context, colNotification)
                 .withTitle("Notification 1")
                 .withIssueDate("2021-02-17")
                 .withNotificationTo("test notification", cvPersonItem.getID().toString())
-                .withRelationshipType("Notification")
+                .withEntityType("Notification")
                 .build();
 
        context.restoreAuthSystemState();
@@ -136,16 +136,16 @@ public class NotificationFeatureIT extends AbstractControllerIntegrationTest {
        parentCommunity = CommunityBuilder.createCommunity(context).build();
        Collection colPersonCv = CollectionBuilder.createCollection(context, parentCommunity)
                                                  .withName("CvPerson Collection")
-                                                 .withRelationshipType("CvPerson").build();
+                                                 .withEntityType("CvPerson").build();
 
        Collection colPerson = CollectionBuilder.createCollection(context, parentCommunity)
                                                .withName("Person Collection")
-                                               .withRelationshipType("Person").build();
+                                               .withEntityType("Person").build();
 
        Community notificationCommunity = CommunityBuilder.createCommunity(context).build();
        Collection colNotification = CollectionBuilder.createCollection(context, notificationCommunity)
                                                      .withName("Notification Collection")
-                                                     .withRelationshipType("Notification").build();
+                                                     .withEntityType("Notification").build();
 
        EPerson user = EPersonBuilder.createEPerson(context)
                .withNameInMetadata("John", "Doe")
@@ -154,19 +154,19 @@ public class NotificationFeatureIT extends AbstractControllerIntegrationTest {
 
        this.ePersonItem = ItemBuilder.createItem(context, colPerson)
                .withTitle("Person Item Title")
-               .withRelationshipType("Person").build();
+               .withEntityType("Person").build();
 
        this.cvPersonItem = ItemBuilder.createItem(context, colPersonCv)
                 .withTitle("CvPerson")
                 .withCrisOwner(user.getName(), user.getID().toString())
-                .withRelationshipType("CvPerson")
+                .withEntityType("CvPerson")
                 .build();
 
        this.notification = ItemBuilder.createItem(context, colNotification)
                 .withTitle("Notification 1")
                 .withIssueDate("2021-02-17")
                 .withNotificationTo("test notification", cvPersonItem.getID().toString())
-                .withRelationshipType("Notification")
+                .withEntityType("Notification")
                 .build();
 
        context.restoreAuthSystemState();
@@ -183,16 +183,16 @@ public class NotificationFeatureIT extends AbstractControllerIntegrationTest {
        parentCommunity = CommunityBuilder.createCommunity(context).build();
        Collection colCvPerson = CollectionBuilder.createCollection(context, parentCommunity)
                                                  .withName("PersonCv Collection")
-                                                 .withRelationshipType("CvPerson").build();
+                                                 .withEntityType("CvPerson").build();
 
        Collection colPerson = CollectionBuilder.createCollection(context, parentCommunity)
                                                  .withName("Person Collection")
-                                                 .withRelationshipType("Person").build();
+                                                 .withEntityType("Person").build();
 
        Community notificationCommunity = CommunityBuilder.createCommunity(context).build();
        Collection colNotification = CollectionBuilder.createCollection(context, notificationCommunity)
                                                      .withName("Notification Collection")
-                                                     .withRelationshipType("Notification").build();
+                                                     .withEntityType("Notification").build();
 
        EPerson user = EPersonBuilder.createEPerson(context)
                .withNameInMetadata("John", "Doe")
@@ -206,34 +206,34 @@ public class NotificationFeatureIT extends AbstractControllerIntegrationTest {
 
        this.ePersonItem = ItemBuilder.createItem(context, colPerson)
                .withTitle("Person Item Title")
-               .withRelationshipType("Person").build();
+               .withEntityType("Person").build();
 
        this.ePerson2Item = ItemBuilder.createItem(context, colPerson)
                .withTitle("Person2 Item Title")
-               .withRelationshipType("Person").build();
+               .withEntityType("Person").build();
 
        this.cvPersonItem = ItemBuilder.createItem(context, colCvPerson)
                 .withTitle("CvPerson")
                 .withCrisOwner(user.getName(), user.getID().toString())
-                .withRelationshipType("CvPerson").build();
+                .withEntityType("CvPerson").build();
 
        this.cvPerson2Item = ItemBuilder.createItem(context, colCvPerson)
                .withTitle("CvPerson")
                .withCrisOwner(user2.getName(), user2.getID().toString())
-               .withRelationshipType("CvPerson").build();
+               .withEntityType("CvPerson").build();
 
        this.notification = ItemBuilder.createItem(context, colNotification)
                 .withTitle("Notification For User1")
                 .withIssueDate("2021-02-17")
                 .withNotificationTo("test notification", cvPersonItem.getID().toString())
-                .withRelationshipType("Notification")
+                .withEntityType("Notification")
                 .build();
 
        this.notification2 = ItemBuilder.createItem(context, colNotification)
                 .withTitle("Notification For User2")
                 .withIssueDate("2021-02-11")
                 .withNotificationTo("test notification 2", cvPerson2Item.getID().toString())
-                .withRelationshipType("Notification")
+                .withEntityType("Notification")
                 .build();
 
        context.restoreAuthSystemState();
@@ -266,16 +266,16 @@ public class NotificationFeatureIT extends AbstractControllerIntegrationTest {
        parentCommunity = CommunityBuilder.createCommunity(context).build();
        Collection colPersonCv = CollectionBuilder.createCollection(context, parentCommunity)
                                                  .withName("CvPerson Collection")
-                                                 .withRelationshipType("CvPerson").build();
+                                                 .withEntityType("CvPerson").build();
 
        Collection colPerson = CollectionBuilder.createCollection(context, parentCommunity)
                                                .withName("Person Collection")
-                                               .withRelationshipType("Person").build();
+                                               .withEntityType("Person").build();
 
        Community notificationCommunity = CommunityBuilder.createCommunity(context).build();
        Collection colNotification = CollectionBuilder.createCollection(context, notificationCommunity)
                                                      .withName("Notification Collection")
-                                                     .withRelationshipType("Notification").build();
+                                                     .withEntityType("Notification").build();
 
        EPerson user = EPersonBuilder.createEPerson(context)
                .withNameInMetadata("John", "Doe")
@@ -284,19 +284,19 @@ public class NotificationFeatureIT extends AbstractControllerIntegrationTest {
 
        this.ePersonItem = ItemBuilder.createItem(context, colPerson)
                .withTitle("Person Item Title")
-               .withRelationshipType("Person").build();
+               .withEntityType("Person").build();
 
        this.cvPersonItem = ItemBuilder.createItem(context, colPersonCv)
                 .withTitle("CvPerson")
                 .withCrisOwner(user.getName(), user.getID().toString())
-                .withRelationshipType("CvPerson")
+                .withEntityType("CvPerson")
                 .build();
 
        this.notification = ItemBuilder.createItem(context, colNotification)
                 .withTitle("Notification 1")
                 .withIssueDate("2021-02-17")
                 .withNotificationTo("test notification", cvPersonItem.getID().toString())
-                .withRelationshipType("Notification")
+                .withEntityType("Notification")
                 .build();
 
        context.restoreAuthSystemState();
@@ -315,16 +315,16 @@ public class NotificationFeatureIT extends AbstractControllerIntegrationTest {
        parentCommunity = CommunityBuilder.createCommunity(context).build();
        Collection colCvPerson = CollectionBuilder.createCollection(context, parentCommunity)
                                                  .withName("PersonCv Collection")
-                                                 .withRelationshipType("CvPerson").build();
+                                                 .withEntityType("CvPerson").build();
 
        Collection colPerson = CollectionBuilder.createCollection(context, parentCommunity)
                                                  .withName("Person Collection")
-                                                 .withRelationshipType("Person").build();
+                                                 .withEntityType("Person").build();
 
        Community notificationCommunity = CommunityBuilder.createCommunity(context).build();
        Collection colNotification = CollectionBuilder.createCollection(context, notificationCommunity)
                                                      .withName("Notification Collection")
-                                                     .withRelationshipType("Notification").build();
+                                                     .withEntityType("Notification").build();
 
        EPerson user = EPersonBuilder.createEPerson(context)
                .withNameInMetadata("John", "Doe")
@@ -338,28 +338,28 @@ public class NotificationFeatureIT extends AbstractControllerIntegrationTest {
 
        ePersonItem = ItemBuilder.createItem(context, colPerson)
                .withTitle("Person Item Title")
-               .withRelationshipType("Person").build();
+               .withEntityType("Person").build();
 
        ePerson2Item = ItemBuilder.createItem(context, colPerson)
                .withTitle("Person2 Item Title")
-               .withRelationshipType("Person").build();
+               .withEntityType("Person").build();
 
        cvPersonItem = ItemBuilder.createItem(context, colCvPerson)
                 .withTitle("CvPerson")
                 .withCrisOwner(user.getName(), user.getID().toString())
-                .withRelationshipType("CvPerson").build();
+                .withEntityType("CvPerson").build();
 
        cvPerson2Item = ItemBuilder.createItem(context, colCvPerson)
                .withTitle("CvPerson")
                .withCrisOwner(user2.getName(), user2.getID().toString())
-               .withRelationshipType("CvPerson").build();
+               .withEntityType("CvPerson").build();
 
        notification = ItemBuilder.createItem(context, colNotification)
                 .withTitle("Notification For User1 and User2")
                 .withIssueDate("2021-03-21")
                 .withNotificationTo("Test notification", cvPersonItem.getID().toString())
                 .withNotificationTo("Test notification", cvPerson2Item.getID().toString())
-                .withRelationshipType("Notification").build();
+                .withEntityType("Notification").build();
 
        context.restoreAuthSystemState();
 

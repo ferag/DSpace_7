@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -230,7 +231,11 @@ public class RelationshipServiceImpl implements RelationshipService {
 
     private boolean isRelationshipValidToCreate(Context context, Relationship relationship) throws SQLException {
         RelationshipType relationshipType = relationship.getRelationshipType();
-
+        if (relationshipType.getLeftType() == null && relationshipType.getRightType() == null) {
+            log.warn("The relationship has been deemed invalid since both left and right type " +
+                         "of relationship type are null");
+            return false;
+        }
         if (!verifyEntityTypes(relationship.getLeftItem(), relationshipType.getLeftType())) {
             log.warn("The relationship has been deemed invalid since the leftItem" +
                          " and leftType do no match on entityType");
@@ -276,6 +281,10 @@ public class RelationshipServiceImpl implements RelationshipService {
                                          Integer maxCardinality,
                                          RelationshipType relationshipType,
                                          boolean isLeft) throws SQLException {
+        if (maxCardinality == null) {
+            //no need to check the relationships
+            return true;
+        }
         List<Relationship> rightRelationships = findByItemAndRelationshipType(context, itemToProcess, relationshipType,
                                                                               isLeft);
         if (maxCardinality != null && rightRelationships.size() >= maxCardinality) {
@@ -285,7 +294,12 @@ public class RelationshipServiceImpl implements RelationshipService {
     }
 
     private boolean verifyEntityTypes(Item itemToProcess, EntityType entityTypeToProcess) {
-        List<MetadataValue> list = itemService.getMetadata(itemToProcess, "relationship", "type", null, Item.ANY);
+        // null means every entity type is fine
+        if (Objects.isNull(entityTypeToProcess)) {
+            return true;
+        }
+        List<MetadataValue> list = itemService.getMetadata(itemToProcess, "dspace", "entity",
+                "type", Item.ANY, false);
         if (list.isEmpty()) {
             return false;
         }
@@ -300,15 +314,14 @@ public class RelationshipServiceImpl implements RelationshipService {
 
     @Override
     public List<Relationship> findByItem(Context context, Item item) throws SQLException {
-
-        return findByItem(context, item, -1, -1);
+        return findByItem(context, item, -1, -1, false);
     }
 
     @Override
-    public List<Relationship> findByItem(Context context, Item item, Integer limit, Integer offset)
-            throws SQLException {
+    public List<Relationship> findByItem(Context context, Item item, Integer limit, Integer offset,
+                                         boolean excludeTilted) throws SQLException {
 
-        List<Relationship> list = relationshipDAO.findByItem(context, item, limit, offset);
+        List<Relationship> list = relationshipDAO.findByItem(context, item, limit, offset, excludeTilted);
 
         list.sort((o1, o2) -> {
             int relationshipType = o1.getRelationshipType().getLeftwardType()
@@ -368,7 +381,11 @@ public class RelationshipServiceImpl implements RelationshipService {
     public void delete(Context context, Relationship relationship, boolean bypassValidation)
             throws SQLException, AuthorizeException {
         //TODO: retrieve default settings from configuration
-        delete(context, relationship, false, false, bypassValidation);
+        if (bypassValidation) {
+            forceDelete(context, relationship, false, false);
+        } else {
+            delete(context, relationship, false, false);
+        }
     }
 
     @Override
@@ -380,7 +397,8 @@ public class RelationshipServiceImpl implements RelationshipService {
                                                           "copyMetadataValuesToRightItem=" + copyToRightItem));
         if (isRelationshipValidToDelete(context, relationship) &&
             copyToItemPermissionCheck(context, relationship, copyToLeftItem, copyToRightItem)) {
-            deleteRelationship(context, relationship, copyToLeftItem, copyToRightItem);
+            // To delete a relationship, a user must have WRITE permissions on one of the related Items
+            deleteRelationshipAndCopyToItem(context, relationship, copyToLeftItem, copyToRightItem);
 
         } else {
             throw new IllegalArgumentException("The relationship given was not valid");
@@ -388,25 +406,23 @@ public class RelationshipServiceImpl implements RelationshipService {
     }
 
     @Override
-    public void delete(Context context, Relationship relationship, boolean copyToLeftItem, boolean copyToRightItem,
-            boolean bypassValidation) throws SQLException, AuthorizeException {
+    public void forceDelete(Context context, Relationship relationship, boolean copyToLeftItem, boolean copyToRightItem)
+        throws SQLException, AuthorizeException {
         log.info(org.dspace.core.LogManager.getHeader(context, "delete_relationship",
                                                       "relationship_id=" + relationship.getID() + "&" +
                                                           "copyMetadataValuesToLeftItem=" + copyToLeftItem + "&" +
                                                           "copyMetadataValuesToRightItem=" + copyToRightItem));
-        if ((isRelationshipValidToDelete(context, relationship) &&
-            copyToItemPermissionCheck(context, relationship, copyToLeftItem, copyToRightItem)) || bypassValidation) {
-            deleteRelationship(context, relationship, copyToLeftItem, copyToRightItem);
+        if (copyToItemPermissionCheck(context, relationship, copyToLeftItem, copyToRightItem)) {
+            // To delete a relationship, a user must have WRITE permissions on one of the related Items
+            deleteRelationshipAndCopyToItem(context, relationship, copyToLeftItem, copyToRightItem);
 
         } else {
             throw new IllegalArgumentException("The relationship given was not valid");
         }
     }
 
-    private void deleteRelationship(Context context, Relationship relationship, boolean copyToLeftItem,
-            boolean copyToRightItem) throws SQLException, AuthorizeException {
-
-        // To delete a relationship, a user must have WRITE permissions on one of the related Items
+    private void deleteRelationshipAndCopyToItem(Context context, Relationship relationship, boolean copyToLeftItem,
+                                                 boolean copyToRightItem) throws SQLException, AuthorizeException {
         copyMetadataValues(context, relationship, copyToLeftItem, copyToRightItem);
         if (authorizeService.authorizeActionBoolean(context, relationship.getLeftItem(), Constants.WRITE) ||
             authorizeService.authorizeActionBoolean(context, relationship.getRightItem(), Constants.WRITE)) {
@@ -747,14 +763,6 @@ public class RelationshipServiceImpl implements RelationshipService {
     public int countByTypeName(Context context, String typeName)
             throws SQLException {
         return relationshipDAO.countByTypeName(context, typeName);
-    }
-
-    @Override
-    public boolean hasRelationshipType(DSpaceObject dsObject, String relationshipType) {
-        return dsObject.getMetadata().stream().anyMatch(metadataValue -> {
-            return "relationship.type".equals(metadataValue.getMetadataField().toString('.')) &&
-                    relationshipType.equals(metadataValue.getValue());
-        });
     }
 
     @Override

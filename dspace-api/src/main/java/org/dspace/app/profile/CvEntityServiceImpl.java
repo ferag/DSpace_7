@@ -168,7 +168,7 @@ public class CvEntityServiceImpl implements CvEntityService {
     }
 
     private String findEntityType(Item item) {
-        return itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
+        return itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
     }
 
     private Item createItemCopy(Context context, Collection collection, Item item)
@@ -213,7 +213,7 @@ public class CvEntityServiceImpl implements CvEntityService {
     }
 
     private boolean hasCvEntityType(Item item) {
-        String entityType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
+        String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
         return entityType != null && entityType.startsWith("Cv") && !entityType.endsWith("Clone");
     }
 

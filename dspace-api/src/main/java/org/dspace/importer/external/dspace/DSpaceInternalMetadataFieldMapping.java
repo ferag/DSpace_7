@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
-import org.dspace.content.MetadataSchemaEnum;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
@@ -112,8 +111,7 @@ public class DSpaceInternalMetadataFieldMapping implements MetadataFieldMapping<
     }
 
     private List<MetadataField> publicMetadataFields(Context context, Item record) throws SQLException {
-        String entityType = itemService.getMetadataFirstValue(record, MetadataSchemaEnum.RELATIONSHIP.getName(),
-            "type", null, Item.ANY);
+        String entityType = itemService.getMetadataFirstValue(record, "dspace", "entity", "type", Item.ANY);
         List<CrisLayoutBox> boxes = crisLayoutBoxService.findEntityBoxes(context, entityType, 1000, 0);
 
         return boxes.stream()

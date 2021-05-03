@@ -179,10 +179,10 @@ public class SolrServiceIndexCtiVitaeDirectorioRelationshipsPluginTest {
         assertNull(document.getField("cti.owner"));
     }
 
-    private Item item(String relationshipType, UUID... owningCollectionsCommunities) throws SQLException {
+    private Item item(String entityType, UUID... owningCollectionsCommunities) throws SQLException {
         Item item = mock(Item.class);
-        when(itemService.getMetadata(item, "relationship.type"))
-            .thenReturn(relationshipType);
+        when(itemService.getMetadata(item, "dspace.entity.type"))
+            .thenReturn(entityType);
         Collection collection = collection(owningCollectionsCommunities);
         when(item.getOwningCollection())
             .thenReturn(collection);

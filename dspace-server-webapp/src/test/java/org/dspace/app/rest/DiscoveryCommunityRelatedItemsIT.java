@@ -51,11 +51,11 @@ public class DiscoveryCommunityRelatedItemsIT extends AbstractControllerIntegrat
 
         Collection displayedCollection =
             CollectionBuilder.createCollection(context, displayedCommunity).withName("Displayed publications")
-                .withRelationshipType("Publication").build();
+                .withEntityType("Publication").build();
 
         Collection notDisplayedCollection =
             CollectionBuilder.createCollection(context, notDisplayedCommunity).withName("Not displayed publications")
-                .withRelationshipType("ItemPublication").build();
+                .withEntityType("ItemPublication").build();
 
 
         Item displayedItem = ItemBuilder.createItem(context, displayedCollection)

@@ -20,14 +20,12 @@
     </bean>
 
     <bean name="reniecUbigeoMapConverter" class="org.dspace.util.SimpleMapConverter" init-method="init">
-        <constructor-arg value="reniecUbigeoCodes" />
         <property name="converterNameFile" value="mapConverter-reniecUbigeoCodes.properties" />
         <property name="configurationService" ref="org.dspace.services.ConfigurationService" />
         <property name="defaultValue" value="NA"/>
     </bean>
 
     <bean name="sunatUbigeoMapConverter" class="org.dspace.util.SimpleMapConverter" init-method="init">
-        <constructor-arg value="sunatUbigeoCodes" />
         <property name="converterNameFile" value="mapConverter-sunatUbigeoCodes.properties" />
         <property name="configurationService" ref="org.dspace.services.ConfigurationService" />
         <property name="defaultValue" value="NA"/>

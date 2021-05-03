@@ -144,8 +144,8 @@ public class CSLItemDataCrosswalk implements ItemExportCrosswalk {
     }
 
     private boolean isExpectedEntityType(Item item) {
-        String relationshipType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
-        return Objects.equals(relationshipType, entityType);
+        String itemEntityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
+        return Objects.equals(itemEntityType, entityType);
     }
 
     public void setMimeType(String mimeType) {

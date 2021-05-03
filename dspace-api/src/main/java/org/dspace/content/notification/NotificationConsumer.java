@@ -93,7 +93,7 @@ public class NotificationConsumer implements Consumer {
     }
 
     private boolean isNotificationEntityItem(Item item) {
-        String entityType = this.itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
+        String entityType = this.itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
         return StringUtils.equals(entityType, "Notification");
     }
 

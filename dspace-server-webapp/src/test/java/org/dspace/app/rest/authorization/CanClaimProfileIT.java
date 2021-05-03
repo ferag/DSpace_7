@@ -72,17 +72,17 @@ public class CanClaimProfileIT extends AbstractControllerIntegrationTest {
         context.turnOffAuthorisationSystem();
 
         Community community = CommunityBuilder.createCommunity(context).withName("Community").build();
-        claimableCollectionA = CollectionBuilder.createCollection(context, community).withRelationshipType("Person")
+        claimableCollectionA = CollectionBuilder.createCollection(context, community).withEntityType("Person")
                                                 .withName("claimableA").build();
-        cvPersonCollection = CollectionBuilder.createCollection(context, community).withRelationshipType("CvPerson")
+        cvPersonCollection = CollectionBuilder.createCollection(context, community).withEntityType("CvPerson")
                                               .withName("CV person").build();
         final Collection claimableCollectionB =
-            CollectionBuilder.createCollection(context, community).withRelationshipType("Person")
+            CollectionBuilder.createCollection(context, community).withEntityType("Person")
                              .withName("claimableB").build();
-        notClaimableCollection = CollectionBuilder.createCollection(context, community).withRelationshipType("Person")
+        notClaimableCollection = CollectionBuilder.createCollection(context, community).withEntityType("Person")
                                                   .withName("notClaimable").build();
         Collection publicationCollection =
-            CollectionBuilder.createCollection(context, community).withRelationshipType("Publication")
+            CollectionBuilder.createCollection(context, community).withEntityType("Publication")
                              .withName("notClaimable").build();
 
         collectionAProfile = ItemBuilder.createItem(context, claimableCollectionA).build();

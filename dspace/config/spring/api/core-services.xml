@@ -64,6 +64,10 @@
 
     <bean id= "org.dspace.app.profile.service.ResearcherProfileService" class="org.dspace.app.profile.ResearcherProfileServiceImpl"/>
     <bean id= "org.dspace.app.profile.service.CvEntityService" class="org.dspace.app.profile.CvEntityServiceImpl"/>
+<!--    <bean class="org.dspace.app.profile.ResearcherProfileServiceImpl"/>-->
+    <bean class="org.dspace.app.profile.ProfileSynchronizationWithOrcidConfiguratorImpl"/>
+
+    <bean class="org.dspace.app.profile.OrcidMetadataCopyingAction"/>
 
     <!-- Ensure PluginService is initialized properly via init() method -->
     <bean class="org.dspace.core.LegacyPluginServiceImpl" init-method="init"/>
@@ -76,9 +80,6 @@
 			</list>
 		</property>
 	</bean>
-
-    <!-- Ensure WorkflowCuratorService is initialized properly via init() method -->
-    <bean class="org.dspace.curate.WorkflowCuratorServiceImpl" init-method="init"/>
 
     <bean class="org.dspace.disseminate.CitationDocumentServiceImpl"/>
 
@@ -149,14 +150,12 @@
     <bean class="org.dspace.layout.service.impl.CrisLayoutTabServiceImpl"/>
     <bean class="org.dspace.layout.service.impl.CrisLayoutBoxServiceImpl"/>
     <bean class="org.dspace.layout.service.impl.CrisLayoutFieldServiceImpl"/>
+    <bean class="org.dspace.layout.service.impl.CrisLayoutMetadataGroupServiceImpl"/>
     <bean class="org.dspace.layout.service.impl.CrisLayoutMetric2BoxServiceImpl"/>
 
     <bean class="org.dspace.layout.service.impl.LayoutSecurityServiceImpl"/>
     <bean class="org.dspace.layout.service.impl.CrisLayoutBoxAccessServiceImpl"/>
     <bean class="org.dspace.layout.service.impl.CrisLayoutTabAccessServiceImpl"/>
-
-    <bean class="org.dspace.app.orcid.service.impl.OrcidQueueServiceImpl" />
-    <bean class="org.dspace.app.orcid.service.impl.OrcidHistoryServiceImpl" />
     
     <bean class="org.dspace.content.security.CrisSecurityServiceImpl" />
 

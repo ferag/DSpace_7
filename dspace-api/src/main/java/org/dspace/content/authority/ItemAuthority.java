@@ -62,7 +62,7 @@ public class ItemAuthority implements ChoiceAuthority, LinkableEntityAuthority {
 
     private DSpace dspace = new DSpace();
 
-    private ItemService itemService = ContentServiceFactory.getInstance().getItemService();
+    protected ItemService itemService = ContentServiceFactory.getInstance().getItemService();
 
     private SearchService searchService = dspace.getServiceManager().getServiceByName(
         "org.dspace.discovery.SearchService", SearchService.class);
@@ -107,8 +107,8 @@ public class ItemAuthority implements ChoiceAuthority, LinkableEntityAuthority {
             return new Choices(Choices.CF_UNSET);
         }
 
-        String relationshipType = getLinkedEntityType();
-        ItemAuthorityService itemAuthorityService = itemAuthorityServiceFactory.getInstance(relationshipType);
+        String entityType = getLinkedEntityType();
+        ItemAuthorityService itemAuthorityService = itemAuthorityServiceFactory.getInstance(entityType);
         String luceneQuery = itemAuthorityService.getSolrQuery(text);
 
 
@@ -118,12 +118,12 @@ public class ItemAuthority implements ChoiceAuthority, LinkableEntityAuthority {
         solrQuery.setRows(limit);
         solrQuery.addFilterQuery("search.resourcetype:" + Item.class.getSimpleName());
 
-        if (StringUtils.isNotBlank(relationshipType)) {
-            solrQuery.addFilterQuery("relationship.type:" + relationshipType);
+        if (StringUtils.isNotBlank(entityType)) {
+            solrQuery.addFilterQuery("dspace.entity.type:" + entityType);
         }
 
         customAuthorityFilters.stream()
-            .flatMap(caf -> caf.getFilterQueries(relationshipType).stream())
+            .flatMap(caf -> caf.getFilterQueries(entityType).stream())
             .forEach(solrQuery::addFilterQuery);
 
         try {
@@ -172,7 +172,7 @@ public class ItemAuthority implements ChoiceAuthority, LinkableEntityAuthority {
 
     @Override
     public String getLinkedEntityType() {
-        return configurationService.getProperty("cris.ItemAuthority." + authorityName + ".relationshipType");
+        return configurationService.getProperty("cris.ItemAuthority." + authorityName + ".entityType");
     }
 
     private boolean isInstitutionEntity() {
@@ -192,7 +192,7 @@ public class ItemAuthority implements ChoiceAuthority, LinkableEntityAuthority {
             .map(rq -> (Context) rq.getAttribute("dspace.context")).orElseGet(Context::new);
         try {
             return collectionService
-                .find(context, UUID.fromString(collection)).getRelationshipType().startsWith("Institution");
+                .find(context, UUID.fromString(collection)).getEntityType().startsWith("Institution");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

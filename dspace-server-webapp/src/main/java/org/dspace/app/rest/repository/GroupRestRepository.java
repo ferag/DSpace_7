@@ -22,6 +22,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.dspace.app.rest.Parameter;
 import org.dspace.app.rest.SearchRestMethod;
 import org.dspace.app.rest.converter.MetadataConverter;
+import org.dspace.app.rest.exception.GroupNameNotProvidedException;
 import org.dspace.app.rest.exception.RESTAuthorizationException;
 import org.dspace.app.rest.exception.RepositoryMethodNotImplementedException;
 import org.dspace.app.rest.exception.UnprocessableEntityException;
@@ -92,7 +93,7 @@ public class GroupRestRepository extends DSpaceObjectRestRepository<Group, Group
         }
 
         if (isBlank(groupRest.getName())) {
-            throw new UnprocessableEntityException("cannot create group, no group name is provided");
+            throw new GroupNameNotProvidedException();
         }
 
         Group group;

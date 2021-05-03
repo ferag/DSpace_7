@@ -370,9 +370,9 @@ public class CvEntityRestRepositoryIT extends AbstractControllerIntegrationTest 
 
     }
 
-    private Collection createCollection(String relationshipType) throws SQLException, AuthorizeException {
+    private Collection createCollection(String entityType) throws SQLException, AuthorizeException {
         return CollectionBuilder.createCollection(context, parentCommunity)
-            .withRelationshipType(relationshipType)
+            .withEntityType(entityType)
             .withSubmitterGroup(eperson)
             .build();
     }

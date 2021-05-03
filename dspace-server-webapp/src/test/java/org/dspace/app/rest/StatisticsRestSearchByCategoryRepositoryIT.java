@@ -133,11 +133,11 @@ public class StatisticsRestSearchByCategoryRepositoryIT extends AbstractControll
         site = SiteBuilder.createSite(context).build();
         communityCRIS = CommunityBuilder.createCommunity(context).build();
         collectionPeople = CollectionBuilder.createCollection(context, communityCRIS).withName("People")
-                .withRelationshipType("Person").build();
+                .withEntityType("Person").build();
         collectionProjects = CollectionBuilder.createCollection(context, communityCRIS).withName("Projects")
-                .withRelationshipType("Project").build();
+                .withEntityType("Project").build();
         collectionPublications = CollectionBuilder.createCollection(context, communityCRIS).withName("Publications")
-                .withRelationshipType("Publication").build();
+                .withEntityType("Publication").build();
 
         // person 1 has project 1, 2, publication 1
         // person 2 has project 3, publication 1, 2
@@ -362,16 +362,16 @@ public class StatisticsRestSearchByCategoryRepositoryIT extends AbstractControll
             .andExpect(jsonPath("$._embedded.usagereports", Matchers.containsInAnyOrder(
                 UsageReportMatcher
                     .matchUsageReport(publicationItem.getID() + "_" + TOTAL_VISITS_REPORT_ID,
-                            TOTAL_VISITS_REPORT_ID, Arrays.asList(getPoint(publicationItem, 13))),
+                            TOTAL_VISITS_REPORT_ID, "table", Arrays.asList(getPoint(publicationItem, 13))),
                 UsageReportMatcher
                     .matchUsageReport(publicationItem.getID() + "_" + TOTAL_VISITS_PER_MONTH_REPORT_ID,
-                            TOTAL_VISITS_PER_MONTH_REPORT_ID),
+                            TOTAL_VISITS_PER_MONTH_REPORT_ID, "chart.line"),
                 UsageReportMatcher
                     .matchUsageReport(publicationItem.getID() + "_" + TOP_COUNTRIES_REPORT_ID,
                             TOP_COUNTRIES_REPORT_ID),
                 UsageReportMatcher
                     .matchUsageReport(publicationItem.getID() + "_" + TOP_CITIES_REPORT_ID,
-                            TOP_CITIES_REPORT_ID),
+                            TOP_CITIES_REPORT_ID, "table"),
                 UsageReportMatcher
                     .matchUsageReport(publicationItem.getID() + "_" + TOTAL_DOWNLOADS_REPORT_ID,
                             TOTAL_DOWNLOADS_REPORT_ID, Arrays.asList(getDownloadPoint(bitstreamVisited, 3)))

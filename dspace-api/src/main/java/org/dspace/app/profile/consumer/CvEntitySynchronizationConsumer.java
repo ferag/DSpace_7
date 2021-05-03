@@ -122,7 +122,7 @@ public class CvEntitySynchronizationConsumer implements Consumer {
         try {
 
             context.turnOffAuthorisationSystem();
-            String entityType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
+            String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
 
             if (isCvPerson(entityType)) {
                 consumeCvPerson(context, item, entityType);
@@ -305,7 +305,7 @@ public class CvEntitySynchronizationConsumer implements Consumer {
     }
 
     private boolean isNotCvEntity(Item item) {
-        String entityType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
+        String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
         return !(entityType != null && entityType.startsWith("Cv") && !entityType.endsWith("Clone"));
     }
 

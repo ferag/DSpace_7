@@ -415,7 +415,7 @@ public class CvRelatedEntitiesServiceTest {
         Item item = mock(Item.class);
         when(item.getID()).thenReturn(uuid);
 
-        when(itemService.getMetadata(item, "relationship.type")).thenReturn(entityType);
+        when(itemService.getMetadata(item, "dspace.entity.type")).thenReturn(entityType);
 
         Arrays.stream(metadataValues)
             .collect(Collectors.groupingBy(mv -> mv.getMetadataField().toString()))

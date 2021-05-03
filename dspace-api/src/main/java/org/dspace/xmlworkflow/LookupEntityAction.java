@@ -44,7 +44,7 @@ public class LookupEntityAction implements PostShadowCopyCreationAction {
 
     private final String metadataToLink;
 
-    private final String relationshipTypeToSearch;
+    private final String entityTypeToSearch;
 
     @Autowired
     private ItemService itemService;
@@ -53,11 +53,11 @@ public class LookupEntityAction implements PostShadowCopyCreationAction {
     private SearchService searchService;
 
     public LookupEntityAction(String shadowCopyMetadata, String metadataToSearch, String metadataToLink,
-        String relationshipTypeToSearch) {
+        String entityTypeToSearch) {
         this.shadowCopyMetadata = shadowCopyMetadata;
         this.metadataToSearch = metadataToSearch;
         this.metadataToLink = metadataToLink;
-        this.relationshipTypeToSearch = relationshipTypeToSearch;
+        this.entityTypeToSearch = entityTypeToSearch;
     }
 
     @Override
@@ -101,7 +101,7 @@ public class LookupEntityAction implements PostShadowCopyCreationAction {
         DiscoverQuery discoverQuery = new DiscoverQuery();
         discoverQuery.setDSpaceObjectFilter(IndexableItem.TYPE);
         discoverQuery.addFilterQueries(metadataToSearch + ":" + metadataValue);
-        discoverQuery.addFilterQueries("search.entitytype:" + relationshipTypeToSearch);
+        discoverQuery.addFilterQueries("search.entitytype:" + entityTypeToSearch);
 
         DiscoverResult discoverResult = searchService.search(context, discoverQuery);
         List<IndexableObject> indexableObjects = discoverResult.getIndexableObjects();
@@ -119,8 +119,8 @@ public class LookupEntityAction implements PostShadowCopyCreationAction {
             .findFirst();
     }
 
-    public String getRelationshipTypeToSearch() {
-        return relationshipTypeToSearch;
+    public String getEntityTypeToSearch() {
+        return entityTypeToSearch;
     }
 
     public String getMetadataToSearch() {

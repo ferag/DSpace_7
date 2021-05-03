@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.rest.model.WorkflowItemRest;
 import org.dspace.app.rest.utils.ContextUtil;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.service.EPersonService;
@@ -56,6 +57,9 @@ public class WorkflowRestPermissionEvaluatorPlugin extends RestObjectPermissionE
     @Autowired
     private EPersonService ePersonService;
 
+    @Autowired
+    private AuthorizeService authorizeService;
+
     @Override
     public boolean hasDSpacePermission(Authentication authentication, Serializable targetId,
                                  String targetType, DSpaceRestPermission permission) {
@@ -89,6 +93,12 @@ public class WorkflowRestPermissionEvaluatorPlugin extends RestObjectPermissionE
             if (claimedTaskService.findByWorkflowIdAndEPerson(context, workflowItem, ePerson) != null) {
                 return true;
             }
+
+            if (authorizeService.authorizeActionBoolean(context, workflowItem.getItem(),
+                restPermission.getDspaceApiActionId())) {
+                return true;
+            }
+
         } catch (SQLException | AuthorizeException | IOException e) {
             log.error(e.getMessage(), e);
         }

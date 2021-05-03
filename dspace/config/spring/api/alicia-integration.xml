@@ -176,7 +176,6 @@
     </bean>
 
     <bean name="aliciaTypeVersionMapConverter" class="org.dspace.util.SimpleMapConverter" init-method="init">
-        <constructor-arg value="aliciaCoarTypes" />
         <property name="converterNameFile" value="mapConverter-aliciaCoarTypes.properties" />
         <property name="configurationService" ref="org.dspace.services.ConfigurationService" />
         <property name="defaultValue" value="NA"/>

@@ -88,6 +88,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.data.rest.webmvc.RestMediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -220,7 +221,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .createCollection(context, directorioSubCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Publications")
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", directorioReviewGroup)
             .withRoleGroup("editor", directorioEditorGroup)
@@ -237,7 +238,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         institutionCollection = createCollection(context, parentCommunity, "123456789/institution-workflow-test")
             .withName("Institution collection")
-            .withRelationshipType("InstitutionPublication")
+            .withEntityType("InstitutionPublication")
             .withSubmissionDefinition("traditional")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", reviewGroup)
@@ -292,7 +293,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(shadowItemMetadata, hasSize(10));
         assertThat(shadowItemMetadata, hasItem(with("dc.title", ITEM_TITLE)));
         assertThat(shadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
-        assertThat(shadowItemMetadata, hasItem(with("relationship.type", "Publication")));
+        assertThat(shadowItemMetadata, hasItem(with("dspace.entity.type", "Publication")));
         assertThat(shadowItemMetadata, hasItem(with("oairecerif.author.affiliation", "4Science")));
         assertThat(shadowItemMetadata, hasItem(with("dc.contributor.editor", "Test editor")));
         assertThat(shadowItemMetadata, hasItem(with("dc.contributor.author", "Mario Rossi", null,
@@ -342,7 +343,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(shadowItemMetadata, hasSize(10));
         assertThat(shadowItemMetadata, hasItem(with("dc.title", ITEM_TITLE)));
         assertThat(shadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
-        assertThat(shadowItemMetadata, hasItem(with("relationship.type", "Publication")));
+        assertThat(shadowItemMetadata, hasItem(with("dspace.entity.type", "Publication")));
         assertThat(shadowItemMetadata, hasItem(with("oairecerif.author.affiliation", "4Science")));
         assertThat(shadowItemMetadata, hasItem(with("dc.contributor.editor", "Test editor")));
         assertThat(shadowItemMetadata, hasItem(with("dc.contributor.author", "Mario Rossi", null,
@@ -388,7 +389,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         assertThat(shadowItemMetadata, hasItem(with("dc.title", ITEM_TITLE)));
         assertThat(shadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
-        assertThat(shadowItemMetadata, hasItem(with("relationship.type", "Publication")));
+        assertThat(shadowItemMetadata, hasItem(with("dspace.entity.type", "Publication")));
         assertThat(shadowItemMetadata, hasItem(with("oairecerif.author.affiliation", "4Science")));
         assertThat(shadowItemMetadata, hasItem(with("dc.contributor.editor", "Test editor")));
         assertThat(shadowItemMetadata, hasItem(with("dc.contributor.author", "Mario Rossi", null,
@@ -440,7 +441,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(shadowItemCopy.getMetadata(), hasSize(10));
         assertThat(shadowItemMetadata, hasItem(with("dc.title", ITEM_TITLE)));
         assertThat(shadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
-        assertThat(shadowItemMetadata, hasItem(with("relationship.type", "Publication")));
+        assertThat(shadowItemMetadata, hasItem(with("dspace.entity.type", "Publication")));
         assertThat(shadowItemMetadata, hasItem(with("oairecerif.author.affiliation", "4Science")));
         assertThat(shadowItemMetadata, hasItem(with("dc.contributor.editor", "Test editor")));
         assertThat(shadowItemMetadata, hasItem(with("dc.contributor.author", "Mario Rossi", null,
@@ -522,7 +523,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(getFirstMetadata(correctionItemShadowCopy, "dc.contributor.editor"), nullValue());
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.title", "Submission Item new title")));
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
-        assertThat(correctionShadowItemMetadata, hasItem(with("relationship.type", "Publication")));
+        assertThat(correctionShadowItemMetadata, hasItem(with("dspace.entity.type", "Publication")));
         assertThat(correctionShadowItemMetadata, hasItem(with("oairecerif.author.affiliation", "4Science")));
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.contributor.author", "Mario Rossi", null,
             "will be referenced::SHADOW::9bab4959-c210-4b6d-9d94-ff75cade84c3", 0, 600)));
@@ -606,7 +607,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(getFirstMetadata(correctionItemShadowCopy, "dc.contributor.editor"), nullValue());
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.title", "Submission Item new title")));
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
-        assertThat(correctionShadowItemMetadata, hasItem(with("relationship.type", "Publication")));
+        assertThat(correctionShadowItemMetadata, hasItem(with("dspace.entity.type", "Publication")));
         assertThat(correctionShadowItemMetadata, hasItem(with("oairecerif.author.affiliation", "4Science")));
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.contributor.author", "Mario Rossi", null,
             "will be referenced::SHADOW::9bab4959-c210-4b6d-9d94-ff75cade84c3", 0, 600)));
@@ -690,7 +691,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(getFirstMetadata(correctionItemShadowCopy, "dc.contributor.editor"), nullValue());
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.title", "Submission Item new title")));
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.date.issued", "2017-10-17")));
-        assertThat(correctionShadowItemMetadata, hasItem(with("relationship.type", "Publication")));
+        assertThat(correctionShadowItemMetadata, hasItem(with("dspace.entity.type", "Publication")));
         assertThat(correctionShadowItemMetadata, hasItem(with("oairecerif.author.affiliation", "4Science")));
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.contributor.author", "Mario Rossi", null,
             "will be referenced::SHADOW::9bab4959-c210-4b6d-9d94-ff75cade84c3", 0, 600)));
@@ -911,7 +912,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         assertThat(getFirstMetadata(correctionItemShadowCopy, "dc.contributor.editor"), nullValue());
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.title", "Test publication new title")));
         assertThat(correctionShadowItemMetadata, hasItem(with("dc.date.issued", "2021-01-04")));
-        assertThat(correctionShadowItemMetadata, hasItem(with("relationship.type", "Publication")));
+        assertThat(correctionShadowItemMetadata, hasItem(with("dspace.entity.type", "Publication")));
 
         assertThat(correctionShadowItemMetadata, hasItem(with("cris.policy.group", directorioReviewGroup.getName(),
             null, directorioReviewGroup.getID().toString(), 0, 600)));
@@ -959,7 +960,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .createCollection(context, directorioCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Persons")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmitterGroup(submitter)
             .withRoleGroup("editor", directorioEditorGroup)
             .build();
@@ -967,7 +968,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Collection institutionPersons = createCollection(context, parentCommunity)
             .withWorkflow("institutionWorkflow")
             .withName("Institution person collection")
-            .withRelationshipType("InstitutionPerson")
+            .withEntityType("InstitutionPerson")
             .withSubmissionDefinition("traditional")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", reviewGroup)
@@ -1684,7 +1685,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .createCollection(context, directorioCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Persons")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmitterGroup(submitter)
             .withRoleGroup("editor", directorioEditorGroup)
             .build();
@@ -2006,7 +2007,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .createCollection(context, directorioCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Persons")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmitterGroup(submitter)
             .withRoleGroup("editor", directorioEditorGroup)
             .build();
@@ -2023,7 +2024,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Collection institutionPersons = createCollection(context, parentCommunity)
             .withWorkflow("institutionWorkflow")
             .withName("Institution person collection")
-            .withRelationshipType("InstitutionPerson")
+            .withEntityType("InstitutionPerson")
             .withSubmissionDefinition("traditional")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", reviewGroup)
@@ -2244,7 +2245,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
             .createCollection(context, directorioCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Persons")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmitterGroup(submitter)
             .withRoleGroup("editor", directorioEditorGroup)
             .build();
@@ -2252,7 +2253,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Collection institutionPersons = createCollection(context, parentCommunity)
             .withWorkflow("institutionWorkflow")
             .withName("Institution person collection")
-            .withRelationshipType("InstitutionPerson")
+            .withEntityType("InstitutionPerson")
             .withSubmissionDefinition("traditional")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", reviewGroup)
@@ -2347,7 +2348,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         CollectionBuilder.createCollection(context, directorioCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Persons")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmitterGroup(submitter)
             .withRoleGroup("editor", directorioEditorGroup)
             .build();
@@ -2355,7 +2356,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Collection institutionPersons = createCollection(context, parentCommunity)
             .withWorkflow("institutionWorkflow")
             .withName("Institution person collection")
-            .withRelationshipType("InstitutionPerson")
+            .withEntityType("InstitutionPerson")
             .withSubmissionDefinition("traditional")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", reviewGroup)
@@ -2363,13 +2364,13 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         Collection cvPersons = createCollection(context, parentCommunity)
             .withName("CV person collection")
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withSubmitterGroup(submitter)
             .build();
 
         Collection cvPersonClones = createCollection(context, parentCommunity)
             .withName("CV person clone collection")
-            .withRelationshipType("CvPersonClone")
+            .withEntityType("CvPersonClone")
             .withWorkflow("institutionWorkflow")
             .withSubmitterGroup(submitter)
             .build();
@@ -2467,7 +2468,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         CollectionBuilder.createCollection(context, directorioCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Persons")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmitterGroup(submitter)
             .withRoleGroup("editor", directorioEditorGroup)
             .build();
@@ -2475,7 +2476,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Collection institutionPersons = createCollection(context, parentCommunity)
             .withWorkflow("institutionWorkflow")
             .withName("Institution person collection")
-            .withRelationshipType("InstitutionPerson")
+            .withEntityType("InstitutionPerson")
             .withSubmissionDefinition("traditional")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", reviewGroup)
@@ -2483,13 +2484,13 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         Collection cvPersons = createCollection(context, parentCommunity)
             .withName("CV person collection")
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withSubmitterGroup(submitter)
             .build();
 
         Collection cvPersonClones = createCollection(context, parentCommunity)
             .withName("CV person clone collection")
-            .withRelationshipType("CvPersonClone")
+            .withEntityType("CvPersonClone")
             .withWorkflow("institutionWorkflow")
             .withSubmitterGroup(submitter)
             .build();
@@ -2583,7 +2584,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         CollectionBuilder.createCollection(context, directorioCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Persons")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmitterGroup(submitter)
             .withRoleGroup("editor", directorioEditorGroup)
             .build();
@@ -2591,7 +2592,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Collection institutionPersons = createCollection(context, parentCommunity)
             .withWorkflow("institutionWorkflow")
             .withName("Institution person collection")
-            .withRelationshipType("InstitutionPerson")
+            .withEntityType("InstitutionPerson")
             .withSubmissionDefinition("traditional")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", reviewGroup)
@@ -2599,13 +2600,13 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         Collection cvPersons = createCollection(context, parentCommunity)
             .withName("CV person collection")
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withSubmitterGroup(submitter)
             .build();
 
         Collection cvPersonClones = createCollection(context, parentCommunity)
             .withName("CV person clone collection")
-            .withRelationshipType("CvPersonClone")
+            .withEntityType("CvPersonClone")
             .withWorkflow("institutionWorkflow")
             .withSubmitterGroup(submitter)
             .build();
@@ -2699,7 +2700,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         CollectionBuilder.createCollection(context, directorioCommunity)
             .withWorkflow("directorioWorkflow")
             .withName("Persons")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmitterGroup(submitter)
             .withRoleGroup("editor", directorioEditorGroup)
             .build();
@@ -2707,7 +2708,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         Collection institutionPersons = createCollection(context, parentCommunity)
             .withWorkflow("institutionWorkflow")
             .withName("Institution person collection")
-            .withRelationshipType("InstitutionPerson")
+            .withEntityType("InstitutionPerson")
             .withSubmissionDefinition("traditional")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", reviewGroup)
@@ -2715,13 +2716,13 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
 
         Collection cvPersons = createCollection(context, parentCommunity)
             .withName("CV person collection")
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withSubmitterGroup(submitter)
             .build();
 
         Collection cvPersonClones = createCollection(context, parentCommunity)
             .withName("CV person clone collection")
-            .withRelationshipType("CvPersonClone")
+            .withEntityType("CvPersonClone")
             .withWorkflow("institutionWorkflow")
             .withSubmitterGroup(submitter)
             .build();
@@ -2958,10 +2959,10 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
     }
 
     private void performActionOnPoolTaskViaRest(EPerson user, PoolTask task) throws Exception {
-        getClient(getAuthToken(user.getEmail(), password))
-            .perform(post(BASE_REST_SERVER_URL + "/api/workflow/pooltasks/{id}", task.getID())
-            .contentType("application/x-www-form-urlencoded"))
-            .andExpect(status().isNoContent());
+        getClient(getAuthToken(user.getEmail(), password)).perform(post("/api/workflow/claimedtasks")
+            .contentType(RestMediaTypes.TEXT_URI_LIST)
+            .content("/api/workflow/pooltasks/" + task.getID()))
+            .andExpect(status().isCreated());
     }
 
     private WorkspaceItem requestForItemCorrection(EPerson user, Item item) throws Exception {

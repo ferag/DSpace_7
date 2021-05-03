@@ -138,19 +138,19 @@ public class CvPersonCreationIT extends AbstractControllerIntegrationTest {
 
         personCollection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("People")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withSubmitterGroup(user)
             .build();
 
         cvCollection = CollectionBuilder.createCollection(context, ctiVitaeCommunity)
             .withName("Profiles")
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withSubmitterGroup(user)
             .build();
 
         cvCloneCollection = CollectionBuilder.createCollection(context, ctiVitaeCloneCommunity)
             .withName("Profiles")
-            .withRelationshipType("CvPersonClone")
+            .withEntityType("CvPersonClone")
             .build();
 
         createRelationshipTypeBuilder(context, cvPersonEntityType, personEntityType, "isPersonOwner",
@@ -251,7 +251,7 @@ public class CvPersonCreationIT extends AbstractControllerIntegrationTest {
             .andExpect(jsonPath("$.type", is("item")))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", user.getName(), user.getID().toString(), 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.name", "Giuseppe Verdi", 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "CvPerson", 0)))
+            .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("person.birthDate", "1813-10-10", 0)));
 
         String profileItemId = getItemIdByProfileId(authToken, user.getID().toString());
@@ -347,8 +347,7 @@ public class CvPersonCreationIT extends AbstractControllerIntegrationTest {
             .andExpect(status().isNotFound());
 
         getClient(authToken).perform(get("/api/core/items/" + profileItemId + "/relationships"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.page.totalPages", is(0)));
+            .andExpect(status().isNotFound());
 
     }
 
@@ -418,7 +417,7 @@ public class CvPersonCreationIT extends AbstractControllerIntegrationTest {
             .andExpect(jsonPath("$.type", is("item")))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", user.getName(), userID.toString(), 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.name", "Mario Rossi", 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "CvPerson", 0)))
+            .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("person.birthDate", "1982-12-17", 0)));
 
         String profileItemId = getItemIdByProfileId(authToken, userID.toString());
@@ -452,7 +451,7 @@ public class CvPersonCreationIT extends AbstractControllerIntegrationTest {
 
         Collection institutionPersonCollection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("People")
-            .withRelationshipType("InstitutionPerson")
+            .withEntityType("InstitutionPerson")
             .withSubmitterGroup(user)
             .build();
 
@@ -511,7 +510,7 @@ public class CvPersonCreationIT extends AbstractControllerIntegrationTest {
             .andExpect(jsonPath("$.type", is("item")))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", user.getName(), user.getID().toString(), 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.name", "Giuseppe Verdi", 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "CvPerson", 0)))
+            .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("person.birthDate", "1813-10-10", 0)));
 
         String profileItemId = getItemIdByProfileId(authToken, user.getID().toString());

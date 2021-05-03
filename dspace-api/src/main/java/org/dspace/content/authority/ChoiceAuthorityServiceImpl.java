@@ -169,30 +169,16 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
         return ma.getMatches(query, start, limit, locale);
     }
 
-
-    @Override
-    public Choices getMatches(String fieldKey, String query, Collection collection, int start, int limit, String locale,
-                              boolean externalInput) {
-        ChoiceAuthority ma = getAuthorityByFieldKeyCollection(fieldKey, collection);
-        if (ma == null) {
-            throw new IllegalArgumentException(
-                "No choices plugin was configured for  field \"" + fieldKey
-                    + "\", collection=" + collection.getID().toString() + ".");
-        }
-        if (externalInput && ma instanceof SolrAuthority) {
-            ((SolrAuthority) ma).addExternalResultsInNextMatches();
-        }
-        return ma.getMatches(query, start, limit, locale);
-    }
-
     @Override
     public Choices getBestMatch(String fieldKey, String query, Collection collection,
                                 String locale) {
         ChoiceAuthority ma = getAuthorityByFieldKeyCollection(fieldKey, collection);
         if (ma == null) {
-            throw new IllegalArgumentException(
-                "No choices plugin was configured for  field \"" + fieldKey
-                    + "\", collection=" + collection.getID().toString() + ".");
+            String errorMessage = "No choices plugin was configured for  field \"" + fieldKey + "\"";
+            if (collection != null) {
+                errorMessage = errorMessage + ", collection=" + collection.getID().toString();
+            }
+            throw new IllegalArgumentException(errorMessage);
         }
         return ma.getBestMatch(query, locale);
     }
@@ -595,9 +581,10 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
     }
 
     @Override
-    public String getRelationshipType(String fieldKey, String formNameDefinition) {
+    public String getLinkedEntityType(String fieldKey, String formNameDefinition) {
 
         ChoiceAuthority ma = getAuthorityByFieldKeyAndFormName(fieldKey, formNameDefinition);
+
         if (ma == null) {
             throw new IllegalArgumentException("No choices plugin was configured for  field \"" + fieldKey + "\".");
         }
@@ -618,15 +605,15 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
     }
 
     @Override
-    public List<String> getAuthorityControlledFieldsByRelationshipType(String relationshipType) {
+    public List<String> getAuthorityControlledFieldsByEntityType(String entityType) {
         init();
 
-        if (StringUtils.isEmpty(relationshipType)) {
+        if (StringUtils.isEmpty(entityType)) {
             return new ArrayList<String>(controller.keySet());
         }
 
         return controller.keySet().stream()
-            .filter(field -> isLinkableToAnEntityWithRelationshipType(controller.get(field), relationshipType))
+            .filter(field -> isLinkableToAnEntityWithEntityType(controller.get(field), entityType))
             .map(field -> removeInstitutionPrefix(field))
             .collect(Collectors.toList());
     }
@@ -638,9 +625,9 @@ public final class ChoiceAuthorityServiceImpl implements ChoiceAuthorityService 
         return field;
     }
 
-    private boolean isLinkableToAnEntityWithRelationshipType(ChoiceAuthority choiceAuthority, String relationshipType) {
+    private boolean isLinkableToAnEntityWithEntityType(ChoiceAuthority choiceAuthority, String entityType) {
         return choiceAuthority instanceof LinkableEntityAuthority
-            && relationshipType.equals(((LinkableEntityAuthority) choiceAuthority).getLinkedEntityType());
+            && entityType.equals(((LinkableEntityAuthority) choiceAuthority).getLinkedEntityType());
     }
 
     private Optional<String> lookupKeyInController(String formNameDefinition, String fieldKey) {

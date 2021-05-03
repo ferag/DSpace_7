@@ -18,7 +18,6 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
-import org.dspace.core.Context.Mode;
 import org.dspace.core.exception.SQLRuntimeException;
 import org.dspace.util.UUIDUtils;
 import org.dspace.xmlworkflow.service.ConcytecWorkflowService;
@@ -55,7 +54,6 @@ public class ItemSearchByShadowCopyRelation implements ItemSearcher, ItemReferen
 
     @Override
     public void resolveReferences(Context context, Item item) {
-        Mode originalMode = context.getCurrentMode();
         try {
 
             context.turnOffAuthorisationSystem();
@@ -64,8 +62,6 @@ public class ItemSearchByShadowCopyRelation implements ItemSearcher, ItemReferen
             if (copiedItem == null) {
                 return;
             }
-
-            context.setMode(Mode.BATCH_EDIT);
 
             String authority = AuthorityValueService.REFERENCE + "SHADOW::" + copiedItem.getID();
             Iterator<Item> itemIterator = findItemsWithAuthority(context, authority, item);
@@ -84,20 +80,17 @@ public class ItemSearchByShadowCopyRelation implements ItemSearcher, ItemReferen
             throw new RuntimeException(e);
         } finally {
             context.restoreAuthSystemState();
-            if (originalMode != context.getCurrentMode()) {
-                context.setMode(originalMode);
-            }
         }
 
     }
 
     private Iterator<Item> findItemsWithAuthority(Context context, String authority, Item item) {
-        String relationshipType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
-        if (relationshipType == null) {
-            throw new IllegalArgumentException("The given item has no relationship.type: " + item.getID());
+        String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
+        if (entityType == null) {
+            throw new IllegalArgumentException("The given item has no dspace.entity.type: " + item.getID());
         }
 
-        return itemService.findByAuthorityControlledMetadataFields(context, authority, relationshipType);
+        return itemService.findByAuthorityControlledMetadataFields(context, authority, entityType);
     }
 
 }

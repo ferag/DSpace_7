@@ -376,11 +376,11 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
 
     private void setFilter(DiscoverQuery discoverQuery, String service) {
         if ("scopus".equals(service)) {
-            discoverQuery.addFilterQueries("relationship.type:Person");
+            discoverQuery.addFilterQueries("dspace.entity.type:Person");
             discoverQuery.addFilterQueries("person.identifier.scopus-author-id:*");
         }
         if ("wos".equals(service)) {
-            discoverQuery.addFilterQueries("relationship.type:Person");
+            discoverQuery.addFilterQueries("dspace.entity.type:Person");
             discoverQuery.addFilterQueries("person.identifier.orcid:* OR person.identifier.rid:*");
         }
     }

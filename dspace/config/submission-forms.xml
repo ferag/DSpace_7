@@ -7032,10 +7032,23 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       </row>
       <row>
         <field>
-          <dc-schema>cris</dc-schema>
-          <dc-element>policy</dc-element>
-          <dc-qualifier>group</dc-qualifier>
-          <label>Allow access to group</label>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ctivitaepolicy</dc-element>
+          <dc-qualifier>education</dc-qualifier>
+          <label>Group(s) enabled on Education box</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ctivitaepolicy</dc-element>
+          <dc-qualifier>organization</dc-qualifier>
+          <label>Group(s) enabled on OrgUnit box</label>
+          <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
           <hint />

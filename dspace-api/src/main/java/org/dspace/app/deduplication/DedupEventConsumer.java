@@ -266,7 +266,7 @@ public class DedupEventConsumer implements Consumer {
     }
 
     private boolean isInstitutionOrCvItem(Context context, Item item) {
-        String entityType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
+        String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
         return entityType != null && (entityType.startsWith("Institution") || entityType.startsWith("Cv"));
     }
 

@@ -137,7 +137,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
         community = createCommunity(context).build();
         collection = createCollection(context, community)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withAdminGroup(eperson)
             .build();
         context.restoreAuthSystemState();
@@ -465,7 +465,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             "will be generated::test-harvest::123", 0, 500)));
         assertThat(values, hasItems(with("oairecerif.author.affiliation", PLACEHOLDER_PARENT_METADATA_VALUE)));
         assertThat(values, hasItems(with("cris.sourceId", "test-harvest::3")));
-        assertThat(values, hasItems(with("relationship.type", "Publication")));
+        assertThat(values, hasItems(with("dspace.entity.type", "Publication")));
     }
 
     @Test
@@ -651,7 +651,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             "will be generated::test-harvest::123", 0, 500)));
         assertThat(values, hasItems(with("oairecerif.author.affiliation", PLACEHOLDER_PARENT_METADATA_VALUE)));
         assertThat(values, hasItems(with("cris.sourceId", "test-harvest::3")));
-        assertThat(values, hasItems(with("relationship.type", "Publication")));
+        assertThat(values, hasItems(with("dspace.entity.type", "Publication")));
     }
 
     @Test
@@ -696,7 +696,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             "will be generated::test-harvest::123", 0, 500)));
         assertThat(values, hasItems(with("oairecerif.author.affiliation", PLACEHOLDER_PARENT_METADATA_VALUE)));
         assertThat(values, hasItems(with("cris.sourceId", "test-harvest::3")));
-        assertThat(values, hasItems(with("relationship.type", "Publication")));
+        assertThat(values, hasItems(with("dspace.entity.type", "Publication")));
 
         harvestRow = harvestedCollectionService.find(context, collection);
         assertThat(harvestRow.getHarvestStatus(), equalTo(HarvestedCollection.STATUS_READY));
@@ -727,7 +727,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             "will be generated::test-harvest::123", 0, 500)));
         assertThat(values, hasItems(with("oairecerif.author.affiliation", PLACEHOLDER_PARENT_METADATA_VALUE)));
         assertThat(values, hasItems(with("cris.sourceId", "test-harvest::3")));
-        assertThat(values, hasItems(with("relationship.type", "Publication")));
+        assertThat(values, hasItems(with("dspace.entity.type", "Publication")));
     }
 
     @Test
@@ -744,7 +744,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             context.turnOffAuthorisationSystem();
 
             Collection personCollection = createCollection(context, community)
-                .withRelationshipType("Person")
+                .withEntityType("Person")
                 .withAdminGroup(eperson)
                 .build();
 
@@ -787,7 +787,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             assertThat(values, hasItems(with("dc.identifier.doi", "10.1007/978-3-642-35233-1_18")));
             assertThat(values, hasItems(with("oairecerif.author.affiliation", PLACEHOLDER_PARENT_METADATA_VALUE)));
             assertThat(values, hasItems(with("cris.sourceId", "test-harvest::3")));
-            assertThat(values, hasItems(with("relationship.type", "Publication")));
+            assertThat(values, hasItems(with("dspace.entity.type", "Publication")));
 
             MetadataValue author = itemService.getMetadata(publication, "dc", "contributor", "author", Item.ANY).get(0);
             UUID authorAuthority = UUIDUtils.fromString(author.getAuthority());
@@ -801,7 +801,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             assertThat(values, hasSize(7));
             assertThat(values, hasItems(with("dc.title", "Manghi, Paolo")));
             assertThat(values, hasItems(with("cris.sourceId", "test-harvest::123")));
-            assertThat(values, hasItems(with("relationship.type", "Person")));
+            assertThat(values, hasItems(with("dspace.entity.type", "Person")));
 
             // import the author person
             harvester.runHarvest(context, personHarvest, getDefaultOptions());
@@ -813,7 +813,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             assertThat(values, hasSize(11));
             assertThat(values, hasItems(with("dc.title", "Manghi, Paolo")));
             assertThat(values, hasItems(with("cris.sourceId", "test-harvest::123")));
-            assertThat(values, hasItems(with("relationship.type", "Person")));
+            assertThat(values, hasItems(with("dspace.entity.type", "Person")));
             assertThat(values, hasItems(with("oairecerif.person.gender", "M")));
             assertThat(values, hasItems(with("person.identifier.orcid", "0000-0002-9079-5932")));
             assertThat(values, hasItems(with("person.givenName", "Paolo")));
@@ -838,7 +838,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             context.turnOffAuthorisationSystem();
 
             Collection personCollection = createCollection(context, community)
-                .withRelationshipType("Person")
+                .withEntityType("Person")
                 .withAdminGroup(eperson)
                 .build();
 
@@ -868,7 +868,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             assertThat(values, hasSize(12));
             assertThat(values, hasItems(with("dc.title", "Manghi, Paolo")));
             assertThat(values, hasItems(with("cris.sourceId", "test-harvest::123")));
-            assertThat(values, hasItems(with("relationship.type", "Person")));
+            assertThat(values, hasItems(with("dspace.entity.type", "Person")));
             assertThat(values, hasItems(with("oairecerif.person.gender", "M")));
             assertThat(values, hasItems(with("person.identifier.orcid", "0000-0002-9079-5932")));
             assertThat(values, hasItems(with("person.givenName", "Paolo")));
@@ -890,7 +890,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             assertThat(values, hasItems(with("dc.identifier.doi", "10.1007/978-3-642-35233-1_18")));
             assertThat(values, hasItems(with("oairecerif.author.affiliation", PLACEHOLDER_PARENT_METADATA_VALUE)));
             assertThat(values, hasItems(with("cris.sourceId", "test-harvest::3")));
-            assertThat(values, hasItems(with("relationship.type", "Publication")));
+            assertThat(values, hasItems(with("dspace.entity.type", "Publication")));
 
             MetadataValue author = itemService.getMetadata(publication, "dc", "contributor", "author", Item.ANY).get(0);
             assertThat(UUIDUtils.fromString(author.getAuthority()), equalTo(person.getID()));
@@ -909,7 +909,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Collection equipmentCollection = createCollection(context, community)
-            .withRelationshipType("Equipment")
+            .withEntityType("Equipment")
             .withAdminGroup(eperson)
             .withHarvestingPreTrasform("preTransformation.xsl")
             .build();
@@ -948,7 +948,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Collection equipmentCollection = createCollection(context, community)
-            .withRelationshipType("Equipment")
+            .withEntityType("Equipment")
             .withAdminGroup(eperson)
             .withHarvestingPostTrasform("postTransformation.xsl")
             .build();
@@ -986,7 +986,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Collection equipmentCollection = createCollection(context, community)
-            .withRelationshipType("Equipment")
+            .withEntityType("Equipment")
             .withAdminGroup(eperson)
             .withHarvestingPreTrasform("preTransformation.xsl")
             .withHarvestingPostTrasform("postTransformation.xsl")
@@ -1060,7 +1060,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Collection equipmentCollection = CollectionBuilder.createCollection(context, community)
-            .withRelationshipType("Equipment")
+            .withEntityType("Equipment")
             .withSubmitterGroup(eperson)
             .withWorkflowGroup(1, eperson)
             .build();
@@ -1261,7 +1261,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             context.turnOffAuthorisationSystem();
 
             collection = createCollection(context, community)
-                .withRelationshipType("Publication")
+                .withEntityType("Publication")
                 .withAdminGroup(eperson)
                 .withHarvestingEmail("IDENTIFY")
                 .withHarvestingItemValidationEnabled()
@@ -1329,7 +1329,7 @@ public class OAIHarvesterIT extends AbstractIntegrationTestWithDatabase {
             context.turnOffAuthorisationSystem();
 
             collection = createCollection(context, community)
-                .withRelationshipType("Publication")
+                .withEntityType("Publication")
                 .withAdminGroup(eperson)
                 .withHarvestingEmail("dspace@test.it")
                 .withHarvestingRecordValidationEnabled()

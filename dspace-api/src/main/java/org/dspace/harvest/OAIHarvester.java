@@ -192,7 +192,6 @@ public class OAIHarvester {
      */
     public void runHarvest(Context context, HarvestedCollection harvestRow, OAIHarvesterOptions options) {
 
-        Context.Mode originalMode = context.getCurrentMode();
         context.setMode(Context.Mode.BATCH_EDIT);
 
         Date toDate = new Date();
@@ -232,8 +231,6 @@ public class OAIHarvester {
                 setRetryStatus(context, harvestRow, message);
                 oaiHarvesterEmailSender.notifyFailure(getEmailRecipient(harvestRow), harvestRow, ex);
             }
-        } finally {
-            context.setMode(originalMode);
         }
 
     }

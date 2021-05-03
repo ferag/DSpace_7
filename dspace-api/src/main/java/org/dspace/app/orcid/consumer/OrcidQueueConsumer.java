@@ -7,6 +7,8 @@
  */
 package org.dspace.app.orcid.consumer;
 
+import static org.dspace.app.profile.OrcidEntitySynchronizationPreference.DISABLED;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +41,6 @@ import org.slf4j.LoggerFactory;
 public class OrcidQueueConsumer implements Consumer {
 
     private static Logger log = LoggerFactory.getLogger(OrcidQueueConsumer.class);
-
-    private static final String SYNC_DISABLED = "DISABLED";
 
     private OrcidQueueService orcidQueueService;
 
@@ -79,18 +79,18 @@ public class OrcidQueueConsumer implements Consumer {
 
     private void consumeItem(Context context, Item item) throws SQLException {
 
-        String relationshipType = getMetadataValue(item, "relationship.type");
-        if (relationshipType == null) {
+        String entityType = getMetadataValue(item, "dspace.entity.type");
+        if (entityType == null) {
             return;
         }
 
-        switch (relationshipType) {
+        switch (entityType) {
             case "Person":
                 consumePerson(context, item);
                 break;
             case "Publication":
             case "Project":
-                consumeItem(context, item, relationshipType);
+                consumeItem(context, item, entityType);
                 break;
             default:
                 break;
@@ -100,7 +100,7 @@ public class OrcidQueueConsumer implements Consumer {
 
     }
 
-    private void consumeItem(Context context, Item item, String relationshipType) throws SQLException {
+    private void consumeItem(Context context, Item item, String entityType) throws SQLException {
         List<MetadataValue> metadataValues = item.getMetadata();
 
         for (MetadataValue metadata : metadataValues) {
@@ -120,9 +120,9 @@ public class OrcidQueueConsumer implements Consumer {
             }
 
             Item ownerItem = itemService.findByIdOrLegacyId(context, relatedItemUuid.toString());
-            String ownerType = getMetadataValue(ownerItem, "relationship.type");
-            String orcidId = getMetadataValue(ownerItem, "person.identifier.orcid");
-            if (!"Person".equals(ownerType) || StringUtils.isEmpty(orcidId)) {
+            String ownerType = getMetadataValue(ownerItem, "dspace.entity.type");
+            String accessToken = getMetadataValue(ownerItem, "cris.orcid.access-token");
+            if (!"Person".equals(ownerType) || StringUtils.isEmpty(accessToken)) {
                 continue;
             }
 
@@ -130,7 +130,7 @@ public class OrcidQueueConsumer implements Consumer {
                 continue;
             }
 
-            if (shouldBeSend(ownerItem, relationshipType)) {
+            if (shouldBeSend(ownerItem, entityType)) {
                 OrcidQueue orcidQueue = orcidQueueService.create(context, ownerItem, item);
                 log.debug("Created ORCID queue record with id " + orcidQueue.getID());
             }
@@ -140,9 +140,9 @@ public class OrcidQueueConsumer implements Consumer {
     }
 
     private void consumePerson(Context context, Item item) throws SQLException {
-        String orcidId = getMetadataValue(item, "person.identifier.orcid");
+        String accessToken = getMetadataValue(item, "cris.orcid.access-token");
         List<OrcidQueue> queueRecords = orcidQueueService.findByOwnerAndEntityId(context, item.getID(), item.getID());
-        if (StringUtils.isNotEmpty(orcidId) && queueRecords.isEmpty()) {
+        if (StringUtils.isNotEmpty(accessToken) && queueRecords.isEmpty()) {
             OrcidQueue orcidQueue = orcidQueueService.create(context, item, item);
             log.debug("Created ORCID queue record with id " + orcidQueue.getID());
         }
@@ -151,7 +151,7 @@ public class OrcidQueueConsumer implements Consumer {
     private boolean shouldBeSend(Item item, String relatedItemType) {
         String syncSetting = "cris.orcid.sync-" + (relatedItemType.equals("Publication") ? "publications" : "projects");
         String syncSettingValue = getMetadataValue(item, syncSetting);
-        return syncSettingValue != null && !syncSettingValue.equals(SYNC_DISABLED);
+        return syncSettingValue != null && !syncSettingValue.equals(DISABLED.name());
     }
 
     private String getMetadataValue(Item item, String metadataField) {

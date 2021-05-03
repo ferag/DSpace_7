@@ -50,7 +50,7 @@ public class WorkspaceItemFromTemplateGeneratorIT extends AbstractControllerInte
             .build();
         Collection col1 = CollectionBuilder.createCollection(context, child1)
             .withName("Collection 1")
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withSubmissionDefinition("traditional")
             .withTemplateItem()
             .withSubmitterGroup(eperson)

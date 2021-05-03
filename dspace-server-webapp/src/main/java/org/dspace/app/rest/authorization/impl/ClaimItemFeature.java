@@ -130,7 +130,7 @@ public class ClaimItemFeature implements AuthorizationFeature {
         List<String> claimableEntityTypes = Arrays.asList(
             configurationService.getArrayProperty("claimable.entityType")
                                                          );
-        return itemService.getMetadataByMetadataString(item, "relationship.type")
+        return itemService.getMetadataByMetadataString(item, "dspace.entity.type")
                           .stream()
                           .noneMatch(mv -> claimableEntityTypes.contains(mv.getValue()));
     }

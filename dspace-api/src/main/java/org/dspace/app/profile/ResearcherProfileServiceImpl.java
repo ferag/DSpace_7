@@ -30,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.exception.ResourceConflictException;
 import org.dspace.app.profile.importproviders.model.ConfiguredResearcherProfileProvider;
 import org.dspace.app.profile.service.AfterProfileDeleteAction;
+import org.dspace.app.profile.service.AfterResearcherProfileCreationAction;
 import org.dspace.app.profile.service.BeforeProfileHardDeleteAction;
 import org.dspace.app.profile.service.ImportResearcherProfileService;
 import org.dspace.app.profile.service.ResearcherProfileService;
@@ -121,7 +122,14 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
             beforeProfileHardDeleteActionList = Collections.emptyList();
         }
 
+        if (afterCreationActions == null) {
+            afterCreationActions = Collections.emptyList();
+        }
+
     }
+
+    @Autowired(required = false)
+    private List<AfterResearcherProfileCreationAction> afterCreationActions;
 
     @Override
     public ResearcherProfile findById(Context context, UUID id) throws SQLException, AuthorizeException {
@@ -159,7 +167,14 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
         context.turnOffAuthorisationSystem();
         Item item = createProfileItem(context, ePerson, collection);
         context.restoreAuthSystemState();
-        return new ResearcherProfile(item);
+
+        ResearcherProfile researcherProfile = new ResearcherProfile(item);
+
+        for (AfterResearcherProfileCreationAction afterCreationAction : afterCreationActions) {
+            afterCreationAction.perform(context, researcherProfile, ePerson);
+        }
+
+        return researcherProfile;
     }
 
     @Override
@@ -263,7 +278,9 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
     }
 
     private void setFilter(DiscoverQuery discoverQuery, UUID ownerUuid) {
-        String filter = "relationship.type:CvPublication OR relationship.type:CvProject OR relationship.type:CvPatent";
+        String filter = "dspace.entity.type:CvPublication "
+            + "OR dspace.entity.type:CvProject "
+            + "OR dspace.entity.type:CvPatent";
         discoverQuery.addFilterQueries(filter);
         discoverQuery.addFilterQueries("cris.owner_authority:" + ownerUuid.toString());
     }
@@ -275,7 +292,7 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
         Iterator<Item> items = itemService.findByAuthorityValue(context, "cris", "owner", null, id.toString());
         while (items.hasNext()) {
             Item item = items.next();
-            if (hasRelationshipTypeMetadataEqualsTo(item, profileType)) {
+            if (hasEntityTypeMetadataEqualsTo(item, profileType)) {
                 return item;
             }
         }
@@ -328,10 +345,10 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
         return item;
     }
 
-    private boolean hasRelationshipTypeMetadataEqualsTo(Item item, String relationshipType) {
+    private boolean hasEntityTypeMetadataEqualsTo(Item item, String entityType) {
         return item.getMetadata().stream().anyMatch(metadataValue -> {
-            return "relationship.type".equals(metadataValue.getMetadataField().toString('.')) &&
-                relationshipType.equals(metadataValue.getValue());
+            return "dspace.entity.type".equals(metadataValue.getMetadataField().toString('.')) &&
+                entityType.equals(metadataValue.getValue());
         });
     }
 

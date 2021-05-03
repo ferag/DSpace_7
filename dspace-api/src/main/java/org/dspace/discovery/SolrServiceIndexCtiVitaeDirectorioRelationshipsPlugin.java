@@ -111,7 +111,7 @@ public class SolrServiceIndexCtiVitaeDirectorioRelationshipsPlugin implements So
     private boolean notADirectorioItem(Context context, Item item) throws SQLException {
 
         if (!cvRelatedEntitiesService.entityWithCvReferences(itemService.getMetadata(item,
-            "relationship.type"))) {
+            "dspace.entity.type"))) {
             return true;
         }
         boolean directorioCollection = collectionService.isDirectorioCollection(context, item.getOwningCollection());

@@ -33,7 +33,7 @@ public class ORCIDRegistrationProvider extends AbstractExternalRegistrationProvi
 
     @Override
     public boolean support(OIDCProfileElementsResponse userData) {
-        return userData.getOrcid() != null;
+        return StringUtils.isNotBlank(userData.getOrcid());
     }
 
     @Override

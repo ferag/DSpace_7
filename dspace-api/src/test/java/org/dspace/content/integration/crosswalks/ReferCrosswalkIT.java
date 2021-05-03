@@ -104,7 +104,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item personItem = createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("John Smith")
             .withFullName("John Smith")
             .withVariantName("J.S.")
@@ -156,7 +156,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withTitle("First Publication")
             .withIssueDate("2020-01-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -164,7 +164,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withTitle("Second Publication")
             .withIssueDate("2020-04-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -189,7 +189,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item personItem = createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("Smith, John")
             .withVariantName("J.S.")
             .withVariantName("Smith John")
@@ -229,7 +229,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item personItem = createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("Smith, John")
             .withVariantName("J.S.")
             .withVariantName("Smith John")
@@ -269,7 +269,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item firstPerson = createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("Smith, John")
             .withVariantName("J.S.")
             .withVariantName("Smith John")
@@ -291,7 +291,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item secondPerson = createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("White, Walter")
             .withGender("M")
             .withPersonMainAffiliation("University")
@@ -323,7 +323,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item item = createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("John Smith")
             .withFullName("John Smith")
             .withVariantName("J.S.")
@@ -373,7 +373,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item item = createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("John Smith")
             .build();
 
@@ -401,7 +401,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item personItem = createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("John Smith")
             .withFullName("John Smith")
             .withVernacularName("JOHN SMITH")
@@ -453,7 +453,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withTitle("First Publication")
             .withIssueDate("2020-01-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -461,7 +461,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withTitle("Second Publication")
             .withIssueDate("2020-04-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -486,7 +486,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         context.turnOffAuthorisationSystem();
         Item firstItem = createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("John Smith")
             .withGivenName("John")
             .withFamilyName("Smith")
@@ -498,7 +498,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withPersonAffiliationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
             .build();
         Item secondItem = createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("Adam White")
             .withGivenName("Adam")
             .withFamilyName("White")
@@ -516,7 +516,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         // with multiple persons export the publications should not be exported
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withTitle("First Publication")
             .withIssueDate("2020-01-01")
             .withAuthor("John Smith", firstItem.getID().toString())
@@ -542,7 +542,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         context.turnOffAuthorisationSystem();
         Item firstItem = createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("John Smith")
             .withGivenName("John")
             .withFamilyName("Smith")
@@ -554,7 +554,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withPersonAffiliationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
             .build();
         Item secondItem = createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("Adam White")
             .withGivenName("Adam")
             .withFamilyName("White")
@@ -572,7 +572,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         // with multiple persons export the publications should not be exported
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withTitle("First Publication")
             .withIssueDate("2020-01-01")
             .withAuthor("John Smith", firstItem.getID().toString())
@@ -599,7 +599,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item project = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Project")
+            .withEntityType("Project")
             .withTitle("Test Project")
             .withInternalId("111-222-333")
             .withAcronym("TP")
@@ -608,7 +608,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withTitle("Test Funding")
             .withType("Internal Funding")
             .withFunder("Test Funder")
@@ -616,7 +616,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item funding = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withTitle("Another Test Funding")
             .withType("Contract")
             .withFunder("Another Test Funder")
@@ -624,7 +624,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item publication = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withTitle("Test Publication")
             .withAlternativeTitle("Alternative publication title")
             .withRelationPublication("Published in publication")
@@ -681,7 +681,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item project = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Project")
+            .withEntityType("Project")
             .withTitle("Test Project")
             .withInternalId("111-222-333")
             .withAcronym("TP")
@@ -690,7 +690,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withTitle("Test Funding")
             .withType("Internal Funding")
             .withFunder("Test Funder")
@@ -698,7 +698,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item funding = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withTitle("Another Test Funding")
             .withType("Contract")
             .withFunder("Another Test Funder")
@@ -706,7 +706,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item publication = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withTitle("Test Publication")
             .withAlternativeTitle("Alternative publication title")
             .withRelationPublication("Published in publication")
@@ -767,7 +767,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item project = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Project")
+            .withEntityType("Project")
             .withTitle("Test Project")
             .withInternalId("111-222-333")
             .withAcronym("TP")
@@ -776,13 +776,13 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item orgUnit = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("OrgUnit")
+            .withEntityType("OrgUnit")
             .withTitle("Test Funder")
             .withAcronym("TFO")
             .build();
 
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withTitle("Test Funding")
             .withType("Internal Funding")
             .withFunder("Test Funder", orgUnit.getID().toString())
@@ -790,7 +790,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item funding = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withTitle("Another Test Funding")
             .withType("Contract")
             .withFunder("Another Test Funder")
@@ -798,7 +798,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item publication = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withTitle("Test Publication")
             .withRelationDoi("doi:10.3972/test")
             .withDoiIdentifier("doi:111.111/publication")
@@ -852,7 +852,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item firstPublication = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withTitle("First Publication")
             .withDoiIdentifier("doi:111.111/publication")
             .withType("Controlled Vocabulary for Resource Type Genres::learning object")
@@ -864,7 +864,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item funding = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withTitle("Test Funding")
             .withType("Contract")
             .withFunder("Test Funder")
@@ -872,7 +872,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item secondPublication = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withTitle("Second Publication")
             .withDoiIdentifier("doi:222.222/publication")
             .withType("Controlled Vocabulary for Resource Type Genres::clinical trial")
@@ -902,7 +902,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item publication = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withTitle("Test Publication")
             .withDoiIdentifier("doi:111.111/publication")
             .withHandle("123456789/xxx")
@@ -943,7 +943,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item publication = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("InstitutionPublication")
+            .withEntityType("InstitutionPublication")
             .withTitle("Test Publication")
             .withDoiIdentifier("doi:111.111/publication")
             .withHandle("123456789/xxx")
@@ -984,13 +984,13 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item coordinator = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("OrgUnit")
+            .withEntityType("OrgUnit")
             .withTitle("Coordinator OrgUnit")
             .withAcronym("COU")
             .build();
 
         Item project = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Project")
+            .withEntityType("Project")
             .withAcronym("TP")
             .withTitle("Test Project")
             .withOpenaireId("11-22-33")
@@ -1015,7 +1015,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withTitle("Test funding")
             .withType("Award")
             .withFunder("OrgUnit Funder")
@@ -1043,13 +1043,13 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item coordinator = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("OrgUnit")
+            .withEntityType("OrgUnit")
             .withTitle("Coordinator OrgUnit")
             .withAcronym("COU")
             .build();
 
         Item project = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Project")
+            .withEntityType("Project")
             .withAcronym("TP")
             .withTitle("Test Project")
             .withOpenaireId("11-22-33")
@@ -1077,7 +1077,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withTitle("Test funding")
             .withType("Award")
             .withFunder("OrgUnit Funder")
@@ -1105,13 +1105,13 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item coordinator = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("OrgUnit")
+            .withEntityType("OrgUnit")
             .withTitle("Coordinator OrgUnit")
             .withAcronym("COU")
             .build();
 
         Item project = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Project")
+            .withEntityType("Project")
             .withAcronym("TP")
             .withTitle("Test Project")
             .withOpenaireId("11-22-33")
@@ -1146,7 +1146,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withTitle("Test funding")
             .withType("Award")
             .withFunder("OrgUnit Funder")
@@ -1154,7 +1154,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withTitle("Another Test funding")
             .withType("Award")
             .withFunder("Another OrgUnit Funder")
@@ -1182,7 +1182,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item firstProject = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Project")
+            .withEntityType("Project")
             .withAcronym("TP")
             .withTitle("Test Project")
             .withOpenaireId("11-22-33")
@@ -1205,7 +1205,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item secondProject = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Project")
+            .withEntityType("Project")
             .withAcronym("STP")
             .withTitle("Second Test Project")
             .withOpenaireId("55-66-77")
@@ -1243,7 +1243,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item firstProject = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Project")
+            .withEntityType("Project")
             .withAcronym("TP")
             .withTitle("Test Project")
             .withOpenaireId("11-22-33")
@@ -1266,7 +1266,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item secondProject = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Project")
+            .withEntityType("Project")
             .withAcronym("STP")
             .withTitle("Second Test Project")
             .withOpenaireId("55-66-77")
@@ -1304,13 +1304,13 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item parent = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("OrgUnit")
+            .withEntityType("OrgUnit")
             .withAcronym("POU")
             .withTitle("Parent OrgUnit")
             .build();
 
         Item orgUnit = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("OrgUnit")
+            .withEntityType("OrgUnit")
             .withAcronym("TOU")
             .withTitle("Test OrgUnit")
             .withOrgUnitLegalName("Test OrgUnit LegalName")
@@ -1335,13 +1335,13 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("Walter White")
             .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
             .build();
 
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("Jesse Pinkman")
             .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
             .build();
@@ -1367,13 +1367,13 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item parent = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("OrgUnit")
+            .withEntityType("OrgUnit")
             .withAcronym("POU")
             .withTitle("Parent OrgUnit")
             .build();
 
         Item orgUnit = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("OrgUnit")
+            .withEntityType("OrgUnit")
             .withAcronym("TOU")
             .withTitle("Test OrgUnit")
             .withOrgUnitLegalName("Test OrgUnit LegalName")
@@ -1386,13 +1386,13 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("Walter White")
             .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
             .build();
 
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("Jesse Pinkman")
             .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
             .build();
@@ -1418,7 +1418,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item orgUnit = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("OrgUnit")
+            .withEntityType("OrgUnit")
             .withAcronym("TOU")
             .withTitle("Test OrgUnit")
             .withOrgUnitLegalName("Test OrgUnit LegalName")
@@ -1442,18 +1442,6 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withDescriptionAbstract("This is an org unit")
             .build();
 
-        ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Person")
-            .withTitle("Walter White")
-            .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
-            .build();
-
-        ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Person")
-            .withTitle("Jesse Pinkman")
-            .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
-            .build();
-
         context.restoreAuthSystemState();
         context.commit();
 
@@ -1475,13 +1463,13 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item parent = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("OrgUnit")
+            .withEntityType("OrgUnit")
             .withAcronym("POU")
             .withTitle("Parent OrgUnit")
             .build();
 
         Item orgUnit = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("OrgUnit")
+            .withEntityType("OrgUnit")
             .withAcronym("TOU")
             .withTitle("Test OrgUnit")
             .withOrgUnitLegalName("Test OrgUnit LegalName")
@@ -1509,18 +1497,6 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withSubject("Keyword2")
             .build();
 
-        ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Person")
-            .withTitle("Walter White")
-            .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
-            .build();
-
-        ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Person")
-            .withTitle("Jesse Pinkman")
-            .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
-            .build();
-
         context.restoreAuthSystemState();
         context.commit();
 
@@ -1542,7 +1518,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item firstOrgUnit = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("OrgUnit")
+            .withEntityType("OrgUnit")
             .withAcronym("TOU")
             .withTitle("Test OrgUnit")
             .withOrgUnitLegalName("Test OrgUnit LegalName")
@@ -1555,7 +1531,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item secondOrgUnit = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("OrgUnit")
+            .withEntityType("OrgUnit")
             .withAcronym("ATOU")
             .withTitle("Another Test OrgUnit")
             .withType("Private non-profit")
@@ -1584,7 +1560,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item firstOrgUnit = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("OrgUnit")
+            .withEntityType("OrgUnit")
             .withAcronym("TOU")
             .withTitle("Test OrgUnit")
             .withOrgUnitLegalName("Test OrgUnit LegalName")
@@ -1597,7 +1573,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item secondOrgUnit = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("OrgUnit")
+            .withEntityType("OrgUnit")
             .withAcronym("ATOU")
             .withTitle("Another Test OrgUnit")
             .withType("Private non-profit")
@@ -1626,7 +1602,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item equipment = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Equipment")
+            .withEntityType("Equipment")
             .withAcronym("T-EQ")
             .withTitle("Test Equipment")
             .withInternalId("ID-01")
@@ -1669,7 +1645,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item equipment = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Equipment")
+            .withEntityType("Equipment")
             .withType("Type")
             .withAcronym("T-EQ")
             .withTitle("Test Equipment")
@@ -1700,7 +1676,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item equipment = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Equipment")
+            .withEntityType("Equipment")
             .withAcronym("T-EQ")
             .withTitle("Test Equipment")
             .withInternalId("ID-01")
@@ -1742,7 +1718,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item firstEquipment = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Equipment")
+            .withEntityType("Equipment")
             .withAcronym("FT-EQ")
             .withTitle("First Test Equipment")
             .withInternalId("ID-01")
@@ -1752,7 +1728,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item secondEquipment = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Equipment")
+            .withEntityType("Equipment")
             .withAcronym("ST-EQ")
             .withTitle("Second Test Equipment")
             .withInternalId("ID-02")
@@ -1781,7 +1757,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item firstEquipment = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Equipment")
+            .withEntityType("Equipment")
             .withAcronym("FT-EQ")
             .withType("Type")
             .withTitle("First Test Equipment")
@@ -1792,7 +1768,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item secondEquipment = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Equipment")
+            .withEntityType("Equipment")
             .withAcronym("ST-EQ")
             .withType("Type")
             .withTitle("Second Test Equipment")
@@ -1822,7 +1798,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item funding = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withAcronym("T-FU")
             .withTitle("Test Funding")
             .withType("Gift")
@@ -1860,13 +1836,13 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item parent = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withAcronym("P-FU")
             .withTitle("Parent Funding")
             .build();
 
         Item funding = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withAcronym("T-FU")
             .withTitle("Test Funding")
             .withType("Gift")
@@ -1905,13 +1881,13 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item parent = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withAcronym("P-FU")
             .withTitle("Parent Funding")
             .build();
 
         Item funding = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withAcronym("T-FU")
             .withTitle("Test Funding")
             .withType("Gift")
@@ -1950,7 +1926,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item firstFunding = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withAcronym("T-FU")
             .withTitle("Test Funding")
             .withType("Gift")
@@ -1967,7 +1943,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item secondFunding = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withAcronym("AT-FU")
             .withTitle("Another Test Funding")
             .withType("Grant")
@@ -2001,7 +1977,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item firstFunding = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withAcronym("T-FU")
             .withTitle("Test Funding")
             .withType("Gift")
@@ -2018,7 +1994,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item secondFunding = ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Funding")
+            .withEntityType("Funding")
             .withAcronym("AT-FU")
             .withTitle("Another Test Funding")
             .withType("Grant")
@@ -2051,7 +2027,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item personItem = createItem(context, collection)
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withTitle("John Smith")
             .withFullName("John Smith")
             .withVariantName("J.S.")
@@ -2121,7 +2097,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item personItem = createItem(context, collection)
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withTitle("Smith, John")
             .withVariantName("J.S.")
             .withVariantName("Smith John")
@@ -2161,7 +2137,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item personItem = createItem(context, collection)
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withTitle("Smith, John")
             .withVariantName("J.S.")
             .withVariantName("Smith John")
@@ -2201,7 +2177,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item firstPerson = createItem(context, collection)
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withTitle("Smith, John")
             .withVariantName("J.S.")
             .withVariantName("Smith John")
@@ -2223,7 +2199,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         Item secondPerson = createItem(context, collection)
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withTitle("White, Walter")
             .withGender("M")
             .withPersonMainAffiliation("University")
@@ -2256,7 +2232,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item item = createItem(context, collection)
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withTitle("John Smith")
             .build();
 
@@ -2285,7 +2261,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         Item personItem = createItem(context, collection)
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withTitle("John Smith")
             .withFullName("John Smith")
             .withVernacularName("JOHN SMITH")
@@ -2338,7 +2314,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withTitle("First Publication")
             .withIssueDate("2020-01-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -2346,7 +2322,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .build();
 
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withTitle("Second Publication")
             .withIssueDate("2020-04-01")
             .withAuthor("John Smith", personItem.getID().toString())
@@ -2371,7 +2347,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         context.turnOffAuthorisationSystem();
         Item firstItem = createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("John Smith")
             .withGivenName("John")
             .withFamilyName("Smith")
@@ -2383,7 +2359,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withPersonAffiliationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
             .build();
         Item secondItem = createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("Adam White")
             .withGivenName("Adam")
             .withFamilyName("White")
@@ -2401,7 +2377,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         // with multiple persons export the publications should not be exported
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withTitle("First Publication")
             .withIssueDate("2020-01-01")
             .withAuthor("John Smith", firstItem.getID().toString())
@@ -2427,7 +2403,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         context.turnOffAuthorisationSystem();
         Item firstItem = createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("John Smith")
             .withGivenName("John")
             .withFamilyName("Smith")
@@ -2439,7 +2415,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withPersonAffiliationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
             .build();
         Item secondItem = createItem(context, collection)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withTitle("Adam White")
             .withGivenName("Adam")
             .withFamilyName("White")
@@ -2457,7 +2433,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         // with multiple persons export the publications should not be exported
         ItemBuilder.createItem(context, collection)
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .withTitle("First Publication")
             .withIssueDate("2020-01-01")
             .withAuthor("John Smith", firstItem.getID().toString())

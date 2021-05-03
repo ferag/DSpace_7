@@ -256,6 +256,12 @@ public class EPersonRestRepository extends DSpaceObjectRestRepository<EPerson, E
         if (validationResult.isError()) {
             throw new DSpaceBadRequestException("The dni and date provided are invalid");
         }
+        if (StringUtils.isBlank(epersonRest.getEmail())) {
+            throw new DSpaceBadRequestException("The required email is missing.");
+        }
+        if (es.findByEmail(context, epersonRest.getEmail()) != null) {
+            throw new DSpaceBadRequestException("The email " + epersonRest.getEmail() + " is already used.");
+        }
 
         // TODO patch the epersonRest with data coming from reniec
         epersonRest.getMetadata().put("eperson.firstname",

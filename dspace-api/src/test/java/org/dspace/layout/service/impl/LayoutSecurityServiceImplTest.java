@@ -377,6 +377,90 @@ public class LayoutSecurityServiceImplTest {
     }
 
     /**
+     * CUSTOM_DATA {@link LayoutSecurity} set, accessed by null user.
+     * Group is threated as anonymous, anonymous group has grants for the box, access is granted
+     *
+     * @throws SQLException
+     */
+    @Test
+    public void customSecurityNullUserAsAnonymousAndGroupAllowed() throws SQLException {
+
+        UUID anonymousGroupUuid = UUID.randomUUID();
+        UUID securityAuthorityUuid = UUID.randomUUID();
+
+        Item item = mock(Item.class);
+        Context context = mock(Context.class);
+
+        EPerson user = null;
+        Group anonymousGroup = group(anonymousGroupUuid);
+
+        when(groupService.findByName(any(Context.class), eq(Group.ANONYMOUS)))
+            .thenReturn(anonymousGroup);
+
+        MetadataField securityMetadataField = securityMetadataField();
+
+        HashSet<MetadataField> securityMetadataFieldSet = new HashSet<>(singletonList(securityMetadataField));
+
+        List<MetadataValue> metadataValueList =
+            Arrays.asList(metadataValueWithAuthority(anonymousGroupUuid.toString()));
+
+
+        when(itemService.getMetadata(item, securityMetadataField.getMetadataSchema().getName(),
+                                     securityMetadataField.getElement(), null, Item.ANY, true))
+            .thenReturn(metadataValueList);
+
+        boolean granted = securityService.hasAccess(LayoutSecurity.CUSTOM_DATA,
+                                                    context, user,
+                                                    securityMetadataFieldSet,
+                                                    item);
+
+        assertThat(granted, is(true));
+    }
+
+    /**
+     * CUSTOM_DATA {@link LayoutSecurity} set, accessed by null user.
+     * Group is threated as anonymous, anonymous group hasn't grants for the box, access is forbidden
+     *
+     * @throws SQLException
+     */
+    @Test
+    public void customSecurityNullUserAsAnonymousAndGroupNotAllowed() throws SQLException {
+
+        UUID anonymousGroupUuid = UUID.randomUUID();
+        UUID allowedGroupUuid = UUID.randomUUID();
+
+        Item item = mock(Item.class);
+        Context context = mock(Context.class);
+
+        EPerson user = null;
+        Group anonymousGroup = group(anonymousGroupUuid);
+        Group allowedGroup = group(allowedGroupUuid);
+
+        when(groupService.findByName(any(Context.class), eq(Group.ANONYMOUS)))
+            .thenReturn(anonymousGroup);
+
+        MetadataField securityMetadataField = securityMetadataField();
+
+        HashSet<MetadataField> securityMetadataFieldSet = new HashSet<>(singletonList(securityMetadataField));
+
+
+        List<MetadataValue> metadataValueList =
+            Arrays.asList(metadataValueWithAuthority(allowedGroup.toString()));
+
+
+        when(itemService.getMetadata(item, securityMetadataField.getMetadataSchema().getName(),
+                                     securityMetadataField.getElement(), null, Item.ANY, true))
+            .thenReturn(metadataValueList);
+
+        boolean granted = securityService.hasAccess(LayoutSecurity.CUSTOM_DATA,
+                                                    context, user,
+                                                    securityMetadataFieldSet,
+                                                    item);
+
+        assertThat(granted, is(false));
+    }
+
+    /**
      * CUSTOM_DATA {@link LayoutSecurity} set, accessed by user with id that does not have any authority on
      * metadata contained in the box, access is NOT  granted
      *
@@ -431,6 +515,9 @@ public class LayoutSecurityServiceImplTest {
         final Item item = mock(Item.class);
         final EPerson user = null;
 
+        final UUID anonymousGroupId = UUID.randomUUID();
+
+
         final MetadataField metadataField = securityMetadataField();
 
         final HashSet<MetadataField> securityMetadataFieldSet = new HashSet<>(singletonList(metadataField));
@@ -438,6 +525,9 @@ public class LayoutSecurityServiceImplTest {
         List<MetadataValue> metadataValueList =
             singletonList(metadataValueWithAuthority(UUID.randomUUID().toString()));
 
+
+        final Group anonymousGroup = group(anonymousGroupId);
+        when(groupService.findByName(context, Group.ANONYMOUS)).thenReturn(anonymousGroup);
 
         when(itemService.getMetadata(item, metadataField.getMetadataSchema().getName(),
                                      metadataField.getElement(), null, Item.ANY, true))

@@ -207,7 +207,7 @@ public class ItemConverter
         EPerson currentUser = context.getCurrentUser();
         if (isPublicMetadataField(metadataField, allPublicMetadata)) {
             return true;
-        } else if (currentUser != null) {
+        } else {
             for (CrisLayoutBox box : boxesWithMetadataFieldExcludedPublic) {
                 if (crisLayoutBoxAccessService.hasAccess(context, currentUser, box, item)) {
                     return true;

@@ -97,7 +97,7 @@ public class ItemCorrectionProvider extends AbstractVersionProvider {
     }
 
     protected boolean isNotRelationshipType(MetadataValue metadataValue) {
-        return !metadataValue.getMetadataField().toString('.').equals("relationship.type");
+        return !metadataValue.getMetadataField().toString('.').equals("dspace.entity.type");
     }
 
     protected void updateBundlesAndBitstreams(Context c, Item itemNew, Item nativeItem)

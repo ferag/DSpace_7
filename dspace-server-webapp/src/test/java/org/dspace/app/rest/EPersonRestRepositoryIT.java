@@ -18,6 +18,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -30,20 +31,26 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.dspace.app.rest.exception.EPersonNameNotProvidedException;
+import org.dspace.app.rest.exception.RESTEmptyWorkflowGroupException;
 import org.dspace.app.rest.jackson.IgnoreJacksonWriteOnlyAccess;
 import org.dspace.app.rest.matcher.EPersonMatcher;
 import org.dspace.app.rest.matcher.GroupMatcher;
@@ -66,9 +73,11 @@ import org.dspace.builder.WorkflowItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.authority.Choices;
+import org.dspace.core.I18nUtil;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.PasswordHash;
+import org.dspace.eperson.dao.RegistrationDataDAO;
 import org.dspace.eperson.service.AccountService;
 import org.dspace.eperson.service.EPersonService;
 import org.dspace.eperson.service.GroupService;
@@ -78,6 +87,7 @@ import org.dspace.perucris.externalservices.reniec.ReniecProvider;
 import org.dspace.perucris.externalservices.reniec.ReniecRestConnector;
 import org.dspace.perucris.registration.DniRegistrationServiceImpl;
 import org.dspace.services.ConfigurationService;
+import org.dspace.workflow.WorkflowService;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -96,7 +106,13 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
     private EPersonService ePersonService;
 
     @Autowired
+    private WorkflowService workflowService;
+
+    @Autowired
     private GroupService groupService;
+
+    @Autowired
+    private RegistrationDataDAO registrationDataDAO;
 
     @Autowired
     private ConfigurationService configurationService;
@@ -1028,11 +1044,60 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
 
         // 422 error when trying to DELETE the eperson=submitter
         getClient(token).perform(delete("/api/eperson/epersons/" + ePerson.getID()))
-                   .andExpect(status().is(422));
+                   .andExpect(status().isUnprocessableEntity());
 
         // Verify the eperson is still here
         getClient(token).perform(get("/api/eperson/epersons/" + ePerson.getID()))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteLastPersonInWorkflowGroup() throws Exception {
+        // set up workflow group with ePerson as only member
+        context.turnOffAuthorisationSystem();
+        EPerson ePerson = EPersonBuilder
+            .createEPerson(context)
+            .withEmail("eperson@example.com")
+            .withNameInMetadata("Sample", "EPerson")
+            .build();
+        Community community = CommunityBuilder
+            .createCommunity(context)
+            .build();
+        Collection collection = CollectionBuilder
+            .createCollection(context, community)
+            .withWorkflowGroup(1, ePerson)
+            .build();
+        Group workflowGroup = collection.getWorkflowStep1(context);
+        context.restoreAuthSystemState();
+
+        // enable Polish locale
+        configurationService.setProperty("webui.supported.locales", "en, pl");
+
+        // generate expectations
+        String key = RESTEmptyWorkflowGroupException.MESSAGE_KEY;
+        String[] values = {
+            ePerson.getID().toString(),
+            workflowGroup.getID().toString(),
+        };
+        MessageFormat defaultFmt = new MessageFormat(I18nUtil.getMessage(key));
+        MessageFormat plFmt = new MessageFormat(I18nUtil.getMessage(key, new Locale("pl")));
+
+        // make request using Polish locale
+        getClient(getAuthToken(admin.getEmail(), password))
+            .perform(
+                delete("/api/eperson/epersons/" + ePerson.getID())
+                    .header("Accept-Language", "pl") // request Polish response
+            )
+            .andExpect(status().isUnprocessableEntity())
+            .andExpect(status().reason(is(plFmt.format(values))))
+            .andExpect(status().reason(startsWith("[PL]"))); // verify it did not fall back to default locale
+
+        // make request using default locale
+        getClient(getAuthToken(admin.getEmail(), password))
+            .perform(delete("/api/eperson/epersons/" + ePerson.getID()))
+            .andExpect(status().isUnprocessableEntity())
+            .andExpect(status().reason(is(defaultFmt.format(values))))
+            .andExpect(status().reason(not(startsWith("[PL]"))));
     }
 
     @Test
@@ -1264,9 +1329,11 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
 
         context.turnOffAuthorisationSystem();
 
+        // Create a new EPerson and ensure canLogin is set to "false" initially
         EPerson ePerson = EPersonBuilder.createEPerson(context)
                                         .withNameInMetadata("John", "Doe")
                                         .withEmail("Johndoe@example.com")
+                                        .withCanLogin(false)
                                         .build();
 
         context.restoreAuthSystemState();
@@ -1285,7 +1352,12 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$.canLogIn", Matchers.is(true)))
                         .andExpect(jsonPath("$.email", Matchers.is("johndoe@example.com")))
-                        .andExpect(jsonPath("$.netid", Matchers.nullValue()));
+                        .andExpect(jsonPath("$.netid", Matchers.nullValue()))
+                        // Verify CSRF token has NOT been changed (as neither the cookie nor header are sent back)
+                        // This is included in this single test as a simple proof that CSRF tokens don't change on
+                        // basic requests. Additional tests regarding CSRF tokens are in AuthenticationRestControllerIT
+                        .andExpect(cookie().doesNotExist("DSPACE-XSRF-COOKIE"))
+                        .andExpect(header().doesNotExist("DSPACE-XSRF-TOKEN"));
 
 
     }
@@ -2724,12 +2796,33 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
 
         mapper.setAnnotationIntrospector(new IgnoreJacksonWriteOnlyAccess());
 
+        // enable Polish locale
+        configurationService.setProperty("webui.supported.locales", "en, pl");
+
         try {
+            // make request using Polish locale
             getClient().perform(post("/api/eperson/epersons")
-                                         .param("token", newRegisterToken)
-                                         .content(mapper.writeValueAsBytes(ePersonRest))
-                                         .contentType(MediaType.APPLICATION_JSON))
-                            .andExpect(status().isUnprocessableEntity());
+                                        .header("Accept-Language", "pl") // request Polish response
+                                        .param("token", newRegisterToken)
+                                        .content(mapper.writeValueAsBytes(ePersonRest))
+                                        .contentType(MediaType.APPLICATION_JSON))
+                            .andExpect(status().isUnprocessableEntity())
+                            .andExpect(status().reason(is(
+                                // find message in dspace-server-webapp/src/test/resources/Messages_pl.properties
+                                I18nUtil.getMessage(EPersonNameNotProvidedException.MESSAGE_KEY, new Locale("pl"))
+                            )))
+                            .andExpect(status().reason(startsWith("[PL]"))); // verify default locale was NOT used
+
+            // make request using default locale
+            getClient().perform(post("/api/eperson/epersons")
+                                        .param("token", newRegisterToken)
+                                        .content(mapper.writeValueAsBytes(ePersonRest))
+                                        .contentType(MediaType.APPLICATION_JSON))
+                            .andExpect(status().isUnprocessableEntity())
+                            .andExpect(status().reason(is(
+                                I18nUtil.getMessage(EPersonNameNotProvidedException.MESSAGE_KEY)
+                            )))
+                            .andExpect(status().reason(not(startsWith("[PL]"))));
 
             EPerson createdEPerson = ePersonService.findByEmail(context, newRegisterEmail);
             assertNull(createdEPerson);
@@ -2770,12 +2863,34 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
 
         mapper.setAnnotationIntrospector(new IgnoreJacksonWriteOnlyAccess());
 
+        // enable Polish locale
+        configurationService.setProperty("webui.supported.locales", "en, pl");
+
         try {
+            // make request using Polish locale
             getClient().perform(post("/api/eperson/epersons")
-                                         .param("token", newRegisterToken)
-                                         .content(mapper.writeValueAsBytes(ePersonRest))
-                                         .contentType(MediaType.APPLICATION_JSON))
-                            .andExpect(status().isUnprocessableEntity());
+                                        .header("Accept-Language", "pl") // request Polish response
+                                        .param("token", newRegisterToken)
+                                        .content(mapper.writeValueAsBytes(ePersonRest))
+                                        .contentType(MediaType.APPLICATION_JSON))
+                            .andExpect(status().isUnprocessableEntity())
+                            .andExpect(status().reason(is(
+                                // find message in dspace-server-webapp/src/test/resources/Messages_pl.properties
+                                I18nUtil.getMessage(EPersonNameNotProvidedException.MESSAGE_KEY, new Locale("pl"))
+                            )))
+                            .andExpect(status().reason(startsWith("[PL]"))); // verify default locale was NOT used
+
+            // make request using default locale
+            getClient().perform(post("/api/eperson/epersons")
+                                        .param("token", newRegisterToken)
+                                        .content(mapper.writeValueAsBytes(ePersonRest))
+                                        .contentType(MediaType.APPLICATION_JSON))
+                            .andExpect(status().isUnprocessableEntity())
+                            .andExpect(status().reason(is(
+                                // find message in dspace-server-webapp/src/test/resources/Messages_pl.properties
+                                I18nUtil.getMessage(EPersonNameNotProvidedException.MESSAGE_KEY)
+                            )))
+                            .andExpect(status().reason(not(startsWith("[PL]"))));
 
             EPerson createdEPerson = ePersonService.findByEmail(context, newRegisterEmail);
             assertNull(createdEPerson);
@@ -2957,6 +3072,7 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
         ePersonRest.setCanLogIn(true);
         ePersonRest.setMetadata(metadataRest);
         ePersonRest.setPassword("somePassword");
+
         AtomicReference<UUID> idRef = new AtomicReference<UUID>();
 
         ReniecProvider originalReniecProvider = dniRegistrationService.getReniecProvider();
@@ -2971,12 +3087,14 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
         mapper.setAnnotationIntrospector(new IgnoreJacksonWriteOnlyAccess());
         try {
 
+            // missing date
             getClient().perform(post("/api/eperson/epersons")
                     .param("dni", "41918999")
                     .content(mapper.writeValueAsBytes(ePersonRest))
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isUnauthorized());
 
+            // missing dni
             getClient().perform(post("/api/eperson/epersons")
                     .param("date", "1982-11-09")
                     .content(mapper.writeValueAsBytes(ePersonRest))
@@ -2985,6 +3103,7 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
 
             when(reniecProvider.getReniecObject("41918999")).thenReturn(null);
 
+            // service unavailable
             getClient().perform(post("/api/eperson/epersons")
                     .param("dni", "41918999")
                     .param("date", "1982-11-09")
@@ -2994,12 +3113,34 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
 
             when(reniecProvider.getReniecObject("41918999")).thenReturn(reniecDTO);
 
+            // wrong date
             getClient().perform(post("/api/eperson/epersons")
                     .param("dni", "41918999")
                     .param("date", "2000-01-01")
                     .content(mapper.writeValueAsBytes(ePersonRest))
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isBadRequest());
+
+            // missing email
+            getClient().perform(post("/api/eperson/epersons")
+                    .param("dni", "41918999")
+                    .param("date", "1982-11-09")
+                    .content(mapper.writeValueAsBytes(ePersonRest))
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isBadRequest());
+
+            ePersonRest.setEmail("test@email.com");
+
+            // already used email
+            getClient().perform(post("/api/eperson/epersons")
+                    .param("dni", "41918999")
+                    .param("date", "1982-11-09")
+                    .content(mapper.writeValueAsBytes(ePersonRest))
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isBadRequest());
+
+            // success case
+            ePersonRest.setEmail("user@email.com");
 
             getClient().perform(post("/api/eperson/epersons")
                                                                .param("dni", "41918999")
@@ -3010,6 +3151,7 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
                                                   .andExpect(jsonPath("$", Matchers.allOf(
                                                       hasJsonPath("$.uuid", not(empty())),
                                                       hasJsonPath("$.type", is("eperson")),
+                                                      hasJsonPath("$.email", is("user@email.com")),
                                                       hasJsonPath("$._links.self.href", not(empty())),
                                                       hasJsonPath("$.metadata", Matchers.allOf(
                                                           matchMetadata("eperson.firstname", "John"),

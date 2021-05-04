@@ -71,20 +71,20 @@ public class CtiVitaeEntitiesIndexIT extends AbstractIntegrationTestWithDatabase
         Community ctiVitae = CommunityBuilder.createCommunity(context).withName("CTI Vitae").build();
 
         publications = CollectionBuilder.createCollection(context, directorio)
-            .withRelationshipType("Publication").build();
+            .withEntityType("Publication").build();
 
         people = CollectionBuilder.createCollection(context, directorio)
-            .withRelationshipType("Person").build();
+            .withEntityType("Person").build();
 
         cvPublications = CollectionBuilder.createCollection(context, ctiVitae)
             .withTemplateItem()
-            .withRelationshipType("CvPublication").build();
+            .withEntityType("CvPublication").build();
 
         cvProfiles = CollectionBuilder.createCollection(context, ctiVitae)
-            .withRelationshipType("CvPerson").build();
+            .withEntityType("CvPerson").build();
 
         cvPublicationsClone = CollectionBuilder.createCollection(context, ctiVitae)
-            .withRelationshipType("CvPublicationClone").build();
+            .withEntityType("CvPublicationClone").build();
 
         configurationService.setProperty("directorios.community-id", directorio.getID().toString());
 

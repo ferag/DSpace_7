@@ -40,11 +40,11 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
         parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
 
         Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withRelationshipType("Person")
+                                           .withEntityType("Person")
                                            .withName("Collection 1").build();
 
         Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withRelationshipType("Person")
+                                           .withEntityType("Person")
                                            .withName("Collection 2").build();
 
         Item itemPersonA = ItemBuilder.createItem(context, col1)
@@ -124,11 +124,11 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
         parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
 
         Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withRelationshipType("Person")
+                                           .withEntityType("Person")
                                            .withName("Collection 1").build();
 
         Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withRelationshipType("Person")
+                                           .withEntityType("Person")
                                            .withName("Collection 2").build();
 
         Item itemPersonA = ItemBuilder.createItem(context, col1)
@@ -209,11 +209,11 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
         parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
 
         Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withRelationshipType("Person")
+                                           .withEntityType("Person")
                                            .withName("Collection 1").build();
 
         Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withRelationshipType("Person")
+                                           .withEntityType("Person")
                                            .withName("Collection 2").build();
 
         Item itemPersonA = ItemBuilder.createItem(context, col1)
@@ -292,7 +292,7 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
         parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
 
         Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withRelationshipType("Person")
+                                           .withEntityType("Person")
                                            .withName("Collection 1").build();
 
         Item itemPersonA = ItemBuilder.createItem(context, col1)

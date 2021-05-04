@@ -42,11 +42,11 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                                           .withName("Parent Community").build();
 
         Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withRelationshipType("OrgUnit")
+                                           .withEntityType("OrgUnit")
                                            .withName("Collection 1").build();
 
         Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withRelationshipType("OrgUnit")
+                                           .withEntityType("OrgUnit")
                                            .withName("Collection 2").build();
 
         Item orgUnitA = ItemBuilder.createItem(context, col1)
@@ -80,7 +80,7 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                  .andExpect(jsonPath("$.uuid", Matchers.is(orgUnitA.getID().toString())))
                  .andExpect(jsonPath("$.metadata['dc.title'].[0].value", is("Title item A")))
                  .andExpect(jsonPath("$.metadata['orgunit.identifier.country'].[0].value", is("Peru")))
-                 .andExpect(jsonPath("$.metadata['relationship.type'].[0].value", is("OrgUnit")))
+                 .andExpect(jsonPath("$.metadata['dspace.entity.type'].[0].value", is("OrgUnit")))
                  .andExpect(jsonPath("$.metadata['organization.identifier.ruc'].[0].value", is("20172627421")))
                  .andExpect(jsonPath("$.metadata['organization.legalName'].[0].value", is("UNIVERSIDAD DE PIURA")))
                  .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].value", is("PIURA")))
@@ -95,7 +95,7 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                  .andExpect(jsonPath("$.uuid", Matchers.is(orgUnitB.getID().toString())))
                  .andExpect(jsonPath("$.metadata['dc.title'].[0].value", is("Title item B")))
                  .andExpect(jsonPath("$.metadata['orgunit.identifier.country'].[0].value", is("Peru")))
-                 .andExpect(jsonPath("$.metadata['relationship.type'].[0].value", is("OrgUnit")))
+                 .andExpect(jsonPath("$.metadata['dspace.entity.type'].[0].value", is("OrgUnit")))
                  .andExpect(jsonPath("$.metadata['organization.identifier.ruc'].[0].value", is("20101247865")))
                  .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].authority", is("150114")))
                  .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].value", is("LA MOLINA")))
@@ -110,7 +110,7 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                  .andExpect(jsonPath("$.uuid", Matchers.is(orgUnitC.getID().toString())))
                  .andExpect(jsonPath("$.metadata['dc.title'].[0].value", is("Title item C")))
                  .andExpect(jsonPath("$.metadata['orgunit.identifier.country'].[0].value", is("Peru")))
-                 .andExpect(jsonPath("$.metadata['relationship.type'].[0].value", is("OrgUnit")))
+                 .andExpect(jsonPath("$.metadata['dspace.entity.type'].[0].value", is("OrgUnit")))
                  .andExpect(jsonPath("$.metadata['organization.identifier.ruc'].[0].value", is("20102982372")))
                  .andExpect(jsonPath("$.metadata['organization.address.addressLocality']").doesNotExist())
                  .andExpect(jsonPath("$.metadata['perucris.type.ciiu']").doesNotExist())
@@ -125,11 +125,11 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                                           .withName("Parent Community").build();
 
         Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withRelationshipType("OrgUnit")
+                                           .withEntityType("OrgUnit")
                                            .withName("Collection 1").build();
 
         Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withRelationshipType("OrgUnit")
+                                           .withEntityType("OrgUnit")
                                            .withName("Collection 2").build();
 
         Item orgUnitA = ItemBuilder.createItem(context, col1)
@@ -163,7 +163,7 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                  .andExpect(jsonPath("$.uuid", Matchers.is(orgUnitA.getID().toString())))
                  .andExpect(jsonPath("$.metadata['dc.title'].[0].value", is("Title item A")))
                  .andExpect(jsonPath("$.metadata['orgunit.identifier.country'].[0].value", is("Peru")))
-                 .andExpect(jsonPath("$.metadata['relationship.type'].[0].value", is("OrgUnit")))
+                 .andExpect(jsonPath("$.metadata['dspace.entity.type'].[0].value", is("OrgUnit")))
                  .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].value", is("PIURA")))
                  .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].authority", is("200101")))
                  .andExpect(jsonPath("$.metadata['organization.identifier.ruc'].[0].value", is("20172627421")))
@@ -178,7 +178,7 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                  .andExpect(jsonPath("$.uuid", Matchers.is(orgUnitB.getID().toString())))
                  .andExpect(jsonPath("$.metadata['dc.title'].[0].value", is("Title item B")))
                  .andExpect(jsonPath("$.metadata['orgunit.identifier.country'].[0].value", is("Peru")))
-                 .andExpect(jsonPath("$.metadata['relationship.type'].[0].value", is("OrgUnit")))
+                 .andExpect(jsonPath("$.metadata['dspace.entity.type'].[0].value", is("OrgUnit")))
                  .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].value", is("LA MOLINA")))
                  .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].authority", is("150114")))
                  .andExpect(jsonPath("$.metadata['organization.identifier.ruc'].[0].value", is("20101247865")))
@@ -193,7 +193,7 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                  .andExpect(jsonPath("$.uuid", Matchers.is(orgUnitC.getID().toString())))
                  .andExpect(jsonPath("$.metadata['dc.title'].[0].value", is("Title item C")))
                  .andExpect(jsonPath("$.metadata['orgunit.identifier.country'].[0].value", is("Peru")))
-                 .andExpect(jsonPath("$.metadata['relationship.type'].[0].value", is("OrgUnit")))
+                 .andExpect(jsonPath("$.metadata['dspace.entity.type'].[0].value", is("OrgUnit")))
                  .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].value", is("SULLANA")))
                  .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].authority", is("200601")))
                  .andExpect(jsonPath("$.metadata['organization.identifier.ruc'].[0].value", is("20102982372")))
@@ -212,11 +212,11 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                                           .withName("Parent Community").build();
 
         Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withRelationshipType("OrgUnit")
+                                           .withEntityType("OrgUnit")
                                            .withName("Collection 1").build();
 
         Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withRelationshipType("OrgUnit")
+                                           .withEntityType("OrgUnit")
                                            .withName("Collection 2").build();
 
         Item orgUnitA = ItemBuilder.createItem(context, col1)
@@ -249,7 +249,7 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                  .andExpect(jsonPath("$.uuid", Matchers.is(orgUnitA.getID().toString())))
                  .andExpect(jsonPath("$.metadata['dc.title'].[0].value", is("Title item A")))
                  .andExpect(jsonPath("$.metadata['orgunit.identifier.country'].[0].value", is("Peru")))
-                 .andExpect(jsonPath("$.metadata['relationship.type'].[0].value", is("OrgUnit")))
+                 .andExpect(jsonPath("$.metadata['dspace.entity.type'].[0].value", is("OrgUnit")))
                  .andExpect(jsonPath("$.metadata['organization.identifier.ruc'].[0].value", is("20172627421")))
                  .andExpect(jsonPath("$.metadata['organization.address.addressLocality']").doesNotExist())
                  .andExpect(jsonPath("$.metadata['perucris.ubigeoSunat']").doesNotExist())
@@ -261,7 +261,7 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                  .andExpect(jsonPath("$.uuid", Matchers.is(orgUnitB.getID().toString())))
                  .andExpect(jsonPath("$.metadata['dc.title'].[0].value", is("Title item B")))
                  .andExpect(jsonPath("$.metadata['orgunit.identifier.country'].[0].value", is("Peru")))
-                 .andExpect(jsonPath("$.metadata['relationship.type'].[0].value", is("OrgUnit")))
+                 .andExpect(jsonPath("$.metadata['dspace.entity.type'].[0].value", is("OrgUnit")))
                  .andExpect(jsonPath("$.metadata['organization.identifier.ruc'].[0].value", is("20101247865")))
                  .andExpect(jsonPath("$.metadata['organization.address.addressLocality']").doesNotExist())
                  .andExpect(jsonPath("$.metadata['perucris.type.ciiu']").doesNotExist())
@@ -272,7 +272,7 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
                  .andExpect(jsonPath("$.uuid", Matchers.is(orgUnitC.getID().toString())))
                  .andExpect(jsonPath("$.metadata['dc.title'].[0].value", is("Title item C")))
                  .andExpect(jsonPath("$.metadata['orgunit.identifier.country'].[0].value", is("Peru")))
-                 .andExpect(jsonPath("$.metadata['relationship.type'].[0].value", is("OrgUnit")))
+                 .andExpect(jsonPath("$.metadata['dspace.entity.type'].[0].value", is("OrgUnit")))
                  .andExpect(jsonPath("$.metadata['organization.identifier.ruc'].[0].value", is("20102982372")))
                  .andExpect(jsonPath("$.metadata['organization.address.addressLocality']").doesNotExist())
                  .andExpect(jsonPath("$.metadata['perucris.type.ciiu']").doesNotExist())

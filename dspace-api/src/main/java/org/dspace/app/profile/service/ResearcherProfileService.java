@@ -41,9 +41,9 @@ public interface ResearcherProfileService {
     /**
      * Create a new researcher profile for the given ePerson.
      *
-     * @param context the relevant DSpace Context.
-     * @param ePerson the ePerson
-     * @return the created profile
+     * @param  context                the relevant DSpace Context.
+     * @param  ePerson                the ePerson
+     * @return                        the created profile
      * @throws SQLException
      * @throws AuthorizeException
      * @throws SearchServiceException

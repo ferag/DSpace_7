@@ -83,7 +83,7 @@ public class ClaimableRelationCreationAction implements PostShadowCopyCreationAc
     }
 
     private String getItemRelationshipType(Item item) {
-        return itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
+        return itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
     }
 
     private boolean alreadyInARelation(Context context, Item item) throws SQLException {

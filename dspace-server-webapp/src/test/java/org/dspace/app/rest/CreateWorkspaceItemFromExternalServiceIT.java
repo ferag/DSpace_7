@@ -6,6 +6,7 @@
  * http://www.dspace.org/license/
  */
 package org.dspace.app.rest;
+
 import static org.dspace.builder.CollectionBuilder.createCollection;
 import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.SHADOW_COPY;
@@ -82,10 +83,11 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
     private Item itemPublication;
     @SuppressWarnings("unused")
     private Item itemPublication2;
-    @SuppressWarnings("unused")
+
     private XmlWorkflowItem witem;
-    @SuppressWarnings("unused")
+
     private XmlWorkflowItem witem2;
+
 
     private Collection col1;
     private Collection col2Scopus;
@@ -146,12 +148,12 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
         parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
 
         this.col1 = CollectionBuilder.createCollection(context, directorioCommunity)
-                                     .withRelationshipType("Person")
+                                     .withEntityType("Person")
                                      .withName("Collection 1").build();
 
         this.col2Scopus = createCollection(context, parentCommunity)
             .withName("Collection for new WorkspaceItems imported from Scopus")
-            .withRelationshipType("InstitutionPublication")
+            .withEntityType("InstitutionPublication")
             .withSubmissionDefinition("traditional")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", reviewGroup)
@@ -159,7 +161,7 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
 
         this.col2WOS = createCollection(context, parentCommunity)
             .withName("Collection for new WorkspaceItems imported from WOS")
-            .withRelationshipType("InstitutionPublication")
+            .withEntityType("InstitutionPublication")
             .withSubmissionDefinition("traditional")
             .withSubmitterGroup(submitter)
             .withRoleGroup("reviewer", reviewGroup)
@@ -382,6 +384,7 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
         context.restoreAuthSystemState();
 
         String[] args = new String[] {"import-publications", "-s", "scopus", "-e", admin.getEmail()};
+
         TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
         nameToProvider.put("scopus", mockScopusProvider);
         createWorkspaceItemService.initialize(args, handler, admin);
@@ -389,7 +392,8 @@ public class CreateWorkspaceItemFromExternalServiceIT extends AbstractController
         createWorkspaceItemService.run();
 
         String tokenAdmin = getAuthToken(admin.getEmail(), password);
-        getClient(tokenAdmin).perform(get("/api/submission/workspaceitems"))
+
+        getClient(tokenAdmin).perform(get("/api/workflow/workflowitems"))
                              .andExpect(status().isOk())
                              .andExpect(jsonPath("$.page.totalElements", is(0)));
     }

@@ -75,7 +75,7 @@ public class CERIFIngestionCrosswalkPeruCrisIT extends AbstractIntegrationTestWi
     @SuppressWarnings("unchecked")
     public void testPublicationIngest() throws Exception {
         context.turnOffAuthorisationSystem();
-        Item item = ItemBuilder.createItem(context, collection).withRelationshipType("Publication").build();
+        Item item = ItemBuilder.createItem(context, collection).withEntityType("Publication").build();
         context.restoreAuthSystemState();
 
         Document document = readDocument(OAI_PMH_DIR_PATH, "sample-perucris-publication.xml");
@@ -111,7 +111,7 @@ public class CERIFIngestionCrosswalkPeruCrisIT extends AbstractIntegrationTestWi
     @SuppressWarnings("unchecked")
     public void testInstitutionPublicationIngest() throws Exception {
         context.turnOffAuthorisationSystem();
-        Item item = ItemBuilder.createItem(context, collection).withRelationshipType("InstitutionPublication").build();
+        Item item = ItemBuilder.createItem(context, collection).withEntityType("InstitutionPublication").build();
         context.restoreAuthSystemState();
 
         Document document = readDocument(OAI_PMH_DIR_PATH, "sample-perucris-publication.xml");
@@ -147,7 +147,7 @@ public class CERIFIngestionCrosswalkPeruCrisIT extends AbstractIntegrationTestWi
     @SuppressWarnings("unchecked")
     public void testPersonIngest() throws Exception {
         context.turnOffAuthorisationSystem();
-        Item item = ItemBuilder.createItem(context, collection).withRelationshipType("Person").build();
+        Item item = ItemBuilder.createItem(context, collection).withEntityType("Person").build();
         context.restoreAuthSystemState();
 
         Document document = readDocument(OAI_PMH_DIR_PATH, "sample-perucris-person.xml");
@@ -173,7 +173,7 @@ public class CERIFIngestionCrosswalkPeruCrisIT extends AbstractIntegrationTestWi
     @SuppressWarnings("unchecked")
     public void testProjectIngest() throws Exception {
         context.turnOffAuthorisationSystem();
-        Item item = ItemBuilder.createItem(context, collection).withRelationshipType("Project").build();
+        Item item = ItemBuilder.createItem(context, collection).withEntityType("Project").build();
         context.restoreAuthSystemState();
 
         Document document = readDocument(OAI_PMH_DIR_PATH, "sample-perucris-project.xml");
@@ -195,7 +195,7 @@ public class CERIFIngestionCrosswalkPeruCrisIT extends AbstractIntegrationTestWi
     @SuppressWarnings("unchecked")
     public void testOrgUnitIngest() throws Exception {
         context.turnOffAuthorisationSystem();
-        Item item = ItemBuilder.createItem(context, collection).withRelationshipType("OrgUnit").build();
+        Item item = ItemBuilder.createItem(context, collection).withEntityType("OrgUnit").build();
         context.restoreAuthSystemState();
 
         Document document = readDocument(OAI_PMH_DIR_PATH, "sample-perucris-orgUnit.xml");
@@ -219,7 +219,7 @@ public class CERIFIngestionCrosswalkPeruCrisIT extends AbstractIntegrationTestWi
     @SuppressWarnings("unchecked")
     public void testFundingIngest() throws Exception {
         context.turnOffAuthorisationSystem();
-        Item item = ItemBuilder.createItem(context, collection).withRelationshipType("Funding").build();
+        Item item = ItemBuilder.createItem(context, collection).withEntityType("Funding").build();
         context.restoreAuthSystemState();
 
         Document document = readDocument(OAI_PMH_DIR_PATH, "sample-perucris-funding.xml");

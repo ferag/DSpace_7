@@ -222,11 +222,24 @@
         <scope_note></scope_note>
     </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ubigeoRegion</element>
+        <scope_note></scope_note>
+    </dc-type>
+
 <!--    to be used for custom code from orgunits -->
     <dc-type>
         <schema>perucris</schema>
         <element>ubigeo</element>
         <qualifier>ubigeoSunat</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ubigeo</element>
+        <qualifier>ubigeoSunatRegion</qualifier>
         <scope_note></scope_note>
     </dc-type>
 
@@ -478,6 +491,13 @@
     <dc-type>
         <schema>perucris</schema>
         <element>domicilio</element>
+        <qualifier>ubigeoReniecRegion</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>domicilio</element>
         <qualifier>region</qualifier>
         <scope_note></scope_note>
     </dc-type>
@@ -510,7 +530,12 @@
         <scope_note></scope_note>
     </dc-type>
 
-
+    <dc-type>
+        <schema>perucris</schema>
+        <element>nacimiento</element>
+        <qualifier>ubigeoReniecRegion</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
 
     <dc-type>
         <schema>perucris</schema>
@@ -837,12 +862,6 @@
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
-	    <qualifier>perucrisidentifierdni</qualifier>
-    </dc-type>
-    
-    <dc-type>
-        <schema>perucris</schema>
-        <element>flagcv</element>
 	    <qualifier>perucrisidentifierpassport</qualifier>
     </dc-type>
     
@@ -850,12 +869,6 @@
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>perucrisidentifierimmigrationCard</qualifier>
-    </dc-type>
-    
-    <dc-type>
-        <schema>perucris</schema>
-        <element>flagcv</element>
-	    <qualifier>personidentifierorcid</qualifier>
     </dc-type>
     
     <dc-type>
@@ -1601,6 +1614,18 @@
         <schema>perucris</schema>
         <element>ctivitae</element>
         <qualifier>owner</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ctivitaepolicy</element>
+        <qualifier>education</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ctivitaepolicy</element>
+        <qualifier>organization</qualifier>
     </dc-type>
     
 </dspace-dc-types>

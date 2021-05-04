@@ -14,19 +14,18 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
-import org.dspace.authority.factory.AuthorityServiceFactory;
 import org.dspace.authority.filler.AuthorityImportFiller;
 import org.dspace.authority.filler.AuthorityImportFillerService;
 import org.dspace.authority.service.AuthorityValueService;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.dto.MetadataValueDTO;
-import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.external.model.ExternalDataObject;
 import org.dspace.external.provider.AbstractExternalDataProvider;
 import org.dspace.util.UUIDUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This class allows to configure a Live Import Provider as an External Data Provider
@@ -36,10 +35,11 @@ import org.dspace.util.UUIDUtils;
  */
 public class AuthorityImportDataProvider extends AbstractExternalDataProvider {
 
-    private AuthorityImportFillerService authorityImportFillerService = AuthorityServiceFactory.getInstance()
-            .getAuthorityImportFillerService();
+    @Autowired
+    private AuthorityImportFillerService authorityImportFillerService;
 
-    private ItemService itemService = ContentServiceFactory.getInstance().getItemService();
+    @Autowired
+    private ItemService itemService;
 
     /**
      * An unique human readable identifier for this provider

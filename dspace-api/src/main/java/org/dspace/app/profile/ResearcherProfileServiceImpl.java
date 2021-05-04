@@ -12,21 +12,26 @@ import static org.dspace.core.Constants.READ;
 import static org.dspace.core.Constants.WRITE;
 import static org.dspace.eperson.Group.ANONYMOUS;
 
+import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.exception.ResourceConflictException;
 import org.dspace.app.profile.importproviders.model.ConfiguredResearcherProfileProvider;
 import org.dspace.app.profile.service.AfterProfileDeleteAction;
+import org.dspace.app.profile.service.AfterResearcherProfileCreationAction;
+import org.dspace.app.profile.service.BeforeProfileHardDeleteAction;
 import org.dspace.app.profile.service.ImportResearcherProfileService;
 import org.dspace.app.profile.service.ResearcherProfileService;
 import org.dspace.authorize.AuthorizeException;
@@ -103,6 +108,29 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
     @Autowired(required = false)
     private List<AfterProfileDeleteAction> afterProfileDeleteActionList;
 
+    @Autowired(required = false)
+    private List<BeforeProfileHardDeleteAction> beforeProfileHardDeleteActionList;
+
+    @PostConstruct
+    public void postConstruct() {
+
+        if (afterProfileDeleteActionList == null) {
+            afterProfileDeleteActionList = Collections.emptyList();
+        }
+
+        if (beforeProfileHardDeleteActionList == null) {
+            beforeProfileHardDeleteActionList = Collections.emptyList();
+        }
+
+        if (afterCreationActions == null) {
+            afterCreationActions = Collections.emptyList();
+        }
+
+    }
+
+    @Autowired(required = false)
+    private List<AfterResearcherProfileCreationAction> afterCreationActions;
+
     @Override
     public ResearcherProfile findById(Context context, UUID id) throws SQLException, AuthorizeException {
         Assert.notNull(id, "An id must be provided to find a researcher profile");
@@ -139,7 +167,14 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
         context.turnOffAuthorisationSystem();
         Item item = createProfileItem(context, ePerson, collection);
         context.restoreAuthSystemState();
-        return new ResearcherProfile(item);
+
+        ResearcherProfile researcherProfile = new ResearcherProfile(item);
+
+        for (AfterResearcherProfileCreationAction afterCreationAction : afterCreationActions) {
+            afterCreationAction.perform(context, researcherProfile, ePerson);
+        }
+
+        return researcherProfile;
     }
 
     @Override
@@ -184,13 +219,14 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
             return;
         }
 
-        List<MetadataValue> metadata = itemService.getMetadata(profileItem, "cris", "owner", null, Item.ANY);
-        itemService.removeMetadataValues(context, profileItem, metadata);
+        if (isHardDeleteEnabled()) {
+            deleteItem(context, profileItem);
+        } else {
+            removeCrisOwnerMetadata(context, profileItem);
+        }
 
-        if (Objects.nonNull(afterProfileDeleteActionList)) {
-            for (AfterProfileDeleteAction action : afterProfileDeleteActionList) {
-                action.apply(context, profileItem);
-            }
+        for (AfterProfileDeleteAction action : afterProfileDeleteActionList) {
+            action.apply(context, profileItem);
         }
     }
 
@@ -242,7 +278,9 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
     }
 
     private void setFilter(DiscoverQuery discoverQuery, UUID ownerUuid) {
-        String filter = "relationship.type:CvPublication OR relationship.type:CvProject OR relationship.type:CvPatent";
+        String filter = "dspace.entity.type:CvPublication "
+            + "OR dspace.entity.type:CvProject "
+            + "OR dspace.entity.type:CvPatent";
         discoverQuery.addFilterQueries(filter);
         discoverQuery.addFilterQueries("cris.owner_authority:" + ownerUuid.toString());
     }
@@ -254,7 +292,7 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
         Iterator<Item> items = itemService.findByAuthorityValue(context, "cris", "owner", null, id.toString());
         while (items.hasNext()) {
             Item item = items.next();
-            if (hasRelationshipTypeMetadataEqualsTo(item, profileType)) {
+            if (hasEntityTypeMetadataEqualsTo(item, profileType)) {
                 return item;
             }
         }
@@ -307,11 +345,38 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
         return item;
     }
 
-    private boolean hasRelationshipTypeMetadataEqualsTo(Item item, String relationshipType) {
+    private boolean hasEntityTypeMetadataEqualsTo(Item item, String entityType) {
         return item.getMetadata().stream().anyMatch(metadataValue -> {
-            return "relationship.type".equals(metadataValue.getMetadataField().toString('.')) &&
-                relationshipType.equals(metadataValue.getValue());
+            return "dspace.entity.type".equals(metadataValue.getMetadataField().toString('.')) &&
+                entityType.equals(metadataValue.getValue());
         });
+    }
+
+    private boolean isHardDeleteEnabled() {
+        return configurationService.getBooleanProperty("researcher-profile.hard-delete.enabled");
+    }
+
+    private void removeCrisOwnerMetadata(Context context, Item profileItem) throws SQLException {
+        List<MetadataValue> metadata = itemService.getMetadata(profileItem, "cris", "owner", null, Item.ANY);
+        itemService.removeMetadataValues(context, profileItem, metadata);
+    }
+
+    private void deleteItem(Context context, Item profileItem) throws SQLException, AuthorizeException {
+        try {
+
+            context.turnOffAuthorisationSystem();
+
+            for (BeforeProfileHardDeleteAction action : beforeProfileHardDeleteActionList) {
+                action.apply(context, profileItem);
+            }
+
+            itemService.delete(context, profileItem);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            context.restoreAuthSystemState();
+        }
     }
 
     private String getProfileType() {

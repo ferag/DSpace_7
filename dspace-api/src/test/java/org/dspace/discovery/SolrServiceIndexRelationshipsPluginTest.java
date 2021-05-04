@@ -147,7 +147,7 @@ public class SolrServiceIndexRelationshipsPluginTest {
     }
 
     @Test
-    public void itemInLeftRelationshipWithFirstPosition() throws SQLException {
+    public void itemInLeftPartOfRelationshipAtFirstPosition() throws SQLException {
         IndexableItem indexableItem = mock(IndexableItem.class);
 
         Item item = item(randomUUID());
@@ -167,10 +167,10 @@ public class SolrServiceIndexRelationshipsPluginTest {
 
         List<Relationship> relatedItemRelationships = Arrays.asList(
             relationship,
-            relationship(relationshipType, item(randomUUID()), relatedItem, 1, 0),
-            relationship(relationshipType, item(randomUUID()), relatedItem, 2, 0),
-            relationship(relationshipType, item(randomUUID()), relatedItem, 3, 0),
-            relationship(relationshipType, item(randomUUID()), relatedItem, 4, 0)
+            relationship(relationshipType, item(randomUUID()), relatedItem, 0, 0),
+            relationship(relationshipType, item(randomUUID()), relatedItem, 0, 1),
+            relationship(relationshipType, item(randomUUID()), relatedItem, 0, 2),
+            relationship(relationshipType, item(randomUUID()), relatedItem, 0, 3)
         );
         when(relationshipService.findByItemAndRelationshipType(context, relatedItem, relationshipType,
             false))
@@ -186,7 +186,7 @@ public class SolrServiceIndexRelationshipsPluginTest {
     }
 
     @Test
-    public void itemInRightRelationshipWithFirstPosition() throws SQLException {
+    public void itemInRightPartOfRelationshipAtFirstPosition() throws SQLException {
         IndexableItem indexableItem = mock(IndexableItem.class);
 
         Item item = item(randomUUID());
@@ -206,10 +206,10 @@ public class SolrServiceIndexRelationshipsPluginTest {
 
         List<Relationship> relatedItemRelationships = Arrays.asList(
             relationship,
-            relationship(relationshipType, relatedItem, item(randomUUID()), 1, 1),
-            relationship(relationshipType, relatedItem, item(randomUUID()), 2, 2),
-            relationship(relationshipType, relatedItem, item(randomUUID()), 3, 3),
-            relationship(relationshipType, relatedItem, item(randomUUID()), 4, 4)
+            relationship(relationshipType, relatedItem, item(randomUUID()), 1, 0),
+            relationship(relationshipType, relatedItem, item(randomUUID()), 2, 0),
+            relationship(relationshipType, relatedItem, item(randomUUID()), 3, 0),
+            relationship(relationshipType, relatedItem, item(randomUUID()), 4, 0)
         );
         when(relationshipService.findByItemAndRelationshipType(context, relatedItem, relationshipType,
             true))
@@ -225,7 +225,7 @@ public class SolrServiceIndexRelationshipsPluginTest {
     }
 
     @Test
-    public void itemInLeftRelationshipWithLastPosition() throws SQLException {
+    public void itemInLeftPartOfRelationshipAtLastPosition() throws SQLException {
         IndexableItem indexableItem = mock(IndexableItem.class);
 
         Item item = item(randomUUID());
@@ -237,7 +237,7 @@ public class SolrServiceIndexRelationshipsPluginTest {
 
         RelationshipType relationshipType = relationshipType("isRelatedTo", "isRelatedBy");
         Relationship relationship =
-            relationship(relationshipType, item, relatedItem, 4, 0);
+            relationship(relationshipType, item, relatedItem, 0, 4);
 
         when(relationshipService.findByItem(context, item)).thenReturn(
             Collections.singletonList(relationship)
@@ -246,9 +246,9 @@ public class SolrServiceIndexRelationshipsPluginTest {
         List<Relationship> relatedItemRelationships = Arrays.asList(
             relationship,
             relationship(relationshipType, item(randomUUID()), relatedItem, 0, 0),
-            relationship(relationshipType, item(randomUUID()), relatedItem, 1, 0),
-            relationship(relationshipType, item(randomUUID()), relatedItem, 2, 0),
-            relationship(relationshipType, item(randomUUID()), relatedItem, 3, 0)
+            relationship(relationshipType, item(randomUUID()), relatedItem, 0, 1),
+            relationship(relationshipType, item(randomUUID()), relatedItem, 0, 2),
+            relationship(relationshipType, item(randomUUID()), relatedItem, 0, 3)
         );
         when(relationshipService.findByItemAndRelationshipType(context, relatedItem, relationshipType,
             false))
@@ -274,7 +274,7 @@ public class SolrServiceIndexRelationshipsPluginTest {
 
         RelationshipType relationshipType = relationshipType("isRelatedTo", "isRelatedBy");
         Relationship relationship =
-            relationship(relationshipType, relatedItem, item, 40, 4);
+            relationship(relationshipType, relatedItem, item, 4, 40);
 
         when(relationshipService.findByItem(context, item)).thenReturn(
             Collections.singletonList(relationship)
@@ -283,9 +283,9 @@ public class SolrServiceIndexRelationshipsPluginTest {
         List<Relationship> relatedItemRelationships = Arrays.asList(
             relationship,
             relationship(relationshipType, relatedItem, item(randomUUID()), 0, 0),
-            relationship(relationshipType, relatedItem, item(randomUUID()), 1, 1),
-            relationship(relationshipType, relatedItem, item(randomUUID()), 2, 2),
-            relationship(relationshipType, relatedItem, item(randomUUID()), 3, 3)
+            relationship(relationshipType, relatedItem, item(randomUUID()), 1, 0),
+            relationship(relationshipType, relatedItem, item(randomUUID()), 2, 0),
+            relationship(relationshipType, relatedItem, item(randomUUID()), 3, 0)
         );
         when(relationshipService.findByItemAndRelationshipType(context, relatedItem, relationshipType,
             true))
@@ -300,7 +300,7 @@ public class SolrServiceIndexRelationshipsPluginTest {
 
 
     @Test
-    public void itemInLeftRelationshipWithIntermediatePosition() throws SQLException {
+    public void itemInLeftPartOfRelationshipAtIntermediatePosition() throws SQLException {
         IndexableItem indexableItem = mock(IndexableItem.class);
 
         Item item = item(randomUUID());
@@ -312,7 +312,7 @@ public class SolrServiceIndexRelationshipsPluginTest {
 
         RelationshipType relationshipType = relationshipType("isRelatedTo", "isRelatedBy");
         Relationship relationship =
-            relationship(relationshipType, item, relatedItem, 2, 0);
+            relationship(relationshipType, item, relatedItem, 0, 2);
 
         when(relationshipService.findByItem(context, item)).thenReturn(
             Collections.singletonList(relationship)
@@ -321,9 +321,9 @@ public class SolrServiceIndexRelationshipsPluginTest {
         List<Relationship> relatedItemRelationships = Arrays.asList(
             relationship,
             relationship(relationshipType, item(randomUUID()), relatedItem, 0, 0),
-            relationship(relationshipType, item(randomUUID()), relatedItem, 1, 0),
-            relationship(relationshipType, item(randomUUID()), relatedItem, 3, 0),
-            relationship(relationshipType, item(randomUUID()), relatedItem, 4, 0)
+            relationship(relationshipType, item(randomUUID()), relatedItem, 0, 1),
+            relationship(relationshipType, item(randomUUID()), relatedItem, 0, 2),
+            relationship(relationshipType, item(randomUUID()), relatedItem, 0, 3)
         );
         when(relationshipService.findByItemAndRelationshipType(context, relatedItem, relationshipType,
             false))
@@ -351,7 +351,7 @@ public class SolrServiceIndexRelationshipsPluginTest {
 
         RelationshipType relationshipType = relationshipType("isRelatedTo", "isRelatedBy");
         Relationship relationship =
-            relationship(relationshipType, relatedItem, item, 0, 2);
+            relationship(relationshipType, relatedItem, item, 2, 0);
 
         when(relationshipService.findByItem(context, item)).thenReturn(
             Collections.singletonList(relationship)
@@ -360,9 +360,9 @@ public class SolrServiceIndexRelationshipsPluginTest {
         List<Relationship> relatedItemRelationships = Arrays.asList(
             relationship,
             relationship(relationshipType, relatedItem, item(randomUUID()), 0, 0),
-            relationship(relationshipType, relatedItem, item(randomUUID()), 11, 1),
-            relationship(relationshipType, relatedItem, item(randomUUID()), 3, 3),
-            relationship(relationshipType, relatedItem, item(randomUUID()), 444, 4)
+            relationship(relationshipType, relatedItem, item(randomUUID()), 1, 1123),
+            relationship(relationshipType, relatedItem, item(randomUUID()), 3, 3434),
+            relationship(relationshipType, relatedItem, item(randomUUID()), 4, 432)
         );
         when(relationshipService.findByItemAndRelationshipType(context, relatedItem, relationshipType,
             true))

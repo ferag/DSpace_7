@@ -7,10 +7,17 @@
  */
 package org.dspace.app.rest;
 
+import static com.jayway.jsonpath.JsonPath.read;
+import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
 import static java.util.Arrays.asList;
+import static java.util.UUID.fromString;
 import static org.dspace.app.matcher.MetadataValueMatcher.with;
+import static org.dspace.app.profile.OrcidEntitySynchronizationPreference.ALL;
+import static org.dspace.app.profile.OrcidEntitySynchronizationPreference.MINE;
 import static org.dspace.app.rest.matcher.HalMatcher.matchLinks;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadata;
+import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadataDoesNotExist;
+import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadataNotEmpty;
 import static org.dspace.builder.RelationshipBuilder.createRelationshipBuilder;
 import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.CLONE;
@@ -18,11 +25,13 @@ import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.MERGED;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.ORIGINATED;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.SHADOW_COPY;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.data.rest.webmvc.RestMediaTypes.TEXT_URI_LIST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -37,10 +46,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.jayway.jsonpath.JsonPath;
 import org.dspace.app.profile.ResearcherProfile;
 import org.dspace.app.profile.service.ResearcherProfileService;
+import org.dspace.app.rest.matcher.ItemMatcher;
 import org.dspace.app.rest.model.MetadataValueRest;
 import org.dspace.app.rest.model.patch.AddOperation;
 import org.dspace.app.rest.model.patch.Operation;
@@ -60,8 +71,10 @@ import org.dspace.content.EntityType;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataSchema;
+import org.dspace.content.MetadataValue;
 import org.dspace.content.Relationship;
 import org.dspace.content.RelationshipType;
+import org.dspace.content.service.ItemService;
 import org.dspace.content.service.MetadataFieldService;
 import org.dspace.content.service.MetadataSchemaService;
 import org.dspace.content.service.RelationshipService;
@@ -70,6 +83,7 @@ import org.dspace.eperson.service.GroupService;
 import org.dspace.layout.CrisLayoutBox;
 import org.dspace.layout.LayoutSecurity;
 import org.dspace.services.ConfigurationService;
+import org.dspace.util.UUIDUtils;
 import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -107,6 +121,9 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
     @Autowired
     private AuthorizeService authorizeService;
 
+    @Autowired
+    private ItemService itemService;
+
     private EPerson user;
 
     private EPerson anotherUser;
@@ -138,7 +155,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
         cvPersonCollection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Profile Collection")
-            .withRelationshipType("CvPerson")
+            .withEntityType("CvPerson")
             .withSubmitterGroup(user)
             .build();
 
@@ -176,13 +193,15 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
             .andExpect(jsonPath("$.id", is(id.toString())))
             .andExpect(jsonPath("$.visible", is(true)))
             .andExpect(jsonPath("$.type", is("profile")))
+            .andExpect(jsonPath("$.orcid").doesNotExist())
+            .andExpect(jsonPath("$.orcidSynchronization").doesNotExist())
             .andExpect(jsonPath("$", matchLinks("http://localhost/api/cris/profiles/" + id, "item", "eperson")));
 
         getClient(authToken).perform(get("/api/cris/profiles/{id}/item", id))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.type", is("item")))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", name, id.toString(), 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "CvPerson", 0)));
+            .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)));
 
         getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", id))
             .andExpect(status().isOk())
@@ -224,7 +243,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.type", is("item")))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", name, id.toString(), 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "CvPerson", 0)));
+            .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)));
 
         getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", id))
             .andExpect(status().isOk())
@@ -294,7 +313,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
             .andExpect(jsonPath("$.type", is("item")))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", name, id.toString(), 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.sourceId", id, 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "CvPerson", 0)));
+            .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)));
 
         getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", id))
             .andExpect(status().isOk())
@@ -335,7 +354,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
             .andExpect(jsonPath("$.type", is("item")))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", name, id.toString(), 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.sourceId", id, 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "CvPerson", 0)));
+            .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)));
 
         getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", id))
             .andExpect(status().isOk())
@@ -424,8 +443,11 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
     @Test
     public void testDelete() throws Exception {
 
+        configurationService.setProperty("researcher-profile.hard-delete.enabled", false);
+
         String id = user.getID().toString();
         String authToken = getAuthToken(user.getEmail(), password);
+        AtomicReference<UUID> itemIdRef = new AtomicReference<UUID>();
 
         getClient(authToken).perform(post("/api/cris/profiles/")
             .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -434,10 +456,56 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
         getClient(authToken).perform(get("/api/cris/profiles/{id}", id))
             .andExpect(status().isOk());
 
+        getClient(authToken).perform(get("/api/cris/profiles/{id}/item", id))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasJsonPath("$.metadata", matchMetadataNotEmpty("cris.owner"))))
+            .andDo(result -> itemIdRef.set(fromString(read(result.getResponse().getContentAsString(), "$.id"))));
+
         getClient(authToken).perform(delete("/api/cris/profiles/{id}", id))
             .andExpect(status().isNoContent());
 
         getClient(authToken).perform(get("/api/cris/profiles/{id}", id))
+            .andExpect(status().isNotFound());
+
+        getClient(authToken).perform(get("/api/core/items/{id}", itemIdRef.get()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasJsonPath("$.metadata", matchMetadataDoesNotExist("cris.owner"))));
+
+    }
+
+    /**
+     * Verify that a user can hard delete his profile using the delete endpoint.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testHardDelete() throws Exception {
+
+        configurationService.setProperty("researcher-profile.hard-delete.enabled", true);
+
+        String id = user.getID().toString();
+        String authToken = getAuthToken(user.getEmail(), password);
+        AtomicReference<UUID> itemIdRef = new AtomicReference<UUID>();
+
+        getClient(authToken).perform(post("/api/cris/profiles/")
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isCreated());
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}", id))
+            .andExpect(status().isOk());
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}/item", id))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasJsonPath("$.metadata", matchMetadataNotEmpty("cris.owner"))))
+            .andDo(result -> itemIdRef.set(fromString(read(result.getResponse().getContentAsString(), "$.id"))));
+
+        getClient(authToken).perform(delete("/api/cris/profiles/{id}", id))
+            .andExpect(status().isNoContent());
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}", id))
+            .andExpect(status().isNotFound());
+
+        getClient(authToken).perform(get("/api/core/items/{id}", itemIdRef.get()))
             .andExpect(status().isNotFound());
 
     }
@@ -699,6 +767,8 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
     @Test
     public void testAutomaticProfileClaimByEmail() throws Exception {
 
+        configurationService.setProperty("researcher-profile.hard-delete.enabled", false);
+
         String id = user.getID().toString();
 
         String adminToken = getAuthToken(admin.getEmail(), password);
@@ -801,7 +871,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
             .andExpect(jsonPath("$.type", is("item")))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", user.getName(), user.getID().toString(), 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.name", "Giuseppe Garibaldi", 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("relationship.type", "CvPerson", 0)))
+            .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("person.birthDate", "1807-07-04", 0)));
 
         getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", user.getID()))
@@ -888,12 +958,12 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
         Collection cvPersonCloneCollection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Cv Person Clone Collection")
-            .withRelationshipType("CvPersonClone")
+            .withEntityType("CvPersonClone")
             .build();
 
         Collection personCollection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Person Collection")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .build();
 
         Item person = ItemBuilder.createItem(context, personCollection)
@@ -958,12 +1028,12 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
         Collection cvPersonCloneCollection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Cv Person Clone Collection")
-            .withRelationshipType("CvPersonClone")
+            .withEntityType("CvPersonClone")
             .build();
 
         Collection personCollection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Person Collection")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .build();
 
         Item person = ItemBuilder.createItem(context, personCollection)
@@ -1013,7 +1083,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
         Collection publicationCollection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Publication Collection")
-            .withRelationshipType("Publication")
+            .withEntityType("Publication")
             .build();
 
         Item publication = ItemBuilder.createItem(context, publicationCollection)
@@ -1103,17 +1173,17 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
         Collection cvPersonCloneCollection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Cv Person Clone Collection")
-            .withRelationshipType("CvPersonClone")
+            .withEntityType("CvPersonClone")
             .build();
 
         Collection personCollection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Person Collection")
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .build();
 
         Collection institutionPersonCollection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Institution Person Collection")
-            .withRelationshipType("InstitutionPerson")
+            .withEntityType("InstitutionPerson")
             .build();
 
         Item person = ItemBuilder.createItem(context, personCollection)
@@ -1202,14 +1272,14 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
        Item CvPublication = ItemBuilder.createItem(context, col1)
                .withTitle("CvPublication Title")
                .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
-               .withRelationshipType("CvPublication")
+               .withEntityType("CvPublication")
                .withIssueDate("2021-01-01")
                .build();
 
        Item CvProject = ItemBuilder.createItem(context, col1)
                .withTitle("CvProject Title")
                .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
-               .withRelationshipType("CvProject")
+               .withEntityType("CvProject")
                .withIssueDate("2021-02-07")
                .build();
 
@@ -1217,7 +1287,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
                .withTitle("CvPatent Title")
                .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
                .withIssueDate("2020-10-11")
-               .withRelationshipType("CvPatent")
+               .withEntityType("CvPatent")
                .build();
 
        context.restoreAuthSystemState();
@@ -1296,14 +1366,14 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
        Item CvPublication = ItemBuilder.createItem(context, col1)
                .withTitle("CvPublication Title")
                .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
-               .withRelationshipType("CvPublication")
+               .withEntityType("CvPublication")
                .withIssueDate("2021-01-01")
                .build();
 
        Item CvProject = ItemBuilder.createItem(context, col1)
                .withTitle("CvProject Title")
                .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
-               .withRelationshipType("CvProject")
+               .withEntityType("CvProject")
                .withIssueDate("2021-02-07")
                .build();
 
@@ -1311,7 +1381,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
                .withTitle("CvPatent Title")
                .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
                .withIssueDate("2020-10-11")
-               .withRelationshipType("CvPatent")
+               .withEntityType("CvPatent")
                .build();
 
        context.restoreAuthSystemState();
@@ -1390,14 +1460,14 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
        Item CvPublication = ItemBuilder.createItem(context, col1)
                .withTitle("CvPublication Title")
                .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
-               .withRelationshipType("CvPublication")
+               .withEntityType("CvPublication")
                .withIssueDate("2021-01-01")
                .build();
 
        Item CvProject = ItemBuilder.createItem(context, col1)
                .withTitle("CvProject Title")
                .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
-               .withRelationshipType("CvProject")
+               .withEntityType("CvProject")
                .withIssueDate("2021-02-07")
                .build();
 
@@ -1405,7 +1475,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
                .withTitle("CvPatent Title")
                .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
                .withIssueDate("2020-10-11")
-               .withRelationshipType("CvPatent")
+               .withEntityType("CvPatent")
                .build();
 
        context.restoreAuthSystemState();
@@ -1487,14 +1557,14 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
        Item CvPublication = ItemBuilder.createItem(context, col1)
                .withTitle("CvPublication Title")
                .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
-               .withRelationshipType("CvPublication")
+               .withEntityType("CvPublication")
                .withIssueDate("2021-01-01")
                .build();
 
        Item CvProject = ItemBuilder.createItem(context, col1)
                .withTitle("CvProject Title")
                .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
-               .withRelationshipType("CvProject")
+               .withEntityType("CvProject")
                .withIssueDate("2021-02-07")
                .build();
 
@@ -1502,7 +1572,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
                .withTitle("CvPatent Title")
                .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
                .withIssueDate("2020-10-11")
-               .withRelationshipType("CvPatent")
+               .withEntityType("CvPatent")
                .build();
 
        context.restoreAuthSystemState();
@@ -1563,6 +1633,878 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
                             .andExpect(status().isOk())
                             .andExpect(jsonPath("$.uuid", Matchers.is(CvPatent.getID().toString())));
 
+    }
+
+    @Test
+    public void cvOwnerAuthorizedToSeeNotVisibleDataTest() throws Exception {
+       context.turnOffAuthorisationSystem();
+
+       parentCommunity = CommunityBuilder.createCommunity(context).build();
+
+       Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withName("Collection 1")
+                                          .build();
+
+       EPerson researcher = EPersonBuilder.createEPerson(context)
+               .withNameInMetadata("John", "Doe")
+               .withEmail("Johndoe@example.com")
+               .withPassword(password).build();
+
+       ResearcherProfile researcherProfile = createProfileForUser(researcher);
+
+       Item CvPublication = ItemBuilder.createItem(context, col1)
+               .withTitle("CvPublication Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
+               .withEntityType("CvPublication")
+               .withIssueDate("2021-01-01")
+               .build();
+
+       Item CvProject = ItemBuilder.createItem(context, col1)
+               .withTitle("CvProject Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
+               .withEntityType("CvProject")
+               .withIssueDate("2021-02-07")
+               .build();
+
+       Item CvPatent = ItemBuilder.createItem(context, col1)
+               .withTitle("CvPatent Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
+               .withIssueDate("2020-10-11")
+               .withEntityType("CvPatent")
+               .build();
+
+       context.restoreAuthSystemState();
+
+       String researcherToken = getAuthToken(researcher.getEmail(), password);
+
+       getClient(researcherToken).perform(get("/api/cris/profiles/" + researcher.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(false)));
+
+       getClient(researcherToken).perform(get("/api/core/items/" + CvPublication.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$",  ItemMatcher
+                                         .matchItemWithTitleAndDateIssued(CvPublication,
+                                                 "CvPublication Title", "2021-01-01")));
+
+       getClient(researcherToken).perform(get("/api/core/items/" + CvProject.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$",  ItemMatcher
+                                               .matchItemWithTitleAndDateIssued(CvProject,
+                                                       "CvProject Title", "2021-02-07")));
+
+       getClient(researcherToken).perform(get("/api/core/items/" + CvPatent.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$",  ItemMatcher
+                                                .matchItemWithTitleAndDateIssued(CvPatent,
+                                                        "CvPatent Title", "2020-10-11")));
+    }
+
+    @Test
+    public void cvSecurityWithResearcherProfileNotVisibleForbiddenTest() throws Exception {
+       context.turnOffAuthorisationSystem();
+
+       parentCommunity = CommunityBuilder.createCommunity(context).build();
+
+       Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withName("Collection 1")
+                                          .build();
+
+       EPerson researcher = EPersonBuilder.createEPerson(context)
+               .withNameInMetadata("John", "Doe")
+               .withEmail("Johndoe@example.com")
+               .withPassword(password).build();
+
+       ResearcherProfile researcherProfile = createProfileForUser(researcher);
+
+       Item CvPublication = ItemBuilder.createItem(context, col1)
+               .withTitle("CvPublication Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
+               .withEntityType("CvPublication")
+               .withIssueDate("2021-01-01")
+               .build();
+
+       Item CvProject = ItemBuilder.createItem(context, col1)
+               .withTitle("CvProject Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
+               .withEntityType("CvProject")
+               .withIssueDate("2021-02-07")
+               .build();
+
+       Item CvPatent = ItemBuilder.createItem(context, col1)
+               .withTitle("CvPatent Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
+               .withIssueDate("2020-10-11")
+               .withEntityType("CvPatent")
+               .build();
+
+       context.restoreAuthSystemState();
+
+       String tokenEperson = getAuthToken(eperson.getEmail(), password);
+       String researcherToken = getAuthToken(researcher.getEmail(), password);
+
+       getClient(researcherToken).perform(get("/api/cris/profiles/" + researcher.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(false)));
+
+       getClient(tokenEperson).perform(get("/api/core/items/" + CvPublication.getID()))
+                              .andExpect(status().isForbidden());
+
+       getClient(tokenEperson).perform(get("/api/core/items/" + CvProject.getID()))
+                              .andExpect(status().isForbidden());
+
+       getClient(tokenEperson).perform(get("/api/core/items/" + CvPatent.getID()))
+                              .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void cvSecurityWithResearcherProfileNotVisibleUnauthorizedTest() throws Exception {
+       context.turnOffAuthorisationSystem();
+
+       parentCommunity = CommunityBuilder.createCommunity(context).build();
+
+       Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withName("Collection 1")
+                                          .build();
+
+       EPerson researcher = EPersonBuilder.createEPerson(context)
+               .withNameInMetadata("John", "Doe")
+               .withEmail("Johndoe@example.com")
+               .withPassword(password).build();
+
+       ResearcherProfile researcherProfile = createProfileForUser(researcher);
+
+       Item CvPublication = ItemBuilder.createItem(context, col1)
+               .withTitle("CvPublication Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
+               .withEntityType("CvPublication")
+               .withIssueDate("2021-01-01")
+               .build();
+
+       Item CvProject = ItemBuilder.createItem(context, col1)
+               .withTitle("CvProject Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
+               .withEntityType("CvProject")
+               .withIssueDate("2021-02-07")
+               .build();
+
+       Item CvPatent = ItemBuilder.createItem(context, col1)
+               .withTitle("CvPatent Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
+               .withIssueDate("2020-10-11")
+               .withEntityType("CvPatent")
+               .build();
+
+       context.restoreAuthSystemState();
+
+       String researcherToken = getAuthToken(researcher.getEmail(), password);
+
+       getClient(researcherToken).perform(get("/api/cris/profiles/" + researcher.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(false)));
+
+       getClient().perform(get("/api/core/items/" + CvPublication.getID()))
+                  .andExpect(status().isUnauthorized());
+
+       getClient().perform(get("/api/core/items/" + CvProject.getID()))
+                  .andExpect(status().isUnauthorized());
+
+       getClient().perform(get("/api/core/items/" + CvPatent.getID()))
+                  .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void cvSecurityWithResearcherProfileNotVisibleAdminTest() throws Exception {
+       context.turnOffAuthorisationSystem();
+
+       parentCommunity = CommunityBuilder.createCommunity(context).build();
+
+       Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withName("Collection 1")
+                                          .build();
+
+       EPerson researcher = EPersonBuilder.createEPerson(context)
+               .withNameInMetadata("John", "Doe")
+               .withEmail("Johndoe@example.com")
+               .withPassword(password).build();
+
+       ResearcherProfile researcherProfile = createProfileForUser(researcher);
+
+       Item CvPublication = ItemBuilder.createItem(context, col1)
+               .withTitle("CvPublication Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
+               .withEntityType("CvPublication")
+               .withIssueDate("2021-01-01")
+               .build();
+
+       Item CvProject = ItemBuilder.createItem(context, col1)
+               .withTitle("CvProject Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
+               .withEntityType("CvProject")
+               .withIssueDate("2021-02-07")
+               .build();
+
+       Item CvPatent = ItemBuilder.createItem(context, col1)
+               .withTitle("CvPatent Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
+               .withIssueDate("2020-10-11")
+               .withEntityType("CvPatent")
+               .build();
+
+       context.restoreAuthSystemState();
+
+       String researcherToken = getAuthToken(researcher.getEmail(), password);
+       String tokenAdmin = getAuthToken(admin.getEmail(), password);
+
+       getClient(researcherToken).perform(get("/api/cris/profiles/" + researcher.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(false)));
+
+       getClient(tokenAdmin).perform(get("/api/core/items/" + CvPublication.getID()))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$", ItemMatcher
+                                .matchItemWithTitleAndDateIssued(CvPublication, "CvPublication Title", "2021-01-01")));
+
+       getClient(tokenAdmin).perform(get("/api/core/items/" + CvProject.getID()))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$", ItemMatcher
+                                       .matchItemWithTitleAndDateIssued(CvProject, "CvProject Title", "2021-02-07")));
+
+       getClient(tokenAdmin).perform(get("/api/core/items/" + CvPatent.getID()))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$", ItemMatcher
+                                      .matchItemWithTitleAndDateIssued(CvPatent, "CvPatent Title", "2020-10-11")));
+    }
+
+    @Test
+    public void cvSecurityWithResearcherProfileVisibleLoggedUserTest() throws Exception {
+       context.turnOffAuthorisationSystem();
+
+       parentCommunity = CommunityBuilder.createCommunity(context).build();
+
+       Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withName("Collection 1")
+                                          .build();
+
+       EPerson researcher = EPersonBuilder.createEPerson(context)
+               .withNameInMetadata("John", "Doe")
+               .withEmail("Johndoe@example.com")
+               .withPassword(password).build();
+
+       ResearcherProfile researcherProfile = createProfileForUser(researcher);
+
+       Item CvPublication = ItemBuilder.createItem(context, col1)
+               .withTitle("CvPublication Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
+               .withEntityType("CvPublication")
+               .withIssueDate("2021-01-01")
+               .build();
+
+       Item CvProject = ItemBuilder.createItem(context, col1)
+               .withTitle("CvProject Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
+               .withEntityType("CvProject")
+               .withIssueDate("2021-02-07")
+               .build();
+
+       Item CvPatent = ItemBuilder.createItem(context, col1)
+               .withTitle("CvPatent Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
+               .withIssueDate("2020-10-11")
+               .withEntityType("CvPatent")
+               .build();
+
+       context.restoreAuthSystemState();
+
+       String tokenEperson = getAuthToken(eperson.getEmail(), password);
+       String researcherToken = getAuthToken(researcher.getEmail(), password);
+
+       List<Operation> operations = asList(new ReplaceOperation("/visible", true));
+
+       getClient(researcherToken).perform(patch("/api/cris/profiles/" + researcher.getID())
+                                 .content(getPatchContent(operations))
+                                 .contentType(MediaType.APPLICATION_JSON_VALUE))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(true)));
+
+        getClient(tokenEperson).perform(get("/api/core/items/" + CvPublication.getID()))
+                               .andExpect(status().isOk())
+                               .andExpect(jsonPath("$", ItemMatcher.matchItemWithTitleAndDateIssued(
+                                               CvPublication, "CvPublication Title", "2021-01-01")));
+
+        getClient(tokenEperson).perform(get("/api/core/items/" + CvProject.getID()))
+                               .andExpect(status().isOk())
+                               .andExpect(jsonPath("$", ItemMatcher.matchItemWithTitleAndDateIssued(
+                                                       CvProject, "CvProject Title", "2021-02-07")));
+
+        getClient(tokenEperson).perform(get("/api/core/items/" + CvPatent.getID()))
+                               .andExpect(status().isOk())
+                               .andExpect(jsonPath("$", ItemMatcher.matchItemWithTitleAndDateIssued(
+                                                         CvPatent, "CvPatent Title", "2020-10-11")));
+    }
+
+    @Test
+    public void cvSecurityWithResearcherProfileVisibleAnonymousUserTest() throws Exception {
+       context.turnOffAuthorisationSystem();
+
+       parentCommunity = CommunityBuilder.createCommunity(context).build();
+
+       Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withName("Collection 1")
+                                          .build();
+
+       EPerson researcher = EPersonBuilder.createEPerson(context)
+               .withNameInMetadata("John", "Doe")
+               .withEmail("Johndoe@example.com")
+               .withPassword(password).build();
+
+       ResearcherProfile researcherProfile = createProfileForUser(researcher);
+
+       Item CvPublication = ItemBuilder.createItem(context, col1)
+               .withTitle("CvPublication Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
+               .withEntityType("CvPublication")
+               .withIssueDate("2021-01-01")
+               .build();
+
+       Item CvProject = ItemBuilder.createItem(context, col1)
+               .withTitle("CvProject Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
+               .withEntityType("CvProject")
+               .withIssueDate("2021-02-07")
+               .build();
+
+       Item CvPatent = ItemBuilder.createItem(context, col1)
+               .withTitle("CvPatent Title")
+               .withCrisOwner(researcher.getName(), researcherProfile.getId().toString())
+               .withIssueDate("2020-10-11")
+               .withEntityType("CvPatent")
+               .build();
+
+       context.restoreAuthSystemState();
+
+       String researcherToken = getAuthToken(researcher.getEmail(), password);
+
+       List<Operation> operations = asList(new ReplaceOperation("/visible", true));
+
+       getClient(researcherToken).perform(patch("/api/cris/profiles/" + researcher.getID())
+                                 .content(getPatchContent(operations))
+                                 .contentType(MediaType.APPLICATION_JSON_VALUE))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.visible", is(true)));
+
+        getClient().perform(get("/api/core/items/" + CvPublication.getID()))
+                   .andExpect(status().isOk())
+                   .andExpect(jsonPath("$",
+                    ItemMatcher.matchItemWithTitleAndDateIssued(CvPublication, "CvPublication Title", "2021-01-01")));
+
+        getClient().perform(get("/api/core/items/" + CvProject.getID()))
+                   .andExpect(status().isOk())
+                   .andExpect(jsonPath("$",
+                    ItemMatcher.matchItemWithTitleAndDateIssued(CvProject, "CvProject Title", "2021-02-07")));
+
+        getClient().perform(get("/api/core/items/" + CvPatent.getID()))
+                   .andExpect(status().isOk())
+                   .andExpect(jsonPath("$",
+                    ItemMatcher.matchItemWithTitleAndDateIssued(CvPatent, "CvPatent Title", "2020-10-11")));
+    }
+
+    /**
+     * Verify that after an user login an automatic claim between the logged eperson
+     * and possible profiles without eperson is done.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testAutomaticProfileClaimByOrcid() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EPerson ePerson = EPersonBuilder.createEPerson(context)
+            .withCanLogin(true)
+            .withNameInMetadata("Test", "User")
+            .withPassword(password)
+            .withEmail("test@email.it")
+            .withOrcid("0000-1111-2222-3333")
+            .build();
+
+        Item item = ItemBuilder.createItem(context, cvPersonCollection)
+            .withTitle("Test User")
+            .withOrcidIdentifier("0000-1111-2222-3333")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        String epersonId = ePerson.getID().toString();
+
+        String token = getAuthToken(ePerson.getEmail(), password);
+
+        getClient(token).perform(get("/api/cris/profiles/{id}", epersonId))
+            .andExpect(status().isOk());
+
+        String profileItemId = getItemIdByProfileId(token, epersonId);
+        assertEquals("The item should be the same", item.getID().toString(), profileItemId);
+
+    }
+
+    @Test
+    public void testNoAutomaticProfileClaimOccursIfManyClaimableItemsAreFound() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EPerson ePerson = EPersonBuilder.createEPerson(context)
+            .withCanLogin(true)
+            .withNameInMetadata("Test", "User")
+            .withPassword(password)
+            .withEmail("test@email.it")
+            .withOrcid("0000-1111-2222-3333")
+            .build();
+
+        ItemBuilder.createItem(context, cvPersonCollection)
+            .withTitle("Test User")
+            .withOrcidIdentifier("0000-1111-2222-3333")
+            .build();
+
+        ItemBuilder.createItem(context, cvPersonCollection)
+            .withTitle("Test User 2")
+            .withOrcidIdentifier("0000-1111-2222-3333")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        String epersonId = ePerson.getID().toString();
+
+        getClient(getAuthToken(ePerson.getEmail(), password))
+            .perform(get("/api/cris/profiles/{id}", epersonId))
+            .andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    @Ignore
+    public void testNoAutomaticProfileClaimOccursIfTheUserHasAlreadyAProfile() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EPerson ePerson = EPersonBuilder.createEPerson(context)
+                                        .withCanLogin(true)
+                                        .withNameInMetadata("Test", "User")
+                                        .withPassword(password)
+                                        .withEmail("test@email.it")
+                                        .withOrcid("0000-1111-2222-3333")
+                                        .build();
+
+        context.restoreAuthSystemState();
+
+        String epersonId = ePerson.getID().toString();
+
+        String token = getAuthToken(ePerson.getEmail(), password);
+
+        getClient(token).perform(post("/api/cris/profiles/")
+                           .contentType(MediaType.APPLICATION_JSON_VALUE))
+                           .andExpect(status().isCreated());
+
+        getClient(token).perform(get("/api/cris/profiles/{id}", epersonId))
+                        .andExpect(status().isOk());
+
+        String profileItemId = getItemIdByProfileId(token, epersonId);
+
+        context.turnOffAuthorisationSystem();
+
+        ItemBuilder.createItem(context, cvPersonCollection)
+                   .withTitle("Test User")
+                   .withOrcidIdentifier("0000-1111-2222-3333")
+                   .build();
+
+        context.restoreAuthSystemState();
+
+        token = getAuthToken(ePerson.getEmail(), password);
+
+        String newProfileItemId = getItemIdByProfileId(token, epersonId);
+        assertEquals("The item should be the same", newProfileItemId, profileItemId);
+
+    }
+
+    @Test
+    public void testNoAutomaticProfileClaimOccursIfTheFoundProfileIsAlreadyClaimed() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EPerson ePerson = EPersonBuilder.createEPerson(context)
+            .withCanLogin(true)
+            .withNameInMetadata("Test", "User")
+            .withPassword(password)
+            .withEmail("test@email.it")
+            .build();
+
+        ItemBuilder.createItem(context, cvPersonCollection)
+            .withTitle("Admin User")
+            .withPersonEmail("test@email.it")
+            .withCrisOwner("Admin User", admin.getID().toString())
+            .build();
+
+        context.restoreAuthSystemState();
+
+        String epersonId = ePerson.getID().toString();
+
+        String token = getAuthToken(ePerson.getEmail(), password);
+
+        getClient(token).perform(get("/api/cris/profiles/{id}", epersonId))
+            .andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    public void testOrcidMetadataOfEpersonAreCopiedOnProfile() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EPerson ePerson = EPersonBuilder.createEPerson(context)
+            .withCanLogin(true)
+            .withOrcid("0000-1111-2222-3333")
+            .withEmail("test@email.it")
+            .withPassword(password)
+            .withNameInMetadata("Test", "User")
+            .withOrcidAccessToken("af097328-ac1c-4a3e-9eb4-069897874910")
+            .withOrcidRefreshToken("32aadae0-829e-49c5-824f-ccaf4d1913e4")
+            .withOrcidScope("/first-scope")
+            .withOrcidScope("/second-scope")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        String ePersonId = ePerson.getID().toString();
+        String authToken = getAuthToken(ePerson.getEmail(), password);
+
+        getClient(authToken).perform(post("/api/cris/profiles/")
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id", is(ePersonId.toString())))
+            .andExpect(jsonPath("$.visible", is(false)))
+            .andExpect(jsonPath("$.type", is("profile")));
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}", ePersonId))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.orcid", is("0000-1111-2222-3333")))
+            .andExpect(jsonPath("$.orcidSynchronization.mode", is("MANUAL")))
+            .andExpect(jsonPath("$.orcidSynchronization.publicationsPreference", is("DISABLED")))
+            .andExpect(jsonPath("$.orcidSynchronization.projectsPreference", is("DISABLED")))
+            .andExpect(jsonPath("$.orcidSynchronization.profilePreferences", empty()));
+
+        String itemId = getItemIdByProfileId(authToken, ePersonId);
+
+        Item profileItem = itemService.find(context, UUIDUtils.fromString(itemId));
+        assertThat(profileItem, notNullValue());
+
+        List<MetadataValue> metadata = profileItem.getMetadata();
+        assertThat(metadata, hasItem(with("person.identifier.orcid", "0000-1111-2222-3333")));
+        assertThat(metadata, hasItem(with("cris.orcid.access-token", "af097328-ac1c-4a3e-9eb4-069897874910")));
+        assertThat(metadata, hasItem(with("cris.orcid.refresh-token", "32aadae0-829e-49c5-824f-ccaf4d1913e4")));
+        assertThat(metadata, hasItem(with("cris.orcid.scope", "/first-scope", 0)));
+        assertThat(metadata, hasItem(with("cris.orcid.scope", "/second-scope", 1)));
+
+    }
+
+    @Test
+    public void testPatchToSetOrcidSynchronizationPreferenceForPublications() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EPerson ePerson = EPersonBuilder.createEPerson(context)
+            .withCanLogin(true)
+            .withOrcid("0000-1111-2222-3333")
+            .withEmail("test@email.it")
+            .withPassword(password)
+            .withNameInMetadata("Test", "User")
+            .withOrcidAccessToken("af097328-ac1c-4a3e-9eb4-069897874910")
+            .withOrcidRefreshToken("32aadae0-829e-49c5-824f-ccaf4d1913e4")
+            .withOrcidScope("/first-scope")
+            .withOrcidScope("/second-scope")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        String ePersonId = ePerson.getID().toString();
+        String authToken = getAuthToken(ePerson.getEmail(), password);
+
+        getClient(authToken).perform(post("/api/cris/profiles/")
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isCreated());
+
+        List<Operation> operations = asList(new ReplaceOperation("/orcid/publications", ALL.name()));
+
+        getClient(authToken).perform(patch("/api/cris/profiles/{id}", ePersonId)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.orcidSynchronization.publicationsPreference", is(ALL.name())));
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}", ePersonId))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.orcidSynchronization.publicationsPreference", is(ALL.name())));
+
+        operations = asList(new ReplaceOperation("/orcid/publications", MINE.name()));
+
+        getClient(authToken).perform(patch("/api/cris/profiles/{id}", ePersonId)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.orcidSynchronization.publicationsPreference", is(MINE.name())));
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}", ePersonId))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.orcidSynchronization.publicationsPreference", is(MINE.name())));
+
+        operations = asList(new ReplaceOperation("/orcid/publications", "INVALID_VALUE"));
+
+        getClient(authToken).perform(patch("/api/cris/profiles/{id}", ePersonId)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isUnprocessableEntity());
+
+    }
+
+    @Test
+    public void testPatchToSetOrcidSynchronizationPreferenceForProjects() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EPerson ePerson = EPersonBuilder.createEPerson(context)
+            .withCanLogin(true)
+            .withOrcid("0000-1111-2222-3333")
+            .withEmail("test@email.it")
+            .withPassword(password)
+            .withNameInMetadata("Test", "User")
+            .withOrcidAccessToken("af097328-ac1c-4a3e-9eb4-069897874910")
+            .withOrcidRefreshToken("32aadae0-829e-49c5-824f-ccaf4d1913e4")
+            .withOrcidScope("/first-scope")
+            .withOrcidScope("/second-scope")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        String ePersonId = ePerson.getID().toString();
+        String authToken = getAuthToken(ePerson.getEmail(), password);
+
+        getClient(authToken).perform(post("/api/cris/profiles/")
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isCreated());
+
+        List<Operation> operations = asList(new ReplaceOperation("/orcid/projects", ALL.name()));
+
+        getClient(authToken).perform(patch("/api/cris/profiles/{id}", ePersonId)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.orcidSynchronization.projectsPreference", is(ALL.name())));
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}", ePersonId))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.orcidSynchronization.projectsPreference", is(ALL.name())));
+
+        operations = asList(new ReplaceOperation("/orcid/projects", MINE.name()));
+
+        getClient(authToken).perform(patch("/api/cris/profiles/{id}", ePersonId)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.orcidSynchronization.projectsPreference", is(MINE.name())));
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}", ePersonId))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.orcidSynchronization.projectsPreference", is(MINE.name())));
+
+        operations = asList(new ReplaceOperation("/orcid/projects", "INVALID_VALUE"));
+
+        getClient(authToken).perform(patch("/api/cris/profiles/{id}", ePersonId)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isUnprocessableEntity());
+
+    }
+
+    @Test
+    public void testPatchToSetOrcidSynchronizationPreferenceForProfile() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EPerson ePerson = EPersonBuilder.createEPerson(context)
+            .withCanLogin(true)
+            .withOrcid("0000-1111-2222-3333")
+            .withEmail("test@email.it")
+            .withPassword(password)
+            .withNameInMetadata("Test", "User")
+            .withOrcidAccessToken("af097328-ac1c-4a3e-9eb4-069897874910")
+            .withOrcidRefreshToken("32aadae0-829e-49c5-824f-ccaf4d1913e4")
+            .withOrcidScope("/first-scope")
+            .withOrcidScope("/second-scope")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        String ePersonId = ePerson.getID().toString();
+        String authToken = getAuthToken(ePerson.getEmail(), password);
+
+        getClient(authToken).perform(post("/api/cris/profiles/")
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isCreated());
+
+        List<Operation> operations = asList(new ReplaceOperation("/orcid/profile", "AFFILIATION, EDUCATION"));
+
+        getClient(authToken).perform(patch("/api/cris/profiles/{id}", ePersonId)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.orcidSynchronization.profilePreferences",
+                containsInAnyOrder("AFFILIATION", "EDUCATION")));
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}", ePersonId))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.orcidSynchronization.profilePreferences",
+                containsInAnyOrder("AFFILIATION", "EDUCATION")));
+
+        operations = asList(new ReplaceOperation("/orcid/profile", "IDENTIFIERS"));
+
+        getClient(authToken).perform(patch("/api/cris/profiles/{id}", ePersonId)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.orcidSynchronization.profilePreferences",
+                containsInAnyOrder("IDENTIFIERS")));
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}", ePersonId))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.orcidSynchronization.profilePreferences",
+                containsInAnyOrder("IDENTIFIERS")));
+
+        operations = asList(new ReplaceOperation("/orcid/profiles", "INVALID_VALUE"));
+
+        getClient(authToken).perform(patch("/api/cris/profiles/{id}", ePersonId)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isUnprocessableEntity());
+
+    }
+
+    @Test
+    public void testPatchToSetOrcidSynchronizationMode() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EPerson ePerson = EPersonBuilder.createEPerson(context)
+            .withCanLogin(true)
+            .withOrcid("0000-1111-2222-3333")
+            .withEmail("test@email.it")
+            .withPassword(password)
+            .withNameInMetadata("Test", "User")
+            .withOrcidAccessToken("af097328-ac1c-4a3e-9eb4-069897874910")
+            .withOrcidRefreshToken("32aadae0-829e-49c5-824f-ccaf4d1913e4")
+            .withOrcidScope("/first-scope")
+            .withOrcidScope("/second-scope")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        String ePersonId = ePerson.getID().toString();
+        String authToken = getAuthToken(ePerson.getEmail(), password);
+
+        getClient(authToken).perform(post("/api/cris/profiles/")
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isCreated());
+
+        List<Operation> operations = asList(new ReplaceOperation("/orcid/mode", "BATCH"));
+
+        getClient(authToken).perform(patch("/api/cris/profiles/{id}", ePersonId)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.orcidSynchronization.mode", is("BATCH")));
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}", ePersonId))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.orcidSynchronization.mode", is("BATCH")));
+
+        operations = asList(new ReplaceOperation("/orcid/mode", "MANUAL"));
+
+        getClient(authToken).perform(patch("/api/cris/profiles/{id}", ePersonId)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.orcidSynchronization.mode", is("MANUAL")));
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}", ePersonId))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.orcidSynchronization.mode", is("MANUAL")));
+
+        operations = asList(new ReplaceOperation("/orcid/mode", "INVALID_VALUE"));
+
+        getClient(authToken).perform(patch("/api/cris/profiles/{id}", ePersonId)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isUnprocessableEntity());
+
+    }
+
+    @Test
+    public void testPatchToSetOrcidSynchronizationPreferenceWithWrongPath() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        EPerson ePerson = EPersonBuilder.createEPerson(context)
+            .withCanLogin(true)
+            .withOrcid("0000-1111-2222-3333")
+            .withEmail("test@email.it")
+            .withPassword(password)
+            .withNameInMetadata("Test", "User")
+            .withOrcidAccessToken("af097328-ac1c-4a3e-9eb4-069897874910")
+            .withOrcidRefreshToken("32aadae0-829e-49c5-824f-ccaf4d1913e4")
+            .withOrcidScope("/first-scope")
+            .withOrcidScope("/second-scope")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        String ePersonId = ePerson.getID().toString();
+        String authToken = getAuthToken(ePerson.getEmail(), password);
+
+        getClient(authToken).perform(post("/api/cris/profiles/")
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isCreated());
+
+        List<Operation> operations = asList(new ReplaceOperation("/orcid/wrong-path", "BATCH"));
+
+        getClient(authToken).perform(patch("/api/cris/profiles/{id}", ePersonId)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    public void testPatchToSetOrcidSynchronizationPreferenceWithProfileNotLinkedToOrcid() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        EPerson ePerson = EPersonBuilder.createEPerson(context)
+            .withCanLogin(true)
+            .withOrcid("0000-1111-2222-3333")
+            .withEmail("test@email.it")
+            .withPassword(password)
+            .withNameInMetadata("Test", "User")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        String ePersonId = ePerson.getID().toString();
+        String authToken = getAuthToken(ePerson.getEmail(), password);
+
+        getClient(authToken).perform(post("/api/cris/profiles/")
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isCreated());
+
+        List<Operation> operations = asList(new ReplaceOperation("/orcid/mode", "BATCH"));
+
+        getClient(authToken).perform(patch("/api/cris/profiles/{id}", ePersonId)
+            .content(getPatchContent(operations))
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest());
     }
 
     private String getItemIdByProfileId(String token, String id) throws SQLException, Exception {

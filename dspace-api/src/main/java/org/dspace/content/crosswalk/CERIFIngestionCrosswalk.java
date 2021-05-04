@@ -200,7 +200,7 @@ public class CERIFIngestionCrosswalk implements IngestionCrosswalk {
 
     private StreamSource getCerifToDimXslt(Item item) throws CrosswalkException {
         String parent = configurationService.getProperty("dspace.dir") + File.separator + "config" + File.separator;
-        File xsltFile = new File(parent, format(CERIF_TO_DIM_XSL_PATH, metadataConfig, getRelationshipType(item)));
+        File xsltFile = new File(parent, format(CERIF_TO_DIM_XSL_PATH, metadataConfig, getEntityType(item)));
         if (!xsltFile.exists()) {
             throw new CrosswalkException("The configured xslt does not exists: " + xsltFile.getPath());
         }
@@ -215,12 +215,12 @@ public class CERIFIngestionCrosswalk implements IngestionCrosswalk {
         return (IngestionCrosswalk) crosswalk;
     }
 
-    private String getRelationshipType(Item item) {
-        String relationshipType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
-        if (StringUtils.isBlank(relationshipType)) {
+    private String getEntityType(Item item) {
+        String itemEntityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
+        if (StringUtils.isBlank(itemEntityType)) {
             return "Publication";
         }
-        return StringUtils.removeStart(relationshipType, "Institution");
+        return StringUtils.removeStart(itemEntityType, "Institution");
     }
 
     public void setIdPrefix(String idPrefix) {

@@ -25,7 +25,7 @@ public class RENIECRegistrationProvider extends AbstractExternalRegistrationProv
 
     @Override
     public boolean support(OIDCProfileElementsResponse userData) {
-        return userData.getReniecDni() != null;
+        return StringUtils.isNotBlank(userData.getReniecDni());
     }
 
     @Override

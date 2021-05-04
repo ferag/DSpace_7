@@ -24,6 +24,7 @@ public class CvEntity {
 
     public CvEntity(Item item) {
         Assert.notNull(item, "A CV entity requires an item");
+        Assert.isTrue(hasCvEntityType(item), "A CV entity requires an item with a CV type");
         this.item = item;
     }
 
@@ -33,5 +34,12 @@ public class CvEntity {
 
     public Item getItem() {
         return item;
+    }
+
+    private boolean hasCvEntityType(Item item) {
+        return item.getMetadata().stream()
+            .filter(metadataValue -> "dspace.entity.type".equals(metadataValue.getMetadataField().toString('.')))
+            .map(metadataValue -> metadataValue.getValue())
+            .allMatch(value -> value != null && value.startsWith("Cv") && !value.endsWith("Clone"));
     }
 }

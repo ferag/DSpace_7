@@ -127,6 +127,11 @@ public class OrcidHistoryServiceImpl implements OrcidHistoryService {
     }
 
     @Override
+    public List<OrcidHistory> findByOwner(Context context, Item owner) throws SQLException {
+        return orcidHistoryDAO.findByOwner(context, owner);
+    }
+
+    @Override
     public OrcidHistory create(Context context, Item owner, Item entity) throws SQLException {
         OrcidHistory orcidHistory = new OrcidHistory();
         orcidHistory.setEntity(entity);
@@ -166,25 +171,22 @@ public class OrcidHistoryServiceImpl implements OrcidHistoryService {
         }
 
         Item entity = orcidQueue.getEntity();
-        String entityType = getMetadataValue(entity, "relationship.type");
+        String entityType = getMetadataValue(entity, "dspace.entity.type");
         if (entityType == null) {
             throw new IllegalArgumentException("The related entity item does not have a relationship type");
         }
 
         switch (entityType) {
             case "Person":
-                //TODO
-                sendPersonToOrcid(context, orcidQueue, orcid, token);
-                break;
+                return sendPersonToOrcid(context, orcidQueue, orcid, token);
             case "Publication":
                 return sendPublicationToOrcid(context, orcidQueue, orcid, token, forceAddition);
             case "Project":
                 return sendProjectToOrcid(context, orcidQueue, orcid, token, forceAddition);
             default:
-                break;
+                throw new IllegalArgumentException("The item to send to ORCID has an invalid type: " + entityType);
 
         }
-        return null;
     }
 
     private OrcidHistory sendPublicationToOrcid(Context context, OrcidQueue orcidQueue, String orcid, String token,
@@ -208,7 +210,7 @@ public class OrcidHistoryServiceImpl implements OrcidHistoryService {
         } else {
             deleteOldRecords(context, entity, owner);
         }
-        return sendObjectToOrcid(context, orcidQueue, orcid, token, putCode, work, WORK_ENDPOINT);
+        return sendObjectToOrcid(context, orcidQueue, orcid, token, putCode, work, WORK_ENDPOINT, Work.class);
     }
 
     private OrcidHistory sendProjectToOrcid(Context context, OrcidQueue orcidQueue, String orcid, String token,
@@ -249,19 +251,21 @@ public class OrcidHistoryServiceImpl implements OrcidHistoryService {
             orgAddress.setCity(city);
             orgAddress.setCountry(country);
             org.setAddress(orgAddress);
+
             funding.setOrganization(org);
         }
-        return sendObjectToOrcid(context, orcidQueue, orcid, token, putCode, funding, FUNDING_ENDPOINT);
+        return sendObjectToOrcid(context, orcidQueue, orcid, token, putCode, funding, FUNDING_ENDPOINT, Funding.class);
     }
 
-    private void sendPersonToOrcid(Context context, OrcidQueue orcidQueue, String orcid, String token)
+    private OrcidHistory sendPersonToOrcid(Context context, OrcidQueue orcidQueue, String orcid, String token)
             throws SQLException {
         // TODO send person info to orcid
         orcidQueueDAO.delete(context, orcidQueue);
+        return null;
     }
 
-    private OrcidHistory sendObjectToOrcid(Context context, OrcidQueue orcidQueue, String orcid, String token,
-            Long putCode, Object objToSend, String endpoint) {
+    private <T> OrcidHistory sendObjectToOrcid(Context context, OrcidQueue orcidQueue, String orcid, String token,
+        Long putCode, T objToSend, String endpoint, Class<T> clazz) {
 
         Item entity = orcidQueue.getEntity();
         Item owner = orcidQueue.getOwner();
@@ -274,7 +278,7 @@ public class OrcidHistoryServiceImpl implements OrcidHistoryService {
 
         try {
 
-            JAXBContext jaxbContext = JAXBContext.newInstance(Work.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
             String objToSendAsString = marshall(jaxbContext, objToSend);
 
             request.addHeader("Content-Type", "application/vnd.orcid+xml");

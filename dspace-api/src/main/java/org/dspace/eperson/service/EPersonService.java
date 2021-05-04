@@ -56,6 +56,8 @@ public interface EPersonService extends DSpaceObjectService<EPerson>, DSpaceObje
             = new MetadataFieldName(EPERSON, "phone");
     public static final MetadataFieldName MD_LANGUAGE
             = new MetadataFieldName(EPERSON, "language");
+    public static final MetadataFieldName MD_ORCID
+            = new MetadataFieldName(EPERSON, "orcid");
 
     /**
      * Find the eperson by their email address.
@@ -240,8 +242,7 @@ public interface EPersonService extends DSpaceObjectService<EPerson>, DSpaceObje
      * EPersons. Called by delete() to determine whether the eperson can
      * actually be deleted.
      *
-     * An EPerson cannot be deleted if it exists in the item, workflowitem, or
-     * tasklistitem tables.
+     * An EPerson cannot be deleted if it exists in the item, resourcepolicy or workflow-related tables.
      *
      * @param context The relevant DSpace Context.
      * @param ePerson EPerson to find

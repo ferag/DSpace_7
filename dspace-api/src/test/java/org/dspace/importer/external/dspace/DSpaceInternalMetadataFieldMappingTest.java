@@ -26,7 +26,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataSchema;
-import org.dspace.content.MetadataSchemaEnum;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
@@ -102,8 +101,7 @@ public class DSpaceInternalMetadataFieldMappingTest {
                 metadataValue(metadataField(222, 222222, "metadata222", "foo"), "metadata222Value")
         );
 
-        when(itemService.getMetadataFirstValue(item, MetadataSchemaEnum.RELATIONSHIP.getName(),
-                "type", null, Item.ANY)).thenReturn(entityType);
+        when(itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY)).thenReturn(entityType);
 
         when(crisLayoutBoxService.findEntityBoxes(context, entityType, 1000, 0))
                 .thenReturn(boxes);
@@ -157,8 +155,7 @@ public class DSpaceInternalMetadataFieldMappingTest {
                 metadataValue(metadataField(222, 222222, "metadata222", "foo"), "metadata222Value")
         );
 
-        when(itemService.getMetadataFirstValue(item, MetadataSchemaEnum.RELATIONSHIP.getName(),
-                "type", null, Item.ANY)).thenReturn(entityType);
+        when(itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY)).thenReturn(entityType);
 
         when(crisLayoutBoxService.findEntityBoxes(context, entityType, 1000, 0))
                 .thenReturn(boxes);
@@ -180,8 +177,7 @@ public class DSpaceInternalMetadataFieldMappingTest {
         Item item = item(UUID.randomUUID());
 
         doThrow(new SQLException("sql exception")).when(itemService)
-                .getMetadataFirstValue(item, MetadataSchemaEnum.RELATIONSHIP.getName(),
-                        "type", null, Item.ANY);
+            .getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
 
 
         metadataFieldMapping.resultToDCValueMapping(item);

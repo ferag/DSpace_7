@@ -11,12 +11,14 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.rest.utils.ContextUtil;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.DSpaceObjectService;
+import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
@@ -51,6 +53,9 @@ public class AuthorizeServicePermissionEvaluatorPlugin extends RestObjectPermiss
 
     @Autowired
     private ContentServiceFactory contentServiceFactory;
+
+    @Autowired
+    private ItemService itemService;
 
     @Override
     public boolean hasDSpacePermission(Authentication authentication, Serializable targetId, String targetType,
@@ -89,6 +94,11 @@ public class AuthorizeServicePermissionEvaluatorPlugin extends RestObjectPermiss
                     // If the item is still inprogress we can process here only the READ permission.
                     // Other actions need to be evaluated against the wrapper object (workspace or workflow item)
                     if (dSpaceObject instanceof Item) {
+                        if (isCvEntity((Item)dSpaceObject)) {
+                            // cv* type items are managed in a specific plagin :
+                            // org.dspace.app.rest.security.CvEntityPermissionEvaluatorPlugin
+                            return false;
+                        }
                         if (!DSpaceRestPermission.READ.equals(restPermission)
                             && !((Item) dSpaceObject).isArchived() && !((Item) dSpaceObject).isWithdrawn()) {
                             return false;
@@ -105,6 +115,11 @@ public class AuthorizeServicePermissionEvaluatorPlugin extends RestObjectPermiss
         }
 
         return false;
+    }
+
+    private boolean isCvEntity(Item item) {
+        String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
+        return StringUtils.equalsAny(entityType, "CvPublication", "CvPatent", "CvProject");
     }
 
 }

@@ -13,6 +13,7 @@
             <list>
                 <ref bean="dspaceAfterImportAction"/>
                 <ref bean="profileItemCloningAction"/>
+                <ref bean="setOrcidAndDniAction"/>
             </list>
         </property>
         <property name="importProfileProviders">
@@ -88,6 +89,7 @@
     </bean>
     
     <bean id="profileItemCloningAction" class="org.dspace.importer.external.dspace.ProfileItemCloningAction" />
+    <bean id="setOrcidAndDniAction" class="org.dspace.importer.external.dspace.SetOrcidAndDniAction" />
 
     <bean id="dspaceItemRelationshipService" class="org.dspace.importer.external.dspace.DSpaceItemRelationshipService">
 
@@ -98,6 +100,7 @@
     </bean>
 
     <bean id="removeRelationAction" class="org.dspace.importer.external.dspace.RemoveDSpaceRelationAction"/>
+    <bean id="deleteCvEntititesAction" class="org.dspace.importer.external.dspace.DeleteCvEntititesAction"/>
     
     <util:map id="profileSynchronizationMap" map-class="java.util.HashMap" key-type="java.lang.String" value-type="java.util.List"> 
 	   <entry key="perucris.cvPerson.syncEducation" >
@@ -150,10 +153,8 @@
 			   <value>perucris.subject.ocde</value>
 			   <value>perucris.subject.minam</value>
 			   <value>perucris.subject.ins</value>
-			   <value>perucris.identifier.dni</value>
 			   <value>perucris.identifier.passport</value>
 			   <value>perucris.identifier.immigrationCard</value>
-			   <value>person.identifier.orcid</value>
 			   <value>perucris.identifier.dina</value>
 			   <value>perucris.identifier.renacyt</value>
 			   <value>person.identifier.scopus-author-id</value>

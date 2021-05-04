@@ -15,21 +15,21 @@
         <constructor-arg name="shadowCopyMetadata" value="perucris.author.orcid" />
         <constructor-arg name="metadataToSearch" value="person.identifier.orcid" />
         <constructor-arg name="metadataToLink" value="dc.contributor.author" />
-        <constructor-arg name="relationshipTypeToSearch" value="Person" />
+        <constructor-arg name="entityTypeToSearch" value="Person" />
     </bean>
     
     <bean id="shadowCopyLookupByResearcherIdAction" class="org.dspace.xmlworkflow.LookupEntityAction">
         <constructor-arg name="shadowCopyMetadata" value="perucris.author.rid" />
         <constructor-arg name="metadataToSearch" value="person.identifier.rid" />
         <constructor-arg name="metadataToLink" value="dc.contributor.author" />
-        <constructor-arg name="relationshipTypeToSearch" value="Person" />
+        <constructor-arg name="entityTypeToSearch" value="Person" />
     </bean>
     
     <bean id="shadowCopyLookupByScopusIdAction" class="org.dspace.xmlworkflow.LookupEntityAction">
         <constructor-arg name="shadowCopyMetadata" value="perucris.author.scopus-author-id " />
         <constructor-arg name="metadataToSearch" value="person.identifier.scopus-author-id" />
         <constructor-arg name="metadataToLink" value="dc.contributor.author" />
-        <constructor-arg name="relationshipTypeToSearch" value="Person" />
+        <constructor-arg name="entityTypeToSearch" value="Person" />
     </bean>
     
 </beans>

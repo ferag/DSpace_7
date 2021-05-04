@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.util.DCInputsReaderException;
 import org.dspace.app.util.Util;
@@ -114,8 +115,8 @@ public class WorkspaceItemServiceImpl implements WorkspaceItemService {
         }
 
         Optional<MetadataValue> optionalType =
-            collection.getMetadata().stream().filter(x -> x.getMetadataField().toString('.')
-                .equalsIgnoreCase(MetadataSchemaEnum.RELATIONSHIP.getName() + ".type")).findFirst();
+            collection.getMetadata().stream()
+                .filter(x -> x.getMetadataField().toString('.').equalsIgnoreCase("dspace.entity.type")).findFirst();
         if (optionalType.isPresent()) {
             MetadataValue original = optionalType.get();
             MetadataField metadataField = original.getMetadataField();
@@ -140,6 +141,10 @@ public class WorkspaceItemServiceImpl implements WorkspaceItemService {
 
                 MetadataValueVO metadataValueFromTemplate = templateItemValueService.value(context, item,
                     templateItem, templateMetadataValue);
+
+                if (StringUtils.isEmpty(metadataValueFromTemplate.getValue())) {
+                    continue;
+                }
 
                 itemService.addMetadata(context, item, metadataSchema.getName(), metadataField.getElement(),
                     metadataField.getQualifier(), templateMetadataValue.getLanguage(),

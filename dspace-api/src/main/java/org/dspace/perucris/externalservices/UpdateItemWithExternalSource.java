@@ -146,11 +146,11 @@ public class UpdateItemWithExternalSource
 
     private void setFilter(DiscoverQuery discoverQuery, String service) {
         if ("reniec".equals(service) || "sunedu".equals(service) || "renacyt".equals(service)) {
-            discoverQuery.addFilterQueries("relationship.type:Person");
+            discoverQuery.addFilterQueries("dspace.entity.type:Person");
             discoverQuery.addFilterQueries("perucris.identifier.dni:*");
         }
         if ("sunat".equals(service)) {
-            discoverQuery.addFilterQueries("relationship.type:OrgUnit");
+            discoverQuery.addFilterQueries("dspace.entity.type:OrgUnit");
             discoverQuery.addFilterQueries("organization.identifier.ruc:*");
         }
     }

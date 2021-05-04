@@ -8,6 +8,8 @@
 package org.dspace.layout.service.impl;
 
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -37,6 +39,8 @@ public class LayoutSecurityServiceImpl implements LayoutSecurityService {
     private final ItemService itemService;
     private final GroupService groupService;
     private final CrisSecurityService crisSecurityService;
+
+    private Group anonymousGroup;
 
     @Autowired
     public LayoutSecurityServiceImpl(AuthorizeService authorizeService,
@@ -99,16 +103,27 @@ public class LayoutSecurityServiceImpl implements LayoutSecurityService {
 
     private boolean checkGroup(MetadataValue value, Set<Group> groups) {
         return groups.stream()
-                     .anyMatch(g -> g.getID().toString().equals(value.getAuthority()));
+                     .anyMatch(g -> g != null && g.getID().toString().equals(value.getAuthority()));
     }
 
     // in private method so that checked exception can be handled and metod can be called from a lambda
     private Set<Group> groups(final Context context, final EPerson user) {
         try {
+            if (user == null) {
+                return new HashSet<>(Collections.singletonList(anonymousGroup(context)));
+            }
             return groupService.allMemberGroupsSet(context, user);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+    }
+
+    private Group anonymousGroup(final Context context) throws SQLException {
+        if (anonymousGroup == null) {
+            anonymousGroup = groupService.findByName(context,
+                                                     Group.ANONYMOUS);
+        }
+        return anonymousGroup;
     }
 
 }

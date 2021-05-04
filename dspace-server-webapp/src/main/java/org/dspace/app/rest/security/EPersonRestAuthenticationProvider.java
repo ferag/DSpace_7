@@ -11,9 +11,11 @@ import static org.dspace.app.rest.security.WebSecurityConfiguration.ADMIN_GRANT;
 import static org.dspace.app.rest.security.WebSecurityConfiguration.AUTHENTICATED_GRANT;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -63,8 +65,17 @@ public class EPersonRestAuthenticationProvider implements AuthenticationProvider
     @Autowired
     private HttpServletRequest request;
 
-    @Autowired
+    @Autowired(required = false)
     private List<PostLoggedInAction> postLoggedInActions;
+
+    @PostConstruct
+    public void postConstruct() {
+
+        if (postLoggedInActions == null) {
+            postLoggedInActions = Collections.emptyList();
+        }
+
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -105,7 +116,7 @@ public class EPersonRestAuthenticationProvider implements AuthenticationProvider
                         output = createAuthentication(password, newContext);
 
                         for (PostLoggedInAction action : postLoggedInActions) {
-                            action.loggedIn(newContext, request);
+                            action.loggedIn(newContext);
                         }
 
                     } else {
@@ -136,8 +147,7 @@ public class EPersonRestAuthenticationProvider implements AuthenticationProvider
         if (ePerson != null && (StringUtils.isNotBlank(username))) {
             //Pass the eperson ID to the request service
             requestService.setCurrentUserId(ePerson.getID());
-
-            return new DSpaceAuthentication(ePerson, getGrantedAuthorities(context, ePerson), username);
+            return new DSpaceAuthentication(ePerson, getGrantedAuthorities(context), username);
 
         } else {
             log.info(
@@ -146,17 +156,17 @@ public class EPersonRestAuthenticationProvider implements AuthenticationProvider
         }
     }
 
-    public List<GrantedAuthority> getGrantedAuthorities(Context context, EPerson eperson) {
+    public List<GrantedAuthority> getGrantedAuthorities(Context context) {
         List<GrantedAuthority> authorities = new LinkedList<>();
-
+        EPerson eperson = context.getCurrentUser();
         if (eperson != null) {
             boolean isAdmin = false;
             boolean isCommunityAdmin = false;
             boolean isCollectionAdmin = false;
             try {
                 isAdmin = authorizeService.isAdmin(context, eperson);
-                isCommunityAdmin = authorizeService.isCommunityAdmin(context, eperson);
-                isCollectionAdmin = authorizeService.isCollectionAdmin(context, eperson);
+                isCommunityAdmin = authorizeService.isCommunityAdmin(context);
+                isCollectionAdmin = authorizeService.isCollectionAdmin(context);
             } catch (SQLException e) {
                 log.error("SQL error while checking for admin rights", e);
             }

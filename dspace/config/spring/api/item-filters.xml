@@ -87,23 +87,23 @@
         </property>
     </bean>
     
-    <!-- relationship.type is exactly Person -->
+    <!-- dspace.entity.type is exactly Person -->
     <bean id="relationship-type-equals-person_condition"
           class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
         <property name="parameters">
             <map>
-                <entry key="field" value="relationship.type" />
+                <entry key="field" value="dspace.entity.type" />
                 <entry key="pattern" value="^Person$|^InstitutionPerson$" />
             </map>
         </property>
     </bean>
 
-    <!-- relationship.type is exactly CvPerson -->
+    <!-- dspace.entity.type is exactly CvPerson -->
     <bean id="relationship-type-equals-cv-person_condition"
           class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
         <property name="parameters">
             <map>
-                <entry key="field" value="relationship.type" />
+                <entry key="field" value="dspace.entity.type" />
                 <entry key="pattern" value="^CvPerson$" />
             </map>
         </property>

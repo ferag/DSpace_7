@@ -7,11 +7,18 @@
  */
 package org.dspace.app.profile;
 
+import static org.dspace.app.profile.OrcidEntitySynchronizationPreference.DISABLED;
+import static org.dspace.app.profile.OrcidSynchronizationMode.MANUAL;
 import static org.dspace.core.Constants.READ;
 import static org.dspace.eperson.Group.ANONYMOUS;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
 import org.dspace.util.UUIDUtils;
@@ -29,6 +36,13 @@ public class ResearcherProfile {
 
     private final MetadataValue crisOwner;
 
+    /**
+     * Create a new ResearcherProfile object from the given item.
+     *
+     * @param  item                     the profile item
+     * @throws IllegalArgumentException if the given item has not a cris.owner
+     *                                  metadata with a valid authority
+     */
     public ResearcherProfile(Item item) {
         Assert.notNull(item, "A researcher profile requires an item");
         this.item = item;
@@ -47,21 +61,71 @@ public class ResearcherProfile {
         return crisOwner.getValue();
     }
 
+    public String getItemFullName() {
+        return StringUtils.isNotBlank(getItem().getName()) ? getItem().getName() : crisOwner.getValue();
+    }
+
     public boolean isVisible() {
         return item.getResourcePolicies().stream()
             .filter(policy -> policy.getGroup() != null)
             .anyMatch(policy -> READ == policy.getAction() && ANONYMOUS.equals(policy.getGroup().getName()));
     }
 
+    public boolean isLinkedToOrcid() {
+        return getOrcidAccessToken().isPresent() && getOrcid().isPresent();
+    }
+
     public Item getItem() {
         return item;
     }
 
+    public Optional<String> getOrcid() {
+        return getMetadataValue(item, "person.identifier.orcid")
+            .map(metadataValue -> metadataValue.getValue());
+    }
+
+    public String getOrcidSynchronizationMode() {
+        return getMetadataValue(item, "cris.orcid.sync-mode")
+            .map(metadataValue -> metadataValue.getValue())
+            .orElse(MANUAL.name());
+    }
+
+    public String getOrcidSynchronizationPublicationsPreference() {
+        return getMetadataValue(item, "cris.orcid.sync-publications")
+            .map(metadataValue -> metadataValue.getValue())
+            .orElse(DISABLED.name());
+    }
+
+    public String getOrcidSynchronizationProjectsPreference() {
+        return getMetadataValue(item, "cris.orcid.sync-projects")
+            .map(metadataValue -> metadataValue.getValue())
+            .orElse(DISABLED.name());
+    }
+
+    public List<String> getOrcidSynchronizationProfilePreferences() {
+        return getMetadataValues(item, "cris.orcid.sync-profile")
+            .map(MetadataValue::getValue)
+            .collect(Collectors.toList());
+    }
+
     private MetadataValue getCrisOwnerMetadata(Item item) {
+        return getMetadataValue(item, "cris.owner")
+            .filter(metadata -> UUIDUtils.fromString(metadata.getAuthority()) != null)
+            .orElseThrow(() -> new IllegalArgumentException("A profile item must have a valid cris.owner metadata"));
+    }
+
+    private Optional<String> getOrcidAccessToken() {
+        return getMetadataValue(item, "cris.orcid.access-token")
+            .map(metadataValue -> metadataValue.getValue());
+    }
+
+    private Optional<MetadataValue> getMetadataValue(Item item, String metadataField) {
+        return getMetadataValues(item, metadataField).findFirst();
+    }
+
+    private Stream<MetadataValue> getMetadataValues(Item item, String metadataField) {
         return item.getMetadata().stream()
-            .filter(metadata -> "cris.owner".equals(metadata.getMetadataField().toString('.')))
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("A profile item must have a cris.owner metadata"));
+            .filter(metadata -> metadataField.equals(metadata.getMetadataField().toString('.')));
     }
 
 }

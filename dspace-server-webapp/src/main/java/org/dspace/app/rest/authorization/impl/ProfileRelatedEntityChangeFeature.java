@@ -141,7 +141,7 @@ public class ProfileRelatedEntityChangeFeature implements AuthorizationFeature {
     }
 
     private String getEntityType(Item item) {
-        return itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
+        return itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
     }
 
     @Override

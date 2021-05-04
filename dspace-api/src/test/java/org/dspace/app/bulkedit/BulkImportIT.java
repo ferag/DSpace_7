@@ -805,7 +805,7 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
             context.turnOffAuthorisationSystem();
 
             Item person = ItemBuilder.createItem(context, collection)
-                .withRelationshipType("Person")
+                .withEntityType("Person")
                 .withTitle("Walter White")
                 .withOrcidIdentifier("0000-0002-9079-593X")
                 .build();
@@ -861,7 +861,7 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
             context.turnOffAuthorisationSystem();
 
             Item person = ItemBuilder.createItem(context, collection)
-                .withRelationshipType("InstitutionPerson")
+                .withEntityType("InstitutionPerson")
                 .withTitle("Walter White")
                 .withOrcidIdentifier("0000-0002-9079-593X")
                 .build();
@@ -917,7 +917,7 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
             context.turnOffAuthorisationSystem();
 
             createCollection(context, community)
-                .withRelationshipType("Person")
+                .withEntityType("Person")
                 .withAdminGroup(eperson)
                 .build();
 
@@ -975,7 +975,7 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
             context.turnOffAuthorisationSystem();
 
             Item person = ItemBuilder.createItem(context, collection)
-                .withRelationshipType("Person")
+                .withEntityType("Person")
                 .withTitle("Walter White")
                 .withOrcidIdentifier("0000-0002-9079-593X")
                 .build();
@@ -1031,14 +1031,14 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
             context.turnOffAuthorisationSystem();
 
             Item person = ItemBuilder.createItem(context, collection)
-                .withRelationshipType("InstitutionPerson")
+                .withEntityType("InstitutionPerson")
                 .withTitle("Walter White")
                 .withOrcidIdentifier("0000-0002-9079-593X")
                 .build();
 
             Collection publications = createCollection(context, community)
                 .withSubmissionDefinition("institution-publication")
-                .withRelationshipType("InstitutionPublication")
+                .withEntityType("InstitutionPublication")
                 .withAdminGroup(eperson)
                 .build();
 
@@ -1088,7 +1088,7 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
             context.turnOffAuthorisationSystem();
 
             createCollection(context, community)
-                .withRelationshipType("Person")
+                .withEntityType("Person")
                 .withAdminGroup(eperson)
                 .build();
 
@@ -1532,7 +1532,7 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
         context.turnOffAuthorisationSystem();
 
         createCollection(context, community)
-            .withRelationshipType("Person")
+            .withEntityType("Person")
             .withAdminGroup(eperson)
             .build();
 

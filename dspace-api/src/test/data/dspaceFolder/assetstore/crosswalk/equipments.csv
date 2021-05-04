@@ -1,4 +1,4 @@
-Name,Acronym,Type,Institution assigned identifier,Description,Owner organization,Owner person,Usage,Subject(s),Research line,Funding(s),Manufacturing country,Manufacturing date,Acquisition date,Amount,Amount's currency,Internal note
+Nombre,Acrónimo,Tipo,Identificador de la institución,Descripción,Organización propietaria,Persona propietaria,Uso,Materia(s),Linea de investigación,Financiador(es),País de manufactura,Fecha de manufactura,Fecha de adquisición,Cantidad,Moneda,Nota interna
 "First Test Equipment","FT-EQ","Type","ID-01","This is an equipment to test the export functionality","Test OrgUnit","Walter White","Investigacion cientifica y desarrollo experimental","First subject||Second subject","ResearchLine","Funding","IT","2020-01-01","2021-01-01","4000","€","Note"
 "Second Test Equipment","ST-EQ","","ID-02","This is another equipment to test the export functionality","","John Smith","","Subject","","First funding||Second funding","","","2021-02-01","5000","€",""
 "Third Test Equipment","TT-EQ","","ID-03","","","","","","","","","","","","",""

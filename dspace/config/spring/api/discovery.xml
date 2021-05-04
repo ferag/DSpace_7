@@ -3561,7 +3561,9 @@
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
-                    <list/>
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
                 </property>
             </bean>
         </property>
@@ -3592,7 +3594,9 @@
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
-                    <list/>
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
                 </property>
             </bean>
         </property>
@@ -3623,7 +3627,9 @@
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
-                    <list/>
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
                 </property>
             </bean>
         </property>
@@ -3654,7 +3660,9 @@
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
-                    <list/>
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
                 </property>
             </bean>
         </property>
@@ -3685,7 +3693,9 @@
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
-                    <list/>
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
                 </property>
             </bean>
         </property>
@@ -3716,7 +3726,9 @@
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
-                    <list/>
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
                 </property>
             </bean>
         </property>
@@ -3747,7 +3759,9 @@
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
-                    <list/>
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
                 </property>
             </bean>
         </property>
@@ -3778,7 +3792,9 @@
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
-                    <list/>
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
                 </property>
             </bean>
         </property>

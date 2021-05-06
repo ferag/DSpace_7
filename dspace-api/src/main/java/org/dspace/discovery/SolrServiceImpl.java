@@ -46,6 +46,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
+import org.apache.solr.common.SolrException;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.params.FacetParams;
 import org.apache.solr.common.params.HighlightParams;
@@ -1551,6 +1552,12 @@ public class SolrServiceImpl implements SearchService, IndexingService {
             solrClient.commit();
         } catch (SolrServerException | IOException e) {
             log.error(e.getMessage(), e);
+        } catch (SolrException se) {
+            if (se.getMessage().contains("missing required field")) {
+                log.error(se.getMessage(), se);
+            } else {
+                throw se;
+            }
         }
     }
 }

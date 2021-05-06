@@ -10,6 +10,7 @@ package org.dspace.discovery;
 import static java.util.UUID.randomUUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentMatchers.startsWith;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -28,6 +29,7 @@ import org.dspace.content.service.RelationshipService;
 import org.dspace.core.Context;
 import org.dspace.discovery.indexobject.IndexableCollection;
 import org.dspace.discovery.indexobject.IndexableItem;
+import org.dspace.services.ConfigurationService;
 import org.hamcrest.core.Is;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,10 +46,12 @@ public class SolrServiceIndexRelationshipsPluginTest {
 
     private RelationshipService relationshipService = mock(RelationshipService.class);
     private Context context = mock(Context.class);
+    private ConfigurationService configurationService = mock(ConfigurationService.class);
 
     @Before
     public void setUp() throws Exception {
-        solrServiceIndexRelationshipsPlugin = new SolrServiceIndexRelationshipsPlugin(relationshipService);
+        solrServiceIndexRelationshipsPlugin = new SolrServiceIndexRelationshipsPlugin(relationshipService,
+                                                                                      configurationService);
     }
 
     @Test
@@ -159,7 +163,7 @@ public class SolrServiceIndexRelationshipsPluginTest {
 
         RelationshipType relationshipType = relationshipType("isRelatedTo", "isRelatedBy");
         Relationship relationship =
-            relationship(relationshipType, item, relatedItem, 0, 0);
+            relationship(relationshipType, item, relatedItem, 5, 0);
 
         when(relationshipService.findByItem(context, item)).thenReturn(
             Collections.singletonList(relationship)
@@ -167,14 +171,17 @@ public class SolrServiceIndexRelationshipsPluginTest {
 
         List<Relationship> relatedItemRelationships = Arrays.asList(
             relationship,
-            relationship(relationshipType, item(randomUUID()), relatedItem, 0, 0),
-            relationship(relationshipType, item(randomUUID()), relatedItem, 0, 1),
-            relationship(relationshipType, item(randomUUID()), relatedItem, 0, 2),
-            relationship(relationshipType, item(randomUUID()), relatedItem, 0, 3)
+            relationship(relationshipType, item(randomUUID()), relatedItem, 5, 0),
+            relationship(relationshipType, item(randomUUID()), relatedItem, 5, 1),
+            relationship(relationshipType, item(randomUUID()), relatedItem, 5, 2),
+            relationship(relationshipType, item(randomUUID()), relatedItem, 5, 3)
         );
         when(relationshipService.findByItemAndRelationshipType(context, relatedItem, relationshipType,
             false))
             .thenReturn(relatedItemRelationships);
+
+        when(configurationService.getArrayProperty(startsWith("relationship.places.only")))
+            .thenReturn(new String[]{"null::null::isRelatedTo::isRelatedBy"});
 
         SolrInputDocument document = new SolrInputDocument();
         solrServiceIndexRelationshipsPlugin.additionalIndex(context, indexableItem, document);
@@ -198,7 +205,7 @@ public class SolrServiceIndexRelationshipsPluginTest {
 
         RelationshipType relationshipType = relationshipType("isRelatedTo", "isRelatedBy");
         Relationship relationship =
-            relationship(relationshipType, relatedItem, item, 0, 0);
+            relationship(relationshipType, relatedItem, item, 0, 5);
 
         when(relationshipService.findByItem(context, item)).thenReturn(
             Collections.singletonList(relationship)
@@ -206,14 +213,17 @@ public class SolrServiceIndexRelationshipsPluginTest {
 
         List<Relationship> relatedItemRelationships = Arrays.asList(
             relationship,
-            relationship(relationshipType, relatedItem, item(randomUUID()), 1, 0),
-            relationship(relationshipType, relatedItem, item(randomUUID()), 2, 0),
-            relationship(relationshipType, relatedItem, item(randomUUID()), 3, 0),
-            relationship(relationshipType, relatedItem, item(randomUUID()), 4, 0)
+            relationship(relationshipType, relatedItem, item(randomUUID()), 1, 5),
+            relationship(relationshipType, relatedItem, item(randomUUID()), 2, 5),
+            relationship(relationshipType, relatedItem, item(randomUUID()), 3, 5),
+            relationship(relationshipType, relatedItem, item(randomUUID()), 4, 5)
         );
         when(relationshipService.findByItemAndRelationshipType(context, relatedItem, relationshipType,
             true))
             .thenReturn(relatedItemRelationships);
+
+        when(configurationService.getArrayProperty(startsWith("relationship.places.only")))
+            .thenReturn(new String[]{"null::null::isRelatedTo::isRelatedBy"});
 
         SolrInputDocument document = new SolrInputDocument();
         solrServiceIndexRelationshipsPlugin.additionalIndex(context, indexableItem, document);
@@ -312,7 +322,7 @@ public class SolrServiceIndexRelationshipsPluginTest {
 
         RelationshipType relationshipType = relationshipType("isRelatedTo", "isRelatedBy");
         Relationship relationship =
-            relationship(relationshipType, item, relatedItem, 0, 2);
+            relationship(relationshipType, item, relatedItem, 5, 2);
 
         when(relationshipService.findByItem(context, item)).thenReturn(
             Collections.singletonList(relationship)
@@ -320,17 +330,21 @@ public class SolrServiceIndexRelationshipsPluginTest {
 
         List<Relationship> relatedItemRelationships = Arrays.asList(
             relationship,
-            relationship(relationshipType, item(randomUUID()), relatedItem, 0, 0),
-            relationship(relationshipType, item(randomUUID()), relatedItem, 0, 1),
-            relationship(relationshipType, item(randomUUID()), relatedItem, 0, 2),
-            relationship(relationshipType, item(randomUUID()), relatedItem, 0, 3)
+            relationship(relationshipType, item(randomUUID()), relatedItem, 5, 0),
+            relationship(relationshipType, item(randomUUID()), relatedItem, 5, 1),
+            relationship(relationshipType, item(randomUUID()), relatedItem, 5, 2),
+            relationship(relationshipType, item(randomUUID()), relatedItem, 5, 3)
         );
         when(relationshipService.findByItemAndRelationshipType(context, relatedItem, relationshipType,
             false))
             .thenReturn(relatedItemRelationships);
+        when(configurationService.getArrayProperty(startsWith("relationship.places.only")))
+            .thenReturn(new String[]{"null::null::isRelatedTo::isRelatedBy"});
 
         SolrInputDocument document = new SolrInputDocument();
         solrServiceIndexRelationshipsPlugin.additionalIndex(context, indexableItem, document);
+
+
 
         List<String> fieldValue = Collections.nCopies(3, relatedItemUuid.toString());
 
@@ -351,7 +365,7 @@ public class SolrServiceIndexRelationshipsPluginTest {
 
         RelationshipType relationshipType = relationshipType("isRelatedTo", "isRelatedBy");
         Relationship relationship =
-            relationship(relationshipType, relatedItem, item, 2, 0);
+            relationship(relationshipType, relatedItem, item, 2, 5);
 
         when(relationshipService.findByItem(context, item)).thenReturn(
             Collections.singletonList(relationship)
@@ -359,17 +373,22 @@ public class SolrServiceIndexRelationshipsPluginTest {
 
         List<Relationship> relatedItemRelationships = Arrays.asList(
             relationship,
-            relationship(relationshipType, relatedItem, item(randomUUID()), 0, 0),
-            relationship(relationshipType, relatedItem, item(randomUUID()), 1, 1123),
-            relationship(relationshipType, relatedItem, item(randomUUID()), 3, 3434),
-            relationship(relationshipType, relatedItem, item(randomUUID()), 4, 432)
+            relationship(relationshipType, relatedItem, item(randomUUID()), 0, 5),
+            relationship(relationshipType, relatedItem, item(randomUUID()), 1, 5),
+            relationship(relationshipType, relatedItem, item(randomUUID()), 3, 5),
+            relationship(relationshipType, relatedItem, item(randomUUID()), 4, 5)
         );
         when(relationshipService.findByItemAndRelationshipType(context, relatedItem, relationshipType,
             true))
             .thenReturn(relatedItemRelationships);
 
+        when(configurationService.getArrayProperty(startsWith("relationship.places.only")))
+            .thenReturn(new String[]{"null::null::isRelatedTo::isRelatedBy"});
+
         SolrInputDocument document = new SolrInputDocument();
         solrServiceIndexRelationshipsPlugin.additionalIndex(context, indexableItem, document);
+
+
 
         List<String> fieldValue = Collections.nCopies(3, relatedItemUuid.toString());
 

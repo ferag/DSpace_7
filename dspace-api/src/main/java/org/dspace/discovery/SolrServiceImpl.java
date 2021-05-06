@@ -1532,4 +1532,25 @@ public class SolrServiceImpl implements SearchService, IndexingService {
         }
         return queryResponse;
     }
+
+    @Override
+    public void updateRelationForItem(final String itemId, final String relationLabel,
+                                      final List<String> relatedItems) {
+
+        UpdateRequest req = new UpdateRequest();
+        SolrClient solrClient =  solrSearchCore.getSolr();
+
+        try {
+            SolrInputDocument solrInDoc = new SolrInputDocument();
+            solrInDoc.addField(SearchUtils.RESOURCE_UNIQUE_ID, "Item-" + itemId);
+            final String field = "relation." + relationLabel;
+            solrInDoc.addField(field,
+                               Collections.<String, Object>singletonMap("set", relatedItems));
+            req.add(solrInDoc);
+            solrClient.request(req);
+            solrClient.commit();
+        } catch (SolrServerException | IOException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
 }

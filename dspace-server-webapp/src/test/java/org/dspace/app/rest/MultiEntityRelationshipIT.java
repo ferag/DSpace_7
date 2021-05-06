@@ -46,7 +46,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 /**
- *
+ * The scope of this IT is to verify behaviour of relationship involving all entities on its left or right side,
+ * for example "all entities" in relation with Person.
  *
  * @author Corrado Lombardi (corrado.lombardi at 4science.it)
  *

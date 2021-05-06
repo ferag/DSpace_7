@@ -43,6 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -2505,6 +2506,110 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
             .content(getPatchContent(operations))
             .contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void createAndReturnCheckNestedMetadataFieldsTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        EntityType eType = EntityTypeBuilder.createEntityTypeBuilder(context, "Person").build();
+
+        EPerson user = EPersonBuilder.createEPerson(context)
+                                     .withNameInMetadata("Viktok", "Bruni")
+                                     .withEmail("viktor.bruni@test.com")
+                                     .withPassword(password)
+                                     .build();
+
+        parentCommunity = CommunityBuilder.createCommunity(context)
+                                          .withName("Parent Community")
+                                          .build();
+
+        Collection cvCollection = CollectionBuilder.createCollection(context, parentCommunity)
+                                                   .withName("Profiles")
+                                                   .withEntityType("CvPerson")
+                                                   .build();
+
+       Collection cvCloneCollection = CollectionBuilder.createCollection(context, parentCommunity)
+                                                       .withName("Profiles")
+                                                       .withEntityType("CvPersonClone")
+                                                       .withWorkflow("institutionWorkflow")
+                                                       .build();
+
+        Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
+                                           .withEntityType("Person")
+                                           .withName("Collection 1")
+                                           .build();
+
+        Item personItem = ItemBuilder.createItem(context, col1)
+                                     .withTitle("Person Item Title")
+                                     .withPersonEducation("High school")
+                                     .withPersonEducationStartDate("1968-09-01")
+                                     .withPersonEducationEndDate("1973-06-10")
+                                     .withEntityType("Person")
+                                     .build();
+
+        AtomicReference<UUID> idRef = new AtomicReference<UUID>();
+        try {
+            MetadataField title = metadataFieldService.findByElement(context, "dc", "title", null);
+            MetadataField education = metadataFieldService.findByElement(context, "crisrp", "education", null);
+
+            MetadataField educationStart = metadataFieldService.findByElement(context, "crisrp", "education", "start");
+            MetadataField educationEnd = metadataFieldService.findByElement(context, "crisrp", "education", "end");
+
+            List<MetadataField> nestedFields = new ArrayList<MetadataField>();
+            nestedFields.add(educationStart);
+            nestedFields.add(educationEnd);
+
+            CrisLayoutBox box1 = CrisLayoutBoxBuilder.createBuilder(context, eType, true, true)
+                                                     .withShortname("box-shortname-one")
+                                                     .withSecurity(LayoutSecurity.PUBLIC)
+                                                     .build();
+
+            CrisLayoutFieldBuilder.createMetadataField(context, title, 0, 0)
+                                  .withLabel("LABEL TITLE")
+                                  .withRendering("RENDERIGN TITLE")
+                                  .withStyle("STYLE")
+                                  .withBox(box1)
+                                  .build();
+
+            CrisLayoutBox box2 = CrisLayoutBoxBuilder.createBuilder(context, eType, true, true)
+                                                     .withShortname("box-shortname-two")
+                                                     .withSecurity(LayoutSecurity.PUBLIC)
+                                                     .build();
+
+            CrisLayoutFieldBuilder.createMetadataField(context, education, 0, 0)
+                                  .withLabel("LABEL EDUCATION")
+                                  .withRendering("RENDERIGN EDUCATION")
+                                  .withStyle("STYLE")
+                                  .withBox(box2)
+                                  .withNestedField(nestedFields)
+                                  .build();
+
+            configurationService.setProperty("researcher-profile.collection.uuid", cvCollection.getID().toString());
+            configurationService.setProperty("cti-vitae.clone.person-collection-id",
+                                              cvCloneCollection.getID().toString());
+            context.restoreAuthSystemState();
+
+            String tokenUser = getAuthToken(user.getEmail(), password);
+
+            getClient(tokenUser).perform(post("/api/cris/profiles/")
+                                 .contentType(TEXT_URI_LIST)
+                                 .content("http://localhost:8080/server/api/core/items/" + personItem.getID()))
+                                 .andExpect(status().isCreated())
+                                 .andDo(result -> idRef
+                                       .set(UUID.fromString(read(result.getResponse().getContentAsString(), "$.id"))));
+
+            getClient(tokenUser).perform(get("/api/cris/profiles/{id}/item", idRef.get()))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$.metadata",
+                                       matchMetadata("cris.owner", user.getName(), user.getID().toString(), 0)))
+                            .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.education", "High school", 0)))
+                            .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.education.start", "1968-09-01", 0)))
+                            .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.education.end", "1973-06-10", 0)))
+                            .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)))
+                            .andExpect(jsonPath("$.metadata", matchMetadata("dc.title", "Person Item Title", 0)));
+        } finally {
+            ItemBuilder.deleteItem(idRef.get());
+        }
     }
 
     private String getItemIdByProfileId(String token, String id) throws SQLException, Exception {

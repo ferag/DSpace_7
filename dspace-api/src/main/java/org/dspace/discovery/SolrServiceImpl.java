@@ -70,6 +70,7 @@ import org.dspace.discovery.configuration.DiscoveryConfigurationParameters;
 import org.dspace.discovery.configuration.DiscoveryMoreLikeThisConfiguration;
 import org.dspace.discovery.configuration.DiscoverySearchFilterFacet;
 import org.dspace.discovery.configuration.DiscoverySortConfiguration;
+import org.dspace.discovery.configuration.DiscoverySortFunctionConfiguration;
 import org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet;
 import org.dspace.discovery.indexobject.IndexableCollection;
 import org.dspace.discovery.indexobject.IndexableCommunity;
@@ -1266,6 +1267,9 @@ public class SolrServiceImpl implements SearchService, IndexingService {
 
     @Override
     public String toSortFieldIndex(String metadataField, String type) {
+        if (DiscoverySortFunctionConfiguration.SORT_FUNCTION.equals(type)) {
+            return metadataField;
+        }
         if (StringUtils.equalsIgnoreCase(DiscoverySortConfiguration.SCORE, metadataField)) {
             return DiscoverySortConfiguration.SCORE;
         } else if (StringUtils.equals(type, DiscoveryConfigurationParameters.TYPE_DATE)) {
@@ -1550,14 +1554,8 @@ public class SolrServiceImpl implements SearchService, IndexingService {
             req.add(solrInDoc);
             solrClient.request(req);
             solrClient.commit();
-        } catch (SolrServerException | IOException e) {
+        } catch (SolrServerException | SolrException | IOException e) {
             log.error(e.getMessage(), e);
-        } catch (SolrException se) {
-            if (se.getMessage().contains("missing required field")) {
-                log.error(se.getMessage(), se);
-            } else {
-                throw se;
-            }
         }
     }
 }

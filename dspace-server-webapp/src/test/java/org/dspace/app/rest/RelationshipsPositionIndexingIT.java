@@ -79,8 +79,6 @@ public class RelationshipsPositionIndexingIT extends AbstractEntityIntegrationTe
         super.setUp();
         context.turnOffAuthorisationSystem();
         final EntityType personEntity = getEntityType("Person");
-        final EntityType publicationEntity = getEntityType("Publication");
-        final EntityType patentEntity = getEntityType("Patent");
 
         parentCommunity = CommunityBuilder.createCommunity(context)
                                           .withName("Parent Community")

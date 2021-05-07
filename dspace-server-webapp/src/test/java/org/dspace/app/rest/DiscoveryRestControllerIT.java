@@ -68,7 +68,6 @@ import org.dspace.content.EntityType;
 import org.dspace.content.Item;
 import org.dspace.content.Relationship;
 import org.dspace.content.RelationshipType;
-import org.dspace.content.RelationshipType;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.content.authority.Choices;
 import org.dspace.content.authority.service.MetadataAuthorityService;
@@ -6383,8 +6382,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                                                          .withEntityType("Publication")
                                                          .build();
         final Collection projects = CollectionBuilder.createCollection(context, parentCommunity)
-                                                    .withEntityType("Project")
-                                                    .build();
+                                                     .withEntityType("Project")
+                                                     .build();
         final Collection people = CollectionBuilder.createCollection(context, parentCommunity)
                                                    .withEntityType("Person")
                                                    .build();
@@ -6392,11 +6391,11 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                                       .withEmail("test@test.com")
                                       .withPassword("password")
                                       .withCanLogin(true)
-            .withNameInMetadata("John", "Doe").build();
+                                      .withNameInMetadata("John", "Doe").build();
 
         Item author = ItemBuilder.createItem(context, people)
-                                  .withCrisOwner(owner.getFullName(), UUIDUtils.toString(owner.getID()))
-                                  .withTitle("Doe, John").build();
+                                 .withCrisOwner(owner.getFullName(), UUIDUtils.toString(owner.getID()))
+                                 .withTitle("Doe, John").build();
 
         Item publication1 = ItemBuilder.createItem(context, publications).withTitle("Publication 1")
                                        .withAuthor(author.getName(), author.getID().toString()).build();
@@ -6414,24 +6413,24 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                                                                      .createEntityTypeBuilder(
                                                                          context, "Person").build());
         final RelationshipType hiddenResearchOutput = RelationshipTypeBuilder
-                                                            .createRelationshipTypeBuilder(
-                                                                context,
-                                                                null,
-                                                                personEntity,
-                                                                "isResearchoutputsHiddenFor",
-                                                                "notDisplayingResearchoutputs",
-                                                                0, null,
-                                                                0, null).build();
-
-        final RelationshipType hiddenProject = RelationshipTypeBuilder
                                                           .createRelationshipTypeBuilder(
                                                               context,
                                                               null,
                                                               personEntity,
-                                                              "isProjectsHiddenFor",
-                                                              "notDisplayingProjects",
+                                                              "isResearchoutputsHiddenFor",
+                                                              "notDisplayingResearchoutputs",
                                                               0, null,
                                                               0, null).build();
+
+        final RelationshipType hiddenProject = RelationshipTypeBuilder
+                                                   .createRelationshipTypeBuilder(
+                                                       context,
+                                                       null,
+                                                       personEntity,
+                                                       "isProjectsHiddenFor",
+                                                       "notDisplayingProjects",
+                                                       0, null,
+                                                       0, null).build();
 
         RelationshipBuilder.createRelationshipBuilder(context, publication1, author, hiddenResearchOutput)
                            .build();
@@ -6453,14 +6452,15 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
         final String ownerToken = getAuthToken(owner.getEmail(), "password");
 
         getClient(ownerToken).perform(get("/api/discover/search/objects")
-                                .param("configuration", "RELATION.Person.researchoutputs")
-                                .param("scope", author.getID().toString()))
-                   .andExpect(status().isOk())
-                   .andExpect(jsonPath("$.configuration", is("RELATION.Person.researchoutputs")))
-                   .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.containsInAnyOrder(
-                       SearchResultMatcher.matchOnItemName("item", "items", "Publication 2"),
-                       SearchResultMatcher.matchOnItemName("item", "items", "Publication 1"))))
-                   .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(2)));
+                                          .param("configuration", "RELATION.Person.researchoutputs")
+                                          .param("scope", author.getID().toString()))
+                             .andExpect(status().isOk())
+                             .andExpect(jsonPath("$.configuration", is("RELATION.Person.researchoutputs")))
+                             .andExpect(
+                                 jsonPath("$._embedded.searchResult._embedded.objects", Matchers.containsInAnyOrder(
+                                     SearchResultMatcher.matchOnItemName("item", "items", "Publication 2"),
+                                     SearchResultMatcher.matchOnItemName("item", "items", "Publication 1"))))
+                             .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(2)));
 
 
         final String adminToken = getAuthToken(admin.getEmail(), password);
@@ -6478,6 +6478,7 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                                                   .matchOnItemName("item", "items", "Publication 1"))))
                              .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(2)));
 
+    }
 
     private Item createItem(String title, Collection collection) {
         return ItemBuilder.createItem(context, collection).withTitle(title).build();

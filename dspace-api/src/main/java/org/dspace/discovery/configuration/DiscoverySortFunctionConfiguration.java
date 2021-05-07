@@ -7,6 +7,8 @@
  */
 package org.dspace.discovery.configuration;
 
+import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -42,8 +44,18 @@ public class DiscoverySortFunctionConfiguration extends DiscoverySortFieldConfig
 
     @Override
     public String getMetadataField() {
+        return "relevance";
+    }
+
+    /**
+     * Returns the function to be used by solr to sort result
+     * @param functionArgs variable arguments to be inserted in function
+     * @return
+     */
+    public String getFunction(final Serializable... functionArgs) {
         final String args = String.join(",",
                                         Optional.ofNullable(arguments).orElse(Collections.emptyList()));
-        return function + "(" + args + ")";
+        final String result = function + "(" + args + ")";
+        return  MessageFormat.format(result, functionArgs);
     }
 }

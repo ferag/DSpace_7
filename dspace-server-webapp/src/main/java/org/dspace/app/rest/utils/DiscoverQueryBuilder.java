@@ -336,12 +336,17 @@ public class DiscoverQueryBuilder implements InitializingBean {
             .getSortFieldConfiguration(sortBy);
 
         if (sortFieldConfiguration != null) {
-            String sortField = searchService
-                .toSortFieldIndex(sortFieldConfiguration.getMetadataField(), sortFieldConfiguration.getType());
+            String sortField;
 
             if (DiscoverySortFunctionConfiguration.SORT_FUNCTION.equals(sortFieldConfiguration.getType())) {
-                sortField = MessageFormat.format(sortField, scope.getID());
+                sortField = MessageFormat.format(
+                    ((DiscoverySortFunctionConfiguration) sortFieldConfiguration).getFunction(scope.getID()),
+                    scope.getID());
+            } else {
+                sortField = searchService
+                                .toSortFieldIndex(sortFieldConfiguration.getMetadataField(), sortFieldConfiguration.getType());
             }
+
 
             if ("asc".equalsIgnoreCase(sortOrder)) {
                 queryArgs.setSortField(sortField, DiscoverQuery.SORT_ORDER.asc);

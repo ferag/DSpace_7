@@ -33,6 +33,8 @@
     <bean id="SolrServiceIndexCollectionSubmittersPlugin" class="org.dspace.discovery.SolrServiceIndexCollectionSubmittersPlugin" scope="prototype"/>
 	<bean id="solrServiceIndexCollectionAdministratorsPlugin" class="org.dspace.discovery.SolrServiceIndexCollectionAdministratorsPlugin"/>
 	<bean id="solrServiceIndexRelationshipsPlugin" class="org.dspace.discovery.SolrServiceIndexRelationshipsPlugin"/>
+    <bean id="solrServiceHiddenRelationsRestrictionPlugin" class="org.dspace.discovery.SolrServiceHiddenRelationsRestrictionPlugin"/>
+
 
     <alias name="solrServiceResourceIndexPlugin" alias="org.dspace.discovery.SolrServiceResourceRestrictionPlugin"/>
 
@@ -911,6 +913,17 @@
                 <!--DefaultSortOrder can either be desc or asc (desc is default)-->
                 <property name="sortFields">
                     <list>
+                        <bean name="sortByRelevance" class="org.dspace.discovery.configuration.DiscoverySortFunctionConfiguration">
+                            <property name="defaultSortOrder" value="desc"/>
+                            <!--sort by frequency of relation.isResearchoutputsSelectedFor. The placeholder {0} will be replaced with scope (UUID of researcher)-->
+                            <property name="function" value="termfreq"/>
+                            <property name="arguments">
+                                <list>
+                                    <value>relation.isResearchoutputsSelectedFor</value>
+                                    <value>{0}</value>
+                                </list>
+                            </property>
+                        </bean>
                         <ref bean="sortTitle" />
                     </list>
                 </property>

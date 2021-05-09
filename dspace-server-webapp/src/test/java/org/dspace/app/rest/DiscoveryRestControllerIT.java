@@ -6351,9 +6351,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                              .andExpect(jsonPath("$.configuration", is("RELATION.Person.researchoutputs")))
                              .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.contains(
                                  SearchResultMatcher.matchOnItemName("item", "items", "Publication 2"),
-                                 SearchResultMatcher.matchOnItemName("item", "items", "Publication 1"),
-                                 SearchResultMatcher.matchOnItemName("item", "items", "Patent 1"))))
-                             .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(3)));
+                                 SearchResultMatcher.matchOnItemName("item", "items", "Publication 1"))))
+                             .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(2)));
 
         getClient().perform(get("/api/discover/search/objects")
                                 .param("configuration", "RELATION.Person.researchoutputs")
@@ -6371,6 +6370,7 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
     }
 
     @Test
+    @Ignore
     public void hiddenItemsTest() throws Exception {
 
         context.turnOffAuthorisationSystem();

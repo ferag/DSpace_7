@@ -28,6 +28,7 @@ public class DiscoverySortFunctionConfiguration extends DiscoverySortFieldConfig
     public static final String SORT_FUNCTION = "sort_function";
     private String function;
     private List<String> arguments;
+    private String id;
 
     public void setFunction(final String function) {
         this.function = function;
@@ -44,7 +45,11 @@ public class DiscoverySortFunctionConfiguration extends DiscoverySortFieldConfig
 
     @Override
     public String getMetadataField() {
-        return "relevance";
+        return id;
+    }
+
+    public void setId(final String id) {
+        this.id = id;
     }
 
     /**

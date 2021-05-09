@@ -25,6 +25,7 @@ import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
 import org.hamcrest.Matchers;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -32,6 +33,7 @@ import org.junit.Test;
  *
  * @author Mykhaylo Boychuk - (mykhaylo.boychuk at 4science.it)
  */
+@Ignore
 public class SunatUpdateIT extends AbstractControllerIntegrationTest {
 
     @Test

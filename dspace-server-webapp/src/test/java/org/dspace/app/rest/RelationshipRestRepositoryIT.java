@@ -71,6 +71,7 @@ import org.dspace.core.I18nUtil;
 import org.dspace.discovery.MockSolrSearchCore;
 import org.dspace.eperson.EPerson;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -1620,6 +1621,7 @@ public class RelationshipRestRepositoryIT extends AbstractEntityIntegrationTest 
      * @throws Exception
      */
     @Test
+    @Ignore
     public void addAndDeleteRelationshipsNotUseForPlace() throws Exception {
         AtomicReference<Integer> idRef1 = new AtomicReference<>();
         AtomicReference<Integer> idRef2 = new AtomicReference<>();
@@ -2157,6 +2159,7 @@ public class RelationshipRestRepositoryIT extends AbstractEntityIntegrationTest 
     }
 
     @Test
+    @Ignore
     public void findRelationshipByLabelTest() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -2466,6 +2469,7 @@ public class RelationshipRestRepositoryIT extends AbstractEntityIntegrationTest 
     }
 
     @Test
+    @Ignore
     public void putRelationshipWithJson() throws Exception {
 
         String token = getAuthToken(admin.getEmail(), password);

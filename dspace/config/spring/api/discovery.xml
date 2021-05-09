@@ -2122,10 +2122,11 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <bean name="sortByRelevance" class="org.dspace.discovery.configuration.DiscoverySortFunctionConfiguration">
+                        <bean name="sortByAuthorSelection" class="org.dspace.discovery.configuration.DiscoverySortFunctionConfiguration">
                             <property name="defaultSortOrder" value="desc"/>
                             <!--sort by frequency of relation.isResearchoutputsSelectedFor. The placeholder {0} will be replaced with scope (UUID of researcher)-->
                             <property name="function" value="termfreq"/>
+                            <property name="id" value="authorselection"/>
                             <property name="arguments">
                                 <list>
                                     <value>relation.isResearchoutputsSelectedFor</value>
@@ -2303,10 +2304,11 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <bean name="sortByRelevance" class="org.dspace.discovery.configuration.DiscoverySortFunctionConfiguration">
+                        <bean name="sortByProjectAuthorSelection" class="org.dspace.discovery.configuration.DiscoverySortFunctionConfiguration">
                             <property name="defaultSortOrder" value="desc"/>
                             <!--sort by frequency of relation.isProjectsSelectedFor. The placeholder {0} will be replaced with scope (UUID of researcher)-->
                             <property name="function" value="termfreq"/>
+                            <property name="id" value="authorselection"/>
                             <property name="arguments">
                                 <list>
                                     <value>relation.isProjectsSelectedFor</value>
@@ -2464,10 +2466,11 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <bean name="sortByRelevance" class="org.dspace.discovery.configuration.DiscoverySortFunctionConfiguration">
+                        <bean name="sortByPantentAuthorSelection" class="org.dspace.discovery.configuration.DiscoverySortFunctionConfiguration">
                             <property name="defaultSortOrder" value="desc"/>
                             <!--sort by frequency of relation.isPatentsSelectedFor. The placeholder {0} will be replaced with scope (UUID of researcher)-->
                             <property name="function" value="termfreq"/>
+                            <property name="id" value="authorselection"/>
                             <property name="arguments">
                                 <list>
                                     <value>relation.isPatentsSelectedFor</value>
@@ -2611,10 +2614,11 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <bean name="sortByRelevance" class="org.dspace.discovery.configuration.DiscoverySortFunctionConfiguration">
+                        <bean name="sortByEquipmetSelection" class="org.dspace.discovery.configuration.DiscoverySortFunctionConfiguration">
                             <property name="defaultSortOrder" value="desc"/>
                             <!--sort by frequency of relation.isEquipmentsSelectedFor. The placeholder {0} will be replaced with scope (UUID of researcher)-->
                             <property name="function" value="termfreq"/>
+                            <property name="id" value="ownerselection"/>
                             <property name="arguments">
                                 <list>
                                     <value>relation.isEquipmentsSelectedFor</value>

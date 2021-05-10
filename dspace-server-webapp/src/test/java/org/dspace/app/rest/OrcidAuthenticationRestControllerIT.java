@@ -55,6 +55,7 @@ import org.dspace.services.ConfigurationService;
 import org.dspace.util.UUIDUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.orcid.jaxb.model.v3.release.record.Email;
 import org.orcid.jaxb.model.v3.release.record.Emails;
@@ -393,6 +394,7 @@ public class OrcidAuthenticationRestControllerIT extends AbstractControllerInteg
     }
 
     @Test
+    @Ignore
     public void testLoggedInEPersonWithProfile() throws Exception {
 
         when(orcidClientMock.getAccessToken(CODE)).thenReturn(buildOrcidTokenResponse(ORCID, ACCESS_TOKEN));

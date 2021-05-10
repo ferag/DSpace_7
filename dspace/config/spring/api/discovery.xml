@@ -1021,7 +1021,18 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <ref bean="sortScore" />
+                        <bean name="sortByAuthorSelection" class="org.dspace.discovery.configuration.DiscoverySortFunctionConfiguration">
+                            <property name="defaultSortOrder" value="desc"/>
+                            <!--sort by frequency of relation.isResearchoutputsSelectedFor. The placeholder {0} will be replaced with scope (UUID of researcher)-->
+                            <property name="function" value="termfreq"/>
+                            <property name="id" value="authorselection"/>
+                            <property name="arguments">
+                                <list>
+                                    <value>relation.isResearchoutputsSelectedFor</value>
+                                    <value>{0}</value>
+                                </list>
+                            </property>
+                        </bean>
                         <ref bean="sortTitle" />
                     </list>
                 </property>
@@ -1195,7 +1206,9 @@
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
-                    <list/>
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
                 </property>
             </bean>
         </property>
@@ -1235,7 +1248,9 @@
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
-                    <list/>
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
                 </property>
             </bean>
         </property>
@@ -2122,7 +2137,18 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <ref bean="sortScore"/>
+                        <bean name="sortByAuthorSelection" class="org.dspace.discovery.configuration.DiscoverySortFunctionConfiguration">
+                            <property name="defaultSortOrder" value="desc"/>
+                            <!--sort by frequency of relation.isResearchoutputsSelectedFor. The placeholder {0} will be replaced with scope (UUID of researcher)-->
+                            <property name="function" value="termfreq"/>
+                            <property name="id" value="authorselection"/>
+                            <property name="arguments">
+                                <list>
+                                    <value>relation.isResearchoutputsSelectedFor</value>
+                                    <value>{0}</value>
+                                </list>
+                            </property>
+                        </bean>
                         <ref bean="sortDateAccessioned" />
                     </list>
                 </property>
@@ -2293,7 +2319,18 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <ref bean="sortScore"/>
+                        <bean name="sortByProjectAuthorSelection" class="org.dspace.discovery.configuration.DiscoverySortFunctionConfiguration">
+                            <property name="defaultSortOrder" value="desc"/>
+                            <!--sort by frequency of relation.isProjectsSelectedFor. The placeholder {0} will be replaced with scope (UUID of researcher)-->
+                            <property name="function" value="termfreq"/>
+                            <property name="id" value="authorselection"/>
+                            <property name="arguments">
+                                <list>
+                                    <value>relation.isProjectsSelectedFor</value>
+                                    <value>{0}</value>
+                                </list>
+                            </property>
+                        </bean>
                         <ref bean="sortTitle" />
                     </list>
                 </property>
@@ -2444,7 +2481,18 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <ref bean="sortScore"/>
+                        <bean name="sortByPantentAuthorSelection" class="org.dspace.discovery.configuration.DiscoverySortFunctionConfiguration">
+                            <property name="defaultSortOrder" value="desc"/>
+                            <!--sort by frequency of relation.isPatentsSelectedFor. The placeholder {0} will be replaced with scope (UUID of researcher)-->
+                            <property name="function" value="termfreq"/>
+                            <property name="id" value="authorselection"/>
+                            <property name="arguments">
+                                <list>
+                                    <value>relation.isPatentsSelectedFor</value>
+                                    <value>{0}</value>
+                                </list>
+                            </property>
+                        </bean>
                         <ref bean="sortTitle" />
                     </list>
                 </property>
@@ -2581,7 +2629,18 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <ref bean="sortScore"/>
+                        <bean name="sortByEquipmetSelection" class="org.dspace.discovery.configuration.DiscoverySortFunctionConfiguration">
+                            <property name="defaultSortOrder" value="desc"/>
+                            <!--sort by frequency of relation.isEquipmentsSelectedFor. The placeholder {0} will be replaced with scope (UUID of researcher)-->
+                            <property name="function" value="termfreq"/>
+                            <property name="id" value="ownerselection"/>
+                            <property name="arguments">
+                                <list>
+                                    <value>relation.isEquipmentsSelectedFor</value>
+                                    <value>{0}</value>
+                                </list>
+                            </property>
+                        </bean>
                         <ref bean="sortTitle" />
                     </list>
                 </property>
@@ -3561,7 +3620,9 @@
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
-                    <list/>
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
                 </property>
             </bean>
         </property>
@@ -3592,7 +3653,9 @@
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
-                    <list/>
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
                 </property>
             </bean>
         </property>
@@ -3623,7 +3686,9 @@
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
-                    <list/>
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
                 </property>
             </bean>
         </property>
@@ -3654,7 +3719,9 @@
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
-                    <list/>
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
                 </property>
             </bean>
         </property>
@@ -3685,7 +3752,9 @@
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
-                    <list/>
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
                 </property>
             </bean>
         </property>
@@ -3716,7 +3785,9 @@
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
-                    <list/>
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
                 </property>
             </bean>
         </property>
@@ -3747,7 +3818,9 @@
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
-                    <list/>
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
                 </property>
             </bean>
         </property>
@@ -3778,7 +3851,9 @@
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
-                    <list/>
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
                 </property>
             </bean>
         </property>

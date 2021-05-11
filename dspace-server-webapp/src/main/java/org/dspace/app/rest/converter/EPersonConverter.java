@@ -10,7 +10,6 @@ package org.dspace.app.rest.converter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedMap;
 
@@ -66,7 +65,7 @@ public class EPersonConverter extends DSpaceObjectConverter<EPerson, org.dspace.
         eperson.setSelfRegistered(obj.getSelfRegistered());
         eperson.setEmail(obj.getEmail());
 
-        addDefaultGroup(eperson, projection);
+        addDefaultGroup(obj, eperson);
         return eperson;
     }
 
@@ -80,26 +79,29 @@ public class EPersonConverter extends DSpaceObjectConverter<EPerson, org.dspace.
         return EPerson.class;
     }
 
-    private void addDefaultGroup(EPersonRest eperson, Projection projection) {
-        final String defaultGroup = configurationService.getProperty("eperson.group.default");
-        if (StringUtils.isBlank(defaultGroup)) {
-            return;
-        }
+    private void addDefaultGroup(final EPerson source, EPersonRest converted) {
         Optional<Context> context = Optional.ofNullable(requestService.getCurrentRequest())
             .map(cr -> ContextUtil.obtainContext(cr.getServletRequest()));
+
         if (context.isEmpty()) {
             return;
         }
+
+//        final String defaultGroup = configurationService.getProperty("eperson.group.default");
+//        if (StringUtils.isBlank(defaultGroup)) {
+//            return;
+//        }
         try {
-            Group group = groupService.find(context.get(), UUIDUtils.fromString(defaultGroup));
-            if (Objects.isNull(group)) {
+            Optional<Group> group = findGroup(context.get(), source);
+//            Group group = groupService.find(context.get(), UUIDUtils.fromString(defaultGroup));
+            if (group.isEmpty()) {
                 return;
             }
             MetadataValueDTO metadataValue = new MetadataValueDTO("perucris", "eperson", "role", null,
-                group.getNameWithoutTypePrefix(), UUIDUtils.toString(group.getID()), Choices.CF_ACCEPTED);
+                group.get().getNameWithoutTypePrefix(), UUIDUtils.toString(group.get().getID()), Choices.CF_ACCEPTED);
 
 
-            SortedMap<String, List<MetadataValueRest>> metadataMap = eperson.getMetadata().getMap();
+            SortedMap<String, List<MetadataValueRest>> metadataMap = converted.getMetadata().getMap();
             metadataMap.putIfAbsent("perucris.eperson.role", new ArrayList<>());
 
             MetadataValueRest metadataValueRest = metadataValueConverter.convert(metadataValue);
@@ -111,6 +113,17 @@ public class EPersonConverter extends DSpaceObjectConverter<EPerson, org.dspace.
         } catch (SQLException e) {
             LOGGER.warn("Error while finding default group: {}", e.getMessage());
         }
+    }
+
+    private Optional<Group> findGroup(final Context context, final EPerson ePerson) throws SQLException {
+        if (authorizeService.isAdmin(context, ePerson)) {
+            return Optional.ofNullable(groupService.findByName(context, Group.ADMIN));
+        }
+        final String defaultGroup = configurationService.getProperty("eperson.group.default");
+        if (StringUtils.isBlank(defaultGroup)) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(groupService.find(context, UUIDUtils.fromString(defaultGroup)));
     }
 
 }

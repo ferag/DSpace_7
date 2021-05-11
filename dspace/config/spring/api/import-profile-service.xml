@@ -14,6 +14,7 @@
                 <ref bean="dspaceAfterImportAction"/>
                 <ref bean="profileItemCloningAction"/>
                 <ref bean="setOrcidAndDniAction"/>
+                <ref bean="updateSolrDocuments"/>
             </list>
         </property>
         <property name="importProfileProviders">
@@ -90,6 +91,15 @@
     
     <bean id="profileItemCloningAction" class="org.dspace.importer.external.dspace.ProfileItemCloningAction" />
     <bean id="setOrcidAndDniAction" class="org.dspace.importer.external.dspace.SetOrcidAndDniAction" />
+    <bean id="updateSolrDocuments" class="org.dspace.importer.external.dspace.UpdateRelatedEntitiesAction">
+        <property name="discoveryKeys">
+			<util:list value-type="java.lang.String">
+			    <value>RELATION.Person.projects</value>
+			    <value>RELATION.Person.patents</value>
+			    <value>RELATION.Person.researchoutputs</value>
+			</util:list>
+       </property>
+    </bean>
 
     <bean id="dspaceItemRelationshipService" class="org.dspace.importer.external.dspace.DSpaceItemRelationshipService">
 

@@ -605,6 +605,8 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
 
         Group defaultRole = GroupBuilder.createGroup(context).withName("Default role").build();
 
+        Group adminGroup = groupService.findByName(context, Group.ADMIN);
+
         String existingRoleId = UUID.randomUUID().toString();
 
         configurationService.setProperty("eperson.group.default", defaultRole.getID());
@@ -616,10 +618,9 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
                                          .param("email", admin.getEmail()))
                             .andExpect(status().isOk())
                             .andExpect(content().contentType(contentType))
-                            .andExpect(jsonPath("$.metadata", matchMetadata("perucris.eperson.role", "Administrators",
-                                                                            defaultRole.getID().toString(), 1)))
-                            .andExpect(jsonPath("$.metadata", matchMetadata("perucris.eperson.role", "Existing role",
-                                                                            existingRoleId, 0)));
+                            .andExpect(jsonPath("$.metadata", matchMetadata("perucris.eperson.role",
+                                                                            adminGroup.getName(),
+                                                                            adminGroup.getID().toString(), 0)));
 
         configurationService.setProperty("eperson.group.default", "");
     }

@@ -8,6 +8,7 @@
 package org.dspace.perucris.externalservices;
 
 import java.sql.SQLException;
+import java.util.UUID;
 
 import org.apache.commons.cli.Options;
 import org.dspace.authorize.service.AuthorizeService;
@@ -57,6 +58,17 @@ public class UpdateItemWithExternalSourceScriptConfiguration<T extends UpdateIte
             options.getOption("i").setType(String.class);
             options.getOption("i").setRequired(false);
 
+            options.addOption("b", "lastCompleted", true, "only updates items from the last completed process");
+            options.getOption("b").setType(Boolean.class);
+            options.getOption("b").setRequired(false);
+
+            options.addOption("l", "limit", true, "the limit of items to update");
+            options.getOption("l").setType(Integer.class);
+            options.getOption("l").setRequired(false);
+
+            options.addOption("u", "itemUuid", true, "update only the item passed on this param");
+            options.getOption("u").setType(UUID.class);
+            options.getOption("u").setRequired(false);
 
             super.options = options;
         }

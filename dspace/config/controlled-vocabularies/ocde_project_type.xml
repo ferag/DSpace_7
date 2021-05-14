@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <node id="oecd_pt" label="oecd_project_type">
     <isComposedBy>
-        <node id="https://purl.org/pe-repo/ocde/tipoProyecto#investigacionYDesarrolloExperimental"
+        <node id="investigacionYDesarrolloExperimental"
               label="Investigación y desarrollo experimental">
             <isComposedBy>
                 <node
-                        id="https://purl.org/pe-repo/ocde/tipoProyecto#investigacionBasica"
+                        id="investigacionBasica"
                         label="Investigación básica">
 
                 </node>
                 <node
-                        id="https://purl.org/pe-repo/ocde/tipoProyecto#investigacionAplicada"
+                        id="investigacionAplicada"
                         label="Investigación aplicada">
 
                 </node>
                 <node
-                        id="https://purl.org/pe-repo/ocde/tipoProyecto#desarrolloExperimental"
+                        id="desarrolloExperimental"
                         label="Desarrollo experimental">
 
                 </node>
             </isComposedBy>
         </node>
-      <node id="https://purl.org/pe-repo/ocde/tipoProyecto#innovacionTecnologica"
+      <node id="innovacionTecnologica"
             label="Innovación tecnológica">
         <isComposedBy>
           <node
-                  id="https://purl.org/pe-repo/ocde/tipoProyecto#innovacionDeProducto"
+                  id="innovacionDeProducto"
                   label="Innovación de producto">
 
           </node>
           <node
-                  id="https://purl.org/pe-repo/ocde/tipoProyecto#innovacionDeProcesoNegocio"
+                  id="innovacionDeProcesoNegocio"
                   label="Innovación de procesos de negocio">
 
           </node>

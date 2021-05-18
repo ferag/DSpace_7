@@ -13,11 +13,12 @@ import com.ibm.icu.text.CharsetDetector;
 import com.ibm.icu.text.CharsetMatch;
 import com.ibm.icu.text.Normalizer;
 import org.dspace.content.DSpaceObject;
+import org.dspace.core.Context;
 
 public class TitleWithDigitSignature extends MD5ValueSignature {
 
     @Override
-    protected String normalize(DSpaceObject item, String value) {
+    protected String normalize(DSpaceObject item, Context context, String value) {
         if (value != null) {
 
             String norm = Normalizer.normalize(value, Normalizer.NFD);

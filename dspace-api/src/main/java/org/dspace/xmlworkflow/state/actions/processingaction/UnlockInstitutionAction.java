@@ -307,7 +307,7 @@ public class UnlockInstitutionAction extends ProcessingAction {
         }
     }
 
-    public String getMyDSpaceLink() {
+    private String getMyDSpaceLink() {
         return configurationService.getProperty("dspace.ui.url") + "/mydspace";
     }
 

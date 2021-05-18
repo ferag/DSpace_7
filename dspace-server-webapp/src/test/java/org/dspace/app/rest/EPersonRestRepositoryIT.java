@@ -600,6 +600,32 @@ public class EPersonRestRepositoryIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    public void findAdministratorByEmailWithAdminRoleAndAppendedToExistingOnes() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Group defaultRole = GroupBuilder.createGroup(context).withName("Default role").build();
+
+        Group adminGroup = groupService.findByName(context, Group.ADMIN);
+
+        String existingRoleId = UUID.randomUUID().toString();
+
+        configurationService.setProperty("eperson.group.default", defaultRole.getID());
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        getClient(authToken).perform(get("/api/eperson/epersons/search/byEmail")
+                                         .param("email", admin.getEmail()))
+                            .andExpect(status().isOk())
+                            .andExpect(content().contentType(contentType))
+                            .andExpect(jsonPath("$.metadata", matchMetadata("perucris.eperson.role",
+                                                                            adminGroup.getName(),
+                                                                            adminGroup.getID().toString(), 0)));
+
+        configurationService.setProperty("eperson.group.default", "");
+    }
+
+    @Test
     public void findByEmailWithDefaultRoleDisabled() throws Exception {
         context.turnOffAuthorisationSystem();
 

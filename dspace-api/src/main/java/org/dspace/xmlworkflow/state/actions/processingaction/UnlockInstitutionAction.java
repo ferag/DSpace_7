@@ -18,17 +18,30 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.dspace.app.deduplication.utils.DedupUtils;
 import org.dspace.app.deduplication.utils.DuplicateItemInfo;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.content.Collection;
 import org.dspace.content.Item;
+import org.dspace.content.MetadataSchemaEnum;
+import org.dspace.content.MetadataValue;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.core.Context;
+import org.dspace.core.Context.Mode;
+import org.dspace.core.Email;
+import org.dspace.core.I18nUtil;
+import org.dspace.core.LogManager;
 import org.dspace.discovery.SearchServiceException;
+import org.dspace.eperson.EPerson;
+import org.dspace.services.ConfigurationService;
 import org.dspace.versioning.ItemCorrectionService;
 import org.dspace.workflow.WorkflowException;
 import org.dspace.xmlworkflow.ConcytecFeedback;
@@ -42,6 +55,8 @@ import org.dspace.xmlworkflow.state.actions.ActionResult;
 import org.dspace.xmlworkflow.state.actions.WorkflowActionConfig;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.dspace.xmlworkflow.storedcomponents.service.XmlWorkflowItemService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -50,6 +65,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  */
 public class UnlockInstitutionAction extends ProcessingAction {
+
+    private static final Logger log = LoggerFactory.getLogger(UnlockInstitutionAction.class);
 
     @Autowired
     private XmlWorkflowItemService workflowItemService;
@@ -71,6 +88,9 @@ public class UnlockInstitutionAction extends ProcessingAction {
 
     @Autowired
     private DedupUtils dedupUtils;
+
+    @Autowired
+    private ConfigurationService configurationService;
 
     @Override
     public void activate(Context c, XmlWorkflowItem wf) {
@@ -244,15 +264,51 @@ public class UnlockInstitutionAction extends ProcessingAction {
     }
 
     private ActionResult finalizeItemCreation(Context context, XmlWorkflowItem workflowItem,
-        ConcytecFeedback concytecFeedback) throws SQLException, AuthorizeException, WorkflowException {
+        ConcytecFeedback concytecFeedback) throws SQLException, AuthorizeException, WorkflowException, IOException {
 
         if (concytecFeedback == ConcytecFeedback.REJECT) {
             Item item = installItemService.installItem(context, workflowItem);
             itemService.withdraw(context, item);
+            sendEmail(context, item, workflowItem.getCollection());
             return getCancelActionResult();
         }
 
         return getCompleteActionResult();
+    }
+
+    private void sendEmail(Context context, Item item, Collection collection) throws IOException, SQLException {
+        try {
+            EPerson submitter = item.getSubmitter();
+            if (Objects.nonNull(submitter)) {
+                Locale supportedLocale = I18nUtil.getEPersonLocale(submitter);
+                Email email = Email.getEmail(I18nUtil.getEmailFilename(supportedLocale, "submit_reject_concytec"));
+
+                List<MetadataValue> titles = itemService
+                    .getMetadata(item, MetadataSchemaEnum.DC.getName(), "title", null, Item.ANY);
+                String title = "";
+                try {
+                    title = I18nUtil.getMessage("org.dspace.workflow.WorkflowManager.untitled");
+                } catch (MissingResourceException e) {
+                    title = "Untitled";
+                }
+                if (titles.size() > 0) {
+                    title = titles.iterator().next().getValue();
+                }
+                email.addRecipient(submitter.getEmail());
+                email.addArgument(title);
+                email.addArgument(collection.getName());
+                email.addArgument(getMyDSpaceLink());
+
+                email.send();
+            }
+        } catch (MessagingException e) {
+            log.warn(LogManager.getHeader(context, "finalizeItemCreation", "cannot email user" + " item_id="
+                     + item.getID()));
+        }
+    }
+
+    private String getMyDSpaceLink() {
+        return configurationService.getProperty("dspace.ui.url") + "/mydspace";
     }
 
     private ActionResult finalizeItemWithdraw(Context context, XmlWorkflowItem workflowItem, Item itemToWithdraw,

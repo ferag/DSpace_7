@@ -22,6 +22,7 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.ResourcePolicy;
@@ -628,6 +629,9 @@ public class XmlWorkflowServiceImpl implements XmlWorkflowService {
     protected void notifyOfArchive(Context context, Item item, Collection coll)
         throws SQLException, IOException {
         try {
+            if (isCvEntityClone(item)) {
+                return;
+            }
             // Get submitter
             EPerson ep = item.getSubmitter();
             // send the notification to the submitter unless the submitter eperson has been deleted
@@ -664,6 +668,15 @@ public class XmlWorkflowServiceImpl implements XmlWorkflowService {
                     "cannot email user" + " item_id=" + item.getID()));
         }
     }
+
+    private boolean isCvEntityClone(Item item) {
+        String itemRelationshipType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
+        if (StringUtils.isBlank(itemRelationshipType)) {
+            return true;
+        }
+        return (itemRelationshipType.startsWith("Cv") && itemRelationshipType.endsWith("Clone"));
+    }
+
 
     /***********************************
      * WORKFLOW TASK MANAGEMENT

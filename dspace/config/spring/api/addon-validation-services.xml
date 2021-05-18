@@ -53,4 +53,14 @@
         <property name="filter" ref="peruvian-cv-person-has-ubigeo_filter"/>
     </bean>
 
+    <bean name="projectWithOaPolicyUrl" class="org.dspace.validation.LogicalStatementValidator">
+    <property name="errorKey" value="error.validation.mandateUrlRequired"/>
+    <property name="metadataFields">
+        <list>
+            <value>oairecerif.oamandate.url</value>
+        </list>
+    </property>
+    <property name="filter" ref="project-without-oa-mandate-requires-policy-url"/>
+</bean>
+
 </beans>

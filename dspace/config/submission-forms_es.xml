@@ -7885,7 +7885,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>OA Política URL</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>La política de acceso abierto que se aplica al proyecto</required>
+          <required />
           <hint />
         </field>
       </row>
@@ -8200,7 +8200,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>OA Política URL</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>La política de acceso abierto que se aplica al proyecto</required>
+          <required />
           <hint />
         </field>
       </row>
@@ -8515,7 +8515,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>OA Política URL</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>La política de acceso abierto que se aplica al proyecto</required>
+          <required />
           <hint />
         </field>
       </row>

@@ -86,14 +86,8 @@ public class EPersonConverter extends DSpaceObjectConverter<EPerson, org.dspace.
         if (context.isEmpty()) {
             return;
         }
-
-//        final String defaultGroup = configurationService.getProperty("eperson.group.default");
-//        if (StringUtils.isBlank(defaultGroup)) {
-//            return;
-//        }
         try {
             Optional<Group> group = findGroup(context.get(), source);
-//            Group group = groupService.find(context.get(), UUIDUtils.fromString(defaultGroup));
             if (group.isEmpty()) {
                 return;
             }

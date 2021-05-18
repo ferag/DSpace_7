@@ -35,7 +35,6 @@ import org.dspace.content.MetadataSchemaEnum;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.core.Context;
-import org.dspace.core.Context.Mode;
 import org.dspace.core.Email;
 import org.dspace.core.I18nUtil;
 import org.dspace.core.LogManager;

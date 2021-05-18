@@ -112,13 +112,28 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
+    <step-definition id="institution-project_openaire_id" mandatory="false">
+      <heading>submit.progressbar.describe.institution-project_openaire_id</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
     <step-definition id="cv-project" mandatory="true">
       <heading>submit.progressbar.describe.cv-project</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
+    <step-definition id="cv-project_openaire_id" mandatory="false">
+      <heading>submit.progressbar.describe.cv-project_openaire_id</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
     <step-definition id="project" mandatory="true">
       <heading>submit.progressbar.describe.project</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="project_openaire_id" mandatory="false">
+      <heading>submit.progressbar.describe.project_openaire_id</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
@@ -257,6 +272,11 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
+    <step-definition id="notification-form" mandatory="true">
+      <heading>submit.progressbar.describe.notification-form</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
     <step-definition id="extraction" mandatory="false">
       <heading>submit.progressbar.extraction</heading>
       <processing-class>org.dspace.app.rest.submit.step.ExtractMetadataStep</processing-class>
@@ -268,13 +288,6 @@
       <processing-class>org.dspace.app.rest.submit.step.DetectPotentialDuplicateStep</processing-class>
       <type>detect-duplicate</type>
     </step-definition>
-
-    <step-definition id="notification-form" mandatory="true">
-      <heading>submit.progressbar.describe.notification-form</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
-
   </step-definitions>
   <submission-definitions>
     <submission-process name="institution-product">
@@ -331,32 +344,38 @@
     </submission-process>
     <submission-process name="institution-project-edit">
       <step id="institution-project" />
+      <step id="institution-project_openaire_id" />
       <step id="upload" />
     </submission-process>
     <submission-process name="institution-project">
       <step id="collection" />
       <step id="institution-project" />
+      <step id="institution-project_openaire_id" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="cvproject-edit">
       <step id="cv-project" />
+      <step id="cv-project_openaire_id" />
       <step id="upload" />
     </submission-process>
     <submission-process name="cvproject">
       <step id="collection" />
       <step id="cv-project" />
+      <step id="cv-project_openaire_id" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="project-edit">
       <step id="project" />
+      <step id="project_openaire_id" />
       <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="project">
       <step id="collection" />
       <step id="project" />
+      <step id="project_openaire_id" />
       <step id="detect-duplicate" />
       <step id="upload" />
       <step id="license" />
@@ -469,6 +488,10 @@
     <submission-process name="cvperson-edit-qualification">
       <step id="cv-person-edit-qualification" />
     </submission-process>
+    <submission-process name="notification">
+      <step id="collection" />
+      <step id="notification-form" />
+    </submission-process>
     <submission-process name="event">
       <step id="collection" />
       <step id="event" />
@@ -564,12 +587,6 @@
       <step id="upload" />
       <step id="license" />
     </submission-process>
-
-    <submission-process name="notification">
-      <step id="collection" />
-      <step id="notification-form" />
-    </submission-process>
-
   </submission-definitions>
 </item-submission>
 

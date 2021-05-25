@@ -62,4 +62,6 @@
 
     <bean id="crisMetricsServiceFactory" class="org.dspace.externalservices.scopus.factory.CrisMetricsServiceFactoryImpl"/>
 
+    <bean id="elasticsearchIndexQueueServiceFactory" class="org.dspace.app.elasticsearch.factory.ElasticsearchIndexQueueServiceFactoryImpl"/>
+
 </beans>

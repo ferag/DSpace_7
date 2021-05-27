@@ -8,7 +8,7 @@
 package org.dspace.app.elasticsearch.service.impl;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.dspace.app.elasticsearch.ElasticsearchIndexQueue;
@@ -16,7 +16,6 @@ import org.dspace.app.elasticsearch.dao.ElasticsearchIndexQueueDAO;
 import org.dspace.app.elasticsearch.service.ElasticsearchIndexQueueService;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.service.AuthorizeService;
-import org.dspace.content.Item;
 import org.dspace.core.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -32,14 +31,14 @@ public class ElasticsearchIndexQueueServiceImpl implements ElasticsearchIndexQue
     private ElasticsearchIndexQueueDAO elasticsearchIndexQueueDAO;
 
     @Override
-    public ElasticsearchIndexQueue find(Context context, int id) throws SQLException {
-        return elasticsearchIndexQueueDAO.findByID(context, ElasticsearchIndexQueue.class, id);
+    public ElasticsearchIndexQueue find(Context context, UUID uuid) throws SQLException {
+        return elasticsearchIndexQueueDAO.findByID(context, ElasticsearchIndexQueue.class, uuid);
     }
 
     @Override
-    public ElasticsearchIndexQueue create(Context context, Item item, Integer operationType) throws SQLException {
+    public ElasticsearchIndexQueue create(Context context, UUID itemUuid, Integer operationType) throws SQLException {
         ElasticsearchIndexQueue elasticsearchIndexQueue = new ElasticsearchIndexQueue();
-        elasticsearchIndexQueue.setItem(item);
+        elasticsearchIndexQueue.setId(itemUuid);
         elasticsearchIndexQueue.setOperationType(operationType);
         elasticsearchIndexQueue.setInsertionDate(new Date());
         return elasticsearchIndexQueueDAO.create(context, elasticsearchIndexQueue);
@@ -56,8 +55,14 @@ public class ElasticsearchIndexQueueServiceImpl implements ElasticsearchIndexQue
     }
 
     @Override
-    public List<ElasticsearchIndexQueue> findByItemId(Context context, UUID itemId) throws SQLException {
-        return elasticsearchIndexQueueDAO.findByItemId(context, itemId, -1, 0);
+    public void update(Context context, ElasticsearchIndexQueue elasticsearchIndexQueue)
+            throws SQLException, AuthorizeException {
+        if (!authorizeService.isAdmin(context)) {
+            throw new AuthorizeException("You must be an admin to update a ElasticsearchIndexQueue");
+        }
+        if (Objects.nonNull(elasticsearchIndexQueue)) {
+            elasticsearchIndexQueueDAO.save(context, elasticsearchIndexQueue);
+        }
     }
 
 }

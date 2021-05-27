@@ -7,19 +7,14 @@
  */
 package org.dspace.app.elasticsearch;
 import java.util.Date;
+import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.dspace.content.Item;
 import org.dspace.core.ReloadableEntity;
 
 /**
@@ -27,44 +22,30 @@ import org.dspace.core.ReloadableEntity;
  */
 @Entity
 @Table(name = "elasticsearch_index_queue")
-public class ElasticsearchIndexQueue implements ReloadableEntity<Integer> {
+public class ElasticsearchIndexQueue implements ReloadableEntity<UUID> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "elasticsearch_queue_id_seq")
-    @SequenceGenerator(name = "elasticsearch_queue_id_seq",
-                       sequenceName = "elasticsearch_queue_id_seq", allocationSize = 1)
-    private Integer id;
-
-    @ManyToOne
-    @JoinColumn(name = "item_id")
-    private Item item;
+    @Column(name = "item_uuid")
+    private UUID id;
 
     @Column(name = "operation_type")
     private Integer operationType;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "current_timestamp")
+    @Column(name = "timestamp_insertion_date")
     private Date insertionDate;
 
     @Override
-    public Integer getID() {
+    public UUID getID() {
         return getId();
     }
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
-    }
-
-    public Item getItem() {
-        return item;
-    }
-
-    public void setItem(Item item) {
-        this.item = item;
     }
 
     public Integer getOperationType() {

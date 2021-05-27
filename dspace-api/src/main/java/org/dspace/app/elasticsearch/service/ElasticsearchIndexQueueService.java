@@ -7,12 +7,10 @@
  */
 package org.dspace.app.elasticsearch.service;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.UUID;
 
 import org.dspace.app.elasticsearch.ElasticsearchIndexQueue;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.content.Item;
 import org.dspace.core.Context;
 
 /**
@@ -30,7 +28,7 @@ public interface ElasticsearchIndexQueueService  {
      * @return         the ElasticsearchIndexQueue format, or null if the ID is invalid.
      * @throws         SQLException if database error
      */
-    public ElasticsearchIndexQueue find(Context context, int id) throws SQLException;
+    public ElasticsearchIndexQueue find(Context context, UUID uuid) throws SQLException;
 
     /**
      * Delete an ElasticsearchIndexQueue
@@ -44,16 +42,6 @@ public interface ElasticsearchIndexQueueService  {
            throws SQLException, AuthorizeException;
 
     /**
-     * Get the ElasticsearchIndex queue records by the item id.
-     *
-     * @param  context        DSpace context object
-     * @param  itemId         The owner item id
-     * @return                The elasticsearchIndex queue records
-     * @throws SQLException   If an SQL error occurs
-     */
-    public List<ElasticsearchIndexQueue> findByItemId(Context context, UUID itemId) throws SQLException;
-
-    /**
      * Create an ElasticsearchIndexQueue
      * 
      * @param context              DSpace context object
@@ -62,6 +50,17 @@ public interface ElasticsearchIndexQueueService  {
      * @return
      * @throws SQLException        If an SQL error occurs
      */
-    public ElasticsearchIndexQueue create(Context context, Item item, Integer operationType) throws SQLException;
+    public ElasticsearchIndexQueue create(Context context, UUID itemUuid, Integer operationType) throws SQLException;
+
+    /**
+     * Update the ElasticsearchIndexQueue
+     *
+     * @param context                      context
+     * @param ElasticsearchIndexQueue      elasticsearchIndexQueue
+     * @throws SQLException                if database error
+     * @throws AuthorizeException          if authorization error
+     */
+    public void update(Context context, ElasticsearchIndexQueue elasticsearchIndexQueue)
+           throws SQLException, AuthorizeException;
 
 }

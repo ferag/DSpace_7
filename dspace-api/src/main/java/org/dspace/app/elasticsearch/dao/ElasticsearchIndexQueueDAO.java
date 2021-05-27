@@ -6,12 +6,7 @@
  * http://www.dspace.org/license/
  */
 package org.dspace.app.elasticsearch.dao;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.UUID;
-
 import org.dspace.app.elasticsearch.ElasticsearchIndexQueue;
-import org.dspace.core.Context;
 import org.dspace.core.GenericDAO;
 
 /**
@@ -23,18 +18,5 @@ import org.dspace.core.GenericDAO;
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
 public interface ElasticsearchIndexQueueDAO extends GenericDAO<ElasticsearchIndexQueue> {
-
-    /**
-     * Get the ElasticsearchIndex queue records by the item id.
-     *
-     * @param context           DSpace context object
-     * @param itemId            The item uuid
-     * @param limit             Limit
-     * @param offset            Offset
-     * @return                  The ElasticsearchIndex queue records
-     * @throws SQLException     If an SQL error occurs
-     */
-    public List<ElasticsearchIndexQueue> findByItemId(Context context, UUID itemId, Integer limit, Integer offset)
-        throws SQLException;
 
 }

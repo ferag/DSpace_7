@@ -15,7 +15,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ws.rs.core.MediaType;
 
 import org.dspace.app.elasticsearch.service.ElasticsearchIndexQueueService;
@@ -28,7 +30,9 @@ import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
 import org.dspace.event.Event;
+import org.dspace.services.ConfigurationService;
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -41,6 +45,17 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
 
     @Autowired
     private ElasticsearchIndexQueueService elasticsearchService;
+
+    @Autowired
+    private ConfigurationService configurationService;
+
+    @Before
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        configurationService.addPropertyValue("elasticsearch.entity", "Person");
+        configurationService.addPropertyValue("elasticsearch.entity", "Publication");
+    }
 
     @Test
     public void elasticsearchIndexQueueWithCreatedItemsTest() throws Exception {
@@ -189,6 +204,54 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
         } finally {
             context.setCurrentUser(admin);
             elasticsearchService.delete(context, record1);
+        }
+    }
+
+    @Test
+    public void elasticsearchIndexQueuePatchItemTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        parentCommunity = CommunityBuilder.createCommunity(context)
+                                          .withName("Parent Community").build();
+
+        Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
+                                           .withEntityType("Publication")
+                                           .withName("Collection 1").build();
+
+        Item itemA = ItemBuilder.createItem(context, col1)
+                                .withTitle("Title item A").build();
+
+        context.restoreAuthSystemState();
+
+        String tokenAdmin = getAuthToken(admin.getEmail(), password);
+
+        ElasticsearchIndexQueue record = null;
+        try {
+
+            record = elasticsearchService.find(context, itemA.getID());
+            assertNotNull(record);
+            assertEquals(itemA.getID().toString(), record.getID().toString());
+            assertEquals(Event.CREATE, record.getOperationType().intValue());
+
+            List<Operation> ops = new ArrayList<>();
+            List<Map<String, String>> values = new ArrayList<>();
+            Map<String, String> value = new HashMap<>();
+            value.put("value", "New Title");
+            values.add(value);
+            ops.add(new ReplaceOperation("/metadata/dc.title", values));
+
+            getClient(tokenAdmin).perform(patch("/api/core/items/" + itemA.getID())
+                                 .content(getPatchContent(ops))
+                                 .contentType(contentType))
+                                 .andExpect(status().isOk());
+
+            record = elasticsearchService.find(context, itemA.getID());
+            assertNotNull(record);
+            assertEquals(itemA.getID().toString(), record.getID().toString());
+            assertEquals(Event.MODIFY_METADATA, record.getOperationType().intValue());
+        } finally {
+            context.setCurrentUser(admin);
+            elasticsearchService.delete(context, record);
         }
     }
 

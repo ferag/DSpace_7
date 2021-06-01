@@ -7,12 +7,13 @@
  */
 package org.dspace.app.elasticsearch.consumer;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import org.apache.commons.codec.binary.StringUtils;
 import org.dspace.app.elasticsearch.ElasticsearchIndexQueue;
 import org.dspace.app.elasticsearch.factory.ElasticsearchIndexQueueServiceFactory;
 import org.dspace.app.elasticsearch.service.ElasticsearchIndexQueueService;
@@ -24,6 +25,8 @@ import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.event.Consumer;
 import org.dspace.event.Event;
+import org.dspace.services.ConfigurationService;
+import org.dspace.services.factory.DSpaceServicesFactory;
 
 /**
  * Consumer responsible for inserting events performed on items in the ElasticsearchIndexQueue table.
@@ -34,6 +37,8 @@ public class ElasticsearchQueueConsumer implements Consumer {
 
     private ItemService itemService;
 
+    private ConfigurationService configurationService;
+
     private ElasticsearchIndexQueueService elasticsearchIndexQueueService;
 
     private Set<Item> itemsAlreadyProcessed = new HashSet<Item>();
@@ -43,6 +48,7 @@ public class ElasticsearchQueueConsumer implements Consumer {
         this.itemService = ContentServiceFactory.getInstance().getItemService();
         this.elasticsearchIndexQueueService = ElasticsearchIndexQueueServiceFactory.getInstance()
                 .getElasticsearchIndexQueueService();
+        this.configurationService = DSpaceServicesFactory.getInstance().getConfigurationService();
     }
 
     @Override
@@ -53,35 +59,35 @@ public class ElasticsearchQueueConsumer implements Consumer {
         int eventType = event.getEventType();
         if (eventType == Event.CREATE || eventType == Event.MODIFY) {
             Item item = (Item) event.getSubject(context);
-            if (itemsAlreadyProcessed.contains(item)) {
+            if (itemsAlreadyProcessed.contains(item) || !isSupportedEntityType(item)) {
                 return;
             }
-            if (isSupportedEntityType(item)) {
-                elasticsearchIndexQueueService.create(context, item.getID(), event.getEventType());
-            }
+            elasticsearchIndexQueueService.create(context, item.getID(), event.getEventType());
             itemsAlreadyProcessed.add(item);
         }
+        ElasticsearchIndexQueue elasticIndex = elasticsearchIndexQueueService.find(context, event.getSubjectID());
         if (eventType == Event.MODIFY_METADATA) {
             DSpaceObject obj =  event.getSubject(context);
             if (Objects.isNull(obj)) {
                 return;
             }
             Item item = (Item) obj;
-            if (itemsAlreadyProcessed.contains(item)) {
+            if (itemsAlreadyProcessed.contains(item) || !isSupportedEntityType(item)) {
                 return;
             }
-            if (isSupportedEntityType((Item) obj) && ((Item) obj).isWithdrawn()) {
-                ElasticsearchIndexQueue elasticIndex = elasticsearchIndexQueueService.find(context, item.getID());
-                if (Objects.nonNull(elasticIndex)) {
-                    elasticIndex.setOperationType(Event.DELETE);
-                    elasticIndex.setInsertionDate(new Date());
-                    elasticsearchIndexQueueService.update(context, elasticIndex);
-                }
+            // if the item has been withdrawn, update record with DELETE type
+            if (item.isWithdrawn() && Objects.nonNull(elasticIndex)) {
+                elasticIndex.setOperationType(Event.DELETE);
+                elasticIndex.setInsertionDate(new Date());
+                elasticsearchIndexQueueService.update(context, elasticIndex);
+            } else if (Objects.nonNull(elasticIndex)) {
+                elasticIndex.setOperationType(eventType);
+                elasticIndex.setInsertionDate(new Date());
+                elasticsearchIndexQueueService.update(context, elasticIndex);
             }
             itemsAlreadyProcessed.add((Item) obj);
         }
         if (eventType == Event.DELETE) {
-            ElasticsearchIndexQueue elasticIndex = elasticsearchIndexQueueService.find(context, event.getSubjectID());
             if (Objects.nonNull(elasticIndex)) {
                 elasticIndex.setOperationType(event.getEventType());
                 elasticIndex.setInsertionDate(new Date());
@@ -92,7 +98,9 @@ public class ElasticsearchQueueConsumer implements Consumer {
 
     private boolean isSupportedEntityType(Item item) {
         String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
-        return (StringUtils.equals(entityType, "Person") || StringUtils.equals(entityType, "Publication"));
+        List<String> supportedEntities = Arrays.asList(
+                                      configurationService.getArrayProperty("elasticsearch.entity"));
+        return supportedEntities.contains(entityType);
     }
 
     @Override

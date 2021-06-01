@@ -1647,5 +1647,11 @@
         <element>ctivitaepolicy</element>
         <qualifier>organization</qualifier>
     </dc-type>
-    
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ctivitaepolicy</element>
+        <qualifier>group</qualifier>
+    </dc-type>
+
 </dspace-dc-types>

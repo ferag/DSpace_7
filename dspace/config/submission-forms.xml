@@ -2281,8 +2281,8 @@
           <repeatable>false</repeatable>
           <required>You must enter at least the year.</required>
           <hint>Please give the date of previous publication or public distribution.
-                        You can leave out the day and/or month if they aren't
-                        applicable.</hint>
+            You can leave out the day and/or month if they aren't
+            applicable.</hint>
         </field>
       </row>
       <row>
@@ -2486,8 +2486,8 @@
           <repeatable>false</repeatable>
           <required>You must enter at least the year.</required>
           <hint>Please give the date of previous publication or public distribution.
-                        You can leave out the day and/or month if they aren't
-                        applicable.</hint>
+            You can leave out the day and/or month if they aren't
+            applicable.</hint>
         </field>
       </row>
       <row>
@@ -2691,8 +2691,8 @@
           <repeatable>false</repeatable>
           <required>You must enter at least the year.</required>
           <hint>Please give the date of previous publication or public distribution.
-                        You can leave out the day and/or month if they aren't
-                        applicable.</hint>
+            You can leave out the day and/or month if they aren't
+            applicable.</hint>
         </field>
       </row>
       <row>
@@ -4918,7 +4918,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Date of filing the application.
-You can leave out the day and/or month if they aren't applicable.</hint>
+            You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
         <field>
           <dc-schema>dc</dc-schema>
@@ -4929,7 +4929,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Date of making available to the public by printing or similar process of a patent document on which grant has taken place on or before the said date.
-You can leave out the day and/or month if they aren't applicable.</hint>
+            You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
       <row>
@@ -5066,7 +5066,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Date of filing the application.
-You can leave out the day and/or month if they aren't applicable.</hint>
+            You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
         <field>
           <dc-schema>dc</dc-schema>
@@ -5077,7 +5077,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Date of making available to the public by printing or similar process of a patent document on which grant has taken place on or before the said date.
-You can leave out the day and/or month if they aren't applicable.</hint>
+            You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
       <row>
@@ -5214,7 +5214,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Date of filing the application.
-You can leave out the day and/or month if they aren't applicable.</hint>
+            You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
         <field>
           <dc-schema>dc</dc-schema>
@@ -5225,7 +5225,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Date of making available to the public by printing or similar process of a patent document on which grant has taken place on or before the said date.
-You can leave out the day and/or month if they aren't applicable.</hint>
+            You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
       <row>
@@ -7054,6 +7054,30 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <hint />
         </field>
       </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>internalNote</dc-qualifier>
+          <label>Internal Note</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>cris</dc-schema>
+          <dc-element>policy</dc-element>
+          <dc-qualifier>group</dc-qualifier>
+          <label>Group(s) enabled to view Internal Note</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
     </form>
     <form name="cv-person-edit-education">
       <row>
@@ -7696,8 +7720,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
         </field>
-      </row>
-      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>description</dc-element>

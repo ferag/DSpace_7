@@ -2281,8 +2281,8 @@
           <repeatable>false</repeatable>
           <required>Debe introducir al menos el año.</required>
           <hint>Indique la fecha de publicación o distribución pública anterior.
-                        Puede omitir el día y/o el mes si no son
-                        aplicables.</hint>
+            Puede omitir el día y/o el mes si no son
+            aplicables.</hint>
         </field>
       </row>
       <row>
@@ -2486,8 +2486,8 @@
           <repeatable>false</repeatable>
           <required>Debe introducir al menos el año.</required>
           <hint>Indique la fecha de publicación o distribución pública anterior.
-                        Puede omitir el día y/o el mes si no son
-                        aplicables.</hint>
+            Puede omitir el día y/o el mes si no son
+            aplicables.</hint>
         </field>
       </row>
       <row>
@@ -2691,8 +2691,8 @@
           <repeatable>false</repeatable>
           <required>Debe introducir al menos el año.</required>
           <hint>Indique la fecha de publicación o distribución pública anterior.
-                        Puede omitir el día y/o el mes si no son
-                        aplicables.</hint>
+            Puede omitir el día y/o el mes si no son
+            aplicables.</hint>
         </field>
       </row>
       <row>
@@ -4918,7 +4918,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Fecha de presentación de la solicitud.
-Puede omitir el día y/o el mes si no son aplicables.</hint>
+            Puede omitir el día y/o el mes si no son aplicables.</hint>
         </field>
         <field>
           <dc-schema>dc</dc-schema>
@@ -4929,7 +4929,7 @@ Puede omitir el día y/o el mes si no son aplicables.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Fecha de puesta a disposición del público mediante impresión o procedimiento similar de un documento de patente cuya concesión haya tenido lugar en dicha fecha o antes.
-You can leave out the day and/or month if they aren't applicable.</hint>
+            You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
       <row>
@@ -5066,7 +5066,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Fecha de presentación de la solicitud.
-Puede omitir el día y/o el mes si no son aplicables.</hint>
+            Puede omitir el día y/o el mes si no son aplicables.</hint>
         </field>
         <field>
           <dc-schema>dc</dc-schema>
@@ -5077,7 +5077,7 @@ Puede omitir el día y/o el mes si no son aplicables.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Fecha de puesta a disposición del público mediante impresión o procedimiento similar de un documento de patente cuya concesión haya tenido lugar en dicha fecha o antes.
-You can leave out the day and/or month if they aren't applicable.</hint>
+            You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
       <row>
@@ -5214,7 +5214,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Fecha de presentación de la solicitud.
-Puede omitir el día y/o el mes si no son aplicables.</hint>
+            Puede omitir el día y/o el mes si no son aplicables.</hint>
         </field>
         <field>
           <dc-schema>dc</dc-schema>
@@ -5225,7 +5225,7 @@ Puede omitir el día y/o el mes si no son aplicables.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Fecha de puesta a disposición del público mediante impresión o procedimiento similar de un documento de patente cuya concesión haya tenido lugar en dicha fecha o antes.
-You can leave out the day and/or month if they aren't applicable.</hint>
+            You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
       <row>
@@ -7054,6 +7054,30 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <hint />
         </field>
       </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>internalNote</dc-qualifier>
+          <label>Nota interna</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>cris</dc-schema>
+          <dc-element>policy</dc-element>
+          <dc-qualifier>group</dc-qualifier>
+          <label>Grupos habilitados en el box Nota interna</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
     </form>
     <form name="cv-person-edit-education">
       <row>
@@ -7397,6 +7421,38 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       <row>
         <field>
           <dc-schema>perucris</dc-schema>
+          <dc-element>sti</dc-element>
+          <dc-qualifier>actions</dc-qualifier>
+          <label>Acciones de vigilancia tecnológica</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>sti</dc-element>
+          <dc-qualifier>formalUnit</dc-qualifier>
+          <label>Unidad formal de vigilancia tecnológica</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>sti</dc-element>
+          <dc-qualifier>qualityCertified</dc-qualifier>
+          <label>166006 o equivalente certificada</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
           <dc-element>description</dc-element>
           <dc-qualifier>internalNote</dc-qualifier>
           <label>Nota interna</label>
@@ -7634,6 +7690,36 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
       <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>sti</dc-element>
+          <dc-qualifier>actions</dc-qualifier>
+          <label>Acciones de vigilancia tecnológica</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>sti</dc-element>
+          <dc-qualifier>formalUnit</dc-qualifier>
+          <label>Unidad formal de vigilancia tecnológica</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>sti</dc-element>
+          <dc-qualifier>qualityCertified</dc-qualifier>
+          <label>166006 o equivalente certificada</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>description</dc-element>

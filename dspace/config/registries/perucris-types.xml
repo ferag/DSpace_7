@@ -687,6 +687,26 @@
 
     <dc-type>
         <schema>perucris</schema>
+        <element>sti</element>
+        <qualifier>actions</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>sti</element>
+        <qualifier>formalUnit</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>sti</element>
+        <qualifier>qualityCertified</qualifier>
+    </dc-type>
+
+
+
+    <dc-type>
+        <schema>perucris</schema>
         <element>cvPerson</element>
         <qualifier>syncEducation</qualifier>
     </dc-type>

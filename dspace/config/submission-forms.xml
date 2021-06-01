@@ -7397,6 +7397,38 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       <row>
         <field>
           <dc-schema>perucris</dc-schema>
+          <dc-element>sti</dc-element>
+          <dc-qualifier>actions</dc-qualifier>
+          <label>Technological Surveillance Actions</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>sti</dc-element>
+          <dc-qualifier>formalUnit</dc-qualifier>
+          <label>Has formal technological surveillance unit</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>sti</dc-element>
+          <dc-qualifier>qualityCertified</dc-qualifier>
+          <label>166006 or equivalent certified</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
           <dc-element>description</dc-element>
           <dc-qualifier>internalNote</dc-qualifier>
           <label>Internal Note</label>
@@ -7631,6 +7663,38 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
           <vocabulary closed="true">ocde_subjects</vocabulary>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>sti</dc-element>
+          <dc-qualifier>actions</dc-qualifier>
+          <label>Technological Surveillance Actions</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>sti</dc-element>
+          <dc-qualifier>formalUnit</dc-qualifier>
+          <label>Has formal technological surveillance unit</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>sti</dc-element>
+          <dc-qualifier>qualityCertified</dc-qualifier>
+          <label>166006 or equivalent certified</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
         </field>
       </row>
       <row>

@@ -786,6 +786,18 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "perucris", "notification", "to", null, notification, authority, 600);
     }
 
+    public ItemBuilder withRightsHolder(String rightsHolder) {
+        return addMetadataValue(item, "dcterms", "rightsHolder", null, rightsHolder);
+    }
+
+    public ItemBuilder withRelationPatent(String patent) {
+        return addMetadataValue(item, "dc", "relation", "patent", patent);
+    }
+
+    public ItemBuilder withDescriptionVersion(String version) {
+        return addMetadataValue(item, MetadataSchemaEnum.DC.getName(), "description", "version", version);
+    }
+
     /**
      * Withdrawn the item under build. Please note that an user need to be loggedin the context to avoid NPE during the
      * creation of the provenance metadata

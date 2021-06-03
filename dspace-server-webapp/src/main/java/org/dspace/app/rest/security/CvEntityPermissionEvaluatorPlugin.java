@@ -8,9 +8,11 @@
 package org.dspace.app.rest.security;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.profile.ResearcherProfile;
 import org.dspace.app.profile.service.ResearcherProfileService;
@@ -18,6 +20,7 @@ import org.dspace.app.rest.utils.ContextUtil;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
+import org.dspace.content.MetadataValue;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.DSpaceObjectService;
 import org.dspace.content.service.ItemService;
@@ -96,8 +99,11 @@ public class CvEntityPermissionEvaluatorPlugin extends RestObjectPermissionEvalu
                     if (dSpaceObject instanceof Item) {
                         Item item = (Item)dSpaceObject;
                         if (isCvEntity(item)) {
-                            UUID researcherUuid = UUID.fromString(
-                                 itemService.getMetadata(item, "cris", "owner", null, Item.ANY).get(0).getAuthority());
+                            List<MetadataValue> values = itemService.getMetadata(item, "cris", "owner", null, Item.ANY);
+                            if (CollectionUtils.isEmpty(values)) {
+                                return false;
+                            }
+                            UUID researcherUuid = UUID.fromString(values.get(0).getAuthority());
                             try {
                                 ResearcherProfile profile = researcherProfileService.findById(context, researcherUuid);
                                 if (profile.isVisible()) {

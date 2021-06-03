@@ -9,6 +9,7 @@
 package org.dspace.importer.external.dspace;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.dspace.importer.external.metadatamapping.MetadatumDTO;
 import org.dspace.importer.external.metadatamapping.contributor.MetadataContributor;
 import org.dspace.layout.CrisLayoutBox;
 import org.dspace.layout.CrisLayoutField;
+import org.dspace.layout.CrisMetadataGroup;
 import org.dspace.layout.LayoutSecurity;
 import org.dspace.layout.service.CrisLayoutBoxService;
 import org.dspace.services.RequestService;
@@ -111,13 +113,20 @@ public class DSpaceInternalMetadataFieldMapping implements MetadataFieldMapping<
     }
 
     private List<MetadataField> publicMetadataFields(Context context, Item record) throws SQLException {
+        List<MetadataField> metadataFields = new ArrayList<MetadataField>();
         String entityType = itemService.getMetadataFirstValue(record, "dspace", "entity", "type", Item.ANY);
         List<CrisLayoutBox> boxes = crisLayoutBoxService.findEntityBoxes(context, entityType, 1000, 0);
 
-        return boxes.stream()
-            .filter(b -> LayoutSecurity.valueOf(b.getSecurity()).equals(LayoutSecurity.PUBLIC))
-            .flatMap(b -> b.getLayoutFields().stream())
-            .map(CrisLayoutField::getMetadataField)
-            .collect(Collectors.toList());
+        List<CrisLayoutField> publicLayoutFields = boxes.stream()
+                                  .filter(b -> LayoutSecurity.valueOf(b.getSecurity()).equals(LayoutSecurity.PUBLIC))
+                                  .flatMap(b -> b.getLayoutFields().stream())
+                                  .collect(Collectors.toList());
+        for (CrisLayoutField publicField : publicLayoutFields) {
+            metadataFields.add(publicField.getMetadataField());
+            for (CrisMetadataGroup nestedField : publicField.getCrisMetadataGroupList()) {
+                metadataFields.add(nestedField.getMetadataField());
+            }
+        }
+        return metadataFields;
     }
 }

@@ -86,7 +86,7 @@
             </map>
         </property>
     </bean>
-    
+
     <!-- dspace.entity.type is exactly Person -->
     <bean id="relationship-type-equals-person_condition"
           class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
@@ -94,6 +94,17 @@
             <map>
                 <entry key="field" value="dspace.entity.type" />
                 <entry key="pattern" value="^Person$|^InstitutionPerson$" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- dspace.entity.type is exactly Project or InstitutionProject or CvProject-->
+    <bean id="relationship-type-equals-project_condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="dspace.entity.type" />
+                <entry key="pattern" value="^Project$|^InstitutionProject$|^CvProject$|" />
             </map>
         </property>
     </bean>
@@ -168,6 +179,50 @@
             </map>
         </property>
     </bean>
+
+    <!-- has oairecerif.oamandate set to true-->
+    <bean id="has-oa-mandate-condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="oairecerif.oamandate" />
+                <entry key="pattern" value="true" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has oairecerif.oamandate set to false-->
+    <bean id="has-not-oa-mandate-condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="oairecerif.oamandate" />
+                <entry key="pattern" value="false" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has oairecerif.oamandate.url set-->
+    <bean id="has-oa-policy-url-condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="oairecerif.oamandate.url" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has oairecerif.oamandate set-->
+    <bean id="has-oa-mandate-condition-not-set"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="oairecerif.oamandate" />
+            </map>
+        </property>
+    </bean>
+
+
     
 
     <!--
@@ -459,6 +514,37 @@
                 </property>
             </bean>
         </property>
+    </bean>
+
+    <bean id="project-without-oa-mandate-requires-policy-url" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="relationship-type-equals-project_condition"/>
+                            </property>
+                        </bean>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="has-oa-mandate-condition-not-set"/>
+                            </property>
+                        </bean>
+                        <bean class="org.dspace.content.logic.operator.And">
+                            <property name="statements">
+                                <list>
+                                    <ref bean="has-not-oa-mandate-condition" />
+                                    <ref bean="has-oa-policy-url-condition" />
+                                </list>
+                            </property>
+                        </bean>
+                        <ref bean="has-oa-mandate-condition" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+
     </bean>
 
     <bean id="peruvian-cv-person-has-ubigeo_filter" class="org.dspace.content.logic.DefaultFilter">

@@ -47,7 +47,7 @@ public class UbigeoConsumer implements Consumer {
         if (event.getSubjectType() == Constants.ITEM) {
             Item item = (Item) event.getSubject(context);
 
-            if (itemsAlreadyProcessed.contains(item)) {
+            if (item == null || itemsAlreadyProcessed.contains(item)) {
                 return;
             }
 

@@ -1,7 +1,8 @@
 Title = dc.title
-Approval date = dcterms.dateAccepted
+Approval date = dcterms.dateSubmitted
 Registration date = dc.date.issued
 Patent number = dc.identifier.patentno
+Country = oairecerif.patent.country
 Type = dc.type
 Language = dc.language.iso
 Inventor(s) = group.dc-contributor-author

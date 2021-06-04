@@ -781,6 +781,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "dcterms", "dateAccepted", null, dateAccepted);
     }
 
+    public ItemBuilder withDateSubmitted(String dateSubmitted) {
+        return addMetadataValue(item, "dcterms", "dateSubmitted", null, dateSubmitted);
+    }
+
     public ItemBuilder withHandle(String handle) {
         this.handle = handle;
         return this;
@@ -800,6 +804,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withDescriptionVersion(String version) {
         return addMetadataValue(item, MetadataSchemaEnum.DC.getName(), "description", "version", version);
+    }
+
+    public ItemBuilder withPatentCountry(String country) {
+        return addMetadataValue(item, "oairecerif", "patent", "country", country);
     }
 
     /**

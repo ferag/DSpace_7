@@ -1,12 +1,10 @@
-<Patent xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="@virtual.id@">
+<Patent xmlns="https://www.openaire.eu/cerif-profile/1.1/" id="@virtual.id@">
    <Type xmlns="https://www.openaire.eu/cerif-profile/vocab/COAR_Patent_Types">http://purl.org/coar/resource_type/c_15cd</Type>
    <Title>@dc.title@</Title>
    <RegistrationDate>@dc.date.issued@</RegistrationDate>
    <ApprovalDate>@dcterms.dateSubmitted@</ApprovalDate>
-   <CountryCode>@oairecerif.patent.country@</CountryCode>
    <Issuer> <OrgUnit> <Name>@dc.publisher@</Name> </OrgUnit> </Issuer>
    <PatentNumber>@dc.identifier.patentno@</PatentNumber>
-   <URL>@dc.identifier.url@</URL>
    <Inventors>
       @group.dc-contributor-author.start@
 	  <Inventor>

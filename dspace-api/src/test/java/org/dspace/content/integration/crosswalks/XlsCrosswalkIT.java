@@ -699,7 +699,8 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item firstItem = ItemBuilder.createItem(context, collection)
             .withEntityType("Patent")
             .withTitle("First patent")
-            .withDateAccepted("2020-01-01")
+            .withPatentCountry("Italy")
+            .withDateSubmitted("2020-01-01")
             .withIssueDate("2021-01-01")
             .withLanguage("en")
             .withType("patent")
@@ -736,7 +737,8 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item thirdItem = ItemBuilder.createItem(context, collection)
             .withEntityType("Patent")
             .withTitle("Third patent")
-            .withDateAccepted("2019-01-01")
+            .withPatentCountry("England")
+            .withDateSubmitted("2019-01-01")
             .withLanguage("ita")
             .withPublisher("Publisher")
             .withPatentNo("12345-888")
@@ -763,19 +765,19 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(sheet.getPhysicalNumberOfRows(), equalTo(4));
 
         assertThat(getRowValues(sheet.getRow(0)), contains("Title", "Approval date", "Registration date",
-            "Patent number", "Type", "Language", "Inventor(s)", "Holder(s)", "Issuer(s)", "Keyword(s)", "Funding(s)",
-            "Project(s)", "Predecessor(s)", "Reference(s)", "Abstract"));
+            "Patent number", "Country", "Type", "Language", "Inventor(s)", "Holder(s)", "Issuer(s)", "Keyword(s)",
+            "Funding(s)", "Project(s)", "Predecessor(s)", "Reference(s)", "Abstract"));
 
         assertThat(getRowValues(sheet.getRow(1)), contains("First patent", "2020-01-01", "2021-01-01", "12345-666",
-            "patent", "en", "Walter White/4Science||Jesse Pinkman||John Smith/4Science", "Test Organization",
+            "Italy", "patent", "en", "Walter White/4Science||Jesse Pinkman||John Smith/4Science", "Test Organization",
             "First publisher||Second publisher", "patent||test", "Test funding", "First project||Second project",
             "Another patent", "", "This is a patent"));
 
-        assertThat(getRowValues(sheet.getRow(2)), contains("Second patent", "", "", "12345-777", "patent", "",
+        assertThat(getRowValues(sheet.getRow(2)), contains("Second patent", "", "", "12345-777", "", "patent", "",
             "Bruce Wayne", "", "", "second", "Funding", "", "Another patent", "", ""));
 
-        assertThat(getRowValues(sheet.getRow(3)), contains("Third patent", "2019-01-01", "", "12345-888", "", "ita", "",
-            "Organization", "Publisher", "", "First funding||Second funding", "", "Another patent", "",
+        assertThat(getRowValues(sheet.getRow(3)), contains("Third patent", "2019-01-01", "", "12345-888", "England",
+            "", "ita", "", "Organization", "Publisher", "", "First funding||Second funding", "", "Another patent", "",
             "Patent description"));
     }
 

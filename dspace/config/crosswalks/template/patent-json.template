@@ -1,8 +1,9 @@
 {
 	"title": "@dc.title@",
-	"approval-date": "@dcterms.dateAccepted@",
+	"approval-date": "@dcterms.dateSubmitted@",
 	"registration-date": "@dc.date.issued@",
 	"patent-number": "@dc.identifier.patentno@",
+	"country": "@oairecerif.patent.country@",
 	"type": "@dc.type@",
 	"language": "@dc.language.iso@",
 	"inventors": [

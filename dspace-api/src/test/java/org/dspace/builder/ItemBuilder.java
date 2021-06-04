@@ -777,6 +777,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return setMetadataSingleValue(item, "perucris", "cvPerson", "syncQualification", enabled + "");
     }
 
+    public ItemBuilder withDateAccepted(String dateAccepted) {
+        return addMetadataValue(item, "dcterms", "dateAccepted", null, dateAccepted);
+    }
+
     public ItemBuilder withHandle(String handle) {
         this.handle = handle;
         return this;

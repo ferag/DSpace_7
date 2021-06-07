@@ -13,6 +13,8 @@ import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.audit.AuditService;
+import org.dspace.app.elasticsearch.factory.ElasticsearchIndexQueueServiceFactory;
+import org.dspace.app.elasticsearch.service.ElasticsearchIndexQueueService;
 import org.dspace.app.metrics.service.CrisMetricsService;
 import org.dspace.app.nbevent.service.NBEventService;
 import org.dspace.app.orcid.factory.OrcidHistoryServiceFactory;
@@ -121,6 +123,7 @@ public abstract class AbstractBuilder<T, S> {
     static NBEventService nbEventService;
     static SolrSuggestionStorageService solrSuggestionService;
     static CollectionRoleService collectionRoleService;
+    static ElasticsearchIndexQueueService elasticsearchIndexQueueService;
 
     protected Context context;
 
@@ -183,6 +186,8 @@ public abstract class AbstractBuilder<T, S> {
         auditService = new DSpace().getSingletonService(AuditService.class);
         crisMetricsService = CrisMetricsServiceFactory.getInstance().getCrisMetricsService();
         harvestedCollectionService = HarvestServiceFactory.getInstance().getHarvestedCollectionService();
+        elasticsearchIndexQueueService = ElasticsearchIndexQueueServiceFactory.getInstance()
+                                        .getElasticsearchIndexQueueService();
 
         collectionRoleService = XmlWorkflowServiceFactory.getInstance().getCollectionRoleService();
 
@@ -229,6 +234,7 @@ public abstract class AbstractBuilder<T, S> {
         crisLayoutMetric2BoxService = null;
         nbEventService = null;
         harvestedCollectionService = null;
+        elasticsearchIndexQueueService = null;
     }
 
     public static void cleanupObjects() throws Exception {

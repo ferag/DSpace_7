@@ -65,4 +65,9 @@ public class ElasticsearchIndexQueueServiceImpl implements ElasticsearchIndexQue
         }
     }
 
+    @Override
+    public ElasticsearchIndexQueue getFirstRecord(Context context) throws SQLException {
+        return elasticsearchIndexQueueDAO.getFirstRecord(context);
+    }
+
 }

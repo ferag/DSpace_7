@@ -6,7 +6,10 @@
  * http://www.dspace.org/license/
  */
 package org.dspace.app.elasticsearch.dao;
+import java.sql.SQLException;
+
 import org.dspace.app.elasticsearch.ElasticsearchIndexQueue;
+import org.dspace.core.Context;
 import org.dspace.core.GenericDAO;
 
 /**
@@ -18,5 +21,7 @@ import org.dspace.core.GenericDAO;
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
 public interface ElasticsearchIndexQueueDAO extends GenericDAO<ElasticsearchIndexQueue> {
+
+    ElasticsearchIndexQueue getFirstRecord(Context context) throws SQLException;
 
 }

@@ -6,9 +6,13 @@
  * http://www.dspace.org/license/
  */
 package org.dspace.app.elasticsearch.dao.impl;
+import java.sql.SQLException;
+import javax.persistence.Query;
+
 import org.dspace.app.elasticsearch.ElasticsearchIndexQueue;
 import org.dspace.app.elasticsearch.dao.ElasticsearchIndexQueueDAO;
 import org.dspace.core.AbstractHibernateDAO;
+import org.dspace.core.Context;
 
 /**
  * Implementation of {@link ElasticsearchIndexQueueDAO}
@@ -18,5 +22,13 @@ import org.dspace.core.AbstractHibernateDAO;
 public class ElasticsearchIndexQueueDAOImpl
         extends AbstractHibernateDAO<ElasticsearchIndexQueue>
          implements ElasticsearchIndexQueueDAO {
+
+    @Override
+    public ElasticsearchIndexQueue getFirstRecord(Context context) throws SQLException {
+        Query query = createQuery(context,
+                      "FROM " + ElasticsearchIndexQueue.class.getSimpleName() + " ORDER BY insertionDate ASC");
+        query.setMaxResults(1);
+        return singleResult(query);
+    }
 
 }

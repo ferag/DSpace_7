@@ -63,4 +63,12 @@ public interface ElasticsearchIndexQueueService  {
     public void update(Context context, ElasticsearchIndexQueue elasticsearchIndexQueue)
            throws SQLException, AuthorizeException;
 
+    /**
+     * Get the first ElasticsearchIndexQueue from the database, ordered by date ascendant.
+     *
+     * @param context  DSpace context object
+     * @return         the ElasticsearchIndexQueue format, or null the database is empty.
+     */
+    public ElasticsearchIndexQueue getFirstRecord(Context context) throws SQLException;
+
 }

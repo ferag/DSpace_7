@@ -81,6 +81,10 @@
         <property name="dspaceRunnableClass" value="org.dspace.perucris.externalservices.CreateWorkspaceItemWithExternalSourceCli"/>
     </bean>
 
+    <bean id="update-elasticsearch" class="org.dspace.app.elasticsearch.script.SendRecordsToElasticsearchCliScriptConfiguration">
+        <property name="description" value="Perform the updating of elasticsearch records"/>
+        <property name="dspaceRunnableClass" value="org.dspace.app.elasticsearch.script.SendRecordsToElasticsearchCli"/>
+    </bean>
 
 <!--    <bean id="import-oaire-suggestions" class="org.dspace.app.suggestion.OAIREPublicationLoaderCliScriptConfiguration" primary="true">-->
 <!--       <property name="description" value="Import and store locally metadata from OpenAIRE"/>-->

@@ -89,9 +89,11 @@ public class ElasticsearchQueueConsumer implements Consumer {
         }
         if (eventType == Event.DELETE) {
             if (Objects.nonNull(elasticIndex)) {
-                elasticIndex.setOperationType(event.getEventType());
+                elasticIndex.setOperationType(eventType);
                 elasticIndex.setInsertionDate(new Date());
                 elasticsearchIndexQueueService.update(context, elasticIndex);
+            } else {
+                elasticsearchIndexQueueService.create(context, event.getSubjectID(), eventType);
             }
         }
     }

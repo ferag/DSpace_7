@@ -10,5 +10,16 @@
     <context:annotation-config /> <!-- allows us to use spring annotations in beans -->
     
     <bean class="org.dspace.app.elasticsearch.service.impl.ElasticsearchIndexQueueServiceImpl" />
-     
+
+    <bean class="org.dspace.app.elasticsearch.service.ElasticsearchIndexConverter">
+         <constructor-arg>
+			<map>
+				<entry key="Publication" value-ref="referCrosswalkOrgUnitXml" />
+				<!-- <entry key="Person" value-ref="" />  -->
+			</map>
+		</constructor-arg>
+	</bean>
+
+    <bean class="org.dspace.app.elasticsearch.externalservice.ElasticsearchProvider" />
+    <bean class="org.dspace.app.elasticsearch.externalservice.ElasticsearchConnectorImpl" />
 </beans>

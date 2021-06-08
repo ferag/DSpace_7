@@ -18,8 +18,6 @@ import org.dspace.app.elasticsearch.externalservice.ElasticsearchProvider;
 import org.dspace.app.elasticsearch.factory.ElasticsearchIndexQueueServiceFactory;
 import org.dspace.app.elasticsearch.service.ElasticsearchIndexConverter;
 import org.dspace.app.elasticsearch.service.ElasticsearchIndexQueueService;
-import org.dspace.content.factory.ContentServiceFactory;
-import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.factory.EPersonServiceFactory;
@@ -42,15 +40,16 @@ public class SendRecordsToElasticsearch
 
     private ElasticsearchProvider elasticsearchProvider;
 
-    private ItemService itemService;
-
     private Context context;
 
     @Override
     public void setup() throws ParseException {
-        this.itemService = ContentServiceFactory.getInstance().getItemService();
         this.elasticsearchQueueService = ElasticsearchIndexQueueServiceFactory.getInstance()
                                                         .getElasticsearchIndexQueueService();
+        this.elasticsearchIndexConverter = new DSpace().getServiceManager().getServiceByName(
+                                ElasticsearchIndexConverter.class.getName(), ElasticsearchIndexConverter.class);
+        this.elasticsearchProvider = new DSpace().getServiceManager().getServiceByName(
+                                            ElasticsearchProvider.class.getName(), ElasticsearchProvider.class);
     }
 
     @Override
@@ -64,9 +63,15 @@ public class SendRecordsToElasticsearch
                 ElasticsearchIndexQueue record = elasticsearchQueueService.getFirstRecord(context);
                 if (Objects.nonNull(record)) {
                     String json = elasticsearchIndexConverter.convert(context, record);
+                    System.out.println(json);
+                    elasticsearchProvider.processRecord(context, record, json);
+                    if (recorHasNotBeenModified(record)) {
+                        elasticsearchQueueService.delete(context, record);
+                    }
                 } else {
                     existRecord = false;
                 }
+
             }
             context.complete();
         } catch (Exception e) {
@@ -76,6 +81,11 @@ public class SendRecordsToElasticsearch
         } finally {
             context.restoreAuthSystemState();
         }
+    }
+
+    private boolean recorHasNotBeenModified(ElasticsearchIndexQueue record) throws SQLException {
+        ElasticsearchIndexQueue recordToCheck = elasticsearchQueueService.find(context, record.getId());
+        return record.getInsertionDate().equals(recordToCheck.getInsertionDate());
     }
 
     private void assignCurrentUserInContext() throws SQLException {

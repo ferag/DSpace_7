@@ -5834,6 +5834,16 @@
           <required />
           <hint />
         </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>personProfile</dc-element>
+          <dc-qualifier>type</dc-qualifier>
+          <label>Profile Type</label>
+          <input-type value-pairs-name="peru_personprofile_type">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
       </row>
       <row>
         <field>
@@ -6304,6 +6314,16 @@
           <required />
           <hint />
         </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>personProfile</dc-element>
+          <dc-qualifier>type</dc-qualifier>
+          <label>Profile Type</label>
+          <input-type value-pairs-name="peru_personprofile_type">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
       </row>
       <row>
         <field>
@@ -6770,6 +6790,16 @@
           <dc-qualifier>name</dc-qualifier>
           <label>Main Affiliation</label>
           <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>personProfile</dc-element>
+          <dc-qualifier>type</dc-qualifier>
+          <label>Profile Type</label>
+          <input-type value-pairs-name="peru_personprofile_type">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -11825,6 +11855,20 @@
       <pair>
         <displayed-value>SubOrgUnit</displayed-value>
         <stored-value>suborgunit</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="peru_personprofile_type" dc-term="peru_personprofile_type">
+      <pair>
+        <displayed-value>Investigator</displayed-value>
+        <stored-value>Investigator</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Technician or assimilated</displayed-value>
+        <stored-value>Technician or assimilated</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Other support staff</displayed-value>
+        <stored-value>Other support staff</stored-value>
       </pair>
     </value-pairs>
   </form-value-pairs>

@@ -777,6 +777,14 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return setMetadataSingleValue(item, "perucris", "cvPerson", "syncQualification", enabled + "");
     }
 
+    public ItemBuilder withDateAccepted(String dateAccepted) {
+        return addMetadataValue(item, "dcterms", "dateAccepted", null, dateAccepted);
+    }
+
+    public ItemBuilder withDateSubmitted(String dateSubmitted) {
+        return addMetadataValue(item, "dcterms", "dateSubmitted", null, dateSubmitted);
+    }
+
     public ItemBuilder withHandle(String handle) {
         this.handle = handle;
         return this;
@@ -784,6 +792,22 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withNotificationTo(String notification, String authority) {
         return addMetadataValue(item, "perucris", "notification", "to", null, notification, authority, 600);
+    }
+
+    public ItemBuilder withRightsHolder(String rightsHolder) {
+        return addMetadataValue(item, "dcterms", "rightsHolder", null, rightsHolder);
+    }
+
+    public ItemBuilder withRelationPatent(String patent) {
+        return addMetadataValue(item, "dc", "relation", "patent", patent);
+    }
+
+    public ItemBuilder withDescriptionVersion(String version) {
+        return addMetadataValue(item, MetadataSchemaEnum.DC.getName(), "description", "version", version);
+    }
+
+    public ItemBuilder withPatentCountry(String country) {
+        return addMetadataValue(item, "oairecerif", "patent", "country", country);
     }
 
     /**

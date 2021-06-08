@@ -254,6 +254,7 @@ public class UnlockInstitutionAction extends ProcessingAction {
 
         if (concytecFeedback == ConcytecFeedback.REJECT) {
             workflowService.deleteWorkflowByWorkflowItem(context, workflowItem, context.getCurrentUser());
+            sendEmail(context, workflowItem.getItem(), workflowItem.getCollection());
             return getCancelActionResult();
         } else {
             itemCorrectionService.replaceCorrectionItemWithNative(context, workflowItem);

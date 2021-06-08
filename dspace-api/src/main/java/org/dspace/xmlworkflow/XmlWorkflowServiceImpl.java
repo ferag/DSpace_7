@@ -670,7 +670,7 @@ public class XmlWorkflowServiceImpl implements XmlWorkflowService {
     }
 
     private boolean isCvEntityClone(Item item) {
-        String itemRelationshipType = itemService.getMetadataFirstValue(item, "relationship", "type", null, Item.ANY);
+        String itemRelationshipType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
         if (StringUtils.isBlank(itemRelationshipType)) {
             return true;
         }

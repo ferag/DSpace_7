@@ -1138,6 +1138,7 @@
 				<entry key="bitstream" value-ref="virtualFieldBitstream" />
 				<entry key="mapConverter" value-ref="virtualFieldMapConverter" />
 				<entry key="personName" value-ref="virtualFieldPersonName" />
+				<entry key="date" value-ref="virtualFieldDateFormatter" />
 			</map>
 		</constructor-arg>
 	</bean>
@@ -1159,7 +1160,8 @@
 		<constructor-arg name="itemService" ref="org.dspace.content.ItemServiceImpl"/>
 		<constructor-arg name="mapConverters" ref="org.dspace.util.MapConverters"/>
 	</bean>
-
+	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldDateFormatter" id="virtualFieldDateFormatter"/>
+	
 	<!-- MapConverter configuration -->
 
 	<bean id="org.dspace.util.MapConverters"  class="org.dspace.util.MapConverters">

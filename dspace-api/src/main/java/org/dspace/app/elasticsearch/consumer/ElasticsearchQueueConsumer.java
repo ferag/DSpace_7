@@ -6,11 +6,8 @@
  * http://www.dspace.org/license/
  */
 package org.dspace.app.elasticsearch.consumer;
-
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -19,14 +16,10 @@ import org.dspace.app.elasticsearch.factory.ElasticsearchIndexQueueServiceFactor
 import org.dspace.app.elasticsearch.service.ElasticsearchIndexQueueService;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
-import org.dspace.content.factory.ContentServiceFactory;
-import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.event.Consumer;
 import org.dspace.event.Event;
-import org.dspace.services.ConfigurationService;
-import org.dspace.services.factory.DSpaceServicesFactory;
 
 /**
  * Consumer responsible for inserting events performed on items in the ElasticsearchIndexQueue table.
@@ -35,20 +28,14 @@ import org.dspace.services.factory.DSpaceServicesFactory;
  */
 public class ElasticsearchQueueConsumer implements Consumer {
 
-    private ItemService itemService;
-
-    private ConfigurationService configurationService;
-
     private ElasticsearchIndexQueueService elasticsearchIndexQueueService;
 
     private Set<Item> itemsAlreadyProcessed = new HashSet<Item>();
 
     @Override
     public void initialize() throws Exception {
-        this.itemService = ContentServiceFactory.getInstance().getItemService();
         this.elasticsearchIndexQueueService = ElasticsearchIndexQueueServiceFactory.getInstance()
                 .getElasticsearchIndexQueueService();
-        this.configurationService = DSpaceServicesFactory.getInstance().getConfigurationService();
     }
 
     @Override
@@ -59,7 +46,7 @@ public class ElasticsearchQueueConsumer implements Consumer {
         int eventType = event.getEventType();
         if (eventType == Event.CREATE || eventType == Event.MODIFY) {
             Item item = (Item) event.getSubject(context);
-            if (itemsAlreadyProcessed.contains(item) || !isSupportedEntityType(item)) {
+            if (itemsAlreadyProcessed.contains(item) || !elasticsearchIndexQueueService.isSupportedEntityType(item)) {
                 return;
             }
             elasticsearchIndexQueueService.create(context, item.getID(), event.getEventType());
@@ -72,7 +59,7 @@ public class ElasticsearchQueueConsumer implements Consumer {
                 return;
             }
             Item item = (Item) obj;
-            if (itemsAlreadyProcessed.contains(item) || !isSupportedEntityType(item)) {
+            if (itemsAlreadyProcessed.contains(item) || !elasticsearchIndexQueueService.isSupportedEntityType(item)) {
                 return;
             }
             // if the item has been withdrawn, update record with DELETE type
@@ -96,13 +83,6 @@ public class ElasticsearchQueueConsumer implements Consumer {
                 elasticsearchIndexQueueService.create(context, event.getSubjectID(), eventType);
             }
         }
-    }
-
-    private boolean isSupportedEntityType(Item item) {
-        String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
-        List<String> supportedEntities = Arrays.asList(
-                                      configurationService.getArrayProperty("elasticsearch.entity"));
-        return supportedEntities.contains(entityType);
     }
 
     @Override

@@ -7,29 +7,28 @@
  */
 package org.dspace.app.elasticsearch.externalservice;
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import javax.annotation.PostConstruct;
-import javax.net.ssl.SSLContext;
 
-import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
-import org.apache.http.ssl.SSLContexts;
-import org.elasticsearch.action.delete.DeleteRequest;
-import org.elasticsearch.action.delete.DeleteResponse;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestClientBuilder;
-import org.elasticsearch.client.RestClientBuilder.HttpClientConfigCallback;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.xcontent.XContentType;
+import org.apache.http.ssl.TrustStrategy;
+import org.dspace.app.elasticsearch.ElasticsearchIndexQueue;
 
 /**
  * This class deals with logic management to connect to the Elasticsearch external service
@@ -41,128 +40,108 @@ public class ElasticsearchConnectorImpl implements ElasticsearchConnector {
     private String user;
     private String password;
     private String url;
-    private int port;
 
-    private RestHighLevelClient client;
-
-//    public RestHighLevelClient createSimpleElasticClient() throws Exception {
-//
-//        try {
-//            final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-//            credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials("admin", "admin"));
-//
-//            SSLContextBuilder sslBuilder = SSLContexts.custom()
-//                    .loadTrustMaterial(null, (x509Certificates, s) -> true);
-//            final SSLContext sslContext = sslBuilder.build();
-//            RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(
-//                    new HttpHost("localhost", 9200, "https"))
-//                    .setHttpClientConfigCallback(new HttpClientConfigCallback() {
-//                        @Override
-//                        public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
-//                            return httpClientBuilder
-//                                     .setSSLContext(sslContext)
-//                                     .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
-//                                     .setDefaultCredentialsProvider(credentialsProvider);
-//                        }
-//                    })
-//                    .setRequestConfigCallback(new RestClientBuilder.RequestConfigCallback() {
-//                        @Override
-//                        public RequestConfig.Builder customizeRequestConfig(
-//                                RequestConfig.Builder requestConfigBuilder) {
-//                            return requestConfigBuilder.setConnectTimeout(5000)
-//                                    .setSocketTimeout(120000);
-//                        }
-//                    }));
-//            System.out.println("elasticsearch client created");
-//            return client;
-//        } catch (Exception e) {
-//            System.out.println(e);
-//            throw new Exception("Could not create an elasticsearch client!!");
-//        }
-//    }
-
-    public RestHighLevelClient createSimpleElasticClient() throws Exception {
-        try {
-            final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-            credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials("admin", "admin"));
-            SSLContextBuilder sslBuilder = SSLContexts.custom().loadTrustMaterial(null, (x509Certificates, s) -> true);
-            final SSLContext sslContext = sslBuilder.build();
-            RestHighLevelClient client = new RestHighLevelClient(RestClient
-                    .builder(new HttpHost("localhost", 9200, "https"))
-                    .setHttpClientConfigCallback(new HttpClientConfigCallback() {
-                        @Override
-                        public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
-                            return httpClientBuilder
-                                     .setSSLContext(sslContext)
-                                     .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
-                                     .setDefaultCredentialsProvider(credentialsProvider);
-                        }
-                    })
-                    .setRequestConfigCallback(new RestClientBuilder.RequestConfigCallback() {
-                        @Override
-                        public RequestConfig.Builder customizeRequestConfig(
-                                RequestConfig.Builder requestConfigBuilder) {
-                            return requestConfigBuilder.setConnectTimeout(5000).setSocketTimeout(120000);
-                        }
-                    }));
-            System.out.println("elasticsearch client created");
-            return client;
-        } catch (Exception e) {
-            System.out.println(e);
-            throw new Exception("Could not create an elasticsearch client!!");
-        }
-    }
+    private HttpClient httpClient;
 
     @PostConstruct
-    private void setup() throws Exception {
-        client = createSimpleElasticClient();
+    @SuppressWarnings("deprecation")
+    private void setup() throws IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+
+        // set credentials
+        CredentialsProvider provider = new BasicCredentialsProvider();
+        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(user, password);
+        provider.setCredentials(AuthScope.ANY, credentials);
+
+        //disable ssl verification
+        SSLContextBuilder builder = new SSLContextBuilder();
+        builder.loadTrustMaterial(null, new TrustStrategy() {
+            @Override
+            public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                return true;
+            }
+        });
+        SSLConnectionSocketFactory sslSF = new SSLConnectionSocketFactory(builder.build(),
+                                               SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+        this.httpClient = HttpClients.custom()
+                                     .setSSLSocketFactory(sslSF)
+                                     .setDefaultCredentialsProvider(provider).build();
     }
 
-//    @PostConstruct
-//    private void setup() {
-
-    //        final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-//        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials("admin", "admin"));
-//
-//        RestClientBuilder builder = RestClient.builder(new HttpHost("localhost", 9200, "https"))
-//                   .setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
-//                       @Override
-//                       public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
-//                           return httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-//                       }
-//                       });
-//
-//        client = new RestHighLevelClient(builder);
-//    }
-
     @Override
-    public void update(String json) {}
-
-    @Override
-    public void create(String json) throws IOException {
+    public HttpResponse create(String json, String index, ElasticsearchIndexQueue record) throws IOException {
         try {
-            boolean x = client.ping(RequestOptions.DEFAULT);
-            System.out.println(x);
+            HttpPost httpPost = new HttpPost(url + index + "/_doc/" + record.getId());
+            httpPost.setHeader("Content-type", "application/json; charset=UTF-8");
+            httpPost.setEntity(new StringEntity(json));
+            return httpClient.execute(httpPost);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-        } finally {
-            client.close();
+            throw new RuntimeException(e.getMessage());
         }
     }
 
     @Override
-    public void delete(String index, String id) throws IOException {
-        DeleteRequest request = new DeleteRequest(index, id);
-        DeleteResponse deleteResponse = client.delete(
-                request, RequestOptions.DEFAULT);
+    public HttpResponse update(String json, String index, ElasticsearchIndexQueue record) {
+        try {
+            HttpPost httpPost = new HttpPost(url + index + "/_doc/" + record.getId());
+            httpPost.setHeader("Content-type", "application/json; charset=UTF-8");
+            httpPost.setEntity(new StringEntity(json));
+            return httpClient.execute(httpPost);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
-    public RestHighLevelClient getClient() {
-        return client;
+    @Override
+    public HttpResponse delete(String index, ElasticsearchIndexQueue record) throws IOException {
+        try {
+            HttpDelete httpDelete = new HttpDelete(url + index + "/_doc/" + record.getId());
+            return httpClient.execute(httpDelete);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
-    public void setClient(RestHighLevelClient client) {
-        this.client = client;
+    @Override
+    public HttpResponse searchByIndexAndDoc(String index, ElasticsearchIndexQueue record) throws IOException {
+        try {
+            HttpGet httpGet = new HttpGet(url + index + "/_doc/" + record.getId());
+            return httpClient.execute(httpGet);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public HttpClient getHttpClient() {
+        return httpClient;
+    }
+
+    public void setHttpClient(HttpClient httpClient) {
+        this.httpClient = httpClient;
     }
 
 }

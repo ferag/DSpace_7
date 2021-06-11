@@ -9,8 +9,6 @@ package org.dspace.app.elasticsearch.service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -24,7 +22,6 @@ import org.dspace.content.crosswalk.CrosswalkException;
 import org.dspace.content.integration.crosswalks.ReferCrosswalk;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
-import org.dspace.services.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -40,7 +37,7 @@ public class ElasticsearchIndexConverter {
     private ItemService itemService;
 
     @Autowired
-    private ConfigurationService configurationService;
+    private ElasticsearchIndexQueueService elasticsearchIndexService;
 
     public ElasticsearchIndexConverter(Map<String,ReferCrosswalk> entity2ReferCrosswalk) {
         this.entity2ReferCrosswalk = entity2ReferCrosswalk;
@@ -49,8 +46,8 @@ public class ElasticsearchIndexConverter {
     public String convert(Context context, ElasticsearchIndexQueue record) throws SQLException {
         Item item = itemService.find(context, record.getId());
         if (Objects.nonNull(item)) {
-            String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
-            if (isSupportedEntityType(entityType)) {
+            if (elasticsearchIndexService.isSupportedEntityType(item)) {
+                String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
                 ReferCrosswalk referCrosswalk = entity2ReferCrosswalk.get(entityType);
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 try {
@@ -62,11 +59,6 @@ public class ElasticsearchIndexConverter {
             }
         }
         return StringUtils.EMPTY;
-    }
-
-    private boolean isSupportedEntityType(String entityType) {
-        List<String> supported = Arrays.asList(configurationService.getArrayProperty("elasticsearch.entity"));
-        return supported.contains(entityType);
     }
 
 }

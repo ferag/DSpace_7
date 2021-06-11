@@ -14,12 +14,24 @@
     <bean class="org.dspace.app.elasticsearch.service.ElasticsearchIndexConverter">
          <constructor-arg>
 			<map>
-				<entry key="Publication" value-ref="referCrosswalkOrgUnitXml" />
-				<!-- <entry key="Person" value-ref="" />  -->
+				<entry key="Publication" value-ref= "referCrosswalkElasticsearchPublication" />
+				<entry key="Person" value-ref= "referCrosswalkElasticsearchPerson" />
 			</map>
 		</constructor-arg>
 	</bean>
 
-    <bean class="org.dspace.app.elasticsearch.externalservice.ElasticsearchProvider" />
-    <bean class="org.dspace.app.elasticsearch.externalservice.ElasticsearchConnectorImpl" />
+    <bean class="org.dspace.app.elasticsearch.externalservice.ElasticsearchProvider">
+        <constructor-arg>
+			<map>
+				<entry key="" value= "" />
+			</map>
+		</constructor-arg>
+	</bean>
+
+    <bean class="org.dspace.app.elasticsearch.externalservice.ElasticsearchConnectorImpl">
+        <property name="user" value="${elasticsearch.clientId}" />
+        <property name="password" value="${elasticsearch.password}" />
+        <property name="url" value="${elasticsearch.url}" />
+    </bean>
+
 </beans>

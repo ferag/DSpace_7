@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.elasticsearch.ElasticsearchIndexQueue;
@@ -21,6 +22,7 @@ import org.dspace.app.elasticsearch.service.ElasticsearchIndexQueueService;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.factory.EPersonServiceFactory;
+import org.dspace.event.Event;
 import org.dspace.scripts.DSpaceRunnable;
 import org.dspace.utils.DSpace;
 
@@ -55,25 +57,31 @@ public class SendRecordsToElasticsearch
     @Override
     public void internalRun() throws Exception {
         boolean existRecord = true;
+        handler.logInfo("Start to send records to Elasticsearch!");
+        int countProcessedItems = 0;
         context = new Context();
         assignCurrentUserInContext();
         try {
             context.turnOffAuthorisationSystem();
+            String json = StringUtils.EMPTY;
             while (existRecord) {
                 ElasticsearchIndexQueue record = elasticsearchQueueService.getFirstRecord(context);
                 if (Objects.nonNull(record)) {
-                    String json = elasticsearchIndexConverter.convert(context, record);
-                    System.out.println(json);
+                    if (record.getOperationType() != Event.DELETE) {
+                        json = elasticsearchIndexConverter.convert(context, record);
+                    }
                     elasticsearchProvider.processRecord(context, record, json);
                     if (recorHasNotBeenModified(record)) {
                         elasticsearchQueueService.delete(context, record);
                     }
+                    countProcessedItems ++;
                 } else {
                     existRecord = false;
                 }
-
             }
             context.complete();
+            handler.logInfo(countProcessedItems + " ElasticsearchIndexQueue have been processed!");
+            handler.logInfo("Process end");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             handler.handleException(e);

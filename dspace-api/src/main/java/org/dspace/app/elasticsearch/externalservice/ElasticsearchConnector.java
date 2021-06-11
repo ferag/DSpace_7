@@ -6,18 +6,22 @@
  * http://www.dspace.org/license/
  */
 package org.dspace.app.elasticsearch.externalservice;
-
 import java.io.IOException;
+
+import org.apache.http.HttpResponse;
+import org.dspace.app.elasticsearch.ElasticsearchIndexQueue;
 
 /**
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
 public interface ElasticsearchConnector {
 
-    public void create(String json) throws IOException;
+    public HttpResponse create(String json, String index, ElasticsearchIndexQueue record) throws IOException;
 
-    public void update(String json);
+    public HttpResponse update(String json, String index, ElasticsearchIndexQueue record) throws IOException;
 
-    public void delete(String index, String id) throws IOException;
+    public HttpResponse delete(String index, ElasticsearchIndexQueue record) throws IOException;
+
+    public HttpResponse searchByIndexAndDoc(String index, ElasticsearchIndexQueue record) throws IOException;
 
 }

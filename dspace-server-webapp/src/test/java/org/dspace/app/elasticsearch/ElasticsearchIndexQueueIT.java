@@ -6,9 +6,14 @@
  * http://www.dspace.org/license/
  */
 package org.dspace.app.elasticsearch;
+import static org.dspace.app.launcher.ScriptLauncher.handleScript;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -16,24 +21,43 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.ProtocolVersion;
+import org.apache.http.StatusLine;
+import org.apache.http.client.HttpClient;
+import org.apache.http.message.BasicHttpResponse;
+import org.dspace.app.elasticsearch.externalservice.ElasticsearchConnectorImpl;
+import org.dspace.app.elasticsearch.externalservice.ElasticsearchProvider;
+import org.dspace.app.elasticsearch.service.ElasticsearchIndexConverter;
 import org.dspace.app.elasticsearch.service.ElasticsearchIndexQueueService;
+import org.dspace.app.launcher.ScriptLauncher;
+import org.dspace.app.rest.matcher.HttpEntityRequestMatcher;
 import org.dspace.app.rest.model.patch.Operation;
 import org.dspace.app.rest.model.patch.ReplaceOperation;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
+import org.dspace.app.scripts.handler.impl.TestDSpaceRunnableHandler;
 import org.dspace.builder.CollectionBuilder;
 import org.dspace.builder.CommunityBuilder;
+import org.dspace.builder.ElasticsearchIndexQueueBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
 import org.dspace.event.Event;
 import org.dspace.services.ConfigurationService;
 import org.hamcrest.Matchers;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
+import org.mockito.invocation.Invocation;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -49,12 +73,34 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
     @Autowired
     private ConfigurationService configurationService;
 
+    @Autowired
+    private ElasticsearchProvider elasticsearchProvider;
+
+    @Autowired
+    private ElasticsearchConnectorImpl elasticsearchConnector;
+
+    @Autowired
+    private ElasticsearchIndexConverter elasticsearchIndexConverter;
+
+    private Map<String, String> originIndexes;
+
     @Before
     @Override
     public void setUp() throws Exception {
         super.setUp();
+        Map<String, String> testIndexes = new HashMap<String, String>();
+        testIndexes.put("Publication", "test_pub");
+        testIndexes.put("Person", "test_pers");
         configurationService.addPropertyValue("elasticsearch.entity", "Person");
         configurationService.addPropertyValue("elasticsearch.entity", "Publication");
+        this.originIndexes = elasticsearchProvider.getIndexes();
+        elasticsearchProvider.setIndexes(testIndexes);
+    }
+
+    @After
+    @Override
+    public void destroy() throws Exception {
+        elasticsearchProvider.setIndexes(originIndexes);
     }
 
     @Test
@@ -253,6 +299,174 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
             context.setCurrentUser(admin);
             elasticsearchService.delete(context, record);
         }
+    }
+
+    @Test
+    public void sendElasticsearchIndexQueueWithCreateOperationTypeTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        HttpClient originHttpClient = elasticsearchConnector.getHttpClient();
+        HttpClient mockHttpClient = Mockito.mock(HttpClient.class);
+        try {
+            elasticsearchConnector.setHttpClient(mockHttpClient);
+
+            HttpResponse response = mock(HttpResponse.class);
+            when(response.getStatusLine()).thenReturn(statusLine(new ProtocolVersion("http", 1, 1),
+                                                                     HttpStatus.SC_CREATED, "OK"));
+
+            when(mockHttpClient.execute(ArgumentMatchers.any())).thenReturn(response);
+
+            parentCommunity = CommunityBuilder.createCommunity(context)
+                                              .withName("Parent Community")
+                                              .build();
+
+            Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
+                                               .withName("Collection 1").build();
+
+            Item publicationItem = ItemBuilder.createItem(context, col1)
+                                              .withTitle("Publication item Title")
+                                              .withIssueDate("2020-06-25")
+                                              .withAuthor("Smith, Maria")
+                                              .withEntityType("Publication").build();
+
+            ElasticsearchIndexQueue record = elasticsearchService.find(context, publicationItem.getID());
+            assertNotNull(record);
+            assertEquals(publicationItem.getID().toString(), record.getID().toString());
+            assertEquals(Event.CREATE, record.getOperationType().intValue());
+            String json = elasticsearchIndexConverter.convert(context, record);
+
+            context.restoreAuthSystemState();
+
+            String[] args = new String[] { "update-elasticsearch" };
+            TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
+
+            assertEquals(0, handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin));
+
+            verify(mockHttpClient).execute(ArgumentMatchers.argThat(new HttpEntityRequestMatcher(json, "POST" )));
+
+            record = elasticsearchService.find(context, publicationItem.getID());
+            assertNull(record);
+        } finally {
+            elasticsearchConnector.setHttpClient(originHttpClient);
+        }
+    }
+
+    @Test
+    public void sendElasticsearchIndexQueueWithModifyOperationTypeTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        HttpClient originHttpClient = elasticsearchConnector.getHttpClient();
+        HttpClient mockHttpClient = Mockito.mock(HttpClient.class);
+        try {
+            elasticsearchConnector.setHttpClient(mockHttpClient);
+
+            HttpResponse response = mock(HttpResponse.class);
+            when(response.getStatusLine()).thenReturn(statusLine(new ProtocolVersion("http", 1, 1),
+                                                                     HttpStatus.SC_OK, "OK"));
+
+            when(mockHttpClient.execute(ArgumentMatchers.any())).thenReturn(response);
+
+            parentCommunity = CommunityBuilder.createCommunity(context)
+                                              .withName("Parent Community")
+                                              .build();
+
+            Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
+                                               .withName("Collection 1").build();
+
+            Item publicationItem = ItemBuilder.createItem(context, col1)
+                                              .withTitle("Publication item Title")
+                                              .withIssueDate("2020-09-20")
+                                              .withAuthor("Smith, Maria")
+                                              .withEntityType("Publication").build();
+
+            List<Operation> ops = new ArrayList<>();
+            List<Map<String, String>> values = new ArrayList<>();
+            Map<String, String> value = new HashMap<>();
+            value.put("value", "New Title");
+            values.add(value);
+            ops.add(new ReplaceOperation("/metadata/dc.title", values));
+
+            String tokenAdmin = getAuthToken(admin.getEmail(), password);
+            getClient(tokenAdmin).perform(patch("/api/core/items/" + publicationItem.getID())
+                                 .content(getPatchContent(ops))
+                                 .contentType(contentType))
+                                 .andExpect(status().isOk());
+
+            ElasticsearchIndexQueue record = elasticsearchService.find(context, publicationItem.getID());
+            assertNotNull(record);
+            assertEquals(publicationItem.getID().toString(), record.getID().toString());
+            assertEquals(Event.MODIFY_METADATA, record.getOperationType().intValue());
+            String json = elasticsearchIndexConverter.convert(context, record);
+
+            context.restoreAuthSystemState();
+
+            String[] args = new String[] { "update-elasticsearch" };
+            TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
+
+            assertEquals(0, handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin));
+
+            verify(mockHttpClient).execute(ArgumentMatchers.argThat(new HttpEntityRequestMatcher(json, "POST" )));
+
+            record = elasticsearchService.find(context, publicationItem.getID());
+            assertNull(record);
+
+        } finally {
+            elasticsearchConnector.setHttpClient(originHttpClient);
+        }
+    }
+
+    @Test
+    public void sendElasticsearchIndexQueueWithDeleteOperationTypeTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        HttpClient originHttpClient = elasticsearchConnector.getHttpClient();
+        HttpClient mockHttpClient = Mockito.mock(HttpClient.class);
+        try {
+            elasticsearchConnector.setHttpClient(mockHttpClient);
+
+            BasicHttpResponse basicHttpResponse = new BasicHttpResponse(new ProtocolVersion("http", 1, 1), 200, "OK");
+
+            when(mockHttpClient.execute(ArgumentMatchers.any())).thenReturn(basicHttpResponse);
+
+            UUID uuid = UUID.randomUUID();
+            ElasticsearchIndexQueueBuilder.createElasticsearchIndexQueue(context, uuid, Event.DELETE).build();
+
+            context.restoreAuthSystemState();
+
+            String[] args = new String[] { "update-elasticsearch" };
+            TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
+
+            assertEquals(0, handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin));
+
+            java.util.Collection<Invocation> invocations = Mockito.mockingDetails(mockHttpClient).getInvocations();
+            assertEquals(2, invocations.size());
+            Iterator<Invocation> invocationIterator = invocations.iterator();
+            assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("GET"));
+            assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("DELETE"));
+
+            assertNull(elasticsearchService.find(context, uuid));
+        } finally {
+            elasticsearchConnector.setHttpClient(originHttpClient);
+        }
+    }
+
+    private StatusLine statusLine(final ProtocolVersion protocolVersion, int statusCode, String reason) {
+        return new StatusLine() {
+            @Override
+            public ProtocolVersion getProtocolVersion() {
+                return protocolVersion;
+            }
+
+            @Override
+            public int getStatusCode() {
+                return statusCode;
+            }
+
+            @Override
+            public String getReasonPhrase() {
+                return reason;
+            }
+        };
     }
 
 }

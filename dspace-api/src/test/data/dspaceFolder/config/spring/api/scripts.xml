@@ -85,6 +85,11 @@
         <property name="dspaceRunnableClass" value="org.dspace.perucris.externalservices.CreateWorkspaceItemWithExternalSourceCli"/>
     </bean>
 
+    <bean id="update-elasticsearch" class="org.dspace.app.elasticsearch.script.SendRecordsToElasticsearchCliScriptConfiguration">
+        <property name="description" value="Perform the updating of elasticsearch records"/>
+        <property name="dspaceRunnableClass" value="org.dspace.app.elasticsearch.script.SendRecordsToElasticsearchCli"/>
+    </bean>
+
     <!-- Keep as last script; for test ScriptRestRepository#findOneScriptByNameTest -->
     <bean id="mock-script" class="org.dspace.scripts.MockDSpaceRunnableScriptConfiguration" scope="prototype">
         <property name="description" value="Mocking a script for testing purposes" />

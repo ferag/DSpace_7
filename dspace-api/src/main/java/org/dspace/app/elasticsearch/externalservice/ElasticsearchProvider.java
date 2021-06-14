@@ -49,7 +49,9 @@ public class ElasticsearchProvider {
                 break;
             case Event.DELETE : deleteDocument(record, index);
                 break;
-            case Event.MODIFY | Event.MODIFY_METADATA : updateDocument(record, json, index);
+            case Event.MODIFY : updateDocument(record, json, index);
+                break;
+            case Event.MODIFY_METADATA : updateDocument(record, json, index);
                 break;
             default:
                 throw new RuntimeException("The operation type : " + record.getOperationType() +

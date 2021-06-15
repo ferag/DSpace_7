@@ -17,8 +17,8 @@ import org.apache.logging.log4j.Logger;
 import org.dspace.app.elasticsearch.ElasticsearchIndexQueue;
 import org.dspace.app.elasticsearch.externalservice.ElasticsearchProvider;
 import org.dspace.app.elasticsearch.factory.ElasticsearchIndexQueueServiceFactory;
-import org.dspace.app.elasticsearch.service.ElasticsearchIndexConverter;
 import org.dspace.app.elasticsearch.service.ElasticsearchIndexQueueService;
+import org.dspace.app.elasticsearch.service.ElasticsearchItemBuilder;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.factory.EPersonServiceFactory;
@@ -27,7 +27,8 @@ import org.dspace.scripts.DSpaceRunnable;
 import org.dspace.utils.DSpace;
 
 /**
- * Implementation of {@link DSpaceRunnable}
+ * Implementation of {@link DSpaceRunnable} to process ElasticsearchIndex queue
+ * and send documents in JSON format to Elasticsearch.
  *
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
@@ -38,25 +39,30 @@ public class SendRecordsToElasticsearch
 
     private ElasticsearchIndexQueueService elasticsearchQueueService;
 
-    private ElasticsearchIndexConverter elasticsearchIndexConverter;
+    private ElasticsearchItemBuilder elasticsearchIndexConverter;
 
     private ElasticsearchProvider elasticsearchProvider;
 
     private Context context;
+
+    private Integer limit;
 
     @Override
     public void setup() throws ParseException {
         this.elasticsearchQueueService = ElasticsearchIndexQueueServiceFactory.getInstance()
                                                         .getElasticsearchIndexQueueService();
         this.elasticsearchIndexConverter = new DSpace().getServiceManager().getServiceByName(
-                                ElasticsearchIndexConverter.class.getName(), ElasticsearchIndexConverter.class);
+                                ElasticsearchItemBuilder.class.getName(), ElasticsearchItemBuilder.class);
         this.elasticsearchProvider = new DSpace().getServiceManager().getServiceByName(
                                             ElasticsearchProvider.class.getName(), ElasticsearchProvider.class);
+        String strLimit = commandLine.getOptionValue('l');
+        this.limit = StringUtils.isNotBlank(strLimit) ?  Integer.valueOf(strLimit) : 0;
     }
 
     @Override
     public void internalRun() throws Exception {
         boolean existRecord = true;
+        boolean checkLimit = false;
         handler.logInfo("Start to send records to Elasticsearch!");
         int countProcessedItems = 0;
         context = new Context();
@@ -64,7 +70,7 @@ public class SendRecordsToElasticsearch
         try {
             context.turnOffAuthorisationSystem();
             String json = StringUtils.EMPTY;
-            while (existRecord) {
+            while (existRecord && !checkLimit) {
                 ElasticsearchIndexQueue record = elasticsearchQueueService.getFirstRecord(context);
                 if (Objects.nonNull(record)) {
                     if (record.getOperationType() != Event.DELETE) {
@@ -75,6 +81,9 @@ public class SendRecordsToElasticsearch
                         elasticsearchQueueService.delete(context, record);
                     }
                     countProcessedItems ++;
+                    if (this.limit == countProcessedItems) {
+                        checkLimit = true;
+                    }
                 } else {
                     existRecord = false;
                 }

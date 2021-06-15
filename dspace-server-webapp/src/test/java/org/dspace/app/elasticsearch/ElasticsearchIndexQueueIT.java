@@ -35,8 +35,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.message.BasicHttpResponse;
 import org.dspace.app.elasticsearch.externalservice.ElasticsearchConnectorImpl;
 import org.dspace.app.elasticsearch.externalservice.ElasticsearchProvider;
-import org.dspace.app.elasticsearch.service.ElasticsearchIndexConverter;
 import org.dspace.app.elasticsearch.service.ElasticsearchIndexQueueService;
+import org.dspace.app.elasticsearch.service.ElasticsearchItemBuilder;
 import org.dspace.app.launcher.ScriptLauncher;
 import org.dspace.app.rest.matcher.HttpEntityRequestMatcher;
 import org.dspace.app.rest.model.patch.Operation;
@@ -80,7 +80,7 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
     private ElasticsearchConnectorImpl elasticsearchConnector;
 
     @Autowired
-    private ElasticsearchIndexConverter elasticsearchIndexConverter;
+    private ElasticsearchItemBuilder elasticsearchIndexConverter;
 
     private Map<String, String> originIndexes;
 
@@ -352,7 +352,7 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
     }
 
     @Test
-    public void sendElasticsearchIndexQueueWithModifyOperationTypeTest() throws Exception {
+    public void sendElasticsearchIndexQueueWithModifyMetadataOperationTypeTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
         HttpClient originHttpClient = elasticsearchConnector.getHttpClient();

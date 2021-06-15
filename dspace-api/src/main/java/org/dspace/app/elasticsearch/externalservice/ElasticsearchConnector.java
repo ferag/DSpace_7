@@ -12,6 +12,8 @@ import org.apache.http.HttpResponse;
 import org.dspace.app.elasticsearch.ElasticsearchIndexQueue;
 
 /**
+ * This class deals with logic management to connect to the Elasticsearch external service
+ *
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
 public interface ElasticsearchConnector {

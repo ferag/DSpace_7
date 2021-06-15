@@ -11,7 +11,7 @@
     
     <bean class="org.dspace.app.elasticsearch.service.impl.ElasticsearchIndexQueueServiceImpl" />
 
-    <bean class="org.dspace.app.elasticsearch.service.ElasticsearchIndexConverter">
+    <bean class="org.dspace.app.elasticsearch.service.ElasticsearchItemBuilder">
          <constructor-arg>
 			<map>
 				<entry key="Publication" value-ref= "referCrosswalkElasticsearchPublication" />

@@ -51,6 +51,7 @@ public class ElasticsearchQueueConsumer implements Consumer {
             }
             elasticsearchIndexQueueService.create(context, item.getID(), event.getEventType());
             itemsAlreadyProcessed.add(item);
+            return;
         }
         ElasticsearchIndexQueue elasticIndex = elasticsearchIndexQueueService.find(context, event.getSubjectID());
         if (eventType == Event.MODIFY_METADATA) {
@@ -73,6 +74,7 @@ public class ElasticsearchQueueConsumer implements Consumer {
                 elasticsearchIndexQueueService.update(context, elasticIndex);
             }
             itemsAlreadyProcessed.add((Item) obj);
+            return;
         }
         if (eventType == Event.DELETE) {
             if (Objects.nonNull(elasticIndex)) {

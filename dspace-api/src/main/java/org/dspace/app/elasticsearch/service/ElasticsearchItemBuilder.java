@@ -25,11 +25,14 @@ import org.dspace.core.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
+ * This is the converter from/to the Item
+ * in the JSON/XML data model using ReferCrosswalk.
+ * 
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
-public class ElasticsearchIndexConverter {
+public class ElasticsearchItemBuilder {
 
-    private static final Logger log = LogManager.getLogger(ElasticsearchIndexConverter.class);
+    private static final Logger log = LogManager.getLogger(ElasticsearchItemBuilder.class);
 
     private final Map<String,ReferCrosswalk> entity2ReferCrosswalk;
 
@@ -39,10 +42,18 @@ public class ElasticsearchIndexConverter {
     @Autowired
     private ElasticsearchIndexQueueService elasticsearchIndexService;
 
-    public ElasticsearchIndexConverter(Map<String,ReferCrosswalk> entity2ReferCrosswalk) {
+    public ElasticsearchItemBuilder(Map<String,ReferCrosswalk> entity2ReferCrosswalk) {
         this.entity2ReferCrosswalk = entity2ReferCrosswalk;
     }
 
+    /**
+     * Convert related Item of record in JSON/XML format
+     * 
+     * @param context         DSpace context object
+     * @param record          ElasticsearchIndexQueue object
+     * @return                as String converted object, empty if related item non exist or EntityType non supported
+     * @throws SQLException   if database error
+     */
     public String convert(Context context, ElasticsearchIndexQueue record) throws SQLException {
         Item item = itemService.find(context, record.getId());
         if (Objects.nonNull(item)) {

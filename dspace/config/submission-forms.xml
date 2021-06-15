@@ -2281,8 +2281,8 @@
           <repeatable>false</repeatable>
           <required>You must enter at least the year.</required>
           <hint>Please give the date of previous publication or public distribution.
-                        You can leave out the day and/or month if they aren't
-                        applicable.</hint>
+            You can leave out the day and/or month if they aren't
+            applicable.</hint>
         </field>
       </row>
       <row>
@@ -2486,8 +2486,8 @@
           <repeatable>false</repeatable>
           <required>You must enter at least the year.</required>
           <hint>Please give the date of previous publication or public distribution.
-                        You can leave out the day and/or month if they aren't
-                        applicable.</hint>
+            You can leave out the day and/or month if they aren't
+            applicable.</hint>
         </field>
       </row>
       <row>
@@ -2691,8 +2691,8 @@
           <repeatable>false</repeatable>
           <required>You must enter at least the year.</required>
           <hint>Please give the date of previous publication or public distribution.
-                        You can leave out the day and/or month if they aren't
-                        applicable.</hint>
+            You can leave out the day and/or month if they aren't
+            applicable.</hint>
         </field>
       </row>
       <row>
@@ -4918,7 +4918,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Date of filing the application.
-You can leave out the day and/or month if they aren't applicable.</hint>
+            You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
         <field>
           <dc-schema>dc</dc-schema>
@@ -4929,7 +4929,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Date of making available to the public by printing or similar process of a patent document on which grant has taken place on or before the said date.
-You can leave out the day and/or month if they aren't applicable.</hint>
+            You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
       <row>
@@ -5066,7 +5066,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Date of filing the application.
-You can leave out the day and/or month if they aren't applicable.</hint>
+            You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
         <field>
           <dc-schema>dc</dc-schema>
@@ -5077,7 +5077,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Date of making available to the public by printing or similar process of a patent document on which grant has taken place on or before the said date.
-You can leave out the day and/or month if they aren't applicable.</hint>
+            You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
       <row>
@@ -5214,7 +5214,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Date of filing the application.
-You can leave out the day and/or month if they aren't applicable.</hint>
+            You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
         <field>
           <dc-schema>dc</dc-schema>
@@ -5225,7 +5225,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Date of making available to the public by printing or similar process of a patent document on which grant has taken place on or before the said date.
-You can leave out the day and/or month if they aren't applicable.</hint>
+            You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
       <row>
@@ -5834,6 +5834,16 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
         </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>personProfile</dc-element>
+          <dc-qualifier>type</dc-qualifier>
+          <label>Profile Type</label>
+          <input-type value-pairs-name="peru_personprofile_type">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
       </row>
       <row>
         <field>
@@ -6300,6 +6310,16 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-qualifier>name</dc-qualifier>
           <label>Main Affiliation</label>
           <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>personProfile</dc-element>
+          <dc-qualifier>type</dc-qualifier>
+          <label>Profile Type</label>
+          <input-type value-pairs-name="peru_personprofile_type">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -6774,6 +6794,16 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
         </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>personProfile</dc-element>
+          <dc-qualifier>type</dc-qualifier>
+          <label>Profile Type</label>
+          <input-type value-pairs-name="peru_personprofile_type">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
       </row>
       <row>
         <field>
@@ -7048,6 +7078,30 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>ctivitaepolicy</dc-element>
           <dc-qualifier>organization</dc-qualifier>
           <label>Group(s) enabled on OrgUnit box</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>internalNote</dc-qualifier>
+          <label>Internal Note</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>cris</dc-schema>
+          <dc-element>policy</dc-element>
+          <dc-qualifier>group</dc-qualifier>
+          <label>Group(s) enabled to view Internal Note</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -7397,6 +7451,38 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       <row>
         <field>
           <dc-schema>perucris</dc-schema>
+          <dc-element>sti</dc-element>
+          <dc-qualifier>actions</dc-qualifier>
+          <label>Technological Surveillance Actions</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>sti</dc-element>
+          <dc-qualifier>formalUnit</dc-qualifier>
+          <label>Has formal technological surveillance unit</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>sti</dc-element>
+          <dc-qualifier>qualityCertified</dc-qualifier>
+          <label>166006 or equivalent certified</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
           <dc-element>description</dc-element>
           <dc-qualifier>internalNote</dc-qualifier>
           <label>Internal Note</label>
@@ -7634,6 +7720,36 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
       <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>sti</dc-element>
+          <dc-qualifier>actions</dc-qualifier>
+          <label>Technological Surveillance Actions</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>sti</dc-element>
+          <dc-qualifier>formalUnit</dc-qualifier>
+          <label>Has formal technological surveillance unit</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>sti</dc-element>
+          <dc-qualifier>qualityCertified</dc-qualifier>
+          <label>166006 or equivalent certified</label>
+          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>description</dc-element>
@@ -11739,6 +11855,20 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       <pair>
         <displayed-value>SubOrgUnit</displayed-value>
         <stored-value>suborgunit</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="peru_personprofile_type" dc-term="peru_personprofile_type">
+      <pair>
+        <displayed-value>Investigator</displayed-value>
+        <stored-value>Investigator</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Technician or assimilated</displayed-value>
+        <stored-value>Technician or assimilated</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Other support staff</displayed-value>
+        <stored-value>Other support staff</stored-value>
       </pair>
     </value-pairs>
   </form-value-pairs>

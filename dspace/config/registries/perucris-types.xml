@@ -687,6 +687,32 @@
 
     <dc-type>
         <schema>perucris</schema>
+        <element>sti</element>
+        <qualifier>actions</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>sti</element>
+        <qualifier>formalUnit</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>sti</element>
+        <qualifier>qualityCertified</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>personProfile</element>
+        <qualifier>type</qualifier>
+    </dc-type>
+
+
+
+    <dc-type>
+        <schema>perucris</schema>
         <element>cvPerson</element>
         <qualifier>syncEducation</qualifier>
     </dc-type>
@@ -815,6 +841,12 @@
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>personaffiliationname</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>flagcv</element>
+	    <qualifier>perucrispersonprofiletype</qualifier>
     </dc-type>
     
     <dc-type>
@@ -1627,5 +1659,11 @@
         <element>ctivitaepolicy</element>
         <qualifier>organization</qualifier>
     </dc-type>
-    
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ctivitaepolicy</element>
+        <qualifier>group</qualifier>
+    </dc-type>
+
 </dspace-dc-types>

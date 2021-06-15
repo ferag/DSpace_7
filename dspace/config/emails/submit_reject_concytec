@@ -10,6 +10,8 @@ You submitted: ${params[0]}
 
 To collection: ${params[1]}
 
+Your submission has been rejected
+
 Your submission has not been deleted.
 You can access it from your "My DSpace" page: ${params[2]}
 

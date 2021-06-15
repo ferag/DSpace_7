@@ -155,6 +155,18 @@
         </property>
     </bean>
 
+    <bean id="cvperson-mainReports" class="org.dspace.app.rest.model.UsageReportCategoryRest">
+        <property name="categoryType" value="mainReports" />
+        <property name="reports">
+            <map>
+                <entry key="TotalVisits" value-ref="totalVisitGenerator" />
+                <entry key="TotalVisitsPerMonth" value-ref="totalVisitPerPeriodGenerator" />
+                <entry key="TopCountries" value-ref="topCountriesGenerator" />
+                <entry key="TopCities" value-ref="topCitiesGenerator" />
+            </map>
+        </property>
+    </bean>
+
     <bean id="site-mainReports" class="org.dspace.app.rest.model.UsageReportCategoryRest">
         <property name="categoryType" value="mainReports" />
         <property name="reports">
@@ -205,6 +217,11 @@
 		                <ref bean="person-projectsReports"/>
 		            </list>
 		        </entry>
+                <entry key="item-CvPerson">
+                    <list>
+                        <ref bean="cvperson-mainReports"/>
+                    </list>
+                </entry>
 		        <entry key="bitstream">
                     <list>
                         <ref bean="bitstream-mainReports"/>

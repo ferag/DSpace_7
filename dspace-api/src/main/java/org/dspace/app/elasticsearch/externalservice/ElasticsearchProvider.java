@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.dspace.app.elasticsearch.ElasticsearchIndexQueue;
+import org.dspace.app.elasticsearch.exception.ElasticsearchException;
 import org.dspace.content.Item;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
@@ -22,6 +23,8 @@ import org.dspace.event.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
+ * The scope of this class is to manage sending of requests to Elasticsearch.
+ * 
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
 public class ElasticsearchProvider {
@@ -38,6 +41,15 @@ public class ElasticsearchProvider {
         this.indexes = indexes;
     }
 
+    /**
+     * Processes record according to the operation type
+     * 
+     * @param context        DSpace context object
+     * @param record         ElasticsearchIndexQueue object
+     * @param json           Json representation of item related to the record
+     * @throws IOException   if IO error
+     * @throws SQLException  If there's a database problem
+     */
     public void processRecord(Context context, ElasticsearchIndexQueue record, String json)
             throws IOException, SQLException {
         String index = getIndex(context, record);
@@ -63,7 +75,7 @@ public class ElasticsearchProvider {
         HttpResponse responce =  elasticsearchConnector.create(json, index, record);
         int status = responce.getStatusLine().getStatusCode();
         if (status != HttpStatus.SC_CREATED) {
-            throw new RuntimeException("It was not possible to CREATE document with uuid: " + record.getId() +
+            throw new ElasticsearchException("It was not possible to CREATE document with uuid: " + record.getId() +
                                        "  Elasticsearch returned status code : " + status);
         }
     }
@@ -72,7 +84,7 @@ public class ElasticsearchProvider {
         HttpResponse responce = elasticsearchConnector.update(json, index, record);
         int status = responce.getStatusLine().getStatusCode();
         if (status != HttpStatus.SC_OK) {
-            throw new RuntimeException("It was not possible to UPDATE document with uuid: " + record.getId() +
+            throw new ElasticsearchException("It was not possible to UPDATE document with uuid: " + record.getId() +
                                        "  Elasticsearch returned status code : " + status);
         }
     }
@@ -81,7 +93,7 @@ public class ElasticsearchProvider {
         HttpResponse responce = elasticsearchConnector.delete(index, record);
         int status = responce.getStatusLine().getStatusCode();
         if (status != HttpStatus.SC_OK) {
-            throw new RuntimeException("It was not possible to DELETE document with uuid: " + record.getId() +
+            throw new ElasticsearchException("It was not possible to DELETE document with uuid: " + record.getId() +
                                        "  Elasticsearch returned status code : " + status);
         }
     }
@@ -99,6 +111,7 @@ public class ElasticsearchProvider {
         Item item = itemService.find(context, record.getId());
         if (Objects.nonNull(item)) {
             String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
+            entityType.toLowerCase();
             return indexes.containsKey(entityType) ? indexes.get(entityType) : StringUtils.EMPTY;
         }
         return StringUtils.EMPTY;

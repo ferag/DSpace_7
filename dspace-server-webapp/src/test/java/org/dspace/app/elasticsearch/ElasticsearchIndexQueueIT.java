@@ -450,6 +450,25 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
         }
     }
 
+    @Test
+    public void sendElasticsearchIndexQueueIndexNotFoundTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        UUID uuid = UUID.randomUUID();
+        ElasticsearchIndexQueueBuilder.createElasticsearchIndexQueue(context, uuid, 100).build();
+
+        context.restoreAuthSystemState();
+
+        String[] args = new String[] { "update-elasticsearch" };
+        TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
+
+        assertEquals(0, handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin));
+        Exception exception = handler.getException();
+        assertNotNull(exception);
+        assertEquals("Not found index for ElasticsearchIndexQueue with uuid: " + uuid.toString(),
+                     exception.getMessage());
+    }
+
     private StatusLine statusLine(final ProtocolVersion protocolVersion, int statusCode, String reason) {
         return new StatusLine() {
             @Override

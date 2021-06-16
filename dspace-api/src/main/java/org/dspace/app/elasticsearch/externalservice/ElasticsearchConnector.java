@@ -7,9 +7,9 @@
  */
 package org.dspace.app.elasticsearch.externalservice;
 import java.io.IOException;
+import java.util.UUID;
 
 import org.apache.http.HttpResponse;
-import org.dspace.app.elasticsearch.ElasticsearchIndexQueue;
 
 /**
  * This class deals with logic management to connect to the Elasticsearch external service
@@ -18,12 +18,13 @@ import org.dspace.app.elasticsearch.ElasticsearchIndexQueue;
  */
 public interface ElasticsearchConnector {
 
-    public HttpResponse create(String json, String index, ElasticsearchIndexQueue record) throws IOException;
+    public HttpResponse create(String json, String index, UUID docId) throws IOException;
 
-    public HttpResponse update(String json, String index, ElasticsearchIndexQueue record) throws IOException;
+    public HttpResponse update(String json, String index, UUID docId) throws IOException;
 
-    public HttpResponse delete(String index, ElasticsearchIndexQueue record) throws IOException;
+    public HttpResponse delete(String index, UUID docId) throws IOException;
 
-    public HttpResponse searchByIndexAndDoc(String index, ElasticsearchIndexQueue record) throws IOException;
+    public HttpResponse searchByIndexAndDoc(String index, UUID docId) throws IOException;
 
+    public HttpResponse deleteIndex(String index) throws IOException;
 }

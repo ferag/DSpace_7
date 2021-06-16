@@ -12,6 +12,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.UUID;
 import javax.annotation.PostConstruct;
 
 import org.apache.http.HttpResponse;
@@ -28,7 +29,6 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.TrustStrategy;
-import org.dspace.app.elasticsearch.ElasticsearchIndexQueue;
 
 /**
  * This class deals with logic management to connect to the Elasticsearch external service
@@ -69,9 +69,9 @@ public class ElasticsearchConnectorImpl implements ElasticsearchConnector {
     }
 
     @Override
-    public HttpResponse create(String json, String index, ElasticsearchIndexQueue record) throws IOException {
+    public HttpResponse create(String json, String index, UUID docId) throws IOException {
         try {
-            HttpPost httpPost = new HttpPost(url + index + "/_doc/" + record.getId());
+            HttpPost httpPost = new HttpPost(url + index + "/_doc/" + docId);
             httpPost.setHeader("Content-type", "application/json; charset=UTF-8");
             httpPost.setEntity(new StringEntity(json));
             return httpClient.execute(httpPost);
@@ -81,9 +81,9 @@ public class ElasticsearchConnectorImpl implements ElasticsearchConnector {
     }
 
     @Override
-    public HttpResponse update(String json, String index, ElasticsearchIndexQueue record) {
+    public HttpResponse update(String json, String index, UUID docId) {
         try {
-            HttpPost httpPost = new HttpPost(url + index + "/_doc/" + record.getId());
+            HttpPost httpPost = new HttpPost(url + index + "/_doc/" + docId);
             httpPost.setHeader("Content-type", "application/json; charset=UTF-8");
             httpPost.setEntity(new StringEntity(json));
             return httpClient.execute(httpPost);
@@ -93,9 +93,9 @@ public class ElasticsearchConnectorImpl implements ElasticsearchConnector {
     }
 
     @Override
-    public HttpResponse delete(String index, ElasticsearchIndexQueue record) throws IOException {
+    public HttpResponse delete(String index, UUID docId) throws IOException {
         try {
-            HttpDelete httpDelete = new HttpDelete(url + index + "/_doc/" + record.getId());
+            HttpDelete httpDelete = new HttpDelete(url + index + "/_doc/" + docId);
             return httpClient.execute(httpDelete);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -103,10 +103,20 @@ public class ElasticsearchConnectorImpl implements ElasticsearchConnector {
     }
 
     @Override
-    public HttpResponse searchByIndexAndDoc(String index, ElasticsearchIndexQueue record) throws IOException {
+    public HttpResponse searchByIndexAndDoc(String index, UUID docId) throws IOException {
         try {
-            HttpGet httpGet = new HttpGet(url + index + "/_doc/" + record.getId());
+            HttpGet httpGet = new HttpGet(url + index + "/_doc/" + docId);
             return httpClient.execute(httpGet);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public HttpResponse deleteIndex(String index) throws IOException {
+        try {
+            HttpDelete httpDelete = new HttpDelete(url + index);
+            return httpClient.execute(httpDelete);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }

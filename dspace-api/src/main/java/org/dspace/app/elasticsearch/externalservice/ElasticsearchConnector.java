@@ -27,4 +27,7 @@ public interface ElasticsearchConnector {
     public HttpResponse searchByIndexAndDoc(String index, UUID docId) throws IOException;
 
     public HttpResponse deleteIndex(String index) throws IOException;
+
+    public HttpResponse findIndex(String index) throws IOException;
+
 }

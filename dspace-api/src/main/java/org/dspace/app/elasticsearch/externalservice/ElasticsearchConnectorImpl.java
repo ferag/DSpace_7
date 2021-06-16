@@ -15,6 +15,7 @@ import java.security.cert.X509Certificate;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -70,53 +71,63 @@ public class ElasticsearchConnectorImpl implements ElasticsearchConnector {
 
     @Override
     public HttpResponse create(String json, String index, UUID docId) throws IOException {
-        try {
-            HttpPost httpPost = new HttpPost(url + index + "/_doc/" + docId);
-            httpPost.setHeader("Content-type", "application/json; charset=UTF-8");
-            httpPost.setEntity(new StringEntity(json));
-            return httpClient.execute(httpPost);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        String url = this.url + index + "/_doc/" + docId;
+        return httpPostRequest(url, "Content-type", "application/json; charset=UTF-8", json);
     }
 
     @Override
-    public HttpResponse update(String json, String index, UUID docId) {
-        try {
-            HttpPost httpPost = new HttpPost(url + index + "/_doc/" + docId);
-            httpPost.setHeader("Content-type", "application/json; charset=UTF-8");
-            httpPost.setEntity(new StringEntity(json));
-            return httpClient.execute(httpPost);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+    public HttpResponse update(String json, String index, UUID docId) throws IOException {
+        String url = this.url + index + "/_doc/" + docId;
+        return httpPostRequest(url, "Content-type", "application/json; charset=UTF-8", json);
     }
 
     @Override
     public HttpResponse delete(String index, UUID docId) throws IOException {
-        try {
-            HttpDelete httpDelete = new HttpDelete(url + index + "/_doc/" + docId);
-            return httpClient.execute(httpDelete);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        return httpDeleteRequest(this.url + index + "/_doc/" + docId);
     }
 
     @Override
     public HttpResponse searchByIndexAndDoc(String index, UUID docId) throws IOException {
+        return httpGetRequest(this.url + index + "/_doc/" + docId);
+    }
+
+    @Override
+    public HttpResponse deleteIndex(String index) throws IOException {
+        return httpDeleteRequest(this.url + index);
+    }
+
+    @Override
+    public HttpResponse findIndex(String index) throws IOException {
+        return httpGetRequest(this.url + index);
+    }
+
+    private HttpResponse httpPostRequest(String url, String headerName, String headerValue, String entity)
+            throws IOException {
         try {
-            HttpGet httpGet = new HttpGet(url + index + "/_doc/" + docId);
-            return httpClient.execute(httpGet);
+            HttpPost httpPost = new HttpPost(url);
+            if (StringUtils.isNotBlank(headerName) && StringUtils.isNotBlank(headerValue)) {
+                httpPost.setHeader(headerName, headerValue);
+            }
+            if (StringUtils.isNotBlank(entity)) {
+                httpPost.setEntity(new StringEntity(entity));
+            }
+            return httpClient.execute(httpPost);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
-    @Override
-    public HttpResponse deleteIndex(String index) throws IOException {
+    private HttpResponse httpGetRequest(String url) throws IOException {
         try {
-            HttpDelete httpDelete = new HttpDelete(url + index);
-            return httpClient.execute(httpDelete);
+            return httpClient.execute(new HttpGet(url));
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    private HttpResponse httpDeleteRequest(String url) throws IOException {
+        try {
+            return httpClient.execute(new HttpDelete(url));
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }

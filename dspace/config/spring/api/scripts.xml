@@ -86,6 +86,11 @@
         <property name="dspaceRunnableClass" value="org.dspace.app.elasticsearch.script.SendRecordsToElasticsearchCli"/>
     </bean>
 
+    <bean id="elasticsearch-bulk-indexing" class="org.dspace.app.elasticsearch.script.bulkindex.ElasticsearchBulkIndexCliScriptConfiguration">
+        <property name="description" value="Perform bulk inswxing of Elasticsearch"/>
+        <property name="dspaceRunnableClass" value="org.dspace.app.elasticsearch.script.bulkindex.ElasticsearchBulkIndexCli"/>
+    </bean>
+
 <!--    <bean id="import-oaire-suggestions" class="org.dspace.app.suggestion.OAIREPublicationLoaderCliScriptConfiguration" primary="true">-->
 <!--       <property name="description" value="Import and store locally metadata from OpenAIRE"/>-->
 <!--       <property name="dspaceRunnableClass" value="org.dspace.app.suggestion.OAIREPublicationLoaderRunnableCli"/>-->

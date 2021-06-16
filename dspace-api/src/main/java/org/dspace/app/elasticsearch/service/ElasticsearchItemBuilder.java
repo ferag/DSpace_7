@@ -56,6 +56,18 @@ public class ElasticsearchItemBuilder {
      */
     public String convert(Context context, ElasticsearchIndexQueue record) throws SQLException {
         Item item = itemService.find(context, record.getId());
+        return convert(context, item);
+    }
+
+    /**
+     * Convert Item in JSON/XML format
+     * 
+     * @param context           DSpace context object
+     * @param item              Item
+     * @return                  as String converted object, empty if item non exist or EntityType non supported
+     * @throws SQLException     if database error
+     */
+    public String convert(Context context, Item item) throws SQLException {
         if (Objects.nonNull(item)) {
             if (elasticsearchIndexService.isSupportedEntityType(item)) {
                 String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);

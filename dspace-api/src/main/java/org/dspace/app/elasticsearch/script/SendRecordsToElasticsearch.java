@@ -39,7 +39,7 @@ public class SendRecordsToElasticsearch
 
     private ElasticsearchIndexQueueService elasticsearchQueueService;
 
-    private ElasticsearchItemBuilder elasticsearchIndexConverter;
+    private ElasticsearchItemBuilder elasticsearchItemBuilder;
 
     private ElasticsearchProvider elasticsearchProvider;
 
@@ -51,7 +51,7 @@ public class SendRecordsToElasticsearch
     public void setup() throws ParseException {
         this.elasticsearchQueueService = ElasticsearchIndexQueueServiceFactory.getInstance()
                                                         .getElasticsearchIndexQueueService();
-        this.elasticsearchIndexConverter = new DSpace().getServiceManager().getServiceByName(
+        this.elasticsearchItemBuilder = new DSpace().getServiceManager().getServiceByName(
                                 ElasticsearchItemBuilder.class.getName(), ElasticsearchItemBuilder.class);
         this.elasticsearchProvider = new DSpace().getServiceManager().getServiceByName(
                                             ElasticsearchProvider.class.getName(), ElasticsearchProvider.class);
@@ -74,7 +74,7 @@ public class SendRecordsToElasticsearch
                 ElasticsearchIndexQueue record = elasticsearchQueueService.getFirstRecord(context);
                 if (Objects.nonNull(record)) {
                     if (record.getOperationType() != Event.DELETE) {
-                        json = elasticsearchIndexConverter.convert(context, record);
+                        json = elasticsearchItemBuilder.convert(context, record);
                     }
                     elasticsearchProvider.processRecord(context, record, json);
                     if (recorHasNotBeenModified(record)) {

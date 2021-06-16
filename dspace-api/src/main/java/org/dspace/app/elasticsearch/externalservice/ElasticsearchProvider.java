@@ -72,7 +72,7 @@ public class ElasticsearchProvider {
     }
 
     private void addDocument(ElasticsearchIndexQueue record, String json, String index) throws IOException {
-        HttpResponse responce =  elasticsearchConnector.create(json, index, record);
+        HttpResponse responce =  elasticsearchConnector.create(json, index, record.getId());
         int status = responce.getStatusLine().getStatusCode();
         if (status != HttpStatus.SC_CREATED) {
             throw new ElasticsearchException("It was not possible to CREATE document with uuid: " + record.getId() +
@@ -81,7 +81,7 @@ public class ElasticsearchProvider {
     }
 
     private void updateDocument(ElasticsearchIndexQueue record, String json, String index) throws IOException {
-        HttpResponse responce = elasticsearchConnector.update(json, index, record);
+        HttpResponse responce = elasticsearchConnector.update(json, index, record.getId());
         int status = responce.getStatusLine().getStatusCode();
         if (status != HttpStatus.SC_OK) {
             throw new ElasticsearchException("It was not possible to UPDATE document with uuid: " + record.getId() +
@@ -90,7 +90,7 @@ public class ElasticsearchProvider {
     }
 
     private void deleteDocument(ElasticsearchIndexQueue record, String index) throws IOException {
-        HttpResponse responce = elasticsearchConnector.delete(index, record);
+        HttpResponse responce = elasticsearchConnector.delete(index, record.getId());
         int status = responce.getStatusLine().getStatusCode();
         if (status != HttpStatus.SC_OK) {
             throw new ElasticsearchException("It was not possible to DELETE document with uuid: " + record.getId() +
@@ -101,7 +101,7 @@ public class ElasticsearchProvider {
     private String getIndex(Context context, ElasticsearchIndexQueue record) throws SQLException, IOException {
         if (record.getOperationType() == Event.DELETE) {
             for (String index : indexes.values()) {
-                HttpResponse responce = elasticsearchConnector.searchByIndexAndDoc(index, record);
+                HttpResponse responce = elasticsearchConnector.searchByIndexAndDoc(index, record.getId());
                 int status = responce.getStatusLine().getStatusCode();
                 if (status == HttpStatus.SC_OK) {
                     return index;

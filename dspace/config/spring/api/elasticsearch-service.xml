@@ -34,4 +34,6 @@
         <property name="url" value="${elasticsearch.url}" />
     </bean>
 
+    <bean class="org.dspace.app.elasticsearch.externalservice.ElasticsearchIndexProvider" />
+
 </beans>

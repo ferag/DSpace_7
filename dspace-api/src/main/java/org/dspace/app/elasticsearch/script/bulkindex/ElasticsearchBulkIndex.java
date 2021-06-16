@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.elasticsearch.externalservice.ElasticsearchIndexProvider;
@@ -94,9 +95,7 @@ public class ElasticsearchBulkIndex
     }
 
     private void performBulkIndexing() {
-        if (!elasticsearchIndexProvider.deleteIndex(index)) {
-            throw new RuntimeException("Can not delete Index");
-        }
+        deleteIndex();
         int count = 0;
         try {
             Iterator<Item> itemIterator = findItems();
@@ -130,6 +129,18 @@ public class ElasticsearchBulkIndex
         } catch (SQLException | SearchServiceException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    private void deleteIndex() {
+        int status = elasticsearchIndexProvider.checkIngex(index);
+        if (status == HttpStatus.SC_NOT_FOUND) {
+            return;
+        }
+        if (status == HttpStatus.SC_OK) {
+            if (!elasticsearchIndexProvider.deleteIndex(index)) {
+                throw new RuntimeException("Can not delete Index");
+            }
         }
     }
 
@@ -167,6 +178,14 @@ public class ElasticsearchBulkIndex
     public ElasticsearchBulkIndexScriptConfiguration<ElasticsearchBulkIndex> getScriptConfiguration() {
         return new DSpace().getServiceManager().getServiceByName("elasticsearch-bulk-indexing",
                 ElasticsearchBulkIndexScriptConfiguration.class);
+    }
+
+    public ElasticsearchIndexProvider getElasticsearchIndexProvider() {
+        return elasticsearchIndexProvider;
+    }
+
+    public void setElasticsearchIndexProvider(ElasticsearchIndexProvider elasticsearchIndexProvider) {
+        this.elasticsearchIndexProvider = elasticsearchIndexProvider;
     }
 
 }

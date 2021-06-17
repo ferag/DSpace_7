@@ -86,8 +86,9 @@ public class UbigeoConsumer implements Consumer {
         if (StringUtils.isBlank(value) || (value.length() < 2)) {
             return;
         }
-        String vocabularyId = value.substring(0, 2);
-        ChoiceAuthority source = choiceAuthorityService.getChoiceAuthorityByAuthorityName("peru_ubigeo");
+        final String[] split = value.split(":");
+        String vocabularyId = split[1].substring(0, 2);
+        ChoiceAuthority source = choiceAuthorityService.getChoiceAuthorityByAuthorityName(split[0]);
         Choice choice = source.getChoice(vocabularyId, context.getCurrentLocale().toString());
         if (StringUtils.isNotBlank(choice.label)) {
             try {

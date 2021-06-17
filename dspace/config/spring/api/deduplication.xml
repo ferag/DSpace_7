@@ -21,8 +21,10 @@
 		<property name="dedupService" ref="org.dspace.app.deduplication.service.DedupService" />
 	</bean>
 
-	<bean class="org.dspace.app.deduplication.utils.TitleSignature" name="TitleSignaturePlugin">
-		<property name="signatureType" value="title" />
+	<bean class="org.dspace.app.deduplication.utils.MD5ValueSignature" name="TitleSignaturePlugin">
+	    <property name="useCollection" value="true" />
+	    <property name="normalizationRegexp" value="[^\\p{L}]" />
+		<property name="signatureType" value="titleAndEntityType" />
 		<property name="metadata" value="dc.title" />
 		<property name="resourceTypeID" value="2" />
 	</bean>

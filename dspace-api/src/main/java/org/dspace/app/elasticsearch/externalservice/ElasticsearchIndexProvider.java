@@ -26,43 +26,43 @@ public class ElasticsearchIndexProvider {
     private ElasticsearchConnector elasticsearchConnector;
 
     public int checkIngex(String index) {
-        HttpResponse responce = null;
+        HttpResponse response = null;
         try {
-            responce = elasticsearchConnector.findIndex(index);
+            response = elasticsearchConnector.findIndex(index);
         } catch (IOException e) {
             log.error("Can not find index, caused by: " + e.getMessage());
             return 0;
         }
-        return responce.getStatusLine().getStatusCode();
+        return response.getStatusLine().getStatusCode();
     }
 
     public boolean indexSingleItem(String index, Item item, String json) {
-        HttpResponse responce = null;
+        HttpResponse response = null;
         try {
-            responce = elasticsearchConnector.create(json, index, item.getID());
+            response = elasticsearchConnector.create(json, index, item.getID());
         } catch (IOException e) {
             log.error("Can not indexing item with uuid: " + item.getID()  + " , caused by: " + e.getMessage());
             return false;
         }
-        int status = responce.getStatusLine().getStatusCode();
+        int status = response.getStatusLine().getStatusCode();
         if (status != HttpStatus.SC_CREATED) {
-            log.error("Can not indexing item with uuid: " + item.getID()  + " , with responce status: " + status);
+            log.error("Can not indexing item with uuid: " + item.getID()  + " , with response status: " + status);
             return false;
         }
         return true;
     }
 
     public boolean deleteIndex(String index) {
-        HttpResponse responce = null;
+        HttpResponse response = null;
         try {
-            responce = elasticsearchConnector.deleteIndex(index);
+            response = elasticsearchConnector.deleteIndex(index);
         } catch (IOException e) {
             log.error("Can not delete Index : " + index + " , caused by: " + e.getMessage());
             return false;
         }
-        int status = responce.getStatusLine().getStatusCode();
+        int status = response.getStatusLine().getStatusCode();
         if (status != HttpStatus.SC_OK) {
-            log.error("Can not delete Index : " + index + " , with responce status: " + status);
+            log.error("Can not delete Index : " + index + " , with response status: " + status);
             return false;
         }
         return true;

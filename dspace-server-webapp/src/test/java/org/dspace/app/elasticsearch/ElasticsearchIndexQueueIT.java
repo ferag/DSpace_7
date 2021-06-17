@@ -19,11 +19,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 
@@ -33,8 +35,8 @@ import org.apache.http.ProtocolVersion;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.message.BasicHttpResponse;
+import org.dspace.app.elasticsearch.consumer.ElasticsearchIndexManager;
 import org.dspace.app.elasticsearch.externalservice.ElasticsearchConnectorImpl;
-import org.dspace.app.elasticsearch.externalservice.ElasticsearchProvider;
 import org.dspace.app.elasticsearch.service.ElasticsearchIndexQueueService;
 import org.dspace.app.elasticsearch.service.ElasticsearchItemBuilder;
 import org.dspace.app.launcher.ScriptLauncher;
@@ -43,6 +45,7 @@ import org.dspace.app.rest.model.patch.Operation;
 import org.dspace.app.rest.model.patch.ReplaceOperation;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
 import org.dspace.app.scripts.handler.impl.TestDSpaceRunnableHandler;
+import org.dspace.authorize.AuthorizeException;
 import org.dspace.builder.CollectionBuilder;
 import org.dspace.builder.CommunityBuilder;
 import org.dspace.builder.ElasticsearchIndexQueueBuilder;
@@ -52,8 +55,6 @@ import org.dspace.content.Item;
 import org.dspace.event.Event;
 import org.dspace.services.ConfigurationService;
 import org.hamcrest.Matchers;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
@@ -74,39 +75,19 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
     private ConfigurationService configurationService;
 
     @Autowired
-    private ElasticsearchProvider elasticsearchProvider;
-
-    @Autowired
     private ElasticsearchConnectorImpl elasticsearchConnector;
 
     @Autowired
     private ElasticsearchItemBuilder elasticsearchIndexConverter;
 
-    private Map<String, String> originIndexes;
-
-    @Before
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        Map<String, String> testIndexes = new HashMap<String, String>();
-        testIndexes.put("Publication", "test_pub");
-        testIndexes.put("Person", "test_pers");
-        configurationService.addPropertyValue("elasticsearch.entity", "Person");
-        configurationService.addPropertyValue("elasticsearch.entity", "Publication");
-        this.originIndexes = elasticsearchProvider.getIndexes();
-        elasticsearchProvider.setIndexes(testIndexes);
-    }
-
-    @After
-    @Override
-    public void destroy() throws Exception {
-        elasticsearchProvider.setIndexes(originIndexes);
-    }
+    @Autowired
+    private ElasticsearchIndexManager elasticsearchIndexManager;
 
     @Test
     public void elasticsearchIndexQueueWithCreatedItemsTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
+        Map<String, String> originIndexes = start();
         parentCommunity = CommunityBuilder.createCommunity(context)
                                           .withName("Parent Community")
                                           .build();
@@ -143,6 +124,7 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
             context.setCurrentUser(admin);
             elasticsearchService.delete(context, record1);
             elasticsearchService.delete(context, record2);
+            end(originIndexes);
         }
     }
 
@@ -150,6 +132,7 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
     public void elasticsearchIndexQueueWithDeletedItemTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
+        Map<String, String> originIndexes = start();
         parentCommunity = CommunityBuilder.createCommunity(context)
                                           .withName("Parent Community")
                                           .build();
@@ -164,27 +147,34 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
                                      .withEntityType("Person").build();
 
         context.restoreAuthSystemState();
+        ElasticsearchIndexQueue record1 = null;
+        try {
+            record1 = elasticsearchService.find(context, personItem.getID());
+            assertNotNull(record1);
+            assertEquals(personItem.getID().toString(), record1.getID().toString());
+            assertEquals(Event.CREATE, record1.getOperationType().intValue());
 
-        ElasticsearchIndexQueue record1 = elasticsearchService.find(context, personItem.getID());
-        assertNotNull(record1);
-        assertEquals(personItem.getID().toString(), record1.getID().toString());
-        assertEquals(Event.CREATE, record1.getOperationType().intValue());
+            String tokenAdmin = getAuthToken(admin.getEmail(), password);
+            getClient(tokenAdmin).perform(delete("/api/core/items/" + personItem.getID()))
+                                 .andExpect(status().is(204));
 
-        String tokenAdmin = getAuthToken(admin.getEmail(), password);
-        getClient(tokenAdmin).perform(delete("/api/core/items/" + personItem.getID()))
-                             .andExpect(status().is(204));
-
-        // after deletion we have the same item but with operation type DELETE
-        record1 = elasticsearchService.find(context, personItem.getID());
-        assertNotNull(record1);
-        assertEquals(personItem.getID().toString(), record1.getID().toString());
-        assertEquals(Event.DELETE, record1.getOperationType().intValue());
+            // after deletion we have the same item but with operation type DELETE
+            record1 = elasticsearchService.find(context, personItem.getID());
+            assertNotNull(record1);
+            assertEquals(personItem.getID().toString(), record1.getID().toString());
+            assertEquals(Event.DELETE, record1.getOperationType().intValue());
+        } finally {
+            context.setCurrentUser(admin);
+            elasticsearchService.delete(context, record1);
+            end(originIndexes);
+        }
     }
 
     @Test
     public void elasticsearchIndexQueueWithUnsupportedItemsTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
+        Map<String, String> originIndexes = start();
         parentCommunity = CommunityBuilder.createCommunity(context)
                                           .withName("Parent Community")
                                           .build();
@@ -199,13 +189,18 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
                                      .withEntityType("Patent").build();
 
         context.restoreAuthSystemState();
-        assertNull(elasticsearchService.find(context, patentItem.getID()));
+        try {
+            assertNull(elasticsearchService.find(context, patentItem.getID()));
+        } finally {
+            end(originIndexes);
+        }
     }
 
     @Test
     public void elasticsearchIndexQueueWithWithdrawnItemTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
+        Map<String, String> originIndexes = start();
         parentCommunity = CommunityBuilder.createCommunity(context)
                                           .withName("Parent Community").build();
 
@@ -250,6 +245,7 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
         } finally {
             context.setCurrentUser(admin);
             elasticsearchService.delete(context, record1);
+            end(originIndexes);
         }
     }
 
@@ -257,6 +253,7 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
     public void elasticsearchIndexQueuePatchItemTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
+        Map<String, String> originIndexes = start();
         parentCommunity = CommunityBuilder.createCommunity(context)
                                           .withName("Parent Community").build();
 
@@ -298,6 +295,7 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
         } finally {
             context.setCurrentUser(admin);
             elasticsearchService.delete(context, record);
+            end(originIndexes);
         }
     }
 
@@ -305,6 +303,7 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
     public void sendElasticsearchIndexQueueWithCreateOperationTypeTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
+        Map<String, String> originIndexes = start();
         HttpClient originHttpClient = elasticsearchConnector.getHttpClient();
         HttpClient mockHttpClient = Mockito.mock(HttpClient.class);
         try {
@@ -348,6 +347,7 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
             assertNull(record);
         } finally {
             elasticsearchConnector.setHttpClient(originHttpClient);
+            end(originIndexes);
         }
     }
 
@@ -355,6 +355,7 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
     public void sendElasticsearchIndexQueueWithModifyMetadataOperationTypeTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
+        Map<String, String> originIndexes = start();
         HttpClient originHttpClient = elasticsearchConnector.getHttpClient();
         HttpClient mockHttpClient = Mockito.mock(HttpClient.class);
         try {
@@ -412,6 +413,7 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
 
         } finally {
             elasticsearchConnector.setHttpClient(originHttpClient);
+            end(originIndexes);
         }
     }
 
@@ -419,6 +421,7 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
     public void sendElasticsearchIndexQueueWithDeleteOperationTypeTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
+        Map<String, String> originIndexes = start();
         HttpClient originHttpClient = elasticsearchConnector.getHttpClient();
         HttpClient mockHttpClient = Mockito.mock(HttpClient.class);
         try {
@@ -447,6 +450,7 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
             assertNull(elasticsearchService.find(context, uuid));
         } finally {
             elasticsearchConnector.setHttpClient(originHttpClient);
+            end(originIndexes);
         }
     }
 
@@ -454,19 +458,24 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
     public void sendElasticsearchIndexQueueIndexNotFoundTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
+        Map<String, String> originIndexes = start();
         UUID uuid = UUID.randomUUID();
         ElasticsearchIndexQueueBuilder.createElasticsearchIndexQueue(context, uuid, 100).build();
 
         context.restoreAuthSystemState();
 
-        String[] args = new String[] { "update-elasticsearch" };
-        TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
+        try {
+            String[] args = new String[] { "update-elasticsearch" };
+            TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
 
-        assertEquals(0, handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin));
-        Exception exception = handler.getException();
-        assertNotNull(exception);
-        assertEquals("Not found index for ElasticsearchIndexQueue with uuid: " + uuid.toString(),
-                     exception.getMessage());
+            assertEquals(0, handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin));
+            Exception exception = handler.getException();
+            assertNotNull(exception);
+            assertEquals("Not found index for ElasticsearchIndexQueue with uuid: " + uuid.toString(),
+                         exception.getMessage());
+        } finally {
+            end(originIndexes);
+        }
     }
 
     private StatusLine statusLine(final ProtocolVersion protocolVersion, int statusCode, String reason) {
@@ -486,6 +495,35 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
                 return reason;
             }
         };
+    }
+
+    private Map<String, String> start() throws SQLException, AuthorizeException {
+        context.turnOffAuthorisationSystem();
+        boolean exist = true;
+        while (exist) {
+            ElasticsearchIndexQueue record = elasticsearchService.getFirstRecord(context);
+            if (Objects.isNull(record)) {
+                exist = false;
+            } else {
+                elasticsearchService.delete(context, record);
+            }
+        }
+        context.restoreAuthSystemState();
+        Map<String, String> originIndexes = null;
+        Map<String, String> testIndexes = new HashMap<String, String>();
+        testIndexes.put("Publication", "test_pub");
+        testIndexes.put("Person", "test_pers");
+        configurationService.addPropertyValue("elasticsearch.entity", "Person");
+        configurationService.addPropertyValue("elasticsearch.entity", "Publication");
+        originIndexes = elasticsearchIndexManager.getEntityType2Index();
+        elasticsearchIndexManager.setEntityType2Index(testIndexes);
+        configurationService.addPropertyValue("elasticsearchbulk.maxattempt", 3);
+
+        return originIndexes;
+    }
+
+    private void end(Map<String, String> originIndexes) {
+        elasticsearchIndexManager.setEntityType2Index(originIndexes);
     }
 
 }

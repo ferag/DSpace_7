@@ -11,7 +11,6 @@ import java.util.UUID;
 
 import org.dspace.app.elasticsearch.ElasticsearchIndexQueue;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.content.Item;
 import org.dspace.core.Context;
 
 /**
@@ -71,7 +70,5 @@ public interface ElasticsearchIndexQueueService  {
      * @return         the ElasticsearchIndexQueue format, or null the database is empty.
      */
     public ElasticsearchIndexQueue getFirstRecord(Context context) throws SQLException;
-
-    boolean isSupportedEntityType(Item item);
 
 }

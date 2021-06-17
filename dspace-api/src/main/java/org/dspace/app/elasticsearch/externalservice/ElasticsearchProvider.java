@@ -8,13 +8,13 @@
 package org.dspace.app.elasticsearch.externalservice;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Map;
 import java.util.Objects;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.dspace.app.elasticsearch.ElasticsearchIndexQueue;
+import org.dspace.app.elasticsearch.consumer.ElasticsearchIndexManager;
 import org.dspace.app.elasticsearch.exception.ElasticsearchException;
 import org.dspace.content.Item;
 import org.dspace.content.service.ItemService;
@@ -29,17 +29,14 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class ElasticsearchProvider {
 
-    private Map<String, String> indexes;
-
     @Autowired
     private ItemService itemService;
 
     @Autowired
     private ElasticsearchConnector elasticsearchConnector;
 
-    public ElasticsearchProvider(Map<String, String> indexes) {
-        this.indexes = indexes;
-    }
+    @Autowired
+    private ElasticsearchIndexManager elasticsearchIndexManager;
 
     /**
      * Processes record according to the operation type
@@ -81,8 +78,8 @@ public class ElasticsearchProvider {
     }
 
     private void updateDocument(ElasticsearchIndexQueue record, String json, String index) throws IOException {
-        HttpResponse responce = elasticsearchConnector.update(json, index, record.getId());
-        int status = responce.getStatusLine().getStatusCode();
+        HttpResponse response = elasticsearchConnector.update(json, index, record.getId());
+        int status = response.getStatusLine().getStatusCode();
         if (status != HttpStatus.SC_OK) {
             throw new ElasticsearchException("It was not possible to UPDATE document with uuid: " + record.getId() +
                                        "  Elasticsearch returned status code : " + status);
@@ -90,8 +87,8 @@ public class ElasticsearchProvider {
     }
 
     private void deleteDocument(ElasticsearchIndexQueue record, String index) throws IOException {
-        HttpResponse responce = elasticsearchConnector.delete(index, record.getId());
-        int status = responce.getStatusLine().getStatusCode();
+        HttpResponse response = elasticsearchConnector.delete(index, record.getId());
+        int status = response.getStatusLine().getStatusCode();
         if (status != HttpStatus.SC_OK) {
             throw new ElasticsearchException("It was not possible to DELETE document with uuid: " + record.getId() +
                                        "  Elasticsearch returned status code : " + status);
@@ -100,7 +97,7 @@ public class ElasticsearchProvider {
 
     private String getIndex(Context context, ElasticsearchIndexQueue record) throws SQLException, IOException {
         if (record.getOperationType() == Event.DELETE) {
-            for (String index : indexes.values()) {
+            for (String index : elasticsearchIndexManager.getEntityType2Index().values()) {
                 HttpResponse responce = elasticsearchConnector.searchByIndexAndDoc(index, record.getId());
                 int status = responce.getStatusLine().getStatusCode();
                 if (status == HttpStatus.SC_OK) {
@@ -112,17 +109,10 @@ public class ElasticsearchProvider {
         if (Objects.nonNull(item)) {
             String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
             entityType.toLowerCase();
-            return indexes.containsKey(entityType) ? indexes.get(entityType) : StringUtils.EMPTY;
+            return elasticsearchIndexManager.getEntityType2Index().containsKey(entityType)
+                         ? elasticsearchIndexManager.getEntityType2Index().get(entityType) : StringUtils.EMPTY;
         }
         return StringUtils.EMPTY;
-    }
-
-    public Map<String, String> getIndexes() {
-        return indexes;
-    }
-
-    public void setIndexes(Map<String, String> indexes) {
-        this.indexes = indexes;
     }
 
 }

@@ -20,13 +20,7 @@
 		</constructor-arg>
 	</bean>
 
-    <bean class="org.dspace.app.elasticsearch.externalservice.ElasticsearchProvider">
-        <constructor-arg>
-			<map>
-				<entry key="" value= "" />
-			</map>
-		</constructor-arg>
-	</bean>
+    <bean class="org.dspace.app.elasticsearch.externalservice.ElasticsearchProvider" />
 
     <bean class="org.dspace.app.elasticsearch.externalservice.ElasticsearchConnectorImpl">
         <property name="user" value="${elasticsearch.clientId}" />
@@ -35,5 +29,13 @@
     </bean>
 
     <bean class="org.dspace.app.elasticsearch.externalservice.ElasticsearchIndexProvider" />
+
+    <bean class="org.dspace.app.elasticsearch.consumer.ElasticsearchIndexManager">
+        <constructor-arg>
+			<map>
+				<entry key="" value= "" />
+			</map>
+		</constructor-arg>
+	</bean>
 
 </beans>

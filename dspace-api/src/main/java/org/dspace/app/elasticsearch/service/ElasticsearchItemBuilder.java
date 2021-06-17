@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.elasticsearch.ElasticsearchIndexQueue;
+import org.dspace.app.elasticsearch.consumer.ElasticsearchIndexManager;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Item;
 import org.dspace.content.crosswalk.CrosswalkException;
@@ -40,7 +41,7 @@ public class ElasticsearchItemBuilder {
     private ItemService itemService;
 
     @Autowired
-    private ElasticsearchIndexQueueService elasticsearchIndexService;
+    private ElasticsearchIndexManager elasticsearchIndexManager;
 
     public ElasticsearchItemBuilder(Map<String,ReferCrosswalk> entity2ReferCrosswalk) {
         this.entity2ReferCrosswalk = entity2ReferCrosswalk;
@@ -69,8 +70,8 @@ public class ElasticsearchItemBuilder {
      */
     public String convert(Context context, Item item) throws SQLException {
         if (Objects.nonNull(item)) {
-            if (elasticsearchIndexService.isSupportedEntityType(item)) {
-                String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
+            String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
+            if (elasticsearchIndexManager.isSupportedEntityType(entityType)) {
                 ReferCrosswalk referCrosswalk = entity2ReferCrosswalk.get(entityType);
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 try {

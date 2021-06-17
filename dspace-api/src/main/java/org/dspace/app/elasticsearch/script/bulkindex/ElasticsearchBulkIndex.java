@@ -8,7 +8,6 @@
 package org.dspace.app.elasticsearch.script.bulkindex;
 import java.sql.SQLException;
 import java.time.Year;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -17,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dspace.app.elasticsearch.consumer.ElasticsearchIndexManager;
 import org.dspace.app.elasticsearch.externalservice.ElasticsearchIndexProvider;
 import org.dspace.app.elasticsearch.service.ElasticsearchItemBuilder;
 import org.dspace.content.Item;
@@ -48,6 +48,8 @@ public class ElasticsearchBulkIndex
 
     private ElasticsearchItemBuilder elasticsearchItemBuilder;
 
+    private ElasticsearchIndexManager elasticsearchIndexManager;
+
     private Context context;
 
     private String entityType;
@@ -62,6 +64,8 @@ public class ElasticsearchBulkIndex
                     ElasticsearchIndexProvider.class.getName(), ElasticsearchIndexProvider.class);
         this.elasticsearchItemBuilder = new DSpace().getServiceManager().getServiceByName(
                         ElasticsearchItemBuilder.class.getName(), ElasticsearchItemBuilder.class);
+        this.elasticsearchIndexManager = new DSpace().getServiceManager().getServiceByName(
+                      ElasticsearchIndexManager.class.getName(), ElasticsearchIndexManager.class);
         this.configurationService = DSpaceServicesFactory.getInstance().getConfigurationService();
         this.entityType = commandLine.getOptionValue('e');
         this.index = commandLine.getOptionValue('i');
@@ -76,7 +80,7 @@ public class ElasticsearchBulkIndex
         if (StringUtils.isBlank(entityType)) {
             throw new IllegalArgumentException("The EntityType must be provided");
         }
-        if (!Arrays.asList(configurationService.getArrayProperty("elasticsearch.entity")).contains(entityType)) {
+        if (!elasticsearchIndexManager.getEntityType2Index().containsKey(entityType)) {
             throw new IllegalArgumentException("Provided entity type does not supported!");
         }
         this.index = StringUtils.isNotBlank(this.index)
@@ -111,7 +115,10 @@ public class ElasticsearchBulkIndex
                 do {
                     countAttempt ++;
                     updated = elasticsearchIndexProvider.indexSingleItem(this.index, item, json);
-                } while (!updated && countAttempt <= this.maxAttempt);
+                    if (!updated && countAttempt == this.maxAttempt) {
+                        handler.logInfo("It was not possible to indexing the item with uuid: " + item.getID());
+                    }
+                } while (!updated && countAttempt < this.maxAttempt);
                 context.uncacheEntity(item);
                 if (updated) {
                     countUpdatedItems++;
@@ -139,7 +146,7 @@ public class ElasticsearchBulkIndex
         }
         if (status == HttpStatus.SC_OK) {
             if (!elasticsearchIndexProvider.deleteIndex(index)) {
-                throw new RuntimeException("Can not delete Index");
+                throw new RuntimeException("Can not delete Index with name: " + this.index);
             }
         }
     }
@@ -148,17 +155,8 @@ public class ElasticsearchBulkIndex
         DiscoverQuery discoverQuery = new DiscoverQuery();
         discoverQuery.setDSpaceObjectFilter(IndexableItem.TYPE);
         discoverQuery.setMaxResults(20);
-        setFilter(discoverQuery);
+        discoverQuery.addFilterQueries("dspace.entity.type:" + this.entityType);
         return new DiscoverResultIterator<Item, UUID>(context, discoverQuery);
-    }
-
-    private void setFilter(DiscoverQuery discoverQuery) {
-        if (StringUtils.equalsIgnoreCase("Person", this.entityType)) {
-            discoverQuery.addFilterQueries("dspace.entity.type:Person");
-        }
-        if (StringUtils.equalsIgnoreCase("Publication", this.entityType)) {
-            discoverQuery.addFilterQueries("dspace.entity.type:Publication");
-        }
     }
 
     private void assignCurrentUserInContext() throws SQLException {

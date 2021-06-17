@@ -12,6 +12,8 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 
@@ -72,13 +74,17 @@ public class ElasticsearchConnectorImpl implements ElasticsearchConnector {
     @Override
     public HttpResponse create(String json, String index, UUID docId) throws IOException {
         String url = this.url + index + "/_doc/" + docId;
-        return httpPostRequest(url, "Content-type", "application/json; charset=UTF-8", json);
+        Map<String, String> headerConfig = new HashMap<String, String>();
+        headerConfig.put("Content-type", "application/json; charset=UTF-8");
+        return httpPostRequest(url, headerConfig, json);
     }
 
     @Override
     public HttpResponse update(String json, String index, UUID docId) throws IOException {
         String url = this.url + index + "/_doc/" + docId;
-        return httpPostRequest(url, "Content-type", "application/json; charset=UTF-8", json);
+        Map<String, String> headerConfig = new HashMap<String, String>();
+        headerConfig.put("Content-type", "application/json; charset=UTF-8");
+        return httpPostRequest(url, headerConfig, json);
     }
 
     @Override
@@ -101,12 +107,14 @@ public class ElasticsearchConnectorImpl implements ElasticsearchConnector {
         return httpGetRequest(this.url + index);
     }
 
-    private HttpResponse httpPostRequest(String url, String headerName, String headerValue, String entity)
+    private HttpResponse httpPostRequest(String url, Map<String, String> headerConfig, String entity)
             throws IOException {
         try {
             HttpPost httpPost = new HttpPost(url);
-            if (StringUtils.isNotBlank(headerName) && StringUtils.isNotBlank(headerValue)) {
-                httpPost.setHeader(headerName, headerValue);
+            if (!headerConfig.isEmpty()) {
+                for (String congf : headerConfig.keySet()) {
+                    httpPost.addHeader(congf, headerConfig.get(congf));
+                }
             }
             if (StringUtils.isNotBlank(entity)) {
                 httpPost.setEntity(new StringEntity(entity));

@@ -20,6 +20,7 @@ import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.event.Consumer;
 import org.dspace.event.Event;
+import org.dspace.utils.DSpace;
 
 /**
  * Consumer responsible for inserting events performed on items in the ElasticsearchIndexQueue table.
@@ -30,12 +31,16 @@ public class ElasticsearchQueueConsumer implements Consumer {
 
     private ElasticsearchIndexQueueService elasticsearchIndexQueueService;
 
+    private ElasticsearchIndexManager elasticsearchIndexManager;
+
     private Set<Item> itemsAlreadyProcessed = new HashSet<Item>();
 
     @Override
     public void initialize() throws Exception {
         this.elasticsearchIndexQueueService = ElasticsearchIndexQueueServiceFactory.getInstance()
                 .getElasticsearchIndexQueueService();
+        this.elasticsearchIndexManager = new DSpace().getServiceManager().getServiceByName(
+                       ElasticsearchIndexManager.class.getName(), ElasticsearchIndexManager.class);
     }
 
     @Override
@@ -46,7 +51,7 @@ public class ElasticsearchQueueConsumer implements Consumer {
         int eventType = event.getEventType();
         if (eventType == Event.CREATE || eventType == Event.MODIFY) {
             Item item = (Item) event.getSubject(context);
-            if (itemsAlreadyProcessed.contains(item) || !elasticsearchIndexQueueService.isSupportedEntityType(item)) {
+            if (itemsAlreadyProcessed.contains(item) || !elasticsearchIndexManager.isSupportedEntityType(item)) {
                 return;
             }
             elasticsearchIndexQueueService.create(context, item.getID(), event.getEventType());
@@ -60,7 +65,7 @@ public class ElasticsearchQueueConsumer implements Consumer {
                 return;
             }
             Item item = (Item) obj;
-            if (itemsAlreadyProcessed.contains(item) || !elasticsearchIndexQueueService.isSupportedEntityType(item)) {
+            if (itemsAlreadyProcessed.contains(item) || !elasticsearchIndexManager.isSupportedEntityType(item)) {
                 return;
             }
             // if the item has been withdrawn, update record with DELETE type

@@ -9,17 +9,27 @@ package org.dspace.app.rest;
 
 import static com.jayway.jsonpath.JsonPath.read;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
+import static org.dspace.app.matcher.OrcidQueueMatcher.matches;
+import static org.dspace.app.orcid.OrcidOperation.DELETE;
+import static org.dspace.app.profile.OrcidEntitySyncPreference.ALL;
 import static org.dspace.app.matcher.MetadataValueMatcher.with;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadata;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadataDoesNotExist;
+import static org.dspace.builder.OrcidHistoryBuilder.createOrcidHistory;
+import static org.dspace.builder.OrcidQueueBuilder.createOrcidQueue;
 import static org.dspace.builder.RelationshipBuilder.createRelationshipBuilder;
 import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
 import static org.dspace.core.Constants.WRITE;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.SHADOW_COPY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -43,6 +53,10 @@ import javax.ws.rs.core.MediaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
+import org.dspace.app.orcid.OrcidHistory;
+import org.dspace.app.orcid.OrcidQueue;
+import org.dspace.app.orcid.service.OrcidHistoryService;
+import org.dspace.app.orcid.service.OrcidQueueService;
 import org.dspace.app.rest.matcher.BitstreamMatcher;
 import org.dspace.app.rest.matcher.BundleMatcher;
 import org.dspace.app.rest.matcher.CollectionMatcher;
@@ -92,6 +106,12 @@ public class ItemRestRepositoryIT extends AbstractControllerIntegrationTest {
 
     @Autowired
     private CollectionService collectionService;
+
+    @Autowired
+    private OrcidQueueService orcidQueueService;
+
+    @Autowired
+    private OrcidHistoryService orcidHistoryService;
 
     @Autowired
     private ConfigurationService configurationService;
@@ -1270,7 +1290,7 @@ public class ItemRestRepositoryIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
-    public void deleteOneArchivedTest() throws Exception {
+    public void deleteOneArchivedTestAsSystemAdmin() throws Exception {
         context.turnOffAuthorisationSystem();
 
         //** GIVEN **
@@ -1323,8 +1343,164 @@ public class ItemRestRepositoryIT extends AbstractControllerIntegrationTest {
                    .andExpect(status().is(404));
 
         //Trying to get deleted item bitstream should fail with 404
-        getClient().perform(get("/api/core/biststreams/" + bitstream.getID()))
+        // NOTE: it currently does not work without an admin token
+        String adminToken = getAuthToken(admin.getEmail(), password);
+        getClient(adminToken).perform(get("/api/core/bitstreams/" + bitstream.getID()))
                    .andExpect(status().is(404));
+    }
+
+    @Test
+    public void deleteOneArchivedTestAsCollectionAdmin() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        //** GIVEN **
+        // A collection administrator
+        EPerson col1Admin = EPersonBuilder.createEPerson(context)
+            .withCanLogin(true)
+            .withEmail("col1admin@email.com")
+            .withPassword(password)
+            .withNameInMetadata("Col1", "Admin")
+            .build();
+
+        // A community with one collection.
+        parentCommunity = CommunityBuilder.createCommunity(context)
+            .withName("Parent Community")
+            .build();
+        Collection col1 = CollectionBuilder
+            .createCollection(context, parentCommunity)
+            .withName("Collection 1")
+            .withAdminGroup(col1Admin)
+            .build();
+
+        // One public item, one workspace item and one template item.
+        Item publicItem = ItemBuilder.createItem(context, col1)
+            .withTitle("Public item 1")
+            .withIssueDate("2017-10-17")
+            .withAuthor("Smith, Donald").withAuthor("Doe, John")
+            .withSubject("ExtraEntry")
+            .build();
+
+        //Add a bitstream to an item
+        String bitstreamContent = "ThisIsSomeDummyText";
+        Bitstream bitstream = null;
+        try (InputStream is = IOUtils.toInputStream(bitstreamContent, CharEncoding.UTF_8)) {
+            bitstream = BitstreamBuilder.
+                createBitstream(context, publicItem, is)
+                .withName("Bitstream1")
+                .withMimeType("text/plain")
+                .build();
+        }
+
+        context.restoreAuthSystemState();
+        // Check publicItem creation
+        getClient().perform(get("/api/core/items/" + publicItem.getID()))
+            .andExpect(status().isOk());
+
+        // Check publicItem bitstream creation (shuold be stored in bundle)
+        getClient().perform(get("/api/core/items/" + publicItem.getID() + "/bundles"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$._links.self.href", Matchers
+                .containsString("/api/core/items/" + publicItem.getID() + "/bundles")));
+
+        String token = getAuthToken(col1Admin.getEmail(), password);
+
+        //Delete public item
+        getClient(token).perform(delete("/api/core/items/" + publicItem.getID()))
+            .andExpect(status().is(204));
+
+        //Trying to get deleted item should fail with 404
+        getClient().perform(get("/api/core/items/" + publicItem.getID()))
+            .andExpect(status().is(404));
+
+        //Trying to get deleted item bitstream should fail with 404
+        // NOTE: it currently does not work without an admin token
+        String adminToken = getAuthToken(admin.getEmail(), password);
+        getClient(adminToken).perform(get("/api/core/bitstreams/" + bitstream.getID()))
+            .andExpect(status().is(404));
+    }
+
+    @Test
+    public void deleteOneArchivedTestAsOtherCollectionAdmin() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        //** GIVEN **
+        // two collection administrators
+        EPerson col1Admin = EPersonBuilder.createEPerson(context)
+            .withCanLogin(true)
+            .withEmail("col1admin@email.com")
+            .withPassword(password)
+            .withNameInMetadata("Col1", "Admin")
+            .build();
+
+        EPerson col2Admin = EPersonBuilder.createEPerson(context)
+            .withCanLogin(true)
+            .withEmail("col2admin@email.com")
+            .withPassword(password)
+            .withNameInMetadata("Col2", "Admin")
+            .build();
+
+        // A community with two collections.
+        parentCommunity = CommunityBuilder.createCommunity(context)
+            .withName("Parent Community")
+            .build();
+        Collection col1 = CollectionBuilder
+            .createCollection(context, parentCommunity)
+            .withName("Collection 1")
+            .withAdminGroup(col1Admin)
+            .build();
+        CollectionBuilder
+            .createCollection(context, parentCommunity)
+            .withName("Collection 2")
+            .withAdminGroup(col2Admin)
+            .build();
+
+        // One public item, one workspace item and one template item in the first collection.
+        Item publicItem = ItemBuilder.createItem(context, col1)
+            .withTitle("Public item 1")
+            .withIssueDate("2017-10-17")
+            .withAuthor("Smith, Donald").withAuthor("Doe, John")
+            .withSubject("ExtraEntry")
+            .build();
+
+        //Add a bitstream to an item in the first collection
+        String bitstreamContent = "ThisIsSomeDummyText";
+        Bitstream bitstream = null;
+        try (InputStream is = IOUtils.toInputStream(bitstreamContent, CharEncoding.UTF_8)) {
+            bitstream = BitstreamBuilder.
+                createBitstream(context, publicItem, is)
+                .withName("Bitstream1")
+                .withMimeType("text/plain")
+                .build();
+        }
+
+        context.restoreAuthSystemState();
+
+        // Check publicItem creation
+        getClient().perform(get("/api/core/items/" + publicItem.getID()))
+            .andExpect(status().isOk());
+
+        // Check publicItem bitstream creation (should be stored in bundle)
+        getClient().perform(get("/api/core/items/" + publicItem.getID() + "/bundles"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$._links.self.href", Matchers
+                .containsString("/api/core/items/" + publicItem.getID() + "/bundles")));
+
+        // the admin of collection 2 will try to delete an item of collection 1
+        String token = getAuthToken(col2Admin.getEmail(), password);
+
+        // trying to delete the public item should fail
+        getClient(token).perform(delete("/api/core/items/" + publicItem.getID()))
+            .andExpect(status().isForbidden());
+
+        // the item should still exist
+        getClient().perform(get("/api/core/items/" + publicItem.getID()))
+            .andExpect(status().isOk());
+
+        // the bitstream should still exist
+        getClient().perform(get("/api/core/bitstreams/" + bitstream.getID()))
+            .andExpect(status().isOk());
     }
 
     @Test
@@ -3599,6 +3775,213 @@ public class ItemRestRepositoryIT extends AbstractControllerIntegrationTest {
         getClient(token).perform(get("/api/core/items/" + author2.getID()))
                         .andExpect(status().is(200))
                         .andExpect(jsonPath("$.metadata['relation.isPublicationOfAuthor']").doesNotExist());
+    }
+
+    @Test
+    public void testDeletionOfOrcidOwner() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        parentCommunity = CommunityBuilder.createCommunity(context)
+            .withName("Parent Community")
+            .build();
+
+        Collection profileCollection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Profiles")
+            .withEntityType("Person")
+            .build();
+
+        Collection publicationCollection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Publications")
+            .withEntityType("Publication")
+            .build();
+
+        Collection projectCollection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Projects")
+            .withEntityType("Project")
+            .build();
+
+        Item profile = ItemBuilder.createItem(context, profileCollection)
+            .withTitle("Test User")
+            .withCrisOwner(eperson)
+            .withOrcidIdentifier("0000-1111-2222-3333")
+            .withOrcidAccessToken("ab4d18a0-8d9a-40f1-b601-a417255c8d20")
+            .build();
+
+        Item publication = ItemBuilder.createItem(context, publicationCollection)
+            .withTitle("Test publication")
+            .build();
+
+        Item project = ItemBuilder.createItem(context, projectCollection)
+            .withTitle("Test project")
+            .build();
+
+        createOrcidQueue(context, profile, publication).build();
+        createOrcidQueue(context, profile, project).build();
+        createOrcidHistory(context, profile, publication).build();
+        createOrcidHistory(context, profile, publication).build();
+        createOrcidHistory(context, profile, project).build();
+
+        context.restoreAuthSystemState();
+
+        String token = getAuthToken(admin.getEmail(), password);
+
+        getClient(token).perform(delete("/api/core/items/" + profile.getID()))
+            .andExpect(status().is(204));
+
+        assertThat(orcidQueueService.findAll(context), empty());
+        assertThat(orcidHistoryService.findAll(context), empty());
+
+    }
+
+    @Test
+    public void testDeletionOfPublicationToBeSynchronizedWithOrcid() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        parentCommunity = CommunityBuilder.createCommunity(context)
+            .withName("Parent Community")
+            .build();
+
+        Collection profileCollection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Profiles")
+            .withEntityType("Person")
+            .build();
+
+        Collection publicationCollection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Publications")
+            .withEntityType("Publication")
+            .build();
+
+        Item firstProfile = ItemBuilder.createItem(context, profileCollection)
+            .withTitle("Test User")
+            .withCrisOwner(eperson)
+            .withOrcidIdentifier("0000-1111-2222-3333")
+            .withOrcidAccessToken("ab4d18a0-8d9a-40f1-b601-a417255c8d20")
+            .withOrcidSynchronizationPublicationsPreference(ALL)
+            .build();
+
+        Item secondProfile = ItemBuilder.createItem(context, profileCollection)
+            .withTitle("Test User")
+            .withCrisOwner(eperson)
+            .withOrcidIdentifier("4444-1111-2222-3333")
+            .withOrcidAccessToken("bb4d18a0-8d9a-40f1-b601-a417255c8d20")
+            .build();
+
+        Item thirdProfile = ItemBuilder.createItem(context, profileCollection)
+            .withTitle("Test User")
+            .withCrisOwner(eperson)
+            .withOrcidIdentifier("5555-1111-2222-3333")
+            .withOrcidAccessToken("cb4d18a0-8d9a-40f1-b601-a417255c8d20")
+            .withOrcidSynchronizationPublicationsPreference(ALL)
+            .build();
+
+        Item publication = ItemBuilder.createItem(context, publicationCollection)
+            .withTitle("Test publication")
+            .build();
+
+        createOrcidQueue(context, firstProfile, publication).build();
+        createOrcidQueue(context, secondProfile, publication).build();
+
+        List<OrcidHistory> historyRecords = new ArrayList<OrcidHistory>();
+        historyRecords.add(createOrcidHistory(context, firstProfile, publication).build());
+        historyRecords.add(createOrcidHistory(context, firstProfile, publication).withPutCode("12345").build());
+        historyRecords.add(createOrcidHistory(context, secondProfile, publication).build());
+        historyRecords.add(createOrcidHistory(context, secondProfile, publication).withPutCode("67891").build());
+        historyRecords.add(createOrcidHistory(context, thirdProfile, publication).withPutCode("98765").build());
+
+        context.restoreAuthSystemState();
+
+        String token = getAuthToken(admin.getEmail(), password);
+
+        getClient(token).perform(delete("/api/core/items/" + publication.getID()))
+            .andExpect(status().is(204));
+
+        List<OrcidQueue> orcidQueueRecords = orcidQueueService.findAll(context);
+        assertThat(orcidQueueRecords, hasSize(2));
+        assertThat(orcidQueueRecords, hasItem(matches(firstProfile, null, "Publication", "12345", DELETE)));
+        assertThat(orcidQueueRecords, hasItem(matches(thirdProfile, null, "Publication", "98765", DELETE)));
+
+        for (OrcidHistory historyRecord : historyRecords) {
+            historyRecord = context.reloadEntity(historyRecord);
+            assertThat(historyRecord, notNullValue());
+            assertThat(historyRecord.getEntity(), nullValue());
+        }
+    }
+
+    @Test
+    public void testDeletionOfFundingToBeSynchronizedWithOrcid() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        parentCommunity = CommunityBuilder.createCommunity(context)
+            .withName("Parent Community")
+            .build();
+
+        Collection profileCollection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Profiles")
+            .withEntityType("Person")
+            .build();
+
+        Collection fundingCollection = CollectionBuilder.createCollection(context, parentCommunity)
+            .withName("Fundings")
+            .withEntityType("Funding")
+            .build();
+
+        Item firstProfile = ItemBuilder.createItem(context, profileCollection)
+            .withTitle("Test User")
+            .withCrisOwner(eperson)
+            .withOrcidIdentifier("0000-1111-2222-3333")
+            .withOrcidAccessToken("ab4d18a0-8d9a-40f1-b601-a417255c8d20")
+            .withOrcidSynchronizationFundingsPreference(ALL)
+            .build();
+
+        Item secondProfile = ItemBuilder.createItem(context, profileCollection)
+            .withTitle("Test User")
+            .withCrisOwner(eperson)
+            .withOrcidIdentifier("4444-1111-2222-3333")
+            .withOrcidAccessToken("bb4d18a0-8d9a-40f1-b601-a417255c8d20")
+            .build();
+
+        Item thirdProfile = ItemBuilder.createItem(context, profileCollection)
+            .withTitle("Test User")
+            .withCrisOwner(eperson)
+            .withOrcidIdentifier("5555-1111-2222-3333")
+            .withOrcidAccessToken("cb4d18a0-8d9a-40f1-b601-a417255c8d20")
+            .withOrcidSynchronizationFundingsPreference(ALL)
+            .build();
+
+        Item funding = ItemBuilder.createItem(context, fundingCollection)
+            .withTitle("Test funding")
+            .build();
+
+        createOrcidQueue(context, firstProfile, funding).build();
+        createOrcidQueue(context, secondProfile, funding).build();
+
+        List<OrcidHistory> historyRecords = new ArrayList<OrcidHistory>();
+        historyRecords.add(createOrcidHistory(context, firstProfile, funding).build());
+        historyRecords.add(createOrcidHistory(context, firstProfile, funding).withPutCode("12345").build());
+        historyRecords.add(createOrcidHistory(context, secondProfile, funding).build());
+        historyRecords.add(createOrcidHistory(context, secondProfile, funding).withPutCode("67891").build());
+        historyRecords.add(createOrcidHistory(context, thirdProfile, funding).build());
+
+        context.restoreAuthSystemState();
+
+        String token = getAuthToken(admin.getEmail(), password);
+
+        getClient(token).perform(delete("/api/core/items/" + funding.getID()))
+            .andExpect(status().is(204));
+
+        List<OrcidQueue> orcidQueueRecords = orcidQueueService.findAll(context);
+        assertThat(orcidQueueRecords, hasSize(1));
+        assertThat(orcidQueueRecords, hasItem(matches(firstProfile, null, "Funding", "12345", DELETE)));
+
+        for (OrcidHistory historyRecord : historyRecords) {
+            historyRecord = context.reloadEntity(historyRecord);
+            assertThat(historyRecord, notNullValue());
+            assertThat(historyRecord.getEntity(), nullValue());
+        }
+
     }
 
     private void initPublicationAuthorsRelationships() throws SQLException {

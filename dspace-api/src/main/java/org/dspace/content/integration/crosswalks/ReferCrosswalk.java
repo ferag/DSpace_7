@@ -77,7 +77,7 @@ public class ReferCrosswalk implements ItemExportCrosswalk {
 
     private static Logger log = Logger.getLogger(ReferCrosswalk.class);
 
-    private static final Pattern FIELD_PATTERN = Pattern.compile("@[a-zA-Z0-9\\-.*]+(\\(.*\\))?@");
+    private static final Pattern FIELD_PATTERN = Pattern.compile("@(.*)@");
 
     @Autowired
     private ConfigurationService configurationService;
@@ -297,7 +297,9 @@ public class ReferCrosswalk implements ItemExportCrosswalk {
 
             List<String> metadataValues = getMetadataValuesForLine(context, templateLine, item);
             for (String metadataValue : metadataValues) {
-                appendLine(lines, templateLine, metadataValue);
+                if (isNotBlank(metadataValue)) {
+                    appendLine(lines, templateLine, metadataValue);
+                }
             }
         }
     }

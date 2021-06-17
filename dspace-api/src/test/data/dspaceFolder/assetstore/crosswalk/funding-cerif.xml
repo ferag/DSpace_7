@@ -15,10 +15,9 @@
 	</Funder>
     <PartOf>
         <Funding>
-            <Name>Parent Funding</Name>
         </Funding>
     </PartOf>
-	<Duration 
+	<Duration
 		startDate="2015-01-01" 
 		endDate="2020-01-01" 
 	/>

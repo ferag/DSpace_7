@@ -756,6 +756,14 @@ public interface ItemService
                                            String lang, boolean enableVirtualMetadata);
 
     /**
+     * Returns the item's entity type, if any.
+     *
+     * @param  item    the item
+     * @return         the entity type as string, if any
+     */
+    public String getEntityType(Item item);
+
+    /**
      * Search all the items that have an authority controller metadata fields
      * related to the given dspace.entity.type with the given authority value.
      *

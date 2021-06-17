@@ -198,7 +198,17 @@ public class DiscoverQueryBuilder implements InitializingBean {
         //Configure pagination
         configurePaginationForFacet(page, queryArgs);
 
+        addScopeForHiddenFilter(scope, discoveryConfiguration, queryArgs);
+
         return queryArgs;
+    }
+
+    private void addScopeForHiddenFilter(final IndexableObject scope,
+                                         final DiscoveryConfiguration discoveryConfiguration,
+                                         final DiscoverQuery queryArgs) {
+        if (scope != null) {
+            queryArgs.setScopeObject(scope);
+        }
     }
 
     private void configurePaginationForFacet(Pageable page, DiscoverQuery queryArgs) {
@@ -287,8 +297,7 @@ public class DiscoverQueryBuilder implements InitializingBean {
                         new String[discoveryConfiguration.getDefaultFilterQueries()
                                                          .size()]);
 
-        if (discoveryConfiguration != null &&
-                discoveryConfiguration instanceof DiscoveryRelatedItemConfiguration) {
+        if (scope != null && discoveryConfiguration instanceof DiscoveryRelatedItemConfiguration) {
             if (queryArray != null) {
                 for ( int i = 0; i < queryArray.length; i++ ) {
                     queryArray[i] = MessageFormat.format(queryArray[i], scope.getID());
@@ -343,8 +352,9 @@ public class DiscoverQueryBuilder implements InitializingBean {
                     ((DiscoverySortFunctionConfiguration) sortFieldConfiguration).getFunction(scope.getID()),
                     scope.getID());
             } else {
-                sortField = searchService.toSortFieldIndex(sortFieldConfiguration.getMetadataField(),
-                    sortFieldConfiguration.getType());
+                sortField = searchService
+                                .toSortFieldIndex(
+                                    sortFieldConfiguration.getMetadataField(), sortFieldConfiguration.getType());
             }
 
 
@@ -426,7 +436,8 @@ public class DiscoverQueryBuilder implements InitializingBean {
                 DiscoverFilterQuery filterQuery = searchService.toFilterQuery(context,
                                                                               filter.getIndexFieldName(),
                                                                               searchFilter.getOperator(),
-                                                                              searchFilter.getValue());
+                                                                              searchFilter.getValue(),
+                                                                              discoveryConfiguration);
 
                 if (filterQuery != null) {
                     filterQueries.add(filterQuery.getFilterQuery());

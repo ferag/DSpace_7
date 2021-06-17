@@ -338,21 +338,4 @@ public final class CrisLayoutSectionMatcher {
         return hasJsonPath("$.componentRows[" + row + "][" + pos + "].counterSettingsList[" + counterPos + "]" +
             ".discoveryConfigurationName", is(discoveryConfiguration));
     }
-
-    /**
-     * Matcher to verify that the multi top column on pos pos of row row
-     * at the position columnPosition within column list
-     * has the given metadataField configuration.
-     *
-     * @param row
-     * @param pos
-     * @param columnPosition
-     * @param metadataField
-     * @return
-     */
-    public static Matcher<? super Object> withColumnComponent(int row, int pos, int columnPosition,
-                                                              String metadataField) {
-        return hasJsonPath("$.componentRows[" + row + "][" + pos + "].columnList[" + columnPosition + "]" +
-            ".metadataField", is(metadataField));
-    }
 }

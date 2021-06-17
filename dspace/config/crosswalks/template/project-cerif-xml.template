@@ -80,7 +80,7 @@
             <Name>@dc.relation.equipment@</Name>
         </Equipment>
     </Uses>
-	<OAMandate 
+	<OAMandate
 		mandated="@oairecerif.oamandate@" 
 		URL="@oairecerif.oamandate.url@" 
 	/>

@@ -162,8 +162,8 @@ public class RelationshipServiceImpl implements RelationshipService {
         if (relationship.getRightPlace() == -1) {
             relationship.setRightPlace(Integer.MAX_VALUE);
         }
-        final boolean onlyRightRelationship = singleDirectionRelationship("right", relationship.getRelationshipType());
-        final boolean onlyLeftRelationship = singleDirectionRelationship("left", relationship.getRelationshipType());
+        final boolean onlyRightRelationship = placesOnly(relationship.getRelationshipType(), false);
+        final boolean onlyLeftRelationship = placesOnly(relationship.getRelationshipType(), true);
         List<Relationship> leftRelationships = onlyRightRelationship ? Collections.emptyList() :
                                                    findByItemAndRelationshipType(context,
                                                                                  leftItem,
@@ -194,14 +194,16 @@ public class RelationshipServiceImpl implements RelationshipService {
                     int position = i < relationship.getLeftPlace() ? i : i + 1;
                     rel.setLeftPlace(position);
                     if (onlyLeftRelationship) {
-                        rel.setRightPlace(leftRelationships.size());
+                        leftRelationships.get(i).setRightPlace(leftRelationships.size() + 1);
                     }
                 }
                 if (relationship.getLeftPlace() > leftRelationships.size()) {
                     relationship.setLeftPlace(leftRelationships.size());
                 }
             } else {
-                relationship.setLeftPlace(0);
+                if (!onlyRightRelationship) {
+                    relationship.setLeftPlace(0);
+                }
             }
             if (onlyLeftRelationship) {
                 relationship.setRightPlace(leftRelationships.size() + 1);
@@ -228,7 +230,9 @@ public class RelationshipServiceImpl implements RelationshipService {
                     relationship.setRightPlace(rightRelationships.size());
                 }
             } else {
-                relationship.setRightPlace(0);
+                if (!onlyLeftRelationship) {
+                    relationship.setRightPlace(0);
+                }
             }
             if (onlyRightRelationship) {
                 relationship.setLeftPlace(rightRelationships.size() + 1);
@@ -462,6 +466,8 @@ public class RelationshipServiceImpl implements RelationshipService {
         if (authorizeService.authorizeActionBoolean(context, relationship.getLeftItem(), Constants.WRITE) ||
             authorizeService.authorizeActionBoolean(context, relationship.getRightItem(), Constants.WRITE)) {
             relationshipDAO.delete(context, relationship);
+            relationship.setLeftPlace(-1);
+            relationship.setRightPlace(-1);
             updatePlaceInRelationship(context, relationship);
             updateItemsInRelationship(context, relationship);
         } else {
@@ -798,6 +804,28 @@ public class RelationshipServiceImpl implements RelationshipService {
     public int countByTypeName(Context context, String typeName)
             throws SQLException {
         return relationshipDAO.countByTypeName(context, typeName);
+    }
+
+    @Override
+    public boolean placesOnly(final RelationshipType relationshipType, final boolean isLeft) {
+
+        final String position = isLeft ? "left" : "right";
+        final String[] placesSettings = configurationService.getArrayProperty("relationship.places.only" +
+                                                                                  position);
+        if (placesSettings == null) {
+            return false;
+        }
+        final String leftTypeLabel = Optional.ofNullable(relationshipType.getLeftType())
+            .map(EntityType::getLabel).orElse("null");
+        final String rightTypeLabel = Optional.ofNullable(relationshipType.getRightType())
+                                             .map(EntityType::getLabel).orElse("null");
+
+        return Arrays.stream(placesSettings)
+                     .anyMatch(v -> v.equals(String.join("::",
+                                           leftTypeLabel,
+                                           rightTypeLabel,
+                                           relationshipType.getLeftwardType(),
+                                           relationshipType.getRightwardType())));
     }
 
     @Override

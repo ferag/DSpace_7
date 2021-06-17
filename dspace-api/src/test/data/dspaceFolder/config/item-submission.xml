@@ -326,7 +326,7 @@
 	      <step id="publication_indexing" />
 	      <step id="publication_bibliographic_details" />
 	      <step id="publication_references" />
-          <step id="detect-duplicate"/>
+	      <step id="detect-duplicate"/>
 	      <step id="upload" />
 	      <step id="license" />
 	    </submission-process>
@@ -370,7 +370,7 @@
         <submission-process name="modeB">
            <step id="onlyTitle"/>
         </submission-process>
-        
+
         <submission-process name="cvperson">
             <step id="cv-person" />
             <step id="upload" />
@@ -418,7 +418,7 @@
 	      <step id="upload" />
 	      <step id="license" />
 	    </submission-process>
-    
+
         <submission-process name="extractiontestprocess">
             <step id="collection"/>
             <step id="traditionalpageone"/>
@@ -428,7 +428,7 @@
             <step id="license"/>
             <step id="cclicense"/>
         </submission-process>
-        
+
     </submission-definitions>
 
 </item-submission>

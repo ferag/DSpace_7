@@ -11,6 +11,7 @@ import static org.springframework.web.servlet.DispatcherServlet.EXCEPTION_ATTRIB
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,9 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.exception.ResourceConflictException;
+import org.dspace.app.orcid.exception.OrcidValidationException;
 import org.dspace.app.rest.converter.ConverterService;
 import org.dspace.app.rest.model.RestModel;
-import org.dspace.app.rest.security.RestAuthenticationService;
 import org.dspace.app.rest.utils.ContextUtil;
 import org.dspace.app.rest.utils.Utils;
 import org.dspace.authorize.AuthorizeException;
@@ -64,9 +65,6 @@ public class DSpaceApiExceptionControllerAdvice extends ResponseEntityExceptionH
     private static final Set<Integer> LOG_AS_ERROR = Set.of(422);
 
     @Autowired
-    private RestAuthenticationService restAuthenticationService;
-
-    @Autowired
     private ConverterService converterService;
 
     @Autowired
@@ -75,7 +73,8 @@ public class DSpaceApiExceptionControllerAdvice extends ResponseEntityExceptionH
     @ExceptionHandler({AuthorizeException.class, RESTAuthorizationException.class, AccessDeniedException.class})
     protected void handleAuthorizeException(HttpServletRequest request, HttpServletResponse response, Exception ex)
         throws IOException {
-        if (restAuthenticationService.hasAuthenticationData(request)) {
+        Context context = ContextUtil.obtainContext(request);
+        if (Objects.nonNull(context.getCurrentUser())) {
             sendErrorResponse(request, response, ex, "Access is denied", HttpServletResponse.SC_FORBIDDEN);
         } else {
             sendErrorResponse(request, response, ex, "Authentication is required", HttpServletResponse.SC_UNAUTHORIZED);
@@ -135,6 +134,12 @@ public class DSpaceApiExceptionControllerAdvice extends ResponseEntityExceptionH
         sendErrorResponse(request, response, null,
                 "Invalid search request",
                 HttpStatus.UNPROCESSABLE_ENTITY.value());
+    }
+
+    @ExceptionHandler({ OrcidValidationException.class })
+    protected void handleOrcidValidationException(HttpServletRequest request, HttpServletResponse response,
+        OrcidValidationException ex) throws IOException {
+        sendErrorResponse(request, response, ex, ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY.value());
     }
 
     /**

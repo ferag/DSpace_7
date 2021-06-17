@@ -14,6 +14,7 @@ import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.REINSTATE;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.WITHDRAW;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.anEmptyMap;
+import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -23,6 +24,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,6 +37,8 @@ import org.dspace.app.rest.model.patch.AddOperation;
 import org.dspace.app.rest.model.patch.Operation;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.authorize.AuthorizeException;
+import org.dspace.builder.ClaimedTaskBuilder;
 import org.dspace.builder.CollectionBuilder;
 import org.dspace.builder.CommunityBuilder;
 import org.dspace.builder.EPersonBuilder;
@@ -45,21 +53,30 @@ import org.dspace.content.Item;
 import org.dspace.content.RelationshipType;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.content.service.WorkspaceItemService;
+import org.dspace.content.service.WorkspaceItemService;
+import org.dspace.deduplication.MockSolrDedupCore;
 import org.dspace.eperson.EPerson;
 import org.dspace.services.ConfigurationService;
 import org.dspace.workflow.WorkflowItem;
 import org.dspace.xmlworkflow.service.XmlWorkflowService;
 import org.dspace.xmlworkflow.storedcomponents.PoolTask;
+import org.dspace.kernel.ServiceManager;
+import org.dspace.services.factory.DSpaceServicesFactory;
+import org.dspace.workflow.WorkflowItem;
+import org.dspace.xmlworkflow.storedcomponents.ClaimedTask;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.dspace.xmlworkflow.storedcomponents.service.PoolTaskService;
+import org.dspace.xmlworkflow.storedcomponents.service.XmlWorkflowItemService;
 import org.dspace.xmlworkflow.storedcomponents.service.XmlWorkflowItemService;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RestMediaTypes;
 import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Test suite for testing Deduplication operations
@@ -86,7 +103,65 @@ public class SubmissionDeduplicationRestIT extends AbstractControllerIntegration
 
     private Collection collection;
 
+    @Autowired
+    private WorkspaceItemService workspaceItemService;
+
+    @Autowired
+    private XmlWorkflowItemService workflowItemService;
+
+    private MockSolrDedupCore dedupService;
+
     private Collection institutionCollection;
+    private Collection collection;
+
+    private EPerson submitter;
+
+    private EPerson editor;
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        ServiceManager serviceManager = DSpaceServicesFactory.getInstance().getServiceManager();
+        dedupService = serviceManager.getServiceByName(null, MockSolrDedupCore.class);
+
+        context.turnOffAuthorisationSystem();
+        parentCommunity = CommunityBuilder.createCommunity(context)
+                                          .withName("Root community").build();
+
+        submitter = EPersonBuilder.createEPerson(context)
+                                  .withEmail("submitter.em@test.com")
+                                  .withPassword(password)
+                                  .build();
+
+        editor = EPersonBuilder.createEPerson(context)
+                               .withEmail("editor@example.com")
+                               .withPassword(password).build();
+
+        collection = CollectionBuilder.createCollection(context, parentCommunity)
+                                      .withName("Collection")
+                                      .withEntityType("Publication")
+                                      .withSubmissionDefinition("publication")
+                                      .withSubmitterGroup(submitter)
+                                      .withWorkflowGroup(2, editor).build();
+
+        context.restoreAuthSystemState();
+    }
+
+    @After
+    public void after() throws SQLException, IOException, AuthorizeException {
+        context.turnOffAuthorisationSystem();
+        workflowItemService.deleteByCollection(context, collection);
+        workspaceItemService.findAll(context).forEach(this::deleteWorkspaceItem);
+        context.restoreAuthSystemState();
+    }
+
+    private void deleteWorkspaceItem(WorkspaceItem workspaceItem) {
+        try {
+            workspaceItemService.deleteAll(context, workspaceItem);
+        } catch (SQLException | AuthorizeException | IOException e) {
+            throw new RuntimeException();
+        }
+    }
 
     private EPerson submitter;
 
@@ -579,6 +654,109 @@ public class SubmissionDeduplicationRestIT extends AbstractControllerIntegration
     private RelationshipType createIsCorrectionOfRelationship(EntityType entityType) {
         return createRelationshipTypeBuilder(context, entityType,
             entityType, "isCorrectionOfItem", "isCorrectedByItem", 0, 1, 0, 1).build();
+    }
+
+}
+
+    @Test
+    public void testWorkflowDuplicationWithSameTitleTest() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item item = createItem("Test publication", collection);
+        String itemId = item.getID().toString();
+
+        WorkflowItem workflowItem = createWorkflowItem("Test publication", collection);
+
+        context.restoreAuthSystemState();
+
+        String submitterToken = getAuthToken(submitter.getEmail(), password);
+        getClient(submitterToken).perform(get("/api/workflow/workflowitems/" + workflowItem.getID()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.sections['detect-duplicate'].matches", aMapWithSize(1)))
+            .andExpect(jsonPath("$.sections['detect-duplicate'].matches['" + itemId + "'].matchObject.id", is(itemId)))
+            .andExpect(jsonPath("$.sections['detect-duplicate'].matches['" + itemId + "']"
+                + ".workflowDecision").doesNotExist());
+    }
+
+    @Test
+    public void testWorkflowDuplicationWithDifferentTitleTest() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item item = createItem("Test publication", collection);
+        String itemId = item.getID().toString();
+
+        WorkflowItem workflowItem = createWorkflowItem("Test publication", collection);
+
+        context.restoreAuthSystemState();
+
+        String submitterToken = getAuthToken(submitter.getEmail(), password);
+        getClient(submitterToken).perform(get("/api/workflow/workflowitems/" + workflowItem.getID()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.sections['detect-duplicate'].matches", aMapWithSize(1)))
+            .andExpect(jsonPath("$.sections['detect-duplicate'].matches['" + itemId + "'].matchObject.id", is(itemId)))
+            .andExpect(jsonPath("$.sections['detect-duplicate'].matches['" + itemId + "']"
+                + ".workflowDecision").doesNotExist());
+    }
+
+    @Test
+    public void workflowDuplicationWithSameDoiButDifferentCommunityTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Community communityA = CommunityBuilder.createSubCommunity(context, parentCommunity)
+                                               .withName("Community A").build();
+
+        Community communityB = CommunityBuilder.createSubCommunity(context, parentCommunity)
+                                               .withName("Community B").build();
+
+        Collection collectionOfComA = CollectionBuilder.createCollection(context, communityA)
+                                                       .withEntityType("Publication")
+                                                       .withSubmissionDefinition("publication")
+                                                       .withSubmitterGroup(submitter)
+                                                       .withWorkflowGroup(2, editor)
+                                                       .withName("Collection Of Community A").build();
+
+        Collection collectionOfComB = CollectionBuilder.createCollection(context, communityB)
+                                                       .withEntityType("Publication")
+                                                       .withSubmissionDefinition("publication")
+                                                       .withSubmitterGroup(submitter)
+                                                       .withWorkflowGroup(2, editor)
+                                                       .withName("Collection Of Community B").build();
+
+        Item item = ItemBuilder.createItem(context, collectionOfComA)
+                               .withTitle("Test Item")
+                               .withDoiIdentifier("10.1000/182")
+                               .build();
+
+        WorkflowItem workflowItem = WorkflowItemBuilder.createWorkflowItem(context, collectionOfComB)
+                                                       .withTitle("Test WorkflowItem")
+                                                       .withSubmitter(submitter)
+                                                       .withDoiIdentifier("10.1000/182")
+                                                       .build();
+
+        context.restoreAuthSystemState();
+
+        String submitterToken = getAuthToken(submitter.getEmail(), password);
+        getClient(submitterToken).perform(get("/api/workflow/workflowitems/" + workflowItem.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.sections['detect-duplicate']", aMapWithSize(1)))
+                                 .andExpect(jsonPath("$.sections['detect-duplicate'].matches['"
+                                     + item.getID().toString() + "'].matchObject.id", is(item.getID().toString())));
+
+    }
+
+    private Item createItem(String title, Collection collection) {
+        return ItemBuilder.createItem(context, collection)
+            .withTitle(title)
+            .build();
+    }
+
+    private WorkflowItem createWorkflowItem(String title, Collection collection) {
+        return WorkflowItemBuilder.createWorkflowItem(context, collection)
+            .withTitle(title)
+            .withSubmitter(submitter)
+            .build();
     }
 
 }

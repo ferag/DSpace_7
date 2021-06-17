@@ -73,7 +73,7 @@
                 <entry key="patent-pdf" value-ref="pdfCrosswalkPatent"></entry>
                 <entry key="patent-csv" value-ref="csvCrosswalkPatent"></entry>
                 <entry key="patent-xls" value-ref="xlsCrosswalkPatent"></entry>
-                
+
                 <entry key="product-perucris-cerif-xml" value-ref="referCrosswalkProductPerucrisCerifXml"></entry>
 
                 <entry key="institutionpublication-bibtex" value-ref="cslItemDataCrosswalkInstitutionPublicationBibtex"></entry>
@@ -124,7 +124,7 @@
 				<entry key="institutionfunding-pdf" value-ref="pdfCrosswalkInstitutionFunding"></entry>
 				<entry key="institutionfunding-csv" value-ref="csvCrosswalkInstitutionFunding"></entry>
 				<entry key="institutionfunding-xls" value-ref="xlsCrosswalkInstitutionFunding"></entry>
-                
+
                 <entry key="institutionpatent-cerif-xml" value-ref="referCrosswalkInstitutionPatentCerifXml"></entry>
                 <entry key="institutionpatent-perucris-cerif-xml" value-ref="referCrosswalkInstitutionPatentPerucrisCerifXml"></entry>
                 <entry key="institutionpatent-json" value-ref="referCrosswalkInstitutionPatentJson"></entry>
@@ -272,7 +272,7 @@
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/publications-xml.template"/>
         <property name="converter" ref="xmlValueConverter" />
     </bean>
-	
+
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPublicationEndnote">
 		<property name="templateFileName" value="crosswalks/template/endnote.template"/>
 		<property name="mimeType" value="application/x-endnote-refer; charset=UTF-8"/>
@@ -290,7 +290,7 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
-    
+
     <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkProjectPerucrisCerifXml">
         <property name="templateFileName" value="crosswalks/template/project-perucris-cerif-xml.template"/>
         <property name="mimeType" value="application/xml; charset=UTF-8"/>
@@ -454,7 +454,7 @@
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
         <property name="converter" ref="xmlValueConverter" />
     </bean>
-    
+
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPatentJson">
 		<property name="templateFileName" value="crosswalks/template/patent-json.template"/>
 		<property name="mimeType" value="application/json; charset=UTF-8"/>
@@ -465,7 +465,7 @@
 		<property name="converter" ref="jsonValueConverter" />
 		<property name="linesPostProcessor" ref="jsonPostProcessor" />
 	</bean>
-    
+
     <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionPatentJson">
         <property name="templateFileName" value="crosswalks/template/patent-json.template"/>
         <property name="mimeType" value="application/json; charset=UTF-8"/>
@@ -734,7 +734,7 @@
         <property name="entityType" value="InstitutionPublication"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE}"/>
     </bean>
-    
+
     <bean class="org.dspace.content.integration.crosswalks.CSLItemDataCrosswalk" id="cslItemDataCrosswalkInstitutionPublicationApa">
         <property name="style" value="crosswalks/csl/apa.csl"/>
         <property name="mimeType" value="text/plain"/>
@@ -743,7 +743,7 @@
         <property name="entityType" value="InstitutionPublication"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
     </bean>
-    
+
     <bean class="org.dspace.content.integration.crosswalks.CSLItemDataCrosswalk" id="cslItemDataCrosswalkInstitutionPublicationChicago">
         <property name="style" value="chicago-library-list.csl"/>
         <property name="mimeType" value="text/plain"/>
@@ -752,7 +752,7 @@
         <property name="entityType" value="InstitutionPublication"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
     </bean>
-    
+
     <bean class="org.dspace.content.integration.crosswalks.CSLItemDataCrosswalk" id="cslItemDataCrosswalkInstitutionPublicationJson">
         <property name="mimeType" value="application/json; charset=UTF-8"/>
         <property name="fileName" value="publications.json"/>
@@ -817,7 +817,7 @@
 		<property name="entityType" value="InstitutionPublication"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
 	</bean>
-    
+
     <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionPublicationEndnote">
         <property name="templateFileName" value="crosswalks/template/endnote.template"/>
         <property name="mimeType" value="application/x-endnote-refer; charset=UTF-8"/>
@@ -1122,6 +1122,8 @@
 				<entry key="bitstream" value-ref="virtualFieldBitstream" />
 				<entry key="mapConverter" value-ref="virtualFieldMapConverter" />
 				<entry key="personName" value-ref="virtualFieldPersonName" />
+				<entry key="date" value-ref="virtualFieldDateFormatter" />
+				<entry key="vocabulary" value-ref="virtualFieldVocabulary" />
 			</map>
 		</constructor-arg>
 	</bean>
@@ -1143,6 +1145,9 @@
 		<constructor-arg name="itemService" ref="org.dspace.content.ItemServiceImpl"/>
 		<constructor-arg name="mapConverters" ref="org.dspace.util.MapConverters"/>
 	</bean>
+	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldDateFormatter" id="virtualFieldDateFormatter"/>
+	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldVocabulary" id="virtualFieldVocabulary"/>
+
 
 	<!-- MapConverter configuration -->
 
@@ -1151,6 +1156,7 @@
 			<map>
 				<entry key="coarTypes" value-ref="mapConverterCoarTypes" />
 				<entry key="fundingTypes" value-ref="mapConverterFundingTypes" />
+				<entry key="eventTypes" value-ref="mapConverterEventTypes" />
 				<entry key="orgUnitTypes" value-ref="mapConverterOrgUnitTypes" />
 				<entry key="accessRight" value-ref="mapConverterAccessRight" />
 				<entry key="coarToPublicationTypes" value-ref="mapConverterCoarToPublicationTypes" />
@@ -1178,13 +1184,17 @@
 		<property name="defaultValue" value="https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_OrgUnit_Types"/>
 	</bean>
 
+	<bean name="mapConverterEventTypes" class="org.dspace.util.SimpleMapConverter" init-method="init">
+		<property name="converterNameFile" value="mapConverter-eventTypes.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+		<property name="defaultValue" value=""/>
+	</bean>
 
 	<bean name="mapConverterAccessRight" class="org.dspace.util.SimpleMapConverter" init-method="init">
 	    <property name="converterNameFile" value="mapConverter-accessRight.properties" />
 	    <property name="configurationService" ref="org.dspace.services.ConfigurationService" />
 	    <property name="defaultValue" value=""/>
 	</bean>
-
 
 	<bean name="mapConverterCoarToPublicationTypes" class="org.dspace.util.SimpleMapConverter" init-method="init">
 		<property name="converterNameFile" value="mapConverter-coarToPublicationTypes.properties" />

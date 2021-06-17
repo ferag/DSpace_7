@@ -29,14 +29,14 @@
 		</Authors>
 	   	<Editors>
 		</Editors>
-        <Publishers>
-            <Publisher>
-                <OrgUnit />
-            </Publisher>
-        </Publishers>
+	    <Publishers>
+	        <Publisher>
+	            <OrgUnit />
+	        </Publisher>
+	    </Publishers>
 		<Access xmlns="http://purl.org/coar/access_right"
-		>
-		</Access>
+	    >
+	    </Access>
 	</Publication>
 	<Publication xmlns="https://www.openaire.eu/cerif-profile/1.1/" id="mock-id">
 		<Type xmlns="https://www.openaire.eu/cerif-profile/vocab/COAR_Publication_Types">http://purl.org/coar/resource_type/c_cb28</Type>
@@ -58,13 +58,13 @@
 		</Authors>
 	   	<Editors>
 		</Editors>
-        <Publishers>
-            <Publisher>
-                <OrgUnit />
-            </Publisher>
-        </Publishers>
+	    <Publishers>
+	        <Publisher>
+	            <OrgUnit />
+	        </Publisher>
+	    </Publishers>
 		<Access xmlns="http://purl.org/coar/access_right"
-		>
-		</Access>
+	    >
+	    </Access>
 	</Publication>
 </Publications>

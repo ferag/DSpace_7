@@ -27,7 +27,7 @@
         <property name="itemService" ref="org.dspace.content.ItemServiceImpl"/>
         <property name="uploadConfigurationService" ref="uploadConfigurationService"/>
     </bean>
-    
+
     <bean name="personHasAtLeastOneIdValidation" class="org.dspace.validation.LogicalStatementValidator">
         <property name="errorKey" value="error.validation.personIdRequired"/>
         <property name="metadataFields">

@@ -108,8 +108,6 @@ public class RelationshipBuilder extends AbstractBuilder<Relationship, Relations
     public static RelationshipBuilder createRelationshipBuilder(Context context, Item leftItem, Item rightItem,
                                                                 RelationshipType relationshipType) {
 
-//        RelationshipBuilder relationshipBuilder = new RelationshipBuilder(context);
-//        return relationshipBuilder.create(context, leftItem, rightItem, relationshipType);
         return createRelationshipBuilder(context, leftItem, rightItem, relationshipType, 0, 0);
     }
 

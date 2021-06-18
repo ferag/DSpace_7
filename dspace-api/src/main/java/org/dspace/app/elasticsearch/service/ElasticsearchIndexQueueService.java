@@ -71,4 +71,14 @@ public interface ElasticsearchIndexQueueService  {
      */
     public ElasticsearchIndexQueue getFirstRecord(Context context) throws SQLException;
 
+    /**
+     * WARNING: This method deletes all records in the table : {ElasticsearchIndexQueue}
+     *          and it will not be possible to go back.
+     * 
+     * @param context                 DSpace context object
+     * @throws SQLException           if database error
+     * @throws AuthorizeException     if authorization error
+     */
+    public void deleteAll(Context context) throws SQLException, AuthorizeException;
+
 }

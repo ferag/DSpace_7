@@ -31,4 +31,11 @@ public class ElasticsearchIndexQueueDAOImpl
         return singleResult(query);
     }
 
+    @Override
+    public void deleteAll(Context context) throws SQLException {
+        String queryString = "DELETE FROM " + ElasticsearchIndexQueue.class.getSimpleName();
+        Query query = createQuery(context, queryString);
+        query.executeUpdate();
+    }
+
 }

@@ -70,4 +70,13 @@ public class ElasticsearchIndexQueueServiceImpl implements ElasticsearchIndexQue
         return elasticsearchIndexQueueDAO.getFirstRecord(context);
     }
 
+    @Override
+    public void deleteAll(Context context) throws SQLException, AuthorizeException {
+        if (!authorizeService.isAdmin(context)) {
+            throw new AuthorizeException(
+                "You must be an admin to delete a ElasticsearchIndexQueue");
+        }
+        elasticsearchIndexQueueDAO.deleteAll(context);
+    }
+
 }

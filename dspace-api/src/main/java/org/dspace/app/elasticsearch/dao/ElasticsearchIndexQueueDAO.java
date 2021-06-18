@@ -22,6 +22,8 @@ import org.dspace.core.GenericDAO;
  */
 public interface ElasticsearchIndexQueueDAO extends GenericDAO<ElasticsearchIndexQueue> {
 
-    ElasticsearchIndexQueue getFirstRecord(Context context) throws SQLException;
+    public ElasticsearchIndexQueue getFirstRecord(Context context) throws SQLException;
+
+    public void deleteAll(Context context) throws SQLException;
 
 }

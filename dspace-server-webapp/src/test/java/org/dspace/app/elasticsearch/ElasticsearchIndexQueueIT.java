@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 
@@ -499,15 +498,7 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
 
     private Map<String, String> start() throws SQLException, AuthorizeException {
         context.turnOffAuthorisationSystem();
-        boolean exist = true;
-        while (exist) {
-            ElasticsearchIndexQueue record = elasticsearchService.getFirstRecord(context);
-            if (Objects.isNull(record)) {
-                exist = false;
-            } else {
-                elasticsearchService.delete(context, record);
-            }
-        }
+        elasticsearchService.deleteAll(context);
         context.restoreAuthSystemState();
         Map<String, String> originIndexes = null;
         Map<String, String> testIndexes = new HashMap<String, String>();

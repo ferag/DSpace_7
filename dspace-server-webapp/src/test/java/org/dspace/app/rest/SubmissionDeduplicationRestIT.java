@@ -39,6 +39,7 @@ import org.dspace.builder.ItemBuilder;
 import org.dspace.builder.WorkflowItemBuilder;
 import org.dspace.builder.WorkspaceItemBuilder;
 import org.dspace.content.Collection;
+import org.dspace.content.Community;
 import org.dspace.content.EntityType;
 import org.dspace.content.Item;
 import org.dspace.content.RelationshipType;
@@ -385,6 +386,117 @@ public class SubmissionDeduplicationRestIT extends AbstractControllerIntegration
         getClient(submitterToken).perform(get("/api/workflow/workflowitems/" + workflowItemReinstate.getID()))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.sections['detect-duplicate']", anEmptyMap()));
+
+    }
+
+    @Test
+    public void workflowDuplicationWithSameEntityTypeButDifferentCommunityTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Community communityA = CommunityBuilder.createSubCommunity(context, parentCommunity)
+                                               .withName("Community A").build();
+
+        Community communityB = CommunityBuilder.createSubCommunity(context, parentCommunity)
+                                               .withName("Community B").build();
+
+        Collection collectionOfComA = CollectionBuilder.createCollection(context, communityA)
+                                                       .withEntityType("Publication")
+                                                       .withSubmissionDefinition("publication")
+                                                       .withSubmitterGroup(submitter)
+                                                       .withWorkflowGroup(2, editor)
+                                                       .withName("Collection Of Community A").build();
+
+        Collection collectionOfComB = CollectionBuilder.createCollection(context, communityB)
+                                                       .withEntityType("Publication")
+                                                       .withSubmissionDefinition("publication")
+                                                       .withSubmitterGroup(submitter)
+                                                       .withWorkflowGroup(2, editor)
+                                                       .withName("Collection Of Community B").build();
+
+        createItem("Test publication", collectionOfComA);
+
+        WorkflowItem workflowItem = createWorkflowItem("Test publication", collectionOfComB);
+
+        context.restoreAuthSystemState();
+
+        String submitterToken = getAuthToken(submitter.getEmail(), password);
+        getClient(submitterToken).perform(get("/api/workflow/workflowitems/" + workflowItem.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.sections['detect-duplicate']", anEmptyMap()));
+
+    }
+
+    @Test
+    public void workflowDuplicationWithDifferentEntityTypeButInSameCommunityTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Collection colPublication = CollectionBuilder.createCollection(context, parentCommunity)
+                                                     .withEntityType("Publication")
+                                                     .withSubmissionDefinition("publication")
+                                                     .withSubmitterGroup(submitter)
+                                                     .withWorkflowGroup(2, editor)
+                                                     .withName("Collection Of Community A").build();
+
+        Collection colPatent = CollectionBuilder.createCollection(context, parentCommunity)
+                                                .withEntityType("Patent")
+                                                .withSubmissionDefinition("patent")
+                                                .withSubmitterGroup(submitter)
+                                                .withWorkflowGroup(2, editor)
+                                                .withName("Collection Of Community B").build();
+
+        createItem("Test publication", colPatent);
+
+        WorkflowItem workflowItem = createWorkflowItem("Test publication", colPublication);
+
+        context.restoreAuthSystemState();
+
+        String submitterToken = getAuthToken(submitter.getEmail(), password);
+        getClient(submitterToken).perform(get("/api/workflow/workflowitems/" + workflowItem.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.sections['detect-duplicate']", anEmptyMap()));
+    }
+
+    @Test
+    public void workflowDuplicationWithSameDoiButDifferentCommunityTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Community communityA = CommunityBuilder.createSubCommunity(context, parentCommunity)
+                                               .withName("Community A").build();
+
+        Community communityB = CommunityBuilder.createSubCommunity(context, parentCommunity)
+                                               .withName("Community B").build();
+
+        Collection collectionOfComA = CollectionBuilder.createCollection(context, communityA)
+                                                       .withEntityType("Publication")
+                                                       .withSubmissionDefinition("publication")
+                                                       .withSubmitterGroup(submitter)
+                                                       .withWorkflowGroup(2, editor)
+                                                       .withName("Collection Of Community A").build();
+
+        Collection collectionOfComB = CollectionBuilder.createCollection(context, communityB)
+                                                       .withEntityType("Publication")
+                                                       .withSubmissionDefinition("publication")
+                                                       .withSubmitterGroup(submitter)
+                                                       .withWorkflowGroup(2, editor)
+                                                       .withName("Collection Of Community B").build();
+
+        ItemBuilder.createItem(context, collectionOfComA)
+                   .withTitle("Test publication")
+                   .withDoiIdentifier("10.1000/182")
+                   .build();
+
+        WorkflowItem workflowItem = WorkflowItemBuilder.createWorkflowItem(context, collectionOfComB)
+                                                       .withTitle("Test publication")
+                                                       .withSubmitter(submitter)
+                                                       .withDoiIdentifier("10.1000/182")
+                                                       .build();
+
+        context.restoreAuthSystemState();
+
+        String submitterToken = getAuthToken(submitter.getEmail(), password);
+        getClient(submitterToken).perform(get("/api/workflow/workflowitems/" + workflowItem.getID()))
+                                 .andExpect(status().isOk())
+                                 .andExpect(jsonPath("$.sections['detect-duplicate']", aMapWithSize(1)));
 
     }
 

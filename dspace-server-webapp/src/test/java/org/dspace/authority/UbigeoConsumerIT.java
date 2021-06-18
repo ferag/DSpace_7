@@ -64,16 +64,16 @@ public class UbigeoConsumerIT extends AbstractControllerIntegrationTest {
             Item templateItem = col.getTemplateItem();
 
             itemService.addMetadata(context, templateItem, "perucris", "ubigeo", null, null,
-                                    "UbiGeo::Amazonas::Chachapoyas", "0101", Choices.CF_ACCEPTED);
+                                    "UbiGeo::Amazonas::Chachapoyas", "peru_ubigeo:0101", Choices.CF_ACCEPTED);
 
             itemService.addMetadata(context, templateItem, "perucris", "ubigeo", "ubigeoSunat", null,
-                                    "UbiGeo::Arequipa::Arequipa::Cayma", "040103", Choices.CF_ACCEPTED);
+                                    "UbiGeo::Arequipa::Arequipa::Cayma", "peru_ubigeo:040103", Choices.CF_ACCEPTED);
 
             itemService.addMetadata(context, templateItem, "perucris", "domicilio", "ubigeoReniec", null,
-                                    "UbiGeo::Ayacucho::Huamanga::Socos", "050112", Choices.CF_ACCEPTED);
+                                    "UbiGeo::Ayacucho::Huamanga::Socos", "peru_ubigeo:050112", Choices.CF_ACCEPTED);
 
             itemService.addMetadata(context, templateItem, "perucris", "nacimiento", "ubigeoReniec", null,
-                                    "UbiGeo::Junín::Huancayo::Colca", "120112", Choices.CF_ACCEPTED);
+                                    "UbiGeo::Junín::Huancayo::Colca", "peru_ubigeo:120112", Choices.CF_ACCEPTED);
 
             itemService.addMetadata(context, templateItem, "dc", "title", null, null, "Test Title");
             itemService.addMetadata(context, templateItem, "dc", "date", "issued", null, "2021-03-01");

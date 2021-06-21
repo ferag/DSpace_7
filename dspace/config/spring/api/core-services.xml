@@ -67,7 +67,6 @@
     <bean id= "org.dspace.app.profile.service.ResearcherProfileService" class="org.dspace.app.profile.ResearcherProfileServiceImpl"/>
     <bean id= "org.dspace.app.profile.service.CvEntityService" class="org.dspace.app.profile.CvEntityServiceImpl"/>
 <!--    <bean class="org.dspace.app.profile.ResearcherProfileServiceImpl"/>-->
-    <bean class="org.dspace.app.profile.ProfileSynchronizationWithOrcidConfiguratorImpl"/>
 
     <bean class="org.dspace.app.profile.OrcidMetadataCopyingAction"/>
     <bean class="org.dspace.app.profile.OrcidProfileEnricher"/>

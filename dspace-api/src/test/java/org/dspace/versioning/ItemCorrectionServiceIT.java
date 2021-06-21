@@ -27,6 +27,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -98,7 +99,7 @@ public class ItemCorrectionServiceIT extends AbstractIntegrationTestWithDatabase
     }
 
     @Test
-    public void testCreateWorkspaceItemAndRelationshipByItem() throws SQLException, AuthorizeException {
+    public void testCreateWorkspaceItemAndRelationshipByItem() throws SQLException, AuthorizeException, IOException {
 
         context.turnOffAuthorisationSystem();
 

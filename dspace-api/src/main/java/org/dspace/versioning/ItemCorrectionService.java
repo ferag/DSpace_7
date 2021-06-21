@@ -101,7 +101,7 @@ public class ItemCorrectionService {
      * @throws AuthorizeException if an authorization error occurs
      */
     public WorkspaceItem createWorkspaceItemByItem(Context context, UUID itemUUID)
-        throws SQLException, AuthorizeException {
+        throws SQLException, AuthorizeException, IOException {
 
         WorkspaceItem wsi = null;
 
@@ -128,7 +128,7 @@ public class ItemCorrectionService {
      * @throws AuthorizeException if an authorization error occurs
      */
     public WorkspaceItem createWorkspaceItemAndRelationshipByItem(Context context, UUID itemUUID, String relationship)
-        throws SQLException, AuthorizeException {
+        throws SQLException, AuthorizeException, IOException {
 
         if (StringUtils.isBlank(relationship)) {
             throw new IllegalArgumentException("Relationship cannot be undefined");
@@ -150,7 +150,8 @@ public class ItemCorrectionService {
         return workspaceItem;
     }
 
-    public WorkspaceItem createCorrectionItem(Context context, UUID itemUUID) throws SQLException, AuthorizeException {
+    public WorkspaceItem createCorrectionItem(Context context, UUID itemUUID)
+        throws SQLException, AuthorizeException, IOException {
         return createWorkspaceItemAndRelationshipByItem(context, itemUUID, getCorrectionRelationshipName());
     }
 

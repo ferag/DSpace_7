@@ -325,6 +325,7 @@
       <heading>submit.progressbar.describe.notification-form</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
+    </step-definition>
         <!-- This optional step may allow the user to select a Creative Commons license -->
     <step-definition id="cclicense" mandatory="false">
       <heading>submit.progressbar.CClicense</heading>

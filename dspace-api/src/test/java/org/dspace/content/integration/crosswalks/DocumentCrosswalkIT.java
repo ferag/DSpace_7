@@ -624,46 +624,6 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
-    public void testPdfCrosswalkPatentDisseminate() throws Exception {
-
-        context.turnOffAuthorisationSystem();
-
-        Item patent = ItemBuilder.createItem(context, collection)
-            .withEntityType("Patent")
-            .withTitle("Test patent")
-            .withDateAccepted("2020-01-01")
-            .withIssueDate("2021-01-01")
-            .withPublisher("First publisher")
-            .withPublisher("Second publisher")
-            .withPatentNo("12345-666")
-            .withAuthor("Walter White", "b6ff8101-05ec-49c5-bd12-cba7894012b7")
-            .withAuthorAffiliation("4Science")
-            .withAuthor("Jesse Pinkman")
-            .withAuthorAffiliation(PLACEHOLDER_PARENT_METADATA_VALUE)
-            .withAuthor("John Smith", "will be referenced::ORCID::0000-0000-0012-3456")
-            .withAuthorAffiliation("4Science")
-            .withRightsHolder("Test Organization")
-            .withDescriptionAbstract("This is a patent")
-            .withRelationPatent("Another patent")
-            .withSubject("patent")
-            .withSubject("test")
-            .build();
-
-        context.restoreAuthSystemState();
-        context.commit();
-
-        StreamDisseminationCrosswalk streamCrosswalkDefault = (StreamDisseminationCrosswalk) CoreServiceFactory
-            .getInstance().getPluginService().getNamedPlugin(StreamDisseminationCrosswalk.class, "patent-pdf");
-
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            streamCrosswalkDefault.disseminate(context, patent, out);
-            assertThat(out.toString(), not(isEmptyString()));
-            assertThatPdfHasContent(out, content -> assertThatPatentDocumentHasContent(content));
-        }
-
-    }
-
-    @Test
     public void testPdfCrosswalkPersonDisseminateWithEmptyPerson() throws Exception {
 
         context.turnOffAuthorisationSystem();

@@ -2876,7 +2876,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Subject(s)</label>
@@ -2962,7 +2962,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Subject(s)</label>
@@ -3048,7 +3048,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Subject(s)</label>
@@ -4534,7 +4534,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Subject(s)</label>
@@ -4632,7 +4632,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Subject(s)</label>
@@ -5379,7 +5379,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Subject(s)</label>
@@ -5441,7 +5441,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Subject(s)</label>
@@ -5503,7 +5503,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Subject(s)</label>
@@ -7437,7 +7437,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Subject(s)</label>
@@ -7708,7 +7708,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Subject(s)</label>
@@ -8120,7 +8120,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Subject(s)</label>
@@ -8435,7 +8435,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Subject(s)</label>
@@ -8750,7 +8750,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Subject(s)</label>
@@ -9375,7 +9375,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>Subject(s)</label>
@@ -9566,7 +9566,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>Subject(s)</label>

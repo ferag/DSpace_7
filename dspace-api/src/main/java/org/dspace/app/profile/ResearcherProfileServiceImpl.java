@@ -15,8 +15,8 @@ import static org.dspace.eperson.Group.ANONYMOUS;
 import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +27,6 @@ import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dspace.app.exception.ResourceConflictException;
 import org.dspace.app.profile.importproviders.model.ConfiguredResearcherProfileProvider;

@@ -43,7 +43,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.data.rest.webmvc.RestMediaTypes.TEXT_URI_LIST;
-import static org.springframework.data.rest.webmvc.RestMediaTypes.TEXT_URI_LIST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -61,18 +60,19 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 
+
 import com.jayway.jsonpath.JsonPath;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrDocument;
-import org.dspace.app.profile.ResearcherProfile;
-import org.dspace.app.profile.service.ResearcherProfileService;
-import org.dspace.app.rest.matcher.ItemMatcher;
 import org.dspace.app.orcid.OrcidQueue;
 import org.dspace.app.orcid.client.OrcidClient;
 import org.dspace.app.orcid.model.OrcidTokenResponseDTO;
 import org.dspace.app.orcid.service.OrcidQueueService;
 import org.dspace.app.orcid.webhook.OrcidWebhookServiceImpl;
+import org.dspace.app.profile.ResearcherProfile;
+import org.dspace.app.profile.service.ResearcherProfileService;
+import org.dspace.app.rest.matcher.ItemMatcher;
 import org.dspace.app.rest.model.MetadataValueRest;
 import org.dspace.app.rest.model.patch.AddOperation;
 import org.dspace.app.rest.model.patch.Operation;
@@ -80,8 +80,8 @@ import org.dspace.app.rest.model.patch.RemoveOperation;
 import org.dspace.app.rest.model.patch.ReplaceOperation;
 import org.dspace.app.rest.repository.ResearcherProfileRestRepository;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
-import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.builder.CollectionBuilder;
 import org.dspace.builder.CommunityBuilder;
 import org.dspace.builder.CrisLayoutBoxBuilder;
@@ -111,8 +111,8 @@ import org.dspace.layout.LayoutSecurity;
 import org.dspace.services.ConfigurationService;
 import org.dspace.util.UUIDUtils;
 import org.hamcrest.Matchers;
-import org.junit.Ignore;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -165,6 +165,8 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
     private EPerson anotherUser;
 
     private Collection cvPersonCollection;
+
+    private Collection personCollection;
 
     /**
      * Tests setup.
@@ -811,63 +813,63 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
                 .andExpect(jsonPath("$.type", is("eperson"))).andExpect(jsonPath("$.name", is(user.getName())));
     }
 
-    @Test
-    public void testCloneFromExternalSourceRecordNotFound() throws Exception {
+//    @Test
+//    public void testCloneFromExternalSourceRecordNotFound() throws Exception {
+//
+//        String authToken = getAuthToken(user.getEmail(), password);
+//
+//        getClient(authToken)
+//                .perform(post("/api/cris/profiles/").contentType(TEXT_URI_LIST)
+//                        .content("http://localhost:8080/server/api/integration/externalsources/orcid/entryValues/FAKE"))
+//                .andExpect(status().isBadRequest());
+//    }
 
-        String authToken = getAuthToken(user.getEmail(), password);
+//    @Test
+//    public void testCloneFromExternalSourceMultipleUri() throws Exception {
+//
+//        String authToken = getAuthToken(user.getEmail(), password);
+//
+//        getClient(authToken)
+//                .perform(post("/api/cris/profiles/").contentType(TEXT_URI_LIST)
+//                        .content("http://localhost:8080/server/api/integration/externalsources/orcid/entryValues/id \n "
+//                                + "http://localhost:8080/server/api/integration/externalsources/dspace/entryValues/id"))
+//                .andExpect(status().isBadRequest());
+//
+//    }
 
-        getClient(authToken)
-                .perform(post("/api/cris/profiles/").contentType(TEXT_URI_LIST)
-                        .content("http://localhost:8080/server/api/integration/externalsources/orcid/entryValues/FAKE"))
-                .andExpect(status().isBadRequest());
-    }
+//    @Test
+//    public void testCloneFromExternalProfileAlreadyAssociated() throws Exception {
+//
+//        String id = user.getID().toString();
+//        String authToken = getAuthToken(user.getEmail(), password);
+//
+//        getClient(authToken).perform(post("/api/cris/profiles/").contentType(MediaType.APPLICATION_JSON_VALUE))
+//                .andExpect(status().isCreated()).andExpect(jsonPath("$.id", is(id.toString())))
+//                .andExpect(jsonPath("$.visible", is(false))).andExpect(jsonPath("$.type", is("profile")));
+//
+//        getClient(authToken)
+//                .perform(post("/api/cris/profiles/").contentType(TEXT_URI_LIST)
+//                        .content("http://localhost:8080/server/api/integration/externalsources/orcid/entryValues/id"))
+//                .andExpect(status().isConflict());
+//    }
 
-    @Test
-    public void testCloneFromExternalSourceMultipleUri() throws Exception {
-
-        String authToken = getAuthToken(user.getEmail(), password);
-
-        getClient(authToken)
-                .perform(post("/api/cris/profiles/").contentType(TEXT_URI_LIST)
-                        .content("http://localhost:8080/server/api/integration/externalsources/orcid/entryValues/id \n "
-                                + "http://localhost:8080/server/api/integration/externalsources/dspace/entryValues/id"))
-                .andExpect(status().isBadRequest());
-
-    }
-
-    @Test
-    public void testCloneFromExternalProfileAlreadyAssociated() throws Exception {
-
-        String id = user.getID().toString();
-        String authToken = getAuthToken(user.getEmail(), password);
-
-        getClient(authToken).perform(post("/api/cris/profiles/").contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isCreated()).andExpect(jsonPath("$.id", is(id.toString())))
-                .andExpect(jsonPath("$.visible", is(false))).andExpect(jsonPath("$.type", is("profile")));
-
-        getClient(authToken)
-                .perform(post("/api/cris/profiles/").contentType(TEXT_URI_LIST)
-                        .content("http://localhost:8080/server/api/integration/externalsources/orcid/entryValues/id"))
-                .andExpect(status().isConflict());
-    }
-
-    @Test
-    public void testCloneFromExternalCollectionNotSet() throws Exception {
-
-        configurationService.setProperty("researcher-profile.collection.uuid", "not-existing");
-        String id = user.getID().toString();
-        String authToken = getAuthToken(user.getEmail(), password);
-
-        getClient(authToken).perform(post("/api/cris/profiles/").contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isCreated()).andExpect(jsonPath("$.id", is(id.toString())))
-                .andExpect(jsonPath("$.visible", is(false))).andExpect(jsonPath("$.type", is("profile")));
-
-        getClient(authToken)
-                .perform(post("/api/cris/profiles/").contentType(TEXT_URI_LIST)
-                        .content("http://localhost:8080/server/api/integration/externalsources/orcid/entryValues/id \n "
-                                + "http://localhost:8080/server/api/integration/externalsources/dspace/entryValues/id"))
-                .andExpect(status().isBadRequest());
-    }
+//    @Test
+//    public void testCloneFromExternalCollectionNotSet() throws Exception {
+//
+//        configurationService.setProperty("researcher-profile.collection.uuid", "not-existing");
+//        String id = user.getID().toString();
+//        String authToken = getAuthToken(user.getEmail(), password);
+//
+//        getClient(authToken).perform(post("/api/cris/profiles/").contentType(MediaType.APPLICATION_JSON_VALUE))
+//                .andExpect(status().isCreated()).andExpect(jsonPath("$.id", is(id.toString())))
+//                .andExpect(jsonPath("$.visible", is(false))).andExpect(jsonPath("$.type", is("profile")));
+//
+//        getClient(authToken)
+//                .perform(post("/api/cris/profiles/").contentType(TEXT_URI_LIST)
+//                        .content("http://localhost:8080/server/api/integration/externalsources/orcid/entryValues/id \n "
+//                                + "http://localhost:8080/server/api/integration/externalsources/dspace/entryValues/id"))
+//                .andExpect(status().isBadRequest());
+//    }
 
     @Test
     public void testPatchToClaimPerson() throws Exception {
@@ -3077,10 +3079,12 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
         return itemService.find(context, itemIdRef.get());
     }
 
-    private String getItemIdByProfileId(String token, String id) throws SQLException, Exception {
-        MvcResult result = getClient(token).perform(get("/api/cris/profiles/{id}/item", id))
-            .andExpect(status().isOk())
-            .andReturn();
+//    private String getItemIdByProfileId(String token, String id) throws SQLException, Exception {
+//        MvcResult result = getClient(token).perform(get("/api/cris/profiles/{id}/item", id))
+//                                           .andExpect(status().isOk())
+//                                           .andReturn();
+//    }
+
     private void assertSearchQuery(Item item, String owner, String authority)
             throws SearchServiceException, SolrServerException, IOException {
         SolrClient solrClient = searchService.getSolrSearchCore().getSolr();

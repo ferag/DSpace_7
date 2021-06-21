@@ -15,6 +15,9 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.dspace.app.util.SubmissionConfigReader;
+import org.dspace.app.util.SubmissionConfigReaderException;
+import org.dspace.authority.service.FormNameLookup;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
@@ -47,20 +50,23 @@ public class LayoutSecurityServiceImpl implements LayoutSecurityService {
     private final GroupService groupService;
     private final CrisSecurityService crisSecurityService;
     private final ChoiceAuthorityService choiceAuthorityService;
+    private final SubmissionConfigReader submissionConfigReader;
 
     private Group anonymousGroup;
 
     @Autowired
     public LayoutSecurityServiceImpl(AuthorizeService authorizeService,
                                      ItemService itemService,
-                                     final GroupService groupService,
+                                     GroupService groupService,
                                      CrisSecurityService crisSecurityService,
-                                     ChoiceAuthorityService choiceAuthorityService) {
+                                     ChoiceAuthorityService choiceAuthorityService)
+        throws SubmissionConfigReaderException {
         this.authorizeService = authorizeService;
         this.itemService = itemService;
         this.groupService = groupService;
         this.crisSecurityService = crisSecurityService;
         this.choiceAuthorityService = choiceAuthorityService;
+        this.submissionConfigReader = new SubmissionConfigReader();
     }
 
 
@@ -133,7 +139,18 @@ public class LayoutSecurityServiceImpl implements LayoutSecurityService {
         String element = metadataValue.getMetadataField().getElement();
         String qualifier = metadataValue.getMetadataField().getQualifier();
         Collection collection = item.getOwningCollection();
-        String authorityName = choiceAuthorityService.getChoiceAuthorityName(schema, element, qualifier, collection);
+        String submissionName = submissionConfigReader.getSubmissionConfigByCollection(collection)
+                                                      .getSubmissionName();
+        String fieldKey = metadataValue.getMetadataField().toString('_');
+        List<String> formNames = FormNameLookup.getInstance()
+                                               .formContainingField(submissionName,
+                                                                    fieldKey);
+        String formNameDefinition = formNames.isEmpty() ? "" : formNames.get(0);
+        String authorityName = choiceAuthorityService.getChoiceAuthorityName(schema,
+                                                                             element,
+                                                                             qualifier,
+                                                                             formNameDefinition);
+
         return authorityName != null ? choiceAuthorityService.getChoiceAuthorityByAuthorityName(authorityName) : null;
     }
 

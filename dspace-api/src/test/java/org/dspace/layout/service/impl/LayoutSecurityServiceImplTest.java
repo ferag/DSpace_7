@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+
+import org.dspace.app.util.SubmissionConfigReader;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
@@ -61,13 +63,16 @@ public class LayoutSecurityServiceImplTest {
     private CrisSecurityService crisSecurityService;
     @Mock
     private ChoiceAuthorityService choiceAuthorityService;
+    @Mock
+    private SubmissionConfigReader submissionConfigReader;
 
     private LayoutSecurityServiceImpl securityService;
 
     @Before
     public void setUp() throws Exception {
         securityService = new LayoutSecurityServiceImpl(authorizeService, itemService, groupService,
-                crisSecurityService, choiceAuthorityService);
+                                                        crisSecurityService, choiceAuthorityService
+        );
     }
 
     /**
@@ -420,7 +425,7 @@ public class LayoutSecurityServiceImplTest {
         HashSet<MetadataField> securityMetadataFieldSet = new HashSet<>(singletonList(securityMetadataField));
 
         List<MetadataValue> metadataValueList =
-            Arrays.asList(metadataValueWithAuthority(anonymousGroupUuid.toString()));
+            Arrays.asList(metadataValueWithAuthority(securityMetadataField, anonymousGroupUuid.toString()));
 
 
         when(itemService.getMetadata(item, securityMetadataField.getMetadataSchema().getName(),
@@ -463,7 +468,7 @@ public class LayoutSecurityServiceImplTest {
 
 
         List<MetadataValue> metadataValueList =
-            Arrays.asList(metadataValueWithAuthority(allowedGroup.toString()));
+            Arrays.asList(metadataValueWithAuthority(securityMetadataField, allowedGroupUuid.toString()));
 
 
         when(itemService.getMetadata(item, securityMetadataField.getMetadataSchema().getName(),

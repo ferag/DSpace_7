@@ -58,7 +58,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
         ElasticsearchBulkIndex bulkIndex = new ElasticsearchBulkIndex();
         ElasticsearchIndexProvider elasticsearchIndexProvider =  Mockito.mock(ElasticsearchIndexProvider.class);
 
-        Map<String, String> originIndexes = start();
+        Map<String, String> originIndexes = cleanUpIndexes();
         String testIndex = "testIndex";
 
         parentCommunity = CommunityBuilder.createCommunity(context)
@@ -128,7 +128,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
             assertTrue(i3.getArgument(2).equals(jsonItem1) || i3.getArgument(2).equals(jsonItem2));
 
         } finally {
-            end(originIndexes);
+            restoreIndexes(originIndexes);
         }
     }
 
@@ -139,7 +139,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
         ElasticsearchBulkIndex bulkIndex = new ElasticsearchBulkIndex();
         ElasticsearchIndexProvider elasticsearchIndexProvider =  Mockito.mock(ElasticsearchIndexProvider.class);
 
-        Map<String, String> originIndexes = start();
+        Map<String, String> originIndexes = cleanUpIndexes();
         String testIndex = "testIndex";
 
         parentCommunity = CommunityBuilder.createCommunity(context)
@@ -194,7 +194,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
             assertEquals(i3.getArgument(1), item1);
             assertEquals(i3.getArgument(2), jsonItem1);
         } finally {
-            end(originIndexes);
+            restoreIndexes(originIndexes);
         }
     }
 
@@ -205,7 +205,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
         ElasticsearchBulkIndex bulkIndex = new ElasticsearchBulkIndex();
         ElasticsearchIndexProvider elasticsearchIndexProvider =  Mockito.mock(ElasticsearchIndexProvider.class);
 
-        Map<String, String> originIndexes = start();
+        Map<String, String> originIndexes = cleanUpIndexes();
         String testIndex = "publication-" + String.valueOf(Year.now().getValue());
 
         parentCommunity = CommunityBuilder.createCommunity(context)
@@ -264,7 +264,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
             assertEquals(i3.getArgument(1), item1);
             assertEquals(i3.getArgument(2), jsonItem1);
         } finally {
-            end(originIndexes);
+            restoreIndexes(originIndexes);
         }
     }
 
@@ -275,7 +275,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
         ElasticsearchBulkIndex bulkIndex = new ElasticsearchBulkIndex();
         ElasticsearchIndexProvider elasticsearchIndexProvider =  Mockito.mock(ElasticsearchIndexProvider.class);
 
-        Map<String, String> originIndexes = start();
+        Map<String, String> originIndexes = cleanUpIndexes();
         String testIndex = "testIndex";
 
         parentCommunity = CommunityBuilder.createCommunity(context)
@@ -322,7 +322,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
             assertEquals(1, i2.getArguments().length);
             assertEquals(i2.getArgument(0), testIndex);
         } finally {
-            end(originIndexes);
+            restoreIndexes(originIndexes);
         }
     }
 
@@ -333,7 +333,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
         ElasticsearchBulkIndex bulkIndex = new ElasticsearchBulkIndex();
         ElasticsearchIndexProvider elasticsearchIndexProvider =  Mockito.mock(ElasticsearchIndexProvider.class);
 
-        Map<String, String> originIndexes = start();
+        Map<String, String> originIndexes = cleanUpIndexes();
         String testIndex = "testIndex";
 
         parentCommunity = CommunityBuilder.createCommunity(context)
@@ -422,11 +422,11 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
             assertTrue(i6.getArgument(1).equals(item1) || i6.getArgument(1).equals(item2));
             assertTrue(i6.getArgument(2).equals(jsonItem1) || i6.getArgument(2).equals(jsonItem2));
         } finally {
-            end(originIndexes);
+            restoreIndexes(originIndexes);
         }
     }
 
-    private Map<String, String> start() {
+    private Map<String, String> cleanUpIndexes() {
         Map<String, String> originIndexes = null;
         Map<String, String> testIndexes = new HashMap<String, String>();
         testIndexes.put("Publication", "test_pub");
@@ -439,7 +439,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
         return originIndexes;
     }
 
-    private void end(Map<String, String> originIndexes) {
+    private void restoreIndexes(Map<String, String> originIndexes) {
         elasticsearchIndexManager.setEntityType2Index(originIndexes);
     }
 }

@@ -19,7 +19,7 @@
     @if.not.authority.dc-relation-funding.start@
     <Funder> <As> <Funding> <Name>@dc.relation.funding@</Name> </Funding> </As> </Funder> 
     @if.not.authority.dc-relation-funding.end@
-    <Subject>@dc.subject.ocde@</Subject>
+    <Subject>@perucris.subject.ocde@</Subject>
     <ResearchLine>@perucris.researchLine@</ResearchLine>
     <ManufacturingCountry>@perucris.manufacturingCountry@</ManufacturingCountry>
     <ManufacturingDate>@perucris.date.manufacturing@</ManufacturingDate>

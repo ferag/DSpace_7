@@ -611,7 +611,7 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
     }
 
     public ItemBuilder withSubjectOCDE(String ocde) {
-        return addMetadataValue(item, "dc", "subject", "ocde", ocde);
+        return withPerucrisSubjectOCDE(ocde);
     }
 
     public ItemBuilder withRightsUri(String uri) {

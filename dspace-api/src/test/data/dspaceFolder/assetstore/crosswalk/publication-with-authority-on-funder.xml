@@ -46,6 +46,8 @@
         </Publisher>
     </Publishers>
     <License>rights-uri</License>
+    <Subject scheme="http://purl.org/pe-repo/ocde/ford">keyword1</Subject>
+    <Subject scheme="http://purl.org/pe-repo/ocde/ford">keyword2</Subject>
     <OriginatesFrom>
         <Project id="mock-id">
             <Acronym>TP</Acronym>

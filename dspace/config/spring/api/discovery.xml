@@ -2018,7 +2018,7 @@
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
 <!--                <value>'{'!join from=search.resourceid to=author_authority fromIndex=${solr.multicorePrefix}search'}'relation.isOwnedByCvPerson:{0}</value>-->
                 <value>perucris.ctivitae.owner_authority:{0}</value>
-                <value>-relation.isResearchoutputsHiddenFor:{0}</value>
+<!--                <value>-relation.isResearchoutputsHiddenFor:{0}</value>-->
                 <value>(search.entitytype: CvPublication OR search.entitytype: Publication )</value>
                 <value>search.resourcetype:Item</value>
             </list>
@@ -2233,7 +2233,7 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>perucris.ctivitae.owner_authority:{0}</value>
-                <value>-relation.isProjectsHiddenFor:{0}</value>
+<!--                <value>-relation.isProjectsHiddenFor:{0}</value>-->
                 <value>(search.entitytype: CvProject OR search.entitytype: Project )</value>
                 <value>search.resourcetype:Item</value>
             </list>
@@ -2418,7 +2418,7 @@
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>perucris.ctivitae.owner_authority:{0}</value>
                 <value>(search.entitytype: CvPatent OR search.entitytype: Patent )</value>
-                <value>-relation.isPatentsHiddenFor:{0}</value>
+<!--                <value>-relation.isPatentsHiddenFor:{0}</value>-->
                 <value>search.resourcetype:Item</value>
             </list>
         </property>
@@ -2566,7 +2566,7 @@
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>'{'!join from=search.resourceid to=eqowner_authority fromIndex=${solr.multicorePrefix}search'}'relation.isOwnedByCvPerson:{0}</value>
                 <value>(entityType_keyword:Equipment OR entityType_keyword:CvEquipment)</value>
-                <value>-relation.isEquipmentsHiddenFor:{0}</value>
+<!--                <value>-relation.isEquipmentsHiddenFor:{0}</value>-->
                 <value>search.resourcetype:Item</value>
             </list>
         </property>

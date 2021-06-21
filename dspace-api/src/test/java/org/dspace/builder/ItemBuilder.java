@@ -378,10 +378,6 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, MetadataSchemaEnum.DC.getName(), "description", "abstract", description);
     }
 
-    public ItemBuilder withDescriptionVersion(String version) {
-        return addMetadataValue(item, MetadataSchemaEnum.DC.getName(), "description", "version", version);
-    }
-
     public ItemBuilder withPersonEducation(String education) {
         return addMetadataValue(item, "crisrp", "education", null, education);
     }
@@ -516,10 +512,6 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withRelationPublication(String publication) {
         return addMetadataValue(item, "dc", "relation", "publication", publication);
-    }
-
-    public ItemBuilder withRelationPatent(String patent) {
-        return addMetadataValue(item, "dc", "relation", "patent", patent);
     }
 
     public ItemBuilder withRelationDoi(String doi) {
@@ -787,16 +779,8 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "crisevent", "partnerpj", null, partner);
     }
 
-    public ItemBuilder withDateAccepted(String dateAccepted) {
-        return addMetadataValue(item, "dcterms", "dateAccepted", null, dateAccepted);
-    }
-
     public ItemBuilder withOrganizationRuc(String ruc) {
         return addMetadataValue(item, "organization", "identifier", "ruc", ruc);
-    }
-
-    public ItemBuilder withOrgUnitCountry(String country) {
-        return addMetadataValue(item, "orgunit", "identifier", "country", country);
     }
 
     public ItemBuilder withUsageType(String usage) {
@@ -962,10 +946,6 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withNotificationTo(String notification, String authority) {
         return addMetadataValue(item, "perucris", "notification", "to", null, notification, authority, 600);
-    }
-
-    public ItemBuilder withRightsHolder(String rightsHolder) {
-        return addMetadataValue(item, "dcterms", "rightsHolder", null, rightsHolder);
     }
 
     public ItemBuilder withRelationPatent(String patent) {

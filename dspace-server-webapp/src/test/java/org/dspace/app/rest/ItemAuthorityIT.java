@@ -215,11 +215,11 @@ public class ItemAuthorityIT extends AbstractControllerIntegrationTest {
             .andExpect(jsonPath("$._embedded.entries", Matchers.containsInAnyOrder(
                 ItemAuthorityMatcher.matchItemAuthorityWithOtherInformations(author_1.getID().toString(),
                     "Author 1", "Author 1", "vocabularyEntry",
-                    "oairecerif_author_affiliation", "OrgUnit_1::"
+                    "data-oairecerif_author_affiliation", "OrgUnit_1::"
                         + orgUnit_1.getID()),
                 ItemAuthorityMatcher.matchItemAuthorityWithOtherInformations(author_2.getID().toString(),
                     "Author 2", "Author 2", "vocabularyEntry",
-                    "oairecerif_author_affiliation", "OrgUnit_1::"
+                    "data-oairecerif_author_affiliation", "OrgUnit_1::"
                         + orgUnit_1.getID())
             )))
             .andExpect(jsonPath("$.page.totalElements", Matchers.is(2)));

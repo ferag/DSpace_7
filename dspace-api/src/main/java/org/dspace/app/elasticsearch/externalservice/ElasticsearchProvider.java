@@ -107,8 +107,7 @@ public class ElasticsearchProvider {
         }
         Item item = itemService.find(context, record.getId());
         if (Objects.nonNull(item)) {
-            String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY)
-                                           .toLowerCase();
+            String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
             return elasticsearchIndexManager.getEntityType2Index().containsKey(entityType)
                          ? elasticsearchIndexManager.getEntityType2Index().get(entityType) : StringUtils.EMPTY;
         }

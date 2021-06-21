@@ -54,7 +54,6 @@ import org.dspace.content.Item;
 import org.dspace.event.Event;
 import org.dspace.services.ConfigurationService;
 import org.hamcrest.Matchers;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
@@ -300,7 +299,6 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
     }
 
     @Test
-    @Ignore
     public void sendElasticsearchIndexQueueWithCreateOperationTypeTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
@@ -353,7 +351,6 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
     }
 
     @Test
-    @Ignore
     public void sendElasticsearchIndexQueueWithModifyMetadataOperationTypeTest() throws Exception {
         context.turnOffAuthorisationSystem();
 

@@ -117,15 +117,15 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
             assertTrue(i2.toString().startsWith("elasticsearchIndexProvider.indexSingleItem"));
             assertEquals(3, i2.getArguments().length);
             assertEquals(i2.getArgument(0), testIndex);
-            assertEquals(i2.getArgument(1), item2);
-            assertEquals(i2.getArgument(2), jsonItem2);
+            assertTrue(i2.getArgument(1).equals(item1) || i2.getArgument(1).equals(item2));
+            assertTrue(i2.getArgument(2).equals(jsonItem1) || i2.getArgument(2).equals(jsonItem2));
 
             Invocation i3 = invocationIterator.next();
             assertTrue(i3.toString().startsWith("elasticsearchIndexProvider.indexSingleItem"));
             assertEquals(3, i3.getArguments().length);
             assertEquals(i3.getArgument(0), testIndex);
-            assertEquals(i3.getArgument(1), item1);
-            assertEquals(i3.getArgument(2), jsonItem1);
+            assertTrue(i3.getArgument(1).equals(item1) || i3.getArgument(1).equals(item2));
+            assertTrue(i3.getArgument(2).equals(jsonItem1) || i3.getArgument(2).equals(jsonItem2));
 
         } finally {
             end(originIndexes);
@@ -398,29 +398,29 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
             assertTrue(i3.toString().startsWith("elasticsearchIndexProvider.indexSingleItem"));
             assertEquals(3, i3.getArguments().length);
             assertEquals(i3.getArgument(0), testIndex);
-            assertEquals(i3.getArgument(1), item1);
-            assertEquals(i3.getArgument(2), jsonItem1);
+            assertTrue(i3.getArgument(1).equals(item1) || i3.getArgument(1).equals(item2));
+            assertTrue(i3.getArgument(2).equals(jsonItem1) || i3.getArgument(2).equals(jsonItem2));
 
             Invocation i4 = invocationIterator.next();
             assertTrue(i4.toString().startsWith("elasticsearchIndexProvider.indexSingleItem"));
             assertEquals(3, i4.getArguments().length);
             assertEquals(i4.getArgument(0), testIndex);
-            assertEquals(i4.getArgument(1), item1);
-            assertEquals(i4.getArgument(2), jsonItem1);
+            assertTrue(i4.getArgument(1).equals(item1) || i4.getArgument(1).equals(item2));
+            assertTrue(i4.getArgument(2).equals(jsonItem1) || i4.getArgument(2).equals(jsonItem2));
 
             Invocation i5 = invocationIterator.next();
             assertTrue(i5.toString().startsWith("elasticsearchIndexProvider.indexSingleItem"));
             assertEquals(3, i5.getArguments().length);
             assertEquals(i5.getArgument(0), testIndex);
-            assertEquals(i5.getArgument(1), item1);
+            assertTrue(i5.getArgument(1).equals(item1) || i5.getArgument(1).equals(item2));
             assertEquals(i5.getArgument(2), jsonItem1);
 
             Invocation i6 = invocationIterator.next();
             assertTrue(i6.toString().startsWith("elasticsearchIndexProvider.indexSingleItem"));
             assertEquals(3, i6.getArguments().length);
             assertEquals(i6.getArgument(0), testIndex);
-            assertEquals(i6.getArgument(1), item2);
-            assertEquals(i6.getArgument(2), jsonItem2);
+            assertTrue(i6.getArgument(1).equals(item1) || i6.getArgument(1).equals(item2));
+            assertTrue(i6.getArgument(2).equals(jsonItem1) || i6.getArgument(2).equals(jsonItem2));
         } finally {
             end(originIndexes);
         }

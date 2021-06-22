@@ -8,7 +8,7 @@
 	"ownerPerson": "@crisequipment.ownerrp@",
 	"usage": "@perucris.type.usage@",
 	"subjects": [
-	   "@dc.subject.ocde@",
+	   "@perucris.subject.ocde@",
 	],
 	"researchLine": "@perucris.researchLine@",
 	"fundings": [

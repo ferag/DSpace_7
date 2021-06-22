@@ -90,7 +90,18 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
 
         ExternalDataObject externalDataObject = mergeExternalObjects(externalObjects);
 
-        return createItem(context, collection, externalDataObject);
+        Item researcherProfile = createItem(context, collection, externalDataObject);
+
+        for (ConfiguredResearcherProfileProvider configuredProvider :
+            getConfiguredProfileProvider(eperson, uriList)) {
+            try {
+                configuredProvider.importSuggestions(context, researcherProfile);
+            } catch (SolrServerException | IOException e) {
+                log.error("Can't import profile suggestions due to unexpected errors");
+            }
+        }
+
+        return researcherProfile;
     }
 
     public void setAfterImportActionList(List<AfterImportAction> afterImportActionList) {

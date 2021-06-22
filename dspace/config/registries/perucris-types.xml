@@ -363,13 +363,6 @@
     </dc-type>
 
     <dc-type>
-        <schema>dc</schema>
-        <element>subject</element>
-        <qualifier>ocde</qualifier>
-        <scope_note></scope_note>
-    </dc-type>
-
-    <dc-type>
         <schema>perucris</schema>
         <element>subject</element>
         <qualifier>minam</qualifier>
@@ -703,6 +696,12 @@
         <qualifier>qualityCertified</qualifier>
     </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>personProfile</element>
+        <qualifier>type</qualifier>
+    </dc-type>
+
 
 
     <dc-type>
@@ -835,6 +834,12 @@
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>personaffiliationname</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>flagcv</element>
+	    <qualifier>perucrispersonprofiletype</qualifier>
     </dc-type>
     
     <dc-type>

@@ -2668,6 +2668,7 @@
             <list>
                 <ref bean="graphPublicationByType" />
                 <ref bean="graphPublicationByDate" />
+                <ref bean="graphOcdeArea"/>
 
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterEditor" />
@@ -2686,6 +2687,7 @@
             <list>
                 <ref bean="graphPublicationByType" />
                 <ref bean="graphPublicationByDate" />
+                <ref bean="graphOcdeArea"/>
                 <ref bean="searchFilterTitle" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterEditor" />
@@ -2740,6 +2742,7 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
+                <ref bean="graphOcdeArea"/>
                 <ref bean="searchFilterJobtitle"/>
                 <ref bean="searchFilterKnowsLanguage"/>
                 <ref bean="searchFilterPersonOrgUnit"/>
@@ -2751,6 +2754,7 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
+                <ref bean="graphOcdeArea"/>
                 <ref bean="searchFilterFamilyName"/>
                 <ref bean="searchFilterGivenName"/>
                 <ref bean="searchFilterJobtitle"/>
@@ -2864,7 +2868,8 @@
         <property name="sidebarFacets">
             <list>
                 <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+<!--                <ref bean="graphPublicationByDate" />-->
+                <ref bean="graphOcdeArea"/>
                 <ref bean="searchFilterSubject"/>
                 <ref bean="searchFilterEntityType"/>
                 <ref bean="searchFilterType"/>
@@ -2878,7 +2883,8 @@
         <property name="searchFilters">
             <list>
                 <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+<!--                <ref bean="graphPublicationByDate" />-->
+                <ref bean="graphOcdeArea"/>
                 <ref bean="searchFilterSubject"/>
                 <ref bean="searchFilterEntityType"/>
                 <ref bean="searchFilterType"/>
@@ -5157,7 +5163,7 @@
     </bean>
 
     <bean id="graphOcdeArea" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
-        <property name="facetLimit" value="10"/>
+        <property name="facetLimit" value="25"/>
         <property name="indexFieldName" value="graphitemtypeOcdeArea" />
         <!-- the splitter needs to be a not empty string -->
         <property name="splitter" value="::" />
@@ -5167,6 +5173,7 @@
         <property name="metadataFields">
             <list>
                 <value>dc.subject.ocde</value>
+                <value>perucris.subject.ocde</value>
                 <value>perucris.renacyt.ocde</value>
             </list>
         </property>

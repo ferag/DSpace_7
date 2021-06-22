@@ -5834,6 +5834,16 @@
           <required />
           <hint />
         </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>personProfile</dc-element>
+          <dc-qualifier>type</dc-qualifier>
+          <label>Tipo de Perfil</label>
+          <input-type value-pairs-name="peru_personprofile_type">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
       </row>
       <row>
         <field>
@@ -6304,6 +6314,16 @@
           <required />
           <hint />
         </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>personProfile</dc-element>
+          <dc-qualifier>type</dc-qualifier>
+          <label>Tipo de Perfil</label>
+          <input-type value-pairs-name="peru_personprofile_type">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
       </row>
       <row>
         <field>
@@ -6770,6 +6790,16 @@
           <dc-qualifier>name</dc-qualifier>
           <label>Filiación principal</label>
           <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>personProfile</dc-element>
+          <dc-qualifier>type</dc-qualifier>
+          <label>Tipo de Perfil</label>
+          <input-type value-pairs-name="peru_personprofile_type">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -11821,6 +11851,20 @@
       <pair>
         <displayed-value>SubOrgUnit</displayed-value>
         <stored-value>suborgunit</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="peru_personprofile_type" dc-term="peru_personprofile_type">
+      <pair>
+        <displayed-value>Investigador</displayed-value>
+        <stored-value>Investigator</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Técnico o personal asimilado</displayed-value>
+        <stored-value>Technician or assimilated</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Otro personal de apoyo</displayed-value>
+        <stored-value>Other support staff</stored-value>
       </pair>
     </value-pairs>
   </form-value-pairs>

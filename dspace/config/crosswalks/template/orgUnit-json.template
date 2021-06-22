@@ -42,7 +42,7 @@
         "@organization.identifier.crossrefid@",
     ],
     "subjects": [
-        "@dc.subject.ocde@",
+        "@perucris.subject.ocde@",
     ],
     "keywords": [
         "@dc.subject@",

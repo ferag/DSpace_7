@@ -179,6 +179,7 @@
 			   <value>dc.description.abstract</value>
 			   <value>crisrp.country</value>
                <value>person.knowsLanguage</value>
+               <value>perucris.personProfile.type</value>
            </list>
        </entry>
 	</util:map>

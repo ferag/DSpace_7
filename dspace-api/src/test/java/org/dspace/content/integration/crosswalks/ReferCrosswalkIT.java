@@ -47,7 +47,6 @@ import org.dspace.core.factory.CoreServiceFactory;
 import org.dspace.utils.DSpace;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -57,7 +56,6 @@ import org.junit.Test;
  * @author Corrado Lombardi (corrado.lombardi at 4science.it)
  *
  */
-@Ignore
 public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
     private static final String BASE_OUTPUT_DIR_PATH = "./target/testing/dspace/assetstore/crosswalk/";
@@ -1497,6 +1495,18 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withSubject("Keyword2")
             .build();
 
+        ItemBuilder.createItem(context, collection)
+            .withEntityType("Person")
+            .withTitle("Walter White")
+            .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
+            .build();
+
+        ItemBuilder.createItem(context, collection)
+            .withEntityType("Person")
+            .withTitle("Jesse Pinkman")
+            .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
+            .build();
+
         context.restoreAuthSystemState();
         context.commit();
 
@@ -2316,14 +2326,16 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         ItemBuilder.createItem(context, collection)
             .withEntityType("Publication")
             .withTitle("First Publication")
+            .withCtiVitaeOwner("John Smith", personItem.getID().toString())
             .withIssueDate("2020-01-01")
             .withAuthor("John Smith", personItem.getID().toString())
             .withAuthor("Walter White")
             .build();
 
         ItemBuilder.createItem(context, collection)
-            .withEntityType("Publication")
+            .withEntityType("CvPublication")
             .withTitle("Second Publication")
+            .withCtiVitaeOwner("John Smith", personItem.getID().toString())
             .withIssueDate("2020-04-01")
             .withAuthor("John Smith", personItem.getID().toString())
             .build();
@@ -2452,6 +2464,338 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             String expectedJson = IOUtils.toString(fis, Charset.defaultCharset());
             compareEachLine(out.toString(), expectedJson);
         }
+    }
+
+    @Test
+    public void testInstitutionPatentPerucrisCerifXmlDisseminate() throws Exception {
+
+        Item patent = ItemBuilder.createItem(context, collection)
+            .withEntityType("InstitutionPatent")
+            .withTitle("Test patent")
+            .withDateSubmitted("2021-01-01")
+            .withPublisher("First publisher")
+            .withPublisher("Second publisher")
+            .withPatentNo("12345-666")
+            .withAuthor("Walter White", "b6ff8101-05ec-49c5-bd12-cba7894012b7")
+            .withAuthorAffiliation("4Science")
+            .withAuthor("Jesse Pinkman")
+            .withAuthorAffiliation(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withAuthor("John Smith")
+            .withAuthorAffiliation("4Science")
+            .withRightsHolder("Test Organization")
+            .withDescriptionAbstract("This is a patent")
+            .withRelationPatent("Another patent")
+            .build();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper
+            .getByType("institutionpatent-perucris-cerif-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, patent, out);
+
+        try (FileInputStream fis = getFileInputStream("patent-perucris-cerif.xml")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+
+    }
+
+    @Test
+    public void testPatentCerifXmlDisseminate() throws Exception {
+
+        Item patent = ItemBuilder.createItem(context, collection)
+            .withEntityType("Patent")
+            .withTitle("Test patent")
+            .withIssueDate("2021-01-01")
+            .withPublisher("First publisher")
+            .withPublisher("Second publisher")
+            .withPatentNo("12345-666")
+            .withAuthor("Walter White", "b6ff8101-05ec-49c5-bd12-cba7894012b7")
+            .withAuthorAffiliation("4Science")
+            .withAuthor("Jesse Pinkman")
+            .withAuthorAffiliation(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withAuthor("John Smith")
+            .withAuthorAffiliation("4Science")
+            .withRightsHolder("Test Organization")
+            .withDescriptionAbstract("This is a patent")
+            .withRelationPatent("Another patent")
+            .build();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-cerif-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, patent, out);
+
+        try (FileInputStream fis = getFileInputStream("patent.xml")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+
+    }
+
+    @Test
+    public void testManyPatentsCerifXmlDisseminate() throws Exception {
+
+        Item firstPatent = ItemBuilder.createItem(context, collection)
+            .withEntityType("Patent")
+            .withTitle("Test patent")
+            .withIssueDate("2021-01-01")
+            .withPublisher("Publisher")
+            .withPatentNo("12345-666")
+            .build();
+
+        Item secondPatent = ItemBuilder.createItem(context, collection)
+            .withEntityType("Patent")
+            .withTitle("Second patent")
+            .withIssueDate("2011-01-01")
+            .withPublisher("First publisher")
+            .withPublisher("Second publisher")
+            .withPatentNo("12345-777")
+            .withAuthor("Walter White")
+            .withAuthorAffiliation("4Science")
+            .withRelationPatent("Another patent")
+            .build();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-cerif-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, Arrays.asList(firstPatent, secondPatent).iterator(), out);
+
+        try (FileInputStream fis = getFileInputStream("patents.xml")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+
+    }
+
+    @Test
+    public void testPatentPerucrisCerifXmlDisseminate() throws Exception {
+
+        Item patent = ItemBuilder.createItem(context, collection)
+            .withEntityType("Patent")
+            .withTitle("Test patent")
+            .withDateSubmitted("2021-01-01")
+            .withPublisher("First publisher")
+            .withPublisher("Second publisher")
+            .withPatentNo("12345-666")
+            .withAuthor("Walter White", "b6ff8101-05ec-49c5-bd12-cba7894012b7")
+            .withAuthorAffiliation("4Science")
+            .withAuthor("Jesse Pinkman")
+            .withAuthorAffiliation(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withAuthor("John Smith")
+            .withAuthorAffiliation("4Science")
+            .withRightsHolder("Test Organization")
+            .withDescriptionAbstract("This is a patent")
+            .withRelationPatent("Another patent")
+            .build();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-perucris-cerif-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, patent, out);
+
+        try (FileInputStream fis = getFileInputStream("patent-perucris-cerif.xml")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+
+    }
+
+    @Test
+    public void testManyPatentsPerucrisCerifXmlDisseminate() throws Exception {
+
+        Item firstPatent = ItemBuilder.createItem(context, collection)
+            .withEntityType("Patent")
+            .withTitle("Test patent")
+            .withDateSubmitted("2021-01-01")
+            .withPublisher("Publisher")
+            .withPatentNo("12345-666")
+            .build();
+
+        Item secondPatent = ItemBuilder.createItem(context, collection)
+            .withEntityType("Patent")
+            .withTitle("Second patent")
+            .withDateSubmitted("2011-01-01")
+            .withPublisher("First publisher")
+            .withPublisher("Second publisher")
+            .withPatentNo("12345-777")
+            .withAuthor("Walter White")
+            .withAuthorAffiliation("4Science")
+            .withRelationPatent("Another patent")
+            .build();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-perucris-cerif-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, Arrays.asList(firstPatent, secondPatent).iterator(), out);
+
+        try (FileInputStream fis = getFileInputStream("patents-perucris-cerif.xml")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+
+    }
+
+    @Test
+    public void testPatentJsonDisseminate() throws Exception {
+
+        Item patent = ItemBuilder.createItem(context, collection)
+            .withEntityType("Patent")
+            .withTitle("Test patent")
+            .withDateSubmitted("2020-01-01")
+            .withIssueDate("2021-01-01")
+            .withLanguage("en")
+            .withType("patent")
+            .withPublisher("First publisher")
+            .withPublisher("Second publisher")
+            .withPatentNo("12345-666")
+            .withAuthor("Walter White", "b6ff8101-05ec-49c5-bd12-cba7894012b7")
+            .withAuthorAffiliation("4Science")
+            .withAuthor("Jesse Pinkman")
+            .withAuthorAffiliation(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withAuthor("John Smith", "will be referenced::ORCID::0000-0000-0012-3456")
+            .withAuthorAffiliation("4Science")
+            .withRightsHolder("Test Organization")
+            .withDescriptionAbstract("This is a patent")
+            .withRelationPatent("Another patent")
+            .withSubject("patent")
+            .withSubject("test")
+            .withRelationFunding("Test funding")
+            .withRelationProject("First project")
+            .withRelationProject("Second project")
+            .build();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-json");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, patent, out);
+
+        try (FileInputStream fis = getFileInputStream("patent.json")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+
+    }
+
+    @Test
+    public void testManyPatentsJsonDisseminate() throws Exception {
+
+        Item firstPatent = ItemBuilder.createItem(context, collection)
+            .withEntityType("Patent")
+            .withTitle("Test patent")
+            .withIssueDate("2021-01-01")
+            .withPublisher("Publisher")
+            .withPatentNo("12345-666")
+            .withSubject("subject")
+            .withRelationProject("Project")
+            .build();
+
+        Item secondPatent = ItemBuilder.createItem(context, collection)
+            .withEntityType("Patent")
+            .withTitle("Second patent")
+            .withIssueDate("2011-01-01")
+            .withPublisher("First publisher")
+            .withPublisher("Second publisher")
+            .withPatentNo("12345-777")
+            .withAuthor("Walter White")
+            .withAuthorAffiliation("4Science")
+            .withRelationPatent("Another patent")
+            .build();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-json");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, Arrays.asList(firstPatent, secondPatent).iterator(), out);
+
+        try (FileInputStream fis = getFileInputStream("patents.json")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+
+    }
+
+    @Test
+    public void testProductPerucrisCerifXmlDisseminate() throws Exception {
+
+        Item project = ItemBuilder.createItem(context, collection)
+            .withEntityType("Project")
+            .withTitle("Test Project")
+            .withAcronym("T-PRJ")
+            .build();
+
+        Item dataSet = ItemBuilder.createItem(context, collection)
+            .withEntityType("Dataset")
+            .withTitle("Test DataSet")
+            .withLanguage("EN")
+            .withDescriptionVersion("V-01")
+            .withDoiIdentifier("10.11234.12")
+            .withAuthor("Walter White")
+            .withAuthorAffiliation(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withAuthor("Jesse Pinkman", "94f05c08-6273-4a9e-b6cd-002fd8669fa0")
+            .withAuthorAffiliation("4Science")
+            .withPublisher("Publisher")
+            .withDescriptionAbstract("This is a DataSet")
+            .withSubject("DataSet")
+            .withSubject("Keyword")
+            .withRelationProject("Test Project", project.getID().toString())
+            .withRelationEquipment("Test Equipment")
+            .build();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("product-perucris-cerif-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, dataSet, out);
+
+        try (FileInputStream fis = getFileInputStream("product-perucris-cerif.xml")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+
+    }
+
+    @Test
+    public void testManyProductsPerucrisCerifXmlDisseminate() throws Exception {
+
+        Item firstDataSet = ItemBuilder.createItem(context, collection)
+            .withEntityType("Dataset")
+            .withTitle("First DataSet")
+            .withAuthor("Walter White")
+            .withAuthorAffiliation(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPublisher("Publisher")
+            .withSubject("DataSet")
+            .withRelationProject("Test Project")
+            .withRelationEquipment("First Equipment")
+            .withRelationEquipment("Second Equipment")
+            .build();
+
+        Item secondDataSet = ItemBuilder.createItem(context, collection)
+            .withEntityType("Dataset")
+            .withTitle("Second DataSet")
+            .withPublisher("Publisher")
+            .withSubject("DataSet")
+            .withRelationProject("First Project")
+            .withRelationProject("Second Project")
+            .build();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("product-perucris-cerif-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, Arrays.asList(firstDataSet, secondDataSet).iterator(), out);
+
+        try (FileInputStream fis = getFileInputStream("products-perucris-cerif.xml")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+
     }
 
     private void compareEachLine(String result, String expectedResult) {

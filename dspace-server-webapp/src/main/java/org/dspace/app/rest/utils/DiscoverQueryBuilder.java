@@ -343,8 +343,8 @@ public class DiscoverQueryBuilder implements InitializingBean {
                     ((DiscoverySortFunctionConfiguration) sortFieldConfiguration).getFunction(scope.getID()),
                     scope.getID());
             } else {
-                sortField = searchService
-                                .toSortFieldIndex(sortFieldConfiguration.getMetadataField(), sortFieldConfiguration.getType());
+                sortField = searchService.toSortFieldIndex(sortFieldConfiguration.getMetadataField(),
+                    sortFieldConfiguration.getType());
             }
 
 

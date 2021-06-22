@@ -8,9 +8,12 @@
 package org.dspace.app.elasticsearch.consumer;
 import java.util.Map;
 import java.util.Objects;
+import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dspace.content.Item;
 import org.dspace.content.service.ItemService;
+import org.dspace.content.template.generator.ElasticsearchIndexTemplateValueGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -22,8 +25,23 @@ public class ElasticsearchIndexManager {
 
     private Map<String, String> entityType2Index;
 
+    private Map<String, ElasticsearchIndexTemplateValueGenerator> entityType2Generator;
+
     @Autowired
     private ItemService itemService;
+
+    @PostConstruct
+    private void setUp() {
+        for (String entityType : this.entityType2Index.keySet()) {
+            if (this.entityType2Generator.containsKey(entityType)) {
+                String newIndex = entityType2Generator.get(entityType).generator(entityType2Index.get(entityType));
+                if (StringUtils.isNotBlank(newIndex)) {
+                    this.entityType2Index.put(entityType, newIndex);
+                }
+            }
+
+        }
+    }
 
     public ElasticsearchIndexManager(Map<String, String> map) {
         this.entityType2Index = map;
@@ -47,6 +65,14 @@ public class ElasticsearchIndexManager {
 
     public void setEntityType2Index(Map<String, String> entityType2Index) {
         this.entityType2Index = entityType2Index;
+    }
+
+    public Map<String, ElasticsearchIndexTemplateValueGenerator> getEntityType2Generator() {
+        return entityType2Generator;
+    }
+
+    public void setEntityType2Generator(Map<String, ElasticsearchIndexTemplateValueGenerator> entityType2Generator) {
+        this.entityType2Generator = entityType2Generator;
     }
 
 }

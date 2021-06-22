@@ -24,8 +24,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-
+import org.dspace.app.util.SubmissionConfig;
 import org.dspace.app.util.SubmissionConfigReader;
+import org.dspace.authority.service.FormNameLookup;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
@@ -66,13 +67,21 @@ public class LayoutSecurityServiceImplTest {
     @Mock
     private SubmissionConfigReader submissionConfigReader;
 
+    @Mock
+    private FormNameLookup formNameLookup;
+
     private LayoutSecurityServiceImpl securityService;
 
     @Before
     public void setUp() throws Exception {
         securityService = new LayoutSecurityServiceImpl(authorizeService, itemService, groupService,
-                                                        crisSecurityService, choiceAuthorityService
+                                                        crisSecurityService, choiceAuthorityService,
+                                                        submissionConfigReader, formNameLookup
         );
+        when(submissionConfigReader.getSubmissionConfigByCollection(any()))
+            .thenReturn(new SubmissionConfig(false, "test-config", Collections.emptyList()));
+        when(formNameLookup.formContainingField(eq("test-config"), any()))
+            .thenReturn(Collections.emptyList());
     }
 
     /**
@@ -401,7 +410,7 @@ public class LayoutSecurityServiceImplTest {
 
     /**
      * CUSTOM_DATA {@link LayoutSecurity} set, accessed by null user.
-     * Group is threated as anonymous, anonymous group has grants for the box, access is granted
+     * Group is treated as anonymous, anonymous group has grants for the box, access is granted
      *
      * @throws SQLException
      */
@@ -423,6 +432,15 @@ public class LayoutSecurityServiceImplTest {
         MetadataField securityMetadataField = securityMetadataField();
 
         HashSet<MetadataField> securityMetadataFieldSet = new HashSet<>(singletonList(securityMetadataField));
+
+        when(choiceAuthorityService.getChoiceAuthorityName(securityMetadataField.getMetadataSchema().getName(),
+                                                           securityMetadataField.getElement(),
+                                                           securityMetadataField.getQualifier(), ""))
+            .thenReturn("GroupAuthority");
+
+        final GroupAuthority groupAuthority = mock(GroupAuthority.class);
+        when(choiceAuthorityService.getChoiceAuthorityByAuthorityName("GroupAuthority"))
+            .thenReturn(groupAuthority);
 
         List<MetadataValue> metadataValueList =
             Arrays.asList(metadataValueWithAuthority(securityMetadataField, anonymousGroupUuid.toString()));

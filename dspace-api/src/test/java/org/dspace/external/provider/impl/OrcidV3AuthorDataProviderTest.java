@@ -36,7 +36,7 @@ public class OrcidV3AuthorDataProviderTest {
     @Before
     public void init() {
         this.orcidV3AuthorDataProvider = new OrcidV3AuthorDataProvider();
-        this.orcidV3AuthorDataProvider.setOrcidUrl("http://orcid-url/");
+        this.orcidV3AuthorDataProvider.setOrcidUrl("http://orcid-url");
         this.orcidPerson =
                 converter.convertSinglePerson(getClass().getResourceAsStream("orcid-person-record.xml"));
     }

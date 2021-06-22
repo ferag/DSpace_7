@@ -51,6 +51,7 @@ public class LayoutSecurityServiceImpl implements LayoutSecurityService {
     private final CrisSecurityService crisSecurityService;
     private final ChoiceAuthorityService choiceAuthorityService;
     private final SubmissionConfigReader submissionConfigReader;
+    private final FormNameLookup formNameLookup;
 
     private Group anonymousGroup;
 
@@ -61,14 +62,42 @@ public class LayoutSecurityServiceImpl implements LayoutSecurityService {
                                      CrisSecurityService crisSecurityService,
                                      ChoiceAuthorityService choiceAuthorityService)
         throws SubmissionConfigReaderException {
+//        this.authorizeService = authorizeService;
+//        this.itemService = itemService;
+//        this.groupService = groupService;
+//        this.crisSecurityService = crisSecurityService;
+//        this.choiceAuthorityService = choiceAuthorityService;
+//        this.submissionConfigReader = new SubmissionConfigReader();
+        this(authorizeService, itemService, groupService, crisSecurityService, choiceAuthorityService,
+             new SubmissionConfigReader(), FormNameLookup.getInstance());
+    }
+
+    /**
+     * Constructor, used by unit tests, which accepts submissionConfigReader and formNameLookup
+     * as input instead of creating a new one
+     *
+     * @param authorizeService
+     * @param itemService
+     * @param groupService
+     * @param crisSecurityService
+     * @param choiceAuthorityService
+     * @param submissionConfigReader
+     * @param formNameLookup
+     */
+    LayoutSecurityServiceImpl(AuthorizeService authorizeService, ItemService itemService,
+                              GroupService groupService,
+                              CrisSecurityService crisSecurityService,
+                              ChoiceAuthorityService choiceAuthorityService,
+                              SubmissionConfigReader submissionConfigReader,
+                              FormNameLookup formNameLookup) {
         this.authorizeService = authorizeService;
         this.itemService = itemService;
         this.groupService = groupService;
         this.crisSecurityService = crisSecurityService;
         this.choiceAuthorityService = choiceAuthorityService;
-        this.submissionConfigReader = new SubmissionConfigReader();
+        this.submissionConfigReader = submissionConfigReader;
+        this.formNameLookup = formNameLookup;
     }
-
 
     @Override
     public boolean hasAccess(LayoutSecurity layoutSecurity, Context context, EPerson user,
@@ -142,7 +171,7 @@ public class LayoutSecurityServiceImpl implements LayoutSecurityService {
         String submissionName = submissionConfigReader.getSubmissionConfigByCollection(collection)
                                                       .getSubmissionName();
         String fieldKey = metadataValue.getMetadataField().toString('_');
-        List<String> formNames = FormNameLookup.getInstance()
+        List<String> formNames = formNameLookup
                                                .formContainingField(submissionName,
                                                                     fieldKey);
         String formNameDefinition = formNames.isEmpty() ? "" : formNames.get(0);

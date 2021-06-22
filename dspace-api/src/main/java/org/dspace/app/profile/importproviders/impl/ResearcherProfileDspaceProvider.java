@@ -7,13 +7,18 @@
  */
 package org.dspace.app.profile.importproviders.impl;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.solr.client.solrj.SolrServerException;
 import org.dspace.app.profile.importproviders.ResearcherProfileProvider;
 import org.dspace.app.profile.importproviders.model.ConfiguredResearcherProfileProvider;
 import org.dspace.app.profile.importproviders.model.ResearcherProfileSource;
+import org.dspace.app.profile.importproviders.model.ResearcherProfileSource.SourceId;
+import org.dspace.content.Item;
+import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.external.model.ExternalDataObject;
 import org.dspace.external.service.ExternalDataService;
@@ -44,7 +49,7 @@ public class ResearcherProfileDspaceProvider implements ResearcherProfileProvide
     public Optional<ConfiguredResearcherProfileProvider> configureProvider(EPerson eperson, List<URI> uriList) {
         for (URI uri : uriList) {
             ResearcherProfileSource source = new ResearcherProfileSource(uri);
-            if (source.getSource().equals(getSourceIdentifier())) {
+            if (source.selectSource(getSourceIdentifier()).isPresent()) {
                 log.debug("Matching ResearcherProfileSource found for uri=" + uri + ", " + source.toString());
                 ConfiguredResearcherProfileProvider configured =
                         new ConfiguredResearcherProfileProvider(source, this);
@@ -57,7 +62,14 @@ public class ResearcherProfileDspaceProvider implements ResearcherProfileProvide
 
     @Override
     public Optional<ExternalDataObject> getExternalDataObject(ResearcherProfileSource source) {
-        return externalDataService.getExternalDataObject(source.getSource(), source.getId());
+        final SourceId sourceId = source.selectSource(getSourceIdentifier()).get();
+        return externalDataService.getExternalDataObject(sourceId.getSource(), sourceId.getId());
+    }
+
+    @Override
+    public void importSuggestions(Context context, Item profile, ResearcherProfileSource source)
+            throws SolrServerException, IOException {
+        // no suggestions for this provider
     }
 
 

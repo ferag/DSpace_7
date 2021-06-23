@@ -130,7 +130,7 @@ public class CtiDatabaseImportFacadeImpl implements CtiDatabaseImportFacade {
     @Override
     public ExternalDataObject getCtiProject(String ctiId) {
 
-        CtiProyecto proyecto = ctiDatabaseDao.getProyecto(Integer.parseInt("10701"));
+        CtiProyecto proyecto = ctiDatabaseDao.getProyecto(Integer.parseInt(ctiId));
 
         List<MetadataValueDTO> metadata = ctiProjectMapper.mapCtiProject(proyecto);
 
@@ -194,7 +194,7 @@ public class CtiDatabaseImportFacadeImpl implements CtiDatabaseImportFacade {
         ExternalDataObject object = new ExternalDataObject();
         object.setId(entity.getCtiId().toString());
         object.setMetadata(metadata);
-        object.setSource("ctiPublication");
+        object.setSource(source);
 
         return object;
     }

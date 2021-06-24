@@ -5163,7 +5163,7 @@
     </bean>
 
     <bean id="graphOcdeArea" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
-        <property name="facetLimit" value="25"/>
+        <property name="facetLimit" value="250"/>
         <property name="indexFieldName" value="graphitemtypeOcdeArea" />
         <!-- the splitter needs to be a not empty string -->
         <property name="splitter" value="::" />
@@ -5179,7 +5179,7 @@
         </property>
         <property name="graphType" value="pie" />
         <property name="exposeMissing" value="true" />
-        <property name="exposeMore" value="true" />
+        <property name="exposeMore" value="false" />
         <property name="exposeTotalElements" value="true" />
     </bean>
 

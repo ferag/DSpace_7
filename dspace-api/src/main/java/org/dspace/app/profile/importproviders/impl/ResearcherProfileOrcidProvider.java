@@ -53,7 +53,13 @@ public class ResearcherProfileOrcidProvider implements ResearcherProfileProvider
     @Override
     public Optional<ExternalDataObject> getExternalDataObject(ResearcherProfileSource source) {
         final SourceId sourceId = source.selectSource("orcid").get();
-        return orcidV3AuthorDataProvider.getExternalDataObject(sourceId.getId());
+        try {
+            return orcidV3AuthorDataProvider.getExternalDataObject(sourceId.getId());
+        } catch (Exception e) {
+            log.warn("Unable to create external data object from orcid id {} : {}", sourceId,
+                     e.getMessage());
+            return Optional.empty();
+        }
     }
 
     private Optional<MetadataValue> getMetadataIdentifier(EPerson eperson) {

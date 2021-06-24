@@ -18,6 +18,7 @@ import org.dspace.app.profile.importproviders.model.ConfiguredResearcherProfileP
 import org.dspace.app.profile.importproviders.model.ResearcherProfileSource;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
+import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.external.model.ExternalDataObject;
@@ -58,9 +59,9 @@ public class ResearcherProfileCtiProvider implements ResearcherProfileProvider {
 
         ResearcherProfileSource source = new ResearcherProfileSource();
 
-        this.configureDniSource(eperson, source);
+        configureDniSource(eperson, source);
 
-        this.configureOrcidSource(eperson, source);
+        configureOrcidSource(eperson, source);
 
         if (source.getSources().isEmpty()) {
             log.debug("Nor orcid or dni metadata identifier found for ePerson " + eperson.getID().toString());
@@ -87,9 +88,7 @@ public class ResearcherProfileCtiProvider implements ResearcherProfileProvider {
                     "eperson".equals(metadata.getElement()) &&
                     "orcid".equals(metadata.getQualifier())) ;
         }).findFirst();
-        if (metadataOpt.isPresent()) {
-            source.addSource("orcid", metadataOpt.get().getValue());
-        }
+        metadataOpt.ifPresent(metadataValue -> source.addSource("orcid", metadataValue.getValue()));
     }
 
     private void configureDniSource(EPerson eperson, ResearcherProfileSource source) {
@@ -99,9 +98,7 @@ public class ResearcherProfileCtiProvider implements ResearcherProfileProvider {
                     "eperson".equals(metadata.getElement()) &&
                     "dni".equals(metadata.getQualifier())) ;
         }).findFirst();
-        if (metadataOpt.isPresent()) {
-            source.addSource("dni", metadataOpt.get().getValue());
-        }
+        metadataOpt.ifPresent(metadataValue -> source.addSource("dni", metadataValue.getValue()));
     }
 
     public void setCtiDatabaseImport(CtiDatabaseImportFacade ctiDatabaseImport) {

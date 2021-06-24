@@ -1140,6 +1140,7 @@
 				<entry key="personName" value-ref="virtualFieldPersonName" />
 				<entry key="date" value-ref="virtualFieldDateFormatter" />
 				<entry key="vocabulary" value-ref="virtualFieldVocabulary" />
+				<entry key="vocabulary2mapConverter" value-ref="virtualFieldVocabulary2mapConverter" />
 			</map>
 		</constructor-arg>
 	</bean>
@@ -1157,6 +1158,12 @@
 			</map>
 		</constructor-arg>
 	</bean>
+
+	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldVocabularyToMapConverter" id="virtualFieldVocabulary2mapConverter">
+		<constructor-arg name="itemService" ref="org.dspace.content.ItemServiceImpl"/>
+		<constructor-arg name="mapConverters" ref="org.dspace.util.MapConverters"/>
+	</bean>
+
 	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldMapConverter" id="virtualFieldMapConverter">
 		<constructor-arg name="itemService" ref="org.dspace.content.ItemServiceImpl"/>
 		<constructor-arg name="mapConverters" ref="org.dspace.util.MapConverters"/>
@@ -1176,10 +1183,22 @@
 				<entry key="coarToPublicationTypes" value-ref="mapConverterCoarToPublicationTypes" />
 				<entry key="cerifToOrgUnitTypes" value-ref="mapConverterCerifToOrgUnitTypes" />
 				<entry key="cerifToFundingTypes" value-ref="mapConverterCerifToFundingTypes" />
+				<entry key="elasticsearchGender" value-ref="mapConverterGenderTypes" />
+				<entry key="elasticsearchUbigeoRegion" value-ref="mapConverterUbigeoRegion" />
 			</map>
 		</constructor-arg>
 	</bean>
-	
+
+	<bean name="mapConverterUbigeoRegion" class="org.dspace.util.SimpleMapConverter" init-method="init">
+		<property name="converterNameFile" value="mapConverter-elasticsearchUbigeoRegion.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+	</bean>
+
+	<bean name="mapConverterGenderTypes" class="org.dspace.util.SimpleMapConverter" init-method="init">
+		<property name="converterNameFile" value="mapConverter-elasticsearchPerson.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+	</bean>
+
 	<bean name="mapConverterCoarTypes" class="org.dspace.util.SimpleMapConverter" init-method="init">
 		<property name="converterNameFile" value="mapConverter-coarTypes.properties" />
 		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />

@@ -43,6 +43,11 @@ public class VirtualFieldDateFormatter implements VirtualField {
 
         String[] virtualFieldName = fieldName.split("\\.", 4);
 
+        if (virtualFieldName.length == 3) {
+            SimpleDateFormat sdf = new SimpleDateFormat(virtualFieldName[2]);
+            return new String[] {sdf.format(new Date())};
+        }
+
         if (virtualFieldName.length != 4) {
             LOGGER.warn("Invalid date formatter virtual field: " + fieldName);
             return new String[] {};

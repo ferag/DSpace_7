@@ -108,6 +108,8 @@ public class CtiDatabaseImportFacadeImpl implements CtiDatabaseImportFacade {
         ExternalDataObject object = new ExternalDataObject();
 
         object.setMetadata(metadata);
+        object.setId(investigadorId.get().toString());
+        object.setSource("ctiProfile");
 
         return object;
     }

@@ -46,6 +46,7 @@ import org.dspace.content.MetadataValue;
 import org.dspace.content.Relationship;
 import org.dspace.content.RelationshipType;
 import org.dspace.content.WorkspaceItem;
+import org.dspace.content.authority.Choices;
 import org.dspace.content.dto.MetadataValueDTO;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
@@ -135,11 +136,14 @@ public class ItemCorrectionServiceIT extends AbstractIntegrationTestWithDatabase
         assertThat(correctionValues, hasItem(with("dc.contributor.author", "White, Walter", null,
             "6238d077-059a-4207-a075-c9ec79709945", 0, 600)));
         assertThat(correctionValues, hasItem(with("oairecerif.author.affiliation",
-            "4Science", null, null, 0, 400)));
+                                                  "4Science", null, null, 0,
+                                                  Choices.CF_UNSET)));
         assertThat(correctionValues, hasItem(with("dc.contributor.author",
-            "Jesse Pinkman", null, null, 1, 400)));
+            "Jesse Pinkman", null, null, 1,
+                                                  Choices.CF_UNSET)));
         assertThat(correctionValues, hasItem(with("oairecerif.author.affiliation",
-            CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE, null, null, 1, 400)));
+            CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE, null, null, 1,
+                                                  Choices.CF_UNSET)));
         assertThat(correctionValues, hasItem(with("cris.owner", "User", null,
             "9912fdb6-b817-4c56-aac3-54f612c3031a", 0, 600)));
     }
@@ -187,7 +191,9 @@ public class ItemCorrectionServiceIT extends AbstractIntegrationTestWithDatabase
         assertThat(values, hasItem(with("dc.title", "Test publication correction")));
         assertThat(values, hasItem(with("dspace.entity.type", "Publication")));
         assertThat(values, hasItem(with("dc.date.issued", "2020-01-01")));
-        assertThat(values, hasItem(with("dc.contributor.author", "Jesse Pinkman", null, null, 0, 400)));
+        assertThat(values, hasItem(with("dc.contributor.author", "Jesse Pinkman", null,
+                                        "will be referenced::ORCID::0000-0002-3453-3978",
+                                        0, Choices.CF_AMBIGUOUS)));
         assertThat(values, hasItem(with("dc.subject", "test subject")));
 
         assertThat(getMetadataValues(item, "dc.contributor.author"), hasSize(1));

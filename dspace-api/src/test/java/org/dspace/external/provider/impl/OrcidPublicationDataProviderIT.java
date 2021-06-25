@@ -82,7 +82,7 @@ public class OrcidPublicationDataProviderIT extends AbstractIntegrationTestWithD
             .build();
 
         persons = CollectionBuilder.createCollection(context, parentCommunity)
-            .withEntityType("Person")
+            .withEntityType("CvPerson")
             .withName("Profiles")
             .build();
 

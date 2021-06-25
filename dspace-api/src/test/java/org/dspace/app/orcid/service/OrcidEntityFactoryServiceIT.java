@@ -90,7 +90,7 @@ public class OrcidEntityFactoryServiceIT extends AbstractIntegrationTestWithData
 
         persons = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Collection")
-            .withEntityType("Person")
+            .withEntityType("CvPerson")
             .build();
 
         orgUnits = CollectionBuilder.createCollection(context, parentCommunity)

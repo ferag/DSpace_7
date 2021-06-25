@@ -40,6 +40,7 @@ import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.Relationship;
 import org.dspace.content.RelationshipType;
+import org.dspace.content.authority.Choices;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.content.service.ItemService;
@@ -296,9 +297,10 @@ public class CvEntitySynchronizationConsumerPatentIT extends AbstractIntegration
         assertThat(newPatentClone.isArchived(), is(false));
         assertThat(newPatentClone.getMetadata(), hasItem(with("dc.title", "Test Patent")));
         assertThat(newPatentClone.getMetadata(), hasItem(with("dc.date.issued", "2021-01-01")));
-        assertThat(newPatentClone.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, 400)));
+        assertThat(newPatentClone.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter",
+                                                              0, Choices.CF_UNSET)));
         assertThat(newPatentClone.getMetadata(),
-            hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, 400)));
+            hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, Choices.CF_AMBIGUOUS)));
 
         List<XmlWorkflowItem> workflowItems = workflowItemService.findByCollection(context, patents);
         assertThat(workflowItems, hasSize(1));
@@ -306,8 +308,8 @@ public class CvEntitySynchronizationConsumerPatentIT extends AbstractIntegration
         Item patent = workflowItems.get(0).getItem();
         assertThat(patent.getMetadata(), hasItem(with("dc.title", "Test Patent")));
         assertThat(patent.getMetadata(), hasItem(with("dc.date.issued", "2021-01-01")));
-        assertThat(patent.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, 400)));
-        assertThat(patent.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, 400)));
+        assertThat(patent.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, Choices.CF_UNSET)));
+        assertThat(patent.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, Choices.CF_AMBIGUOUS)));
 
         List<Relationship> shadowCopyRelations = findRelations(newPatentClone, shadowCopy);
         assertThat(shadowCopyRelations, hasSize(1));
@@ -370,9 +372,10 @@ public class CvEntitySynchronizationConsumerPatentIT extends AbstractIntegration
         assertThat(cvPatentClone.isArchived(), is(false));
         assertThat(cvPatentClone.getMetadata(), hasItem(with("dc.title", "Test Patent")));
         assertThat(cvPatentClone.getMetadata(), hasItem(with("dc.date.issued", "2021-01-01")));
-        assertThat(cvPatentClone.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, 400)));
+        assertThat(cvPatentClone.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter",
+                                                             0, Choices.CF_UNSET)));
         assertThat(cvPatentClone.getMetadata(),
-            hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, 400)));
+            hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, Choices.CF_AMBIGUOUS)));
 
         List<XmlWorkflowItem> workflowItems = workflowItemService.findByCollection(context, patents);
         assertThat(workflowItems, hasSize(1));
@@ -380,8 +383,10 @@ public class CvEntitySynchronizationConsumerPatentIT extends AbstractIntegration
         Item patent = workflowItems.get(0).getItem();
         assertThat(patent.getMetadata(), hasItem(with("dc.title", "Test Patent")));
         assertThat(patent.getMetadata(), hasItem(with("dc.date.issued", "2021-01-01")));
-        assertThat(patent.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, 400)));
-        assertThat(patent.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, 400)));
+        assertThat(patent.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter",
+                                                      0, Choices.CF_UNSET)));
+        assertThat(patent.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER,
+                                                      0, Choices.CF_AMBIGUOUS)));
 
         List<Relationship> shadowCopyRelations = findRelations(cvPatentClone, shadowCopy);
         assertThat(shadowCopyRelations, hasSize(1));
@@ -480,8 +485,10 @@ public class CvEntitySynchronizationConsumerPatentIT extends AbstractIntegration
         assertThat(cloneCorrection.isArchived(), is(false));
         assertThat(cloneCorrection.getMetadata(), hasItem(with("dc.title", "Test Patent")));
         assertThat(cloneCorrection.getMetadata(), hasItem(with("dc.date.issued", "2021-01-01")));
-        assertThat(cloneCorrection.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, 400)));
-        assertThat(cloneCorrection.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, 400)));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter",
+                                                               0, Choices.CF_UNSET)));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER,
+                                                               0, Choices.CF_AMBIGUOUS)));
 
         List<Relationship> patentCorrectionRelations = findRelations(patent, isCorrectionOf);
         assertThat(patentCorrectionRelations, hasSize(1));
@@ -490,8 +497,10 @@ public class CvEntitySynchronizationConsumerPatentIT extends AbstractIntegration
         assertThat(correction.isArchived(), is(false));
         assertThat(correction.getMetadata(), hasItem(with("dc.title", "Test Patent")));
         assertThat(correction.getMetadata(), hasItem(with("dc.date.issued", "2021-01-01")));
-        assertThat(correction.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, 400)));
-        assertThat(correction.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, 400)));
+        assertThat(correction.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter",
+                                                          0, Choices.CF_UNSET)));
+        assertThat(correction.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER,
+                                                          0, Choices.CF_AMBIGUOUS)));
 
         removeMetadata(cvPatent, "dc", "date", "issued");
         cvPatent = updateItem(cvPatent);
@@ -516,8 +525,10 @@ public class CvEntitySynchronizationConsumerPatentIT extends AbstractIntegration
         assertThat(cloneCorrection.isArchived(), is(false));
         assertThat(cloneCorrection.getMetadata(), hasItem(with("dc.title", "Test Patent")));
         assertThat(cloneCorrection.getMetadata(), hasItem(not(with("dc.date.issued", "2021-01-01"))));
-        assertThat(cloneCorrection.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, 400)));
-        assertThat(cloneCorrection.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, 400)));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter",
+                                                               0, Choices.CF_UNSET)));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER,
+                                                               0, Choices.CF_AMBIGUOUS)));
 
         patentCorrectionRelations = findRelations(patent, isCorrectionOf);
         assertThat(patentCorrectionRelations, hasSize(1));
@@ -526,8 +537,10 @@ public class CvEntitySynchronizationConsumerPatentIT extends AbstractIntegration
         assertThat(correction.isArchived(), is(false));
         assertThat(correction.getMetadata(), hasItem(with("dc.title", "Test Patent")));
         assertThat(correction.getMetadata(), hasItem(not(with("dc.date.issued", "2021-01-01"))));
-        assertThat(correction.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, 400)));
-        assertThat(correction.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, 400)));
+        assertThat(correction.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter",
+                                                          0, Choices.CF_UNSET)));
+        assertThat(correction.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER,
+                                                          0, Choices.CF_AMBIGUOUS)));
 
     }
 

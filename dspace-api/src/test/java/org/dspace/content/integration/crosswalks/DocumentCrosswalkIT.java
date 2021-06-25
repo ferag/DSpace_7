@@ -737,33 +737,33 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(content, containsString("John Smith"));
         assertThat(content, containsString("Researcher at University"));
 
-        assertThat(content, containsString("Birth Date: 1992-06-26"));
-        assertThat(content, containsString("Gender: M"));
-        assertThat(content, containsString("Country: England"));
-        assertThat(content, containsString("Email: test@test.com"));
+        assertThat(content, containsString("Fecha de nacimiento: 1992-06-26"));
+        assertThat(content, containsString("Sexo: M"));
+        assertThat(content, containsString("País: England"));
+        assertThat(content, containsString("Correo electrónico: test@test.com"));
         assertThat(content, containsString("ORCID: 0000-0002-9079-5932"));
-        assertThat(content, containsString("Scopus Author IDs: 111-222-333, 444-555-666"));
+        assertThat(content, containsString("ID Scopus del autor: 111-222-333, 444-555-666"));
         assertThat(content, containsString("Lorem ipsum dolor sit amet"));
 
-        assertThat(content, containsString("Affiliations"));
+        assertThat(content, containsString("Afiliaciones"));
         assertThat(content, containsString("Researcher at University from 2020-01-02"));
         assertThat(content, containsString("Developer at Company from 2015-01-01 to 2020-01-01"));
 
-        assertThat(content, containsString("Education"));
+        assertThat(content, containsString("Educación"));
         assertThat(content, containsString("Student at School from 2000-01-01 to 2005-01-01"));
 
-        assertThat(content, containsString("Qualifications"));
+        assertThat(content, containsString("Cualificaciones"));
         assertThat(content, containsString("First Qualification from 2015-01-01 to 2016-01-01"));
         assertThat(content, containsString("Second Qualification from 2016-01-02"));
 
-        assertThat(content, containsString("Publications"));
+        assertThat(content, containsString("Publicaciones"));
         assertThat(content, containsString("John Smith and Walter White (2020-01-01). First Publication"));
         assertThat(content, containsString("John Smith (2020-04-01). Second Publication"));
 
-        assertThat(content, containsString("Other informations"));
-        assertThat(content, containsString("Working groups: First work group, Second work group"));
-        assertThat(content, containsString("Interests: Science"));
-        assertThat(content, containsString("Knows languages: English, Italian"));
+        assertThat(content, containsString("Otra información"));
+        assertThat(content, containsString("Grupos de trabajo: First work group, Second work group"));
+        assertThat(content, containsString("Intereses: Science"));
+        assertThat(content, containsString("Idiomas: English, Italian"));
         assertThat(content, containsString("Personal sites: www.test.com ( Test ) , www.john-smith.com , "
             + "www.site.com ( Site )"));
     }
@@ -771,29 +771,29 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     private void assertThatPublicationDocumentHasContent(String content) {
         assertThat(content, containsString("Test Publication"));
 
-        assertThat(content, containsString("Publication basic information"));
-        assertThat(content, containsString("Other titles: Alternative publication title"));
-        assertThat(content, containsString("Publication date: 2020-01-01"));
+        assertThat(content, containsString("Información básica de la publicación"));
+        assertThat(content, containsString("Otros títulos: Alternative publication title"));
+        assertThat(content, containsString("Fecha de publicación: 2020-01-01"));
         assertThat(content, containsString("DOI: doi:111.111/publication"));
         assertThat(content, containsString("ISBN: 978-3-16-148410-0"));
-        assertThat(content, containsString("ISI number: 111-222-333"));
-        assertThat(content, containsString("SCP number: 99999999"));
+        assertThat(content, containsString("Número ISI: 111-222-333"));
+        assertThat(content, containsString("Número SCP: 99999999"));
         assertThat(content, containsString("Authors: John Smith and Walter White ( Company )"));
         assertThat(content, containsString("Editors: Editor ( Editor Affiliation )"));
-        assertThat(content, containsString("Keywords: test, export"));
-        assertThat(content, containsString("Type: http://purl.org/coar/resource_type/c_efa0"));
-        assertThat(content, containsString("OCDE Subject(s): OCDE"));
+        assertThat(content, containsString("Palabras clave: test, export"));
+        assertThat(content, containsString("Tipo: http://purl.org/coar/resource_type/c_efa0"));
+        assertThat(content, containsString("Materia(s) OCDE: OCDE"));
 
-        assertThat(content, containsString("Publication bibliographic details"));
-        assertThat(content, containsString("Published in: Published in publication"));
+        assertThat(content, containsString("Detalles bibliográficos de la publicación"));
+        assertThat(content, containsString("Publicado en: Published in publication"));
         assertThat(content, containsString("ISSN: 2049-3630"));
-        assertThat(content, containsString("Volume: V.01"));
-        assertThat(content, containsString("Issue: Issue"));
+        assertThat(content, containsString("Volumen: V.01"));
+        assertThat(content, containsString("Edición: Issue"));
 
-        assertThat(content, containsString("Projects"));
+        assertThat(content, containsString("Proyectos"));
         assertThat(content, containsString("Test Project ( TP ) - from 2020-01-01 to 2020-04-01"));
 
-        assertThat(content, containsString("Fundings"));
+        assertThat(content, containsString("Financiadores"));
         assertThat(content, containsString("Another Test Funding ( ATF-01 ) - Funder: Another Test Funder"));
     }
 
@@ -801,64 +801,64 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(content, containsString("Test Project"));
         assertThat(content, containsString("This is a project to test the export"));
 
-        assertThat(content, containsString("Basic informations"));
-        assertThat(content, containsString("Project Acronym: TP"));
+        assertThat(content, containsString("Información básica"));
+        assertThat(content, containsString("Acrónimo de proyecto: TP"));
         assertThat(content, containsString("OpenAIRE id(s): 11-22-33, 44-55-66"));
         assertThat(content, containsString("URL(s): www.project.test, www.test.project"));
-        assertThat(content, containsString("Start date: 2020-01-01"));
-        assertThat(content, containsString("End date: 2020-12-31"));
-        assertThat(content, containsString("Status: OPEN"));
+        assertThat(content, containsString("Fecha de inicio: 2020-01-01"));
+        assertThat(content, containsString("Fecha de fin: 2020-12-31"));
+        assertThat(content, containsString("Estado: OPEN"));
 
-        assertThat(content, containsString("Consortium"));
-        assertThat(content, containsString("Consortium Coordinator(s): Coordinator OrgUnit"));
-        assertThat(content, containsString("Partner Organization(s): Partner OrgUnit, Another Partner OrgUnit"));
-        assertThat(content, containsString("Participant Organization(s): First Member OrgUnit, "
+        assertThat(content, containsString("Consorcio"));
+        assertThat(content, containsString("Coordinadores del consorcio: Coordinator OrgUnit"));
+        assertThat(content, containsString("Organizaciones socias: Partner OrgUnit, Another Partner OrgUnit"));
+        assertThat(content, containsString("Organizacions participantes: First Member OrgUnit, "
             + "Second Member OrgUnit, Third Member OrgUnit"));
 
-        assertThat(content, containsString("Team"));
-        assertThat(content, containsString("Project Coordinator: Investigator"));
-        assertThat(content, containsString("Co-Investigator(s): First coinvestigator, Second coinvestigator"));
+        assertThat(content, containsString("Equipo"));
+        assertThat(content, containsString("Coordinador del proyecto: Investigator"));
+        assertThat(content, containsString("Co-investigador(es): First coinvestigator, Second coinvestigator"));
 
-        assertThat(content, containsString("Other informations"));
-        assertThat(content, containsString("OCDE Subject(s): First OCDE Subject, Second OCDE Subject"));
-        assertThat(content, containsString("Uses equipment(s): Test equipment"));
-        assertThat(content, containsString("Keyword(s): project, test"));
-        assertThat(content, containsString("OA Mandate: true"));
-        assertThat(content, containsString("OA Policy URL: oamandate-url"));
+        assertThat(content, containsString("Otra información"));
+        assertThat(content, containsString("Materia(s) OCDE: First OCDE Subject, Second OCDE Subject"));
+        assertThat(content, containsString("Usa equipmiento(s): Test equipment"));
+        assertThat(content, containsString("Palabra(s) clave: project, test"));
+        assertThat(content, containsString("Mandato OA: true"));
+        assertThat(content, containsString("URL de políticas OA: oamandate-url"));
 
     }
 
     private void assertThatOrgUnitDocumentHasContent(String content) {
         assertThat(content, containsString("Test OrgUnit"));
 
-        assertThat(content, containsString("Basic informations"));
-        assertThat(content, containsString("Acronym: TOU"));
-        assertThat(content, containsString("Type: https://w3id.org/cerif/vocab/OrganisationTypes"
+        assertThat(content, containsString("Información baáica"));
+        assertThat(content, containsString("Acrónimo: TOU"));
+        assertThat(content, containsString("Tipo: https://w3id.org/cerif/vocab/OrganisationTypes"
             + "#StrategicResearchInsitute"));
-        assertThat(content, containsString("Parent organization: Parent OrgUnit"));
-        assertThat(content, containsString("Identifier(s): ID-01, ID-02"));
+        assertThat(content, containsString("Organización padre: Parent OrgUnit"));
+        assertThat(content, containsString("Identificador(es): ID-01, ID-02"));
         assertThat(content, containsString("URL(s): www.orgUnit.com, www.orgUnit.it"));
-        assertThat(content, containsString("People: Walter White, Jesse Pinkman"));
+        assertThat(content, containsString("Personas: Walter White, Jesse Pinkman"));
     }
 
     private void assertThatEquipmentDocumentHasContent(String content) {
         assertThat(content, containsString("Test Equipment"));
         assertThat(content, containsString("This is an equipment to test the export functionality"));
 
-        assertThat(content, containsString("Basic informations"));
-        assertThat(content, containsString("Equipment Acronym: T-EQ"));
-        assertThat(content, containsString("Type: Type"));
-        assertThat(content, containsString("Institution Unique Identifier: ID-01"));
-        assertThat(content, containsString("Owner (Organization): Test OrgUnit"));
-        assertThat(content, containsString("Owner (Person): Walter White"));
-        assertThat(content, containsString("Funding(s): Funding, Another Funding"));
-        assertThat(content, containsString("Subject(s): First subject, Second subject"));
-        assertThat(content, containsString("Research line: ResearchLine"));
-        assertThat(content, containsString("Manufacturing country: IT"));
-        assertThat(content, containsString("Manufacturing date: 2020-01-01"));
-        assertThat(content, containsString("Acquisition date: 2021-01-01"));
-        assertThat(content, containsString("Amount: 4000"));
-        assertThat(content, containsString("Amount currency: €"));
+        assertThat(content, containsString("Información básica"));
+        assertThat(content, containsString("Acrónimo del equipamiento: T-EQ"));
+        assertThat(content, containsString("Tipo: Type"));
+        assertThat(content, containsString("Identificador único de la institución: ID-01"));
+        assertThat(content, containsString("Propietario (Organización): Test OrgUnit"));
+        assertThat(content, containsString("Propietario (Persona): Walter White"));
+        assertThat(content, containsString("Financiador(es): Funding, Another Funding"));
+        assertThat(content, containsString("Materia(s): First subject, Second subject"));
+        assertThat(content, containsString("Linea de investigación: ResearchLine"));
+        assertThat(content, containsString("País de manufactura: IT"));
+        assertThat(content, containsString("Fecha de manufactura: 2020-01-01"));
+        assertThat(content, containsString("Fecha de adquisición: 2021-01-01"));
+        assertThat(content, containsString("Cantidad: 4000"));
+        assertThat(content, containsString("Moneda: €"));
 
     }
 
@@ -866,17 +866,17 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(content, containsString("Test Funding"));
         assertThat(content, containsString("Funding to test export"));
 
-        assertThat(content, containsString("Basic informations"));
-        assertThat(content, containsString("Acronym: T-FU"));
-        assertThat(content, containsString("Type: https://www.openaire.eu/cerif-profile/vocab/"
+        assertThat(content, containsString("Información básica"));
+        assertThat(content, containsString("Acrónimo: T-FU"));
+        assertThat(content, containsString("Tipo: https://www.openaire.eu/cerif-profile/vocab/"
             + "OpenAIRE_Funding_Types#Gift"));
-        assertThat(content, containsString("Funding Code: ID-01"));
-        assertThat(content, containsString("Grant Number: 0001"));
+        assertThat(content, containsString("Código de financiamiento: ID-01"));
+        assertThat(content, containsString("Número de beca: 0001"));
         assertThat(content, containsString("Amount: 30.000,00 (EUR)"));
-        assertThat(content, containsString("Funder: OrgUnit Funder"));
+        assertThat(content, containsString("Financiador: OrgUnit Funder"));
         assertThat(content, containsString("Duration: from 2015-01-01 to 2020-01-01"));
-        assertThat(content, containsString("OA Mandate: true"));
-        assertThat(content, containsString("OA Policy URL: www.mandate.url"));
+        assertThat(content, containsString("Mandato OA: true"));
+        assertThat(content, containsString("URL de políticas OA: www.mandate.url"));
     }
 
     private void assertThatPatentDocumentHasContent(String text) {

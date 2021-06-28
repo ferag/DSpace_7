@@ -467,18 +467,12 @@ public class LayoutSecurityServiceImplTest {
     @Test
     public void customSecurityNullUserAsAnonymousAndGroupNotAllowed() throws SQLException {
 
-        UUID anonymousGroupUuid = UUID.randomUUID();
         UUID allowedGroupUuid = UUID.randomUUID();
 
         Item item = mock(Item.class);
         Context context = mock(Context.class);
 
         EPerson user = null;
-        Group anonymousGroup = group(anonymousGroupUuid);
-        Group allowedGroup = group(allowedGroupUuid);
-
-        when(groupService.findByName(any(Context.class), eq(Group.ANONYMOUS)))
-            .thenReturn(anonymousGroup);
 
         MetadataField securityMetadataField = securityMetadataField();
 
@@ -563,7 +557,6 @@ public class LayoutSecurityServiceImplTest {
 
 
         final Group anonymousGroup = group(anonymousGroupId);
-        when(groupService.findByName(context, Group.ANONYMOUS)).thenReturn(anonymousGroup);
 
         when(itemService.getMetadata(item, metadataField.getMetadataSchema().getName(),
                                      metadataField.getElement(), null, Item.ANY, true))

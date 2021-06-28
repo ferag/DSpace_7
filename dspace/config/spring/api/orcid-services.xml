@@ -72,7 +72,7 @@
 		<property name="citationType" value="${orcid.mapping.work.citation.type}" />
 		<property name="citationCrosswalks">
 			<util:map>
-				<entry key="bibtex" value-ref="cslItemDataCrosswalkBibtex" />
+				<entry key="bibtex" value-ref="cslItemDataCrosswalkPublicationBibtex" />
 			</util:map>
 		</property>
 	</bean>

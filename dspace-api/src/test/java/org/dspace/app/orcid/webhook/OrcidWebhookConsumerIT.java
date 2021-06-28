@@ -78,7 +78,7 @@ public class OrcidWebhookConsumerIT extends AbstractIntegrationTestWithDatabase 
             .build();
 
         persons = CollectionBuilder.createCollection(context, parentCommunity)
-            .withEntityType("Person")
+            .withEntityType("CvPerson")
             .withName("Profiles")
             .build();
 

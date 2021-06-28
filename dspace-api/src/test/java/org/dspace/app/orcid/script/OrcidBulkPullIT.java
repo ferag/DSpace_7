@@ -76,7 +76,7 @@ public class OrcidBulkPullIT extends AbstractIntegrationTestWithDatabase {
 
         profileCollection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Persons")
-            .withEntityType("Person")
+            .withEntityType("CvPerson")
             .build();
 
         context.restoreAuthSystemState();

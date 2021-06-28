@@ -136,14 +136,6 @@
 			</map>
 		</constructor-arg>
 	</bean>
-
-	<bean class="org.dspace.content.integration.crosswalks.CSLItemDataCrosswalk" id="cslItemDataCrosswalkBibtex">
-		<property name="style" value="bibtex.csl"/>
-		<property name="mimeType" value="application/x-bibtex; charset=UTF-8"/>
-		<property name="format" value="text"/>
-		<property name="fileName" value="references.bib"/>
-		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE}"/>
-	</bean>
 	
 	<bean class="org.dspace.content.integration.crosswalks.CSLItemDataCrosswalk" id="cslItemDataCrosswalkPublicationBibtex">
 		<property name="style" value="bibtex.csl"/>

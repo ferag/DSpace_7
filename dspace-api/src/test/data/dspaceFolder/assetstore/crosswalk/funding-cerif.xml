@@ -15,6 +15,7 @@
 	</Funder>
     <PartOf>
         <Funding>
+            <Name>Parent Funding</Name>
         </Funding>
     </PartOf>
 	<Duration

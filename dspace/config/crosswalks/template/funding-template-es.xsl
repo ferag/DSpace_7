@@ -56,7 +56,7 @@
 					<xsl:if test="cerif:Amount">
 					  	<fo:block font-size="10pt" margin-top="2mm">
 							<fo:inline font-weight="bold" text-align="right" >
-								<xsl:text>Amount:</xsl:text>
+								<xsl:text>Cantidad:</xsl:text>
 							</fo:inline>
 							<fo:inline>
 								<xsl:value-of select="cerif:Amount"/>

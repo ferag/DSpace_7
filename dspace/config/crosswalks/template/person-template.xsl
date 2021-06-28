@@ -199,52 +199,41 @@
 
 			    	</xsl:if>
 
-
-	  				<xsl:if test="( count(working-groups/working-group) &gt; 0 ) or ( count(interests/interest) &gt; 0 ) or ( count(knows-languages/language) &gt; 0 )">
+                    <xsl:if test="( count(address/street) &gt; 0 ) or 
+                                  ( count(address/postal-code) &gt; 0 ) or 
+                                  ( count(address/country) &gt; 0 ) or 
+                                  ( count(working-groups/working-group) &gt; 0 ) or 
+                                  ( count(interests/interest) &gt; 0 ) or 
+                                  ( count(knows-languages/language) &gt; 0 )">
 					
 						<xsl:call-template name="section-title">
 					    	<xsl:with-param name="label" select="'Other informations'" />
 				    	</xsl:call-template>
-						<xsl:call-template name="print-values">
-					    	<xsl:with-param name="label" select="'Working groups'" />
-					    	<xsl:with-param name="values" select="working-groups/working-group" />
-				    	</xsl:call-template>
-						<xsl:call-template name="print-values">
-					    	<xsl:with-param name="label" select="'Interests'" />
-					    	<xsl:with-param name="values" select="interests/interest" />
-				    	</xsl:call-template>
-						<xsl:call-template name="print-values">
-					    	<xsl:with-param name="label" select="'Knows languages'" />
-					    	<xsl:with-param name="values" select="knows-languages/language" />
-				    	</xsl:call-template>
-					<xsl:call-template name="section-title">
-				    	<xsl:with-param name="label" select="'Other informations'" />
-			    	</xsl:call-template>
 
-                    <xsl:call-template name="print-value">
-                        <xsl:with-param name="label" select="'Street address'" />
-                        <xsl:with-param name="value" select="address/street" />
-                    </xsl:call-template>
-                    <xsl:call-template name="print-value">
-                        <xsl:with-param name="label" select="'Postal code'" />
-                        <xsl:with-param name="value" select="address/postal-code" />
-                    </xsl:call-template>
-                    <xsl:call-template name="print-value">
-                        <xsl:with-param name="label" select="'Country address'" />
-                        <xsl:with-param name="value" select="address/country" />
-                    </xsl:call-template>
-					<xsl:call-template name="print-values">
-				    	<xsl:with-param name="label" select="'Working groups'" />
-				    	<xsl:with-param name="values" select="working-groups/working-group" />
-			    	</xsl:call-template>
-					<xsl:call-template name="print-values">
-				    	<xsl:with-param name="label" select="'Interests'" />
-				    	<xsl:with-param name="values" select="interests/interest" />
-			    	</xsl:call-template>
-					<xsl:call-template name="print-values">
-				    	<xsl:with-param name="label" select="'Knows languages'" />
-				    	<xsl:with-param name="values" select="knows-languages/language" />
-			    	</xsl:call-template>
+	                    <xsl:call-template name="print-value">
+	                        <xsl:with-param name="label" select="'Street address'" />
+	                        <xsl:with-param name="value" select="address/street" />
+	                    </xsl:call-template>
+	                    <xsl:call-template name="print-value">
+	                        <xsl:with-param name="label" select="'Postal code'" />
+	                        <xsl:with-param name="value" select="address/postal-code" />
+	                    </xsl:call-template>
+	                    <xsl:call-template name="print-value">
+	                        <xsl:with-param name="label" select="'Country address'" />
+	                        <xsl:with-param name="value" select="address/country" />
+	                    </xsl:call-template>
+	                    <xsl:call-template name="print-values">
+	                        <xsl:with-param name="label" select="'Working groups'" />
+	                        <xsl:with-param name="values" select="working-groups/working-group" />
+	                    </xsl:call-template>
+	                    <xsl:call-template name="print-values">
+	                        <xsl:with-param name="label" select="'Interests'" />
+	                        <xsl:with-param name="values" select="interests/interest" />
+	                    </xsl:call-template>
+	                    <xsl:call-template name="print-values">
+	                        <xsl:with-param name="label" select="'Knows languages'" />
+	                        <xsl:with-param name="values" select="knows-languages/language" />
+	                    </xsl:call-template>
 
 			    	</xsl:if>
 

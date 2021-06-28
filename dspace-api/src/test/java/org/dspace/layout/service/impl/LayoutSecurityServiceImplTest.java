@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-
 import org.dspace.app.util.SubmissionConfigReader;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.Item;

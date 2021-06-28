@@ -864,8 +864,8 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 //        assertThat(getRowValues(sheet.getRow(2)), contains("Second patent", "", "", "12345-777", "patent", "",
 //            "Bruce Wayne", "", "", "second", "Funding", "", "Another patent", "", ""));
 //
-//        assertThat(getRowValues(sheet.getRow(3)), contains("Third patent", "2019-01-01", "", "12345-888", "", "ita", "",
-//            "Organization", "Publisher", "", "First funding||Second funding", "", "Another patent", "",
+//        assertThat(getRowValues(sheet.getRow(3)), contains("Third patent", "2019-01-01", "", "12345-888", "", "ita",
+//            "", "Organization", "Publisher", "", "First funding||Second funding", "", "Another patent", "",
 //            "Patent description"));
 //    }
 

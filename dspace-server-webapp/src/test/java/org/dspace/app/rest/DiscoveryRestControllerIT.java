@@ -6422,11 +6422,14 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                             "api/discover/facets/author?dsoType=Item&configuration=defaultConfiguration")))
                    .andExpect(jsonPath("$._embedded.values", Matchers.containsInAnyOrder(
                        SearchResultMatcher.matchEmbeddedFacetValues("Anton, Senek", 1, "discover",
-                    "discover/search/objects?dsoType=Item&configuration=defaultConfiguration&f.author=Anton,%20Senek,equals"),
+                    "discover/search/objects?dsoType=Item&configuration=defaultConfiguration"
+                    + "&f.author=Anton,%20Senek,equals"),
                        SearchResultMatcher.matchEmbeddedFacetValues("Doe, Jane", 1, "discover",
-                    "discover/search/objects?dsoType=Item&configuration=defaultConfiguration&f.author=Doe,%20Jane,equals"),
+                    "discover/search/objects?dsoType=Item&configuration=defaultConfiguration"
+                    + "&f.author=Doe,%20Jane,equals"),
                        SearchResultMatcher.matchEmbeddedFacetValues("Smith, Donald", 1, "discover",
-                    "discover/search/objects?dsoType=Item&configuration=defaultConfiguration&f.author=Smith,%20Donald,equals"))
+                    "discover/search/objects?dsoType=Item&configuration=defaultConfiguratio"
+                    + "n&f.author=Smith,%20Donald,equals"))
                     ));
     }
 

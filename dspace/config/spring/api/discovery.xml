@@ -4820,6 +4820,7 @@
         <property name="metadataFields">
             <list>
                 <value>perucris.subject.ocde</value>
+                <value>perucris.renacyt.ocde</value>
                 <value>dc.subject.ocde</value>
             </list>
         </property>
@@ -5161,13 +5162,13 @@
         <property name="facetLimit" value="10"/>
         <property name="indexFieldName" value="graphiteminstitutionalSector" />
         <!-- the splitter needs to be a not empty string -->
-        <property name="splitter" value="::" />
-        <property name="onlyLastNodeRelevant" value="true" />
+<!--        <property name="splitter" value="::" />-->
+<!--        <property name="onlyLastNodeRelevant" value="true" />-->
         <!-- isDate cannot be true if the splitter is set -->
         <property name="isDate" value="false" />
         <property name="metadataFields">
             <list>
-                <value>perucris.type.sectorInstitutional</value>
+                <value>perucris.type.sectorInstitucional</value>
             </list>
         </property>
         <property name="graphType" value="pie" />
@@ -5177,7 +5178,7 @@
     </bean>
 
     <bean id="graphOcdeArea" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
-        <property name="facetLimit" value="25"/>
+        <property name="facetLimit" value="250"/>
         <property name="indexFieldName" value="graphitemtypeOcdeArea" />
         <!-- the splitter needs to be a not empty string -->
         <property name="splitter" value="::" />
@@ -5193,7 +5194,7 @@
         </property>
         <property name="graphType" value="pie" />
         <property name="exposeMissing" value="true" />
-        <property name="exposeMore" value="true" />
+        <property name="exposeMore" value="false" />
         <property name="exposeTotalElements" value="true" />
     </bean>
 

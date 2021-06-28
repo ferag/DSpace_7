@@ -196,11 +196,11 @@
                     </xsl:if>
                     
                     <xsl:if test="( count(address/street) &gt; 0 ) or 
-			                      ( count(address/postal-code) &gt; 0 ) or 
-			                      ( count(address/country) &gt; 0 ) or 
-			                      ( count(working-groups/working-group) &gt; 0 ) or 
-			                      ( count(interests/interest) &gt; 0 ) or 
-			                      ( count(knows-languages/language) &gt; 0 )">
+                    ( count(address/postal-code) &gt; 0 ) or 
+                    ( count(address/country) &gt; 0 ) or 
+                    ( count(working-groups/working-group) &gt; 0 ) or 
+                    ( count(interests/interest) &gt; 0 ) or 
+                    ( count(knows-languages/language) &gt; 0 )">
                     
 	                    <xsl:call-template name="section-title">
 	                        <xsl:with-param name="label" select="'Otra información'" />

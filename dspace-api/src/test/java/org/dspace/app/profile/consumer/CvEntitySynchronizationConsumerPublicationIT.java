@@ -40,6 +40,7 @@ import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.Relationship;
 import org.dspace.content.RelationshipType;
+import org.dspace.content.authority.Choices;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.content.service.ItemService;
@@ -295,7 +296,7 @@ public class CvEntitySynchronizationConsumerPublicationIT extends AbstractIntegr
         assertThat(newPublicationClone.isArchived(), is(false));
         assertThat(newPublicationClone.getMetadata(), hasItem(with("dc.title", "Test Publication")));
         assertThat(newPublicationClone.getMetadata(), hasItem(with("dc.date.issued", "2021-01-01")));
-        assertThat(newPublicationClone.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, 400)));
+        assertThat(newPublicationClone.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, Choices.CF_UNSET)));
         assertThat(newPublicationClone.getMetadata(),
             hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, 400)));
 
@@ -305,7 +306,7 @@ public class CvEntitySynchronizationConsumerPublicationIT extends AbstractIntegr
         Item publication = workflowItems.get(0).getItem();
         assertThat(publication.getMetadata(), hasItem(with("dc.title", "Test Publication")));
         assertThat(publication.getMetadata(), hasItem(with("dc.date.issued", "2021-01-01")));
-        assertThat(publication.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, 400)));
+        assertThat(publication.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, Choices.CF_UNSET)));
         assertThat(publication.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, 400)));
 
         List<Relationship> shadowCopyRelations = findRelations(newPublicationClone, shadowCopy);
@@ -369,7 +370,8 @@ public class CvEntitySynchronizationConsumerPublicationIT extends AbstractIntegr
         assertThat(cvPublicationClone.isArchived(), is(false));
         assertThat(cvPublicationClone.getMetadata(), hasItem(with("dc.title", "Test Publication")));
         assertThat(cvPublicationClone.getMetadata(), hasItem(with("dc.date.issued", "2021-01-01")));
-        assertThat(cvPublicationClone.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, 400)));
+        assertThat(cvPublicationClone.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0,
+                                                                  Choices.CF_UNSET)));
         assertThat(cvPublicationClone.getMetadata(),
             hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, 400)));
 
@@ -379,7 +381,8 @@ public class CvEntitySynchronizationConsumerPublicationIT extends AbstractIntegr
         Item publication = workflowItems.get(0).getItem();
         assertThat(publication.getMetadata(), hasItem(with("dc.title", "Test Publication")));
         assertThat(publication.getMetadata(), hasItem(with("dc.date.issued", "2021-01-01")));
-        assertThat(publication.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, 400)));
+        assertThat(publication.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter",
+                                                           0, Choices.CF_UNSET)));
         assertThat(publication.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, 400)));
 
         List<Relationship> shadowCopyRelations = findRelations(cvPublicationClone, shadowCopy);
@@ -479,7 +482,7 @@ public class CvEntitySynchronizationConsumerPublicationIT extends AbstractIntegr
         assertThat(cloneCorrection.isArchived(), is(false));
         assertThat(cloneCorrection.getMetadata(), hasItem(with("dc.title", "Test Publication")));
         assertThat(cloneCorrection.getMetadata(), hasItem(with("dc.date.issued", "2021-01-01")));
-        assertThat(cloneCorrection.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, 400)));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, Choices.CF_UNSET)));
         assertThat(cloneCorrection.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, 400)));
 
         List<Relationship> publicationCorrectionRelations = findRelations(publication, isCorrectionOf);
@@ -489,7 +492,7 @@ public class CvEntitySynchronizationConsumerPublicationIT extends AbstractIntegr
         assertThat(correction.isArchived(), is(false));
         assertThat(correction.getMetadata(), hasItem(with("dc.title", "Test Publication")));
         assertThat(correction.getMetadata(), hasItem(with("dc.date.issued", "2021-01-01")));
-        assertThat(correction.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, 400)));
+        assertThat(correction.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, Choices.CF_UNSET)));
         assertThat(correction.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, 400)));
 
         removeMetadata(cvPublication, "dc", "date", "issued");
@@ -515,7 +518,8 @@ public class CvEntitySynchronizationConsumerPublicationIT extends AbstractIntegr
         assertThat(cloneCorrection.isArchived(), is(false));
         assertThat(cloneCorrection.getMetadata(), hasItem(with("dc.title", "Test Publication")));
         assertThat(cloneCorrection.getMetadata(), hasItem(not(with("dc.date.issued", "2021-01-01"))));
-        assertThat(cloneCorrection.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, 400)));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter",
+                                                               0, Choices.CF_UNSET)));
         assertThat(cloneCorrection.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, 400)));
 
         publicationCorrectionRelations = findRelations(publication, isCorrectionOf);
@@ -525,7 +529,8 @@ public class CvEntitySynchronizationConsumerPublicationIT extends AbstractIntegr
         assertThat(correction.isArchived(), is(false));
         assertThat(correction.getMetadata(), hasItem(with("dc.title", "Test Publication")));
         assertThat(correction.getMetadata(), hasItem(not(with("dc.date.issued", "2021-01-01"))));
-        assertThat(correction.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, 400)));
+        assertThat(correction.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter",
+                                                          0, Choices.CF_UNSET)));
         assertThat(correction.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, 400)));
 
     }

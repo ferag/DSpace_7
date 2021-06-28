@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.solr.client.solrj.SolrServerException;
 import org.dspace.app.profile.importproviders.ResearcherProfileProvider;
@@ -102,10 +104,25 @@ public class ResearcherProfileCtiProvider implements ResearcherProfileProvider {
         if (metadataOpt.isPresent()) {
             source.addSource("dni", metadataOpt.get().getValue());
         }
+
+        if (eperson.getNetid() != null && isDni(eperson.getNetid())) {
+            source.addSource("dni", eperson.getNetid());
+        }
     }
 
     public void setCtiDatabaseImport(CtiDatabaseImportFacade ctiDatabaseImport) {
         this.ctiDatabaseImport = ctiDatabaseImport;
+    }
+
+    /*
+     * Only digits and fixed length of 8.
+     */
+    private boolean isDni(String text) {
+        Pattern pattern = Pattern.compile("^[0-9]{8}$");
+
+        Matcher matcher = pattern.matcher(text);
+        boolean matches = matcher.matches();
+        return matches;
     }
 
     @Override

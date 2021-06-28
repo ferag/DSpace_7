@@ -595,7 +595,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item patent = ItemBuilder.createItem(context, collection)
             .withEntityType("Patent")
             .withTitle("Test patent")
-            .withDateSubmitted("2020-01-01")
+            .withDateAccepted("2020-01-01")
             .withIssueDate("2021-01-01")
             .withPublisher("First publisher")
             .withPublisher("Second publisher")

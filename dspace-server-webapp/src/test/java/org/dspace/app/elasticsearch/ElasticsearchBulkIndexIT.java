@@ -6,29 +6,37 @@
  * http://www.dspace.org/license/
  */
 package org.dspace.app.elasticsearch;
+import static org.dspace.app.launcher.ScriptLauncher.handleScript;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
+import java.io.FileInputStream;
+import java.nio.charset.Charset;
 import java.time.Year;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.dspace.app.elasticsearch.consumer.ElasticsearchIndexManager;
 import org.dspace.app.elasticsearch.externalservice.ElasticsearchIndexProvider;
 import org.dspace.app.elasticsearch.script.bulkindex.ElasticsearchBulkIndex;
 import org.dspace.app.elasticsearch.service.ElasticsearchItemBuilder;
+import org.dspace.app.launcher.ScriptLauncher;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
 import org.dspace.app.scripts.handler.impl.TestDSpaceRunnableHandler;
 import org.dspace.builder.CollectionBuilder;
 import org.dspace.builder.CommunityBuilder;
+import org.dspace.builder.CrisMetricsBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
+import org.dspace.metrics.scopus.UpdateScopusMetrics;
+import org.dspace.metrics.wos.UpdateWOSMetrics;
 import org.dspace.services.ConfigurationService;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -424,6 +432,117 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
         } finally {
             restoreIndexes(originIndexes);
         }
+    }
+
+    @Test
+    public void test99() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        try (FileInputStream file = new FileInputStream(testProps.get("test.publicationCrosswalk").toString())) {
+
+            String jsonPublication = IOUtils.toString(file, Charset.defaultCharset());
+
+            parentCommunity = CommunityBuilder.createCommunity(context)
+                                              .withName("Parent Community")
+                                              .build();
+
+            Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
+                                               .withName("Collection 1").build();
+
+            Item item = createFullPublicationItemForElasticsearch(col1);
+
+            CrisMetricsBuilder.createCrisMetrics(context, item)
+                              .withMetricType(UpdateScopusMetrics.SCOPUS_CITATION)
+                              .withMetricCount(1007)
+                              .isLast(true).build();
+
+            CrisMetricsBuilder.createCrisMetrics(context, item)
+                              .withMetricType(UpdateWOSMetrics.WOS_METRIC_TYPE)
+                              .withMetricCount(5)
+                              .isLast(true).build();
+
+            context.restoreAuthSystemState();
+            String[] args = new String[] {"update-metrics-in-solr"};
+            TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
+            int status = handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin);
+            assertEquals(0, status);
+
+            String generatedJson = elasticsearchItemBuilder.convert(context, item);
+            assertEquals(jsonPublication, generatedJson);
+
+        }
+    }
+
+    private Item createFullPublicationItemForElasticsearch(Collection collection) {
+        return ItemBuilder.createItem(context, collection)
+                          .withEntityType("Publication")
+                          .withIsPartOf("Journal")
+                          .withRelationFunding("Test funding")
+                          .withAuthor("John Smith").withAuthor("Artur Noris")
+                          .withEmbargoEnd("2022-01-01")
+                          .withAuthorAffiliation("Affiliation 4Science").withAuthorAffiliation("Test Affiliation")
+                          .withRenatiDiscipline("discipline")
+                          .withSubject("Subject test").withSubject("Subject export")
+                       // .withDegreeGrantor("Test grantor")
+                          .withEditorOrcid("0000-0002-9079-593X").withEditorOrcid("0000-0000-0000-1234")
+                          .withVolume("V01")
+                          .withDoiIdentifier("10.1000/182")
+                          .withPerucrisSubjectOCDE("oecd::Ingeniería, Tecnología::Ingeniería mecánica")
+                          .withPerucrisSubjectOCDE("oecd::Ingeniería, Tecnología::Biotecnología ambiental"
+                                           + "::Biorremediación, Biotecnologías de diagnóstico en la gestión ambiental")
+                          .withRelationIssn("0002").withRelationIssn("0023")
+                          .withIssueDate("2021-06-28")
+                       // .withDegreeName("Test degree name")
+                          .withAccess("embargoed access")
+                          .withCitationEndPage("20")
+                          .withRenatiType("Test renati Type")
+                          .withSubjectLoc("Test loc")
+                          .withType("Test Type")
+                          .withType("Test Type 2")
+                          .withRelationIsbn("ISBN-01")
+                          .withRelationDataset("DataSet")
+                          .withIsbnIdentifier("11-22-33")
+                          .withEditor("Editor 1")
+                          .withEditor("Editor 2")
+                          .withLanguage("en")
+                          .withLanguage("it")
+                          .withCitationIdentifier("CIT-01")
+                          .withTitle("Publication Title")
+                          .withAdvisorDni("123456")
+                          .withAdvisorOrcid("0000-0002-0000-9999")
+                          .withAuthorOrcid("0000-0000-0000-7777").withAuthorOrcid("0000-0000-0000-8888")
+                          .withVersion("V01")
+                          .withCoverageIsbn("Test Coverage Isbn")
+                          .withIssue("03")
+                          .withDescription("Publication Description")
+                          .withPmidIdentifier("1234567890")
+                          .withRelationDoi("doi:10.3972/test")
+                          .withEditorDni("editor-dni-0001")
+                          .withEditorDni("editor-dni-0002")
+                          .withRelationGrantno("relation-grantno-01")
+                          .withIsiIdentifier("111-222-333")
+                          .withCoveragePublication("Coverage publication")
+                          .withAdvisor("First advisor")
+                          .withDDC("test-ddc")
+                          .withRightsUri("rights-uri")
+                          .withRelationIspartofseries("ispartofseries")
+                          .withIdentifierUrl("identifier-url")
+                       // .withDegreeDiscipline("degree-discipline")
+                          .withDescriptionAbstract("This is a publication")
+                          .withDescriptionSponsorship("description- sponsorship")
+                          .withRenatiLevel("Renati-Level-22")
+                          .withInternalNote("Note")
+                          .withRelationPublication("Published in publication")
+                          .withRelationConference("Relation-Conference")
+                          .withEditorAffiliation("Editor Affiliation-1").withEditorAffiliation("Editor Affiliation-2")
+                          .withAlternativeTitle("Alternative publication title")
+                          .withAuthorDniIdentifier("Author-Dni-1").withAuthorDniIdentifier("Author-Dni-2")
+                          .withScopusIdentifier("scopus-id-1")
+                          .withCoverageDoi("coverage-doi-1")
+                          .withCitationStartPage("1")
+                          .withRelationProject("First project")
+                          .withSubjectMesh("Subject-mesh-1").withSubjectMesh("Subject-mesh-2")
+                          .build();
     }
 
     private Map<String, String> cleanUpIndexes() {

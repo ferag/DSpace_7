@@ -19,6 +19,7 @@
 			<map>
 				<entry key="Publication" value-ref= "referCrosswalkElasticsearchPublication" />
 				<entry key="Person" value-ref= "referCrosswalkElasticsearchPerson" />
+				<entry key="OrgUnit" value-ref= "referCrosswalkElasticsearchOrgUnit" />
 			</map>
 		</constructor-arg>
 	</bean>
@@ -38,6 +39,7 @@
 			<map>
 				<entry key="Publication" value= "publications-v1" />
 				<entry key="Person" value= "persons-{DATE.yyyy}" />
+				<entry key="OrgUnit" value= "" />
 			</map>
 		</constructor-arg>
 		<property name="entityType2Generator" ref="entityType2Generators" />

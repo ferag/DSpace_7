@@ -1125,6 +1125,13 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 	</bean>
 
+	<bean id="referCrosswalkElasticsearchOrgUnit" class="org.dspace.content.integration.crosswalks.ReferCrosswalk">
+		<property name="templateFileName" value="crosswalks/template/elasticsearch-orgunit.template"/>
+		<property name="mimeType" value="application/json; charset=UTF-8"/>
+		<property name="entityType" value="OrgUnit"/>
+		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+	</bean>
+
 	<!-- VIRTUAL FIELDS CONFIGURATION -->
 	
 	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldMapper">

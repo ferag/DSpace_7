@@ -7,10 +7,6 @@
  */
 package org.dspace.importer.external.ctidb.suggestion;
 
-import static org.dspace.app.suggestion.SolrSuggestionStorageService.PROCESSED;
-import static org.dspace.app.suggestion.SolrSuggestionStorageService.SOURCE;
-import static org.dspace.app.suggestion.SolrSuggestionStorageService.SUGGESTION_ID;
-import static org.dspace.app.suggestion.SolrSuggestionStorageService.TARGET_ID;
 import static org.dspace.app.suggestion.SuggestionUtils.getAllEntriesByMetadatum;
 import static org.dspace.app.suggestion.SuggestionUtils.getFirstEntryByMetadatum;
 
@@ -20,10 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocument;
 import org.dspace.app.suggestion.SolrSuggestionProvider;
 import org.dspace.app.suggestion.Suggestion;
 import org.dspace.app.suggestion.SuggestionEvidence;
@@ -51,30 +44,8 @@ public abstract class AbstractCtiSuggestionLoader extends SolrSuggestionProvider
         return StringUtils.equals(externalDataObject.getSource(), getSourceName());
     }
 
-    /**
-     * Retrieve the target of a suggestions by its id.
-     * @param suggestionId
-     * @return
-     */
     public String findCtiProfileUUID(String suggestionId) {
-        SolrQuery solrQuery = new SolrQuery();
-        solrQuery.setRows(1);
-        solrQuery.setQuery("*:*");
-        solrQuery.addFilterQuery(
-                SOURCE + ":" + this.getSourceName(),
-//                TARGET_ID + ":" + target.toString(),
-                SUGGESTION_ID + ":\"" + suggestionId + "\"",
-                PROCESSED + ":false");
-        QueryResponse response = null;
-        try {
-            response = getSolr().query(solrQuery);
-            for (SolrDocument solrDoc : response.getResults()) {
-                return (String)solrDoc.getFieldValue(TARGET_ID); // convertSolrDoc(context, solrDoc);
-            }
-        } catch (SolrServerException | IOException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
+        return solrSuggestionStorageService.findTargetId(getSourceName(), suggestionId);
     }
 
     /**

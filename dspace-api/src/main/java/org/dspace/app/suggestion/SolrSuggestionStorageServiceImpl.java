@@ -8,6 +8,10 @@
 package org.dspace.app.suggestion;
 
 import static org.apache.commons.collections.CollectionUtils.isEmpty;
+import static org.dspace.app.suggestion.SolrSuggestionStorageService.PROCESSED;
+import static org.dspace.app.suggestion.SolrSuggestionStorageService.SOURCE;
+import static org.dspace.app.suggestion.SolrSuggestionStorageService.SUGGESTION_ID;
+import static org.dspace.app.suggestion.SolrSuggestionStorageService.TARGET_ID;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -344,5 +348,26 @@ public class SolrSuggestionStorageServiceImpl implements SolrSuggestionStorageSe
 
     private Item findItem(Context context, String itemId) {
         return findItem(context, UUIDUtils.fromString(itemId));
+    }
+
+    @Override
+    public String findTargetId(String sourceName, String suggestionId) {
+        SolrQuery solrQuery = new SolrQuery();
+        solrQuery.setRows(1);
+        solrQuery.setQuery("*:*");
+        solrQuery.addFilterQuery(
+            SOURCE + ":" + sourceName,
+            SUGGESTION_ID + ":\"" + suggestionId + "\"",
+            PROCESSED + ":false");
+        QueryResponse response = null;
+        try {
+            response = getSolr().query(solrQuery);
+            for (SolrDocument solrDoc : response.getResults()) {
+                return (String) solrDoc.getFieldValue(TARGET_ID);
+            }
+        } catch (SolrServerException | IOException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 }

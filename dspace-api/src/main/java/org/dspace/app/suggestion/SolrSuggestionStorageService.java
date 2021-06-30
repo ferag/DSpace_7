@@ -188,4 +188,13 @@ public interface SolrSuggestionStorageService {
      * @throws IOException
      */
     SuggestionTarget findTarget(Context context, String source, UUID target) throws SolrServerException, IOException;
+
+    /**
+     * Find a suggestion target id by source name and suggestion id.
+     *
+     * @param source       the source name
+     * @param suggestionId the suggestion id
+     * @return the target id, if any
+     */
+    String findTargetId(String source, String suggestionId);
 }

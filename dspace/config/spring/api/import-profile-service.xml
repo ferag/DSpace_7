@@ -20,6 +20,7 @@
         <property name="importProfileProviders">
             <list>
                 <ref bean="researcherProfileDspaceProvider"/>
+                <ref bean="researcherProfileCtiProvider"/>
                 <ref bean="researcherProfileReniecProvider"/>
                 <ref bean="researcherProfileOrcidProvider"/>
             </list>
@@ -75,7 +76,8 @@
     </bean>
 
     <bean id="researcherProfileOrcidProvider" class="org.dspace.app.profile.importproviders.impl.ResearcherProfileOrcidProvider"></bean>
-    
+
+    <bean id="researcherProfileCtiProvider" class="org.dspace.app.profile.importproviders.impl.ResearcherProfileCtiProvider"></bean>
 
     <bean id="dspaceImportService" class="org.dspace.importer.external.dspace.DSpaceImportService"/>
 
@@ -181,7 +183,76 @@
            </list>
        </entry>
 	</util:map>
-    
+
+    <!-- cti database source -->
+
+    <bean id="ctiDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">  
+        <property name="driverClassName" value="org.postgresql.Driver" />  
+        <property name="url" value="${cti.db.url}" />  
+        <property name="username" value="${cti.db.username}" />  
+        <property name="password" value="${cti.db.password}" />  
+    </bean>  
+  
+    <bean id="ctiJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">  
+        <property name="dataSource" ref="ctiDataSource"></property>  
+    </bean>  
+  
+    <bean id="ctiDatabaseDao" class="org.dspace.importer.external.ctidb.CtiDatabaseDaoImpl">  
+        <property name="jdbcTemplate" ref="ctiJdbcTemplate"></property>  
+    </bean>  
+
+    <!-- cti data mapping strategies -->
+
+    <bean class="org.dspace.importer.external.ctidb.mapper.CtiMappingUtilsImpl"></bean> 
+
+    <bean class="org.dspace.importer.external.ctidb.mapper.CtiProfileMapper"></bean>
+
+    <bean class="org.dspace.importer.external.ctidb.mapper.CtiPublicationSuggestionMapper"></bean>
+
+    <bean class="org.dspace.importer.external.ctidb.mapper.CtiProjectSuggestionMapper"></bean>
+
+    <bean class="org.dspace.importer.external.ctidb.mapper.CtiPatentSuggestionMapper"></bean>
+
+    <bean class="org.dspace.importer.external.ctidb.mapper.CtiPublicationMapper"></bean> 
+
+    <bean class="org.dspace.importer.external.ctidb.mapper.CtiProjectMapper"></bean> 
+
+    <bean class="org.dspace.importer.external.ctidb.mapper.CtiPatentMapper"></bean> 
+
+    <!-- cti data import facade -->
+
+    <bean class="org.dspace.importer.external.ctidb.CtiDatabaseImportFacadeImpl"></bean> 
+
+    <!-- cti data providers -->
+
+    <bean class="org.dspace.importer.external.ctidb.provider.CtiPublicationDataProvider">
+        <property name="sourceIdentifier" value="ctiPublication"/>
+        <property name="supportedEntityTypes">
+            <list>
+               <value>ctiPublication</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="org.dspace.importer.external.ctidb.provider.CtiProjectDataProvider">
+        <property name="sourceIdentifier" value="ctiProject"/>
+        <property name="supportedEntityTypes">
+            <list>
+               <value>ctiProject</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="org.dspace.importer.external.ctidb.provider.CtiPatentDataProvider">
+        <property name="sourceIdentifier" value="ctiPatent"/>
+        <property name="supportedEntityTypes">
+            <list>
+               <value>ctiPatent</value>
+            </list>
+        </property>
+    </bean>
+
+
 
     <!-- TODO: set orcid import -->
     

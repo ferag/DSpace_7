@@ -7,14 +7,19 @@
  */
 package org.dspace.app.profile.importproviders.impl;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.solr.client.solrj.SolrServerException;
 import org.dspace.app.profile.importproviders.ResearcherProfileProvider;
 import org.dspace.app.profile.importproviders.model.ConfiguredResearcherProfileProvider;
 import org.dspace.app.profile.importproviders.model.ResearcherProfileSource;
+import org.dspace.app.profile.importproviders.model.ResearcherProfileSource.SourceId;
+import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
+import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.external.model.ExternalDataObject;
 import org.dspace.external.provider.impl.OrcidV3AuthorDataProvider;
@@ -38,7 +43,7 @@ public class ResearcherProfileOrcidProvider implements ResearcherProfileProvider
             log.debug("Orcid profile provider configured for ePerson " + eperson.getID().toString()
                 + " with orcid " + metadataIdentifier.get().getValue());
             ConfiguredResearcherProfileProvider configured = new ConfiguredResearcherProfileProvider(
-                    new ResearcherProfileSource(metadataIdentifier.get().getValue()), this);
+                    new ResearcherProfileSource("orcid", metadataIdentifier.get().getValue()), this);
             return Optional.of(configured);
         }
         log.debug("Orcid metadata identifier not found for ePerson " + eperson.getID().toString());
@@ -47,7 +52,14 @@ public class ResearcherProfileOrcidProvider implements ResearcherProfileProvider
 
     @Override
     public Optional<ExternalDataObject> getExternalDataObject(ResearcherProfileSource source) {
-        return orcidV3AuthorDataProvider.getExternalDataObject(source.getId());
+        final SourceId sourceId = source.selectSource("orcid").get();
+        try {
+            return orcidV3AuthorDataProvider.getExternalDataObject(sourceId.getId());
+        } catch (Exception e) {
+            log.warn("Unable to create external data object from orcid id {} : {}", sourceId,
+                     e.getMessage());
+            return Optional.empty();
+        }
     }
 
     private Optional<MetadataValue> getMetadataIdentifier(EPerson eperson) {
@@ -61,6 +73,12 @@ public class ResearcherProfileOrcidProvider implements ResearcherProfileProvider
 
     public void setOrcidV3AuthorDataProvider(OrcidV3AuthorDataProvider orcidV3AuthorDataProvider) {
         this.orcidV3AuthorDataProvider = orcidV3AuthorDataProvider;
+    }
+
+    @Override
+    public void importSuggestions(Context context, Item profile, ResearcherProfileSource source)
+            throws SolrServerException, IOException {
+        // no suggestions for this provider
     }
 
 }

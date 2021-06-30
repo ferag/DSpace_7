@@ -435,12 +435,12 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
     }
 
     @Test
-    public void test99() throws Exception {
+    public void crosswalkForPublicationJsonToBeSentToElasticsearchTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
         try (FileInputStream file = new FileInputStream(testProps.get("test.publicationCrosswalk").toString())) {
 
-            String jsonPublication = IOUtils.toString(file, Charset.defaultCharset());
+            String json = IOUtils.toString(file, Charset.defaultCharset());
 
             parentCommunity = CommunityBuilder.createCommunity(context)
                                               .withName("Parent Community")
@@ -464,12 +464,10 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
             context.restoreAuthSystemState();
             String[] args = new String[] {"update-metrics-in-solr"};
             TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
-            int status = handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin);
-            assertEquals(0, status);
+            assertEquals(0, handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin));
 
             String generatedJson = elasticsearchItemBuilder.convert(context, item);
-            assertEquals(jsonPublication, generatedJson);
-
+            assertTrue(generatedJson.contains(json));
         }
     }
 

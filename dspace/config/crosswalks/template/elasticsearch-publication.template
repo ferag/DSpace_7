@@ -1,6 +1,6 @@
 {
-    "dc_relation_ispartof" : "@dc.relation.ispartof@",
     "resourceId" : "@virtual.id@",
+    "dc_relation_ispartof" : "@dc.relation.ispartof@",
     "dc_relation_funding" : "@dc.relation.funding@",
     "dc_contributor_authors" : [
            @group.dc-contributor-author.start@
@@ -64,11 +64,11 @@
         ],
     "oaire_version" : "@oaire.version@",
     "dc_coverage_isbn" : "@dc.coverage.isbn@",
-    "oaire_citation_issue" : "oaire.citation.issue",
+    "oaire_citation_issue" : "@oaire.citation.issue@",
     "dc_description" : "@dc.description@",
     "dc_identifier_pmid" : "@dc.identifier.pmid@",
     "dc_relation_doi" : "@dc.relation.doi@",
-    "metric_wosCitation" : "49",
+    "metric_wosCitation" : "@virtual.metric.wosCitation@",
     "perucris_editor_dni" : [
             "@perucris.editor.dni@",
         ],

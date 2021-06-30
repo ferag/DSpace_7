@@ -78,7 +78,7 @@ public class OrcidQueueConsumerIT extends AbstractIntegrationTestWithDatabase {
             .withName("Parent community")
             .build();
 
-        profileCollection = createCollection("Profiles", "Person");
+        profileCollection = createCollection("Profiles", "CvPerson");
 
         context.restoreAuthSystemState();
     }

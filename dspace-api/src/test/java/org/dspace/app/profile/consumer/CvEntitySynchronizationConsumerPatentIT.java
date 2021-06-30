@@ -9,6 +9,7 @@ package org.dspace.app.profile.consumer;
 
 import static org.dspace.app.matcher.MetadataValueMatcher.with;
 import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
+import static org.dspace.content.authority.Choices.CF_AMBIGUOUS;
 import static org.dspace.core.CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.CLONE;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.CORRECTION;
@@ -309,7 +310,7 @@ public class CvEntitySynchronizationConsumerPatentIT extends AbstractIntegration
         assertThat(patent.getMetadata(), hasItem(with("dc.title", "Test Patent")));
         assertThat(patent.getMetadata(), hasItem(with("dc.date.issued", "2021-01-01")));
         assertThat(patent.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter", 0, Choices.CF_UNSET)));
-        assertThat(patent.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, Choices.CF_AMBIGUOUS)));
+        assertThat(patent.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, CF_AMBIGUOUS)));
 
         List<Relationship> shadowCopyRelations = findRelations(newPatentClone, shadowCopy);
         assertThat(shadowCopyRelations, hasSize(1));

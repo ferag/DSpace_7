@@ -545,6 +545,72 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
                           .build();
     }
 
+    @Test
+    public void crosswalkForOrgUnitJsonToBeSentToElasticsearchTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        try (FileInputStream file = new FileInputStream(testProps.get("test.orgunitCrosswalk").toString())) {
+
+            String json = IOUtils.toString(file, Charset.defaultCharset());
+            String replacedJson = json.replace("{", "").trim();
+
+            parentCommunity = CommunityBuilder.createCommunity(context)
+                                              .withName("Parent Community")
+                                              .build();
+
+            Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
+                                               .withName("Collection 1").build();
+
+            Item item = createFullOrgunitItemForElasticsearch(col1);
+
+            String generatedJson = elasticsearchItemBuilder.convert(context, item);
+            assertTrue(generatedJson.contains(replacedJson));
+
+        }
+    }
+
+    private Item createFullOrgunitItemForElasticsearch(Collection collection) {
+        return ItemBuilder.createItem(context, collection)
+                          .withEntityType("OrgUnit")
+                          .withSubject("Science").withSubject("Test Subject")
+                          .withRegistrationNumber("RenRegNum20201008")
+                          .withUbigeo("UbiGeo::La Libertad::Trujillo")
+                          .withParentOrganization("Parent OrgUnit")
+                          .withRegistration("UNT")
+                          .withOrgUnitAddressCountry("PE")
+                          .withDateOfQualification("2008-01-01")
+                          .withOrgUnitAddressLocality("trujillo")
+                          .withOrgUnitScopusAffiliationIdentifier("SCOPUS-01")
+                          .withOrganizationRuc("RUC-UNTR")
+                          .withStiActions("yes")
+                          .withRenacytOcde("oecd::Ciencias agrícolas::Ciencia veterinaria::Ciencia veterinaria")
+                          .withOrgUnitLegalName("Universidad de Trujillo (UNT)")
+                          .withOrgUnitRinIdentifier("RIN-01")
+                          .withRenacytStrength("Gran capacidad de obtención de finanaciamiento")
+                          .withFormalUnit("yes")
+                          .withSectorInstitucional("Higher education")
+                          .withOrgUnitRorIdentifier("ROR-01")
+                          .withDescriptionAbstract("This is an OrgUnit")
+                          .withEducacionSuperior("Institución universitaria e institución con rango universitario")
+                          .withSubjectOCDE("oecd::Ingeniería, Tecnología::Ingeniería médica::Ingeniería médica")
+                          .withSubjectOCDE("oecd::Ciencias médicas, Ciencias de la salud"
+                                             + "::Ciencias de la salud::Epidemiología")
+                          .withInternalNote("Nota interna dentro de una organizacion")
+                          .withType("type-1")
+                          .withOrgUnitIdentifier("ID-01")
+                          .withOrgUnitType("Research group")
+                          .withIndustrialClassification("IND-CLASS")
+                          .withTypeNaturaleza("Public")
+                          .withValidityOfRegistration("2020-01-01")
+                          .withTitle("Universidad Nacional de Trujillo")
+                          .withOrgUnitCrossRefFunderIdentifier("CRF-01")
+                          .withOrgUnitIsniIdentifier("ISNI-01")
+                          .withPersonalSiteUrl("www.test.com")
+                          .withPersonalSiteUrl("www.test2.com")
+                          .withRenacytClassification("Level 1")
+                          .withAcronym("UNITRU")
+                          .build();
+    }
+
     private Map<String, String> cleanUpIndexes() {
         Map<String, String> originIndexes = null;
         Map<String, String> testIndexes = new HashMap<String, String>();

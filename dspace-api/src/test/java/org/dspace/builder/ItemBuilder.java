@@ -568,6 +568,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return withPerucrisSubjectOCDE(ocde);
     }
 
+    public ItemBuilder withSubjectOcde(String ocde) {
+        return addMetadataValue(item, "dc", "subject", "ocde", ocde);
+    }
+
     public ItemBuilder withSubjectLoc(String loc) {
         return addMetadataValue(item, "dc", "subject", "loc", loc);
     }
@@ -683,6 +687,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withOrgUnitCountry(String country) {
         return addMetadataValue(item, "orgunit", "identifier", "country", country);
+    }
+
+    public ItemBuilder withOrgUnitType(String orgunitType) {
+        return addMetadataValue(item, "perucris", "type", "orgunit", orgunitType);
     }
 
     public ItemBuilder withUsageType(String usage) {
@@ -896,6 +904,55 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withSubjectMesh(String mesh) {
         return addMetadataValue(item, "dc", "subject", "mesh", mesh);
+    }
+
+    public ItemBuilder withRegistrationNumber(String registrationNumber) {
+        return addMetadataValue(item, "perucris", "renacyt", "registrationNumber", registrationNumber);
+    }
+
+    public ItemBuilder withRegistration(String registration) {
+        return addMetadataValue(item, "perucris", "renacyt", "registration", registration);
+    }
+
+    public ItemBuilder withDateOfQualification(String dateOfQualification) {
+        return addMetadataValue(item, "perucris", "renacyt", "dateOfQualification",
+                                       new DCDate(dateOfQualification).toString());
+    }
+
+    public ItemBuilder withStiActions(String actions) {
+        return addMetadataValue(item, "perucris", "sti","actions", actions);
+    }
+
+    public ItemBuilder withRenacytOcde(String ocde) {
+        return addMetadataValue(item, "perucris", "renacyt", "ocde", ocde);
+    }
+
+    public ItemBuilder withRenacytStrength(String strength) {
+        return addMetadataValue(item, "perucris", "renacyt", "strength", strength);
+    }
+
+    public ItemBuilder withFormalUnit(String formalUnit) {
+        return addMetadataValue(item, "perucris", "sti", "formalUnit", formalUnit);
+    }
+
+    public ItemBuilder withSectorInstitucional(String sectorInstitucional) {
+        return addMetadataValue(item, "perucris", "type", "sectorInstitucional", sectorInstitucional);
+    }
+
+    public ItemBuilder withEducacionSuperior(String educacionSuperior) {
+        return addMetadataValue(item, "perucris", "type", "educacionSuperior", educacionSuperior);
+    }
+
+    public ItemBuilder withTypeNaturaleza(String naturaleza) {
+        return addMetadataValue(item, "perucris", "type", "naturaleza", naturaleza);
+    }
+
+    public ItemBuilder withValidityOfRegistration(String validityOfRegistration) {
+        return addMetadataValue(item, "perucris", "renacyt", "validityOfRegistration", validityOfRegistration);
+    }
+
+    public ItemBuilder withRenacytClassification(String classification) {
+        return addMetadataValue(item, "perucris", "renacyt", "classification", classification);
     }
 
     /**

@@ -20,8 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class CtiPublicationDataProvider extends AbstractCtiDataProvider {
 
-    //  private static final Logger log = LogManager.getLogger(CtiPublicationDataProvider.class);
-
     @Autowired
     private CtiPublicationSuggestionLoader suggestionLoader;
 

@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
+import org.dspace.app.profile.ResearcherProfile;
 import org.dspace.app.suggestion.SolrSuggestionStorageService;
 import org.dspace.app.suggestion.SuggestionProvider;
 import org.dspace.app.suggestion.SuggestionService;
@@ -114,11 +115,9 @@ public class ExternalDataServiceImpl implements ExternalDataService {
         throws AuthorizeException, SQLException {
         WorkspaceItem workspaceItem = workspaceItemService.create(context, collection, true);
         Item item = workspaceItem.getItem();
+
         for (MetadataValueDTO metadataValueDTO : externalDataObject.getMetadata()) {
-            itemService.addMetadata(context, item, metadataValueDTO.getSchema(), metadataValueDTO.getElement(),
-                                    metadataValueDTO.getQualifier(), metadataValueDTO.getLanguage(),
-                                    metadataValueDTO.getValue(), metadataValueDTO.getAuthority(),
-                                    metadataValueDTO.getConfidence());
+            processMetadataValue(context, item, metadataValueDTO);
         }
 
         log.info(LogManager.getHeader(context, "create_item_from_externalDataObject", "Created item" +
@@ -139,5 +138,32 @@ public class ExternalDataServiceImpl implements ExternalDataService {
 
     public void setExternalDataProviders(List<ExternalDataProvider> externalDataProviders) {
         this.externalDataProviders = externalDataProviders;
+    }
+
+    private void processMetadataValue(Context context, Item item, MetadataValueDTO metadataValueDTO)
+            throws SQLException {
+
+        if (isCvOwnerHolderMetadata(metadataValueDTO)) {
+            Item cvProfile = itemService.findByIdOrLegacyId(context, metadataValueDTO.getValue());
+            ResearcherProfile researcherProfile = new ResearcherProfile(cvProfile);
+            if (researcherProfile != null) {
+                itemService.addMetadata(context, item, "perucris", "ctivitae", "owner", null,
+                    researcherProfile.getItemFullName(), researcherProfile.getItemId().toString(), 600);
+            }
+            itemService.addMetadata(context, item, "cris", "owner", null, null, researcherProfile.getFullName(),
+                    researcherProfile.getId().toString(), 600);
+        } else {
+            itemService.addMetadata(context, item, metadataValueDTO.getSchema(), metadataValueDTO.getElement(),
+                    metadataValueDTO.getQualifier(), metadataValueDTO.getLanguage(),
+                    metadataValueDTO.getValue(), metadataValueDTO.getAuthority(),
+                    metadataValueDTO.getConfidence());
+
+        }
+    }
+
+    private boolean isCvOwnerHolderMetadata(MetadataValueDTO metadataValueDTO) {
+        return "perucris".equals(metadataValueDTO.getSchema())
+                && "holder".equals(metadataValueDTO.getElement())
+                && "ctiprofile".equals(metadataValueDTO.getQualifier());
     }
 }

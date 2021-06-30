@@ -10,17 +10,19 @@ package org.dspace.app.profile;
 
 import static java.util.stream.Collectors.joining;
 
+import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.apache.solr.client.solrj.SolrServerException;
 import org.dspace.app.profile.importproviders.ResearcherProfileProvider;
 import org.dspace.app.profile.importproviders.model.ConfiguredResearcherProfileProvider;
 import org.dspace.app.profile.service.AfterImportAction;
@@ -88,7 +90,18 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
 
         ExternalDataObject externalDataObject = mergeExternalObjects(externalObjects);
 
-        return createItem(context, collection, externalDataObject);
+        Item researcherProfile = createItem(context, collection, externalDataObject);
+
+        for (ConfiguredResearcherProfileProvider configuredProvider :
+            getConfiguredProfileProvider(eperson, uriList)) {
+            try {
+                configuredProvider.importSuggestions(context, researcherProfile);
+            } catch (SolrServerException | IOException e) {
+                log.error("Can't import profile suggestions due to unexpected errors");
+            }
+        }
+
+        return researcherProfile;
     }
 
     public void setAfterImportActionList(List<AfterImportAction> afterImportActionList) {
@@ -121,33 +134,48 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
      * @param externalObjects the merged source external object
      * @return
      */
-    private ExternalDataObject mergeExternalObjects(List<ExternalDataObject> externalObjects) {
+    private ExternalDataObject mergeExternalObjects(final List<ExternalDataObject> externalObjects) {
 
         log.debug("Merging " + externalObjects.size() + " external objects");
 
         if (externalObjects.size() == 1) {
             return externalObjects.get(0);
         }
-        Set<MetadataValueDTO> metadataSet = new HashSet<MetadataValueDTO>();
-        externalObjects.stream().forEach(object -> {
-            log.debug("Merging object id=" + object.getId() + ", source=" + object.getSource());
-            object.getMetadata().stream().forEach(metadataValue -> {
-                log.debug("Merging metadata " + metadataValue.toString());
-                if (!metadataSet.contains(metadataValue)) {
-                    log.debug("Adding metadata " + metadataValue.toString());
-                    metadataSet.add(metadataValue);
-                }
-            });
-        });
 
         ExternalDataObject result = new ExternalDataObject();
-        result.setId("merged::" + fromSources(externalObjects, ExternalDataObject::getId));
-        result.setSource("merged::" + fromSources(externalObjects, ExternalDataObject::getSource));
+        result.setId("merged--" + fromSources(externalObjects, ExternalDataObject::getId));
+        result.setSource("merged--" + fromSources(externalObjects, ExternalDataObject::getSource));
         result.setDisplayValue("N/A");
         result.setValue("N/A");
-        result.setMetadata(metadataSet.stream().collect(Collectors.toList()));
+
+        for (ExternalDataObject otherObject: externalObjects) {
+            appendMetadataFromOtherObject(result, otherObject);
+        }
+
         return result;
 
+    }
+
+    private ExternalDataObject appendMetadataFromOtherObject(
+            ExternalDataObject object,
+            ExternalDataObject otherObject) {
+
+        Set<String> existentMetadataKeys = object
+                .getMetadata().stream().map(m -> metadataKey(m)).collect(Collectors.toSet());
+
+        for (MetadataValueDTO metadata : otherObject.getMetadata()) {
+            if (!existentMetadataKeys.contains(metadataKey(metadata))) {
+                object.addMetadata(metadata);
+            }
+        }
+
+        return object;
+    }
+
+    private String metadataKey(MetadataValueDTO metadata) {
+        return Stream.of(metadata.getSchema(), metadata.getQualifier(), metadata.getElement())
+                .filter(s -> s != null)
+                .collect(Collectors.joining("."));
     }
 
     private String fromSources(List<ExternalDataObject> externalObjects,

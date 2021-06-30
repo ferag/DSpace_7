@@ -7,14 +7,19 @@
  */
 package org.dspace.app.profile.importproviders.impl;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.solr.client.solrj.SolrServerException;
 import org.dspace.app.profile.importproviders.ResearcherProfileProvider;
 import org.dspace.app.profile.importproviders.model.ConfiguredResearcherProfileProvider;
 import org.dspace.app.profile.importproviders.model.ResearcherProfileSource;
+import org.dspace.app.profile.importproviders.model.ResearcherProfileSource.SourceId;
+import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
+import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.external.model.ExternalDataObject;
 import org.dspace.external.service.ExternalDataService;
@@ -58,7 +63,8 @@ public class ResearcherProfileReniecProvider implements ResearcherProfileProvide
 
     @Override
     public Optional<ExternalDataObject> getExternalDataObject(ResearcherProfileSource source) {
-        return externalDataService.getExternalDataObject(source.getSource(), source.getId());
+        final SourceId sourceId = source.selectSource(getSourceIdentifier()).get();
+        return externalDataService.getExternalDataObject(sourceId.getSource(), sourceId.getId());
     }
 
     private Optional<MetadataValue> getMetadataIdentifier(EPerson eperson) {
@@ -72,6 +78,12 @@ public class ResearcherProfileReniecProvider implements ResearcherProfileProvide
 
     public void setExternalDataService(ExternalDataService externalDataService) {
         this.externalDataService = externalDataService;
+    }
+
+    @Override
+    public void importSuggestions(Context context, Item profile, ResearcherProfileSource source)
+            throws SolrServerException, IOException {
+        // no suggestions for this provider
     }
 
 }

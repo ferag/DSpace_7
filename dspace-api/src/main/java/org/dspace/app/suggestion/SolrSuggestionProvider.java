@@ -137,4 +137,8 @@ public abstract class SolrSuggestionProvider implements SuggestionProvider {
      */
     protected abstract boolean isExternalDataObjectPotentiallySuggested(Context context,
             ExternalDataObject externalDataObject);
+
+    public SolrSuggestionStorageService getSolrSuggestionStorageService() {
+        return solrSuggestionStorageService;
+    }
 }

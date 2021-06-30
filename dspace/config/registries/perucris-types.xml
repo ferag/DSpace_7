@@ -1658,5 +1658,10 @@
         <element>ctivitaepolicy</element>
         <qualifier>group</qualifier>
     </dc-type>
+    <dc-type>
+        <schema>perucris</schema>
+        <element>identifier</element>
+        <qualifier>cti</qualifier>
+    </dc-type>
 
 </dspace-dc-types>

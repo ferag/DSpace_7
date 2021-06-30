@@ -20,6 +20,9 @@
 	          key-type="java.lang.String" value-type="org.dspace.app.suggestion.SuggestionProvider">
 	    <entry key="oaire" value-ref="OAIREPublicationLoader" />
 	    <entry key="orcidWorks" value-ref="orcidPublicationLoader" />
+        <entry key="ctiPublication" value-ref="ctiPublicationSuggestionLoader" />
+        <entry key="ctiProject" value-ref="ctiProjectSuggestionLoader" />
+        <entry key="ctiPatent" value-ref="ctiPatentSuggestionLoader" />
 	</util:map>
 
     <bean id="OAIREPublicationLoader" class="org.dspace.app.suggestion.oaire.OAIREPublicationLoader">
@@ -64,6 +67,20 @@
                 </bean>    
             </list>
         </property>
+    </bean>
+    
+    <!-- cti suggestions loader -->
+
+    <bean id="ctiPublicationSuggestionLoader" class="org.dspace.importer.external.ctidb.suggestion.CtiPublicationSuggestionLoader">
+        <property name="sourceName" value="ctiPublication" />
+    </bean>
+
+    <bean id="ctiProjectSuggestionLoader" class="org.dspace.importer.external.ctidb.suggestion.CtiProjectSuggestionLoader">
+        <property name="sourceName" value="ctiProject" />
+    </bean>
+
+    <bean id="ctiPatentSuggestionLoader" class="org.dspace.importer.external.ctidb.suggestion.CtiPatentSuggestionLoader">
+        <property name="sourceName" value="ctiPatent" />
     </bean>
 
  </beans>

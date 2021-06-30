@@ -106,7 +106,8 @@ public class CtiProfileMapper extends AbstractCtiMapper {
                 metadata.add(new MetadataValueDTO("crisrp", "education", "end", null, fechaFin));
                 metadata.add(new MetadataValueDTO("crisrp", "education", "role", null, gradoAcademico));
                 metadata.add(new MetadataValueDTO("perucris", "education", "grantor", null, centroEstudiosNombre));
-                metadata.add(new MetadataValueDTO("perucris", "education", "country", null, centroEstudioPaisNombre));
+//                metadata.add(new MetadataValueDTO("perucris", "education", "country", null, centroEstudioPaisNombre));
+                metadata.add(new MetadataValueDTO("perucris", "education", "country", null, EMPTY));
 
             }
         }
@@ -121,8 +122,8 @@ public class CtiProfileMapper extends AbstractCtiMapper {
         }
 
         for (CtiConocimientoIdioma conocimientoIdioma : ctiConocimientoIdioma) {
-            metadata.add(new MetadataValueDTO("person", "knowsLanguage", null, null,
-                    conocimientoIdioma.getIdiomaDescription()));
+//            metadata.add(new MetadataValueDTO("person", "knowsLanguage", null, null,
+//                    conocimientoIdioma.getIdiomaDescription()));
         }
 
         return metadata;
@@ -291,11 +292,11 @@ public class CtiProfileMapper extends AbstractCtiMapper {
 
 
         if (ctiInvestigador.getSexo() != null && ctiInvestigador.getSexo().equals(1)) {
-            metadata.add(new MetadataValueDTO("oairecerif", "person", "gender", null, "Femenino"));
+            metadata.add(new MetadataValueDTO("oairecerif", "person", "gender", null, "f"));
         }
 
         if (ctiInvestigador.getSexo() != null && ctiInvestigador.getSexo().equals(2)) {
-            metadata.add(new MetadataValueDTO("oairecerif", "person", "gender", null, "Masculino"));
+            metadata.add(new MetadataValueDTO("oairecerif", "person", "gender", null, "m"));
         }
 
         if (ctiInvestigador.getDepartamentoDescr() != null
@@ -330,10 +331,10 @@ public class CtiProfileMapper extends AbstractCtiMapper {
                     ctiInvestigador.getPaisResidenciaNombre().trim()));
         }
 
-        if (!Strings.isBlank(ctiInvestigador.getPaisNacimientoNombre())) {
-            metadata.add(new MetadataValueDTO("crisrp", "country", null, null,
-                    ctiInvestigador.getPaisNacimientoNombre().trim()));
-        }
+//        if (!Strings.isBlank(ctiInvestigador.getPaisNacimientoNombre())) {
+//            metadata.add(new MetadataValueDTO("crisrp", "country", null, null,
+//                    ctiInvestigador.getPaisNacimientoNombre().trim()));
+//        }
 
         return metadata;
     }

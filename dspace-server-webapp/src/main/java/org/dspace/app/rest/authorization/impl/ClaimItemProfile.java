@@ -41,12 +41,12 @@ import org.springframework.stereotype.Component;
  * @author Corrado Lombardi (corrado.lombardi at 4science.it)
  */
 @Component
-@AuthorizationFeatureDocumentation(name = ClaimItemFeature.NAME,
+@AuthorizationFeatureDocumentation(name = ClaimItemProfile.NAME,
     description = "Used to verify if for a given Profile (Person) Item, an user has claim rights")
-public class ClaimItemFeature implements AuthorizationFeature {
+public class ClaimItemProfile implements AuthorizationFeature {
 
-    public static final String NAME = "canClaimItem";
-    private static final Logger LOG = LoggerFactory.getLogger(ClaimItemFeature.class);
+    public static final String NAME = "canClaimProfile";
+    private static final Logger LOG = LoggerFactory.getLogger(ClaimItemProfile.class);
 
     private final ItemService itemService;
     private final ResearcherProfileService researcherProfileService;
@@ -55,7 +55,7 @@ public class ClaimItemFeature implements AuthorizationFeature {
     private final ConcytecWorkflowService concytecWorkflowService;
 
     @Autowired
-    public ClaimItemFeature(ItemService itemService,
+    public ClaimItemProfile(ItemService itemService,
                             ResearcherProfileService researcherProfileService,
                             ConfigurationService configurationService,
                             final RelationshipService relationshipService,

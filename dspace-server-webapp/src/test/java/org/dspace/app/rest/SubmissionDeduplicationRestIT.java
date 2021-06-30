@@ -89,47 +89,19 @@ public class SubmissionDeduplicationRestIT extends AbstractControllerIntegration
 
     private Collection collection;
 
-    private MockSolrDedupCore dedupService;
-
     private Collection institutionCollection;
 
     private EPerson submitter;
 
     private EPerson editor;
 
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        ServiceManager serviceManager = DSpaceServicesFactory.getInstance().getServiceManager();
-        dedupService = serviceManager.getServiceByName(null, MockSolrDedupCore.class);
-
-        context.turnOffAuthorisationSystem();
-        parentCommunity = CommunityBuilder.createCommunity(context)
-                                          .withName("Root community").build();
-
-        submitter = EPersonBuilder.createEPerson(context)
-                                  .withEmail("submitter.em@test.com")
-                                  .withPassword(password)
-                                  .build();
-
-        editor = EPersonBuilder.createEPerson(context)
-                               .withEmail("editor@example.com")
-                               .withPassword(password).build();
-
-        collection = CollectionBuilder.createCollection(context, parentCommunity)
-                                      .withName("Collection")
-                                      .withEntityType("Publication")
-                                      .withSubmissionDefinition("publication")
-                                      .withSubmitterGroup(submitter)
-                                      .withWorkflowGroup(2, editor).build();
-
-        context.restoreAuthSystemState();
-    }
-
     private EntityType publicationType;
 
     @Before
     public void setup() throws SQLException, AuthorizeException {
+
+        ServiceManager serviceManager = DSpaceServicesFactory.getInstance().getServiceManager();
+        serviceManager.getServiceByName(null, MockSolrDedupCore.class);
 
         context.turnOffAuthorisationSystem();
 

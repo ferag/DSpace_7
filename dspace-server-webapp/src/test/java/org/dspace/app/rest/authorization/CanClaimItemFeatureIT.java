@@ -55,6 +55,8 @@ public class CanClaimItemFeatureIT extends AbstractControllerIntegrationTest {
 
     private Collection personCollection;
 
+    private Collection cvPersonCollection;
+
     @Override
     @Before
     public void setUp() throws Exception {
@@ -66,6 +68,9 @@ public class CanClaimItemFeatureIT extends AbstractControllerIntegrationTest {
         personCollection =
             CollectionBuilder.createCollection(context, parentCommunity).withEntityType("Person")
                              .withName("claimableA").build();
+        cvPersonCollection =
+            CollectionBuilder.createCollection(context, parentCommunity).withEntityType("CvPerson")
+                             .withName("Profiles").build();
         final Collection claimableCollectionB =
             CollectionBuilder.createCollection(context, parentCommunity).withEntityType("Person")
                              .withName("claimableB").build();
@@ -156,7 +161,7 @@ public class CanClaimItemFeatureIT extends AbstractControllerIntegrationTest {
 
         context.turnOffAuthorisationSystem();
 
-        ItemBuilder.createItem(context, personCollection)
+        ItemBuilder.createItem(context, cvPersonCollection)
             .withTitle("User")
             .withCrisOwner("User", context.getCurrentUser().getID().toString())
             .build();

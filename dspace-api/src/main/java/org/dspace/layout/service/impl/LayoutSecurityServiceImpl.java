@@ -178,7 +178,7 @@ public class LayoutSecurityServiceImpl implements LayoutSecurityService {
     }
 
     private boolean isAuthorityEqualsTo(MetadataValue metadataValue, EPerson user) {
-        return StringUtils.equals(metadataValue.getAuthority(), user.getID().toString());
+        return user != null && StringUtils.equals(metadataValue.getAuthority(), user.getID().toString());
     }
 
     private boolean checkGroup(MetadataValue value, Set<Group> groups) {

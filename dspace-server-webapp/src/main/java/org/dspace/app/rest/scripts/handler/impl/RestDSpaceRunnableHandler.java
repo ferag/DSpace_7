@@ -325,6 +325,7 @@ public class RestDSpaceRunnableHandler implements DSpaceRunnableHandler {
                 context.setSpecialGroup(group.getID());
                 specialGroups.add(group.getID());
             }
+            context.complete();
         } catch (SQLException e) {
             log.error("RestDSpaceRunnableHandler with process: " + processId + " could not find the proccess", e);
         } finally {

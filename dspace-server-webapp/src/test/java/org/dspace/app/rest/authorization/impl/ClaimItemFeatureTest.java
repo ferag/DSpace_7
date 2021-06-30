@@ -44,7 +44,7 @@ import org.junit.Test;
  */
 public class ClaimItemFeatureTest {
 
-    private ClaimItemFeature claimItemFeature;
+    private ClaimItemProfile claimItemFeature;
     private final Context context = mock(Context.class);
     private final ItemService itemService = mock(ItemService.class);
     private final ResearcherProfileService researcherProfileService = mock(ResearcherProfileService.class);
@@ -55,7 +55,7 @@ public class ClaimItemFeatureTest {
 
     @Before
     public void setUp() throws Exception {
-        claimItemFeature = new ClaimItemFeature(itemService, researcherProfileService, configurationService,
+        claimItemFeature = new ClaimItemProfile(itemService, researcherProfileService, configurationService,
             relationshipService, concytecWorkflowService);
     }
 

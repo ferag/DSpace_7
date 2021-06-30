@@ -143,8 +143,8 @@ public class ImportResearcherProfileServiceImpl implements ImportResearcherProfi
         }
 
         ExternalDataObject result = new ExternalDataObject();
-        result.setId("merged--" + fromSources(externalObjects, ExternalDataObject::getId));
-        result.setSource("merged--" + fromSources(externalObjects, ExternalDataObject::getSource));
+        result.setId("merged+" + fromSources(externalObjects, ExternalDataObject::getId));
+        result.setSource("merged+" + fromSources(externalObjects, ExternalDataObject::getSource));
         result.setDisplayValue("N/A");
         result.setValue("N/A");
 

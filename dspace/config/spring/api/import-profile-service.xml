@@ -20,9 +20,9 @@
         <property name="importProfileProviders">
             <list>
                 <ref bean="researcherProfileDspaceProvider"/>
+                <ref bean="researcherProfileCtiProvider"/>
                 <ref bean="researcherProfileReniecProvider"/>
                 <ref bean="researcherProfileOrcidProvider"/>
-                <ref bean="researcherProfileCtiProvider"/>
             </list>
         </property>
     </bean>

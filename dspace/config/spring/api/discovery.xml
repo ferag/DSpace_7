@@ -298,14 +298,6 @@
                 <property name="metadataFields">
                     <list>
                         <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
-                            <property name="field" value="dc.contributor.author"/>
-                            <property name="snippets" value="5"/>
-                        </bean>
-                        <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
-                            <property name="field" value="dspace.entity.type"/>
-                            <property name="snippets" value="5"/>
-                        </bean>
-                        <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
                             <property name="field" value="person.identifier.jobtitle"/>
                             <property name="snippets" value="5"/>
                         </bean>
@@ -439,14 +431,6 @@
             <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
                 <property name="metadataFields">
                     <list>
-                        <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
-                            <property name="field" value="dc.contributor.author"/>
-                            <property name="snippets" value="5"/>
-                        </bean>
-                        <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
-                            <property name="field" value="dspace.entity.type"/>
-                            <property name="snippets" value="5"/>
-                        </bean>
                         <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
                             <property name="field" value="person.identifier.jobtitle"/>
                             <property name="snippets" value="5"/>
@@ -601,14 +585,6 @@
                 <property name="metadataFields">
                     <list>
                         <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
-                            <property name="field" value="dc.contributor.author"/>
-                            <property name="snippets" value="5"/>
-                        </bean>
-                        <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
-                            <property name="field" value="dspace.entity.type"/>
-                            <property name="snippets" value="5"/>
-                        </bean>
-                        <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
                             <property name="field" value="person.identifier.jobtitle"/>
                             <property name="snippets" value="5"/>
                         </bean>
@@ -701,10 +677,6 @@
                             <property name="snippets" value="5"/>
                         </bean>
                         <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
-                            <property name="field" value="dc.contributor.author"/>
-                            <property name="snippets" value="5"/>
-                        </bean>
-                        <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
                             <property name="field" value="dc.description.abstract"/>
                             <property name="maxSize" value="250"/>
                             <property name="snippets" value="2"/>
@@ -778,10 +750,6 @@
                             <property name="snippets" value="5"/>
                         </bean>
                         <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
-                            <property name="field" value="dc.contributor.author"/>
-                            <property name="snippets" value="5"/>
-                        </bean>
-                        <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
                             <property name="field" value="dc.description.abstract"/>
                             <property name="maxSize" value="250"/>
                             <property name="snippets" value="2"/>
@@ -849,10 +817,6 @@
                     <list>
                         <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
                             <property name="field" value="dc.title"/>
-                            <property name="snippets" value="5"/>
-                        </bean>
-                        <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">
-                            <property name="field" value="dc.contributor.author"/>
                             <property name="snippets" value="5"/>
                         </bean>
                         <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration">

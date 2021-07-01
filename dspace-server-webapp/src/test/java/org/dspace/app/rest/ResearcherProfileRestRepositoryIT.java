@@ -33,6 +33,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 import static org.springframework.data.rest.webmvc.RestMediaTypes.TEXT_URI_LIST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -44,7 +45,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -87,6 +91,15 @@ import org.dspace.discovery.SearchService;
 import org.dspace.discovery.SearchServiceException;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.service.GroupService;
+import org.dspace.importer.external.ctidb.CtiDatabaseDao;
+import org.dspace.importer.external.ctidb.CtiDatabaseImportFacadeImpl;
+import org.dspace.importer.external.ctidb.model.CtiDatosConfidenciales;
+import org.dspace.importer.external.ctidb.model.CtiDatosLaborales;
+import org.dspace.importer.external.ctidb.model.CtiDerechosPi;
+import org.dspace.importer.external.ctidb.model.CtiFormacionAcademica;
+import org.dspace.importer.external.ctidb.model.CtiInvestigador;
+import org.dspace.importer.external.ctidb.model.CtiProduccionBibliografica;
+import org.dspace.importer.external.ctidb.model.CtiProyecto;
 import org.dspace.layout.CrisLayoutBox;
 import org.dspace.layout.LayoutSecurity;
 import org.dspace.services.ConfigurationService;
@@ -94,9 +107,13 @@ import org.dspace.util.UUIDUtils;
 import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultMatcher;
+
+
 
 /**
  * Integration tests for {@link ResearcherProfileRestRepository}.
@@ -106,6 +123,9 @@ import org.springframework.test.web.servlet.MvcResult;
  *
  */
 public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegrationTest {
+
+    public static final String DNI_TEST = "01234567";
+    public static final Integer INVESTIGADOR_ID_TEST = 1;
 
     @Autowired
     private ConfigurationService configurationService;
@@ -127,6 +147,12 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
     @Autowired
     private AuthorizeService authorizeService;
+
+    @Mock
+    private CtiDatabaseDao ctiDatabaseDaoMock;
+
+    @Autowired
+    private CtiDatabaseImportFacadeImpl ctiDatabaseImportFacade;
 
     @Autowired
     private ItemService itemService;
@@ -719,7 +745,6 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
      * @throws Exception
      */
     @Test
-    @Ignore
     public void testCloneFromExternalSource() throws Exception {
         // FIXME: unIgnore once orcid integration ready
 
@@ -827,6 +852,78 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
                         .content("http://localhost:8080/server/api/integration/externalsources/orcid/entryValues/id \n "
                                 + "http://localhost:8080/server/api/integration/externalsources/dspace/entryValues/id"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testClaimExistentDirectorioPersonAsProfileAndMergeItWithCtiDatabase() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EPerson userWithDni = EPersonBuilder.createEPerson(context).withEmail("userWithDni@example.com")
+                .withPassword(password).withDni(DNI_TEST).build();
+
+        context.setCurrentUser(userWithDni);
+
+        Collection cvPersonCloneCollection = CollectionBuilder.createCollection(context, parentCommunity)
+                .withName("Cv Person Clone Collection").withEntityType("CvPersonClone").build();
+
+        Collection personCollection = CollectionBuilder.createCollection(context, parentCommunity)
+                .withName("Person Collection").withEntityType("Person").build();
+
+        configurationService.setProperty("claimable.entityType", "Person");
+        configurationService.setProperty("cti-vitae.clone.person-collection-id",
+                cvPersonCloneCollection.getID().toString());
+
+        Item person = ItemBuilder.createItem(context, personCollection).withFullName("Giuseppe Garibaldi")
+                .withBirthDate("1807-07-04").build();
+
+        EntityType personType = createEntityType("Person");
+        EntityType institutionPersonType = createEntityType("InstitutionPerson");
+        EntityType cvPersonCloneType = createEntityType("CvPersonClone");
+        EntityType cvPersonType = createEntityType("CvPerson");
+
+        createHasShadowCopyRelationship(institutionPersonType, personType);
+        createHasShadowCopyRelationship(cvPersonCloneType, personType);
+        createCloneRelationship(cvPersonCloneType, cvPersonType);
+        createIsOriginatedFromRelationship(personType, cvPersonCloneType);
+        createIsMergedInRelationship(personType);
+        createIsPersonOwnerRelationship(cvPersonType, personType);
+
+        mockCtiDatabaseDao(ctiDatabaseDaoMock);
+
+        CrisLayoutBox publicBox = CrisLayoutBoxBuilder.createBuilder(context, personType, false, false)
+                .withSecurity(LayoutSecurity.PUBLIC).build();
+
+        CrisLayoutFieldBuilder.createMetadataField(context, metadataField("crisrp", "name", Optional.empty()), 1, 1)
+                .withBox(publicBox).build();
+
+        CrisLayoutFieldBuilder
+                .createMetadataField(context, metadataField("person", "birthDate", Optional.empty()), 2, 1)
+                .withBox(publicBox).build();
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(userWithDni.getEmail(), password);
+
+        String claimedURI = "http://localhost:8080/server/api/integration/externalsources/dspace/entryValues/"
+                + person.getID().toString();
+
+        getClient(authToken).perform(post("/api/cris/profiles/").contentType(TEXT_URI_LIST).content(claimedURI))
+                .andExpect(status().isCreated()).andExpect(jsonPath("$.id", is(userWithDni.getID().toString())))
+                .andExpect(jsonPath("$.visible", is(false))).andExpect(jsonPath("$.type", is("profile")))
+                .andExpect(jsonPath("$",
+                        matchLinks("http://localhost/api/cris/profiles/" + userWithDni.getID(), "item", "eperson")));
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}", userWithDni.getID())).andExpect(status().isOk());
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}/item", userWithDni.getID()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.type", is("item")))
+                .andExpect(mergeDirectorioCtiResultMatcher(userWithDni));
+
+        getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", userWithDni.getID()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.type", is("eperson"))).andExpect(jsonPath("$.name", is(userWithDni.getName())));
     }
 
     @Test
@@ -2034,89 +2131,62 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
     public void updateCvLinkedEntitiesSolrDocumentsAfterClaimTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
-        EPerson user = EPersonBuilder.createEPerson(context)
-                                     .withNameInMetadata("Viktor", "Bruni")
-                                     .withEmail("viktor.bruni@test.com")
-                                     .withPassword(password)
-                                     .build();
+        EPerson user = EPersonBuilder.createEPerson(context).withNameInMetadata("Viktor", "Bruni")
+                .withEmail("viktor.bruni@test.com").withPassword(password).build();
 
-        parentCommunity = CommunityBuilder.createCommunity(context)
-                                          .withName("Parent Community")
-                                          .build();
+        parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
 
-        Collection cvCollection = CollectionBuilder.createCollection(context, parentCommunity)
-                                                   .withName("Profiles")
-                                                   .withEntityType("CvPerson")
-                                                   .build();
+        Collection cvCollection = CollectionBuilder.createCollection(context, parentCommunity).withName("Profiles")
+                .withEntityType("CvPerson").build();
 
-        Collection cvCloneCollection = CollectionBuilder.createCollection(context, parentCommunity)
-                                                        .withName("Profiles")
-                                                        .withEntityType("CvPersonClone")
-                                                        .withWorkflow("institutionWorkflow")
-                                                        .build();
+        Collection cvCloneCollection = CollectionBuilder.createCollection(context, parentCommunity).withName("Profiles")
+                .withEntityType("CvPersonClone").withWorkflow("institutionWorkflow").build();
 
-        Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withEntityType("Person")
-                                           .withName("Collection 1")
-                                           .build();
+        Collection col1 = CollectionBuilder.createCollection(context, parentCommunity).withEntityType("Person")
+                .withName("Collection 1").build();
 
-        Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withName("Collection 2")
-                                           .build();
+        Collection col2 = CollectionBuilder.createCollection(context, parentCommunity).withName("Collection 2").build();
 
-        Item personItem = ItemBuilder.createItem(context, col1)
-                .withTitle("Person Item Title")
-                .withPersonEducation("High school")
-                .withPersonEducationStartDate("1968-09-01")
-                .withPersonEducationEndDate("1973-06-10")
-                .withEntityType("Person")
-                .build();
+        Item personItem = ItemBuilder.createItem(context, col1).withTitle("Person Item Title")
+                .withPersonEducation("High school").withPersonEducationStartDate("1968-09-01")
+                .withPersonEducationEndDate("1973-06-10").withEntityType("Person").build();
 
         Item publicationItem = ItemBuilder.createItem(context, col2)
-                                          .withAuthor(personItem.getName(), personItem.getID().toString())
-                                          .withTitle("Publication Item Title")
-                                          .withEntityType("Publication")
-                                          .build();
+                .withAuthor(personItem.getName(), personItem.getID().toString()).withTitle("Publication Item Title")
+                .withEntityType("Publication").build();
 
         Item projectItem = ItemBuilder.createItem(context, col2)
-                                      .withProjectInvestigator(personItem.getName(), personItem.getID().toString())
-                                      .withTitle("Project Item Title")
-                                      .withEntityType("Project")
-                                      .build();
+                .withProjectInvestigator(personItem.getName(), personItem.getID().toString())
+                .withTitle("Project Item Title").withEntityType("Project").build();
 
         Item patentItem = ItemBuilder.createItem(context, col2)
-                                     .withAuthor(personItem.getName(), personItem.getID().toString())
-                                     .withTitle("Patent Item Title")
-                                     .withEntityType("Patent")
-                                     .build();
+                .withAuthor(personItem.getName(), personItem.getID().toString()).withTitle("Patent Item Title")
+                .withEntityType("Patent").build();
 
         context.commit();
         AtomicReference<UUID> idRef = new AtomicReference<UUID>();
         try {
 
-
             configurationService.setProperty("researcher-profile.collection.uuid", cvCollection.getID().toString());
             configurationService.setProperty("cti-vitae.clone.person-collection-id",
-                                              cvCloneCollection.getID().toString());
+                    cvCloneCollection.getID().toString());
             context.restoreAuthSystemState();
 
             String tokenUser = getAuthToken(user.getEmail(), password);
 
-            getClient(tokenUser).perform(post("/api/cris/profiles/")
-                                .contentType(TEXT_URI_LIST)
-                                .content("http://localhost:8080/server/api/core/items/" + personItem.getID()))
-                                .andExpect(status().isCreated())
-                                .andDo(result -> idRef
-                                       .set(UUID.fromString(read(result.getResponse().getContentAsString(), "$.id"))));
+            getClient(tokenUser)
+                    .perform(post("/api/cris/profiles/").contentType(TEXT_URI_LIST)
+                            .content("http://localhost:8080/server/api/core/items/" + personItem.getID()))
+                    .andExpect(status().isCreated()).andDo(result -> idRef
+                            .set(UUID.fromString(read(result.getResponse().getContentAsString(), "$.id"))));
 
-            getClient(tokenUser).perform(get("/api/cris/profiles/{id}/item", idRef.get()))
-                     .andExpect(status().isOk())
-                     .andExpect(jsonPath("$.metadata['dc.title'][0].value", is(user.getFullName())))
-                     .andExpect(jsonPath("$.metadata['cris.owner'][0].value", is(user.getEmail())))
-                     .andExpect(jsonPath("$.metadata['cris.owner'][0].authority", is(user.getID().toString())))
-                     .andExpect(jsonPath("$.metadata['dspace.entity.type'][0].value", is("CvPerson")))
-                     .andDo(result ->
-                            idRef.set(UUID.fromString(read(result.getResponse().getContentAsString(), "$.id"))));
+            getClient(tokenUser).perform(get("/api/cris/profiles/{id}/item", idRef.get())).andExpect(status().isOk())
+                    .andExpect(jsonPath("$.metadata['dc.title'][0].value", is(user.getFullName())))
+                    .andExpect(jsonPath("$.metadata['cris.owner'][0].value", is(user.getEmail())))
+                    .andExpect(jsonPath("$.metadata['cris.owner'][0].authority", is(user.getID().toString())))
+                    .andExpect(jsonPath("$.metadata['dspace.entity.type'][0].value", is("CvPerson")))
+                    .andDo(result -> idRef
+                            .set(UUID.fromString(read(result.getResponse().getContentAsString(), "$.id"))));
 
             assertSearchQuery(publicationItem, user.getFullName(), idRef.get().toString());
             assertSearchQuery(projectItem, user.getFullName(), idRef.get().toString());
@@ -2139,39 +2209,23 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
         context.turnOffAuthorisationSystem();
         EntityType eType = EntityTypeBuilder.createEntityTypeBuilder(context, "Person").build();
 
-        EPerson user = EPersonBuilder.createEPerson(context)
-                                     .withNameInMetadata("Viktok", "Bruni")
-                                     .withEmail("viktor.bruni@test.com")
-                                     .withPassword(password)
-                                     .build();
+        EPerson user = EPersonBuilder.createEPerson(context).withNameInMetadata("Viktok", "Bruni")
+                .withEmail("viktor.bruni@test.com").withPassword(password).build();
 
-        parentCommunity = CommunityBuilder.createCommunity(context)
-                                          .withName("Parent Community")
-                                          .build();
+        parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
 
-        Collection cvCollection = CollectionBuilder.createCollection(context, parentCommunity)
-                                                   .withName("Profiles")
-                                                   .withEntityType("CvPerson")
-                                                   .build();
+        Collection cvCollection = CollectionBuilder.createCollection(context, parentCommunity).withName("Profiles")
+                .withEntityType("CvPerson").build();
 
-       Collection cvCloneCollection = CollectionBuilder.createCollection(context, parentCommunity)
-                                                       .withName("Profiles")
-                                                       .withEntityType("CvPersonClone")
-                                                       .withWorkflow("institutionWorkflow")
-                                                       .build();
+        Collection cvCloneCollection = CollectionBuilder.createCollection(context, parentCommunity).withName("Profiles")
+                .withEntityType("CvPersonClone").withWorkflow("institutionWorkflow").build();
 
-        Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withEntityType("Person")
-                                           .withName("Collection 1")
-                                           .build();
+        Collection col1 = CollectionBuilder.createCollection(context, parentCommunity).withEntityType("Person")
+                .withName("Collection 1").build();
 
-        Item personItem = ItemBuilder.createItem(context, col1)
-                                     .withTitle("Person Item Title")
-                                     .withPersonEducation("High school")
-                                     .withPersonEducationStartDate("1968-09-01")
-                                     .withPersonEducationEndDate("1973-06-10")
-                                     .withEntityType("Person")
-                                     .build();
+        Item personItem = ItemBuilder.createItem(context, col1).withTitle("Person Item Title")
+                .withPersonEducation("High school").withPersonEducationStartDate("1968-09-01")
+                .withPersonEducationEndDate("1973-06-10").withEntityType("Person").build();
 
         AtomicReference<UUID> idRef = new AtomicReference<UUID>();
         try {
@@ -2186,53 +2240,39 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
             nestedFields.add(educationEnd);
 
             CrisLayoutBox box1 = CrisLayoutBoxBuilder.createBuilder(context, eType, true, true)
-                                                     .withShortname("box-shortname-one")
-                                                     .withSecurity(LayoutSecurity.PUBLIC)
-                                                     .build();
+                    .withShortname("box-shortname-one").withSecurity(LayoutSecurity.PUBLIC).build();
 
-            CrisLayoutFieldBuilder.createMetadataField(context, title, 0, 0)
-                                  .withLabel("LABEL TITLE")
-                                  .withRendering("RENDERIGN TITLE")
-                                  .withStyle("STYLE")
-                                  .withBox(box1)
-                                  .build();
+            CrisLayoutFieldBuilder.createMetadataField(context, title, 0, 0).withLabel("LABEL TITLE")
+                    .withRendering("RENDERIGN TITLE").withStyle("STYLE").withBox(box1).build();
 
             CrisLayoutBox box2 = CrisLayoutBoxBuilder.createBuilder(context, eType, true, true)
-                                                     .withShortname("box-shortname-two")
-                                                     .withSecurity(LayoutSecurity.PUBLIC)
-                                                     .build();
+                    .withShortname("box-shortname-two").withSecurity(LayoutSecurity.PUBLIC).build();
 
-            CrisLayoutFieldBuilder.createMetadataField(context, education, 0, 0)
-                                  .withLabel("LABEL EDUCATION")
-                                  .withRendering("RENDERIGN EDUCATION")
-                                  .withStyle("STYLE")
-                                  .withBox(box2)
-                                  .withNestedField(nestedFields)
-                                  .build();
+            CrisLayoutFieldBuilder.createMetadataField(context, education, 0, 0).withLabel("LABEL EDUCATION")
+                    .withRendering("RENDERIGN EDUCATION").withStyle("STYLE").withBox(box2).withNestedField(nestedFields)
+                    .build();
 
             configurationService.setProperty("researcher-profile.collection.uuid", cvCollection.getID().toString());
             configurationService.setProperty("cti-vitae.clone.person-collection-id",
-                                              cvCloneCollection.getID().toString());
+                    cvCloneCollection.getID().toString());
             context.restoreAuthSystemState();
 
             String tokenUser = getAuthToken(user.getEmail(), password);
 
-            getClient(tokenUser).perform(post("/api/cris/profiles/")
-                                 .contentType(TEXT_URI_LIST)
-                                 .content("http://localhost:8080/server/api/core/items/" + personItem.getID()))
-                                 .andExpect(status().isCreated())
-                                 .andDo(result -> idRef
-                                       .set(UUID.fromString(read(result.getResponse().getContentAsString(), "$.id"))));
+            getClient(tokenUser)
+                    .perform(post("/api/cris/profiles/").contentType(TEXT_URI_LIST)
+                            .content("http://localhost:8080/server/api/core/items/" + personItem.getID()))
+                    .andExpect(status().isCreated()).andDo(result -> idRef
+                            .set(UUID.fromString(read(result.getResponse().getContentAsString(), "$.id"))));
 
-            getClient(tokenUser).perform(get("/api/cris/profiles/{id}/item", idRef.get()))
-                            .andExpect(status().isOk())
-                            .andExpect(jsonPath("$.metadata",
-                                       matchMetadata("cris.owner", user.getName(), user.getID().toString(), 0)))
-                            .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.education", "High school", 0)))
-                            .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.education.start", "1968-09-01", 0)))
-                            .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.education.end", "1973-06-10", 0)))
-                            .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)))
-                            .andExpect(jsonPath("$.metadata", matchMetadata("dc.title", "Person Item Title", 0)));
+            getClient(tokenUser).perform(get("/api/cris/profiles/{id}/item", idRef.get())).andExpect(status().isOk())
+                    .andExpect(jsonPath("$.metadata",
+                            matchMetadata("cris.owner", user.getName(), user.getID().toString(), 0)))
+                    .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.education", "High school", 0)))
+                    .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.education.start", "1968-09-01", 0)))
+                    .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.education.end", "1973-06-10", 0)))
+                    .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)))
+                    .andExpect(jsonPath("$.metadata", matchMetadata("dc.title", "Person Item Title", 0)));
         } finally {
             ItemBuilder.deleteItem(idRef.get());
         }
@@ -2292,5 +2332,215 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
     private ResearcherProfile createProfileForUser(EPerson ePerson) throws Exception {
         return researcherProfileService.createAndReturn(context, ePerson);
     }
+
+    private static class CtiDatabaseMockBuilder {
+
+        protected static final Integer CTI_SEXO_MASCULINO = 2;
+        protected static final Integer PAIS_NACIMIENTO_ID = 2;
+        protected static final Integer PAIS_RESIDENCIA_ID = 3;
+        protected static final Integer DEPARTAMENTO_ID = 4;
+        protected static final Integer PROVINCIA_ID = 5;
+        protected static final Integer DISTRITO_ID = 6;
+
+        protected static final Integer DATO_CONFIDENTIALES_ID = 7;
+        protected static final Integer INSTITUTION_LABORAL_ID = 8;
+        protected static final Integer DATOS_LABORALES_ID = 9;
+        protected static final Integer FORMACION_ACADEMICA_ID = 10;
+        protected static final Integer GRADO_ACADEMICO_ID = 11;
+        protected static final Integer CENTRO_ESTUDIOS_ID = 12;
+        protected static final Integer CENTRO_ESTUDIOS_PAIS_ID = 13;
+
+        protected static final Integer PRODUCCION_BIBLIOGRAFICA_ID = 14;
+        protected static final Integer PROYECTO_ID = 15;
+        protected static final Integer PROPRIEDAD_INTELECTUAL_ID = 16;
+
+        protected CtiInvestigador mockInvestigador() {
+            CtiInvestigador investigador = new CtiInvestigador();
+            investigador.setCtiId(INVESTIGADOR_ID_TEST);
+
+            investigador.setApellidoMaterno("ApellidoMaterno");
+            investigador.setApellidoPaterno("ApellidoPaterno");
+            investigador.setNombres("Nombres");
+            investigador.setDescPersonal("DescPersonal");
+            investigador.setDireccionWeb("DireccionWeb");
+            investigador.setEmail("investigador@cti.com");
+
+            investigador.setIdOrcid("orcid");
+            investigador.setIdPerfilScopus("idPerfilScopus");
+
+            investigador.setInstitucionLaboralId(INSTITUTION_LABORAL_ID);
+
+            investigador.setPaisNacimientoId(PAIS_NACIMIENTO_ID);
+            investigador.setPaisNacimientoNombre("PaisNacimientoNombre");
+            investigador.setPaisResidenciaId(PAIS_RESIDENCIA_ID);
+            investigador.setPaisResidenciaNombre("PaisResidenciaNombre");
+
+            // Geo
+            investigador.setDistritoDesc("DistritoDesc");
+            investigador.setDistritoId(DISTRITO_ID);
+            investigador.setDepartamentoDescr("DepartamentoDescr");
+            investigador.setDepartamentoId(DEPARTAMENTO_ID);
+            investigador.setProvinciaDesc("ProvinciaDesc");
+            investigador.setProvinciaId(PROVINCIA_ID);
+            investigador.setSexo(CTI_SEXO_MASCULINO);
+
+            return investigador;
+        }
+
+        protected List<CtiDatosConfidenciales> mockDatosConfidenciales() {
+            CtiDatosConfidenciales datosConfidenciales = new CtiDatosConfidenciales();
+            datosConfidenciales.setCtiId(DATO_CONFIDENTIALES_ID);
+            datosConfidenciales.setFechaNacimiento(formatDate("1980-01-01"));
+            datosConfidenciales.setNroDocumento("NroDocumento");
+            datosConfidenciales.setTelefonoCelular("TelefonoCelular");
+            datosConfidenciales.setTelefonoFijo("TelefonoFijo");
+            datosConfidenciales.setTipoDocumentoId(1);
+            List<CtiDatosConfidenciales> datosConfidentialesList = new ArrayList<>();
+            datosConfidentialesList.add(datosConfidenciales);
+            return datosConfidentialesList;
+        }
+
+        protected List<CtiDatosLaborales> mockDatosLaboralesList() {
+            CtiDatosLaborales datosLaborales = new CtiDatosLaborales();
+            datosLaborales.setCtiId(DATOS_LABORALES_ID);
+            datosLaborales.setCargo("Cargo");
+            datosLaborales.setFechaInicio(formatDate("2020-01-02"));
+            datosLaborales.setFechaFin(formatDate("2020-01-03"));
+            datosLaborales.setInstitucionId(INSTITUTION_LABORAL_ID);
+            datosLaborales.setInstitucionRazonSocial("InstitucionRazonSocial");
+            List<CtiDatosLaborales> datosLaboralesList = new ArrayList<>();
+            datosLaboralesList.add(datosLaborales);
+            return datosLaboralesList;
+        }
+
+        protected List<CtiFormacionAcademica> mockFormacionAcademica() {
+            CtiFormacionAcademica formacionAcademica = new CtiFormacionAcademica();
+            formacionAcademica.setCtiId(FORMACION_ACADEMICA_ID);
+            formacionAcademica.setTitulo("Titulo");
+            formacionAcademica.setFechaInicio(formatDate("2020-01-10"));
+            formacionAcademica.setFechaFin(formatDate("2020-01-11"));
+            formacionAcademica.setGradoAcademicoDescripcion("GradoAcademicoDescripcion");
+            formacionAcademica.setGradoAcademicoId(GRADO_ACADEMICO_ID);
+            formacionAcademica.setCentroEstudiosNombre("CentroEstudiosNombre");
+            formacionAcademica.setCentroEstudiosId(CENTRO_ESTUDIOS_ID);
+            formacionAcademica.setCentroEstudiosPaisId(CENTRO_ESTUDIOS_PAIS_ID);
+            formacionAcademica.setCentroEstudiosPaisNombre("CentroEstudiosPaisNombre");
+            List<CtiFormacionAcademica> formacionAcademicaList = new ArrayList<>();
+            formacionAcademicaList.add(formacionAcademica);
+            return formacionAcademicaList;
+        }
+
+        protected List<CtiProduccionBibliografica> mockProduccionBibliografica() {
+            CtiProduccionBibliografica produccionBibliografica = new CtiProduccionBibliografica();
+            produccionBibliografica.setCtiId(PRODUCCION_BIBLIOGRAFICA_ID);
+            produccionBibliografica.setTitulo("Suggestion Titulo");
+            List<CtiProduccionBibliografica> produccionBibliogaficaList = new ArrayList<>();
+            produccionBibliogaficaList.add(produccionBibliografica);
+            return produccionBibliogaficaList;
+        }
+
+        protected List<CtiProyecto> mockProyecto() {
+            CtiProyecto proyecto = new CtiProyecto();
+            proyecto.setCtiId(PROYECTO_ID);
+            proyecto.setTitulo("Suggestion Titulo");
+            List<CtiProyecto> proyectoList = new ArrayList<>();
+            proyectoList.add(proyecto);
+            return proyectoList;
+        }
+
+        protected List<CtiDerechosPi> mockDerechosPi() {
+            CtiDerechosPi propriedad = new CtiDerechosPi();
+            propriedad.setCtiId(PROPRIEDAD_INTELECTUAL_ID);
+            propriedad.setTituloPi("Suggestion TituloPI");
+            List<CtiDerechosPi> propriedadList = new ArrayList<>();
+            propriedadList.add(propriedad);
+            return propriedadList;
+        }
+
+        private Date formatDate(String date) {
+            try {
+                return new SimpleDateFormat("yyyy-MM-dd").parse(date);
+            } catch (ParseException e) {
+                //
+            }
+            return null;
+        }
+    }
+
+    private void mockCtiDatabaseDao(CtiDatabaseDao ctiDatabaseDaoMock) throws ParseException {
+
+        CtiDatabaseMockBuilder ctiBuilder = new CtiDatabaseMockBuilder();
+
+        // lookup
+        when(ctiDatabaseDaoMock.getInvestigadorIdFromDni(DNI_TEST)).thenReturn(INVESTIGADOR_ID_TEST);
+
+        // profile
+        when(ctiDatabaseDaoMock.getInvestigadorBaseInfo(INVESTIGADOR_ID_TEST))
+        .thenReturn(ctiBuilder.mockInvestigador());
+        when(ctiDatabaseDaoMock.getDatosConfidenciales(INVESTIGADOR_ID_TEST))
+        .thenReturn(ctiBuilder.mockDatosConfidenciales());
+        when(ctiDatabaseDaoMock.getDatosLaborales(INVESTIGADOR_ID_TEST))
+        .thenReturn(ctiBuilder.mockDatosLaboralesList());
+        when(ctiDatabaseDaoMock.getFormacionAcademica(INVESTIGADOR_ID_TEST))
+        .thenReturn(ctiBuilder.mockFormacionAcademica());
+
+        // suggestions
+        when(ctiDatabaseDaoMock.getAllProduccionesBibliograficas(INVESTIGADOR_ID_TEST))
+        .thenReturn(ctiBuilder.mockProduccionBibliografica());
+        when(ctiDatabaseDaoMock.getAllProyectos(INVESTIGADOR_ID_TEST)).thenReturn(ctiBuilder.mockProyecto());
+        when(ctiDatabaseDaoMock.getAllPropriedadIntelectual(INVESTIGADOR_ID_TEST))
+        .thenReturn(ctiBuilder.mockDerechosPi());
+
+        this.ctiDatabaseImportFacade.setCtiDatabaseDao(ctiDatabaseDaoMock);
+
+    }
+
+    private ResultMatcher mergeDirectorioCtiResultMatcher(EPerson user) {
+        return ResultMatcher.matchAll(
+                //
+                jsonPath("$.metadata", matchMetadata("cris.owner", user.getName(), user.getID().toString(), 0)),
+                jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)),
+
+                // From Directorio (claimed profile)
+                jsonPath("$.metadata", matchMetadata("crisrp.name", "Giuseppe Garibaldi", 0)),
+                jsonPath("$.metadata", matchMetadata("person.birthDate", "1807-07-04", 0)),
+
+                // From cti database
+                jsonPath("$.metadata", matchMetadata("dc.title", "ApellidoPaterno ApellidoMaterno Nombres", 0)),
+                jsonPath("$.metadata", matchMetadata("person.email", "investigador@cti.com", 0)),
+                jsonPath("$.metadata", matchMetadata("person.familyName", "ApellidoPaterno ApellidoMaterno", 0)),
+                jsonPath("$.metadata", matchMetadata("person.givenName", "Nombres", 0)),
+                jsonPath("$.metadata", matchMetadata("perucris.apellidoMaterno", "ApellidoMaterno", 0)),
+                jsonPath("$.metadata", matchMetadata("perucris.apellidoPaterno", "ApellidoPaterno", 0)),
+                jsonPath("$.metadata", matchMetadata("oairecerif.person.gender", "m", 0)),
+                jsonPath("$.metadata", matchMetadata("oairecerif.identifier.url", "DireccionWeb", 0)),
+                jsonPath("$.metadata", matchMetadata("perucris.mobilePhone", "TelefonoCelular", 0)),
+                jsonPath("$.metadata", matchMetadata("perucris.phone", "TelefonoFijo", 0)),
+                jsonPath("$.metadata", matchMetadata("person.identifier.scopus-author-id", "idPerfilScopus", 0)),
+
+                jsonPath("$.metadata", matchMetadata("crisrp.education", "Titulo", 0)),
+                jsonPath("$.metadata", matchMetadata("crisrp.education.role", "GradoAcademicoDescripcion", 0)),
+                jsonPath("$.metadata", matchMetadata("crisrp.education.start", "2020-01-10", 0)),
+                jsonPath("$.metadata", matchMetadata("crisrp.education.end", "2020-01-11", 0)),
+                jsonPath("$.metadata", matchMetadata("perucris.education.country",
+                        "#PLACEHOLDER_PARENT_METADATA_VALUE#", 0)),
+                jsonPath("$.metadata", matchMetadata("perucris.education.grantor", "CentroEstudiosNombre", 0)),
+
+                jsonPath("$.metadata", matchMetadata("oairecerif.person.affiliation", "InstitucionRazonSocial", 0)),
+                jsonPath("$.metadata", matchMetadata("oairecerif.affiliation.startDate", "2020-01-02", 0)),
+                jsonPath("$.metadata", matchMetadata("oairecerif.affiliation.endDate", "2020-01-03", 0)),
+                jsonPath("$.metadata", matchMetadata("oairecerif.affiliation.role", "Cargo", 0)),
+
+                jsonPath("$.metadata", matchMetadata("person.jobTitle", "Cargo", 0)),
+                jsonPath("$.metadata", matchMetadata("person.affiliation.name", "InstitucionRazonSocial", 0)),
+
+                jsonPath("$.metadata", matchMetadata("perucris.identifier.cti", "1", 0)),
+                jsonPath("$.metadata", matchMetadata("perucris.identifier.dina", "1", 0)),
+                jsonPath("$.metadata", matchMetadata("perucris.identifier.dni", "01234567", 0))
+
+                );
+    }
+
+
 
 }

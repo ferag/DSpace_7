@@ -326,10 +326,10 @@ public class CtiProfileMapper extends AbstractCtiMapper {
 //            }
         }
 
-        if (!Strings.isBlank(ctiInvestigador.getPaisResidenciaNombre())) {
-            metadata.add(new MetadataValueDTO("perucris", "address", "addressCountry", null,
-                    ctiInvestigador.getPaisResidenciaNombre().trim()));
-        }
+//        if (!Strings.isBlank(ctiInvestigador.getPaisResidenciaNombre())) {
+//            metadata.add(new MetadataValueDTO("perucris", "address", "addressCountry", null,
+//                    ctiInvestigador.getPaisResidenciaNombre().trim()));
+//        }
 
 //        if (!Strings.isBlank(ctiInvestigador.getPaisNacimientoNombre())) {
 //            metadata.add(new MetadataValueDTO("crisrp", "country", null, null,

@@ -745,8 +745,9 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
      * @throws Exception
      */
     @Test
+    @Ignore
     public void testCloneFromExternalSource() throws Exception {
-        // FIXME: unIgnore once orcid integration ready
+        // FIXME: unIgnore once orcid integration ready and merged
 
         context.turnOffAuthorisationSystem();
         ItemBuilder.createItem(context, cvPersonCollection).withFullName("Giuseppe Garibaldi")

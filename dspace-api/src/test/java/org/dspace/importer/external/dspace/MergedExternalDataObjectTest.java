@@ -42,8 +42,8 @@ public class MergedExternalDataObjectTest {
         UUID dspaceSourceId = UUID.randomUUID();
 
         ExternalDataObject externalDataObject = new ExternalDataObject();
-        externalDataObject.setSource("merged::orcid+dspace");
-        externalDataObject.setId("merged::0000-1111-2222-3333+" + dspaceSourceId.toString());
+        externalDataObject.setSource("merged+orcid+dspace");
+        externalDataObject.setId("merged+0000-1111-2222-3333+" + dspaceSourceId.toString());
 
         MergedExternalDataObject mergedExternalDataObject = MergedExternalDataObject.from(externalDataObject);
 
@@ -57,8 +57,8 @@ public class MergedExternalDataObjectTest {
         String dspaceSourceId = "invalid";
 
         ExternalDataObject externalDataObject = new ExternalDataObject();
-        externalDataObject.setSource("merged::orcid+dspace");
-        externalDataObject.setId("merged::0000-1111-2222-3333+" + dspaceSourceId);
+        externalDataObject.setSource("merged+orcid+dspace");
+        externalDataObject.setId("merged+0000-1111-2222-3333+" + dspaceSourceId);
 
         MergedExternalDataObject mergedExternalDataObject = MergedExternalDataObject.from(externalDataObject);
 
@@ -70,8 +70,8 @@ public class MergedExternalDataObjectTest {
     public void mergedWithoutDspaceSource() {
 
         ExternalDataObject externalDataObject = new ExternalDataObject();
-        externalDataObject.setSource("merged::orcid+reniec");
-        externalDataObject.setId("merged::0000-1111-2222-3333+123456");
+        externalDataObject.setSource("merged+orcid+reniec");
+        externalDataObject.setId("merged+0000-1111-2222-3333+123456");
 
         MergedExternalDataObject mergedExternalDataObject = MergedExternalDataObject.from(externalDataObject);
 

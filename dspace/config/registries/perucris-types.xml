@@ -363,13 +363,6 @@
     </dc-type>
 
     <dc-type>
-        <schema>dc</schema>
-        <element>subject</element>
-        <qualifier>ocde</qualifier>
-        <scope_note></scope_note>
-    </dc-type>
-
-    <dc-type>
         <schema>perucris</schema>
         <element>subject</element>
         <qualifier>minam</qualifier>
@@ -1664,6 +1657,11 @@
         <schema>perucris</schema>
         <element>ctivitaepolicy</element>
         <qualifier>group</qualifier>
+    </dc-type>
+    <dc-type>
+        <schema>perucris</schema>
+        <element>identifier</element>
+        <qualifier>cti</qualifier>
     </dc-type>
 
 </dspace-dc-types>

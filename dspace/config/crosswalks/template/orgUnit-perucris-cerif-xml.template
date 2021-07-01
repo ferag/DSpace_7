@@ -20,7 +20,7 @@
 		<OrgUnit> <Name>@organization.parentOrganization@</Name> </OrgUnit>
 		@if.not.authority.organization-parentOrganization.end@
 	</PartOf>
-	<Subject>@dc.subject.ocde@</Subject>
+	<Subject>@perucris.subject.ocde@</Subject>
     <Keyword>@dc.subject@</Keyword>
     <PostAddress>
         <AddressLocality>@organization.address.addressLocality@</AddressLocality>

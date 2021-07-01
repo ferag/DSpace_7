@@ -37,7 +37,7 @@ public class MergedExternalDataObject {
      * @return
      */
     public boolean isMerged() {
-        return externalDataObject.getId().startsWith("merged::");
+        return externalDataObject.getId().startsWith("merged+");
     }
 
     /**
@@ -49,9 +49,10 @@ public class MergedExternalDataObject {
             return Optional.empty();
         }
         String[] sources = mergeParts(externalDataObject.getSource());
+        String[] ids = mergeParts(externalDataObject.getId());
         for (int i = 0; i < sources.length; i++) {
             if (StringUtils.equalsIgnoreCase("dspace", sources[i])) {
-                String uuid = mergeParts(externalDataObject.getId())[i];
+                String uuid = ids[i];
                 return Optional.ofNullable(UUIDUtils.fromString(uuid));
             }
         }
@@ -59,7 +60,7 @@ public class MergedExternalDataObject {
     }
 
     private String[] mergeParts(String source) {
-        String[] split = StringUtils.split(source, "::");
-        return StringUtils.split(split[1], "+");
+        String[] split = StringUtils.split(source, "+");
+        return split;
     }
 }

@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.dspace.app.rest.authorization.impl.ClaimItemProfile;
+import org.dspace.app.rest.authorization.impl.CanClaimProfile;
 import org.dspace.app.rest.converter.ItemConverter;
 import org.dspace.app.rest.model.ItemRest;
 import org.dspace.app.rest.projection.Projection;
@@ -98,7 +98,7 @@ public class CanClaimProfileIT extends AbstractControllerIntegrationTest {
 
         context.restoreAuthSystemState();
 
-        claimProfileFeature = authorizationFeatureService.find(ClaimItemProfile.NAME);
+        claimProfileFeature = authorizationFeatureService.find(CanClaimProfile.NAME);
 
     }
 

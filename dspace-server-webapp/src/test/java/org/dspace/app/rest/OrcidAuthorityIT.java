@@ -22,6 +22,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
+import java.util.UUID;
+import javax.annotation.Resource;
 
 import org.dspace.app.orcid.client.OrcidClient;
 import org.dspace.app.orcid.client.OrcidConfiguration;
@@ -37,6 +39,7 @@ import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
 import org.dspace.content.authority.OrcidAuthority;
+import org.dspace.content.authority.SimpleQueryCustomAuthorityFilter;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 import org.hamcrest.Matcher;
@@ -67,6 +70,9 @@ public class OrcidAuthorityIT extends AbstractControllerIntegrationTest {
 
     private OrcidConfiguration orcidConfiguration = OrcidServiceFactory.getInstance().getOrcidConfiguration();
 
+    @Resource(name = "directorioCommunityFilter")
+    private SimpleQueryCustomAuthorityFilter directorioCommunityFilter;
+
     private OrcidClient orcidClientMock = mock(OrcidClient.class);
 
     private String originalClientId;
@@ -81,6 +87,7 @@ public class OrcidAuthorityIT extends AbstractControllerIntegrationTest {
         context.turnOffAuthorisationSystem();
 
         parentCommunity = CommunityBuilder.createCommunity(context).build();
+        setCommunityIdInQuery(parentCommunity.getID(), "Person");
 
         collection = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Test collection")
@@ -687,5 +694,15 @@ public class OrcidAuthorityIT extends AbstractControllerIntegrationTest {
 
     private String id(Item item) {
         return item.getID().toString();
+    }
+
+    private void setCommunityIdInQuery(UUID directorioCommunityId, String entityType) {
+        List<String> filterQueries = directorioCommunityFilter.getFilterQueries(entityType);
+        for (int i = 0; i < filterQueries.size(); i++) {
+            String s = filterQueries.get(i);
+            if (s.contains("location.comm")) {
+                filterQueries.set(i, "location.comm:" + directorioCommunityId.toString());
+            }
+        }
     }
 }

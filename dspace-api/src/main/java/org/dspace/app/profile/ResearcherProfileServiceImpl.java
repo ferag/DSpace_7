@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -44,6 +45,7 @@ import org.dspace.content.WorkspaceItem;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.content.service.ItemService;
+import org.dspace.content.service.RelationshipService;
 import org.dspace.content.service.WorkspaceItemService;
 import org.dspace.core.Context;
 import org.dspace.discovery.DiscoverQuery;
@@ -102,6 +104,9 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
 
     @Autowired
     private AuthorizeService authorizeService;
+
+    @Autowired
+    private RelationshipService relationshipService;
 
     @Autowired
     private ImportResearcherProfileService importResearcherProfileService;
@@ -193,6 +198,10 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
             throw new IllegalStateException("No collection found for researcher profiles");
         }
 
+        if (isItemWithAlreadyAnOwner(context, source.getPath())) {
+            throw new IllegalArgumentException("Item with provided uri has already an owner");
+        }
+
         context.turnOffAuthorisationSystem();
         Item item = importResearcherProfileService.importProfile(context, ePerson, source, collection);
         itemService.addMetadata(context, item, "cris", "owner", null, null, ePerson.getName(),
@@ -202,6 +211,36 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
         setPolicies(context, ePerson, item);
         context.restoreAuthSystemState();
         return new ResearcherProfile(item);
+    }
+
+    private boolean isItemWithAlreadyAnOwner(Context context, String path) throws SQLException {
+        UUID uuid = UUIDUtils.fromString(path.substring(path.lastIndexOf("/") + 1));
+        Item item = itemService.find(context, uuid);
+        if (item == null) {
+            return false;
+        }
+        return alreadyInARelation(context, item);
+    }
+
+    private boolean alreadyInARelation(Context context, Item item) throws SQLException {
+
+        String[] arrayProperty = configurationService.getArrayProperty("claimable.relation.rightwardType");
+        List<String> relationshipTypes = Optional.ofNullable(arrayProperty)
+            .map(a -> Arrays.stream(a).collect(Collectors.toList()))
+            .orElse(Collections.emptyList());
+
+        if (relationshipTypes.isEmpty()) {
+            return false;
+        }
+
+        return relationshipService.findByItem(context, item).stream()
+            .filter(r -> item.equals(r.getRightItem()))
+            .filter(r -> hasOwner(r.getLeftItem()))
+            .anyMatch(r -> relationshipTypes.contains(r.getRelationshipType().getRightwardType()));
+    }
+
+    private boolean hasOwner(final Item item) {
+        return StringUtils.isNotBlank(itemService.getMetadata(item, "cris.owner"));
     }
 
     private void setPolicies(Context context, EPerson ePerson, Item item) throws SQLException, AuthorizeException {
@@ -254,7 +293,7 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
 
     private void addIfNotPresent(Context context, Item item, String schema, String element,
                                  String qualifier, String value) throws SQLException {
-        String metadataFirstValue = metadataFirstValue(item, "dc", "title");
+        String metadataFirstValue = metadataFirstValue(item, schema, element);
         if (Objects.isNull(metadataFirstValue)) {
             itemService.addMetadata(context, item, schema, element, qualifier, null, value);
         }
@@ -443,9 +482,12 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
             .collect(Collectors.joining(" ")).trim();
     }
 
-    private String metadataFirstValue(Item item, String person, String familyName) {
-        return itemService.getMetadataFirstValue(item, person, familyName,
-            null, null);
+    private String metadataFirstValue(Item item, String schema, String element) {
+        return metadataFirstValue(item, schema, element, null);
+    }
+
+    private String metadataFirstValue(Item item, String schema, String element, String qualifier) {
+        return itemService.getMetadataFirstValue(item, schema, element, qualifier, null);
     }
 
 }

@@ -81,7 +81,7 @@ public class ProfileItemCloningAction implements AfterImportAction, ProfileItemC
 
         try {
             cloneProfile(context, profileItem, personItem);
-        } catch (Exception e) {
+        } catch (SQLException | AuthorizeException | IOException e) {
             throw new RuntimeException(e);
         }
 

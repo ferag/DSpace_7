@@ -151,8 +151,8 @@ public class DspaceAfterImportActionTest {
 
         Item relatedItem = item(externalObjectId);
         ExternalDataObject externalDataObject = new ExternalDataObject();
-        externalDataObject.setId("merged::123123+" + externalObjectId.toString());
-        externalDataObject.setSource("merged::reniec+DSPACE");
+        externalDataObject.setId("merged+123123+" + externalObjectId.toString());
+        externalDataObject.setSource("merged+reniec+DSPACE");
 
         when(itemService.find(context, externalObjectId))
             .thenReturn(relatedItem);
@@ -170,8 +170,8 @@ public class DspaceAfterImportActionTest {
         Item item = item(itemId);
 
         ExternalDataObject externalDataObject = new ExternalDataObject();
-        externalDataObject.setId("merged::123123+0000-1111-2222-3333");
-        externalDataObject.setSource("merged::reniec+orcid");
+        externalDataObject.setId("merged+123123+0000-1111-2222-3333");
+        externalDataObject.setSource("merged+reniec+orcid");
 
         dspaceAfterImportAction.applyTo(context, item, externalDataObject);
 

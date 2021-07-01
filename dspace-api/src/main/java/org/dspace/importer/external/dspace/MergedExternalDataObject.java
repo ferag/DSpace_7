@@ -52,7 +52,7 @@ public class MergedExternalDataObject {
         String[] ids = mergeParts(externalDataObject.getId());
         for (int i = 0; i < sources.length; i++) {
             if (StringUtils.equalsIgnoreCase("dspace", sources[i])) {
-                String uuid = ids[1];
+                String uuid = ids[i];
                 return Optional.ofNullable(UUIDUtils.fromString(uuid));
             }
         }

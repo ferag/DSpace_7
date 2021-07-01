@@ -99,7 +99,6 @@ public class ResearcherProfileCtiProvider implements ResearcherProfileProvider {
                     "eperson".equals(metadata.getElement()) &&
                     "dni".equals(metadata.getQualifier())) ;
         }).findFirst();
-        metadataOpt.ifPresent(metadataValue -> source.addSource("dni", metadataValue.getValue()));
         if (metadataOpt.isPresent()) {
             source.addSource("dni", metadataOpt.get().getValue());
             return;

@@ -245,7 +245,7 @@
 									<xsl:if test="site-title">
 										( <xsl:value-of select="site-title" /> )
 									</xsl:if>
-								    <xsl:if test="position() != last()">, </xsl:if>
+									<xsl:if test="position() != last()">, </xsl:if>
 								</xsl:for-each>
 							</fo:inline >
 						</fo:block>
@@ -277,8 +277,8 @@
 		<fo:block font-size="16pt" font-weight="bold" margin-top="8mm" >
 			<xsl:value-of select="$label" /> 
 		</fo:block>
-		<fo:block margin-bottom="2mm" margin-top="-4mm">
-			<fo:leader leader-pattern="rule" leader-length="100%" rule-style="solid" />         
+		<fo:block>
+			<fo:leader leader-pattern="rule" leader-length="100%" rule-style="solid" />
 		</fo:block>
 	</xsl:template>
 	

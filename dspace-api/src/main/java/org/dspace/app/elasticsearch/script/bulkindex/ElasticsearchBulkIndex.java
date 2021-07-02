@@ -9,6 +9,7 @@ package org.dspace.app.elasticsearch.script.bulkindex;
 import java.sql.SQLException;
 import java.time.Year;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.cli.ParseException;
@@ -110,18 +111,20 @@ public class ElasticsearchBulkIndex
                 int countAttempt = 0;
                 Item item = context.reloadEntity(itemIterator.next());
                 countFoundItems++;
-                String json = elasticsearchItemBuilder.convert(context, item);
-                boolean updated = false;
-                do {
-                    countAttempt ++;
-                    updated = elasticsearchIndexProvider.indexSingleItem(this.index, item, json);
-                    if (!updated && countAttempt == this.maxAttempt) {
-                        handler.logInfo("It was not possible to indexing the item with uuid: " + item.getID());
+                List<String> docs = elasticsearchItemBuilder.convert(context, item);
+                for (String json : docs) {
+                    boolean updated = false;
+                    do {
+                        countAttempt++;
+                        updated = elasticsearchIndexProvider.indexSingleItem(this.index, item, json);
+                        if (!updated && countAttempt == this.maxAttempt) {
+                            handler.logInfo("It was not possible to indexing the item with uuid: " + item.getID());
+                        }
+                    } while (!updated && countAttempt < this.maxAttempt);
+                    context.uncacheEntity(item);
+                    if (updated) {
+                        countUpdatedItems++;
                     }
-                } while (!updated && countAttempt < this.maxAttempt);
-                context.uncacheEntity(item);
-                if (updated) {
-                    countUpdatedItems++;
                 }
                 count++;
                 if (count == 20) {

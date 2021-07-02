@@ -7,6 +7,8 @@
  */
 package org.dspace.app.elasticsearch.script;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -69,14 +71,23 @@ public class SendRecordsToElasticsearch
         assignCurrentUserInContext();
         try {
             context.turnOffAuthorisationSystem();
-            String json = StringUtils.EMPTY;
+            List<String> docs = Collections.emptyList();
             while (existRecord && !checkLimit) {
                 ElasticsearchIndexQueue record = elasticsearchQueueService.getFirstRecord(context);
                 if (Objects.nonNull(record)) {
-                    if (record.getOperationType() != Event.DELETE) {
-                        json = elasticsearchItemBuilder.convert(context, record);
+                    if (record.getOperationType() == Event.DELETE) {
+                        elasticsearchProvider.processRecord(context, record, StringUtils.EMPTY);
+                    } else {
+                        docs = elasticsearchItemBuilder.convert(context, record);
+                        if (docs.isEmpty()) {
+                            handler.logError("It was not possible to convert the queueRecord with uuid: "
+                                             + record.getID() + " and OperationType: " + record.getOperationType());
+                        } else {
+                            for (String json : docs) {
+                                elasticsearchProvider.processRecord(context, record, json);
+                            }
+                        }
                     }
-                    elasticsearchProvider.processRecord(context, record, json);
                     if (recorHasNotBeenModified(record)) {
                         elasticsearchQueueService.delete(context, record);
                     }

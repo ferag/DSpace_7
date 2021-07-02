@@ -9,10 +9,11 @@ package org.dspace.app.elasticsearch.service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.elasticsearch.ElasticsearchIndexQueue;
@@ -43,6 +44,9 @@ public class ElasticsearchItemBuilder {
     @Autowired
     private ElasticsearchIndexManager elasticsearchIndexManager;
 
+    @Autowired
+    private ElasticsearchDenormaliser elasticsearchDenormaliser;
+
     public ElasticsearchItemBuilder(Map<String,ReferCrosswalk> entity2ReferCrosswalk) {
         this.entity2ReferCrosswalk = entity2ReferCrosswalk;
     }
@@ -55,7 +59,7 @@ public class ElasticsearchItemBuilder {
      * @return                as String converted object, empty if related item non exist or EntityType non supported
      * @throws SQLException   if database error
      */
-    public String convert(Context context, ElasticsearchIndexQueue record) throws SQLException {
+    public List<String> convert(Context context, ElasticsearchIndexQueue record) throws SQLException {
         Item item = itemService.find(context, record.getId());
         return convert(context, item);
     }
@@ -68,7 +72,7 @@ public class ElasticsearchItemBuilder {
      * @return                  as String converted object, empty if item non exist or EntityType non supported
      * @throws SQLException     if database error
      */
-    public String convert(Context context, Item item) throws SQLException {
+    public List<String> convert(Context context, Item item) throws SQLException {
         if (Objects.nonNull(item)) {
             String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
             if (elasticsearchIndexManager.isSupportedEntityType(entityType)) {
@@ -76,13 +80,13 @@ public class ElasticsearchItemBuilder {
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 try {
                     referCrosswalk.disseminate(context, item, out);
-                    return out.toString();
+                    return elasticsearchDenormaliser.denormalise(entityType, out.toString());
                 } catch (CrosswalkException | IOException | AuthorizeException e) {
                     log.error(e.getMessage());
                 }
             }
         }
-        return StringUtils.EMPTY;
+        return Collections.emptyList();
     }
 
 }

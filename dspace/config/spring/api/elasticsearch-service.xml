@@ -51,4 +51,17 @@
 
     <bean id="currentDateGenerator" class="org.dspace.content.template.generator.ElasticsearchIndexCurrentDateGenerator" />
 
+    <bean class="org.dspace.app.elasticsearch.service.ElasticsearchDenormaliser">
+            <property name="mapping">
+            <map>
+                <entry key="Publication" value-ref="publicationsMapping"/>
+            </map>
+        </property>
+    </bean>
+
+
+	<util:list id="publicationsMapping" value-type="java.lang.String">
+    	<value>dc_contributor_authors</value>
+	</util:list>
+
 </beans>

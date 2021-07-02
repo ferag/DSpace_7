@@ -18,6 +18,7 @@ import java.nio.charset.Charset;
 import java.time.Year;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
@@ -94,8 +95,14 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
                    .withAuthor("Bohach, Ivan")
                    .withEntityType("Patent").build();
 
-        String jsonItem1 = elasticsearchItemBuilder.convert(context, item1);
-        String jsonItem2 = elasticsearchItemBuilder.convert(context, item2);
+        List<String> docsItem1 = elasticsearchItemBuilder.convert(context, item1);
+        List<String> docsItem2 = elasticsearchItemBuilder.convert(context, item2);
+
+        assertEquals(1, docsItem1.size());
+        assertEquals(1, docsItem2.size());
+
+        String jsonItem1 = docsItem1.get(0);
+        String jsonItem2 = docsItem2.get(0);
 
         // the index does not exist
         when(elasticsearchIndexProvider.checkIngex(testIndex)).thenReturn(HttpStatus.SC_NOT_FOUND);
@@ -164,7 +171,10 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
                                 .withEntityType("Publication").build();
 
 
-        String jsonItem1 = elasticsearchItemBuilder.convert(context, item1);
+        List<String> docsItem1 = elasticsearchItemBuilder.convert(context, item1);
+        assertEquals(1, docsItem1.size());
+
+        String jsonItem1 = docsItem1.get(0);
 
         when(elasticsearchIndexProvider.checkIngex(testIndex)).thenReturn(HttpStatus.SC_OK);
         when(elasticsearchIndexProvider.deleteIndex(testIndex)).thenReturn(true);
@@ -235,7 +245,10 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
                    .withAuthor("Bohach, Ivan")
                    .withEntityType("Patent").build();
 
-        String jsonItem1 = elasticsearchItemBuilder.convert(context, item1);
+        List<String> docsItem1 = elasticsearchItemBuilder.convert(context, item1);
+        assertEquals(1, docsItem1.size());
+
+        String jsonItem1 = docsItem1.get(0);
 
         when(elasticsearchIndexProvider.checkIngex(testIndex)).thenReturn(HttpStatus.SC_OK);
         when(elasticsearchIndexProvider.deleteIndex(testIndex)).thenReturn(true);
@@ -369,8 +382,14 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
                    .withAuthor("Bohach, Ivan")
                    .withEntityType("Patent").build();
 
-        String jsonItem1 = elasticsearchItemBuilder.convert(context, item1);
-        String jsonItem2 = elasticsearchItemBuilder.convert(context, item2);
+        List<String> docsItem1 = elasticsearchItemBuilder.convert(context, item1);
+        List<String> docsItem2 = elasticsearchItemBuilder.convert(context, item2);
+
+        assertEquals(1, docsItem1.size());
+        assertEquals(1, docsItem2.size());
+
+        String jsonItem1 = docsItem1.get(0);
+        String jsonItem2 = docsItem2.get(0);
 
         when(elasticsearchIndexProvider.checkIngex(testIndex)).thenReturn(HttpStatus.SC_OK);
         when(elasticsearchIndexProvider.deleteIndex(testIndex)).thenReturn(true);
@@ -466,8 +485,9 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
             TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
             assertEquals(0, handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin));
 
-            String generatedJson = elasticsearchItemBuilder.convert(context, item);
-            assertTrue(generatedJson.contains(json));
+            List<String> generatedDocs = elasticsearchItemBuilder.convert(context, item);
+            assertEquals(1, generatedDocs.size());
+            assertTrue(generatedDocs.get(0).contains(json));
         }
     }
 
@@ -560,8 +580,9 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
 
             Item item = createFullOrgunitItemForElasticsearch(col1);
 
-            String generatedJson = elasticsearchItemBuilder.convert(context, item);
-            assertTrue(generatedJson.contains(replacedJson));
+            List<String> generatedDocs = elasticsearchItemBuilder.convert(context, item);
+            assertEquals(1, generatedDocs.size());
+            assertTrue(generatedDocs.get(0).contains(replacedJson));
 
         }
     }

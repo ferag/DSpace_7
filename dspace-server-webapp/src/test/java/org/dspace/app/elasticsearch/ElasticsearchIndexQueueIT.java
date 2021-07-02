@@ -331,7 +331,9 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
             assertNotNull(record);
             assertEquals(publicationItem.getID().toString(), record.getID().toString());
             assertEquals(Event.CREATE, record.getOperationType().intValue());
-            String json = elasticsearchIndexConverter.convert(context, record);
+            List<String> docs = elasticsearchIndexConverter.convert(context, record);
+            assertEquals(1, docs.size());
+            String json = docs.get(0);
 
             context.restoreAuthSystemState();
 
@@ -396,7 +398,9 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
             assertNotNull(record);
             assertEquals(publicationItem.getID().toString(), record.getID().toString());
             assertEquals(Event.MODIFY_METADATA, record.getOperationType().intValue());
-            String json = elasticsearchIndexConverter.convert(context, record);
+            List<String> docs = elasticsearchIndexConverter.convert(context, record);
+            assertEquals(1, docs.size());
+            String json = docs.get(0);
 
             context.restoreAuthSystemState();
 
@@ -458,12 +462,21 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
         context.turnOffAuthorisationSystem();
 
         Map<String, String> originIndexes = cleanUpIndexes();
-        UUID uuid = UUID.randomUUID();
-        ElasticsearchIndexQueueBuilder.createElasticsearchIndexQueue(context, uuid, 100).build();
-
-        context.restoreAuthSystemState();
-
+        HttpClient originHttpClient = elasticsearchConnector.getHttpClient();
+        HttpClient mockHttpClient = Mockito.mock(HttpClient.class);
         try {
+            elasticsearchConnector.setHttpClient(mockHttpClient);
+
+            BasicHttpResponse basicHttpResponse = new BasicHttpResponse(
+                                                  new ProtocolVersion("http", 1, 1), 404, "Not Found");
+
+            when(mockHttpClient.execute(ArgumentMatchers.any())).thenReturn(basicHttpResponse);
+
+            UUID uuid = UUID.randomUUID();
+            ElasticsearchIndexQueueBuilder.createElasticsearchIndexQueue(context, uuid, Event.DELETE).build();
+
+            context.restoreAuthSystemState();
+
             String[] args = new String[] { "update-elasticsearch" };
             TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
 
@@ -473,6 +486,7 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
             assertEquals("Not found index for ElasticsearchIndexQueue with uuid: " + uuid.toString(),
                          exception.getMessage());
         } finally {
+            elasticsearchConnector.setHttpClient(originHttpClient);
             restoreIndexes(originIndexes);
         }
     }

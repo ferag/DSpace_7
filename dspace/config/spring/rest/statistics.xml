@@ -545,6 +545,15 @@
 		                <ref bean="publication-mainReports"/>
 		            </list>
 		        </entry>
+                <entry key="item-OrgUnit">
+                    <list>
+                        <ref bean="affiliation-mainReports"/>
+                        <ref bean="affiliation-publicationsReports"/>
+                        <ref bean="affiliation-rpPublicationsReports"/>
+                        <ref bean="affiliation-projectsReports"/>
+                        <ref bean="affiliation-rpProjectsReports"/>
+                    </list>
+                </entry>
 		        <entry key="item-Project">
 		            <list>
 		                <ref bean="project-mainReports"/>

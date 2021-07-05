@@ -23,7 +23,7 @@
       "dc_description_abstract" : "@dc.description.abstract@",
       "perucris_type_educacionSuperior" : "@perucris.type.educacionSuperior@",
       "dc_subject_ocde" : [
-             "@dc.subject.ocde@",
+             "@perucris.subject.ocde@",
           ],
       "perucris_description_internalNote" : "@perucris.description.internalNote@",
       "dc_type" : "@dc.type@",

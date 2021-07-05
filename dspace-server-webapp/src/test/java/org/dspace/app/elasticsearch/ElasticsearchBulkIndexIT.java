@@ -571,10 +571,10 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
     @Test
     public void crosswalkForOrgUnitJsonToBeSentToElasticsearchTest() throws Exception {
         context.turnOffAuthorisationSystem();
-//        try (FileInputStream file = new FileInputStream(testProps.get("test.orgunitCrosswalk").toString())) {
+        try (FileInputStream file = new FileInputStream(testProps.get("test.orgunitCrosswalk").toString())) {
 
-//            String json = IOUtils.toString(file, Charset.defaultCharset());
-//            String replacedJson = json.replace("{", "").trim();
+            String json = IOUtils.toString(file, Charset.defaultCharset());
+            String replacedJson = json.replace("{", "").trim();
 
             parentCommunity = CommunityBuilder.createCommunity(context)
                                               .withName("Parent Community")
@@ -587,9 +587,8 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
 
             List<String> generatedDocs = elasticsearchItemBuilder.convert(context, item);
             assertEquals(1, generatedDocs.size());
-//            assertTrue(generatedDocs.get(0).contains(replacedJson));
-
-//        }
+            assertTrue(generatedDocs.get(0).contains(replacedJson));
+        }
     }
 
     private Item createFullOrgunitItemForElasticsearch(Collection collection) {

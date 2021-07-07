@@ -24,6 +24,13 @@ public interface ElasticsearchIndexQueueDAO extends GenericDAO<ElasticsearchInde
 
     public ElasticsearchIndexQueue getFirstRecord(Context context) throws SQLException;
 
+    /**
+     * WARNING: This method deletes all records in the table : {ElasticsearchIndexQueue}
+     *          and it will not be possible to go back.
+     * 
+     * @param context
+     * @throws SQLException
+     */
     public void deleteAll(Context context) throws SQLException;
 
 }

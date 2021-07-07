@@ -45,7 +45,7 @@ public class ElasticsearchItemBuilder {
     private ElasticsearchIndexManager elasticsearchIndexManager;
 
     @Autowired
-    private ElasticsearchDenormaliser elasticsearchDenormaliser;
+    private ElasticsearchDenormalizer elasticsearchDenormaliser;
 
     public ElasticsearchItemBuilder(Map<String,ReferCrosswalk> entity2ReferCrosswalk) {
         this.entity2ReferCrosswalk = entity2ReferCrosswalk;
@@ -80,7 +80,7 @@ public class ElasticsearchItemBuilder {
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 try {
                     referCrosswalk.disseminate(context, item, out);
-                    return elasticsearchDenormaliser.denormalise(entityType, out.toString());
+                    return elasticsearchDenormaliser.denormalize(entityType, out.toString());
                 } catch (CrosswalkException | IOException | AuthorizeException e) {
                     log.error(e.getMessage());
                 }

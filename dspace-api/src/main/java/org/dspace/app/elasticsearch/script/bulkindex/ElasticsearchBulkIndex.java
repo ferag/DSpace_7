@@ -143,7 +143,7 @@ public class ElasticsearchBulkIndex
     }
 
     private void deleteIndex() {
-        int status = elasticsearchIndexProvider.checkIngex(index);
+        int status = elasticsearchIndexProvider.checkIndex(index);
         if (status == HttpStatus.SC_NOT_FOUND) {
             return;
         }

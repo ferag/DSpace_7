@@ -76,16 +76,14 @@ public class SendRecordsToElasticsearch
                 ElasticsearchIndexQueue record = elasticsearchQueueService.getFirstRecord(context);
                 if (Objects.nonNull(record)) {
                     if (record.getOperationType() == Event.DELETE) {
-                        elasticsearchProvider.processRecord(context, record, StringUtils.EMPTY);
+                        elasticsearchProvider.processRecord(context, record, Collections.emptyList());
                     } else {
                         docs = elasticsearchItemBuilder.convert(context, record);
                         if (docs.isEmpty()) {
                             handler.logError("It was not possible to convert the queueRecord with uuid: "
                                              + record.getID() + " and OperationType: " + record.getOperationType());
                         } else {
-                            for (String json : docs) {
-                                elasticsearchProvider.processRecord(context, record, json);
-                            }
+                            elasticsearchProvider.processRecord(context, record, docs);
                         }
                     }
                     if (recorHasNotBeenModified(record)) {

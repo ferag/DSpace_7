@@ -25,7 +25,7 @@ public class ElasticsearchIndexProvider {
     @Autowired
     private ElasticsearchConnector elasticsearchConnector;
 
-    public int checkIngex(String index) {
+    public int checkIndex(String index) {
         HttpResponse response = null;
         try {
             response = elasticsearchConnector.findIndex(index);

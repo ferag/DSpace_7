@@ -43,8 +43,10 @@ public class ElasticsearchIndexManager {
         }
     }
 
-    public ElasticsearchIndexManager(Map<String, String> map) {
-        this.entityType2Index = map;
+    public ElasticsearchIndexManager(Map<String, String> entityType2Index,
+                                     Map<String, ElasticsearchIndexTemplateValueGenerator> entityType2Generator) {
+        this.entityType2Index = entityType2Index;
+        this.entityType2Generator = entityType2Generator;
     }
 
     public boolean isSupportedEntityType(Item item) {

@@ -45,11 +45,6 @@ public class SendRecordsToElasticsearchScriptConfiguration<T extends SendRecords
     public Options getOptions() {
         if (options == null) {
             Options options = new Options();
-
-            options.addOption("s", "service", true, "Test");
-            options.getOption("s").setType(String.class);
-            options.getOption("s").setRequired(false);
-
             super.options = options;
         }
         return options;

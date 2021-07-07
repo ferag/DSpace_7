@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.io.IOUtils;
@@ -52,20 +54,20 @@ public class ElasticsearchProvider {
      * @throws IOException   if IO error
      * @throws SQLException  If there's a database problem
      */
-    public void processRecord(Context context, ElasticsearchIndexQueue record, String json)
+    public void processRecord(Context context, ElasticsearchIndexQueue record, List<String> jsons)
             throws IOException, SQLException {
         String index = getIndex(context, record);
         if (StringUtils.isBlank(index)) {
             throw new RuntimeException("Not found index for ElasticsearchIndexQueue with uuid: " + record.getId());
         }
         switch (record.getOperationType()) {
-            case Event.CREATE : addDocument(record, json, index);
+            case Event.CREATE : addDocument(record, jsons, index);
                 break;
             case Event.DELETE : deleteDocument(record, index);
                 break;
-            case Event.MODIFY : updateDocument(record, json, index);
+            case Event.MODIFY : updateDocument(record, jsons, index);
                 break;
-            case Event.MODIFY_METADATA : updateDocument(record, json, index);
+            case Event.MODIFY_METADATA : updateDocument(record, jsons, index);
                 break;
             default:
                 throw new RuntimeException("The operation type : " + record.getOperationType() +
@@ -73,43 +75,45 @@ public class ElasticsearchProvider {
         }
     }
 
-    private void addDocument(ElasticsearchIndexQueue record, String json, String index) throws IOException {
-        HttpResponse responce =  elasticsearchConnector.create(json, index, null);
-        int status = responce.getStatusLine().getStatusCode();
-        if (status != HttpStatus.SC_CREATED) {
-            throw new ElasticsearchException("It was not possible to CREATE document with uuid: " + record.getId() +
-                                       "  Elasticsearch returned status code : " + status);
+    private void addDocument(ElasticsearchIndexQueue record, List<String> jsons, String index) throws IOException {
+        for (String json : jsons) {
+            HttpResponse responce = elasticsearchConnector.create(json, index, StringUtils.EMPTY);
+            int status = responce.getStatusLine().getStatusCode();
+            if (status != HttpStatus.SC_CREATED) {
+                throw new ElasticsearchException("It was not possible to CREATE document with uuid: " + record.getId()
+                        + "  Elasticsearch returned status code : " + status);
+            }
         }
     }
 
-    private void updateDocument(ElasticsearchIndexQueue record, String json, String index) throws IOException {
-        String docID = getDocIdByField(index, record.getId().toString());
-        HttpResponse response = elasticsearchConnector.update(json, index, docID);
-        int status = response.getStatusLine().getStatusCode();
-        if (status != HttpStatus.SC_OK) {
-            throw new ElasticsearchException("It was not possible to UPDATE document with uuid: " + record.getId() +
-                                       "  Elasticsearch returned status code : " + status);
-        }
+    private void updateDocument(ElasticsearchIndexQueue record, List<String> jsons, String index) throws IOException {
+        deleteDocument(record, index);
+        addDocument(record, jsons, index);
     }
 
     private void deleteDocument(ElasticsearchIndexQueue record, String index) throws IOException {
-        String docID = getDocIdByField(index, record.getId().toString());
-        HttpResponse response = elasticsearchConnector.delete(index, docID);
-        int status = response.getStatusLine().getStatusCode();
-        if (status != HttpStatus.SC_OK) {
-            throw new ElasticsearchException("It was not possible to DELETE document with uuid: " + record.getId() +
-                                       "  Elasticsearch returned status code : " + status);
+        List<String> docIDs = getDocIdByField(index, record.getId().toString());
+        for (String docID : docIDs) {
+            HttpResponse response = elasticsearchConnector.delete(index, docID);
+            int status = response.getStatusLine().getStatusCode();
+            if (status != HttpStatus.SC_OK) {
+                throw new ElasticsearchException("It was not possible to DELETE document with record uuid: "
+                        + record.getId() + " and document id: " + docID
+                        + "  Elasticsearch returned status code : " + status);
+            }
         }
     }
 
     private String getIndex(Context context, ElasticsearchIndexQueue record) throws SQLException, IOException {
         if (record.getOperationType() == Event.DELETE) {
             for (String index : elasticsearchIndexManager.getEntityType2Index().values()) {
-                String docID = getDocIdByField(index, record.getId().toString());
-                HttpResponse responce = elasticsearchConnector.searchByIndexAndDoc(index, docID);
-                int status = responce.getStatusLine().getStatusCode();
-                if (status == HttpStatus.SC_OK) {
-                    return index;
+                List<String> docIDs = getDocIdByField(index, record.getId().toString());
+                if (!docIDs.isEmpty()) {
+                    HttpResponse responce = elasticsearchConnector.searchByIndexAndDoc(index, docIDs.get(0));
+                    int status = responce.getStatusLine().getStatusCode();
+                    if (status == HttpStatus.SC_OK) {
+                        return index;
+                    }
                 }
             }
         }
@@ -122,7 +126,7 @@ public class ElasticsearchProvider {
         return StringUtils.EMPTY;
     }
 
-    private String getDocIdByField(String index, String id) throws IOException {
+    private List<String> getDocIdByField(String index, String id) throws IOException {
         HttpResponse response = elasticsearchConnector.searchByFieldAndValue(index, "resourceId", id);
         int status = response.getStatusLine().getStatusCode();
         InputStream is = response.getEntity().getContent();
@@ -133,21 +137,22 @@ public class ElasticsearchProvider {
         return getDocumentIdFromResponse(is);
     }
 
-    private String getDocumentIdFromResponse(InputStream is) throws IOException {
+    private List<String> getDocumentIdFromResponse(InputStream is) throws IOException {
+        List<String> ids = new LinkedList<String>();
         JSONObject json = new JSONObject(IOUtils.toString(is, StandardCharsets.UTF_8));
         if (json.has("hits")) {
             json = new JSONObject(json.get("hits").toString());
             if (json.has("hits")) {
                 JSONArray array = json.getJSONArray("hits");
-                if (!array.isNull(0)) {
-                    json = new JSONObject(array.get(0).toString());
+                for (Object obj : array) {
+                    json = new JSONObject(obj.toString());
                     if (json.has("_id")) {
-                        return json.get("_id").toString();
+                        ids.add(json.get("_id").toString());
                     }
                 }
             }
         }
-        return StringUtils.EMPTY;
+        return ids;
     }
 
     public ElasticsearchConnector getElasticsearchConnector() {

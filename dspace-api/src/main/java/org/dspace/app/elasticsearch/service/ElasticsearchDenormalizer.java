@@ -22,11 +22,11 @@ import org.json.JSONObject;
  *
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
-public class ElasticsearchDenormaliser {
+public class ElasticsearchDenormalizer {
 
     private Map<String, List<String>> mapping;
 
-    public List<String> denormalise(String entityType, String json) {
+    public List<String> denormalize(String entityType, String json) {
         List<String> denormalisedJsons = new ArrayList<>();
         List<String> fields = mapping.get(entityType);
         if (Objects.isNull(fields) || fields.isEmpty()) {
@@ -36,7 +36,6 @@ public class ElasticsearchDenormaliser {
             JSONObject jsonObj = new JSONObject(json);
             if (jsonObj.has(field)) {
                 JSONArray array = jsonObj.getJSONArray(field);
-                jsonObj.remove(field);
                 if (denormalisedJsons.isEmpty()) {
                     denormaliseField(denormalisedJsons, field, jsonObj, array);
                 } else {

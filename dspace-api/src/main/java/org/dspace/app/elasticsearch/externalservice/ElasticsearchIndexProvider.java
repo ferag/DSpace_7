@@ -39,7 +39,7 @@ public class ElasticsearchIndexProvider {
     public boolean indexSingleItem(String index, Item item, String json) {
         HttpResponse response = null;
         try {
-            response = elasticsearchConnector.create(json, index, item.getID());
+            response = elasticsearchConnector.create(json, index, item.getID().toString());
         } catch (IOException e) {
             log.error("Can not indexing item with uuid: " + item.getID()  + " , caused by: " + e.getMessage());
             return false;

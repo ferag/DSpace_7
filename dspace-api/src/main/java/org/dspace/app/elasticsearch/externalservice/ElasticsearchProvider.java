@@ -7,9 +7,12 @@
  */
 package org.dspace.app.elasticsearch.externalservice;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.Objects;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -20,6 +23,8 @@ import org.dspace.content.Item;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.event.Event;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -69,7 +74,7 @@ public class ElasticsearchProvider {
     }
 
     private void addDocument(ElasticsearchIndexQueue record, String json, String index) throws IOException {
-        HttpResponse responce =  elasticsearchConnector.create(json, index, record.getId());
+        HttpResponse responce =  elasticsearchConnector.create(json, index, null);
         int status = responce.getStatusLine().getStatusCode();
         if (status != HttpStatus.SC_CREATED) {
             throw new ElasticsearchException("It was not possible to CREATE document with uuid: " + record.getId() +
@@ -78,7 +83,8 @@ public class ElasticsearchProvider {
     }
 
     private void updateDocument(ElasticsearchIndexQueue record, String json, String index) throws IOException {
-        HttpResponse response = elasticsearchConnector.update(json, index, record.getId());
+        String docID = getDocIdByField(index, record.getId().toString());
+        HttpResponse response = elasticsearchConnector.update(json, index, docID);
         int status = response.getStatusLine().getStatusCode();
         if (status != HttpStatus.SC_OK) {
             throw new ElasticsearchException("It was not possible to UPDATE document with uuid: " + record.getId() +
@@ -87,7 +93,8 @@ public class ElasticsearchProvider {
     }
 
     private void deleteDocument(ElasticsearchIndexQueue record, String index) throws IOException {
-        HttpResponse response = elasticsearchConnector.delete(index, record.getId());
+        String docID = getDocIdByField(index, record.getId().toString());
+        HttpResponse response = elasticsearchConnector.delete(index, docID);
         int status = response.getStatusLine().getStatusCode();
         if (status != HttpStatus.SC_OK) {
             throw new ElasticsearchException("It was not possible to DELETE document with uuid: " + record.getId() +
@@ -98,7 +105,8 @@ public class ElasticsearchProvider {
     private String getIndex(Context context, ElasticsearchIndexQueue record) throws SQLException, IOException {
         if (record.getOperationType() == Event.DELETE) {
             for (String index : elasticsearchIndexManager.getEntityType2Index().values()) {
-                HttpResponse responce = elasticsearchConnector.searchByIndexAndDoc(index, record.getId());
+                String docID = getDocIdByField(index, record.getId().toString());
+                HttpResponse responce = elasticsearchConnector.searchByIndexAndDoc(index, docID);
                 int status = responce.getStatusLine().getStatusCode();
                 if (status == HttpStatus.SC_OK) {
                     return index;
@@ -112,6 +120,42 @@ public class ElasticsearchProvider {
                          ? elasticsearchIndexManager.getEntityType2Index().get(entityType) : StringUtils.EMPTY;
         }
         return StringUtils.EMPTY;
+    }
+
+    private String getDocIdByField(String index, String id) throws IOException {
+        HttpResponse response = elasticsearchConnector.searchByFieldAndValue(index, "resourceId", id);
+        int status = response.getStatusLine().getStatusCode();
+        InputStream is = response.getEntity().getContent();
+        if (status != HttpStatus.SC_OK || Objects.isNull(is)) {
+            throw new ElasticsearchException("It was not possible to retrieve document by field 'resourceId'"
+                    + " and value: " + id + "  Elasticsearch returned status code : " + status);
+        }
+        return getDocumentIdFromResponse(is);
+    }
+
+    private String getDocumentIdFromResponse(InputStream is) throws IOException {
+        JSONObject json = new JSONObject(IOUtils.toString(is, StandardCharsets.UTF_8));
+        if (json.has("hits")) {
+            json = new JSONObject(json.get("hits").toString());
+            if (json.has("hits")) {
+                JSONArray array = json.getJSONArray("hits");
+                if (!array.isNull(0)) {
+                    json = new JSONObject(array.get(0).toString());
+                    if (json.has("_id")) {
+                        return json.get("_id").toString();
+                    }
+                }
+            }
+        }
+        return StringUtils.EMPTY;
+    }
+
+    public ElasticsearchConnector getElasticsearchConnector() {
+        return elasticsearchConnector;
+    }
+
+    public void setElasticsearchConnector(ElasticsearchConnector elasticsearchConnector) {
+        this.elasticsearchConnector = elasticsearchConnector;
     }
 
 }

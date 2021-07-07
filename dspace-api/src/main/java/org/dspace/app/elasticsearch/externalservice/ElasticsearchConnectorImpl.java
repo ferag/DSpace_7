@@ -12,9 +12,9 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang.StringUtils;
@@ -32,6 +32,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.TrustStrategy;
+import org.json.JSONObject;
 
 /**
  * This class deals with logic management to connect to the Elasticsearch external service
@@ -72,7 +73,16 @@ public class ElasticsearchConnectorImpl implements ElasticsearchConnector {
     }
 
     @Override
-    public HttpResponse create(String json, String index, UUID docId) throws IOException {
+    public HttpResponse create(String json, String index, String docId) throws IOException {
+        String url = this.url + index + "/_doc";
+        String id = StringUtils.isNotBlank(docId) ? StringUtils.EMPTY : "/" + docId;
+        Map<String, String> headerConfig = new HashMap<String, String>();
+        headerConfig.put("Content-type", "application/json; charset=UTF-8");
+        return httpPostRequest(url + id, headerConfig, json);
+    }
+
+    @Override
+    public HttpResponse update(String json, String index, String docId) throws IOException {
         String url = this.url + index + "/_doc/" + docId;
         Map<String, String> headerConfig = new HashMap<String, String>();
         headerConfig.put("Content-type", "application/json; charset=UTF-8");
@@ -80,20 +90,12 @@ public class ElasticsearchConnectorImpl implements ElasticsearchConnector {
     }
 
     @Override
-    public HttpResponse update(String json, String index, UUID docId) throws IOException {
-        String url = this.url + index + "/_doc/" + docId;
-        Map<String, String> headerConfig = new HashMap<String, String>();
-        headerConfig.put("Content-type", "application/json; charset=UTF-8");
-        return httpPostRequest(url, headerConfig, json);
-    }
-
-    @Override
-    public HttpResponse delete(String index, UUID docId) throws IOException {
+    public HttpResponse delete(String index, String docId) throws IOException {
         return httpDeleteRequest(this.url + index + "/_doc/" + docId);
     }
 
     @Override
-    public HttpResponse searchByIndexAndDoc(String index, UUID docId) throws IOException {
+    public HttpResponse searchByIndexAndDoc(String index, String docId) throws IOException {
         return httpGetRequest(this.url + index + "/_doc/" + docId);
     }
 
@@ -105,6 +107,13 @@ public class ElasticsearchConnectorImpl implements ElasticsearchConnector {
     @Override
     public HttpResponse findIndex(String index) throws IOException {
         return httpGetRequest(this.url + index);
+    }
+
+    @Override
+    public HttpResponse searchByFieldAndValue(String index, String field, String value) throws IOException {
+        JSONObject json = new JSONObject();
+        json.put("query", new JSONObject().put("match", new JSONObject().put(field,value)));
+        return httpPostRequest(this.url + index + "/_search", Collections.emptyMap(), json.toString());
     }
 
     private HttpResponse httpPostRequest(String url, Map<String, String> headerConfig, String entity)

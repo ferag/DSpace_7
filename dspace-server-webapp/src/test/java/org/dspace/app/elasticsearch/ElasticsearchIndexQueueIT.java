@@ -367,6 +367,8 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
             elasticsearchConnector.setHttpClient(mockHttpClient);
 
             BasicHttpResponse basicHttpResponse = new BasicHttpResponse(new ProtocolVersion("http", 1, 1), 200, "OK");
+            BasicHttpResponse basicHttpResponse2 = new BasicHttpResponse(
+                                                   new ProtocolVersion("http", 1, 1), 201, "Created");
 
             JSONArray jsonArray =  new JSONArray().put(new JSONObject().put("_id", "test-id"));
             JSONObject jsonObj = new JSONObject().put("hits", new JSONObject().put("hits", jsonArray));
@@ -376,7 +378,8 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
             basicHttpEntity.setChunked(true);
             basicHttpResponse.setEntity(basicHttpEntity);
 
-            when(mockHttpClient.execute(ArgumentMatchers.any())).thenReturn(basicHttpResponse);
+            when(mockHttpClient.execute(ArgumentMatchers.any())).thenReturn(
+                 basicHttpResponse, basicHttpResponse, basicHttpResponse2);
 
             parentCommunity = CommunityBuilder.createCommunity(context)
                                               .withName("Parent Community")
@@ -424,6 +427,12 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
             record = elasticsearchService.find(context, publicationItem.getID());
             assertNull(record);
 
+            java.util.Collection<Invocation> invocations = Mockito.mockingDetails(mockHttpClient).getInvocations();
+            assertEquals(3, invocations.size());
+            Iterator<Invocation> invocationIterator = invocations.iterator();
+            assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("POST https://localhost:9200/test_pub/_search HTTP"));
+            assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("DELETE https://localhost:9200/test_pub/_doc/test-id HTTP"));
+            assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("POST https://localhost:9200/test_pub/_doc HTTP"));
         } finally {
             elasticsearchConnector.setHttpClient(originHttpClient);
             restoreIndexes(originIndexes);

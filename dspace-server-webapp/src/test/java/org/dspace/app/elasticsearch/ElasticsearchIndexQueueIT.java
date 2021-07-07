@@ -33,7 +33,9 @@ import org.apache.http.HttpStatus;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
+import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
+import org.apache.tools.ant.filters.StringInputStream;
 import org.dspace.app.elasticsearch.consumer.ElasticsearchIndexManager;
 import org.dspace.app.elasticsearch.externalservice.ElasticsearchConnectorImpl;
 import org.dspace.app.elasticsearch.service.ElasticsearchIndexQueueService;
@@ -54,6 +56,8 @@ import org.dspace.content.Item;
 import org.dspace.event.Event;
 import org.dspace.services.ConfigurationService;
 import org.hamcrest.Matchers;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
@@ -362,11 +366,17 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
         try {
             elasticsearchConnector.setHttpClient(mockHttpClient);
 
-            HttpResponse response = mock(HttpResponse.class);
-            when(response.getStatusLine()).thenReturn(statusLine(new ProtocolVersion("http", 1, 1),
-                                                                     HttpStatus.SC_OK, "OK"));
+            BasicHttpResponse basicHttpResponse = new BasicHttpResponse(new ProtocolVersion("http", 1, 1), 200, "OK");
 
-            when(mockHttpClient.execute(ArgumentMatchers.any())).thenReturn(response);
+            JSONArray jsonArray =  new JSONArray().put(new JSONObject().put("_id", "test-id"));
+            JSONObject jsonObj = new JSONObject().put("hits", new JSONObject().put("hits", jsonArray));
+
+            BasicHttpEntity basicHttpEntity = new BasicHttpEntity();
+            basicHttpEntity.setContent(new StringInputStream(jsonObj.toString()));
+            basicHttpEntity.setChunked(true);
+            basicHttpResponse.setEntity(basicHttpEntity);
+
+            when(mockHttpClient.execute(ArgumentMatchers.any())).thenReturn(basicHttpResponse);
 
             parentCommunity = CommunityBuilder.createCommunity(context)
                                               .withName("Parent Community")
@@ -431,8 +441,22 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
             elasticsearchConnector.setHttpClient(mockHttpClient);
 
             BasicHttpResponse basicHttpResponse = new BasicHttpResponse(new ProtocolVersion("http", 1, 1), 200, "OK");
+            BasicHttpResponse basicHttpResponse2 = new BasicHttpResponse(new ProtocolVersion("http", 1, 1), 200, "OK");
 
-            when(mockHttpClient.execute(ArgumentMatchers.any())).thenReturn(basicHttpResponse);
+            JSONArray jsonArray =  new JSONArray().put(new JSONObject().put("_id", "test-id"));
+            JSONObject json = new JSONObject().put("hits", new JSONObject().put("hits", jsonArray));
+
+            BasicHttpEntity basicHttpEntity = new BasicHttpEntity();
+            basicHttpEntity.setContent(new StringInputStream(json.toString()));
+            basicHttpEntity.setChunked(true);
+            basicHttpResponse.setEntity(basicHttpEntity);
+
+            BasicHttpEntity basicHttpEntity2 = new BasicHttpEntity();
+            basicHttpEntity2.setContent(new StringInputStream(json.toString()));
+            basicHttpEntity2.setChunked(true);
+            basicHttpResponse2.setEntity(basicHttpEntity2);
+
+            when(mockHttpClient.execute(ArgumentMatchers.any())).thenReturn(basicHttpResponse, basicHttpResponse2);
 
             UUID uuid = UUID.randomUUID();
             ElasticsearchIndexQueueBuilder.createElasticsearchIndexQueue(context, uuid, Event.DELETE).build();
@@ -445,10 +469,12 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
             assertEquals(0, handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin));
 
             java.util.Collection<Invocation> invocations = Mockito.mockingDetails(mockHttpClient).getInvocations();
-            assertEquals(2, invocations.size());
+            assertEquals(4, invocations.size());
             Iterator<Invocation> invocationIterator = invocations.iterator();
-            assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("GET"));
-            assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("DELETE"));
+            assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("POST https://localhost:9200/test_pub/_search"));
+            assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("GET https://localhost:9200/test_pub/_doc/test-id"));
+            assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("POST https://localhost:9200/test_pub/_search"));
+            assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("DELETE https://localhost:9200/test_pub/_doc/test-id"));
 
             assertNull(elasticsearchService.find(context, uuid));
         } finally {
@@ -467,10 +493,26 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
         try {
             elasticsearchConnector.setHttpClient(mockHttpClient);
 
-            BasicHttpResponse basicHttpResponse = new BasicHttpResponse(
-                                                  new ProtocolVersion("http", 1, 1), 404, "Not Found");
+            BasicHttpResponse basicHttpResponse = new BasicHttpResponse(new ProtocolVersion("http", 1, 1), 200, "OK");
+            BasicHttpResponse basicHttpResponse2 = new BasicHttpResponse(
+                                                   new ProtocolVersion("http", 1, 1), 404, "Not Found");
+            BasicHttpResponse basicHttpResponse3 = new BasicHttpResponse(new ProtocolVersion("http", 1, 1), 200, "OK");
 
-            when(mockHttpClient.execute(ArgumentMatchers.any())).thenReturn(basicHttpResponse);
+            JSONArray jsonArray =  new JSONArray().put(new JSONObject().put("_id", "test-id"));
+            JSONObject json = new JSONObject().put("hits", new JSONObject().put("hits", jsonArray));
+
+            BasicHttpEntity basicHttpEntity = new BasicHttpEntity();
+            basicHttpEntity.setContent(new StringInputStream(json.toString()));
+            basicHttpEntity.setChunked(true);
+            basicHttpResponse.setEntity(basicHttpEntity);
+
+            BasicHttpEntity basicHttpEntity2 = new BasicHttpEntity();
+            basicHttpEntity2.setContent(new StringInputStream(json.toString()));
+            basicHttpEntity2.setChunked(true);
+            basicHttpResponse3.setEntity(basicHttpEntity2);
+
+            when(mockHttpClient.execute(ArgumentMatchers.any()))
+                .thenReturn(basicHttpResponse, basicHttpResponse2, basicHttpResponse3, basicHttpResponse2);
 
             UUID uuid = UUID.randomUUID();
             ElasticsearchIndexQueueBuilder.createElasticsearchIndexQueue(context, uuid, Event.DELETE).build();

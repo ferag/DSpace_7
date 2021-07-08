@@ -2876,7 +2876,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>Materia(s) OCDE</label>
@@ -2962,7 +2962,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>Materia(s) OCDE</label>
@@ -3048,7 +3048,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>Materia(s) OCDE</label>
@@ -4534,7 +4534,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE materia(s)</label>
@@ -4632,7 +4632,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE materia(s)</label>
@@ -5379,7 +5379,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Materia(s)</label>
@@ -5441,7 +5441,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Materia(s)</label>
@@ -5503,7 +5503,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Materia(s)</label>
@@ -7437,7 +7437,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Materia(s)</label>
@@ -7454,7 +7454,7 @@
           <dc-element>sti</dc-element>
           <dc-qualifier>actions</dc-qualifier>
           <label>Acciones de vigilancia tecnológica</label>
-          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -7464,7 +7464,7 @@
           <dc-element>sti</dc-element>
           <dc-qualifier>formalUnit</dc-qualifier>
           <label>Unidad formal de vigilancia tecnológica</label>
-          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -7474,7 +7474,7 @@
           <dc-element>sti</dc-element>
           <dc-qualifier>qualityCertified</dc-qualifier>
           <label>166006 o equivalente certificada</label>
-          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -7708,7 +7708,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Materia(s)</label>
@@ -7725,7 +7725,7 @@
           <dc-element>sti</dc-element>
           <dc-qualifier>actions</dc-qualifier>
           <label>Acciones de vigilancia tecnológica</label>
-          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -7735,7 +7735,7 @@
           <dc-element>sti</dc-element>
           <dc-qualifier>formalUnit</dc-qualifier>
           <label>Unidad formal de vigilancia tecnológica</label>
-          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -7745,7 +7745,7 @@
           <dc-element>sti</dc-element>
           <dc-qualifier>qualityCertified</dc-qualifier>
           <label>166006 o equivalente certificada</label>
-          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -8120,7 +8120,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Materia(s)</label>
@@ -8435,7 +8435,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Materia(s)</label>
@@ -8750,7 +8750,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>OCDE Materia(s)</label>
@@ -9375,7 +9375,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>Materia(s)</label>
@@ -9566,7 +9566,7 @@
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ocde</dc-qualifier>
           <label>Materia(s)</label>
@@ -11865,6 +11865,16 @@
       <pair>
         <displayed-value>Otro personal de apoyo</displayed-value>
         <stored-value>Other support staff</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="yesno" dc-term="yesno">
+      <pair>
+        <displayed-value>Sí</displayed-value>
+        <stored-value>yes</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>No</displayed-value>
+        <stored-value>no</stored-value>
       </pair>
     </value-pairs>
   </form-value-pairs>

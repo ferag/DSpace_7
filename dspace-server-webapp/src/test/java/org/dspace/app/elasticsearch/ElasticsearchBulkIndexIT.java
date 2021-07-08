@@ -106,7 +106,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
         String jsonItem2 = docsItem2.get(0);
 
         // the index does not exist
-        when(elasticsearchIndexProvider.checkIngex(testIndex)).thenReturn(HttpStatus.SC_NOT_FOUND);
+        when(elasticsearchIndexProvider.checkIndex(testIndex)).thenReturn(HttpStatus.SC_NOT_FOUND);
         when(elasticsearchIndexProvider.indexSingleItem(testIndex, item1, jsonItem1)).thenReturn(true);
         when(elasticsearchIndexProvider.indexSingleItem(testIndex, item2, jsonItem2)).thenReturn(true);
 
@@ -125,7 +125,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
             assertEquals(3, invocations.size());
             Invocation i = invocationIterator.next();
 
-            assertTrue(i.toString().startsWith("elasticsearchIndexProvider.checkIngex"));
+            assertTrue(i.toString().startsWith("elasticsearchIndexProvider.checkIndex"));
             assertEquals(1, i.getArguments().length);
             assertEquals(i.getArgument(0), testIndex);
 
@@ -177,7 +177,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
 
         String jsonItem1 = docsItem1.get(0);
 
-        when(elasticsearchIndexProvider.checkIngex(testIndex)).thenReturn(HttpStatus.SC_OK);
+        when(elasticsearchIndexProvider.checkIndex(testIndex)).thenReturn(HttpStatus.SC_OK);
         when(elasticsearchIndexProvider.deleteIndex(testIndex)).thenReturn(true);
         when(elasticsearchIndexProvider.indexSingleItem(testIndex, item1, jsonItem1)).thenReturn(true);
 
@@ -197,7 +197,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
             assertEquals(3, invocations.size());
 
             Invocation i = invocationIterator.next();
-            assertTrue(i.toString().startsWith("elasticsearchIndexProvider.checkIngex"));
+            assertTrue(i.toString().startsWith("elasticsearchIndexProvider.checkIndex"));
             assertEquals(1, i.getArguments().length);
             assertEquals(i.getArgument(0), testIndex);
 
@@ -251,7 +251,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
 
         String jsonItem1 = docsItem1.get(0);
 
-        when(elasticsearchIndexProvider.checkIngex(testIndex)).thenReturn(HttpStatus.SC_OK);
+        when(elasticsearchIndexProvider.checkIndex(testIndex)).thenReturn(HttpStatus.SC_OK);
         when(elasticsearchIndexProvider.deleteIndex(testIndex)).thenReturn(true);
         when(elasticsearchIndexProvider.indexSingleItem(testIndex, item1, jsonItem1)).thenReturn(true);
 
@@ -270,7 +270,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
             assertEquals(3, invocations.size());
 
             Invocation i = invocationIterator.next();
-            assertTrue(i.toString().startsWith("elasticsearchIndexProvider.checkIngex"));
+            assertTrue(i.toString().startsWith("elasticsearchIndexProvider.checkIndex"));
             assertEquals(1, i.getArguments().length);
             assertEquals(i.getArgument(0), testIndex);
 
@@ -314,7 +314,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
                    .withEntityType("Publication").build();
 
 
-        when(elasticsearchIndexProvider.checkIngex(testIndex)).thenReturn(HttpStatus.SC_OK);
+        when(elasticsearchIndexProvider.checkIndex(testIndex)).thenReturn(HttpStatus.SC_OK);
         when(elasticsearchIndexProvider.deleteIndex(testIndex)).thenReturn(false);
 
         context.restoreAuthSystemState();
@@ -335,7 +335,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
             assertEquals(2, invocations.size());
 
             Invocation i = invocationIterator.next();
-            assertTrue(i.toString().startsWith("elasticsearchIndexProvider.checkIngex"));
+            assertTrue(i.toString().startsWith("elasticsearchIndexProvider.checkIndex"));
             assertEquals(1, i.getArguments().length);
             assertEquals(i.getArgument(0), testIndex);
 
@@ -392,7 +392,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
         String jsonItem1 = docsItem1.get(0);
         String jsonItem2 = docsItem2.get(0);
 
-        when(elasticsearchIndexProvider.checkIngex(testIndex)).thenReturn(HttpStatus.SC_OK);
+        when(elasticsearchIndexProvider.checkIndex(testIndex)).thenReturn(HttpStatus.SC_OK);
         when(elasticsearchIndexProvider.deleteIndex(testIndex)).thenReturn(true);
         when(elasticsearchIndexProvider.indexSingleItem(testIndex, item1, jsonItem1)).thenReturn(false);
         when(elasticsearchIndexProvider.indexSingleItem(testIndex, item2, jsonItem2)).thenReturn(true);
@@ -413,7 +413,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
             assertEquals(6, invocations.size());
 
             Invocation i = invocationIterator.next();
-            assertTrue(i.toString().startsWith("elasticsearchIndexProvider.checkIngex"));
+            assertTrue(i.toString().startsWith("elasticsearchIndexProvider.checkIndex"));
             assertEquals(1, i.getArguments().length);
             assertEquals(i.getArgument(0), testIndex);
 

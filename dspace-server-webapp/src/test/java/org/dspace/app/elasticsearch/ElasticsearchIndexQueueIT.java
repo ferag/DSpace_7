@@ -478,10 +478,9 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
             assertEquals(0, handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin));
 
             java.util.Collection<Invocation> invocations = Mockito.mockingDetails(mockHttpClient).getInvocations();
-            assertEquals(4, invocations.size());
+            assertEquals(3, invocations.size());
             Iterator<Invocation> invocationIterator = invocations.iterator();
             assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("POST https://localhost:9200/test_pub/_search"));
-            assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("GET https://localhost:9200/test_pub/_doc/test-id"));
             assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("POST https://localhost:9200/test_pub/_search"));
             assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("DELETE https://localhost:9200/test_pub/_doc/test-id"));
 
@@ -502,10 +501,8 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
         try {
             elasticsearchConnector.setHttpClient(mockHttpClient);
 
-            BasicHttpResponse basicHttpResponse = new BasicHttpResponse(new ProtocolVersion("http", 1, 1), 200, "OK");
-            BasicHttpResponse basicHttpResponse2 = new BasicHttpResponse(
-                                                   new ProtocolVersion("http", 1, 1), 404, "Not Found");
-            BasicHttpResponse basicHttpResponse3 = new BasicHttpResponse(new ProtocolVersion("http", 1, 1), 200, "OK");
+            BasicHttpResponse basicHttpResponse = new BasicHttpResponse(
+                                                  new ProtocolVersion("http", 1, 1), 404, "Not Found");
 
             JSONArray jsonArray =  new JSONArray().put(new JSONObject().put("_id", "test-id"));
             JSONObject json = new JSONObject().put("hits", new JSONObject().put("hits", jsonArray));
@@ -515,13 +512,7 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
             basicHttpEntity.setChunked(true);
             basicHttpResponse.setEntity(basicHttpEntity);
 
-            BasicHttpEntity basicHttpEntity2 = new BasicHttpEntity();
-            basicHttpEntity2.setContent(new StringInputStream(json.toString()));
-            basicHttpEntity2.setChunked(true);
-            basicHttpResponse3.setEntity(basicHttpEntity2);
-
-            when(mockHttpClient.execute(ArgumentMatchers.any()))
-                .thenReturn(basicHttpResponse, basicHttpResponse2, basicHttpResponse3, basicHttpResponse2);
+            when(mockHttpClient.execute(ArgumentMatchers.any())).thenReturn(basicHttpResponse);
 
             UUID uuid = UUID.randomUUID();
             ElasticsearchIndexQueueBuilder.createElasticsearchIndexQueue(context, uuid, Event.DELETE).build();
@@ -534,8 +525,8 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
             assertEquals(0, handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin));
             Exception exception = handler.getException();
             assertNotNull(exception);
-            assertEquals("Not found index for ElasticsearchIndexQueue with uuid: " + uuid.toString(),
-                         exception.getMessage());
+            assertEquals("It was not possible to retrieve document by field 'resourceId' and value: "
+                         + uuid + "  Elasticsearch returned status code : 404", exception.getMessage());
         } finally {
             elasticsearchConnector.setHttpClient(originHttpClient);
             restoreIndexes(originIndexes);

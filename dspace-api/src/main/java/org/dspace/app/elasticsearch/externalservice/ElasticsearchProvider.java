@@ -109,11 +109,7 @@ public class ElasticsearchProvider {
             for (String index : elasticsearchIndexManager.getEntityType2Index().values()) {
                 List<String> docIDs = getDocIdByField(index, record.getId().toString());
                 if (!docIDs.isEmpty()) {
-                    HttpResponse responce = elasticsearchConnector.searchByIndexAndDoc(index, docIDs.get(0));
-                    int status = responce.getStatusLine().getStatusCode();
-                    if (status == HttpStatus.SC_OK) {
-                        return index;
-                    }
+                    return index;
                 }
             }
         }

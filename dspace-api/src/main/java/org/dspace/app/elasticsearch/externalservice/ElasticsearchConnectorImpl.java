@@ -75,28 +75,15 @@ public class ElasticsearchConnectorImpl implements ElasticsearchConnector {
     @Override
     public HttpResponse create(String json, String index, String docId) throws IOException {
         String url = this.url + index + "/_doc";
-        String id = StringUtils.isNotBlank(docId) ? StringUtils.EMPTY : "/" + docId;
+        String id = StringUtils.isBlank(docId) ? StringUtils.EMPTY : "/" + docId;
         Map<String, String> headerConfig = new HashMap<String, String>();
         headerConfig.put("Content-type", "application/json; charset=UTF-8");
         return httpPostRequest(url + id, headerConfig, json);
     }
 
     @Override
-    public HttpResponse update(String json, String index, String docId) throws IOException {
-        String url = this.url + index + "/_doc/" + docId;
-        Map<String, String> headerConfig = new HashMap<String, String>();
-        headerConfig.put("Content-type", "application/json; charset=UTF-8");
-        return httpPostRequest(url, headerConfig, json);
-    }
-
-    @Override
     public HttpResponse delete(String index, String docId) throws IOException {
         return httpDeleteRequest(this.url + index + "/_doc/" + docId);
-    }
-
-    @Override
-    public HttpResponse searchByIndexAndDoc(String index, String docId) throws IOException {
-        return httpGetRequest(this.url + index + "/_doc/" + docId);
     }
 
     @Override

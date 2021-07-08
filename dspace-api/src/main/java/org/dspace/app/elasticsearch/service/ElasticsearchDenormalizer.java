@@ -37,8 +37,12 @@ public class ElasticsearchDenormalizer {
             if (jsonObj.has(field)) {
                 JSONArray array = jsonObj.getJSONArray(field);
                 if (denormalisedJsons.isEmpty()) {
-                    denormaliseField(denormalisedJsons, field, jsonObj, array);
-                } else {
+                    if (array.length() == 0) {
+                        denormalisedJsons.add(jsonObj.toString());
+                    } else {
+                        denormaliseField(denormalisedJsons, field, jsonObj, array);
+                    }
+                }  else {
                     List<String> tempList = new ArrayList<String>();
                     for (String j : denormalisedJsons) {
                         JSONObject toWorkJson = new JSONObject(j);

@@ -27,6 +27,7 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.AbstractHttpEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClients;
@@ -78,6 +79,9 @@ public class ElasticsearchConnectorImpl implements ElasticsearchConnector {
         String id = StringUtils.isBlank(docId) ? StringUtils.EMPTY : "/" + docId;
         Map<String, String> headerConfig = new HashMap<String, String>();
         headerConfig.put("Content-type", "application/json; charset=UTF-8");
+        headerConfig.put("Connection", "keep-alive");
+        headerConfig.put("Accept", "*/*");
+        headerConfig.put("Accept-Encoding", "gzip, deflate, br");
         return httpPostRequest(url + id, headerConfig, json);
     }
 
@@ -113,7 +117,10 @@ public class ElasticsearchConnectorImpl implements ElasticsearchConnector {
                 }
             }
             if (StringUtils.isNotBlank(entity)) {
-                httpPost.setEntity(new StringEntity(entity));
+                AbstractHttpEntity httpEntity = new StringEntity(entity);
+                httpEntity.setChunked(true);
+                httpEntity.setContentType("application/json");
+                httpPost.setEntity(httpEntity);
             }
             return httpClient.execute(httpPost);
         } catch (Exception e) {

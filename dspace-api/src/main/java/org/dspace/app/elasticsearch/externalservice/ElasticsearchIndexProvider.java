@@ -8,6 +8,7 @@
 package org.dspace.app.elasticsearch.externalservice;
 import java.io.IOException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
@@ -39,7 +40,7 @@ public class ElasticsearchIndexProvider {
     public boolean indexSingleItem(String index, Item item, String json) {
         HttpResponse response = null;
         try {
-            response = elasticsearchConnector.create(json, index, item.getID().toString());
+            response = elasticsearchConnector.create(json, index, StringUtils.EMPTY);
         } catch (IOException e) {
             log.error("Can not indexing item with uuid: " + item.getID()  + " , caused by: " + e.getMessage());
             return false;

@@ -90,6 +90,7 @@ import org.dspace.content.service.RelationshipService;
 import org.dspace.discovery.SearchService;
 import org.dspace.discovery.SearchServiceException;
 import org.dspace.eperson.EPerson;
+import org.dspace.eperson.Group;
 import org.dspace.eperson.service.GroupService;
 import org.dspace.importer.external.ctidb.CtiDatabaseDao;
 import org.dspace.importer.external.ctidb.CtiDatabaseImportFacadeImpl;

@@ -198,7 +198,7 @@ public class ResearcherProfileServiceImpl implements ResearcherProfileService {
             throw new IllegalStateException("No collection found for researcher profiles");
         }
 
-        if (isItemWithAlreadyAnOwner(context, source.getPath())) {
+        if (source != null && isItemWithAlreadyAnOwner(context, source.getPath())) {
             throw new IllegalArgumentException("Item with provided uri has already an owner");
         }
 

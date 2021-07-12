@@ -10,7 +10,7 @@ import static org.dspace.app.launcher.ScriptLauncher.handleScript;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -22,7 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -60,8 +59,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
+import org.mockito.InOrder;
 import org.mockito.Mockito;
-import org.mockito.invocation.Invocation;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -427,12 +426,13 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
             record = elasticsearchService.find(context, publicationItem.getID());
             assertNull(record);
 
-            java.util.Collection<Invocation> invocations = Mockito.mockingDetails(mockHttpClient).getInvocations();
-            assertEquals(3, invocations.size());
-            Iterator<Invocation> invocationIterator = invocations.iterator();
-            assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("POST https://localhost:9200/test_pub/_search HTTP"));
-            assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("DELETE https://localhost:9200/test_pub/_doc/test-id HTTP"));
-            assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("POST https://localhost:9200/test_pub/_doc HTTP"));
+            InOrder inOrder = inOrder(mockHttpClient);
+            inOrder.verify(mockHttpClient).execute(ArgumentMatchers
+                   .argThat(a -> a.toString().startsWith("POST https://localhost:9200/test_pub/_search HTTP")));
+            inOrder.verify(mockHttpClient).execute(ArgumentMatchers
+                   .argThat(a -> a.toString().startsWith("DELETE https://localhost:9200/test_pub/_doc/test-id HTTP")));
+            inOrder.verify(mockHttpClient).execute(ArgumentMatchers
+                    .argThat(a -> a.toString().startsWith("POST https://localhost:9200/test_pub/_doc HTTP")));
         } finally {
             elasticsearchConnector.setHttpClient(originHttpClient);
             restoreIndexes(originIndexes);
@@ -477,12 +477,11 @@ public class ElasticsearchIndexQueueIT extends AbstractControllerIntegrationTest
 
             assertEquals(0, handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin));
 
-            java.util.Collection<Invocation> invocations = Mockito.mockingDetails(mockHttpClient).getInvocations();
-            assertEquals(3, invocations.size());
-            Iterator<Invocation> invocationIterator = invocations.iterator();
-            assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("POST https://localhost:9200/test_pub/_search"));
-            assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("POST https://localhost:9200/test_pub/_search"));
-            assertTrue(invocationIterator.next().getArgument(0).toString().startsWith("DELETE https://localhost:9200/test_pub/_doc/test-id"));
+            InOrder inOrder = inOrder(mockHttpClient);
+            inOrder.verify(mockHttpClient, Mockito.times(2)).execute(ArgumentMatchers
+                   .argThat(a -> a.toString().startsWith("POST https://localhost:9200/test_pub/_search")));
+            inOrder.verify(mockHttpClient).execute(ArgumentMatchers
+                   .argThat(a -> a.toString().startsWith("DELETE https://localhost:9200/test_pub/_doc/test-id")));
 
             assertNull(elasticsearchService.find(context, uuid));
         } finally {

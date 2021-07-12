@@ -7454,7 +7454,7 @@
           <dc-element>sti</dc-element>
           <dc-qualifier>actions</dc-qualifier>
           <label>Technological Surveillance Actions</label>
-          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -7464,7 +7464,7 @@
           <dc-element>sti</dc-element>
           <dc-qualifier>formalUnit</dc-qualifier>
           <label>Has formal technological surveillance unit</label>
-          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -7474,7 +7474,7 @@
           <dc-element>sti</dc-element>
           <dc-qualifier>qualityCertified</dc-qualifier>
           <label>166006 or equivalent certified</label>
-          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -7725,7 +7725,7 @@
           <dc-element>sti</dc-element>
           <dc-qualifier>actions</dc-qualifier>
           <label>Technological Surveillance Actions</label>
-          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -7735,7 +7735,7 @@
           <dc-element>sti</dc-element>
           <dc-qualifier>formalUnit</dc-qualifier>
           <label>Has formal technological surveillance unit</label>
-          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -7745,7 +7745,7 @@
           <dc-element>sti</dc-element>
           <dc-qualifier>qualityCertified</dc-qualifier>
           <label>166006 or equivalent certified</label>
-          <input-type value-pairs-name="truefalse">dropdown</input-type>
+          <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -11869,6 +11869,16 @@
       <pair>
         <displayed-value>Other support staff</displayed-value>
         <stored-value>Other support staff</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="yesno" dc-term="yesno">
+      <pair>
+        <displayed-value>Yes</displayed-value>
+        <stored-value>yes</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>No</displayed-value>
+        <stored-value>no</stored-value>
       </pair>
     </value-pairs>
   </form-value-pairs>

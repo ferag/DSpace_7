@@ -90,6 +90,7 @@ import org.dspace.content.service.RelationshipService;
 import org.dspace.discovery.SearchService;
 import org.dspace.discovery.SearchServiceException;
 import org.dspace.eperson.EPerson;
+import org.dspace.eperson.Group;
 import org.dspace.eperson.service.GroupService;
 import org.dspace.importer.external.ctidb.CtiDatabaseDao;
 import org.dspace.importer.external.ctidb.CtiDatabaseImportFacadeImpl;
@@ -166,6 +167,8 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
     private Collection cvPersonCollection;
 
+    private Group administrators;
+
     /**
      * Tests setup.
      */
@@ -183,9 +186,19 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
         parentCommunity = CommunityBuilder.createCommunity(context).withName("Parent Community").build();
 
         cvPersonCollection = CollectionBuilder.createCollection(context, parentCommunity).withName("Profile Collection")
-                .withEntityType("CvPerson").withSubmitterGroup(user).build();
+                .withEntityType("CvPerson")
+                .withSubmitterGroup(user)
+                .withTemplateItem().build();
 
         configurationService.setProperty("researcher-profile.collection.uuid", cvPersonCollection.getID().toString());
+
+        administrators = groupService.findByName(context, Group.ADMIN);
+
+        itemService.addMetadata(context, cvPersonCollection.getTemplateItem(), "cris", "policy",
+                                "group", null, administrators.getName());
+
+        configurationService.setProperty("researcher-profile.collection.uuid", cvPersonCollection.getID().toString());
+        configurationService.setProperty("claimable.entityType", "Person");
 
         context.setCurrentUser(user);
 
@@ -314,6 +327,8 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
                 .andExpect(jsonPath("$.type", is("item")))
                 .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", name, id.toString(), 0)))
                 .andExpect(jsonPath("$.metadata", matchMetadata("cris.sourceId", id, 0)))
+                                            .andExpect(jsonPath("$.metadata", matchMetadata("cris.policy.group", administrators.getName(),
+                                                                            UUIDUtils.toString(administrators.getID()), 0)))
                 .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)));
 
         getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", id)).andExpect(status().isOk())
@@ -348,6 +363,8 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
                 .andExpect(jsonPath("$.type", is("item")))
                 .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", name, id.toString(), 0)))
                 .andExpect(jsonPath("$.metadata", matchMetadata("cris.sourceId", id, 0)))
+                .andExpect(jsonPath("$.metadata", matchMetadata("cris.policy.group", administrators.getName(),
+                                                                            UUIDUtils.toString(administrators.getID()), 0)))
                 .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)));
 
         getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", id)).andExpect(status().isOk())

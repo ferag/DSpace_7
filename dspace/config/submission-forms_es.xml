@@ -7392,7 +7392,7 @@
           <dc-schema>perucris</dc-schema>
           <dc-element>type</dc-element>
           <dc-qualifier>educacionSuperior</dc-qualifier>
-          <label>Sunedu  Clasificación</label>
+          <label>Clasificación Sunedu (Obligatorio para instituciones de enseñanza superior)</label>
           <input-type value-pairs-name="sunedu_tipoInstitucion">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -7404,7 +7404,7 @@
           <dc-schema>perucris</dc-schema>
           <dc-element>type</dc-element>
           <dc-qualifier>ciiu</dc-qualifier>
-          <label>Industrial  Clasificación</label>
+          <label>CIIU - Clasificación Industrial Uniforme</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -7663,7 +7663,7 @@
           <dc-schema>perucris</dc-schema>
           <dc-element>type</dc-element>
           <dc-qualifier>educacionSuperior</dc-qualifier>
-          <label>Sunedu Clasificación</label>
+          <label>Clasificación Sunedu (Obligatorio para instituciones de enseñanza superior)</label>
           <input-type value-pairs-name="sunedu_tipoInstitucion">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -7675,7 +7675,7 @@
           <dc-schema>perucris</dc-schema>
           <dc-element>type</dc-element>
           <dc-qualifier>ciiu</dc-qualifier>
-          <label>Industrial Clasificación</label>
+          <label>CIIU - Clasificación Industrial Uniforme</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -8136,7 +8136,7 @@
           <dc-schema>perucris</dc-schema>
           <dc-element>type</dc-element>
           <dc-qualifier>ciiu</dc-qualifier>
-          <label>Clasificación industrial</label>
+          <label>CIIU - Clasificación Industrial Uniforme</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -8451,7 +8451,7 @@
           <dc-schema>perucris</dc-schema>
           <dc-element>type</dc-element>
           <dc-qualifier>ciiu</dc-qualifier>
-          <label>Clasificación industrial</label>
+          <label>CIIU - Clasificación Industrial Uniforme</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -8766,7 +8766,7 @@
           <dc-schema>perucris</dc-schema>
           <dc-element>type</dc-element>
           <dc-qualifier>ciiu</dc-qualifier>
-          <label>Clasificación industrial</label>
+          <label>CIIU - Clasificación Industrial Uniforme</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -10393,11 +10393,11 @@
         <stored-value>crossrefid</stored-value>
       </pair>
       <pair>
-        <displayed-value>Registro de organizaciones de investigación</displayed-value>
+        <displayed-value>ROR  - Registro de organizaciones de investigación</displayed-value>
         <stored-value>ror</stored-value>
       </pair>
       <pair>
-        <displayed-value>Identificador de nombre estándar internacional</displayed-value>
+        <displayed-value>ISNI - Identificador de nombres estándar internacional</displayed-value>
         <stored-value>isni</stored-value>
       </pair>
       <pair>

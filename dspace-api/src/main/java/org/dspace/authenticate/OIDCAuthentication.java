@@ -340,44 +340,44 @@ public class OIDCAuthentication implements AuthenticationMethod {
             String sub = document.read("$.sub", String.class);
             data.setSub(sub);
             try {
-                String pgcRole = document.read("$.attributes.pgc-role", String.class);
+                String pgcRole = document.read("$.pgc-role", String.class);
                 data.setPgcRole(pgcRole);
             } catch (Exception e) {
                 log.warn("Cannot find role in userInfo response");
                 return null;
             }
             try {
-                String reniecDni = document.read("$.attributes.reniec_dni", String.class);
+                String reniecDni = document.read("$.reniec_dni", String.class);
                 data.setReniecDni(reniecDni);
             } catch (Exception e) {
                 log.debug("Cannot find reniecDni in userInfo response");
             }
             try {
-                String orcid = document.read("$.attributes.orcid", String.class);
+                String orcid = document.read("$.orcid", String.class);
                 data.setOrcid(orcid);
             } catch (Exception e) {
                 log.debug("Cannot find orcid in userInfo response");
             }
             try {
-                String email = document.read("$.attributes.email", String.class);
+                String email = document.read("$.email", String.class);
                 data.setEmail(email);
             } catch (Exception e) {
                 log.debug("Cannot find email in userInfo response");
             }
             try {
-                String familyName = document.read("$.attributes.family_name", String.class);
+                String familyName = document.read("$.family_name", String.class);
                 data.setFamilyName(familyName);
             } catch (Exception e) {
                 log.debug("Cannot find familyName in userInfo response");
             }
             try {
-                String givenName = document.read("$.attributes.given_name", String.class);
+                String givenName = document.read("$.given_name", String.class);
                 data.setGivenName(givenName);
             } catch (Exception e) {
                 log.debug("Cannot find givenName in userInfo response");
             }
             try {
-                String birthDate = document.read("$.attributes.birthdate", String.class);
+                String birthDate = document.read("$.birthdate", String.class);
                 data.setBirthdate(birthDate);
             } catch (Exception e) {
                 log.debug("Cannot find birthDate in userInfo response");

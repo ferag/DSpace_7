@@ -13,6 +13,6 @@ To collection: ${params[1]}
 Your submission has been rejected
 
 Your submission has not been deleted.
-You can access it from your "My DSpace" page: ${params[2]}
+You can access it from page: ${params[2]}
 
 DSpace

@@ -11,6 +11,7 @@ import static org.dspace.content.MetadataSchemaEnum.EPERSON;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -289,4 +290,31 @@ public interface EPersonService extends DSpaceObjectService<EPerson>, DSpaceObje
      * @throws SQLException An exception that provides information on a database access error or other errors.
      */
     EPerson findByEid(Context context, MetadataField field, String eid) throws SQLException;
+
+    /**
+     * Find all the ePersons with the given role (institutional or not).
+     *
+     * @param context The relevant DSpace Context.
+     * @param group   the group that represent the role to search for
+     * @return the found ePersons
+     * @throws SQLException       An exception that provides information on a
+     *                            database access error or other errors.
+     */
+    public Iterator<EPerson> findByRole(Context context, Group group) throws SQLException;
+
+    /**
+     * Find all the ePersons in the archive with a given authority key value in the
+     * indicated metadata field.
+     *
+     * @param context   DSpace context object
+     * @param schema    metadata field schema
+     * @param element   metadata field element
+     * @param qualifier metadata field qualifier
+     * @param value     the value of authority key to look for
+     * @return an iterator over the ePersons matching that authority value
+     * @throws SQLException       if database error
+     * @throws AuthorizeException if authorization error
+     */
+    public Iterator<EPerson> findByAuthorityValue(Context context, String schema, String element, String qualifier,
+        String value) throws SQLException, AuthorizeException;
 }

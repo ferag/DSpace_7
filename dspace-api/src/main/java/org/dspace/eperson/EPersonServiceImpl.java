@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.codec.DecoderException;
+import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
@@ -32,6 +33,7 @@ import org.dspace.authorize.service.ResourcePolicyService;
 import org.dspace.content.DSpaceObjectServiceImpl;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
+import org.dspace.content.MetadataSchema;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
@@ -598,4 +600,39 @@ public class EPersonServiceImpl extends DSpaceObjectServiceImpl<EPerson> impleme
         }
         return map.values().stream().findFirst().orElse(null);
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Iterator<EPerson> findByRole(Context context, Group group) throws SQLException {
+        GroupType groupType = groupService.getGroupType(group);
+        String groupId = group.getID().toString();
+        switch (groupType) {
+            case INSTITUTIONAL:
+                return findByAuthorityValue(context, "perucris", "eperson", "institutional-role", groupId);
+            case ROLE:
+                return findByAuthorityValue(context, "perucris", "eperson", "role", groupId);
+            case SCOPED:
+                return findByAuthorityValue(context, "perucris", "eperson", "institutional-scoped-role", groupId);
+            default:
+                return IteratorUtils.emptyIterator();
+
+        }
+    }
+
+    @Override
+    public Iterator<EPerson> findByAuthorityValue(Context context, String schema, String element, String qualifier,
+        String value) throws SQLException {
+        MetadataSchema mds = metadataSchemaService.find(context, schema);
+        if (mds == null) {
+            throw new IllegalArgumentException("No such metadata schema: " + schema);
+        }
+        MetadataField mdf = metadataFieldService.findByElement(context, mds, element, qualifier);
+        if (mdf == null) {
+            throw new IllegalArgumentException(
+                "No such metadata field: schema=" + schema + ", element=" + element + ", qualifier=" + qualifier);
+        }
+
+        return ePersonDAO.findByAuthorityValue(context, mdf, value);
+    }
+
 }

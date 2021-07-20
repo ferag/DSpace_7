@@ -3363,6 +3363,145 @@ public class GroupRestRepositoryIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    public void testGetAllMembersWithRole() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Group group = createGroup("group");
+        Group subGroup = createGroup("subGroup", group, GroupType.ROLE);
+        Group anotherGroup = createGroup("anotherGroup");
+
+        CollectionBuilder.createCollection(context, parentCommunity)
+            .withWorkflowGroup(1, group)
+            .build();
+
+        createEPerson("first@user.it", group);
+
+        EPersonBuilder.createEPerson(context)
+            .withEmail("second@user.it")
+            .withPassword(password)
+            .withMetadata("perucris", "eperson", "role", "subGroup", null, subGroup.getID().toString(), 600)
+            .build();
+
+        EPersonBuilder.createEPerson(context)
+            .withEmail("third@user.it")
+            .withPassword(password)
+            .withMetadata("perucris", "eperson", "role", "subGroup", null, subGroup.getID().toString(), 600)
+            .build();
+
+        createEPerson("another@user.it", anotherGroup);
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        getClient(authToken).perform(get("/api/eperson/groups/" + group.getID()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$._links.allMembers.href", containsString("groups/" + group.getID() + "/allMembers")));
+
+        getClient(authToken).perform(get("/api/eperson/groups/" + group.getID() + "/allMembers"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.allMembers", hasSize(3)))
+            .andExpect(jsonPath("$._embedded.allMembers", hasItem(matchEPersonOnEmail("first@user.it"))))
+            .andExpect(jsonPath("$._embedded.allMembers", hasItem(matchEPersonOnEmail("second@user.it"))))
+            .andExpect(jsonPath("$._embedded.allMembers", hasItem(matchEPersonOnEmail("third@user.it"))));
+    }
+
+    @Test
+    public void testGetAllMembersWithInstitutionalRole() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Group group = createGroup("group");
+        Group subGroup = createGroup("subGroup", group, GroupType.INSTITUTIONAL);
+        Group anotherGroup = createGroup("anotherGroup");
+
+        CollectionBuilder.createCollection(context, parentCommunity)
+            .withWorkflowGroup(1, group)
+            .build();
+
+        createEPerson("first@user.it", group);
+
+        EPersonBuilder.createEPerson(context)
+            .withEmail("second@user.it")
+            .withPassword(password)
+            .withMetadata("perucris", "eperson", "institutional-role", "subGroup", null, subGroup.getID().toString(),
+                600)
+            .build();
+
+        EPersonBuilder.createEPerson(context)
+            .withEmail("third@user.it")
+            .withPassword(password)
+            .withMetadata("perucris", "eperson", "institutional-role", "subGroup", null, subGroup.getID().toString(),
+                600)
+            .build();
+
+        createEPerson("another@user.it", anotherGroup);
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        getClient(authToken).perform(get("/api/eperson/groups/" + group.getID()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$._links.allMembers.href", containsString("groups/" + group.getID() + "/allMembers")));
+
+        getClient(authToken).perform(get("/api/eperson/groups/" + group.getID() + "/allMembers"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.allMembers", hasSize(3)))
+            .andExpect(jsonPath("$._embedded.allMembers", hasItem(matchEPersonOnEmail("first@user.it"))))
+            .andExpect(jsonPath("$._embedded.allMembers", hasItem(matchEPersonOnEmail("second@user.it"))))
+            .andExpect(jsonPath("$._embedded.allMembers", hasItem(matchEPersonOnEmail("third@user.it"))));
+    }
+
+    @Test
+    public void testGetAllMembersWithInstitutionalScopedRole() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Group group = createGroup("group");
+        Group subGroup = createGroup("subGroup", group, GroupType.SCOPED);
+        Group anotherGroup = createGroup("anotherGroup");
+
+        CollectionBuilder.createCollection(context, parentCommunity)
+            .withWorkflowGroup(1, group)
+            .build();
+
+        createEPerson("first@user.it", group);
+
+        EPersonBuilder.createEPerson(context)
+            .withEmail("second@user.it")
+            .withPassword(password)
+            .withMetadata("perucris", "eperson", "institutional-scoped-role", "subGroup", null,
+                subGroup.getID().toString(), 600)
+            .build();
+
+        EPersonBuilder.createEPerson(context)
+            .withEmail("third@user.it")
+            .withPassword(password)
+            .withMetadata("perucris", "eperson", "institutional-scoped-role", "subGroup", null,
+                subGroup.getID().toString(), 600)
+            .build();
+
+        createEPerson("another@user.it", anotherGroup);
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        getClient(authToken).perform(get("/api/eperson/groups/" + group.getID()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$._links.allMembers.href", containsString("groups/" + group.getID() + "/allMembers")));
+
+        getClient(authToken).perform(get("/api/eperson/groups/" + group.getID() + "/allMembers"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.allMembers", hasSize(3)))
+            .andExpect(jsonPath("$._embedded.allMembers", hasItem(matchEPersonOnEmail("first@user.it"))))
+            .andExpect(jsonPath("$._embedded.allMembers", hasItem(matchEPersonOnEmail("second@user.it"))))
+            .andExpect(jsonPath("$._embedded.allMembers", hasItem(matchEPersonOnEmail("third@user.it"))));
+    }
+
+    @Test
     public void testFindWorkflowGroupWithAdmin() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -3544,6 +3683,10 @@ public class GroupRestRepositoryIT extends AbstractControllerIntegrationTest {
 
     private Group createGroup(String name, Group parent) {
         return GroupBuilder.createGroup(context).withName(name).withParent(parent).build();
+    }
+
+    private Group createGroup(String name, Group parent, GroupType type) {
+        return GroupBuilder.createGroup(context).withName(name).withParent(parent).withType(type).build();
     }
 
     private EPerson createEPerson(String email, Group group) {

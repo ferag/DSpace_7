@@ -43,7 +43,7 @@ public class MetadataValueDTO {
         value = metadataValue.getValue();
         authority = metadataValue.getAuthority();
         confidence = metadataValue.getConfidence();
-        securityLevel = metadataValue.getSecurity_level();
+        securityLevel = metadataValue.getSecurityLevel();
     }
 
     public MetadataValueDTO() {

@@ -792,6 +792,23 @@
             </modules>
         </profile>
 
+
+        <!--
+   Builds PGC Api extension for DSpace
+-->
+        <profile>
+            <id>dspace-pgc-api</id>
+            <activation>
+                <file>
+                    <exists>dspace-pgc-api/pom.xml</exists>
+                </file>
+            </activation>
+            <modules>
+                <module>dspace-pgc-api</module>
+            </modules>
+        </profile>
+
+
         <!--
              Builds RDF API and Data Provider extension for DSpace
         -->
@@ -1008,6 +1025,11 @@
             <dependency>
                 <groupId>org.dspace</groupId>
                 <artifactId>dspace-oai</artifactId>
+                <version>cris-2021.01.01-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dspace</groupId>
+                <artifactId>dspace-pgc-api</artifactId>
                 <version>cris-2021.01.01-SNAPSHOT</version>
             </dependency>
             <dependency>

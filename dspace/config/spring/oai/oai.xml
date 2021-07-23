@@ -22,6 +22,14 @@
         <property name="generator" value="cerif-xml"/>
         <property name="fieldName" value="openaire"/>
     </bean>
+    <bean id="xoaiPgcCerifGenerator" class="org.dspace.xoai.app.XOAICerifItemCompilePlugin">
+        <property name="generator" value="perucris-cerif-xml"/>
+        <property name="fieldName" value="pgc-openaire"/>
+    </bean>
+    <bean id="xoaiPgcCerifRestrictedGenerator" class="org.dspace.xoai.app.XOAICerifItemCompilePlugin">
+        <property name="generator" value="perucris-restricted-cerif-xml"/>
+        <property name="fieldName" value="pgc-openaire-restricted"/>
+    </bean>
 
 	<!-- Additional item.compile plugin to enrich field with information about
 		Creative Commons License metadata -->

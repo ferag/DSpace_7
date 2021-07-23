@@ -643,8 +643,8 @@
                 <xsl:with-param name="value" select="$rightsValue"/>
             </xsl:call-template>
         </xsl:variable>
-        <!-- We are checking to ensure that only values ending in "access" can be used as datacite:rights. 
-        This is a valid solution as we pre-normalize dc.rights values in openaire4.xsl to end in the term 
+        <!-- We are checking to ensure that only values ending in "access" can be used as datacite:rights.
+        This is a valid solution as we pre-normalize dc.rights values in openaire4.xsl to end in the term
         "access" according to COAR Controlled Vocabulary -->
         <xsl:if test="ends-with($lc_rightsValue,'access')">
             <datacite:rights>
@@ -1648,7 +1648,7 @@
     <xsl:variable name="ccstart">
         <xsl:value-of select="doc:metadata/doc:element[@name='dc']/doc:element[@name='date']/doc:element[@name='issued']/doc:element/doc:field[@name='value']/text()"/>
     </xsl:variable>
-    
+
     <xsl:template
         match="doc:element[@name='others']/doc:element[@name='cc']"
         mode="oaire">

@@ -10,6 +10,7 @@ package org.dspace.xoai.app;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.Objects;
 
 import com.lyncode.xoai.dataprovider.xml.xoai.Element;
 import com.lyncode.xoai.dataprovider.xml.xoai.Metadata;
@@ -72,14 +73,17 @@ public class XOAICerifItemCompilePlugin implements XOAIExtensionItemCompilePlugi
                 List<Element> elementList = metadata.getElement();
                 elementList.add(ItemUtils.create("cerif"));
                 Element cerif = ItemUtils.getElement(elementList, "cerif");
-                assert cerif != null;
+                if (Objects.isNull(cerif)) {
+                    elementList.add(ItemUtils.create("cerif"));
+                    cerif = ItemUtils.getElement(elementList, "cerif");
+                }
                 Element fieldname = ItemUtils.create(fieldName);
                 cerif.getElement().add(fieldname);
                 Element none = ItemUtils.create("none");
                 fieldname.getElement().add(none);
-                String xml_presentation = out.toString();
-                String toWrite = String.format("<![CDATA[%s]]>", xml_presentation);
-                none.getField().add(ItemUtils.createValue("value", toWrite ));
+                String xmlPresentation = out.toString();
+                String toWrite = xmlPresentation.replace("\n", "");
+                none.getField().add(ItemUtils.createValue("value", toWrite));
                 none.getField().add(ItemUtils.createValue("authority", ""));
                 none.getField().add(ItemUtils.createValue("confidence", "-1"));
                 return metadata;

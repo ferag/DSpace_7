@@ -9,7 +9,7 @@
 				   xmlns:dc="http://purl.org/dc/elements/1.1/"
 				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 				   xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
-			<xsl:for-each select="doc:metadata/doc:element[@name='cerif']/doc:element[@name='openaire']/doc:element[@name='none']/doc:field[@name='value']">
+			<xsl:for-each select="doc:metadata/doc:element[@name='cerif']/doc:element[@name='pgc-openaire']/doc:element[@name='none']/doc:field[@name='value']">
 				<xsl:value-of select="." disable-output-escaping="yes"/>
 			</xsl:for-each>
 		</oai_dc:dc>

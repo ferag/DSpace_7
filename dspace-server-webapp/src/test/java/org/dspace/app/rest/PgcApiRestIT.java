@@ -356,8 +356,7 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
             metadata.write(xmlContext);
             xmlContext.getWriter().flush();
             xmlContext.getWriter().close();
-            doc.addField("item.compile", out.toString().replace("&lt;", "<")
-                    .replace("&gt;", ">").replace("\n", ""));
+            doc.addField("item.compile", out.toString());
             oaiSolrServer.add(doc);
             oaiSolrServer.commit();
         } catch (SolrServerException | IOException | SQLException | XMLStreamException |

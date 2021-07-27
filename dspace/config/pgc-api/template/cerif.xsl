@@ -23,7 +23,7 @@
                 <size><xsl:value-of select="$size"/></size>
                 <resultsInPage><xsl:value-of select="$resultsInPage"/></resultsInPage>
                 <totalResults><xsl:value-of select="$totalResults"/></totalResults>
-                <query><xsl:value-of select="$searchQuery" disable-output-escaping="yes"/></query>
+                <query><xsl:value-of select="$searchQuery"/></query>
             </Header>
             <Payload>
                 <xsl:element name="Cerif"

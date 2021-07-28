@@ -9,6 +9,7 @@ package org.dspace.app.rest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -62,6 +63,11 @@ public class RelationshipsPositionIndexingIT extends AbstractEntityIntegrationTe
     private Item publication2;
     private Item publication3;
     private Item publication4;
+    private Item project1;
+    private Item project2;
+
+    private RelationshipType selectedResearchOutputByAuthor;
+    private RelationshipType selectedResearchOutputByProject;
 
     private RelationshipType selectedResearchOutput;
 
@@ -79,6 +85,7 @@ public class RelationshipsPositionIndexingIT extends AbstractEntityIntegrationTe
         super.setUp();
         context.turnOffAuthorisationSystem();
         final EntityType personEntity = getEntityType("Person");
+        final EntityType projectEntity = getEntityType("Project");
 
         parentCommunity = CommunityBuilder.createCommunity(context)
                                           .withName("Parent Community")
@@ -98,6 +105,10 @@ public class RelationshipsPositionIndexingIT extends AbstractEntityIntegrationTe
         final Collection patentCollection = CollectionBuilder.createCollection(context, childCommunity)
                                                              .withEntityType("Patent")
                                                              .withName("Patent").build();
+
+        final Collection projectCollection = CollectionBuilder.createCollection(context, childCommunity)
+                                                             .withEntityType("Project")
+                                                             .withName("Projects").build();
 
         author1 = ItemBuilder.createItem(context, personCollection)
                              .withTitle("Author1")
@@ -141,7 +152,15 @@ public class RelationshipsPositionIndexingIT extends AbstractEntityIntegrationTe
                                   .withIssueDate("2017-08-01")
                                   .build();
 
-        selectedResearchOutput = RelationshipTypeBuilder
+        project1 = ItemBuilder.createItem(context, projectCollection)
+                                  .withTitle("Project 1")
+                                  .build();
+
+        project2 = ItemBuilder.createItem(context, projectCollection)
+                              .withTitle("Project 2")
+                              .build();
+
+        selectedResearchOutputByAuthor = RelationshipTypeBuilder
                                      .createRelationshipTypeBuilder(
                                          context,
                                          null,
@@ -150,6 +169,16 @@ public class RelationshipsPositionIndexingIT extends AbstractEntityIntegrationTe
                                          "hasSelectedResearchoutputs",
                                          0, null,
                                          0, null).build();
+
+        selectedResearchOutputByProject = RelationshipTypeBuilder
+                                             .createRelationshipTypeBuilder(
+                                                 context,
+                                                 null,
+                                                 projectEntity,
+                                                 "isResearchoutputsSelectedFor",
+                                                 "hasSelectedResearchoutputs",
+                                                 0, null,
+                                                 0, null).build();
 
         context.restoreAuthSystemState();
     }
@@ -168,29 +197,34 @@ public class RelationshipsPositionIndexingIT extends AbstractEntityIntegrationTe
         context.turnOffAuthorisationSystem();
         final Relationship author1ToPublication1 =
             RelationshipBuilder.createRelationshipBuilder(context, publication1,
-                                                          author1, selectedResearchOutput, -1, -1)
+                                                          author1, selectedResearchOutputByAuthor, -1, -1)
                                .build();
         final Relationship author2ToPublication1 =
-            RelationshipBuilder.createRelationshipBuilder(context, publication1, author2, selectedResearchOutput,
+            RelationshipBuilder.createRelationshipBuilder(context, publication1, author2,
+                                                          selectedResearchOutputByAuthor,
                                                           -1, -1)
                                .build();
 
         final Relationship author3ToPublication1 =
-            RelationshipBuilder.createRelationshipBuilder(context, publication1, author3, selectedResearchOutput ,
+            RelationshipBuilder.createRelationshipBuilder(context, publication1, author3,
+                                                          selectedResearchOutputByAuthor,
                                                           -1, -1)
                                .build();
 
         final Relationship author1ToPublication2 =
-            RelationshipBuilder.createRelationshipBuilder(context, publication2, author1, selectedResearchOutput,
+            RelationshipBuilder.createRelationshipBuilder(context, publication2, author1,
+                                                          selectedResearchOutputByAuthor,
                                                           -1, -1)
                                .build();
         final Relationship author1ToPublication3 =
-            RelationshipBuilder.createRelationshipBuilder(context, publication3, author1, selectedResearchOutput,
+            RelationshipBuilder.createRelationshipBuilder(context, publication3, author1,
+                                                          selectedResearchOutputByAuthor,
                                                           -1, -1)
                                .build();
 
         final Relationship author2ToPublication4 =
-            RelationshipBuilder.createRelationshipBuilder(context, publication4, author2, selectedResearchOutput,
+            RelationshipBuilder.createRelationshipBuilder(context, publication4, author2,
+                                                          selectedResearchOutputByAuthor,
                                                           -1, -1)
                                .build();
         context.restoreAuthSystemState();
@@ -329,12 +363,14 @@ public class RelationshipsPositionIndexingIT extends AbstractEntityIntegrationTe
         assertThat(queryResponse.getResults().get(0).getFieldValues("relation.isResearchoutputsSelectedFor"),
                    containsInAnyOrder(
                        UUIDUtils.toString(author2.getID()),
+                       UUIDUtils.toString(author2.getID()),
                        UUIDUtils.toString(author3.getID())
                                      ));
 
         queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(publication2.getID()));
         assertThat(queryResponse.getResults().get(0).getFieldValues("relation.isResearchoutputsSelectedFor"),
                    containsInAnyOrder(
+                       UUIDUtils.toString(author1.getID()),
                        UUIDUtils.toString(author1.getID())
                                      ));
 
@@ -363,7 +399,8 @@ public class RelationshipsPositionIndexingIT extends AbstractEntityIntegrationTe
         context.turnOffAuthorisationSystem();
 
         final Relationship author1ToPublication4 =
-            RelationshipBuilder.createRelationshipBuilder(context, publication4, author1, selectedResearchOutput,
+            RelationshipBuilder.createRelationshipBuilder(context, publication4, author1,
+                                                          selectedResearchOutputByAuthor,
                                                           -1, -1)
             .build();
         context.restoreAuthSystemState();
@@ -403,8 +440,426 @@ public class RelationshipsPositionIndexingIT extends AbstractEntityIntegrationTe
                        UUIDUtils.toString(author1.getID())
                                      ));
 
+        configurationService.setProperty("relationship.places.onlyright", "");
+    }
+
+    /**
+     * Test to verify scenario when an item is in a relation of the same name
+     * with different entities (i.e. a Publication selected from both a couple of researchers
+     * and a Project)
+     */
+    @Test
+    public void sameItemRelatedToDifferentEntityTypesItems() throws Exception {
+
+        configurationService.setProperty("relationship.places.onlyleft", "");
         configurationService.setProperty("relationship.places.onlyright",
-                                         "");
+                                         "null::Person::isResearchoutputsSelectedFor::hasSelectedResearchoutputs");
+        configurationService.addPropertyValue("relationship.places.onlyright",
+                                         "null::Project::isResearchoutputsSelectedFor::hasSelectedResearchoutputs");
+        context.turnOffAuthorisationSystem();
+
+        final Relationship author1ToPublication1 =
+            RelationshipBuilder.createRelationshipBuilder(context, publication1,
+                                                          author1, selectedResearchOutputByAuthor, -1, -1)
+                               .build();
+
+        final Relationship author2ToPublication1 =
+            RelationshipBuilder.createRelationshipBuilder(context, publication1,
+                                                          author2, selectedResearchOutputByAuthor, -1, -1)
+                               .build();
+
+        final Relationship author2ToPublication2 =
+            RelationshipBuilder.createRelationshipBuilder(context, publication2,
+                                                          author2, selectedResearchOutputByAuthor, -1, -1)
+                               .build();
+
+        final Relationship project1ToPublication1 =
+            RelationshipBuilder.createRelationshipBuilder(context, publication1,
+                                                          project1, selectedResearchOutputByProject, -1, -1)
+                               .build();
+
+        final Relationship project1ToPublication2 =
+            RelationshipBuilder.createRelationshipBuilder(context, publication2,
+                                                          project1, selectedResearchOutputByProject, -1, -1)
+                               .build();
+
+        final Relationship project2ToPublication1 =
+            RelationshipBuilder.createRelationshipBuilder(context, publication1,
+                                                          project2, selectedResearchOutputByProject, -1, -1)
+                               .build();
+
+        context.restoreAuthSystemState();
+
+        QueryResponse queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(publication1.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.isResearchoutputsSelectedFor"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(author1.getID()),
+                       UUIDUtils.toString(author2.getID()),
+                       UUIDUtils.toString(author2.getID()),
+                       UUIDUtils.toString(project1.getID()),
+                       UUIDUtils.toString(project1.getID()),
+                       UUIDUtils.toString(project2.getID())
+                                     ));
+
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(publication2.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.isResearchoutputsSelectedFor"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(author2.getID()),
+                       UUIDUtils.toString(project1.getID())
+                                     ));
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(author1.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID())
+                                     ));
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(author2.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID()),
+                       UUIDUtils.toString(publication2.getID())
+                                     ));
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(project1.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID()),
+                       UUIDUtils.toString(publication2.getID())
+                                     ));
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(project2.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID())
+                                     ));
+
+        queryResponse = performQuery("*:*",
+                                     "relation.isResearchoutputsSelectedFor:" + UUIDUtils.toString(author1.getID()));
+
+        assertThat(queryResponse.getResults().size(), is(1));
+
+        queryResponse = performQuery("*:*",
+                                     "relation.isResearchoutputsSelectedFor:" + UUIDUtils.toString(author2.getID()));
+
+        assertThat(queryResponse.getResults().size(), is(2));
+
+        queryResponse = performQuery("*:*",
+                                     "relation.isResearchoutputsSelectedFor:" + UUIDUtils.toString(project1.getID()));
+
+        assertThat(queryResponse.getResults().size(), is(2));
+
+        queryResponse = performQuery("*:*",
+                                     "relation.isResearchoutputsSelectedFor:" + UUIDUtils.toString(project2.getID()));
+
+        assertThat(queryResponse.getResults().size(), is(1));
+
+        JsonObject contentObj = new JsonObject();
+        contentObj.addProperty("rightPlace", 0);
+
+        final String token = getAuthToken(admin.getEmail(), password);
+
+        getClient(token).perform(put("/api/core/relationships/" + author2ToPublication2.getID())
+                                     .contentType("application/json")
+                                     .content(contentObj.toString()))
+                        .andExpect(status().isOk());
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(publication2.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.isResearchoutputsSelectedFor"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(author2.getID()),
+                       UUIDUtils.toString(author2.getID()),
+                       UUIDUtils.toString(project1.getID())
+                                     ));
+
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(publication1.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.isResearchoutputsSelectedFor"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(author1.getID()),
+                       UUIDUtils.toString(author2.getID()),
+                       UUIDUtils.toString(project1.getID()),
+                       UUIDUtils.toString(project1.getID()),
+                       UUIDUtils.toString(project2.getID())
+                                     ));
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(author1.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID())
+                                     ));
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(author2.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID()),
+                       UUIDUtils.toString(publication2.getID())
+                                     ));
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(project1.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID()),
+                       UUIDUtils.toString(publication2.getID())
+                                     ));
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(project2.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID())
+                                     ));
+
+        queryResponse = performQuery("*:*",
+                                     "relation.isResearchoutputsSelectedFor:" + UUIDUtils.toString(author1.getID()));
+
+        assertThat(queryResponse.getResults().size(), is(1));
+
+        queryResponse = performQuery("*:*",
+                                     "relation.isResearchoutputsSelectedFor:" + UUIDUtils.toString(author2.getID()));
+
+        assertThat(queryResponse.getResults().size(), is(2));
+
+        queryResponse = performQuery("*:*",
+                                     "relation.isResearchoutputsSelectedFor:" + UUIDUtils.toString(project1.getID()));
+
+        assertThat(queryResponse.getResults().size(), is(2));
+
+        queryResponse = performQuery("*:*",
+                                     "relation.isResearchoutputsSelectedFor:" + UUIDUtils.toString(project2.getID()));
+
+        assertThat(queryResponse.getResults().size(), is(1));
+
+        getClient(token).perform(delete("/api/core/relationships/" + author2ToPublication2.getID()))
+                        .andExpect(status().isNoContent());
+        getClient(token).perform(delete("/api/core/relationships/" + project2ToPublication1.getID()))
+                        .andExpect(status().isNoContent());
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(publication2.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.isResearchoutputsSelectedFor"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(project1.getID())
+                                     ));
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(publication1.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.isResearchoutputsSelectedFor"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(author1.getID()),
+                       UUIDUtils.toString(author2.getID()),
+                       UUIDUtils.toString(author2.getID()),
+                       UUIDUtils.toString(project1.getID()),
+                       UUIDUtils.toString(project1.getID())
+                                     ));
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(author1.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID())
+                                     ));
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(author2.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID())
+                                     ));
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(project1.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID()),
+                       UUIDUtils.toString(publication2.getID())
+                                     ));
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(project2.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   nullValue());
+
+        queryResponse = performQuery("*:*",
+                                     "relation.isResearchoutputsSelectedFor:" + UUIDUtils.toString(author1.getID()));
+
+        assertThat(queryResponse.getResults().size(), is(1));
+
+        queryResponse = performQuery("*:*",
+                                     "relation.isResearchoutputsSelectedFor:" + UUIDUtils.toString(author2.getID()));
+
+        assertThat(queryResponse.getResults().size(), is(1));
+
+        queryResponse = performQuery("*:*",
+                                     "relation.isResearchoutputsSelectedFor:" + UUIDUtils.toString(project1.getID()));
+
+        assertThat(queryResponse.getResults().size(), is(2));
+
+        queryResponse = performQuery("*:*",
+                                     "relation.isResearchoutputsSelectedFor:" + UUIDUtils.toString(project2.getID()));
+
+        assertThat(queryResponse.getResults().size(), is(0));
+
+        configurationService.setProperty("relationship.places.onlyright", "");
+    }
+
+    @Test
+    public void onlyLeftPlacesUpdated() throws Exception {
+
+        configurationService.setProperty("relationship.places.onlyright", "");
+        configurationService.setProperty("relationship.places.onlyleft",
+                                         "null::Person::isResearchoutputsSelectedFor::hasSelectedResearchoutputs");
+        configurationService.addPropertyValue(
+            "relationship.places.onlyleft",
+            "null::Project::isResearchoutputsSelectedFor::hasSelectedResearchoutputs");
+        context.turnOffAuthorisationSystem();
+
+        final Relationship author1ToPublication1 =
+            RelationshipBuilder.createRelationshipBuilder(context, publication1,
+                                                          author1, selectedResearchOutputByAuthor, -1, -1)
+                               .build();
+
+        final Relationship author2ToPublication1 =
+            RelationshipBuilder.createRelationshipBuilder(context, publication1,
+                                                          author2, selectedResearchOutputByAuthor, -1, -1)
+                               .build();
+
+        final Relationship author3ToPulication1 =
+            RelationshipBuilder.createRelationshipBuilder(context, publication1,
+                                                          author3, selectedResearchOutputByAuthor, -1, -1)
+                               .build();
+
+        final Relationship project1ToPublication1 =
+            RelationshipBuilder.createRelationshipBuilder(context, publication1,
+                                                          project1, selectedResearchOutputByProject, -1, -1)
+                               .build();
+
+        final Relationship project2ToPublication1 =
+            RelationshipBuilder.createRelationshipBuilder(context, publication1,
+                                                          project2, selectedResearchOutputByProject, -1, -1)
+                               .build();
+
+
+
+
+        context.restoreAuthSystemState();
+
+        QueryResponse queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(author1.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID()),
+                       UUIDUtils.toString(publication1.getID()),
+                       UUIDUtils.toString(publication1.getID())
+                                     ));
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(author2.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID()),
+                       UUIDUtils.toString(publication1.getID())
+                                     ));
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(author3.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID())
+                                     ));
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(project1.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID()),
+                       UUIDUtils.toString(publication1.getID())
+                                     ));
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(project2.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID())
+                                     ));
+
+        JsonObject contentObj = new JsonObject();
+        contentObj.addProperty("leftPlace", 1);
+
+        final String token = getAuthToken(admin.getEmail(), password);
+
+        getClient(token).perform(put("/api/core/relationships/" + author3ToPulication1.getID())
+                                     .contentType("application/json")
+                                     .content(contentObj.toString()))
+                        .andExpect(status().isOk());
+
+        contentObj.remove("leftPlace");
+        contentObj.addProperty("leftPlace", 0);
+
+        getClient(token).perform(put("/api/core/relationships/" + project2ToPublication1.getID())
+                                     .contentType("application/json")
+                                     .content(contentObj.toString()))
+                        .andExpect(status().isOk());
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(author1.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID()),
+                       UUIDUtils.toString(publication1.getID()),
+                       UUIDUtils.toString(publication1.getID())
+                                     ));
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(author3.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID()),
+                       UUIDUtils.toString(publication1.getID())
+                                     ));
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(author2.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID())
+                                     ));
+
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(project2.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID()),
+                       UUIDUtils.toString(publication1.getID())
+                                     ));
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(project1.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID())
+                                     ));
+
+        getClient(token).perform(delete("/api/core/relationships/" + author1ToPublication1.getID()))
+                        .andExpect(status().isNoContent());
+        getClient(token).perform(delete("/api/core/relationships/" + project1ToPublication1.getID()))
+                        .andExpect(status().isNoContent());
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(author1.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   nullValue()
+                  );
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(author3.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID()),
+                       UUIDUtils.toString(publication1.getID()),
+                       UUIDUtils.toString(publication1.getID())
+                                     ));
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(author2.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID()),
+                       UUIDUtils.toString(publication1.getID())
+                                     ));
+
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(project2.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   containsInAnyOrder(
+                       UUIDUtils.toString(publication1.getID()),
+                       UUIDUtils.toString(publication1.getID())
+                                     ));
+
+        queryResponse = performQuery("search.resourceid:" + UUIDUtils.toString(project1.getID()));
+        assertThat(queryResponse.getResults().get(0).getFieldValues("relation.hasSelectedResearchoutputs"),
+                   nullValue());
+
+        configurationService.setProperty("relationship.places.onlyleft", "");
     }
 
     private QueryResponse performQuery(final String query, String... filterQuery)

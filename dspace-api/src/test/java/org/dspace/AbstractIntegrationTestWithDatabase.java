@@ -29,6 +29,7 @@ import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
 import org.dspace.eperson.service.GroupService;
 import org.dspace.kernel.ServiceManager;
+import org.dspace.oaisolr.MockSolrOaiCore;
 import org.dspace.services.factory.DSpaceServicesFactory;
 import org.dspace.statistics.MockSolrLoggerServiceImpl;
 import org.dspace.statistics.MockSolrStatisticsCore;
@@ -200,6 +201,10 @@ public class AbstractIntegrationTestWithDatabase extends AbstractDSpaceIntegrati
             MockSolrDedupCore dedupService = serviceManager
                     .getServiceByName(null, MockSolrDedupCore.class);
             dedupService.reset();
+
+            MockSolrOaiCore oaiService = serviceManager
+                    .getServiceByName(null, MockSolrOaiCore.class);
+            oaiService.reset();
             // Reload our ConfigurationService (to reset configs to defaults again)
             DSpaceServicesFactory.getInstance().getConfigurationService().reloadConfig();
 

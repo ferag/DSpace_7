@@ -115,7 +115,7 @@ public class ScriptRestRepository extends DSpaceRestRepository<ScriptRest, Strin
         EPerson user = getUser(context).orElseThrow(() -> new IllegalStateException(
                 "An anonymous user tried to start a process and no default user is configured"));
         RestDSpaceRunnableHandler restDSpaceRunnableHandler = new RestDSpaceRunnableHandler(
-            user, scriptToExecute.getName(), dSpaceCommandLineParameters);
+            user, scriptName, dSpaceCommandLineParameters, context.getSpecialGroups());
         List<String> args = constructArgs(dSpaceCommandLineParameters);
         runDSpaceScript(files, context, user, scriptToExecute, restDSpaceRunnableHandler, args);
         return converter.toRest(restDSpaceRunnableHandler.getProcess(context), utils.obtainProjection());

@@ -353,6 +353,6 @@ public final class CrisLayoutSectionMatcher {
     public static Matcher<? super Object> withColumnComponent(int row, int pos, int columnPosition,
                                                               String metadataField) {
         return hasJsonPath("$.componentRows[" + row + "][" + pos + "].columnList[" + columnPosition + "]" +
-            ".metadataField", is(metadataField));
+                               ".metadataField", is(metadataField));
     }
 }

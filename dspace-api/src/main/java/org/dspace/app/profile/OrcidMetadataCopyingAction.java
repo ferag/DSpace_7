@@ -7,6 +7,9 @@
  */
 package org.dspace.app.profile;
 
+import static java.time.LocalDateTime.now;
+import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 import static org.dspace.content.Item.ANY;
 
 import java.sql.SQLException;
@@ -23,6 +26,8 @@ import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.service.EPersonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 
 /**
  * Implementation of {@link AfterResearcherProfileCreationAction} that copy the
@@ -31,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  *
  */
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class OrcidMetadataCopyingAction implements AfterResearcherProfileCreationAction {
 
     @Autowired
@@ -49,6 +55,11 @@ public class OrcidMetadataCopyingAction implements AfterResearcherProfileCreatio
         copyMetadataValues(context, owner, "eperson.orcid.refresh-token", item, "cris.orcid.refresh-token");
         copyMetadataValues(context, owner, "eperson.orcid.scope", item, "cris.orcid.scope");
 
+        if (isLinkedToOrcid(owner)) {
+            String currentDate = ISO_DATE_TIME.format(now());
+            itemService.setMetadataSingleValue(context, item, "cris", "orcid", "authenticated", null, currentDate);
+        }
+
     }
 
     private void copyMetadataValues(Context context, EPerson ePerson, String ePersonMetadataField, Item item,
@@ -63,6 +74,11 @@ public class OrcidMetadataCopyingAction implements AfterResearcherProfileCreatio
         itemService.clearMetadata(context, item, metadata.SCHEMA, metadata.ELEMENT, metadata.QUALIFIER, ANY);
         itemService.addMetadata(context, item, metadata.SCHEMA, metadata.ELEMENT, metadata.QUALIFIER, null, values);
 
+    }
+
+    private boolean isLinkedToOrcid(EPerson ePerson) {
+        return isNotEmpty(getMetadataValues(ePerson, "eperson.orcid"))
+            && isNotEmpty(getMetadataValues(ePerson, "eperson.orcid.access-token"));
     }
 
     private List<String> getMetadataValues(EPerson ePerson, String metadataField) {

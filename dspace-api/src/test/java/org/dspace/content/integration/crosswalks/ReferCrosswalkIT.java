@@ -14,7 +14,9 @@ import static org.dspace.core.CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -25,9 +27,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.nio.charset.Charset;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.dspace.AbstractIntegrationTestWithDatabase;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.builder.BitstreamBuilder;
@@ -45,6 +50,7 @@ import org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldMappe
 import org.dspace.core.CrisConstants;
 import org.dspace.core.factory.CoreServiceFactory;
 import org.dspace.utils.DSpace;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -649,13 +655,14 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withRelationProject("Test Project", project.getID().toString())
             .withRelationFunding("Another Test Funding", funding.getID().toString())
             .withRelationConference("The best Conference")
-            .withRelationDataset("DataSet")
+//            .withRelationDataset("DataSet")
             .withEmbargoEnd("2021-01-01")
             .withAccess("embargoed access")
             .withSubjectOCDE("keyword1")
             .withSubjectOCDE("keyword2")
             .withRightsUri("rights-uri")
             .withCoveragePublication("Coverage publication")
+            .withRelationProduct("DataSet")
             .build();
 
         context.restoreAuthSystemState();
@@ -731,7 +738,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withRelationProject("Test Project", project.getID().toString())
             .withRelationFunding("Another Test Funding", funding.getID().toString())
             .withRelationConference("The best Conference")
-            .withRelationDataset("DataSet")
+            .withRelationProduct("DataSet")
             .withEmbargoEnd("2021-01-01")
             .withAccess("embargoed access")
             .withSubjectOCDE("keyword1")
@@ -815,7 +822,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withRelationProject("Test Project", project.getID().toString())
             .withRelationFunding("Another Test Funding", funding.getID().toString())
             .withRelationConference("The best Conference")
-            .withRelationDataset("DataSet")
+            .withRelationProduct("DataSet")
             .withSubjectOCDE("keyword1")
             .withSubjectOCDE("keyword2")
             .withRightsUri("rights-uri")
@@ -1335,13 +1342,13 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         ItemBuilder.createItem(context, collection)
             .withEntityType("Person")
             .withTitle("Walter White")
-            .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
+            .withPersonMainAffiliationName("Test OrgUnit", orgUnit.getID().toString())
             .build();
 
         ItemBuilder.createItem(context, collection)
             .withEntityType("Person")
             .withTitle("Jesse Pinkman")
-            .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
+            .withPersonMainAffiliationName("Test OrgUnit", orgUnit.getID().toString())
             .build();
 
         context.restoreAuthSystemState();
@@ -1386,13 +1393,13 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         ItemBuilder.createItem(context, collection)
             .withEntityType("Person")
             .withTitle("Walter White")
-            .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
+            .withPersonMainAffiliationName("Test OrgUnit", orgUnit.getID().toString())
             .build();
 
         ItemBuilder.createItem(context, collection)
             .withEntityType("Person")
             .withTitle("Jesse Pinkman")
-            .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
+            .withPersonMainAffiliationName("Test OrgUnit", orgUnit.getID().toString())
             .build();
 
         context.restoreAuthSystemState();
@@ -1498,13 +1505,13 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         ItemBuilder.createItem(context, collection)
             .withEntityType("Person")
             .withTitle("Walter White")
-            .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
+            .withPersonMainAffiliationName("Test OrgUnit", orgUnit.getID().toString())
             .build();
 
         ItemBuilder.createItem(context, collection)
             .withEntityType("Person")
             .withTitle("Jesse Pinkman")
-            .withPersonAffiliationName("Test OrgUnit", orgUnit.getID().toString())
+            .withPersonMainAffiliationName("Test OrgUnit", orgUnit.getID().toString())
             .build();
 
         context.restoreAuthSystemState();
@@ -2683,43 +2690,43 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
     }
 
-    @Test
-    public void testManyPatentsJsonDisseminate() throws Exception {
-
-        Item firstPatent = ItemBuilder.createItem(context, collection)
-            .withEntityType("Patent")
-            .withTitle("Test patent")
-            .withIssueDate("2021-01-01")
-            .withPublisher("Publisher")
-            .withPatentNo("12345-666")
-            .withSubject("subject")
-            .withRelationProject("Project")
-            .build();
-
-        Item secondPatent = ItemBuilder.createItem(context, collection)
-            .withEntityType("Patent")
-            .withTitle("Second patent")
-            .withIssueDate("2011-01-01")
-            .withPublisher("First publisher")
-            .withPublisher("Second publisher")
-            .withPatentNo("12345-777")
-            .withAuthor("Walter White")
-            .withAuthorAffiliation("4Science")
-            .withRelationPatent("Another patent")
-            .build();
-
-        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-json");
-        assertThat(referCrossWalk, notNullValue());
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        referCrossWalk.disseminate(context, Arrays.asList(firstPatent, secondPatent).iterator(), out);
-
-        try (FileInputStream fis = getFileInputStream("patents.json")) {
-            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
-            compareEachLine(out.toString(), expectedContent);
-        }
-
-    }
+//    @Test
+//    public void testManyPatentsJsonDisseminate() throws Exception {
+//
+//        Item firstPatent = ItemBuilder.createItem(context, collection)
+//            .withEntityType("Patent")
+//            .withTitle("Test patent")
+//            .withIssueDate("2021-01-01")
+//            .withPublisher("Publisher")
+//            .withPatentNo("12345-666")
+//            .withSubject("subject")
+//            .withRelationProject("Project")
+//            .build();
+//
+//        Item secondPatent = ItemBuilder.createItem(context, collection)
+//            .withEntityType("Patent")
+//            .withTitle("Second patent")
+//            .withIssueDate("2011-01-01")
+//            .withPublisher("First publisher")
+//            .withPublisher("Second publisher")
+//            .withPatentNo("12345-777")
+//            .withAuthor("Walter White")
+//            .withAuthorAffiliation("4Science")
+//            .withRelationPatent("Another patent")
+//            .build();
+//
+//        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-json");
+//        assertThat(referCrossWalk, notNullValue());
+//
+//        ByteArrayOutputStream out = new ByteArrayOutputStream();
+//        referCrossWalk.disseminate(context, Arrays.asList(firstPatent, secondPatent).iterator(), out);
+//
+//        try (FileInputStream fis = getFileInputStream("patents.json")) {
+//            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+//            compareEachLine(out.toString(), expectedContent);
+//        }
+//
+//    }
 
     @Test
     public void testProductPerucrisCerifXmlDisseminate() throws Exception {
@@ -2796,6 +2803,243 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             compareEachLine(out.toString(), expectedContent);
         }
 
+    }
+
+//    @Test
+//    public void testPatentCerifXmlDisseminate() throws Exception {
+//
+//        Item patent = ItemBuilder.createItem(context, collection)
+//            .withEntityType("Patent")
+//            .withTitle("Test patent")
+//            .withIssueDate("2021-01-01")
+//            .withPublisher("First publisher")
+//            .withPublisher("Second publisher")
+//            .withPatentNo("12345-666")
+//            .withAuthor("Walter White", "b6ff8101-05ec-49c5-bd12-cba7894012b7")
+//            .withAuthorAffiliation("4Science")
+//            .withAuthor("Jesse Pinkman")
+//            .withAuthorAffiliation(PLACEHOLDER_PARENT_METADATA_VALUE)
+//            .withAuthor("John Smith", "will be referenced::ORCID::0000-0000-0012-3456")
+//            .withAuthorAffiliation("4Science")
+//            .withRightsHolder("Test Organization")
+//            .withDescriptionAbstract("This is a patent")
+//            .withRelationPatent("Another patent")
+//            .build();
+//
+//        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-cerif-xml");
+//        assertThat(referCrossWalk, notNullValue());
+//
+//        ByteArrayOutputStream out = new ByteArrayOutputStream();
+//        referCrossWalk.disseminate(context, patent, out);
+//
+//        try (FileInputStream fis = getFileInputStream("patent.xml")) {
+//            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+//            compareEachLine(out.toString(), expectedContent);
+//        }
+//
+//    }
+
+//    @Test
+//    public void testManyPatentsCerifXmlDisseminate() throws Exception {
+//
+//        Item firstPatent = ItemBuilder.createItem(context, collection)
+//            .withEntityType("Patent")
+//            .withTitle("Test patent")
+//            .withIssueDate("2021-01-01")
+//            .withPublisher("Publisher")
+//            .withPatentNo("12345-666")
+//            .build();
+//
+//        Item secondPatent = ItemBuilder.createItem(context, collection)
+//            .withEntityType("Patent")
+//            .withTitle("Second patent")
+//            .withIssueDate("2011-01-01")
+//            .withPublisher("First publisher")
+//            .withPublisher("Second publisher")
+//            .withPatentNo("12345-777")
+//            .withAuthor("Walter White")
+//            .withAuthorAffiliation("4Science")
+//            .withRelationPatent("Another patent")
+//            .build();
+//
+//        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-cerif-xml");
+//        assertThat(referCrossWalk, notNullValue());
+//
+//        ByteArrayOutputStream out = new ByteArrayOutputStream();
+//        referCrossWalk.disseminate(context, Arrays.asList(firstPatent, secondPatent).iterator(), out);
+//
+//        try (FileInputStream fis = getFileInputStream("patents.xml")) {
+//            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+//            compareEachLine(out.toString(), expectedContent);
+//        }
+//
+//    }
+
+//    @Test
+//    public void testPatentJsonDisseminate() throws Exception {
+//
+//        Item patent = ItemBuilder.createItem(context, collection)
+//            .withEntityType("Patent")
+//            .withTitle("Test patent")
+//            .withDateAccepted("2020-01-01")
+//            .withIssueDate("2021-01-01")
+//            .withLanguage("en")
+//            .withType("patent")
+//            .withPublisher("First publisher")
+//            .withPublisher("Second publisher")
+//            .withPatentNo("12345-666")
+//            .withAuthor("Walter White", "b6ff8101-05ec-49c5-bd12-cba7894012b7")
+//            .withAuthorAffiliation("4Science")
+//            .withAuthor("Jesse Pinkman")
+//            .withAuthorAffiliation(PLACEHOLDER_PARENT_METADATA_VALUE)
+//            .withAuthor("John Smith", "will be referenced::ORCID::0000-0000-0012-3456")
+//            .withAuthorAffiliation("4Science")
+//            .withRightsHolder("Test Organization")
+//            .withDescriptionAbstract("This is a patent")
+//            .withRelationPatent("Another patent")
+//            .withSubject("patent")
+//            .withSubject("test")
+//            .withRelationFunding("Test funding")
+//            .withRelationProject("First project")
+//            .withRelationProject("Second project")
+//            .build();
+//
+//        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-json");
+//        assertThat(referCrossWalk, notNullValue());
+//
+//        ByteArrayOutputStream out = new ByteArrayOutputStream();
+//        referCrossWalk.disseminate(context, patent, out);
+//
+//        try (FileInputStream fis = getFileInputStream("patent.json")) {
+//            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+//            compareEachLine(out.toString(), expectedContent);
+//        }
+//
+//    }
+
+    @Test
+    public void testManyPatentsJsonDisseminate() throws Exception {
+
+        Item firstPatent = ItemBuilder.createItem(context, collection)
+            .withEntityType("Patent")
+            .withTitle("Test patent")
+            .withIssueDate("2021-01-01")
+            .withPublisher("Publisher")
+            .withPatentNo("12345-666")
+            .withSubject("subject")
+            .withRelationProject("Project")
+            .build();
+
+        Item secondPatent = ItemBuilder.createItem(context, collection)
+            .withEntityType("Patent")
+            .withTitle("Second patent")
+            .withIssueDate("2011-01-01")
+            .withPublisher("First publisher")
+            .withPublisher("Second publisher")
+            .withPatentNo("12345-777")
+            .withAuthor("Walter White")
+            .withAuthorAffiliation("4Science")
+            .withRelationPatent("Another patent")
+            .build();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-json");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, Arrays.asList(firstPatent, secondPatent).iterator(), out);
+
+        try (FileInputStream fis = getFileInputStream("patents.json")) {
+            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedContent);
+        }
+
+    }
+
+    @Test
+    public void testVirtualFieldDate() throws Exception {
+
+        Item publication = ItemBuilder.createItem(context, collection)
+            .withEntityType("Publication")
+            .withIssueDate("2020-02-14")
+            .withDateAccepted("2021")
+            .withDateAccepted("2022")
+            .withDateAccepted("2023")
+            .build();
+
+        ReferCrosswalk referCrosswalk = new DSpace().getServiceManager()
+            .getServiceByName("referCrosswalkVirtualFieldDate", ReferCrosswalk.class);
+        assertThat(referCrosswalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrosswalk.disseminate(context, publication, out);
+
+        String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String currentYear = new SimpleDateFormat("yyyy").format(new Date());
+
+        String[] resultLines = out.toString().split("\n");
+        assertThat(resultLines.length, is(12));
+        assertThat(resultLines[0].trim(), is("{"));
+        assertThat(resultLines[1].trim(), is("\"only-year\": \"2020\","));
+        assertThat(resultLines[2].trim(), is("\"date-without-time\": \"2020-02-14\","));
+        assertThat(resultLines[3].trim(), is("\"another-date-without-time\": \"2020\\/02\\/14\","));
+        assertThat(resultLines[4].trim(), is("\"date-with-time\": \"14-02-2020 00:00:00\","));
+        assertThat(resultLines[5].trim(), is("\"another-date-with-time\": \"20200214 000000\","));
+        assertThat(resultLines[6].trim(), is("\"current-timestamp\": \"" + currentDate + "\","));
+        assertThat(resultLines[7].trim(), is("\"current-year\": \"" + currentYear + "\","));
+        assertThat(resultLines[8].trim(), is("\"repeatable-date\": \"2021\","));
+        assertThat(resultLines[9].trim(), is("\"repeatable-date\": \"2022\","));
+        assertThat(resultLines[10].trim(), is("\"repeatable-date\": \"2023\""));
+        assertThat(resultLines[11].trim(), is("}"));
+
+    }
+
+    @Test
+    public void testVirtualFieldVocabulary() throws Exception {
+
+        Item publication = ItemBuilder.createItem(context, collection)
+            .withEntityType("Publication")
+            .withType("Resource Type Genres::software::research software")
+            .build();
+
+        ReferCrosswalk referCrosswalk = new DSpace().getServiceManager()
+            .getServiceByName("referCrosswalkVirtualFieldVocabulary", ReferCrosswalk.class);
+        assertThat(referCrosswalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrosswalk.disseminate(context, publication, out);
+
+        String[] resultLines = out.toString().split("\n");
+        assertThat(resultLines.length, is(7));
+        assertThat(resultLines[0].trim(), is("{"));
+        assertThat(resultLines[1].trim(), is("\"first-element\": \"Resource Type Genres\","));
+        assertThat(resultLines[2].trim(), is("\"second-element\": \"software\","));
+        assertThat(resultLines[3].trim(), is("\"last-element\": \"research software\","));
+        assertThat(resultLines[4].trim(), is("\"second-last-element\": \"software\","));
+        assertThat(resultLines[5].trim(), is("\"deep-element\": \"research software\""));
+        assertThat(resultLines[6].trim(), is("}"));
+
+    }
+
+    @Test
+    public void placeholderFieldMustBeReplacedWithEmptyStringTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Item patent = ItemBuilder.createItem(context, collection)
+                                 .withTitle(PLACEHOLDER_PARENT_METADATA_VALUE)
+                                 .withEntityType("Patent").build();
+
+        context.restoreAuthSystemState();
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-json");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, patent, out);
+
+        String json = out.toString();
+        JSONObject obj = new JSONObject(json);
+        assertTrue(obj.has("title"));
+        assertTrue(StringUtils.equals(obj.getString("title"), StringUtils.EMPTY));
     }
 
     private void compareEachLine(String result, String expectedResult) {

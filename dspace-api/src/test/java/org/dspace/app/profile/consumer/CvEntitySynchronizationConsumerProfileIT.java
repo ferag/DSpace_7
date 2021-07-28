@@ -45,6 +45,7 @@ import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.Relationship;
 import org.dspace.content.RelationshipType;
+import org.dspace.content.authority.Choices;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.content.service.ItemService;
@@ -1183,7 +1184,8 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         Item profileClone = cloneRelations.get(0).getLeftItem();
 
         assertThat(profileClone.isArchived(), is(false));
-        assertThat(profileClone.getMetadata(), hasItem(with("oairecerif.person.affiliation", "4Science", 0, 400)));
+        assertThat(profileClone.getMetadata(), hasItem(with("oairecerif.person.affiliation", "4Science", 0,
+                                                            Choices.CF_UNSET)));
         assertThat(profileClone.getMetadata(), hasItem(with("oairecerif.affiliation.startDate", "2020-07-01")));
         assertThat(profileClone.getMetadata(), hasItem(with("oairecerif.affiliation.endDate", PLACEHOLDER)));
         assertThat(profileClone.getMetadata(), hasItem(with("oairecerif.affiliation.role", "Researcher")));
@@ -1196,7 +1198,8 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         Item person = cloneShadowCopyRelations.get(0).getRightItem();
 
         assertThat(person.isArchived(), is(false));
-        assertThat(person.getMetadata(), hasItem(with("oairecerif.person.affiliation", "4Science", 0, 400)));
+        assertThat(person.getMetadata(), hasItem(with("oairecerif.person.affiliation", "4Science", 0,
+                                                      Choices.CF_UNSET)));
         assertThat(person.getMetadata(), hasItem(with("oairecerif.affiliation.startDate", "2020-07-01")));
         assertThat(person.getMetadata(), hasItem(with("oairecerif.affiliation.endDate", PLACEHOLDER)));
         assertThat(person.getMetadata(), hasItem(with("oairecerif.affiliation.role", "Researcher")));

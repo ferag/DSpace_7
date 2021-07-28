@@ -7,6 +7,7 @@
  */
 package org.dspace.app.profile.service;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public interface CvEntityService {
      * @throws SQLException       if an SQL error occurs
      * @throws AuthorizeException if an authorization error occurs
      */
-    CvEntity createFromItem(Context context, Item item) throws SQLException, AuthorizeException;
+    CvEntity createFromItem(Context context, Item item) throws SQLException, AuthorizeException, IOException;
 
     /**
      * Find all the CV entities related to the given profile item.

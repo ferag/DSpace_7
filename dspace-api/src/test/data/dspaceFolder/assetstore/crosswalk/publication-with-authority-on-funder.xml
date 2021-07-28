@@ -85,7 +85,7 @@
     <PresentedAt> <Event> <Name>The best Conference</Name> </Event> </PresentedAt>
     <Coverage> <Event> <Name>Coverage publication</Name> </Event> </Coverage>
     <References> <Product> <Name>DataSet</Name> </Product> </References>
-    <Access xmlns="http://purl.org/coar/access_right" 
+    <Access xmlns="http://purl.org/coar/access_right"
     >
     </Access>
 </Publication>

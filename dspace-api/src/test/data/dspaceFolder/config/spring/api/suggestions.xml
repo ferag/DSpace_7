@@ -29,8 +29,8 @@
             </bean>
         </entry>
 	</util:map>
-
-    <!-- cti suggestions loader -->
+	
+	<!-- cti suggestions loader -->
 
     <bean id="ctiPublicationSuggestionLoader" class="org.dspace.importer.external.ctidb.suggestion.CtiPublicationSuggestionLoader">
         <property name="sourceName" value="ctiPublication" />

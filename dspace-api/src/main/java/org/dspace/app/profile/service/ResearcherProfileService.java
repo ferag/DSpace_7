@@ -85,4 +85,14 @@ public interface ResearcherProfileService {
      */
     public ResearcherProfile createFromSource(Context context, EPerson ePerson, URI source)
             throws SQLException, AuthorizeException, SearchServiceException;
+
+    /**
+     * Claims and links an eperson to an existing DSpaceObject
+     * @param context the relevant DSpace Context.
+     * @param ePerson the ePerson
+     * @param uri uri of existing DSpaceObject to be linked to the eperson
+     * @return
+     */
+    ResearcherProfile claim(Context context, EPerson ePerson, URI uri)
+        throws SQLException, AuthorizeException, SearchServiceException;
 }

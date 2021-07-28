@@ -55,7 +55,6 @@ import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 import org.dspace.workflow.WorkflowItem;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -64,7 +63,6 @@ import org.junit.Test;
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  *
  */
-@Ignore
 public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
 
     private static final String CRIS_CONSUMER = CrisConsumer.CONSUMER_NAME;
@@ -534,7 +532,7 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
         context.commit();
         context.restoreAuthSystemState();
 
-        String fileLocation = getXlsFilePath("many-publications.xls");
+        String fileLocation = getXlsFilePath("many-institution-publications.xls");
         String[] args = new String[] { "bulk-import", "-c", publications.getID().toString(), "-f", fileLocation };
         TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
 
@@ -572,7 +570,6 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
         assertThat(metadata, hasItems(with("dc.contributor.editor", "Editor")));
         assertThat(metadata, hasItems(with("oairecerif.editor.affiliation", "EditorAffiliation")));
         assertThat(metadata, hasItems(with("dc.identifier.doi", "10.1000/183")));
-        assertThat(metadata, hasItems(with("dc.type", "Article")));
 
         // verify updated item (ROW 3)
         Item itemUpdated = itemService.find(context, itemToUpdateByRid.getID());
@@ -586,10 +583,9 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
         assertThat(metadata, hasItems(with("oairecerif.author.affiliation", PLACEHOLDER)));
         assertThat(metadata, hasItems(with("dc.identifier.doi", "10.1000/184")));
         assertThat(metadata, hasItems(with("dc.relation.project", "Test Project")));
-        assertThat(metadata, hasItems(with("dc.relation.grantno", "1")));
+        assertThat(metadata, hasItems(with("dc.relation.funding", "1")));
         assertThat(metadata, hasItems(with("dc.relation.project", "Another Test Project", 1)));
-        assertThat(metadata, hasItems(with("dc.relation.grantno", PLACEHOLDER, 1)));
-        assertThat(metadata, hasItems(with("dc.type", "Book")));
+        assertThat(metadata, hasItems(with("dc.relation.funding", PLACEHOLDER, 1)));
 
         // verify deleted item (ROW 4)
         assertThat("Item expected to be deleted", itemService.find(context, itemToDelete.getID()), nullValue());

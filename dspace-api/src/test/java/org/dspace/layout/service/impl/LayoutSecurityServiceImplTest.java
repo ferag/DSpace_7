@@ -9,8 +9,8 @@ package org.dspace.layout.service.impl;
 
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -21,13 +21,20 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
+import org.dspace.app.util.SubmissionConfig;
+import org.dspace.app.util.SubmissionConfigReader;
+import org.dspace.authority.service.FormNameLookup;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataSchema;
 import org.dspace.content.MetadataValue;
+import org.dspace.content.authority.EPersonAuthority;
+import org.dspace.content.authority.GroupAuthority;
+import org.dspace.content.authority.service.ChoiceAuthorityService;
 import org.dspace.content.security.service.CrisSecurityService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
@@ -55,13 +62,26 @@ public class LayoutSecurityServiceImplTest {
     private GroupService groupService;
     @Mock
     private CrisSecurityService crisSecurityService;
+    @Mock
+    private ChoiceAuthorityService choiceAuthorityService;
+    @Mock
+    private SubmissionConfigReader submissionConfigReader;
+
+    @Mock
+    private FormNameLookup formNameLookup;
 
     private LayoutSecurityServiceImpl securityService;
 
     @Before
     public void setUp() throws Exception {
         securityService = new LayoutSecurityServiceImpl(authorizeService, itemService, groupService,
-                crisSecurityService);
+                                                        crisSecurityService, choiceAuthorityService,
+                                                        submissionConfigReader, formNameLookup
+        );
+        when(submissionConfigReader.getSubmissionConfigByCollection(any()))
+            .thenReturn(new SubmissionConfig(false, "test-config", Collections.emptyList()));
+        when(formNameLookup.formContainingField(eq("test-config"), any()))
+            .thenReturn(Collections.emptyList());
     }
 
     /**
@@ -257,19 +277,25 @@ public class LayoutSecurityServiceImplTest {
 
         Item item = mock(Item.class);
 
-        List<MetadataValue> metadataValueList = Arrays.asList(metadataValueWithAuthority(userUuid.toString()),
-                                                              metadataValueWithAuthority(UUID.randomUUID().toString()));
+        MetadataField securityMetadataField = securityMetadataField();
 
-        HashSet<MetadataField> securityMetadataFieldSet = new HashSet<>(singletonList(
-            securityMetadataField()));
+        List<MetadataValue> metadataValueList = Arrays.asList(
+            metadataValueWithAuthority(securityMetadataField, userUuid.toString()),
+            metadataValueWithAuthority(securityMetadataField, UUID.randomUUID().toString()));
 
         when(itemService.getMetadata(item, securityMetadataField().getMetadataSchema().getName(),
                                      securityMetadataField().getElement(), null, Item.ANY, true))
             .thenReturn(metadataValueList);
 
+        when(choiceAuthorityService.getChoiceAuthorityName(any(), any(), any(), any()))
+            .thenReturn("EPersonAuthority");
+
+        when(choiceAuthorityService.getChoiceAuthorityByAuthorityName("EPersonAuthority"))
+            .thenReturn(mock(EPersonAuthority.class));
+
         boolean granted =
             securityService.hasAccess(LayoutSecurity.CUSTOM_DATA, mock(Context.class), ePerson(userUuid),
-                                      securityMetadataFieldSet, item);
+                Set.of(securityMetadataField), item);
 
         assertThat(granted, is(true));
     }
@@ -315,11 +341,11 @@ public class LayoutSecurityServiceImplTest {
 
         Item item = mock(Item.class);
 
-        List<MetadataValue> metadataValueList = Arrays.asList(metadataValueWithAuthority(null),
-            metadataValueWithAuthority(UUID.randomUUID().toString()));
+        MetadataField securityMetadataField = securityMetadataField();
 
-        HashSet<MetadataField> securityMetadataFieldSet = new HashSet<>(singletonList(
-            securityMetadataField()));
+        List<MetadataValue> metadataValueList = Arrays.asList(
+            metadataValueWithAuthority(securityMetadataField, null),
+            metadataValueWithAuthority(securityMetadataField, UUID.randomUUID().toString()));
 
         when(itemService.getMetadata(item, securityMetadataField().getMetadataSchema().getName(),
             securityMetadataField().getElement(), null, Item.ANY, true))
@@ -327,7 +353,7 @@ public class LayoutSecurityServiceImplTest {
 
         boolean granted =
             securityService.hasAccess(LayoutSecurity.CUSTOM_DATA, mock(Context.class), ePerson(userUuid),
-                securityMetadataFieldSet, item);
+                Set.of(securityMetadataField), item);
 
         assertThat(granted, is(false));
     }
@@ -360,8 +386,14 @@ public class LayoutSecurityServiceImplTest {
         HashSet<MetadataField> securityMetadataFieldSet = new HashSet<>(singletonList(securityMetadataField));
 
         List<MetadataValue> metadataValueList =
-            Arrays.asList(metadataValueWithAuthority(securityAuthorityUuid.toString()),
-                          metadataValueWithAuthority(groupUuid.toString()));
+            Arrays.asList(metadataValueWithAuthority(securityMetadataField, securityAuthorityUuid.toString()),
+                metadataValueWithAuthority(securityMetadataField, groupUuid.toString()));
+
+        when(choiceAuthorityService.getChoiceAuthorityName(any(), any(), any(), any()))
+            .thenReturn("GroupAuthority");
+
+        when(choiceAuthorityService.getChoiceAuthorityByAuthorityName("GroupAuthority"))
+            .thenReturn(mock(GroupAuthority.class));
 
 
         when(itemService.getMetadata(item, securityMetadataField.getMetadataSchema().getName(),
@@ -378,7 +410,7 @@ public class LayoutSecurityServiceImplTest {
 
     /**
      * CUSTOM_DATA {@link LayoutSecurity} set, accessed by null user.
-     * Group is threated as anonymous, anonymous group has grants for the box, access is granted
+     * Group is treated as anonymous, anonymous group has grants for the box, access is granted
      *
      * @throws SQLException
      */
@@ -401,8 +433,17 @@ public class LayoutSecurityServiceImplTest {
 
         HashSet<MetadataField> securityMetadataFieldSet = new HashSet<>(singletonList(securityMetadataField));
 
+        when(choiceAuthorityService.getChoiceAuthorityName(securityMetadataField.getMetadataSchema().getName(),
+                                                           securityMetadataField.getElement(),
+                                                           securityMetadataField.getQualifier(), ""))
+            .thenReturn("GroupAuthority");
+
+        final GroupAuthority groupAuthority = mock(GroupAuthority.class);
+        when(choiceAuthorityService.getChoiceAuthorityByAuthorityName("GroupAuthority"))
+            .thenReturn(groupAuthority);
+
         List<MetadataValue> metadataValueList =
-            Arrays.asList(metadataValueWithAuthority(anonymousGroupUuid.toString()));
+            Arrays.asList(metadataValueWithAuthority(securityMetadataField, anonymousGroupUuid.toString()));
 
 
         when(itemService.getMetadata(item, securityMetadataField.getMetadataSchema().getName(),
@@ -426,18 +467,12 @@ public class LayoutSecurityServiceImplTest {
     @Test
     public void customSecurityNullUserAsAnonymousAndGroupNotAllowed() throws SQLException {
 
-        UUID anonymousGroupUuid = UUID.randomUUID();
         UUID allowedGroupUuid = UUID.randomUUID();
 
         Item item = mock(Item.class);
         Context context = mock(Context.class);
 
         EPerson user = null;
-        Group anonymousGroup = group(anonymousGroupUuid);
-        Group allowedGroup = group(allowedGroupUuid);
-
-        when(groupService.findByName(any(Context.class), eq(Group.ANONYMOUS)))
-            .thenReturn(anonymousGroup);
 
         MetadataField securityMetadataField = securityMetadataField();
 
@@ -445,7 +480,7 @@ public class LayoutSecurityServiceImplTest {
 
 
         List<MetadataValue> metadataValueList =
-            Arrays.asList(metadataValueWithAuthority(allowedGroup.toString()));
+            Arrays.asList(metadataValueWithAuthority(securityMetadataField, allowedGroupUuid.toString()));
 
 
         when(itemService.getMetadata(item, securityMetadataField.getMetadataSchema().getName(),
@@ -470,17 +505,12 @@ public class LayoutSecurityServiceImplTest {
     public void customSecurityUserNotAllowed() throws SQLException {
 
         UUID userUuid = UUID.randomUUID();
-        UUID groupUuid = UUID.randomUUID();
         UUID securityAuthorityUuid = UUID.randomUUID();
 
         Item item = mock(Item.class);
 
         Context context = mock(Context.class);
         EPerson user = ePerson(userUuid);
-        Group userGroup = group(groupUuid);
-
-        when(groupService.allMemberGroupsSet(any(Context.class), eq(user)))
-            .thenReturn(new HashSet<>(Collections.singletonList(userGroup)));
 
         MetadataField securityMetadataField = securityMetadataField();
 
@@ -488,7 +518,7 @@ public class LayoutSecurityServiceImplTest {
             singletonList(securityMetadataField));
 
         List<MetadataValue> metadataValueList =
-            singletonList(metadataValueWithAuthority(securityAuthorityUuid.toString()));
+            singletonList(metadataValueWithAuthority(securityMetadataField, securityAuthorityUuid.toString()));
 
 
         when(itemService.getMetadata(item, securityMetadataField.getMetadataSchema().getName(),
@@ -523,11 +553,10 @@ public class LayoutSecurityServiceImplTest {
         final HashSet<MetadataField> securityMetadataFieldSet = new HashSet<>(singletonList(metadataField));
 
         List<MetadataValue> metadataValueList =
-            singletonList(metadataValueWithAuthority(UUID.randomUUID().toString()));
+            singletonList(metadataValueWithAuthority(metadataField, UUID.randomUUID().toString()));
 
 
         final Group anonymousGroup = group(anonymousGroupId);
-        when(groupService.findByName(context, Group.ANONYMOUS)).thenReturn(anonymousGroup);
 
         when(itemService.getMetadata(item, metadataField.getMetadataSchema().getName(),
                                      metadataField.getElement(), null, Item.ANY, true))
@@ -574,10 +603,11 @@ public class LayoutSecurityServiceImplTest {
         return msf;
     }
 
-    private MetadataValue metadataValueWithAuthority(String authority) {
+    private MetadataValue metadataValueWithAuthority(MetadataField metadataField, String authority) {
         MetadataValue metadataValue = mock(MetadataValue.class);
 
         when(metadataValue.getAuthority()).thenReturn(authority);
+        when(metadataValue.getMetadataField()).thenReturn(metadataField);
 
         return metadataValue;
 

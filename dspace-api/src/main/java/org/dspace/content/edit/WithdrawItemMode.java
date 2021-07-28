@@ -37,19 +37,29 @@ public class WithdrawItemMode implements AccessItemMode {
      */
     private List<String> users = new ArrayList<String>();
 
+    /**
+     * Contains the list of items metadata for CUSTOM security
+     */
+    private List<String> items;
+
     @Override
     public CrisSecurity getSecurity() {
         return security;
     }
 
     @Override
-    public List<String> getGroups() {
+    public List<String> getGroupMetadataFields() {
         return groups;
     }
 
     @Override
-    public List<String> getUsers() {
+    public List<String> getUserMetadataFields() {
         return users;
+    }
+
+    @Override
+    public List<String> getItemMetadataFields() {
+        return items;
     }
 
     public void setSecurity(CrisSecurity security) {
@@ -64,4 +74,7 @@ public class WithdrawItemMode implements AccessItemMode {
         this.users = users;
     }
 
+    public void setItems(final List<String> items) {
+        this.items = items;
+    }
 }

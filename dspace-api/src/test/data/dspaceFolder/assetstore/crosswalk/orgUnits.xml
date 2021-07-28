@@ -1,13 +1,13 @@
 <OrgUnits>
 	<OrgUnit id="mock-id">
-        <Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">https://w3id.org/cerif/vocab/OrganisationTypes#StrategicResearchInsitute</Type>
-        <Acronym>TOU</Acronym>
+		<Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">https://w3id.org/cerif/vocab/OrganisationTypes#StrategicResearchInsitute</Type>
+		<Acronym>TOU</Acronym>
 		<Name>Test OrgUnit</Name>
 		<Name>Test OrgUnit LegalName</Name>
-        <Identifier>ID-01</Identifier>
-        <Identifier>ID-02</Identifier>
-        <Url>www.orgUnit.com</Url>
-        <Url>www.orgUnit.it</Url>
+		<Identifier>ID-01</Identifier>
+		<Identifier>ID-02</Identifier>
+		<Url>www.orgUnit.com</Url>
+		<Url>www.orgUnit.it</Url>
 		<ParentOrganization>Parent OrgUnit</ParentOrganization>
 		<PostAddress>
 		</PostAddress>
@@ -15,13 +15,13 @@
 		</People>
 	</OrgUnit>
 	<OrgUnit id="mock-id">
-        <Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">https://w3id.org/cerif/vocab/OrganisationTypes#Privatenonprofit</Type>
-        <Acronym>ATOU</Acronym>
+		<Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">https://w3id.org/cerif/vocab/OrganisationTypes#Privatenonprofit</Type>
+		<Acronym>ATOU</Acronym>
 		<Name>Another Test OrgUnit</Name>
-        <Identifier>ID-03</Identifier>
+		<Identifier>ID-03</Identifier>
 		<ParentOrganization>Parent OrgUnit</ParentOrganization>
-        <PostAddress>
-        </PostAddress>
+		<PostAddress>
+		</PostAddress>
 		<People>
 		</People>
 	</OrgUnit>

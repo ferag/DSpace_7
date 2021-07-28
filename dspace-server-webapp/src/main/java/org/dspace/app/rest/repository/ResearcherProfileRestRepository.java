@@ -47,6 +47,9 @@ import org.springframework.stereotype.Component;
 @Component(ResearcherProfileRest.CATEGORY + "." + ResearcherProfileRest.NAME)
 public class ResearcherProfileRestRepository extends DSpaceRestRepository<ResearcherProfileRest, UUID> {
 
+    public static final String NO_VISIBILITY_CHANGE_MSG = "Refused to perform the Researcher Profile patch based "
+        + "on a token without changing the visibility";
+
     @Autowired
     private ResearcherProfileService researcherProfileService;
 

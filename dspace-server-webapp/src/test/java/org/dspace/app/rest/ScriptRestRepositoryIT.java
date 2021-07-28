@@ -12,6 +12,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -42,6 +43,7 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.builder.CollectionBuilder;
 import org.dspace.builder.CommunityBuilder;
 import org.dspace.builder.EPersonBuilder;
+import org.dspace.builder.GroupBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.builder.ProcessBuilder;
 import org.dspace.content.Bitstream;
@@ -50,6 +52,7 @@ import org.dspace.content.Community;
 import org.dspace.content.Item;
 import org.dspace.content.ProcessStatus;
 import org.dspace.eperson.EPerson;
+import org.dspace.eperson.Group;
 import org.dspace.scripts.DSpaceCommandLineParameter;
 import org.dspace.scripts.Process;
 import org.dspace.scripts.configuration.ScriptConfiguration;
@@ -116,7 +119,13 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
                                 ScriptMatcher.matchScript(scriptConfigurations.get(14).getName(),
                                                           scriptConfigurations.get(14).getDescription()),
                                 ScriptMatcher.matchScript(scriptConfigurations.get(15).getName(),
-                                                          scriptConfigurations.get(15).getDescription())
+                                                          scriptConfigurations.get(15).getDescription()),
+                                ScriptMatcher.matchScript(scriptConfigurations.get(16).getName(),
+                                                          scriptConfigurations.get(16).getDescription()),
+                                ScriptMatcher.matchScript(scriptConfigurations.get(17).getName(),
+                                                          scriptConfigurations.get(17).getDescription()),
+                                ScriptMatcher.matchScript(scriptConfigurations.get(18).getName(),
+                                                          scriptConfigurations.get(18).getDescription())
                         )));
 
     }
@@ -159,11 +168,11 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
                                 Matchers.containsString("page=1"), Matchers.containsString("size=1"))))
                         .andExpect(jsonPath("$._links.last.href", Matchers.allOf(
                                 Matchers.containsString("/api/system/scripts?"),
-                                Matchers.containsString("page=15"), Matchers.containsString("size=1"))))
+                                Matchers.containsString("page=18"), Matchers.containsString("size=1"))))
                         .andExpect(jsonPath("$.page.size", is(1)))
                         .andExpect(jsonPath("$.page.number", is(0)))
-                        .andExpect(jsonPath("$.page.totalPages", is(16)))
-                        .andExpect(jsonPath("$.page.totalElements", is(16)));
+                        .andExpect(jsonPath("$.page.totalPages", is(19)))
+                        .andExpect(jsonPath("$.page.totalElements", is(19)));
 
 
         getClient(token).perform(get("/api/system/scripts").param("size", "1").param("page", "1"))
@@ -190,11 +199,11 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
                                 Matchers.containsString("page=2"), Matchers.containsString("size=1"))))
                         .andExpect(jsonPath("$._links.last.href", Matchers.allOf(
                                 Matchers.containsString("/api/system/scripts?"),
-                                Matchers.containsString("page=15"), Matchers.containsString("size=1"))))
+                                Matchers.containsString("page=18"), Matchers.containsString("size=1"))))
                         .andExpect(jsonPath("$.page.size", is(1)))
                         .andExpect(jsonPath("$.page.number", is(1)))
-                        .andExpect(jsonPath("$.page.totalPages", is(16)))
-                        .andExpect(jsonPath("$.page.totalElements", is(16)));
+                        .andExpect(jsonPath("$.page.totalPages", is(19)))
+                        .andExpect(jsonPath("$.page.totalElements", is(19)));
     }
 
     @Test
@@ -563,6 +572,63 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
         }
     }
 
+    @Test
+    public void TrackSpecialGroupduringprocessSchedulingTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        Group specialGroup = GroupBuilder.createGroup(context)
+                                         .withName("Special Group")
+                                         .addMember(admin)
+                                         .build();
+
+        context.restoreAuthSystemState();
+
+        configurationService.setProperty("authentication-password.login.specialgroup", specialGroup.getName());
+
+        LinkedList<DSpaceCommandLineParameter> parameters = new LinkedList<>();
+
+        parameters.add(new DSpaceCommandLineParameter("-r", "test"));
+        parameters.add(new DSpaceCommandLineParameter("-i", null));
+
+        List<ParameterValueRest> list = parameters.stream()
+                                                  .map(dSpaceCommandLineParameter -> dSpaceRunnableParameterConverter
+                                                  .convert(dSpaceCommandLineParameter, Projection.DEFAULT))
+                                                  .collect(Collectors.toList());
+
+
+
+        String token = getAuthToken(admin.getEmail(), password);
+        List<ProcessStatus> acceptableProcessStatuses = new LinkedList<>();
+        acceptableProcessStatuses.addAll(Arrays.asList(ProcessStatus.SCHEDULED,
+                                                       ProcessStatus.RUNNING,
+                                                       ProcessStatus.COMPLETED));
+
+        AtomicReference<Integer> idRef = new AtomicReference<>();
+
+        try {
+            getClient(token).perform(post("/api/system/scripts/mock-script/processes")
+                            .contentType("multipart/form-data")
+                            .param("properties", new Gson().toJson(list)))
+                            .andExpect(status().isAccepted())
+                            .andExpect(jsonPath("$", is(ProcessMatcher.matchProcess("mock-script",
+                                                        String.valueOf(admin.getID()),
+                                                        parameters, acceptableProcessStatuses))))
+                            .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(), "$.processId")));
+
+            Process process = processService.find(context, idRef.get());
+            List<Group> groups = process.getGroups();
+            boolean isPresent = false;
+            for (Group group : groups) {
+                if (group.getID().equals(specialGroup.getID())) {
+                    isPresent = true;
+                }
+            }
+            assertTrue(isPresent);
+
+        } finally {
+            ProcessBuilder.deleteProcess(idRef.get());
+        }
+    }
 
     @After
     public void destroy() throws Exception {

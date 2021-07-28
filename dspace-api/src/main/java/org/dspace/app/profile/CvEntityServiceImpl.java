@@ -73,7 +73,8 @@ public class CvEntityServiceImpl implements CvEntityService {
     private ResearcherProfileService researcherProfileService;
 
     @Override
-    public CvEntity createFromItem(Context context, Item item) throws SQLException, AuthorizeException {
+    public CvEntity createFromItem(Context context, Item item) throws SQLException,
+                                                                              AuthorizeException, IOException {
         Assert.notNull(item, "A item is required to create a CV entity");
 
         try {
@@ -182,7 +183,8 @@ public class CvEntityServiceImpl implements CvEntityService {
         }
     }
 
-    private void linkCvCloneToItem(Context context, Item item, Item cloneItem) throws SQLException, AuthorizeException {
+    private void linkCvCloneToItem(Context context, Item item, Item cloneItem)
+        throws SQLException, AuthorizeException, IOException {
 
         Item institutionItem = concytecWorkflowService.findCopiedItem(context, item);
         if (institutionItem != null) {
@@ -195,7 +197,7 @@ public class CvEntityServiceImpl implements CvEntityService {
     }
 
     private Item createCopyAndMergeIn(Context context, Item item, Item cloneItem)
-        throws SQLException, AuthorizeException {
+        throws SQLException, AuthorizeException, IOException {
 
         WorkspaceItem workspaceItemCopy = itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context,
             item.getID(), MERGED.getLeftType());

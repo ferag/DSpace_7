@@ -44,6 +44,12 @@
           class="org.dspace.statistics.MockSolrLoggerServiceImpl"
           lazy-init="true"/>
 
+    <bean id="org.dspace.oai.SolrOaiCore" class="org.dspace.oai.SolrOaiCore"/>
+
+    <bean class="org.dspace.oaisolr.MockSolrOaiCore" autowire-candidate="true"/>
+
+
+
     <bean id="org.dspace.statistics.SolrStatisticsCore"
           class="org.dspace.statistics.MockSolrStatisticsCore"
           autowire-candidate="true"/>

@@ -93,7 +93,7 @@ public class AbstractControllerIntegrationTest extends AbstractIntegrationTestWi
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    private List<Filter> requestFilters;
+    protected List<Filter> requestFilters;
 
     @Autowired
     void setConverters(HttpMessageConverter<?>[] converters) {

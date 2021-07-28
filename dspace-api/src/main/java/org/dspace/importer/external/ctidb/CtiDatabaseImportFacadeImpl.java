@@ -91,7 +91,13 @@ public class CtiDatabaseImportFacadeImpl implements CtiDatabaseImportFacade {
     @Override
     public ExternalDataObject getCtiProfile(ResearcherProfileSource source) {
 
-        Optional<Integer> investigadorId = findInvestigadorId(source);
+        Optional<Integer> investigadorId;
+        try {
+            investigadorId = findInvestigadorId(source);
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            return null;
+        }
         if (investigadorId.isEmpty()) {
             return null;
         }
@@ -163,7 +169,13 @@ public class CtiDatabaseImportFacadeImpl implements CtiDatabaseImportFacade {
     @Override
     public List<ExternalDataObject> getCtiSuggestions(ResearcherProfileSource source) {
 
-        Optional<Integer> investigadorId = findInvestigadorId(source);
+        Optional<Integer> investigadorId;
+        try {
+            investigadorId = findInvestigadorId(source);
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            return null;
+        }
         if (investigadorId.isEmpty()) {
             return null;
         }

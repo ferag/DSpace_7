@@ -17,12 +17,14 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.parsers.DocumentBuilder;
@@ -434,6 +436,10 @@ public class PgcApiDataProviderServiceImpl implements PgcApiDataProviderService 
                         .append(pageable.getPageNumber())
                         .append("&size=")
                         .append(pageable.getPageSize());
+                    if (pageable.getSort().isSorted()) {
+                        url.append("&sort=")
+                            .append(sort(pageable));
+                    }
                 }
 
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -477,6 +483,13 @@ public class PgcApiDataProviderServiceImpl implements PgcApiDataProviderService 
         } catch (IOException | TransformerException e) {
             throw e;
         }
+    }
+
+    private String sort(Pageable pageable) {
+        return Arrays.stream(pageable.getSort().toString().split(":"))
+            .map(String::trim)
+            .map(String::toLowerCase)
+            .collect(Collectors.joining(","));
     }
 
     private StringWriter domStringWriter(final Document document, final TransformerFactory transformerFactory)

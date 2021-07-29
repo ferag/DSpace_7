@@ -15,9 +15,13 @@
     <bean class="org.dspace.app.bulkedit.BulkImportTransformerService">
         <constructor-arg>
 			<map>
-			<!-- <entry  key="" value-ref= ""> </entry> -->       
+			 <entry  key="perucris.subject.ocde" value-ref= "ocdeTransformer"> </entry>       
 			</map>
 		</constructor-arg>
 	</bean>
+
+    <bean id="ocdeTransformer" class="org.dspace.app.bulkedit.BulkImportOcdeValueTransformer">
+         <property name="authorityName" value="ocde_subjects" />
+    </bean>   
 
 </beans>

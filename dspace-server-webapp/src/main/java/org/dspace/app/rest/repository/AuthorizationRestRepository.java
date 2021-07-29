@@ -154,12 +154,8 @@ public class AuthorizationRestRepository extends DSpaceRestRepository<Authorizat
 
         Context context = obtainContext();
 
-        BaseObjectRest obj = utils.getBaseObjectRestFromUri(context, uri);
-        if (obj == null) {
-            return null;
-        }
-
         EPerson currUser = context.getCurrentUser();
+
         // get the user specified in the requested parameters, can be null for anonymous
         EPerson user = getUserFromRequestParameter(context, epersonUuid);
         if (ObjectUtils.notEqual(currUser, user)) {
@@ -168,11 +164,84 @@ public class AuthorizationRestRepository extends DSpaceRestRepository<Authorizat
             context.switchContextUser(user);
         }
 
+        List<Authorization> authorizations = findAuthorizationsImpl(context, user, uri, epersonUuid, featureName);
+
+        if (currUser != user) {
+            // restore the real current user
+            context.restoreContextUser();
+        }
+        return converter.toRestPage(authorizations, pageable, utils.obtainProjection());
+    }
+
+    @PreAuthorize("#epersonUuid==null || hasPermission(#epersonUuid, 'EPERSON', 'READ')")
+    @SearchRestMethod(name = "objects")
+    public Page<AuthorizationRest> findByObjects(@Parameter(value = "uri") List<String> uriList,
+            @Parameter(value = "eperson") UUID epersonUuid, @Parameter(value = "feature") String featureName,
+            Pageable pageable) throws AuthorizeException, SQLException {
+
+        Context context = obtainContext();
+
+        EPerson currUser = context.getCurrentUser();
+
+        // get the user specified in the requested parameters, can be null for anonymous
+        EPerson user = getUserFromRequestParameter(context, epersonUuid);
+        if (ObjectUtils.notEqual(currUser, user)) {
+            // Temporarily change the Context's current user in order to retrieve
+            // authorizations based on that user
+            context.switchContextUser(user);
+        }
+
+        List<Authorization> authorizations =
+                findAuthorizationsUriListImpl(context, user, uriList, epersonUuid, featureName);
+
+        if (currUser != user) {
+            // restore the real current user
+            context.restoreContextUser();
+        }
+        return converter.toRestPage(authorizations, null, utils.obtainProjection());
+    }
+
+    private List<Authorization> findAuthorizationsUriListImpl(
+            Context context,
+            EPerson user,
+            List<String> uriList,
+            UUID epersonUuid,
+            String featureName) throws SQLException, AuthorizeException {
+
+        if (featureName == null) {
+            return null;
+        }
+
+        List<Authorization> authorizations = new ArrayList<Authorization>();
+        for (String uri : uriList) {
+            try {
+                authorizations.addAll(findAuthorizationsImpl(context, user, uri, epersonUuid, featureName));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                log.warn("Can't evaulate authorizations for item=" + uri + " feature=" + featureName);
+            }
+        }
+        return authorizations;
+    }
+
+    private List<Authorization> findAuthorizationsImpl(
+            Context context,
+            EPerson user,
+            String uri,
+            UUID epersonUuid,
+            String featureName) throws SQLException, AuthorizeException {
+
+        BaseObjectRest obj = utils.getBaseObjectRestFromUri(context, uri);
+        if (obj == null) {
+            return null;
+        }
+
         List<Authorization> authorizations;
         if (isNotBlank(featureName)) {
             authorizations = findByObjectAndFeature(context, user, obj, featureName);
         } else {
-            List<AuthorizationFeature> features = authorizationFeatureService.findByResourceType(obj.getUniqueType());
+            List<AuthorizationFeature> features =
+                    authorizationFeatureService.findByResourceType(obj.getUniqueType());
             authorizations = new ArrayList<>();
             for (AuthorizationFeature f : features) {
                 if (authorizationFeatureService.isAuthorized(context, f, obj)) {
@@ -181,11 +250,7 @@ public class AuthorizationRestRepository extends DSpaceRestRepository<Authorizat
             }
         }
 
-        if (currUser != user) {
-            // restore the real current user
-            context.restoreContextUser();
-        }
-        return converter.toRestPage(authorizations, pageable, utils.obtainProjection());
+        return authorizations;
     }
 
     private List<Authorization> findByObjectAndFeature(

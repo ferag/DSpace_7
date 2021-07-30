@@ -176,7 +176,7 @@ public class AuthorizationRestRepository extends DSpaceRestRepository<Authorizat
     @PreAuthorize("#epersonUuid==null || hasPermission(#epersonUuid, 'EPERSON', 'READ')")
     @SearchRestMethod(name = "objects")
     public Page<AuthorizationRest> findByObjects(@Parameter(value = "uri") List<String> uriList,
-            @Parameter(value = "eperson") UUID epersonUuid, @Parameter(value = "feature") String featureName,
+            @Parameter(value = "eperson") UUID epersonUuid, @Parameter(value = "feature") List<String> featureNames,
             Pageable pageable) throws AuthorizeException, SQLException {
 
         Context context = obtainContext();
@@ -192,7 +192,7 @@ public class AuthorizationRestRepository extends DSpaceRestRepository<Authorizat
         }
 
         List<Authorization> authorizations =
-                findAuthorizationsUriListImpl(context, user, uriList, epersonUuid, featureName);
+                findAuthorizationsUriListImpl(context, user, uriList, featureNames, epersonUuid);
 
         if (currUser != user) {
             // restore the real current user
@@ -205,20 +205,22 @@ public class AuthorizationRestRepository extends DSpaceRestRepository<Authorizat
             Context context,
             EPerson user,
             List<String> uriList,
-            UUID epersonUuid,
-            String featureName) throws SQLException, AuthorizeException {
+            List<String> featureNames,
+            UUID epersonUuid) throws SQLException, AuthorizeException {
 
-        if (featureName == null) {
+        if (featureNames.isEmpty()) {
             return null;
         }
 
         List<Authorization> authorizations = new ArrayList<Authorization>();
         for (String uri : uriList) {
-            try {
-                authorizations.addAll(findAuthorizationsImpl(context, user, uri, epersonUuid, featureName));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                log.warn("Can't evaulate authorizations for item=" + uri + " feature=" + featureName);
+            for (String featureName : featureNames) {
+                try {
+                    authorizations.addAll(findAuthorizationsImpl(context, user, uri, epersonUuid, featureName));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    log.warn("Can't evaulate authorizations for item=" + uri + " feature=" + featureName);
+                }
             }
         }
         return authorizations;

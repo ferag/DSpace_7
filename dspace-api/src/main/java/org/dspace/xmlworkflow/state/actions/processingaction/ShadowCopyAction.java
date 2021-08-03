@@ -160,7 +160,7 @@ public class ShadowCopyAction extends ProcessingAction {
     }
 
     private WorkspaceItem createShadowCopyForWithdraw(Context ctx, Item withdrawItem, Item itemToWithdraw)
-        throws SQLException, AuthorizeException {
+        throws SQLException, AuthorizeException, IOException {
 
         Item itemToWithdrawCopy = concytecWorkflowService.findShadowItemCopy(ctx, itemToWithdraw);
         if (itemToWithdrawCopy == null || itemToWithdrawCopy.isWithdrawn()) {
@@ -173,7 +173,7 @@ public class ShadowCopyAction extends ProcessingAction {
     }
 
     private WorkspaceItem createShadowCopyForReinstate(Context ctx, Item reinstateItem, Item itemToReinstate)
-        throws SQLException, AuthorizeException {
+        throws SQLException, AuthorizeException, IOException {
 
         Item itemToReinstateCopy = concytecWorkflowService.findShadowItemCopy(ctx, itemToReinstate);
         if (itemToReinstateCopy == null || !itemToReinstateCopy.isWithdrawn() || isMergedIn(ctx, itemToReinstateCopy)) {
@@ -226,18 +226,18 @@ public class ShadowCopyAction extends ProcessingAction {
     }
 
     private WorkspaceItem createItemCopyCorrection(Context context, UUID itemCopyId)
-        throws SQLException, AuthorizeException {
+        throws SQLException, AuthorizeException, IOException {
         return itemCorrectionService.createCorrectionItem(context, itemCopyId);
     }
 
     private WorkspaceItem createItemCopyWithdraw(Context context, UUID itemCopyId)
-        throws SQLException, AuthorizeException {
+        throws SQLException, AuthorizeException, IOException {
         return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context,
             itemCopyId, WITHDRAW.getLeftType());
     }
 
     private WorkspaceItem createItemCopyReinstate(Context context, UUID itemCopyId)
-        throws SQLException, AuthorizeException {
+        throws SQLException, AuthorizeException, IOException {
         return itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context,
             itemCopyId, REINSTATE.getLeftType());
     }

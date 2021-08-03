@@ -15,12 +15,11 @@ import com.ibm.icu.text.Normalizer;
 import org.apache.commons.lang3.StringUtils;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.factory.ContentServiceFactory;
-import org.dspace.core.Context;
 
 public class TitleWithDigitAndYearSignature extends MD5ValueSignature {
 
     @Override
-    protected String normalize(DSpaceObject item, Context context, String value) {
+    protected String normalize(DSpaceObject item, String value) {
         if (value != null) {
             String temp = null;
             if (item != null) {

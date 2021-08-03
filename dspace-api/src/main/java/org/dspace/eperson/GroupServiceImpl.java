@@ -380,6 +380,12 @@ public class GroupServiceImpl extends DSpaceObjectServiceImpl<Group> implements 
         //Don't forget to add our direct children
         childGroupChildren.addAll(g.getMembers());
 
+        for (Group group : groups) {
+            if (getGroupType(group) != GroupType.NORMAL) {
+                ePersonService.findByRole(c, group).forEachRemaining(childGroupChildren::add);
+            }
+        }
+
         return new ArrayList<>(childGroupChildren);
     }
 

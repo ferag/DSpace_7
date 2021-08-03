@@ -81,7 +81,7 @@ public class ProfileItemCloningAction implements AfterImportAction, ProfileItemC
 
         try {
             cloneProfile(context, profileItem, personItem);
-        } catch (Exception e) {
+        } catch (SQLException | AuthorizeException | IOException e) {
             throw new RuntimeException(e);
         }
 
@@ -121,7 +121,7 @@ public class ProfileItemCloningAction implements AfterImportAction, ProfileItemC
     }
 
     private Item createCopyAndMergeIn(Context context, Item personItem, Item profileItemClone)
-        throws SQLException, AuthorizeException {
+        throws SQLException, AuthorizeException, IOException {
 
         WorkspaceItem workspaceItemCopy = itemCorrectionService.createWorkspaceItemAndRelationshipByItem(context,
             personItem.getID(), MERGED.getLeftType());

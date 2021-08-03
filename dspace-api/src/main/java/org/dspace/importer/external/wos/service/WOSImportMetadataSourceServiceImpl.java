@@ -144,7 +144,7 @@ public class WOSImportMetadataSourceServiceImpl extends AbstractImportMetadataSo
             String queryString = checkQuery(query);
             String proxyHost = configurationService.getProperty("http.proxy.host");
             String proxyPort = configurationService.getProperty("http.proxy.port");
-            String apiKey = configurationService.getProperty("submission.lookup.wos.apikey");
+            String apiKey = configurationService.getProperty("wos.apiKey");
             if (apiKey != null && !apiKey.equals("")) {
                 HttpGet method = null;
                 try {
@@ -208,7 +208,7 @@ public class WOSImportMetadataSourceServiceImpl extends AbstractImportMetadataSo
 //            String queryString = "(" + doi.replace("!", "/") + ")";
             String proxyHost = configurationService.getProperty("http.proxy.host");
             String proxyPort = configurationService.getProperty("http.proxy.port");
-            String apiKey = configurationService.getProperty("submission.lookup.wos.apikey");
+            String apiKey = configurationService.getProperty("wos.apiKey");
             if (apiKey != null && !apiKey.equals("")) {
                 HttpGet method = null;
                 try {
@@ -276,7 +276,7 @@ public class WOSImportMetadataSourceServiceImpl extends AbstractImportMetadataSo
             Integer count = query.getParameterAsClass("count", Integer.class);
             String proxyHost = configurationService.getProperty("http.proxy.host");
             String proxyPort = configurationService.getProperty("http.proxy.port");
-            String apiKey = configurationService.getProperty("submission.lookup.wos.apikey");
+            String apiKey = configurationService.getProperty("wos.apikey");
             if (apiKey != null && !apiKey.equals("")) {
                 HttpGet method = null;
                 try {

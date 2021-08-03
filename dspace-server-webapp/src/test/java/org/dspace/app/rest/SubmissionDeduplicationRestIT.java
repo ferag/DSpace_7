@@ -45,8 +45,11 @@ import org.dspace.content.Item;
 import org.dspace.content.RelationshipType;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.content.service.WorkspaceItemService;
+import org.dspace.deduplication.MockSolrDedupCore;
 import org.dspace.eperson.EPerson;
+import org.dspace.kernel.ServiceManager;
 import org.dspace.services.ConfigurationService;
+import org.dspace.services.factory.DSpaceServicesFactory;
 import org.dspace.workflow.WorkflowItem;
 import org.dspace.xmlworkflow.service.XmlWorkflowService;
 import org.dspace.xmlworkflow.storedcomponents.PoolTask;
@@ -96,6 +99,9 @@ public class SubmissionDeduplicationRestIT extends AbstractControllerIntegration
 
     @Before
     public void setup() throws SQLException, AuthorizeException {
+
+        ServiceManager serviceManager = DSpaceServicesFactory.getInstance().getServiceManager();
+        serviceManager.getServiceByName(null, MockSolrDedupCore.class);
 
         context.turnOffAuthorisationSystem();
 
@@ -579,6 +585,48 @@ public class SubmissionDeduplicationRestIT extends AbstractControllerIntegration
     private RelationshipType createIsCorrectionOfRelationship(EntityType entityType) {
         return createRelationshipTypeBuilder(context, entityType,
             entityType, "isCorrectionOfItem", "isCorrectedByItem", 0, 1, 0, 1).build();
+    }
+
+    @Test
+    public void testWorkflowDuplicationWithSameTitleTest() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item item = createItem("Test publication", collection);
+        String itemId = item.getID().toString();
+
+        WorkflowItem workflowItem = createWorkflowItem("Test publication", collection);
+
+        context.restoreAuthSystemState();
+
+        String submitterToken = getAuthToken(submitter.getEmail(), password);
+        getClient(submitterToken).perform(get("/api/workflow/workflowitems/" + workflowItem.getID()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.sections['detect-duplicate'].matches", aMapWithSize(1)))
+            .andExpect(jsonPath("$.sections['detect-duplicate'].matches['" + itemId + "'].matchObject.id", is(itemId)))
+            .andExpect(jsonPath("$.sections['detect-duplicate'].matches['" + itemId + "']"
+                + ".workflowDecision").doesNotExist());
+    }
+
+    @Test
+    public void testWorkflowDuplicationWithDifferentTitleTest() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item item = createItem("Test publication", collection);
+        String itemId = item.getID().toString();
+
+        WorkflowItem workflowItem = createWorkflowItem("Test publication", collection);
+
+        context.restoreAuthSystemState();
+
+        String submitterToken = getAuthToken(submitter.getEmail(), password);
+        getClient(submitterToken).perform(get("/api/workflow/workflowitems/" + workflowItem.getID()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.sections['detect-duplicate'].matches", aMapWithSize(1)))
+            .andExpect(jsonPath("$.sections['detect-duplicate'].matches['" + itemId + "'].matchObject.id", is(itemId)))
+            .andExpect(jsonPath("$.sections['detect-duplicate'].matches['" + itemId + "']"
+                + ".workflowDecision").doesNotExist());
     }
 
 }

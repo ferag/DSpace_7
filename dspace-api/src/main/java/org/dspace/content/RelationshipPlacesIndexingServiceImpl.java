@@ -39,36 +39,63 @@ public class RelationshipPlacesIndexingServiceImpl implements RelationshipPlaces
     @Override
     public void updateRelationReferences(final Context context, final Relationship relationship) throws SQLException {
 
-        Item rightItem = relationship.getRightItem();
-        final List<Relationship> relations =
-            relationshipDAO.findByItemAndRelationshipType(context, rightItem,
-                                                          relationship.getRelationshipType(), -1, -1);
+        // If only left position is used to sort this relation, we index all other impacted item positions starting
+        // from left item
+        if (singleDirectionRelationship("left", relationship.getRelationshipType())) {
+            Item leftItem = relationship.getLeftItem();
+            final List<Relationship> relations = relationshipDAO.findByItem(context, leftItem,
+                                                                            -1, -1, false);
 
-        List<String> leftItemsIdsToAdd = new LinkedList<>();
+            List<String> rightItemsIdsToAdd = new LinkedList<>();
 
-        for (final Relationship relation : relations) {
-            addRightItemsReferences(context, relationship, relation);
+            for (final Relationship relation : relations) {
+                addLeftItemsReferences(context, relationship, relation);
 
-            int times = 1;
-            if (singleDirectionRelationship("left", relationship.getRelationshipType())) {
-                times = relation.getRightPlace() - relation.getLeftPlace();
+                int times = 1;
+                if (singleDirectionRelationship("right", relationship.getRelationshipType())) {
+                    times = relation.getLeftPlace() - relation.getRightPlace();
+                }
+                rightItemsIdsToAdd.addAll(Collections.nCopies(times, relation.getRightItem().getID().toString()));
             }
-            leftItemsIdsToAdd.addAll(Collections.nCopies(times, relation.getLeftItem().getID().toString()));
-        }
-        if (!leftItemsIdsToAdd.isEmpty()) {
+            if (!rightItemsIdsToAdd.isEmpty()) {
 
-            indexingService.updateRelationForItem(rightItem.getID().toString(),
-                                                  relationship.getRelationshipType().getRightwardType(),
-                                                  leftItemsIdsToAdd);
+                indexingService.updateRelationForItem(leftItem.getID().toString(),
+                                                      relationship.getRelationshipType().getRightwardType(),
+                                                      rightItemsIdsToAdd);
+            }
+        } else {
+            // if both or only right place is used to sort relationship, impacted items are indexed starting from
+            // right item.
+            Item rightItem = relationship.getRightItem();
+            final List<Relationship> relations = relationshipDAO.findByItem(context, rightItem, -1, -1,
+                                                                            false);
+
+            List<String> leftItemsIdsToAdd = new LinkedList<>();
+
+            for (final Relationship relation : relations) {
+                addRightItemsReferences(context, relationship, relation);
+
+                int times = 1;
+                if (singleDirectionRelationship("left", relationship.getRelationshipType())) {
+                    times = relation.getRightPlace() - relation.getLeftPlace();
+                }
+                leftItemsIdsToAdd.addAll(Collections.nCopies(times, relation.getLeftItem().getID().toString()));
+            }
+            if (!leftItemsIdsToAdd.isEmpty()) {
+
+                indexingService.updateRelationForItem(rightItem.getID().toString(),
+                                                      relationship.getRelationshipType().getRightwardType(),
+                                                      leftItemsIdsToAdd);
+            }
         }
     }
+
 
     private void addRightItemsReferences(final Context context, final Relationship relationship,
                                          final Relationship relation) throws SQLException {
         final Item leftItem = relation.getLeftItem();
-        final List<Relationship> leftItemRelationships =
-            relationshipDAO.findByItemAndRelationshipType(context, leftItem, relationship.getRelationshipType(),
-                                                          -1, -1);
+        final List<Relationship> leftItemRelationships = relationshipDAO.findByItem(context, leftItem,
+                                                                                    -1, -1, false);
         List<String> rightItemsToAdd = new LinkedList<>();
         for (final Relationship leftItemRelation : leftItemRelationships) {
             int times = 1;
@@ -80,6 +107,26 @@ public class RelationshipPlacesIndexingServiceImpl implements RelationshipPlaces
         if (!rightItemsToAdd.isEmpty())  {
             indexingService.updateRelationForItem(leftItem.getID().toString(),
                                                   relation.getRelationshipType().getLeftwardType(),
+                                                  rightItemsToAdd);
+        }
+    }
+
+    private void addLeftItemsReferences(final Context context, final Relationship relationship,
+                                         final Relationship relation) throws SQLException {
+        final Item rightItem = relation.getRightItem();
+        final List<Relationship> leftItemRelationships = relationshipDAO.findByItem(context, rightItem,
+                                                                                    -1, -1, false);
+        List<String> rightItemsToAdd = new LinkedList<>();
+        for (final Relationship leftItemRelation : leftItemRelationships) {
+            int times = 1;
+            if (singleDirectionRelationship("left", relationship.getRelationshipType())) {
+                times = leftItemRelation.getRightPlace() - leftItemRelation.getLeftPlace();
+            }
+            rightItemsToAdd.addAll(Collections.nCopies(times, leftItemRelation.getLeftItem().getID().toString()));
+        }
+        if (!rightItemsToAdd.isEmpty())  {
+            indexingService.updateRelationForItem(rightItem.getID().toString(),
+                                                  relation.getRelationshipType().getRightwardType(),
                                                   rightItemsToAdd);
         }
     }

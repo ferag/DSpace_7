@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.dspace.app.profile.ResearcherProfile;
 import org.dspace.app.profile.service.ResearcherProfileService;
@@ -39,6 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class SolrServiceHiddenRelationsRestrictionPlugin implements SolrServiceSearchPlugin {
 
 
+    public static final String FACET_SCOPE_ID = "facetScopeId";
     private final ResearcherProfileService researcherProfileService;
 
     private final RelationshipTypeService relationshipTypeService;
@@ -62,20 +65,29 @@ public class SolrServiceHiddenRelationsRestrictionPlugin implements SolrServiceS
     public void additionalSearchParameters(final Context context, final DiscoverQuery discoveryQuery,
                                            final SolrQuery solrQuery) {
 
-        final Optional<String> scope = Optional.ofNullable(discoveryQuery.getScopeObject())
-                                               .map(dso -> dso.getID().toString());
-        if (scope.isEmpty() || currentUserIsScopeOrAdmin(scope.get(), context)) {
+        final String scope = Optional.ofNullable(discoveryQuery.getScopeObject())
+                                               .map(dso -> dso.getID().toString())
+                                               .orElseGet(() -> fromProperties(discoveryQuery));
+
+        if (StringUtils.isBlank(scope) || currentUserIsScopeOrAdmin(scope, context)
+                || !discoveryQuery.getDiscoveryConfigurationName().startsWith("RELATION.")) {
             return;
         }
 
-        final List<String> relations = relations(context);
+        final String[] relationSplit = discoveryQuery.getDiscoveryConfigurationName().split("\\.");
+        final List<String> relations = relations(context, relationSplit[relationSplit.length - 1]);
         if (relations == null || relations.isEmpty()) {
             return;
         }
         relations.stream()
-                 .map(r -> "-relation." + r + ":" + scope.get())
+                 .map(r -> "-relation." + r + ":" + scope)
                  .forEach(solrQuery::addFilterQuery);
 
+    }
+
+    private String fromProperties(final DiscoverQuery discoveryQuery) {
+        final List<String> list = discoveryQuery.getProperties().get(FACET_SCOPE_ID);
+        return CollectionUtils.isEmpty(list) ? "" : list.get(0);
     }
 
     private boolean currentUserIsScopeOrAdmin(final String scope, final Context context) {
@@ -101,14 +113,13 @@ public class SolrServiceHiddenRelationsRestrictionPlugin implements SolrServiceS
         }
     }
 
-    private List<String> relations(final Context context) {
+    private List<String> relations(final Context context, final String relation) {
         try {
             return relationshipTypeService
-                       .findByEntityType(context,
-                                         entityTypeService.findByEntityType(context, "Person"),
-                                         false)
+                       .findAll(context)
                        .stream()
-                       .filter(rt -> rt.getLeftwardType().contains("HiddenFor"))
+                       .filter(rt -> StringUtils.containsIgnoreCase(rt.getLeftwardType(),
+                                                                    "is" + relation + "HiddenFor"))
                        .map(RelationshipType::getLeftwardType)
                        .collect(Collectors.toList());
         } catch (SQLException e) {

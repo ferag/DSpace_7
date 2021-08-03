@@ -66,8 +66,8 @@ public class SimpleJsonPathKeyMetadataContributor extends SimpleJsonPathMetadata
     public Collection<MetadatumDTO> contributeMetadata(String fullJson) {
         Collection<MetadatumDTO> metadata = new ArrayList<>();
         Collection<String> metadataValue = new ArrayList<>();
-        if (getMetadataProcessor() != null) {
-            metadataValue = getMetadataProcessor().processMetadata(fullJson);
+        if (metadataProcessor != null) {
+            metadataValue = metadataProcessor.processMetadata(fullJson);
         } else {
             try {
                 ReadContext ctx = JsonPath.parse(fullJson);

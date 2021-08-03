@@ -7,6 +7,7 @@
  */
 package org.dspace.app.rest.repository;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
@@ -91,8 +92,13 @@ public class CvEntityRestRepository extends DSpaceRestRepository<CvEntityRest, U
             throw new RESTAuthorizationException("The user is not allowed to create a CV entity from the given item");
         }
 
-        CvEntity cvEntity = cvEntityService.createFromItem(context, item);
-        return converterService.toRest(cvEntity, utils.obtainProjection());
+        try {
+            CvEntity cvEntity = cvEntityService.createFromItem(context, item);
+            return converterService.toRest(cvEntity, utils.obtainProjection());
+        } catch (IOException e) {
+            throw new UnprocessableEntityException(
+                "An error occurred while creating entity from item with id: " + item.getID());
+        }
     }
 
     private boolean isNotAuthorizedToCreate(Context context, Item item) throws SQLException {

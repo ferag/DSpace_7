@@ -10,6 +10,7 @@ package org.dspace.app.profile.importproviders.impl;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -129,6 +130,9 @@ public class ResearcherProfileCtiProvider implements ResearcherProfileProvider {
             throws SolrServerException, IOException {
 
         List<ExternalDataObject> ctiSuggestions = ctiDatabaseImport.getCtiSuggestions(source);
+        if (Objects.isNull(ctiSuggestions)) {
+            return;
+        }
         ctiPublicationSuggestionLoader.importSuggestions(context, profile, ctiSuggestions);
         ctiProjectSuggestionLoader.importSuggestions(context, profile, ctiSuggestions);
         ctiPatentSuggestionLoader.importSuggestions(context, profile, ctiSuggestions);

@@ -9,6 +9,7 @@ package org.dspace.eperson.dao;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -53,4 +54,7 @@ public interface EPersonDAO extends DSpaceObjectDAO<EPerson>, DSpaceObjectLegacy
 
     List<EPerson> findByMetadataEid(Context context, MetadataField field, String eid)
             throws SQLException;
+
+    public Iterator<EPerson> findByAuthorityValue(Context context, MetadataField metadataField, String authority)
+        throws SQLException;
 }

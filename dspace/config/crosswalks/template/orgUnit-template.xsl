@@ -6,7 +6,7 @@
 	
 	<xsl:param name="imageDir" />
 	
-	<xsl:template match="OrgUnit">	
+	<xsl:template match="OrgUnit">
 		<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
 			<fo:layout-master-set>
 				<fo:simple-page-master master-name="simpleA4"
@@ -36,27 +36,27 @@
 				    	<xsl:with-param name="label" select="'Type'" />
 				    	<xsl:with-param name="value" select="Type" />
 			    	</xsl:call-template>
-                    
+
                     <xsl:call-template name="print-value">
                         <xsl:with-param name="label" select="'Description'" />
                         <xsl:with-param name="value" select="Description" />
                     </xsl:call-template>
-                    
+
                     <xsl:call-template name="print-value">
                         <xsl:with-param name="label" select="'Director'" />
                         <xsl:with-param name="value" select="Director" />
                     </xsl:call-template>
-                    
+
                     <xsl:call-template name="print-value">
                         <xsl:with-param name="label" select="'Established'" />
                         <xsl:with-param name="value" select="Established" />
                     </xsl:call-template>
-                    
+
                     <xsl:call-template name="print-values">
                         <xsl:with-param name="label" select="'Scientifics boards:'" />
                         <xsl:with-param name="values" select="ScientificBoard" />
                     </xsl:call-template>
-			    	
+
 					<xsl:call-template name="print-value">
 				    	<xsl:with-param name="label" select="'Parent Organization'" />
 				    	<xsl:with-param name="value" select="PartOf/OrgUnit/Name" />
@@ -66,72 +66,77 @@
 				    	<xsl:with-param name="label" select="'Identifier(s)'" />
 				    	<xsl:with-param name="values" select="Identifier[not(@type)]" />
 			    	</xsl:call-template>
-                    
+
                     <xsl:call-template name="print-values">
                         <xsl:with-param name="label" select="'URL(s)'" />
                         <xsl:with-param name="values" select="Url" />
                     </xsl:call-template>
-                    
+
                     <xsl:call-template name="print-values">
                         <xsl:with-param name="label" select="'RUC ID(s)'" />
                         <xsl:with-param name="values" select="Identifier[@type = 'RUC']" />
                     </xsl:call-template>
-                    
+
                     <xsl:call-template name="print-values">
                         <xsl:with-param name="label" select="'Ringgold ID(s)'" />
                         <xsl:with-param name="values" select="Identifier[@type = 'Ringgold']" />
                     </xsl:call-template>
-                    
+
                     <xsl:call-template name="print-values">
                         <xsl:with-param name="label" select="'Research Organization Registry ID(s)'" />
                         <xsl:with-param name="values" select="Identifier[@type = 'Research Organization Registry']" />
                     </xsl:call-template>
-                    
+
                     <xsl:call-template name="print-values">
                         <xsl:with-param name="label" select="'International Standard Name ID(s)'" />
                         <xsl:with-param name="values" select="Identifier[@type = 'International Standard Name']" />
                     </xsl:call-template>
-                    
+
                     <xsl:call-template name="print-values">
                         <xsl:with-param name="label" select="'Scopus Affiliation ID(s)'" />
                         <xsl:with-param name="values" select="Identifier[@type = 'Scopus Affiliation']" />
                     </xsl:call-template>
-                    
+
                     <xsl:call-template name="print-values">
                         <xsl:with-param name="label" select="'CrossRef Funder ID(s)'" />
                         <xsl:with-param name="values" select="Identifier[@type = 'CrossRef Funder']" />
                     </xsl:call-template>
-                    
+
                     <xsl:call-template name="print-values">
                         <xsl:with-param name="label" select="'Parent organization'" />
                         <xsl:with-param name="values" select="ParentOrganization" />
                     </xsl:call-template>
-                    
+
                     <xsl:call-template name="print-values">
                         <xsl:with-param name="label" select="'Subject(s)'" />
                         <xsl:with-param name="values" select="Subject" />
                     </xsl:call-template>
-                    
+
                     <xsl:call-template name="print-values">
                         <xsl:with-param name="label" select="'Keyword(s)'" />
                         <xsl:with-param name="values" select="Keyword" />
                     </xsl:call-template>
-                    
+
                     <xsl:call-template name="print-value">
                         <xsl:with-param name="label" select="'PostAddress/AddressCountry'" />
                         <xsl:with-param name="value" select="Country" />
                     </xsl:call-template>
-                    
+
                     <xsl:call-template name="print-value">
                         <xsl:with-param name="label" select="'PostAddress/AddressLocality'" />
                         <xsl:with-param name="value" select="Locality" />
                     </xsl:call-template>
-                    
+
                     <xsl:call-template name="print-value">
                         <xsl:with-param name="label" select="'Ubigeo'" />
                         <xsl:with-param name="value" select="Ubigeo" />
                     </xsl:call-template>
-			    	
+
+					<xsl:call-template name="print-values">
+				    	<xsl:with-param name="label" select="'URL(s)'" />
+				    	<xsl:with-param name="values" select="Identifier[@type = 'URL']" />
+			    	</xsl:call-template>
+
 					<xsl:call-template name="print-values">
 				    	<xsl:with-param name="label" select="'People'" />
 				    	<xsl:with-param name="values" select="People/Person/@displayName" />
@@ -163,7 +168,7 @@
 		<fo:block font-size="16pt" font-weight="bold" margin-top="8mm" >
 			<xsl:value-of select="$label" /> 
 		</fo:block>
-		<fo:block margin-bottom="2mm" margin-top="-4mm">
+		<fo:block>
 			<fo:leader leader-pattern="rule" leader-length="100%" rule-style="solid" />         
 		</fo:block>
 	</xsl:template>

@@ -12,7 +12,7 @@
             <Funding id="@virtual.id@">  
                 <Acronym>@oairecerif.acronym@</Acronym>
                 <Name>@dc.title@</Name>
-            <Funding>  
+            </Funding>
         </As> 
     </Funder>
     @relation.dc-relation-funding.end@  

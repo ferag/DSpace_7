@@ -22,6 +22,7 @@
     <bean class="org.dspace.app.util.MetadataExposureServiceImpl"/>
     <bean class="org.dspace.app.util.OpenSearchServiceImpl"/>
     <bean class="org.dspace.app.util.WebAppServiceImpl"/>
+    <bean class="org.dspace.app.util.DSpaceObjectUtilsImpl"/>
 
     <bean class="org.dspace.authenticate.AuthenticationServiceImpl"/>
 
@@ -66,9 +67,9 @@
     <bean id= "org.dspace.app.profile.service.ResearcherProfileService" class="org.dspace.app.profile.ResearcherProfileServiceImpl"/>
     <bean id= "org.dspace.app.profile.service.CvEntityService" class="org.dspace.app.profile.CvEntityServiceImpl"/>
 <!--    <bean class="org.dspace.app.profile.ResearcherProfileServiceImpl"/>-->
-    <bean class="org.dspace.app.profile.ProfileSynchronizationWithOrcidConfiguratorImpl"/>
 
     <bean class="org.dspace.app.profile.OrcidMetadataCopyingAction"/>
+    <bean class="org.dspace.app.profile.OrcidProfileEnricher"/>
 
     <!-- Ensure PluginService is initialized properly via init() method -->
     <bean class="org.dspace.core.LegacyPluginServiceImpl" init-method="init"/>

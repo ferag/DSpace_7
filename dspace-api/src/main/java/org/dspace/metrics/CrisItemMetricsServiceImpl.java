@@ -53,8 +53,9 @@ public class CrisItemMetricsServiceImpl implements CrisItemMetricsService {
 
     @Override
     public List<CrisMetrics> getMetrics(Context context, UUID itemUuid) {
+        // searches in solr
         List<CrisMetrics> metrics = getStoredMetrics(context, itemUuid);
-        metrics.addAll(getEmbeddableMetrics(context, itemUuid));
+        metrics.addAll(getEmbeddableMetrics(context, itemUuid, metrics));
         return metrics;
     }
 
@@ -64,15 +65,14 @@ public class CrisItemMetricsServiceImpl implements CrisItemMetricsService {
     }
 
     @Override
-    public List<EmbeddableCrisMetrics> getEmbeddableMetrics(Context context, UUID itemUuid) {
+    public List<EmbeddableCrisMetrics> getEmbeddableMetrics(Context context, UUID itemUuid,
+            List<CrisMetrics> retrivedStoredMetrics) {
         try {
             Item item = itemService.find(context, itemUuid);
             List<EmbeddableCrisMetrics> metrics = new ArrayList<>();
             this.providers.stream().forEach(provider -> {
-                final Optional<EmbeddableCrisMetrics> metric = provider.provide(context, item);
-                if (metric.isPresent()) {
-                    metrics.add(metric.get());
-                }
+                final Optional<EmbeddableCrisMetrics> metric = provider.provide(context, item, retrivedStoredMetrics);
+                metric.ifPresent(metrics::add);
             });
             return metrics;
         } catch (SQLException ex) {
@@ -92,10 +92,18 @@ public class CrisItemMetricsServiceImpl implements CrisItemMetricsService {
     }
 
     @Override
+    public Optional<String> embeddableFallback(final String metricType) {
+        return providers.stream()
+                 .filter(p -> p.fallbackOf(metricType))
+                 .map(p -> p.getMetricType())
+            .findFirst();
+    }
+
+    @Override
     public CrisMetrics find(Context context, String metricId) throws SQLException {
         if (this.isEmbeddableMetricId(metricId)) {
             Optional<EmbeddableCrisMetrics> metrics = getEmbeddableById(context, metricId);
-            return metrics.isPresent() ? (CrisMetrics)metrics.get() : null;
+            return metrics.isPresent() ? (CrisMetrics) metrics.get() : null;
         }
         if (StringUtils.startsWith(metricId, STORED_METRIC_ID_PREFIX)) {
             return crisMetricsService.find(context,
@@ -124,12 +132,12 @@ public class CrisItemMetricsServiceImpl implements CrisItemMetricsService {
         // Solr metrics
         SolrDocument solrDocument = findMetricsDocumentInSolr(context, itemUuid);
         Collection<String> fields = Optional.ofNullable(solrDocument)
-            .map(SolrDocument::getFieldNames).orElseGet(Collections::emptyList);
+                .map(SolrDocument::getFieldNames).orElseGet(Collections::emptyList);
         List<CrisMetrics> metrics = buildCrisMetric(context, getMetricFields(fields), solrDocument);
         return metrics;
     }
 
-    private List<CrisMetrics> buildCrisMetric(Context context, ArrayList<String> metricFields, SolrDocument document)  {
+    private List<CrisMetrics> buildCrisMetric(Context context, ArrayList<String> metricFields, SolrDocument document) {
         List<CrisMetrics> metrics = new ArrayList<CrisMetrics>(metricFields.size());
         for (String field : metricFields) {
             String[] splitedField = field.split("\\.");
@@ -174,6 +182,14 @@ public class CrisItemMetricsServiceImpl implements CrisItemMetricsService {
             }
         }
         return metricsField;
+    }
+
+    public EmbeddableCrisMetrics createEmbeddableCrisMetrics(String remark, String uuid) {
+        EmbeddableCrisMetrics embeddableCrisMetrics = new EmbeddableCrisMetrics();
+        embeddableCrisMetrics.setMetricType("embedded-view");
+        embeddableCrisMetrics.setRemark(remark);
+        embeddableCrisMetrics.setEmbeddableId(uuid + ":" + "embedded-view");
+        return embeddableCrisMetrics;
     }
 
 }

@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -228,5 +229,22 @@ public class EPersonDAOImpl extends AbstractHibernateDSODAO<EPerson> implements 
 
         return ((List<EPerson>) criteria.list());
 
+    }
+
+    @Override
+    public Iterator<EPerson> findByAuthorityValue(Context context, MetadataField metadataField, String authority)
+        throws SQLException {
+
+        Query query = createQuery(context, " "
+            + "  SELECT ePerson "
+            + "    FROM EPerson ePerson "
+            + "    JOIN ePerson.metadata metadatavalue "
+            + "   WHERE metadatavalue.metadataField = :metadata_field "
+            + "     AND metadatavalue.authority = :authority");
+
+        query.setParameter("metadata_field", metadataField);
+        query.setParameter("authority", authority);
+
+        return iterate(query);
     }
 }

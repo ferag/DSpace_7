@@ -118,95 +118,120 @@
 					<fo:block font-size="10pt" space-after="5mm" text-align="justify" margin-top="5mm" >
 						<xsl:value-of select="biography" />
 					</fo:block>
+					
+                    <xsl:if test="affiliations/affiliation">
 			    	
-					<xsl:call-template name="section-title">
-				    	<xsl:with-param name="label" select="'Afiliaciones'" />
-			    	</xsl:call-template>        
-					<xsl:for-each select="affiliations/affiliation">
-						<fo:block font-size="10pt">
-							<xsl:value-of select="role" /> at <xsl:value-of select="name" />
-							from <xsl:value-of select="start-date" />
-							<xsl:if test="end-date/text()">
-							 to <xsl:value-of select="end-date" />
-							</xsl:if>
-						</fo:block>
-					</xsl:for-each>
+						<xsl:call-template name="section-title">
+					    	<xsl:with-param name="label" select="'Afiliaciones'" />
+				    	</xsl:call-template>        
+						<xsl:for-each select="affiliations/affiliation">
+							<fo:block font-size="10pt">
+								<xsl:value-of select="role" /> at <xsl:value-of select="name" />
+								from <xsl:value-of select="start-date" />
+								<xsl:if test="end-date/text()">
+								 to <xsl:value-of select="end-date" />
+								</xsl:if>
+							</fo:block>
+						</xsl:for-each>
 					
-					<xsl:call-template name="section-title">
-				    	<xsl:with-param name="label" select="'Educación'" />
-			    	</xsl:call-template>    
-					<xsl:for-each select="educations/education">
-						<fo:block font-size="10pt">
-							<xsl:value-of select="role" /> at <xsl:value-of select="name" />
-							from <xsl:value-of select="start-date" />
-							<xsl:if test="end-date/text()">
-							 to <xsl:value-of select="end-date" />
-							</xsl:if>
-						</fo:block>
-					</xsl:for-each>
-					
-					<xsl:call-template name="section-title">
-				    	<xsl:with-param name="label" select="'Cualificaciones'" />
-			    	</xsl:call-template>
-					<xsl:for-each select="qualifications/qualification">
-						<fo:block font-size="10pt">
-							<xsl:value-of select="name" /> from <xsl:value-of select="start-date" />
-							<xsl:if test="end-date/text()">
-							 to <xsl:value-of select="end-date" />
-							</xsl:if>
-						</fo:block>
-					</xsl:for-each>
+					</xsl:if>
 
-					<xsl:call-template name="section-title">
-				    	<xsl:with-param name="label" select="'Publicaciones'" />
-			    	</xsl:call-template>
-			    	<xsl:for-each select="publications/publication">
-						<fo:block font-size="10pt">
-							<xsl:for-each select="authors/author">
-								<xsl:value-of select="current()" />
-							    <xsl:if test="position() != last()"> and </xsl:if>
-							</xsl:for-each>
-							<xsl:text> </xsl:text>
-							<xsl:if test="date-issued">
-								<xsl:text>(</xsl:text>
-								<xsl:value-of select="date-issued" />
-								<xsl:text>)</xsl:text>
-							</xsl:if>
-							<xsl:text>. </xsl:text>
-							<fo:inline font-style="italic" >
-								<xsl:value-of select="title" /> 
-							</fo:inline >
-						</fo:block>
-					</xsl:for-each>
+                    <xsl:if test="educations/education">
 					
-					<xsl:call-template name="section-title">
-				    	<xsl:with-param name="label" select="'Otra información'" />
-			    	</xsl:call-template>
-			    	
-                    <xsl:call-template name="print-value">
-                        <xsl:with-param name="label" select="'Calle de residencia'" />
-                        <xsl:with-param name="value" select="address/street" />
-                    </xsl:call-template>
-                    <xsl:call-template name="print-value">
-                        <xsl:with-param name="label" select="'Código postal'" />
-                        <xsl:with-param name="value" select="address/postal-code" />
-                    </xsl:call-template>
-                    <xsl:call-template name="print-value">
-                        <xsl:with-param name="label" select="'País de residencia'" />
-                        <xsl:with-param name="value" select="address/country" />
-                    </xsl:call-template>
-					<xsl:call-template name="print-values">
-				    	<xsl:with-param name="label" select="'Grupos de trabajo'" />
-				    	<xsl:with-param name="values" select="working-groups/working-group" />
-			    	</xsl:call-template>
-					<xsl:call-template name="print-values">
-				    	<xsl:with-param name="label" select="'Intereses'" />
-				    	<xsl:with-param name="values" select="interests/interest" />
-			    	</xsl:call-template>
-					<xsl:call-template name="print-values">
-				    	<xsl:with-param name="label" select="'Idiomas'" />
-				    	<xsl:with-param name="values" select="knows-languages/language" />
-			    	</xsl:call-template>
+						<xsl:call-template name="section-title">
+					    	<xsl:with-param name="label" select="'Educación'" />
+				    	</xsl:call-template>    
+						<xsl:for-each select="educations/education">
+							<fo:block font-size="10pt">
+								<xsl:value-of select="role" /> at <xsl:value-of select="name" />
+								from <xsl:value-of select="start-date" />
+								<xsl:if test="end-date/text()">
+								 to <xsl:value-of select="end-date" />
+								</xsl:if>
+							</fo:block>
+						</xsl:for-each>
+					
+					</xsl:if>
+					
+                    <xsl:if test="qualifications/qualification">
+					
+						<xsl:call-template name="section-title">
+					    	<xsl:with-param name="label" select="'Cualificaciones'" />
+				    	</xsl:call-template>
+						<xsl:for-each select="qualifications/qualification">
+							<fo:block font-size="10pt">
+								<xsl:value-of select="name" /> from <xsl:value-of select="start-date" />
+								<xsl:if test="end-date/text()">
+								 to <xsl:value-of select="end-date" />
+								</xsl:if>
+							</fo:block>
+						</xsl:for-each>
+						
+					</xsl:if>
+					
+                    <xsl:if test="publications/publication">
+
+						<xsl:call-template name="section-title">
+					    	<xsl:with-param name="label" select="'Publicaciones'" />
+				    	</xsl:call-template>
+				    	<xsl:for-each select="publications/publication">
+							<fo:block font-size="10pt">
+								<xsl:for-each select="authors/author">
+									<xsl:value-of select="current()" />
+								    <xsl:if test="position() != last()"> and </xsl:if>
+								</xsl:for-each>
+								<xsl:text> </xsl:text>
+								<xsl:if test="date-issued">
+									<xsl:text>(</xsl:text>
+									<xsl:value-of select="date-issued" />
+									<xsl:text>)</xsl:text>
+								</xsl:if>
+								<xsl:text>. </xsl:text>
+								<fo:inline font-style="italic" >
+									<xsl:value-of select="title" /> 
+								</fo:inline >
+							</fo:block>
+						</xsl:for-each>
+					
+                    </xsl:if>
+                    
+                    <xsl:if test="( count(address/street) &gt; 0 ) or 
+                    ( count(address/postal-code) &gt; 0 ) or 
+                    ( count(address/country) &gt; 0 ) or 
+                    ( count(working-groups/working-group) &gt; 0 ) or 
+                    ( count(interests/interest) &gt; 0 ) or 
+                    ( count(knows-languages/language) &gt; 0 )">
+                    
+	                    <xsl:call-template name="section-title">
+	                        <xsl:with-param name="label" select="'Otra información'" />
+	                    </xsl:call-template>
+	                    
+	                    <xsl:call-template name="print-value">
+	                        <xsl:with-param name="label" select="'Calle de residencia'" />
+	                        <xsl:with-param name="value" select="address/street" />
+	                    </xsl:call-template>
+	                    <xsl:call-template name="print-value">
+	                        <xsl:with-param name="label" select="'Código postal'" />
+	                        <xsl:with-param name="value" select="address/postal-code" />
+	                    </xsl:call-template>
+	                    <xsl:call-template name="print-value">
+	                        <xsl:with-param name="label" select="'País de residencia'" />
+	                        <xsl:with-param name="value" select="address/country" />
+	                    </xsl:call-template>
+	                    <xsl:call-template name="print-values">
+	                        <xsl:with-param name="label" select="'Grupos de trabajo'" />
+	                        <xsl:with-param name="values" select="working-groups/working-group" />
+	                    </xsl:call-template>
+	                    <xsl:call-template name="print-values">
+	                        <xsl:with-param name="label" select="'Intereses'" />
+	                        <xsl:with-param name="values" select="interests/interest" />
+	                    </xsl:call-template>
+	                    <xsl:call-template name="print-values">
+	                        <xsl:with-param name="label" select="'Idiomas'" />
+	                        <xsl:with-param name="values" select="knows-languages/language" />
+	                    </xsl:call-template>
+                    
+                    </xsl:if>
 			    	
 	  				<xsl:if test="personal-sites/personal-site">
 				    	<fo:block font-size="10pt" margin-top="2mm">
@@ -220,7 +245,7 @@
 									<xsl:if test="site-title">
 										( <xsl:value-of select="site-title" /> )
 									</xsl:if>
-								    <xsl:if test="position() != last()">, </xsl:if>
+									<xsl:if test="position() != last()">, </xsl:if>
 								</xsl:for-each>
 							</fo:inline >
 						</fo:block>
@@ -252,8 +277,8 @@
 		<fo:block font-size="16pt" font-weight="bold" margin-top="8mm" >
 			<xsl:value-of select="$label" /> 
 		</fo:block>
-		<fo:block margin-bottom="2mm" margin-top="-4mm">
-			<fo:leader leader-pattern="rule" leader-length="100%" rule-style="solid" />         
+		<fo:block>
+			<fo:leader leader-pattern="rule" leader-length="100%" rule-style="solid" />
 		</fo:block>
 	</xsl:template>
 	

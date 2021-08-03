@@ -29,13 +29,13 @@
 		<Keyword>project</Keyword>
 		<Keyword>test</Keyword>
 		<Abstract>This is a project to test the export</Abstract>
-        <Status>OPEN</Status>
-        <Uses>
-            <Equipment>
-                <Name>Test equipment</Name>
-            </Equipment>
-        </Uses>
-		<OAMandate 
+	    <Status>OPEN</Status>
+	    <Uses>
+	        <Equipment>
+	            <Name>Test equipment</Name>
+	        </Equipment>
+	    </Uses>
+		<OAMandate
 			mandated="true" 
 			URL="oamandate-url" 
 		/>
@@ -65,12 +65,12 @@
 				<Person displayName="Coinvestigator" />
 			</Member>
 		</Team>
-        <Status>Status</Status>
-		<Uses>
-			<Equipment>
-				<Name>Another test equipment</Name>
-			</Equipment>
-		</Uses>
+	    <Status>Status</Status>
+	    <Uses>
+	        <Equipment>
+	            <Name>Another test equipment</Name>
+	        </Equipment>
+	    </Uses>
 		<OAMandate 
 			URL="oamandate" 
 		/>

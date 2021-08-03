@@ -1130,6 +1130,12 @@
         <element>flagcv</element>
 		<qualifier>dctermsrightsHolder</qualifier>
     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>holder</element>
+        <qualifier>ctiprofile</qualifier>
+    </dc-type>
     
     <dc-type>
         <schema>perucris</schema>

@@ -51,7 +51,7 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
                                       .withPersonIdentifierFirstName("MARTHA")
                                       .withPersonIdentifierLastName("RUTH")
                                       .withAbreviaturaTitulo("Bachiller")
-                                      .withDNI("08794686").build();
+                                      .withDNI("06027011").build();
 
         Item itemPersonB = ItemBuilder.createItem(context, col1)
                                       .withPersonIdentifierFirstName("ANTONIO")
@@ -82,10 +82,10 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
         getClient(authToken).perform(get("/api/core/items/" + itemPersonA.getID()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.uuid", Matchers.is(itemPersonA.getID().toString())))
-                .andExpect(jsonPath("$.metadata['perucris.identifier.dni'].[0].value", is("08794686")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification'].[0].value", is("III")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.start'].[0].value", is("24-07-2020")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.end'].[0].value", is("24-07-2022")))
+                .andExpect(jsonPath("$.metadata['perucris.identifier.dni'].[0].value", is("06027011")))
+                .andExpect(jsonPath("$.metadata['crisrp.qualification'].[0].value", is("II")))
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.start'].[0].value", is("16-09-2020")))
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.end'].[0].value", is("16-09-2023")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit'].[0].value",
                                     is("Carlos Monge Medrano")));
 
@@ -135,7 +135,7 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
                                       .withPersonIdentifierFirstName("MARTHA")
                                       .withPersonIdentifierLastName("RUTH")
                                       .withAbreviaturaTitulo("Bachiller")
-                                      .withDNI("08794686").build();
+                                      .withDNI("06027011").build();
 
         Item itemPersonB = ItemBuilder.createItem(context, col1)
                                       .withPersonIdentifierFirstName("ANTONIO")
@@ -150,7 +150,7 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
         Item itemPersonD = ItemBuilder.createItem(context, col2)
                                       .withPersonIdentifierFirstName("KARINA")
                                       .withPersonIdentifierLastName("VANESSA")
-                                      .withDNI("10280437").build();
+                                      .withDNI("07537170").build();
 
         context.restoreAuthSystemState();
 
@@ -166,10 +166,10 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
         getClient(authToken).perform(get("/api/core/items/" + itemPersonA.getID()))
                             .andExpect(status().isOk())
                             .andExpect(jsonPath("$.uuid", Matchers.is(itemPersonA.getID().toString())))
-                            .andExpect(jsonPath("$.metadata['perucris.identifier.dni'].[0].value", is("08794686")))
-                            .andExpect(jsonPath("$.metadata['crisrp.qualification'].[0].value", is("III")))
-                            .andExpect(jsonPath("$.metadata['crisrp.qualification.start'].[0].value", is("24-07-2020")))
-                            .andExpect(jsonPath("$.metadata['crisrp.qualification.end'].[0].value", is("24-07-2022")))
+                            .andExpect(jsonPath("$.metadata['perucris.identifier.dni'].[0].value", is("06027011")))
+                            .andExpect(jsonPath("$.metadata['crisrp.qualification'].[0].value", is("II")))
+                            .andExpect(jsonPath("$.metadata['crisrp.qualification.start'].[0].value", is("16-09-2020")))
+                            .andExpect(jsonPath("$.metadata['crisrp.qualification.end'].[0].value", is("16-09-2023")))
                             .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit'].[0].value",
                                                 is("Carlos Monge Medrano")));
 
@@ -194,12 +194,12 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
         getClient(authToken).perform(get("/api/core/items/" + itemPersonD.getID()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.uuid", Matchers.is(itemPersonD.getID().toString())))
-                .andExpect(jsonPath("$.metadata['perucris.identifier.dni'].[0].value", is("10280437")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification'].[0].value", is("II")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.start'].[0].value", is("01-10-2019")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.end'].[0].value", is("01-10-2022")))
+                .andExpect(jsonPath("$.metadata['perucris.identifier.dni'].[0].value", is("07537170")))
+                .andExpect(jsonPath("$.metadata['crisrp.qualification'].[0].value", is("III")))
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.start'].[0].value", is("07-05-2020")))
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.end'].[0].value", is("07-05-2022")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit'].[0].value",
-                                    is("Carlos Monge Medrano")));
+                                    is("María Rostworowski")));
     }
 
     @Test
@@ -220,7 +220,7 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
                                       .withPersonIdentifierFirstName("MARTHA")
                                       .withPersonIdentifierLastName("RUTH")
                                       .withAbreviaturaTitulo("Bachiller")
-                                      .withDNI("08794686").build();
+                                      .withDNI("06027011").build();
 
         Item itemPersonB = ItemBuilder.createItem(context, col1)
                                       .withPersonIdentifierFirstName("ANTONIO")
@@ -251,7 +251,7 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
         getClient(authToken).perform(get("/api/core/items/" + itemPersonA.getID()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.uuid", Matchers.is(itemPersonA.getID().toString())))
-                .andExpect(jsonPath("$.metadata['perucris.identifier.dni'].[0].value", is("08794686")))
+                .andExpect(jsonPath("$.metadata['perucris.identifier.dni'].[0].value", is("06027011")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification']").doesNotExist())
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.start']").doesNotExist())
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.end']").doesNotExist())
@@ -298,16 +298,16 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
         Item itemPersonA = ItemBuilder.createItem(context, col1)
                                       .withPersonIdentifierFirstName("MARTHA")
                                       .withPersonIdentifierLastName("RUTH")
-                                      .withPersonQualification("II")
+                                      .withPersonQualification("I")
                                       .withPersonQualificationStartDate("01-01-2018")
                                       .withPersonQualificationEndDate("01-01-2021")
                                       .withPersonQualificationOrgUnit("X-Group")
-                                      .withDNI("08794686").build();
+                                      .withDNI("06027011").build();
 
         Item itemPersonB = ItemBuilder.createItem(context, col1)
                                       .withPersonIdentifierFirstName("KARINA")
                                       .withPersonIdentifierLastName("VANESSA")
-                                      .withDNI("10280437").build();
+                                      .withDNI("40202098").build();
 
         context.restoreAuthSystemState();
 
@@ -323,13 +323,13 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
         getClient(authToken).perform(get("/api/core/items/" + itemPersonA.getID()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.uuid", Matchers.is(itemPersonA.getID().toString())))
-                .andExpect(jsonPath("$.metadata['perucris.identifier.dni'].[0].value", is("08794686")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification'].[0].value", is("II")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification'].[1].value", is("III")))
+                .andExpect(jsonPath("$.metadata['perucris.identifier.dni'].[0].value", is("06027011")))
+                .andExpect(jsonPath("$.metadata['crisrp.qualification'].[0].value", is("I")))
+                .andExpect(jsonPath("$.metadata['crisrp.qualification'].[1].value", is("II")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.start'].[0].value", is("01-01-2018")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.start'].[1].value", is("24-07-2020")))
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.start'].[1].value", is("16-09-2020")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.end'].[0].value", is("01-01-2021")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.end'].[1].value", is("24-07-2022")))
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.end'].[1].value", is("16-09-2023")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit'].[0].value", is("X-Group")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit'].[1].value",
                                     is("Carlos Monge Medrano")));
@@ -337,12 +337,12 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
         getClient(authToken).perform(get("/api/core/items/" + itemPersonB.getID()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.uuid", Matchers.is(itemPersonB.getID().toString())))
-                .andExpect(jsonPath("$.metadata['perucris.identifier.dni'].[0].value", is("10280437")))
+                .andExpect(jsonPath("$.metadata['perucris.identifier.dni'].[0].value", is("40202098")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification'].[0].value", is("II")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.start'].[0].value", is("01-10-2019")))
-                .andExpect(jsonPath("$.metadata['crisrp.qualification.end'].[0].value", is("01-10-2022")))
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.start'].[0].value", is("31-12-2020")))
+                .andExpect(jsonPath("$.metadata['crisrp.qualification.end'].[0].value", is("31-12-2023")))
                 .andExpect(jsonPath("$.metadata['crisrp.qualification.orgunit'].[0].value",
-                                    is("Carlos Monge Medrano")));
+                                    is("María Rostworowski")));
 
     }
 

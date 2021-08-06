@@ -32,6 +32,7 @@
 				<entry key="ctivitae-profile-xml" value-ref="referCrosswalkCvPersonXml"></entry>
 				<entry key="ctivitae-profile-cerif-xml" value-ref="referCrosswalkCvPersonCerifXml"></entry>
                 <entry key="ctivitae-profile-perucris-cerif-xml" value-ref="referCrosswalkCvPersonPerucrisCerifXml"></entry>
+				<entry key="ctivitae-profile-perucris-restricted-cerif-xml" value-ref="referCrosswalkCvPersonPerucrisRestrictedCerifXml"></entry>
 				<entry key="ctivitae-profile-json" value-ref="referCrosswalkCvPersonJson"></entry>
 				<entry key="ctivitae-profile-pdf" value-ref="pdfCrosswalkCvPerson"></entry>
 				<entry key="ctivitae-profile-rtf" value-ref="rtfCrosswalkCvPerson"></entry>
@@ -159,13 +160,6 @@
 				<entry key="ctivitae-patent-csv" value-ref="csvCrosswalkCtivitaePatent"></entry>
 				<entry key="ctivitae-patent-xls" value-ref="xlsCrosswalkCtivitaePatent"></entry>
 
-				<entry key="cvPerson-cerif-xml" value-ref="referCrosswalkCvPersonCerifXml"></entry>
-				<entry key="cvPerson-perucris-cerif-xml" value-ref="referCrosswalkCvPersonPerucrisCerifXml"></entry>
-				<entry key="cvPerson-perucris-restricted-cerif-xml" value-ref="referCrosswalkCvPersonPerucrisRestrictedCerifXml"></entry>
-
-				<entry key="cvPublication-perucris-cerif-xml" value-ref="referCrosswalkCvPublicationPerucrisCerifXml"></entry>
-				<entry key="cvProject-perucris-cerif-xml" value-ref="referCrosswalkCvProjectPerucrisCerifXml"></entry>
-				<entry key="cvPatent-perucris-cerif-xml" value-ref="referCrosswalkCvPatentPerucrisCerifXml"></entry>
 			</map>
 		</constructor-arg>
 	</bean>

@@ -62,8 +62,7 @@ public class XOAICerifItemCompilePlugin implements XOAIExtensionItemCompilePlugi
                                                                          StreamDisseminationCrosswalkMapper.class);
             ItemServiceImpl itemService = new DSpace().getSingletonService(ItemServiceImpl.class);
             String entityType = itemService.getEntityType(item);
-            final String crosswalkType = entityType.substring(0, 1).toLowerCase()
-                                             + entityType.substring(1) + "-" + generator;
+            final String crosswalkType = crosswalkType(entityType);
             StreamDisseminationCrosswalk crosswalk = crosswalkMapper.getByType(crosswalkType);
             if (crosswalk == null) {
                 log.warn("No Crosswalk found with name " + crosswalkType);
@@ -92,5 +91,22 @@ public class XOAICerifItemCompilePlugin implements XOAIExtensionItemCompilePlugi
             log.error(e.getMessage(), e);
         }
         return metadata;
+    }
+
+    private String crosswalkType(final String entityType) {
+
+
+        String entityPrefix = entityType.substring(0, 1).toLowerCase()
+                                  + entityType.substring(1);;
+        if (entityType.startsWith("Cv")) {
+            if ("CvPerson".equals(entityType)) {
+                entityPrefix = "ctivitae-profile";
+            } else {
+                entityPrefix = "ctivitae-" + entityPrefix.substring(2).toLowerCase();
+            }
+        }
+
+
+        return entityPrefix + "-" + generator;
     }
 }

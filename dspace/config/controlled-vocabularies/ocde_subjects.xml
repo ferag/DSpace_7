@@ -431,6 +431,8 @@
             </node>
             <node id="4.01.07" label="Protección y nutrición de las plantas">
             </node>
+            <node id="4.01.08" label="Acuicultura">
+            </node>
           </isComposedBy>
         </node>
         <node id="4.02.00" label="Ciencia animal, Ciencia de productos lácteos">

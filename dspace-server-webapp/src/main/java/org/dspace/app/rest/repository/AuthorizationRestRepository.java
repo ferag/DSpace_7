@@ -13,6 +13,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -209,7 +210,7 @@ public class AuthorizationRestRepository extends DSpaceRestRepository<Authorizat
             UUID epersonUuid) throws SQLException, AuthorizeException {
 
         if (featureNames.isEmpty()) {
-            return null;
+            return Collections.emptyList();
         }
 
         List<Authorization> authorizations = new ArrayList<Authorization>();
@@ -235,7 +236,7 @@ public class AuthorizationRestRepository extends DSpaceRestRepository<Authorizat
 
         BaseObjectRest obj = utils.getBaseObjectRestFromUri(context, uri);
         if (obj == null) {
-            return null;
+            return Collections.emptyList();
         }
 
         List<Authorization> authorizations;

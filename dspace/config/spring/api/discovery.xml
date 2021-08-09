@@ -154,6 +154,7 @@
                 <!-- Edit Configurations -->
                 <entry key="editCommunity" value-ref="editCommunityConfiguration"/>
                 <entry key="editCollection" value-ref="editCollectionConfiguration"/>
+                <entry key="importedCtiVitae" value-ref="importedCtiVitae"/>
             </map>
         </property>
         <property name="toIgnoreMetadataFields">
@@ -2638,6 +2639,45 @@
         </property>
     </bean>
 
+    <!-- CtiVitae imported from previous database -->
+    <bean id="importedCtiVitae" class="org.dspace.discovery.configuration.DiscoveryConfiguration" scope="prototype">
+        <property name="id" value="publication"/>
+        <property name="indexAlways" value="true"/>
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list>
+            </list>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+<!--        <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/>-->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list>
+
+            </list>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore" />
+                        <ref bean="sortTitle" />
+                        <ref bean="sortDateIssued" />
+                        <ref bean="sortDateAccessioned"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find items, communities and collections-->
+                <value>search.resourcetype:Item AND entityType_keyword:CvPerson AND perucris.identifier.cti:* </value>
+            </list>
+        </property>
+    </bean>
 
     <bean id="researchoutputs" class="org.dspace.discovery.configuration.DiscoveryConfiguration" scope="prototype">
         <property name="id" value="researchoutputs"/>

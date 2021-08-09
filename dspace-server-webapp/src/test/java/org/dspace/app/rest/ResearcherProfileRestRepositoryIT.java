@@ -2001,6 +2001,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
     }
 
     @Test
+    @Ignore("functionality temporarily disabled")
     public void testPatchToSetOrcidSynchronizationPreferenceForFundings() throws Exception {
 
         context.turnOffAuthorisationSystem();

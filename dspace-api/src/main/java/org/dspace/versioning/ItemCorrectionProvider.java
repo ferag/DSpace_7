@@ -48,7 +48,7 @@ public class ItemCorrectionProvider extends AbstractVersionProvider {
 
         WorkspaceItem workspaceItem = workspaceItemService.create(context, collection, false);
         Item itemNew = workspaceItem.getItem();
-        itemService.clearMetadata(context, itemNew, this::isNotRelationshipType);
+        itemService.clearMetadata(context, itemNew, this::isNotEntityType);
         // copy metadata from native item to corrected item
         copyMetadata(context, itemNew, nativeItem);
         context.turnOffAuthorisationSystem();
@@ -68,15 +68,10 @@ public class ItemCorrectionProvider extends AbstractVersionProvider {
     public XmlWorkflowItem updateNativeItemWithCorrection(Context context, XmlWorkflowItem workflowItem,
             Item correctionItem, Item nativeItem) throws AuthorizeException, IOException, SQLException {
 
-        // save entity type
-        MetadataValue entityType = itemService.getMetadata(nativeItem, "dspace", "entity", "type", Item.ANY).get(0);
         // clear all metadata entries from native item
-        itemService.clearMetadata(context, nativeItem, this::isNotRelationshipType);
+        itemService.clearMetadata(context, nativeItem, this::isNotEntityType);
         // copy metadata from corrected item to native item
         copyMetadata(context, nativeItem, correctionItem);
-        // restore entity type
-        itemService.addMetadata(context, nativeItem, entityType.getMetadataField(), entityType.getLanguage(),
-                entityType.getValue(), entityType.getAuthority(), entityType.getConfidence());
 
         context.turnOffAuthorisationSystem();
         // copy bundles and bitstreams of native item
@@ -103,7 +98,7 @@ public class ItemCorrectionProvider extends AbstractVersionProvider {
         return workflowItem;
     }
 
-    protected boolean isNotRelationshipType(MetadataValue metadataValue) {
+    protected boolean isNotEntityType(MetadataValue metadataValue) {
         return !metadataValue.getMetadataField().toString('.').equals("dspace.entity.type");
     }
 

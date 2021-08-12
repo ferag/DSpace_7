@@ -188,16 +188,20 @@ public class ItemCorrectionServiceIT extends AbstractIntegrationTestWithDatabase
         item = context.reloadEntity(item);
 
         List<MetadataValue> values = item.getMetadata();
+        assertThat(values, hasSize(6));
+
         assertThat(values, hasItem(with("dc.title", "Test publication correction")));
         assertThat(values, hasItem(with("dspace.entity.type", "Publication")));
         assertThat(values, hasItem(with("dc.date.issued", "2020-01-01")));
         assertThat(values, hasItem(with("dc.contributor.author", "Jesse Pinkman", null,
-                                        "will be referenced::ORCID::0000-0002-3453-3978",
-                                        0, Choices.CF_AMBIGUOUS)));
+            "will be referenced::ORCID::0000-0002-3453-3978", 0, Choices.CF_AMBIGUOUS)));
         assertThat(values, hasItem(with("dc.subject", "test subject")));
 
         assertThat(getMetadataValues(item, "dc.contributor.author"), hasSize(1));
+        assertThat(getMetadataValues(item, "dspace.entity.type"), hasSize(1));
+        assertThat(getMetadataValues(item, "dc.description.provenance"), hasSize(1));
         assertThat(getMetadataValues(item, "oairecerif.author.affiliation"), empty());
+
 
     }
 

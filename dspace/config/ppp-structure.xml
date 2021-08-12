@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<import_structure>
+	<community>
+		<name>Políticas, Planes y Programas</name>
+		<description />
+		<intro />
+		<copyright />
+		<sidebar />
+		<collection>
+			<name>Politicas</name>
+			<entity-type>Politica</entity-type>
+			<submission-type>politic</submission-type>
+			<description />
+			<intro />
+			<copyright />
+			<sidebar />
+			<license />
+			<provenance />
+		</collection>
+		<collection>
+			<name>Programas</name>
+			<entity-type>Programa</entity-type>
+			<submission-type>program</submission-type>
+			<description />
+			<intro />
+			<copyright />
+			<sidebar />
+			<license />
+			<provenance />
+		</collection>
+		<collection>
+			<name>Plans</name>
+			<entity-type>Plan</entity-type>
+			<submission-type>plan</submission-type>
+			<description />
+			<intro />
+			<copyright />
+			<sidebar />
+			<license />
+			<provenance />
+		</collection>
+		<collection>
+			<name>Objetivos Politica</name>
+			<entity-type>ObjetivoPolitica</entity-type>
+			<submission-type>politic-goal</submission-type>
+			<description />
+			<intro />
+			<copyright />
+			<sidebar />
+			<license />
+			<provenance />
+		</collection>
+		<collection>
+			<name>Indicadores</name>
+			<entity-type>Indicador</entity-type>
+			<submission-type>indicator</submission-type>
+			<description />
+			<intro />
+			<copyright />
+			<sidebar />
+			<license />
+			<provenance />
+		</collection>
+		<collection>
+			<name>Objetivos Generales Programas</name>
+			<entity-type>ObjetivoGeneralPrograma</entity-type>
+			<submission-type>program-general-goal</submission-type>
+			<description />
+			<intro />
+			<copyright />
+			<sidebar />
+			<license />
+			<provenance />
+		</collection>
+		<collection>
+			<name>Objetivos Especificos Programas</name>
+			<entity-type>ObjetivoEspecificoPrograma</entity-type>
+			<submission-type>program-specific-goal</submission-type>
+			<description />
+			<intro />
+			<copyright />
+			<sidebar />
+			<license />
+			<provenance />
+		</collection>
+		<collection>
+			<name>Estandars</name>
+			<entity-type>Estandar</entity-type>
+			<submission-type>standard</submission-type>
+			<description />
+			<intro />
+			<copyright />
+			<sidebar />
+			<license />
+			<provenance />
+		</collection>
+		<collection>
+			<name>Instrumentos Financieros</name>
+			<entity-type>InstrumentoFinanciero</entity-type>
+			<submission-type>financial-instrument</submission-type>
+			<description />
+			<intro />
+			<copyright />
+			<sidebar />
+			<license />
+			<provenance />
+		</collection>
+		<collection>
+			<name>Esquemas Financieros</name>
+			<entity-type>EsquemaFinanciero</entity-type>
+			<submission-type>financial-scheme</submission-type>
+			<description />
+			<intro />
+			<copyright />
+			<sidebar />
+			<license />
+			<provenance />
+		</collection>
+		<collection>
+			<name>Servicios</name>
+			<entity-type>Servicio</entity-type>
+			<submission-type>service</submission-type>
+			<description />
+			<intro />
+			<copyright />
+			<sidebar />
+			<license />
+			<provenance />
+		</collection>
+		<collection>
+			<name>Lineamientos Politicas</name>
+			<entity-type>LineamientoPoliticas</entity-type>
+			<submission-type>politic-guidelines</submission-type>
+			<description />
+			<intro />
+			<copyright />
+			<sidebar />
+			<license />
+			<provenance />
+		</collection>
+		<collection>
+			<name>Actividades</name>
+			<entity-type>Actividad</entity-type>
+			<submission-type>activity</submission-type>
+			<description />
+			<intro />
+			<copyright />
+			<sidebar />
+			<license />
+			<provenance />
+		</collection>
+		<collection>
+			<name>Proyecto Programas</name>
+			<entity-type>ProyectoPrograma</entity-type>
+			<submission-type>project-program</submission-type>
+			<description />
+			<intro />
+			<copyright />
+			<sidebar />
+			<license />
+			<provenance />
+		</collection>
+		<collection>
+			<name>Instrumentos Financieros de Proyectos</name>
+			<entity-type>InstrumentoFinancieroProyecto</entity-type>
+			<submission-type>project-financial-instrument</submission-type>
+			<description />
+			<intro />
+			<copyright />
+			<sidebar />
+			<license />
+			<provenance />
+		</collection>
+		<collection>
+			<name>SubComponentes Objetivo Especifico Programa</name>
+			<entity-type>SubComponenteObjetivoEspecifico</entity-type>
+			<submission-type>program-goal-subcomponent</submission-type>
+			<description />
+			<intro />
+			<copyright />
+			<sidebar />
+			<license />
+			<provenance />
+		</collection>
+		<collection>
+			<name>Componentes Objetivo Especifico Programa</name>
+			<entity-type>ComponenteObjetivoEspecifico</entity-type>
+			<submission-type>program-goal-component</submission-type>
+			<description />
+			<intro />
+			<copyright />
+			<sidebar />
+			<license />
+			<provenance />
+		</collection>
+		<collection>
+			<name>Documentos</name>
+			<entity-type>Documento</entity-type>
+			<submission-type>document</submission-type>
+			<description />
+			<intro />
+			<copyright />
+			<sidebar />
+			<license />
+			<provenance />
+		</collection>
+	</community>
+</import_structure>
+
+
+
+
+
+
+

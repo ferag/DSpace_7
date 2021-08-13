@@ -9965,7 +9965,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Nombre</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un nombre</required>
           <hint />
         </field>
       </row>
@@ -9974,7 +9974,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>description</dc-element>
           <label>Descripción</label>
-          <input-type>onebox</input-type>
+          <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -9986,7 +9986,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>ppp</dc-element>
           <dc-qualifier>politicGoal</dc-qualifier>
           <label>Objetivo Politica</label>
-          <input-type>textarea</input-type>
+          <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -10091,7 +10091,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Nombre</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un nombre</required>
           <hint />
         </field>
       </row>
@@ -10181,7 +10181,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Nombre</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un nombre</required>
           <hint />
         </field>
       </row>
@@ -10264,7 +10264,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Nombre</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un nombre</required>
           <hint />
         </field>
       </row>
@@ -10380,7 +10380,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
-          <dc-qualifier>responsibleInsittution</dc-qualifier>
+          <dc-qualifier>responsibleEntity</dc-qualifier>
           <label>Institución Responsable</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
@@ -10485,7 +10485,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Nombre</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un nombre</required>
           <hint />
         </field>
       </row>
@@ -10510,7 +10510,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Nombre</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un nombre</required>
           <hint />
         </field>
       </row>
@@ -10535,7 +10535,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Nombre</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un nombre</required>
           <hint />
         </field>
       </row>
@@ -10572,7 +10572,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Nombre</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un nombre</required>
           <hint />
         </field>
       </row>
@@ -10678,7 +10678,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Nombre</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un nombre</required>
           <hint />
         </field>
       </row>
@@ -10806,7 +10806,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Nombre</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un nombre</required>
           <hint />
         </field>
       </row>
@@ -10903,7 +10903,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Nombre</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un nombre</required>
           <hint />
         </field>
       </row>
@@ -10928,7 +10928,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Nombre</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un nombre</required>
           <hint />
         </field>
       </row>
@@ -10965,8 +10965,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
         </field>
-      </row>
-      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
@@ -10978,26 +10976,25 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <hint />
         </field>
       </row>
+    </form>
+    <form name="financial-resource">
       <row>
         <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>ppp</dc-element>
-          <dc-qualifier>fundingResource</dc-qualifier>
-          <label>Recursos Finacieros</label>
-          <input-type>group</input-type>
-          <repeatable>true</repeatable>
-          <required />
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Nombre</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un nombre</required>
           <hint />
         </field>
       </row>
-    </form>
-    <form name="activity-perucris-ppp-fundingResource">
       <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
-          <dc-qualifier>fundingResource</dc-qualifier>
-          <label>Fuente de financiamento</label>
+          <dc-qualifier>activity</dc-qualifier>
+          <label>Actividad</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -11010,7 +11007,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>ppp</dc-element>
           <dc-qualifier>currency</dc-qualifier>
           <label>Tipo de Moneda</label>
-          <input-type>onebox</input-type>
+          <input-type value-pairs-name="currency">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -11067,7 +11064,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Nombre</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un nombre</required>
           <hint />
         </field>
       </row>
@@ -11118,6 +11115,17 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       </row>
     </form>
     <form name="project-financial-instrument">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Nombre</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un nombre</required>
+          <hint />
+        </field>
+      </row>
       <row>
         <field>
           <dc-schema>dc</dc-schema>
@@ -11291,7 +11299,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Nombre</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un nombre</required>
           <hint />
         </field>
       </row>
@@ -11316,7 +11324,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Nombre</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un nombre</required>
           <hint />
         </field>
       </row>
@@ -11334,6 +11342,51 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       </row>
     </form>
     <form name="document">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Nombre</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un nombre</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>abstract</dc-qualifier>
+          <label>Resumen</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>date</dc-element>
+          <dc-qualifier>issued</dc-qualifier>
+          <label>Fecha de emisión</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required>Debe introducir al menos el año.</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>source</dc-qualifier>
+          <label>Fuente</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
       <row>
         <field>
           <dc-schema>perucris</dc-schema>

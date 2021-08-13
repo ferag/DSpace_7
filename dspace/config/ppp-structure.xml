@@ -150,6 +150,17 @@
 			<provenance />
 		</collection>
 		<collection>
+			<name>Recursos Financieros</name>
+			<entity-type>RecursoFinanciero</entity-type>
+			<submission-type>financial-resources</submission-type>
+			<description />
+			<intro />
+			<copyright />
+			<sidebar />
+			<license />
+			<provenance />
+		</collection>
+		<collection>
 			<name>Proyecto Programas</name>
 			<entity-type>ProyectoPrograma</entity-type>
 			<submission-type>project-program</submission-type>

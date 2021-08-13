@@ -2027,13 +2027,6 @@
     <dc-type>
         <schema>perucris</schema>
         <element>ppp</element>
-        <qualifier>responsibleInsittution</qualifier>
-        <scope_note />
-     </dc-type>
-
-    <dc-type>
-        <schema>perucris</schema>
-        <element>ppp</element>
         <qualifier>responsiblePerson</qualifier>
         <scope_note />
      </dc-type>

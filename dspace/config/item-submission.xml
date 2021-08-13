@@ -416,6 +416,11 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
+    <step-definition id="financial-resource" mandatory="true">
+      <heading>submit.progressbar.describe.financial-resource</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
     <step-definition id="project-program" mandatory="true">
       <heading>submit.progressbar.describe.project-program</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
@@ -830,6 +835,13 @@
     </submission-process>
     <submission-process name="activity-edit">
       <step id="activity" />
+    </submission-process>
+    <submission-process name="financial-resource">
+      <step id="collection" />
+      <step id="financial-resource" />
+    </submission-process>
+    <submission-process name="financial-resource-edit">
+      <step id="financial-resource" />
     </submission-process>
     <submission-process name="project-program">
       <step id="collection" />

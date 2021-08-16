@@ -9868,7 +9868,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Description</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a description</required>
           <hint />
         </field>
       </row>
@@ -9880,7 +9880,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Approval date</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter an Approval date</required>
           <hint />
         </field>
       </row>
@@ -9888,11 +9888,11 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
-          <dc-qualifier>publicProgram</dc-qualifier>
+          <dc-qualifier>publicProblem</dc-qualifier>
           <label>Public Problem</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Public Problem</required>
           <hint />
         </field>
       </row>
@@ -9904,7 +9904,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Plan Alignments</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Plan Alignments</required>
           <hint />
         </field>
       </row>
@@ -9916,7 +9916,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Results</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Results</required>
           <hint />
         </field>
       </row>
@@ -9928,7 +9928,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Conclusions</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Conclusions</required>
           <hint />
         </field>
       </row>
@@ -9940,7 +9940,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Recommendations</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Recommendations</required>
           <hint />
         </field>
       </row>
@@ -9952,7 +9952,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Status</label>
           <input-type value-pairs-name="perucris_ppp_status">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please select a Status</required>
           <hint />
         </field>
       </row>
@@ -9976,7 +9976,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Description</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a description</required>
           <hint />
         </field>
       </row>
@@ -9988,7 +9988,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Politic Goal</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Politic Goal</required>
           <hint />
         </field>
       </row>
@@ -10000,7 +10000,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Periodicity</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Periodicity</required>
           <hint />
         </field>
         <field>
@@ -10010,7 +10010,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Vision</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Vision</required>
           <hint />
         </field>
         <field>
@@ -10020,7 +10020,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Approval Date</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter an Approval date</required>
           <hint />
         </field>
       </row>
@@ -10032,7 +10032,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Responsible Entity</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Responsible Entity</required>
           <hint />
         </field>
       </row>
@@ -10044,7 +10044,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Plan Type</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Plan Type</required>
           <hint />
         </field>
         <field>
@@ -10054,7 +10054,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Status</label>
           <input-type value-pairs-name="perucris_ppp_status">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a status</required>
           <hint />
         </field>
       </row>
@@ -10066,7 +10066,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Strategical Goal</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Strategical Goal</required>
           <hint />
         </field>
       </row>
@@ -10078,7 +10078,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Strategical Actions</label>
           <input-type>textarea</input-type>
           <repeatable>true</repeatable>
-          <required />
+          <required>Please enter Strategical Actions</required>
           <hint />
         </field>
       </row>
@@ -10102,7 +10102,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Description</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a description</required>
           <hint />
         </field>
       </row>
@@ -10114,7 +10114,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Plan</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Plan</required>
           <hint />
         </field>
       </row>
@@ -10126,7 +10126,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Approval Date</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter an Approval date</required>
           <hint />
         </field>
         <field>
@@ -10136,7 +10136,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Program Type</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Program Type</required>
           <hint />
         </field>
         <field>
@@ -10146,7 +10146,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Responsible Person</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Responsible Person</required>
           <hint />
         </field>
         <field>
@@ -10156,7 +10156,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Execution Year</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter an Execution Year</required>
           <hint />
         </field>
       </row>
@@ -10168,7 +10168,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Status</label>
           <input-type value-pairs-name="perucris_ppp_status">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please select a Status</required>
           <hint />
         </field>
       </row>
@@ -10193,7 +10193,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Politic</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Politic</required>
           <hint />
         </field>
         <field>
@@ -10203,7 +10203,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Responsible Entity</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Responsible Entity</required>
           <hint />
         </field>
       </row>
@@ -10215,7 +10215,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Adopted Measures</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Adopted Measures</required>
           <hint />
         </field>
       </row>
@@ -10227,7 +10227,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>CTI Interventions</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter CTI Interventions</required>
           <hint />
         </field>
       </row>
@@ -10239,7 +10239,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Progress</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Progress</required>
           <hint />
         </field>
       </row>
@@ -10251,7 +10251,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Alert</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Alert</required>
           <hint />
         </field>
       </row>
@@ -10276,7 +10276,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Politic Goal</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Politic Goal</required>
           <hint />
         </field>
         <field>
@@ -10286,7 +10286,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Plan</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Plan</required>
           <hint />
         </field>
         <field>
@@ -10296,7 +10296,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Program</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Program</required>
           <hint />
         </field>
       </row>
@@ -10308,7 +10308,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Program General Goal</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Program General Goal</required>
           <hint />
         </field>
         <field>
@@ -10318,7 +10318,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Program Specific Goal</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Program Specific Goal</required>
           <hint />
         </field>
       </row>
@@ -10330,7 +10330,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Activity</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter an Activity</required>
           <hint />
         </field>
         <field>
@@ -10340,7 +10340,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Standard</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Standard</required>
           <hint />
         </field>
       </row>
@@ -10352,7 +10352,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Financial Instrument</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Financial Instrument</required>
           <hint />
         </field>
         <field>
@@ -10362,7 +10362,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Financial Scheme</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Financial Scheme</required>
           <hint />
         </field>
       </row>
@@ -10374,7 +10374,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Responsible Person</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Responsible Person</required>
           <hint />
         </field>
         <field>
@@ -10384,7 +10384,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Responsible Institution</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Responsible Institution</required>
           <hint />
         </field>
       </row>
@@ -10396,7 +10396,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Indicator Type</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter an Indicator Type</required>
           <hint />
         </field>
         <field>
@@ -10406,7 +10406,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Source</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Source</required>
           <hint />
         </field>
       </row>
@@ -10418,7 +10418,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Base Line</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Base Line</required>
           <hint />
         </field>
       </row>
@@ -10430,7 +10430,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Expected Value</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter an Expected Value</required>
           <hint />
         </field>
         <field>
@@ -10440,7 +10440,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Obtained Value</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter an Obtained Value</required>
           <hint />
         </field>
         <field>
@@ -10450,7 +10450,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Annual Progress</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Annual Progress</required>
           <hint />
         </field>
       </row>
@@ -10462,7 +10462,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Performance Summary</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Performance Summary</required>
           <hint />
         </field>
         <field>
@@ -10472,7 +10472,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Status</label>
           <input-type value-pairs-name="perucris_ppp_status">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please select a Status</required>
           <hint />
         </field>
       </row>
@@ -10497,7 +10497,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Program</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Program</required>
           <hint />
         </field>
       </row>
@@ -10522,7 +10522,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Program General Goal</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Program General Goal</required>
           <hint />
         </field>
       </row>
@@ -10547,7 +10547,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Service</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Service</required>
           <hint />
         </field>
       </row>
@@ -10559,7 +10559,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Fulfillment</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Fulfillment</required>
           <hint />
         </field>
       </row>
@@ -10583,7 +10583,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Description</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Description</required>
           <hint />
         </field>
       </row>
@@ -10595,7 +10595,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Program</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Program General Goal</required>
           <hint />
         </field>
       </row>
@@ -10607,7 +10607,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>CTI Problem</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a CTI Problem</required>
           <hint />
         </field>
       </row>
@@ -10619,7 +10619,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Research Line</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Research Line</required>
           <hint />
         </field>
       </row>
@@ -10631,7 +10631,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Target Population</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Target Population</required>
           <hint />
         </field>
       </row>
@@ -10643,7 +10643,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Status</label>
           <input-type value-pairs-name="perucris_ppp_status">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please select a Status</required>
           <hint />
         </field>
       </row>
@@ -10655,7 +10655,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>General Goal Name</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Generic Goal Name</required>
           <hint />
         </field>
         <field>
@@ -10689,7 +10689,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Description</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Description</required>
           <hint />
         </field>
       </row>
@@ -10701,7 +10701,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Financial Instrument</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Financial Instrument</required>
           <hint />
         </field>
       </row>
@@ -10713,7 +10713,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Target Audience</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Target Audience</required>
           <hint />
         </field>
       </row>
@@ -10725,7 +10725,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Call Date</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Call Date</required>
           <hint />
         </field>
         <field>
@@ -10735,7 +10735,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Awarded Approval Date</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Awarded Approval Date</required>
           <hint />
         </field>
       </row>
@@ -10747,7 +10747,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Awarded Projects</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <required />
+          <required>Please enter Awarded Projects</required>
           <hint />
         </field>
       </row>
@@ -10759,7 +10759,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Expected Results</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Expected Results</required>
           <hint />
         </field>
         <field>
@@ -10769,7 +10769,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Reached Results</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Reached Results</required>
           <hint />
         </field>
       </row>
@@ -10781,7 +10781,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Conclusions</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Conclusions</required>
           <hint />
         </field>
       </row>
@@ -10793,7 +10793,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Recommendations</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Recommendations</required>
           <hint />
         </field>
       </row>
@@ -10818,7 +10818,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Politic Guidelines</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Politic Guidelines</required>
           <hint />
         </field>
       </row>
@@ -10830,7 +10830,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Supplier</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Supplier</required>
           <hint />
         </field>
       </row>
@@ -10842,7 +10842,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Addressee</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Addressee</required>
           <hint />
         </field>
       </row>
@@ -10854,7 +10854,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Coverage</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Coverage</required>
           <hint />
         </field>
       </row>
@@ -10866,7 +10866,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Relevant Actions</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <required />
+          <required>Please enter Relevant Actions</required>
           <hint />
         </field>
       </row>
@@ -10878,7 +10878,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Positive Factors</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <required />
+          <required>Please enter Positive Factors</required>
           <hint />
         </field>
       </row>
@@ -10890,7 +10890,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Negative Factors</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <required />
+          <required>Please enter Negative Factors</required>
           <hint />
         </field>
       </row>
@@ -10915,7 +10915,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Politic Goal</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Politic Goal</required>
           <hint />
         </field>
       </row>
@@ -10940,7 +10940,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Project Program</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Project Program</required>
           <hint />
         </field>
       </row>
@@ -10952,7 +10952,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Involved institution</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter an Involved institution</required>
           <hint />
         </field>
         <field>
@@ -10962,17 +10962,17 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Execution responsible</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Execution responsible</required>
           <hint />
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
           <dc-qualifier>executionYear</dc-qualifier>
-          <label>execution year</label>
+          <label>Execution Year</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Execution Year</required>
           <hint />
         </field>
       </row>
@@ -10997,7 +10997,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Activity</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter an Activity</required>
           <hint />
         </field>
       </row>
@@ -11009,7 +11009,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Currency</label>
           <input-type value-pairs-name="currency">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please select a Currency</required>
           <hint />
         </field>
         <field>
@@ -11019,7 +11019,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Programmed Amount</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Programmed Amount</required>
           <hint />
         </field>
         <field>
@@ -11029,7 +11029,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Executed Amount</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Executed Amount</required>
           <hint />
         </field>
       </row>
@@ -11041,7 +11041,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Identifier</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter an Identifier</required>
           <hint />
         </field>
         <field>
@@ -11051,7 +11051,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Funding Code</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Funding Code</required>
           <hint />
         </field>
       </row>
@@ -11075,7 +11075,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Description</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Description</required>
           <hint />
         </field>
       </row>
@@ -11087,7 +11087,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Program</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Program</required>
           <hint />
         </field>
         <field>
@@ -11097,7 +11097,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Subcomponent</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Subcomponent</required>
           <hint />
         </field>
       </row>
@@ -11109,7 +11109,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Type</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Type</required>
           <hint />
         </field>
       </row>
@@ -11133,7 +11133,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Description</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Description</required>
           <hint />
         </field>
       </row>
@@ -11145,7 +11145,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Financial Scheme</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Financial Scheme</required>
           <hint />
         </field>
       </row>
@@ -11157,7 +11157,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Program</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Program</required>
           <hint />
         </field>
       </row>
@@ -11169,7 +11169,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Project Title</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Project Title</required>
           <hint />
         </field>
       </row>
@@ -11181,7 +11181,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Execution Place</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Execution Place</required>
           <hint />
         </field>
       </row>
@@ -11193,7 +11193,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>OCDE Area</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter OCDE Area</required>
           <hint />
           <vocabulary closed="true">ocde_subjects</vocabulary>
         </field>
@@ -11206,7 +11206,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Grant Beneficiary</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Grant Beneficiary</required>
           <hint />
         </field>
       </row>
@@ -11218,7 +11218,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Project Amount</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Project Amount</required>
           <hint />
         </field>
         <field>
@@ -11228,7 +11228,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>State Contribution</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter State Contribution</required>
           <hint />
         </field>
         <field>
@@ -11238,7 +11238,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Beneficiary Contribution</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Beneficiary Contribution</required>
           <hint />
         </field>
       </row>
@@ -11250,7 +11250,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Team Coordinator</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter Team Coordinator</required>
           <hint />
         </field>
       </row>
@@ -11272,9 +11272,9 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>ppp</dc-element>
           <dc-qualifier>achievement</dc-qualifier>
           <label>Achievements</label>
-          <input-type>onebox</input-type>
-          <repeatable>true</repeatable>
-          <required />
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required>Please enter Achievements</required>
           <hint />
         </field>
       </row>
@@ -11286,7 +11286,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Project Status</label>
           <input-type value-pairs-name="perucris_ppp_status">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please select a Status</required>
           <hint />
         </field>
       </row>
@@ -11311,7 +11311,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Parent Component</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Parent Component</required>
           <hint />
         </field>
       </row>
@@ -11336,7 +11336,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Program Specific Goal</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Program Specific Goal</required>
           <hint />
         </field>
       </row>
@@ -11359,9 +11359,9 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>description</dc-element>
           <dc-qualifier>abstract</dc-qualifier>
           <label>Abstract</label>
-          <input-type>onebox</input-type>
+          <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter an Abstract</required>
           <hint />
         </field>
       </row>
@@ -11370,7 +11370,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>date</dc-element>
           <dc-qualifier>issued</dc-qualifier>
-          <label>Date of Issue</label>
+          <label>Reference Date</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
           <required>You must enter at least the year.</required>
@@ -11383,7 +11383,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Source</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Source</required>
           <hint />
         </field>
       </row>
@@ -11395,7 +11395,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Politic</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Politic</required>
           <hint />
         </field>
       </row>
@@ -11407,7 +11407,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Plan</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Plan</required>
           <hint />
         </field>
       </row>
@@ -11419,7 +11419,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Program</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Program</required>
           <hint />
         </field>
       </row>
@@ -11431,7 +11431,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Financial Instrument</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter a Financial Instrument</required>
           <hint />
         </field>
       </row>

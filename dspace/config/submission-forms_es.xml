@@ -9868,7 +9868,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Descripción</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Descripción</required>
           <hint />
         </field>
       </row>
@@ -9880,7 +9880,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Fecha de aprobación</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Fecha de aprobación</required>
           <hint />
         </field>
       </row>
@@ -9888,11 +9888,11 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
-          <dc-qualifier>publicProgram</dc-qualifier>
+          <dc-qualifier>publicProblem</dc-qualifier>
           <label>Problema Publico</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Problema Publico</required>
           <hint />
         </field>
       </row>
@@ -9904,7 +9904,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Alineamientos Planes</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Alineamientos Planes</required>
           <hint />
         </field>
       </row>
@@ -9916,7 +9916,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Resultados</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Resultados</required>
           <hint />
         </field>
       </row>
@@ -9928,7 +9928,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Conclusiones</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Conclusiones</required>
           <hint />
         </field>
       </row>
@@ -9940,7 +9940,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Recomendaciones</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Recomendaciones</required>
           <hint />
         </field>
       </row>
@@ -9952,7 +9952,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Estado</label>
           <input-type value-pairs-name="perucris_ppp_status">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Seleccionar un Estado</required>
           <hint />
         </field>
       </row>
@@ -9976,7 +9976,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Descripción</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Descripción</required>
           <hint />
         </field>
       </row>
@@ -9988,7 +9988,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Objetivo Politica</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Objetivo Politica</required>
           <hint />
         </field>
       </row>
@@ -10000,7 +10000,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Periodicidad</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Periodicidad</required>
           <hint />
         </field>
         <field>
@@ -10010,7 +10010,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Vision</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Vision</required>
           <hint />
         </field>
         <field>
@@ -10020,7 +10020,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Fecha de aprobación</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Fecha de aprobación</required>
           <hint />
         </field>
       </row>
@@ -10032,7 +10032,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Entidad Responsable</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Entidad Responsable</required>
           <hint />
         </field>
       </row>
@@ -10044,7 +10044,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Tipo Plan</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Tipo plan</required>
           <hint />
         </field>
         <field>
@@ -10054,7 +10054,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Estado</label>
           <input-type value-pairs-name="perucris_ppp_status">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Seleccionar un Estado</required>
           <hint />
         </field>
       </row>
@@ -10066,7 +10066,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Objetivo Estrategico</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Objetivo Estrategico</required>
           <hint />
         </field>
       </row>
@@ -10078,7 +10078,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Acciones Estrategicos</label>
           <input-type>textarea</input-type>
           <repeatable>true</repeatable>
-          <required />
+          <required>Ingresar Acciones Estrategicos</required>
           <hint />
         </field>
       </row>
@@ -10102,7 +10102,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Descripción</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Descripción</required>
           <hint />
         </field>
       </row>
@@ -10114,7 +10114,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Plan</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Plan</required>
           <hint />
         </field>
       </row>
@@ -10126,7 +10126,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Fecha de aprobación</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Fecha de aprobación</required>
           <hint />
         </field>
         <field>
@@ -10136,7 +10136,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Tipo Programa</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Tipo Programa</required>
           <hint />
         </field>
         <field>
@@ -10146,7 +10146,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Persona Responsable</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Persona Responsable</required>
           <hint />
         </field>
         <field>
@@ -10156,7 +10156,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Año de ejecución</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Año de ejecución</required>
           <hint />
         </field>
       </row>
@@ -10168,7 +10168,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Estado</label>
           <input-type value-pairs-name="perucris_ppp_status">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Seleccionar un Estado</required>
           <hint />
         </field>
       </row>
@@ -10193,7 +10193,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Politica</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Politica</required>
           <hint />
         </field>
         <field>
@@ -10203,7 +10203,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Entidad Responsable</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una  Entidad Responsable</required>
           <hint />
         </field>
       </row>
@@ -10215,7 +10215,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Medidas Adoptadas</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Medidas Adoptadas</required>
           <hint />
         </field>
       </row>
@@ -10227,7 +10227,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Intervenciones CTI</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Intervenciones CTI</required>
           <hint />
         </field>
       </row>
@@ -10239,7 +10239,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Avance</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Avance</required>
           <hint />
         </field>
       </row>
@@ -10251,7 +10251,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Alerta</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar  Alerta</required>
           <hint />
         </field>
       </row>
@@ -10276,7 +10276,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Objetivo Politica</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Objetivo Politica</required>
           <hint />
         </field>
         <field>
@@ -10286,7 +10286,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Plan</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Plan</required>
           <hint />
         </field>
         <field>
@@ -10296,7 +10296,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Programa</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Programa</required>
           <hint />
         </field>
       </row>
@@ -10308,7 +10308,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Objetivo General Programa</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Objetivo General Programa</required>
           <hint />
         </field>
         <field>
@@ -10318,7 +10318,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Objetivo Especifico Programa</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Objetivo Especifico Programa</required>
           <hint />
         </field>
       </row>
@@ -10330,7 +10330,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Actividad</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una  Actividad</required>
           <hint />
         </field>
         <field>
@@ -10340,7 +10340,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Estandar</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Estandar</required>
           <hint />
         </field>
       </row>
@@ -10352,7 +10352,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Instrumento Financiero</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Instrumento Financiero</required>
           <hint />
         </field>
         <field>
@@ -10362,7 +10362,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Esquema Financiero</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Esquema Financiero</required>
           <hint />
         </field>
       </row>
@@ -10374,7 +10374,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Persona Responsable</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Persona Responsable</required>
           <hint />
         </field>
         <field>
@@ -10384,7 +10384,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Institución Responsable</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Institución Responsable</required>
           <hint />
         </field>
       </row>
@@ -10396,7 +10396,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Tipo de Indicador</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Tipo de Indicador</required>
           <hint />
         </field>
         <field>
@@ -10406,7 +10406,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Fuente</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Fuente</required>
           <hint />
         </field>
       </row>
@@ -10418,7 +10418,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Linea Base</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Linea Base</required>
           <hint />
         </field>
       </row>
@@ -10430,7 +10430,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Valor Esperado</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Valor Esperado</required>
           <hint />
         </field>
         <field>
@@ -10440,7 +10440,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Valor Obtenido</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Valor Obtenido</required>
           <hint />
         </field>
         <field>
@@ -10450,7 +10450,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Avance Anual</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Avance Anual</required>
           <hint />
         </field>
       </row>
@@ -10462,7 +10462,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Resumen de Desempeño</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Resumen de Desempeño</required>
           <hint />
         </field>
         <field>
@@ -10472,7 +10472,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Estado</label>
           <input-type value-pairs-name="perucris_ppp_status">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Seleccionar un Estado</required>
           <hint />
         </field>
       </row>
@@ -10497,7 +10497,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Programa</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Programa</required>
           <hint />
         </field>
       </row>
@@ -10522,7 +10522,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Objetivo General Programa</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Objetivo General Programa</required>
           <hint />
         </field>
       </row>
@@ -10547,7 +10547,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Servicio</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Servicio</required>
           <hint />
         </field>
       </row>
@@ -10559,7 +10559,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Cumplimiento</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Cumplimiento</required>
           <hint />
         </field>
       </row>
@@ -10583,7 +10583,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Descripción</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Descripción</required>
           <hint />
         </field>
       </row>
@@ -10595,7 +10595,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Programa</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Programa</required>
           <hint />
         </field>
       </row>
@@ -10607,7 +10607,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Problema CTI</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Problema CTI</required>
           <hint />
         </field>
       </row>
@@ -10619,7 +10619,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Linea Investigación</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Linea Investigación</required>
           <hint />
         </field>
       </row>
@@ -10631,7 +10631,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Poblacion Objetivo</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Poblacion Objetivo</required>
           <hint />
         </field>
       </row>
@@ -10643,7 +10643,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Estado</label>
           <input-type value-pairs-name="perucris_ppp_status">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Seleccionar un Estado</required>
           <hint />
         </field>
       </row>
@@ -10655,7 +10655,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Objetivo General</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Objetivo General</required>
           <hint />
         </field>
         <field>
@@ -10689,7 +10689,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Descripción</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Descripción</required>
           <hint />
         </field>
       </row>
@@ -10701,7 +10701,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Instrumento Financiero</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Instrumento Financiero</required>
           <hint />
         </field>
       </row>
@@ -10713,7 +10713,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Público Objetivo</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Público Objetivo</required>
           <hint />
         </field>
       </row>
@@ -10725,7 +10725,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Fecha Convocatoria</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Fecha Convocatoria</required>
           <hint />
         </field>
         <field>
@@ -10735,7 +10735,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Fecha Aprobación Ganadores</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Fecha Aprobación Ganadores</required>
           <hint />
         </field>
       </row>
@@ -10747,7 +10747,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Proyectos Ganadores</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <required />
+          <required>Ingresar Proyectos Ganadores</required>
           <hint />
         </field>
       </row>
@@ -10759,7 +10759,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Resultados Esperados</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Resultados Esperados</required>
           <hint />
         </field>
         <field>
@@ -10769,7 +10769,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Resultados Alcanzados</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Resultados Alcanzados</required>
           <hint />
         </field>
       </row>
@@ -10781,7 +10781,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Conclusiones</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Conclusiones</required>
           <hint />
         </field>
       </row>
@@ -10793,7 +10793,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Recomendaciones</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Recomendaciones</required>
           <hint />
         </field>
       </row>
@@ -10818,7 +10818,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Lineamientos Politica</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Lineamientos Politica</required>
           <hint />
         </field>
       </row>
@@ -10830,7 +10830,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Proveedor</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Proveedor</required>
           <hint />
         </field>
       </row>
@@ -10842,7 +10842,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Destinatario</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Destinatario</required>
           <hint />
         </field>
       </row>
@@ -10854,7 +10854,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Cobertura</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Cobertura</required>
           <hint />
         </field>
       </row>
@@ -10866,7 +10866,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Acciones Relevantes</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <required />
+          <required>Ingresar Acciones Relevantes</required>
           <hint />
         </field>
       </row>
@@ -10878,7 +10878,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Factores Positivos</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <required />
+          <required>Ingresar Factores Positivos</required>
           <hint />
         </field>
       </row>
@@ -10890,7 +10890,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Factores Negativos</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <required />
+          <required>Ingresar Factores Negativos</required>
           <hint />
         </field>
       </row>
@@ -10915,7 +10915,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Objetivo Politica</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Objetivo Politica</required>
           <hint />
         </field>
       </row>
@@ -10940,7 +10940,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Proyecto Programa</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Proyecto Programa</required>
           <hint />
         </field>
       </row>
@@ -10952,7 +10952,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Institución Involucrada</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Institución Involucrada</required>
           <hint />
         </field>
         <field>
@@ -10962,7 +10962,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Responsable de la Ejecución</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Responsable de la Ejecución</required>
           <hint />
         </field>
         <field>
@@ -10972,7 +10972,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Año de ejecución</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Año de ejecución</required>
           <hint />
         </field>
       </row>
@@ -10997,7 +10997,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Actividad</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Actividad</required>
           <hint />
         </field>
       </row>
@@ -11009,7 +11009,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Tipo de Moneda</label>
           <input-type value-pairs-name="currency">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Seleccionar  Tipo de Moneda</required>
           <hint />
         </field>
         <field>
@@ -11019,7 +11019,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Monto Programado</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Monto Programado</required>
           <hint />
         </field>
         <field>
@@ -11029,7 +11029,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Monto Ejecutado</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Monto Ejecutado</required>
           <hint />
         </field>
       </row>
@@ -11041,7 +11041,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Nro Identificador</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Nro Identificador</required>
           <hint />
         </field>
         <field>
@@ -11051,7 +11051,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Codigo Financiamento</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Codigo Financiamento</required>
           <hint />
         </field>
       </row>
@@ -11075,7 +11075,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Descripción</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Descripción</required>
           <hint />
         </field>
       </row>
@@ -11087,7 +11087,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Programa</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Programa</required>
           <hint />
         </field>
         <field>
@@ -11097,7 +11097,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Sub Componente</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Sub Componente</required>
           <hint />
         </field>
       </row>
@@ -11109,7 +11109,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Tipo</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Tipo</required>
           <hint />
         </field>
       </row>
@@ -11133,7 +11133,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Descripción</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Descripción</required>
           <hint />
         </field>
       </row>
@@ -11145,7 +11145,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Esquema Financiero</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Esquema Financiero</required>
           <hint />
         </field>
       </row>
@@ -11157,7 +11157,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Programa</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Programa</required>
           <hint />
         </field>
       </row>
@@ -11169,7 +11169,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Titulo del Proyecto</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Titulo del Proyecto</required>
           <hint />
         </field>
       </row>
@@ -11181,7 +11181,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Lugar de ejecución</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Lugar de ejecución</required>
           <hint />
         </field>
       </row>
@@ -11193,7 +11193,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Area OCDE</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Area OCDE</required>
           <hint />
           <vocabulary closed="true">ocde_subjects</vocabulary>
         </field>
@@ -11206,7 +11206,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Beneficiario de la subvención</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Beneficiario de la subvención</required>
           <hint />
         </field>
       </row>
@@ -11218,7 +11218,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Monto del Proyecto</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Monto del Proyecto</required>
           <hint />
         </field>
         <field>
@@ -11228,7 +11228,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Aporte Estatal</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Aporte Estatal</required>
           <hint />
         </field>
         <field>
@@ -11238,7 +11238,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Aporte Beneficiario</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Aporte Beneficiario</required>
           <hint />
         </field>
       </row>
@@ -11250,7 +11250,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Coordinador del equipo</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Coordinador del equipo</required>
           <hint />
         </field>
       </row>
@@ -11272,9 +11272,9 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>ppp</dc-element>
           <dc-qualifier>achievement</dc-qualifier>
           <label>Logros alcanzados</label>
-          <input-type>onebox</input-type>
-          <repeatable>true</repeatable>
-          <required />
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Logros alcanzados</required>
           <hint />
         </field>
       </row>
@@ -11286,7 +11286,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Estado del Proyecto</label>
           <input-type value-pairs-name="perucris_ppp_status">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Seleccionar  Estado del Proyecto</required>
           <hint />
         </field>
       </row>
@@ -11311,7 +11311,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Componente Principal</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Componente Principal</required>
           <hint />
         </field>
       </row>
@@ -11336,7 +11336,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Objetivo Especifico Programa</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Objetivo Especifico Programa</required>
           <hint />
         </field>
       </row>
@@ -11359,9 +11359,9 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>description</dc-element>
           <dc-qualifier>abstract</dc-qualifier>
           <label>Resumen</label>
-          <input-type>onebox</input-type>
+          <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Resumen</required>
           <hint />
         </field>
       </row>
@@ -11370,7 +11370,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>date</dc-element>
           <dc-qualifier>issued</dc-qualifier>
-          <label>Fecha de emisión</label>
+          <label>Fecha de referencia</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
           <required>Debe introducir al menos el año.</required>
@@ -11383,7 +11383,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Fuente</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Fuente</required>
           <hint />
         </field>
       </row>
@@ -11395,7 +11395,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Politica</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar una Politica</required>
           <hint />
         </field>
       </row>
@@ -11407,7 +11407,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Plan</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Plan</required>
           <hint />
         </field>
       </row>
@@ -11419,7 +11419,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Programa</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Programa</required>
           <hint />
         </field>
       </row>
@@ -11431,7 +11431,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Instrumento Financiero</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar un Instrumento Financiero</required>
           <hint />
         </field>
       </row>

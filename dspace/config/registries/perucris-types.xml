@@ -1992,7 +1992,7 @@
     <dc-type>
         <schema>perucris</schema>
         <element>ppp</element>
-        <qualifier>publicProgram</qualifier>
+        <qualifier>publicProblem</qualifier>
         <scope_note />
      </dc-type>
 

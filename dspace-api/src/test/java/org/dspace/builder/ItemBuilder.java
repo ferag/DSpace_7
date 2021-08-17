@@ -214,8 +214,6 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "dc", "identifier", "issn", issn);
     }
 
-    public ItemBuilder withIsiIdentifier(String isi) {
-        return addMetadataValue(item, "dc", "identifier", "isi", isi);
     public ItemBuilder withRelationIssn(String issn) {
         return addMetadataValue(item, "dc", "relation", "issn", issn);
     }
@@ -719,10 +717,6 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withOrgUnitLocality(String addressLocality) {
         return addMetadataValue(item, "organization", "address", "addressLocality", addressLocality);
-    }
-
-    public ItemBuilder withOrgUnitCountry(String addressCountry) {
-        return addMetadataValue(item, "organization", "address", "addressCountry", addressCountry);
     }
 
     public ItemBuilder withOrgUnitRinggoldIdentifier(String identifier) {

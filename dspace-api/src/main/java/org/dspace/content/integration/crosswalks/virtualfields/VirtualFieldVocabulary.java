@@ -87,7 +87,7 @@ public class VirtualFieldVocabulary implements VirtualField {
             return -1;
         }
         int index = Integer.valueOf(position);
-        return index >= length ? length - 1 : index;
+        return index >= length ? - 1 : index;
     }
 
     private boolean isInvalidOrNegativeNumber(String position) {

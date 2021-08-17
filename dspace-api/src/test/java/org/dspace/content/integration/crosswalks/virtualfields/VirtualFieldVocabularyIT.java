@@ -11,8 +11,10 @@ import static org.dspace.builder.CollectionBuilder.createCollection;
 import static org.dspace.builder.CommunityBuilder.createCommunity;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.emptyArray;
 import static org.hamcrest.Matchers.is;
 
+import org.apache.commons.lang.StringUtils;
 import org.dspace.AbstractIntegrationTestWithDatabase;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
@@ -51,12 +53,12 @@ public class VirtualFieldVocabularyIT extends AbstractIntegrationTestWithDatabas
             .withType("first::second::third::fourth")
             .build();
 
-        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.0"), is("first"));
-        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.1"), is("second"));
-        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.2"), is("third"));
-        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.3"), is("fourth"));
-        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.4"), is("fourth"));
-        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.100"), is("fourth"));
+        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.0", 1), is("first"));
+        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.1", 1), is("second"));
+        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.2", 1), is("third"));
+        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.3", 1), is("fourth"));
+        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.4", 0), isEmptyString());
+        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.100", 0), isEmptyString());
 
     }
 
@@ -67,12 +69,12 @@ public class VirtualFieldVocabularyIT extends AbstractIntegrationTestWithDatabas
             .withType("first::second::third::fourth")
             .build();
 
-        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.leaf"), is("fourth"));
-        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.leaf-1"), is("third"));
-        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.leaf-2"), is("second"));
-        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.leaf-3"), is("first"));
-        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.leaf-4"), is("first"));
-        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.leaf-100"), is("first"));
+        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.leaf", 1), is("fourth"));
+        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.leaf-1", 1), is("third"));
+        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.leaf-2", 1), is("second"));
+        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.leaf-3", 1), is("first"));
+        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.leaf-4", 1), is("first"));
+        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.leaf-100", 1), is("first"));
 
     }
 
@@ -101,8 +103,8 @@ public class VirtualFieldVocabularyIT extends AbstractIntegrationTestWithDatabas
         assertThat(values, arrayContaining("fourth", "D"));
 
         values = virtualField.getMetadata(context, item, "virtual.vocabulary.dc-type.4");
-        assertThat(values.length, is(2));
-        assertThat(values, arrayContaining("fourth", "D"));
+        assertThat(values.length, is(0));
+        assertThat(values, emptyArray());
 
         values = virtualField.getMetadata(context, item, "virtual.vocabulary.dc-type.leaf");
         assertThat(values.length, is(2));
@@ -153,17 +155,17 @@ public class VirtualFieldVocabularyIT extends AbstractIntegrationTestWithDatabas
             .withType("Book")
             .build();
 
-        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.0"), is("Book"));
-        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.1"), is("Book"));
-        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.leaf"), is("Book"));
-        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.leaf-1"), is("Book"));
+        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.0", 1), is("Book"));
+        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.1", 0), isEmptyString());
+        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.leaf", 1), is("Book"));
+        assertThat(getVocabularySection(item, "virtual.vocabulary.dc-type.leaf-1", 1), is("Book"));
 
     }
 
-    private String getVocabularySection(Item item, String virtualFieldName) {
+    private String getVocabularySection(Item item, String virtualFieldName, int length) {
         String[] metadata = virtualField.getMetadata(context, item, virtualFieldName);
-        assertThat(metadata.length, is(1));
-        return metadata[0];
+        assertThat(metadata.length, is(length));
+        return metadata.length == 0 ? StringUtils.EMPTY : metadata[0];
     }
 
 }

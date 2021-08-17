@@ -1,0 +1,103 @@
+{
+    "oairecerif_person_gender" : "@oairecerif.person.gender@",
+    "resourceId" : "@virtual.id@",
+    "crisrp_name" : "@crisrp.name@",
+    "perucris_identifier_passport" : "@perucris.identifier.passport@",
+    "perucris_subject_ocde" : [
+	   "@perucris.subject.ocde@",
+	],
+    "crisrp_education_start" : [
+	   "@crisrp.education.start@",
+	],
+    "dc_subject" : "@dc.subject@",
+    "perucris_ubigeo" : "@virtual.vocabulary.perucris-ubigeo.1@",
+    "perucris_identifier_immigrationCard" : "@perucris.identifier.immigrationCard@",
+    "perucris_address_streetAddress" : "@perucris.address.streetAddress@",
+    "crisrp_education_role" : [
+           "@crisrp.education.role@",
+        ],
+    "perucris_education_grantor" : [
+           "@perucris.education.grantor@",
+        ],
+    "person_identifier_rid" : [
+           "@person.identifier.rid@",
+        ],
+    "crisrp_site_title" : "@crisrp.site.title@",
+    "person_jobTitle" : "@person.jobTitle@",
+    "person_givenName" : "@person.givenName@",
+    "perucris_identifier_dina" : "@perucris.identifier.dina@",
+    "perucris_ubigeoRegion" : "@perucris.ubigeoRegion@",
+    "perucris_type_sectorInstitucional" : "@perucris.type.sectorInstitucional@",
+    "person_knowsLanguage" : [
+          "@person.knowsLanguage@",
+        ],
+    "perucris_mobilePhone" : "@perucris.mobilePhone@",
+    "perucris_type_educacionSuperior" : "@perucris.type.educacionSuperior@",
+    "crisrp_country" : [
+           "@crisrp.country@",
+        ],
+    "person_identifier_orcid" : "@person.identifier.orcid@",
+    "person_affiliation_name" : "@person_affiliation_name@",
+    "oairecerif_affiliation_role" : [
+           "@oairecerif.affiliation.role@",
+        ],
+    "dc_title" : "@dc.title@",
+    "crisrp_name_translated" : "@crisrp.name.translated@",
+    "perucris_identifier_renacyt" : "@perucris.identifier.renacyt@",
+    "oairecerif_identifier_url" : "@oairecerif.identifier.url@",
+    "crisrp_education_end" : [
+           "@crisrp.education.end@",
+        ],
+    "perucris_address_postalCode" : "@perucris.address.postalCode@",
+    "crisrp_qualification" : [
+           "@crisrp.qualification@",
+        ],
+    "crisrp_qualification_end" : [
+           "@crisrp.qualification.end@",
+        ],
+    "referenceYear" : "@virtual.date.yyyy@",
+    "crisrp_education" : [
+           "@crisrp.education@",
+        ],
+    "person_birthYear" : "@virtual.date.person-birthDate.yyyy@",
+    "oairecerif_person_genderLabel" : "@virtual.mapConverter.elasticsearchGender.oairecerif-person-gender@",
+    "person_birthDate" : "@virtual.date.person-birthDate.yyyy-MM-dd@",
+    "perucris_address_addressCountry" : "@perucris.address.addressCountry@",
+    "perucris_education_country" : [
+           "@perucris.education.country@",
+        ],
+    "oairecerif_person_affiliation" : [
+           "@oairecerif.person.affiliation@",
+        ],
+    "crisrp_qualification_orgunit" : [
+           "@crisrp_qualification_orgunit@",
+        ],
+    "crisrp_name_variant" : "@crisrp.name.variant@",
+    "person_email" : "@person_email@",
+    "perucris_subject_ins" : "@perucris.subject.ins@",
+    "perucris_apellidoPaterno" : "@perucris.apellidoPaterno@",
+    "perucris_identifier_dni" : "@perucris.identifier.dni@",
+    "perucris_ubigeoRegionIso" : "@virtual.vocabulary2mapConverter.perucris-ubigeo.1_elasticsearchUbigeoRegion@",
+    "dc_description_abstract" : "@dc.description.abstract@",
+    "oairecerif_affiliation_endDate" : [
+            "@oairecerif.affiliation.endDate@",
+        ],
+    "crisrp_qualification_start" : [
+            "@crisrp.qualification.start@",
+        ],
+    "person_familyName" : "@person_familyName@",
+    "perucris_domicilio_ubigeoReniec" : "@perucris.domicilio.ubigeoReniec@",
+    "perucris_description_internalNote" : "@perucris.description.internalNote@",
+    "crisrp_workgroup" : "@crisrp.workgroup@",
+    "perucris_apellidoMaterno" : "@perucris.apellidoMaterno@",
+    "person_identifier_scopus-author-id" : [
+            "@person.identifier.scopus-author-id@",
+        ],     
+    "perucris_phone" : "@perucris_phone@,
+    "oairecerif_affiliation_startDate" : [
+            "@oairecerif.affiliation.startDate@",
+        ],
+    "perucris_apellidoCasada" : "@perucris_apellidoCasada@",
+    "person_profile_type" : "@perucris.personProfile.type@",
+    "perucris_subject_minam" : "@perucris.subject.minam@"
+}

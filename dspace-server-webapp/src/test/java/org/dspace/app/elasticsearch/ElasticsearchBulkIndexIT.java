@@ -523,7 +523,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
                           .withType("Test Type")
                           .withType("Test Type 2")
                           .withRelationIsbn("ISBN-01")
-                          .withRelationDataset("DataSet")
+                          .withRelationProduct("DataSet")
                           .withIsbnIdentifier("11-22-33")
                           .withEditor("Editor 1")
                           .withEditor("Editor 2")

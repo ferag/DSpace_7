@@ -91,7 +91,7 @@
     </bean>
 
     <bean id="elasticsearch-bulk-indexing" class="org.dspace.app.elasticsearch.script.bulkindex.ElasticsearchBulkIndexCliScriptConfiguration">
-        <property name="description" value="Perform bulk inswxing of Elasticsearch"/>
+        <property name="description" value="Perform bulk indexing of Elasticsearch"/>
         <property name="dspaceRunnableClass" value="org.dspace.app.elasticsearch.script.bulkindex.ElasticsearchBulkIndexCli"/>
     </bean>
 

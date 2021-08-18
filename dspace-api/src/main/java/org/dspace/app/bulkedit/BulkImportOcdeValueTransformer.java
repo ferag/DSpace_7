@@ -38,7 +38,7 @@ public class BulkImportOcdeValueTransformer implements BulkImportValueTransforme
             ChoiceAuthority authority = cas.getChoiceAuthorityByAuthorityName(this.authorityName);
             Choice choice = authority.getChoice(key, Item.ANY);
             if (Objects.nonNull(choice)) {
-                return new MetadataValueVO(choice.value, key);
+                return new MetadataValueVO(choice.value, String.format("%s:%s", authorityName, key));
             }
         }
         return metadataValue;

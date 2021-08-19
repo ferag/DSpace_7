@@ -67,8 +67,7 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
 
     private static final String CRIS_CONSUMER = CrisConsumer.CONSUMER_NAME;
 
-//    private static final String BASE_XLS_DIR_PATH = "./target/testing/dspace/assetstore/bulk-import/";
-    private static final String BASE_XLS_DIR_PATH = "/home/corrado/data/testing/dspace/assetstore/bulk-import";
+    private static final String BASE_XLS_DIR_PATH = "./target/testing/dspace/assetstore/bulk-import/";
 
     private static final String PLACEHOLDER = CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE;
 

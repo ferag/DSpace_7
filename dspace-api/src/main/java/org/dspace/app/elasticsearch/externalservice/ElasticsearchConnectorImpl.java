@@ -6,7 +6,10 @@
  * http://www.dspace.org/license/
  */
 package org.dspace.app.elasticsearch.externalservice;
+
+import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -15,9 +18,11 @@ import java.security.cert.X509Certificate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.PostConstruct;
 
+
+import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -48,6 +53,8 @@ public class ElasticsearchConnectorImpl implements ElasticsearchConnector {
 
     private HttpClient httpClient;
 
+    private String authHeader;
+
     @PostConstruct
     @SuppressWarnings("deprecation")
     private void setup() throws IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
@@ -70,7 +77,14 @@ public class ElasticsearchConnectorImpl implements ElasticsearchConnector {
 
         this.httpClient = HttpClients.custom()
                                      .setSSLSocketFactory(sslSF)
-                                     .setDefaultCredentialsProvider(provider).build();
+//                                     .setDefaultCredentialsProvider(provider)
+                                     .build();
+        String auth = this.user + ":" + this.password;
+
+        byte[] encodedAuth = Base64.encodeBase64(
+            auth.getBytes(StandardCharsets.ISO_8859_1));
+
+        this.authHeader = "Basic " + new String(encodedAuth);
     }
 
     @Override
@@ -109,15 +123,16 @@ public class ElasticsearchConnectorImpl implements ElasticsearchConnector {
 
     private HttpResponse httpPostRequest(String url, Map<String, String> headerConfig, String entity)
             throws IOException {
+        HttpPost httpPost = new HttpPost(url);
         try {
-            HttpPost httpPost = new HttpPost(url);
+            httpPost.setHeader(HttpHeaders.AUTHORIZATION, this.authHeader);
             if (!headerConfig.isEmpty()) {
-                for (String congf : headerConfig.keySet()) {
-                    httpPost.addHeader(congf, headerConfig.get(congf));
+                for (String config : headerConfig.keySet()) {
+                    httpPost.addHeader(config, headerConfig.get(config));
                 }
             }
             if (StringUtils.isNotBlank(entity)) {
-                AbstractHttpEntity httpEntity = new StringEntity(entity);
+                AbstractHttpEntity httpEntity = new StringEntity(entity, "UTF-8");
                 httpEntity.setChunked(true);
                 httpEntity.setContentType("application/json");
                 httpPost.setEntity(httpEntity);
@@ -125,22 +140,32 @@ public class ElasticsearchConnectorImpl implements ElasticsearchConnector {
             return httpClient.execute(httpPost);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
+        } finally {
+            httpPost.releaseConnection();
         }
     }
 
     private HttpResponse httpGetRequest(String url) throws IOException {
+        final HttpGet httpGet = new HttpGet(url);
         try {
-            return httpClient.execute(new HttpGet(url));
+            httpGet.setHeader(HttpHeaders.AUTHORIZATION, this.authHeader);
+            return httpClient.execute(httpGet);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
+        } finally {
+            httpGet.releaseConnection();
         }
     }
 
     private HttpResponse httpDeleteRequest(String url) throws IOException {
+        final HttpDelete httpDelete = new HttpDelete(url);
         try {
-            return httpClient.execute(new HttpDelete(url));
+            httpDelete.setHeader(HttpHeaders.AUTHORIZATION, this.authHeader);
+            return httpClient.execute(httpDelete);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
+        } finally {
+            httpDelete.releaseConnection();
         }
     }
 

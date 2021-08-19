@@ -6,29 +6,31 @@
  * http://www.dspace.org/license/
  */
 package org.dspace.app.elasticsearch.service;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- * The purpose of this class is to denormalise received json
+ * The purpose of this class is to denormalize received json
  * with configured fields if they are present in the json.
  *
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
 public class ElasticsearchDenormalizer {
 
-    private Map<String, List<String>> mapping;
+    private Map<String, List<String>> denormalizationMapping;
 
     public List<String> denormalize(String entityType, String json) {
-        List<String> denormalisedJsons = new ArrayList<>();
-        List<String> fields = mapping.get(entityType);
+        List<String> denormalizedJsons = new ArrayList<>();
+        List<String> fields = denormalizationMapping.get(entityType);
         if (Objects.isNull(fields) || fields.isEmpty()) {
             return Collections.singletonList(json);
         }
@@ -36,43 +38,50 @@ public class ElasticsearchDenormalizer {
             JSONObject jsonObj = new JSONObject(json);
             if (jsonObj.has(field)) {
                 JSONArray array = jsonObj.getJSONArray(field);
-                if (denormalisedJsons.isEmpty()) {
+                if (denormalizedJsons.isEmpty()) {
                     if (array.length() == 0) {
-                        denormalisedJsons.add(jsonObj.toString());
+
+                        denormalizedJsons.add(jsonObj.toString());
                     } else {
-                        denormaliseField(denormalisedJsons, field, jsonObj, array);
+                        denormalizeField(denormalizedJsons, field, jsonObj, array);
                     }
                 }  else {
                     List<String> tempList = new ArrayList<String>();
-                    for (String j : denormalisedJsons) {
+                    for (String j : denormalizedJsons) {
                         JSONObject toWorkJson = new JSONObject(j);
                         toWorkJson.remove(field);
-                        denormaliseField(tempList, field, toWorkJson, array);
+                        denormalizeField(tempList, field, toWorkJson, array);
                     }
-                    denormalisedJsons.clear();
-                    denormalisedJsons.addAll(tempList);
+                    denormalizedJsons.clear();
+                    denormalizedJsons.addAll(tempList);
                 }
             }
         }
-        return denormalisedJsons;
+        if (denormalizedJsons.isEmpty()) {
+            return Collections.singletonList(json);
+        }
+        return denormalizedJsons;
     }
 
-    private void denormaliseField(List<String> denormalisedJsons, String field, JSONObject jsonObj, JSONArray array) {
+    private void denormalizeField(List<String> denormalisedJsons, String field, JSONObject jsonObj, JSONArray array) {
         for (Object obj : array) {
             if (StringUtils.isNotBlank(obj.toString())) {
                 JSONObject newJsonObj = new JSONObject(jsonObj.toString());
                 newJsonObj.put(field, obj);
+
                 denormalisedJsons.add(newJsonObj.toString());
             }
         }
     }
 
-    public Map<String, List<String>> getMapping() {
-        return mapping;
+    public Map<String, List<String>> getDenormalizationMapping() {
+        return denormalizationMapping;
     }
 
-    public void setMapping(Map<String, List<String>> mapping) {
-        this.mapping = mapping;
+    public void setDenormalizationMapping(Map<String, List<String>> denormalizationMapping) {
+        this.denormalizationMapping = denormalizationMapping;
     }
+
+
 
 }

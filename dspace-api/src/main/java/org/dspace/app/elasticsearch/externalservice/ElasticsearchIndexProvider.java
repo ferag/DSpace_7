@@ -6,11 +6,14 @@
  * http://www.dspace.org/license/
  */
 package org.dspace.app.elasticsearch.externalservice;
+
 import java.io.IOException;
+
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dspace.content.Item;
@@ -42,12 +45,21 @@ public class ElasticsearchIndexProvider {
         try {
             response = elasticsearchConnector.create(json, index, StringUtils.EMPTY);
         } catch (IOException e) {
-            log.error("Can not indexing item with uuid: " + item.getID()  + " , caused by: " + e.getMessage());
+            log.error("Cannot index item with uuid: " + item.getID()  + " , caused by: " + e.getMessage());
             return false;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
         }
         int status = response.getStatusLine().getStatusCode();
         if (status != HttpStatus.SC_CREATED) {
-            log.error("Can not indexing item with uuid: " + item.getID()  + " , with response status: " + status);
+            log.error("Cannot index item with uuid: " + item.getID()  + " , response status: " + status);
+            // TODO: remove this after live test
+            try {
+                log.error("response: {}", EntityUtils.toString(response.getEntity()));
+            } catch (IOException e) {
+                log.error("Unable to log response");
+            }
             return false;
         }
         return true;

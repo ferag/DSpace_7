@@ -37,9 +37,9 @@
     <bean class="org.dspace.app.elasticsearch.consumer.ElasticsearchIndexManager">
         <constructor-arg>
 			<map>
-				<entry key="Publication" value= "publications-v1" />
-				<entry key="Person" value= "persons-{DATE.yyyy}" />
-				<entry key="OrgUnit" value= "" />
+				<entry key="Publication" value= "publications-new-v1" />
+				<entry key="Person" value= "persons-new-{DATE.yyyy}" />
+				<entry key="OrgUnit" value= "orgunits-new" />
 			</map>
 		</constructor-arg>
 		<constructor-arg>
@@ -52,15 +52,15 @@
     <bean id="currentDateGenerator" class="org.dspace.content.template.generator.ElasticsearchIndexCurrentDateGenerator" />
 
     <bean class="org.dspace.app.elasticsearch.service.ElasticsearchDenormalizer">
-            <property name="mapping">
+            <property name="denormalizationMapping">
             <map>
-                <entry key="Publication" value-ref="publicationsMapping"/>
+                <entry key="Publication" value-ref="publicationsMetadataToDenormalize"/>
             </map>
         </property>
     </bean>
 
 
-	<util:list id="publicationsMapping" value-type="java.lang.String">
+	<util:list id="publicationsMetadataToDenormalize" value-type="java.lang.String">
     	<value>dc_contributor_authors</value>
 	</util:list>
 

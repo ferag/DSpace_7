@@ -85,7 +85,7 @@ public class ElasticsearchBulkIndex
             throw new IllegalArgumentException("Provided entity type does not supported!");
         }
         this.index = StringUtils.isNotBlank(this.index)
-                     ? this.index : this.entityType.toLowerCase() + "-" + getCurrentYear();
+                     ? this.index : elasticsearchIndexManager.getEntityType2Index().get(this.entityType);
         try {
             context.turnOffAuthorisationSystem();
             performBulkIndexing();
@@ -111,20 +111,26 @@ public class ElasticsearchBulkIndex
                 int countAttempt = 0;
                 Item item = context.reloadEntity(itemIterator.next());
                 countFoundItems++;
-                List<String> docs = elasticsearchItemBuilder.convert(context, item);
+                List<String> docs;
+                try {
+                    docs = elasticsearchItemBuilder.convert(context, item);
+                } catch (Exception e) {
+                    handler.logError("Unable to convert item " + item.getID() + " to Elasticsearch document");
+                    continue;
+                }
+                boolean updated = false;
                 for (String json : docs) {
-                    boolean updated = false;
                     do {
                         countAttempt++;
                         updated = elasticsearchIndexProvider.indexSingleItem(this.index, item, json);
                         if (!updated && countAttempt == this.maxAttempt) {
-                            handler.logInfo("It was not possible to indexing the item with uuid: " + item.getID());
+                            handler.logInfo("It was not possible indexing the item with uuid: " + item.getID());
                         }
                     } while (!updated && countAttempt < this.maxAttempt);
                     context.uncacheEntity(item);
-                    if (updated) {
-                        countUpdatedItems++;
-                    }
+                }
+                if (updated) {
+                    countUpdatedItems++;
                 }
                 count++;
                 if (count == 20) {
@@ -158,7 +164,7 @@ public class ElasticsearchBulkIndex
         DiscoverQuery discoverQuery = new DiscoverQuery();
         discoverQuery.setDSpaceObjectFilter(IndexableItem.TYPE);
         discoverQuery.setMaxResults(20);
-        discoverQuery.addFilterQueries("dspace.entity.type:" + this.entityType);
+        discoverQuery.addFilterQueries("search.entitytype:" + this.entityType);
         return new DiscoverResultIterator<Item, UUID>(context, discoverQuery);
     }
 

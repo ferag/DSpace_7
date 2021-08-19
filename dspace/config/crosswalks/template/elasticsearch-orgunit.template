@@ -16,7 +16,9 @@
       "perucris_renacyt_ocde" : "@perucris.renacyt.ocde@",
       "organization_legalName" : "@organization.legalName@",
       "organization_identifier_rin" : "@organization.identifier.rin@",
-      "perucris_renacyt_strength" : "@perucris.renacyt.strength@",
+      "perucris_renacyt_strength" : [
+            "@perucris.renacyt.strength@",
+          ],
       "perucris_sti_formalUnit" : "@perucris.sti.formalUnit@",
       "perucris_type_sectorInstitucional" : "@perucris.type.sectorInstitucional@",
       "organization_identifier_ror" : "@organization.identifier.ror@",

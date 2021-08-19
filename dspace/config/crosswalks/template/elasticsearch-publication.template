@@ -7,7 +7,12 @@
            {
               "name" : "@dc.contributor.author@"
            },
-           @group.dc-contributor-author.end@
+           @group.dc-contributor-author.end@2
+           @if.not.metadata.dc-contributor-author.start@
+           {
+                "name" : ""
+           },
+           @if.not.metadata.dc-contributor-author.end@
         ],
     "oairecerif_access_embargoEnd" : "@oairecerif.access.embargoEnd@",
     "oairecerif_author_affiliation" : [
@@ -47,6 +52,11 @@
               "name" : "@dc.contributor.editor@"
            },
            @group.dc-contributor-editor.end@
+           @if.not.metadata.dc-contributor-editor.start@
+          {
+               "name" : ""
+          },
+          @if.not.metadata.dc-contributor-editor.end@
         ],
     "dc_language_iso" : [
             "@dc.language.iso@",
@@ -108,7 +118,9 @@
              "@virtual.vocabulary.perucris-subject-ocde.3@",
         ], 
     "oaire_citation_startPage" : "@oaire.citation.startPage@",
-    "dc_relation_project" : "@dc.relation.project@",
+    "dc_relation_project" : [
+                "@dc.relation.project@",
+        ],
     "dc_subject_mesh" : [
               "@dc.subject.mesh@",
         ]

@@ -1,0 +1,18 @@
+## Rejection email message
+##
+## {0}  Title of submission
+## {1}  Name of collection
+## {2}  Link to 'My DSpace' page
+##
+#set($subject = 'DSpace: Submission Rejected')
+
+You submitted: ${params[0]}
+
+To collection: ${params[1]}
+
+Your submission has been rejected
+
+Your submission has not been deleted.
+You can access it from page: ${params[2]}
+
+DSpace

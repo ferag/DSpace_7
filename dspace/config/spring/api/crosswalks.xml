@@ -990,7 +990,8 @@
 	<bean class="org.dspace.content.integration.crosswalks.converter.JsonValueConverter" id="jsonValueConverter" />
 	
 	<bean class="org.dspace.content.integration.crosswalks.postprocessors.JsonPostProcessor" id="jsonPostProcessor" />
-	
+	<bean class="org.dspace.content.integration.crosswalks.postprocessors.ElasticsearchJsonPostProcessor" id="elasticSearchJsonPostProcessor" />
+
     <bean class="org.dspace.content.integration.crosswalks.CSLItemDataCrosswalk" id="cslItemDataCrosswalkInstitutionPublicationBibtex">
         <property name="style" value="bibtex.csl"/>
         <property name="mimeType" value="application/x-bibtex; charset=UTF-8"/>
@@ -1381,6 +1382,8 @@
 		<property name="mimeType" value="application/json; charset=UTF-8"/>
 		<property name="entityType" value="Publication"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="linesPostProcessor" ref="elasticSearchJsonPostProcessor"/>
+		<property name="converter" ref="jsonValueConverter"/>
 	</bean>
 
 	<bean id="referCrosswalkElasticsearchPerson" class="org.dspace.content.integration.crosswalks.ReferCrosswalk">
@@ -1388,6 +1391,8 @@
 		<property name="mimeType" value="application/json; charset=UTF-8"/>
 		<property name="entityType" value="Person"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="linesPostProcessor" ref="elasticSearchJsonPostProcessor"/>
+		<property name="converter" ref="jsonValueConverter"/>
 	</bean>
 
 	<bean id="referCrosswalkElasticsearchOrgUnit" class="org.dspace.content.integration.crosswalks.ReferCrosswalk">
@@ -1395,6 +1400,8 @@
 		<property name="mimeType" value="application/json; charset=UTF-8"/>
 		<property name="entityType" value="OrgUnit"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="linesPostProcessor" ref="elasticSearchJsonPostProcessor"/>
+		<property name="converter" ref="jsonValueConverter"/>
 	</bean>
 
 	<!-- VIRTUAL FIELDS CONFIGURATION -->

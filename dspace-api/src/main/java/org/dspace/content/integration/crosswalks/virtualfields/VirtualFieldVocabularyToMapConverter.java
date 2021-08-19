@@ -41,6 +41,9 @@ public class VirtualFieldVocabularyToMapConverter extends VirtualFieldVocabulary
         }
 
         String[] values = super.getMetadata(context, item, virtualFieldName[0]);
+        if (values.length == 0) {
+            return values;
+        }
         SimpleMapConverter mapConverter = mapConverters.getConverter(virtualFieldName[1])
                 .orElseThrow(() -> new IllegalArgumentException("No MapConverter found for field name: " + fieldName));
         return new String[] {mapConverter.getValue(values[0])};

@@ -27,6 +27,8 @@ import org.dspace.core.Context;
 import org.dspace.event.Event;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -45,6 +47,8 @@ public class ElasticsearchProvider {
     @Autowired
     private ElasticsearchIndexManager elasticsearchIndexManager;
 
+    private static final Logger logger = LoggerFactory.getLogger(ElasticsearchProvider.class);
+
     /**
      * Processes record according to the operation type
      * 
@@ -58,7 +62,7 @@ public class ElasticsearchProvider {
             throws IOException, SQLException {
         String index = getIndex(context, record);
         if (StringUtils.isBlank(index)) {
-            throw new RuntimeException("Not found index for ElasticsearchIndexQueue with uuid: " + record.getId());
+            logger.warn("Unable to find an ElasticSearch index for item {}, item not indexed", record.getID());
         }
         switch (record.getOperationType()) {
             case Event.CREATE : addDocument(record, jsons, index);
@@ -77,10 +81,10 @@ public class ElasticsearchProvider {
 
     private void addDocument(ElasticsearchIndexQueue record, List<String> jsons, String index) throws IOException {
         for (String json : jsons) {
-            HttpResponse responce = elasticsearchConnector.create(json, index, StringUtils.EMPTY);
-            int status = responce.getStatusLine().getStatusCode();
+            HttpResponse response = elasticsearchConnector.create(json, index, StringUtils.EMPTY);
+            int status = response.getStatusLine().getStatusCode();
             if (status != HttpStatus.SC_CREATED) {
-                throw new ElasticsearchException("It was not possible to CREATE document with uuid: " + record.getId()
+                logger.warn("It was not possible to CREATE document with uuid: " + record.getId()
                         + "  Elasticsearch returned status code : " + status);
             }
         }

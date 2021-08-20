@@ -4,15 +4,15 @@
 ## {1}  Name of collection
 ## {2}  Link to 'My DSpace' page
 ##
-#set($subject = 'DSpace: Submission Rejected')
+#set($subject = 'DSpace: Presentación rechazada')
 
-You submitted: ${params[0]}
+Usted presentó: ${params[0]}
 
-To collection: ${params[1]}
+A la colección: ${params[1]}
 
-Your submission has been rejected
+Su envío ha sido rechazado
 
-Your submission has not been deleted.
-You can access it from page: ${params[2]}
+Su envío no ha sido eliminado.
+Puede acceder a él desde la página: ${params[2]}
 
 DSpace

@@ -49,9 +49,11 @@ public class ElasticsearchQueueConsumer implements Consumer {
             return;
         }
         int eventType = event.getEventType();
-        if (eventType == Event.CREATE || eventType == Event.MODIFY) {
+        if (eventType == Event.CREATE || eventType == Event.MODIFY || eventType == Event.INSTALL) {
             Item item = (Item) event.getSubject(context);
-            if (itemsAlreadyProcessed.contains(item) || !elasticsearchIndexManager.isSupportedEntityType(item)) {
+            if (!item.isArchived()
+                    || itemsAlreadyProcessed.contains(item)
+                    || !elasticsearchIndexManager.isSupportedEntityType(item)) {
                 return;
             }
             elasticsearchIndexQueueService.create(context, item.getID(), event.getEventType());
@@ -65,18 +67,22 @@ public class ElasticsearchQueueConsumer implements Consumer {
                 return;
             }
             Item item = (Item) obj;
-            if (itemsAlreadyProcessed.contains(item) || !elasticsearchIndexManager.isSupportedEntityType(item)) {
+            final boolean itemNotRequiringActions = !item.isWithdrawn() && !item.isArchived();
+            if (itemNotRequiringActions
+                    || itemsAlreadyProcessed.contains(item)
+                    || !elasticsearchIndexManager.isSupportedEntityType(item)) {
                 return;
             }
             // if the item has been withdrawn, update record with DELETE type
-            if (item.isWithdrawn() && Objects.nonNull(elasticIndex)) {
-                elasticIndex.setOperationType(Event.DELETE);
+            final boolean itemToBeDeleted = item.isWithdrawn() || !item.isDiscoverable();
+            final int operationType = itemToBeDeleted ? Event.DELETE : eventType;
+            if (Objects.nonNull(elasticIndex)) {
+                elasticIndex.setOperationType(operationType);
                 elasticIndex.setInsertionDate(new Date());
                 elasticsearchIndexQueueService.update(context, elasticIndex);
-            } else if (Objects.nonNull(elasticIndex)) {
-                elasticIndex.setOperationType(eventType);
-                elasticIndex.setInsertionDate(new Date());
-                elasticsearchIndexQueueService.update(context, elasticIndex);
+           } else {
+                elasticsearchIndexQueueService.create(context, item.getID(),
+                                                      operationType);
             }
             itemsAlreadyProcessed.add((Item) obj);
             return;

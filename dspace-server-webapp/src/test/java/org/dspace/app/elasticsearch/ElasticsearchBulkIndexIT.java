@@ -15,7 +15,6 @@ import static org.mockito.Mockito.when;
 
 import java.io.FileInputStream;
 import java.nio.charset.Charset;
-import java.time.Year;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -40,6 +39,7 @@ import org.dspace.content.Item;
 import org.dspace.metrics.scopus.UpdateScopusMetrics;
 import org.dspace.metrics.wos.UpdateWOSMetrics;
 import org.dspace.services.ConfigurationService;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.Invocation;
@@ -225,7 +225,7 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
         ElasticsearchIndexProvider elasticsearchIndexProvider =  Mockito.mock(ElasticsearchIndexProvider.class);
 
         Map<String, String> originIndexes = cleanUpIndexes();
-        String testIndex = "publication-" + String.valueOf(Year.now().getValue());
+        String testIndex = "test_pub";
 
         parentCommunity = CommunityBuilder.createCommunity(context)
                                           .withName("Parent Community")
@@ -573,8 +573,6 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
         context.turnOffAuthorisationSystem();
         try (FileInputStream file = new FileInputStream(testProps.get("test.orgunitCrosswalk").toString())) {
 
-            String json = IOUtils.toString(file, Charset.defaultCharset());
-            String replacedJson = json.replace("{", "").trim();
 
             parentCommunity = CommunityBuilder.createCommunity(context)
                                               .withName("Parent Community")
@@ -587,7 +585,18 @@ public class ElasticsearchBulkIndexIT extends AbstractControllerIntegrationTest 
 
             List<String> generatedDocs = elasticsearchItemBuilder.convert(context, item);
             assertEquals(1, generatedDocs.size());
-            assertTrue(generatedDocs.get(0).contains(replacedJson));
+
+            String json = IOUtils.toString(file, Charset.defaultCharset());
+
+            final String expectedDocument = new JSONObject(json).toString();
+            final String firstGenerated = generatedDocs.get(0);
+            final String generatedDocument =
+                new JSONObject("{" +
+                                   firstGenerated
+                                       .substring(firstGenerated.indexOf("\"dc_subject\"")))
+                .toString();
+
+            assertEquals(generatedDocument, expectedDocument);
         }
     }
 

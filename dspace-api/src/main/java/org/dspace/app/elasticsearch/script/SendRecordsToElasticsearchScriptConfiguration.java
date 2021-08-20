@@ -45,6 +45,11 @@ public class SendRecordsToElasticsearchScriptConfiguration<T extends SendRecords
     public Options getOptions() {
         if (options == null) {
             Options options = new Options();
+
+            options.addOption("l", "limit", true, "Max number of records to parse");
+            options.getOption("l").setType(String.class);
+            options.getOption("l").setRequired(false);
+
             super.options = options;
         }
         return options;

@@ -1621,20 +1621,20 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
         assertThat(infoMessages.get(0), containsString("Start reading all the metadata group rows"));
         assertThat(infoMessages.get(1), containsString("Found 0 metadata groups to process"));
         assertThat(infoMessages.get(2), containsString("Found 1 items to process"));
-        assertThat(infoMessages.get(3), containsString("Row 2 - WorkspaceItem created successfully"));
+        assertThat(infoMessages.get(3), containsString("Row 2 - Item archived successfully"));
 
         // verify created item (ROW 2)
         String createdItemId = getItemUuidFromMessage(infoMessages.get(3));
 
         Item createdItem = itemService.findByIdOrLegacyId(context, createdItemId);
         assertThat("Item expected to be created", createdItem, notNullValue());
-        assertThat(createdItem.isArchived(), is(false));
-        assertThat(findWorkspaceItem(createdItem), notNullValue());
+        assertThat(createdItem.isArchived(), is(true));
+        assertThat(findWorkspaceItem(createdItem), nullValue());
 
         List<MetadataValue> metadata = createdItem.getMetadata();
         assertThat(metadata, hasItems(with("dc.title", "Test Title")));
         assertThat(metadata, hasItems(with("perucris.subject.ocde", "oecd::Ciencias naturales::Matemáticas",
-                                      null, "1.01.00", 0, 600)));
+                                      null, "ocde_subjects:1.01.00", 0, 600)));
 
     }
 

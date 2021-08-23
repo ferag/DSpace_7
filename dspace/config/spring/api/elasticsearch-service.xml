@@ -37,9 +37,9 @@
     <bean class="org.dspace.app.elasticsearch.consumer.ElasticsearchIndexManager">
         <constructor-arg>
 			<map>
-				<entry key="Publication" value= "publications-new-v1" />
-				<entry key="Person" value= "persons-new-{DATE.yyyy}" />
-				<entry key="OrgUnit" value= "orgunits-new" />
+				<entry key="Publication" value= "publications-v1" />
+				<entry key="Person" value= "persons-{DATE.yyyy}" />
+				<entry key="OrgUnit" value= "orgunits-v1" />
 			</map>
 		</constructor-arg>
 		<constructor-arg>

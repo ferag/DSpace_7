@@ -13,6 +13,7 @@
       "organization_legalName" : "@organization.legalName@",
       "organization_identifier_rin" : "@organization.identifier.rin@",
       "perucris_sti_formalUnit" : "@perucris.sti.formalUnit@",
+      "perucris_sti_qualityCertified" : "@perucris.sti.qualityCertified@",
       "perucris_type_sectorInstitucional" : "@perucris.type.sectorInstitucional@",
       "organization_identifier_ror" : "@organization.identifier.ror@",
       "dc_description_abstract" : "@dc.description.abstract@",

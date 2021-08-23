@@ -106,7 +106,6 @@
     "oairecerif_editor_affiliation" : [
               "@oairecerif.editor.affiliation@",
         ],
-    "dc_title_alternative" : "@dc.title.alternative@",
     "perucris_author_dni" : [
               "@perucris.author.dni@",
         ],

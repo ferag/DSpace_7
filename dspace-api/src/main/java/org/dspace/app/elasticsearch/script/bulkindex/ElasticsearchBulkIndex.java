@@ -116,6 +116,7 @@ public class ElasticsearchBulkIndex
                     docs = elasticsearchItemBuilder.convert(context, item);
                 } catch (Exception e) {
                     handler.logError("Unable to convert item " + item.getID() + " to Elasticsearch document");
+                    log.error(e.getMessage(), e);
                     continue;
                 }
                 boolean updated = false;

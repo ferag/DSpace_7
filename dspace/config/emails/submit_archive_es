@@ -1,0 +1,19 @@
+## Item Archived email message
+##
+## {0}  Title of submission
+## {1}  Name of collection
+## {2}  handle
+##
+#set($subject = 'DSpace: Presentación aprobada y archivada')
+
+Usted presentó: ${params[0]}
+
+A la colección: ${params[1]}
+
+Su envío ha sido aceptado y archivado en DSpace
+y se le ha asignado el siguiente identificador:
+
+
+Por favor, utilice este identificador cuando cite a su envío.
+
+Muchas gracias.

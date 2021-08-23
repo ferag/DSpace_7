@@ -17,7 +17,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
+
+import org.apache.commons.io.FileUtils;
 import org.dspace.core.service.LicenseService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 import org.slf4j.Logger;
@@ -35,6 +43,8 @@ public class LicenseServiceImpl implements LicenseService {
      * The default license
      */
     protected String license;
+
+    private Map<Locale, String> localisedLicenses;
 
     protected LicenseServiceImpl() {
 
@@ -111,6 +121,36 @@ public class LicenseServiceImpl implements LicenseService {
         return license;
     }
 
+    @Override
+    public String getDefaultSubmissionLicense(final Locale locale) {
+        if (Objects.isNull(localisedLicenses)) {
+            initLicenseMap();
+        }
+        return localisedLicenses.containsKey(locale) ?
+                   localisedLicenses.get(locale) : localisedLicenses.get(I18nUtil.getDefaultLocale());
+    }
+
+    private void initLicenseMap() {
+        localisedLicenses = Arrays.stream(I18nUtil.getSupportedLocales())
+              .collect(Collectors.toMap(l -> l, this::readLicense));
+    }
+
+    private String readLicense(final Locale locale) {
+        String fileName = "";
+        /** Name of the default license */
+        String defsFilename = DSpaceServicesFactory.getInstance().getConfigurationService().getProperty("dspace.dir")
+                                  + File.separator + "config" + File.separator + "default";
+
+        fileName = getFilename(locale, defsFilename, ".license");
+
+
+        try {
+            return FileUtils.readFileToString(FileUtils.getFile(fileName), Charset.defaultCharset());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Load in the default license.
      */
@@ -168,5 +208,69 @@ public class LicenseServiceImpl implements LicenseService {
                 }
             }
         }
+    }
+
+    /**
+     * Get the appropriate localized version of a file according to language settings
+     * e. g. help files in jsp/help/
+     *
+     * @param locale   Locale to get the file for
+     * @param fileName String fileName, to get the localized file for
+     * @param fileType String file extension
+     * @return localizedFileName
+     * String - localized filename
+     */
+    private static String getFilename(Locale locale, String fileName, String fileType) {
+        String localizedFileName = null;
+        boolean fileFound = false;
+        // with Language, Country, Variant
+        String fileNameLCV = null;
+        // with Language, Country
+        String fileNameLC = null;
+        // with Language
+        String fileNameL = null;
+        fileNameL = fileName + "_" + locale.getLanguage();
+
+        if (fileType == null) {
+            fileType = "";
+        }
+
+        if (!("".equals(locale.getCountry()))) {
+            fileNameLC = fileName + "_" + locale.getLanguage() + "_"
+                             + locale.getCountry();
+
+            if (!("".equals(locale.getVariant()))) {
+                fileNameLCV = fileName + "_" + locale.getLanguage() + "_"
+                                  + locale.getCountry() + "_" + locale.getVariant();
+            }
+        }
+
+        if (fileNameLCV != null && !fileFound) {
+            File fileTmp = new File(fileNameLCV + fileType);
+            if (fileTmp.exists()) {
+                fileFound = true;
+                localizedFileName = fileNameLCV + fileType;
+            }
+        }
+
+        if (fileNameLC != null && !fileFound) {
+            File fileTmp = new File(fileNameLC + fileType);
+            if (fileTmp.exists()) {
+                fileFound = true;
+                localizedFileName = fileNameLC + fileType;
+            }
+        }
+
+        if (fileNameL != null && !fileFound) {
+            File fileTmp = new File(fileNameL + fileType);
+            if (fileTmp.exists()) {
+                fileFound = true;
+                localizedFileName = fileNameL + fileType;
+            }
+        }
+        if (!fileFound) {
+            localizedFileName = fileName + fileType;
+        }
+        return localizedFileName;
     }
 }

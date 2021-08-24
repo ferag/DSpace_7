@@ -37,6 +37,30 @@
           <hint>Personal picture, logo, main article, etc.</hint>
         </field>
       </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>date</dc-element>
+          <dc-qualifier>issued</dc-qualifier>
+          <label>Reference Date</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>source</dc-qualifier>
+          <label>Source</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
     </form>
     <form name="publication-dc-contributor-author">
       <row>
@@ -10064,8 +10088,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>ppp</dc-element>
           <dc-qualifier>strategicalGoal</dc-qualifier>
           <label>Strategical Goal</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
+          <input-type>textarea</input-type>
+          <repeatable>true</repeatable>
           <required>Please enter a Strategical Goal</required>
           <hint />
         </field>
@@ -10304,21 +10328,11 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
-          <dc-qualifier>programGeneralGoal</dc-qualifier>
+          <dc-qualifier>programGoal</dc-qualifier>
           <label>Program General Goal</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required>Please enter a Program General Goal</required>
-          <hint />
-        </field>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>ppp</dc-element>
-          <dc-qualifier>programSpecificGoal</dc-qualifier>
-          <label>Program Specific Goal</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required>Please enter a Program Specific Goal</required>
           <hint />
         </field>
       </row>
@@ -10477,7 +10491,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
     </form>
-    <form name="program-general-goal">
+    <form name="program-goal">
       <row>
         <field>
           <dc-schema>dc</dc-schema>
@@ -10497,20 +10511,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Program</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>Please enter a Program</required>
-          <hint />
-        </field>
-      </row>
-    </form>
-    <form name="program-specific-goal">
-      <row>
-        <field>
-          <dc-schema>dc</dc-schema>
-          <dc-element>title</dc-element>
-          <label>Name</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required>Please enter a name</required>
+          <required />
           <hint />
         </field>
       </row>
@@ -10518,11 +10519,11 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
-          <dc-qualifier>programGeneralGoal</dc-qualifier>
+          <dc-qualifier>programGoal</dc-qualifier>
           <label>Program General Goal</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>Please enter a Program General Goal</required>
+          <required />
           <hint />
         </field>
       </row>
@@ -11090,16 +11091,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required>Please enter a Program</required>
           <hint />
         </field>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>ppp</dc-element>
-          <dc-qualifier>subComponent</dc-qualifier>
-          <label>Subcomponent</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required>Please enter a Subcomponent</required>
-          <hint />
-        </field>
       </row>
       <row>
         <field>
@@ -11287,151 +11278,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type value-pairs-name="perucris_ppp_status">dropdown</input-type>
           <repeatable>false</repeatable>
           <required>Please select a Status</required>
-          <hint />
-        </field>
-      </row>
-    </form>
-    <form name="program-goal-subcomponent">
-      <row>
-        <field>
-          <dc-schema>dc</dc-schema>
-          <dc-element>title</dc-element>
-          <label>Name</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required>Please enter a name</required>
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>ppp</dc-element>
-          <dc-qualifier>component</dc-qualifier>
-          <label>Parent Component</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required>Please enter a Parent Component</required>
-          <hint />
-        </field>
-      </row>
-    </form>
-    <form name="program-goal-component">
-      <row>
-        <field>
-          <dc-schema>dc</dc-schema>
-          <dc-element>title</dc-element>
-          <label>Name</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required>Please enter a name</required>
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>ppp</dc-element>
-          <dc-qualifier>programSpecificGoal</dc-qualifier>
-          <label>Program Specific Goal</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required>Please enter a Program Specific Goal</required>
-          <hint />
-        </field>
-      </row>
-    </form>
-    <form name="document">
-      <row>
-        <field>
-          <dc-schema>dc</dc-schema>
-          <dc-element>title</dc-element>
-          <label>Name</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required>Please enter a name</required>
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>dc</dc-schema>
-          <dc-element>description</dc-element>
-          <dc-qualifier>abstract</dc-qualifier>
-          <label>Abstract</label>
-          <input-type>textarea</input-type>
-          <repeatable>false</repeatable>
-          <required>Please enter an Abstract</required>
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>dc</dc-schema>
-          <dc-element>date</dc-element>
-          <dc-qualifier>issued</dc-qualifier>
-          <label>Reference Date</label>
-          <input-type>date</input-type>
-          <repeatable>false</repeatable>
-          <required>You must enter at least the year.</required>
-          <hint />
-        </field>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>ppp</dc-element>
-          <dc-qualifier>source</dc-qualifier>
-          <label>Source</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required>Please enter a Source</required>
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>ppp</dc-element>
-          <dc-qualifier>politic</dc-qualifier>
-          <label>Politic</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required>Please enter a Politic</required>
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>ppp</dc-element>
-          <dc-qualifier>plan</dc-qualifier>
-          <label>Plan</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required>Please enter a Plan</required>
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>ppp</dc-element>
-          <dc-qualifier>program</dc-qualifier>
-          <label>Program</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required>Please enter a Program</required>
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>ppp</dc-element>
-          <dc-qualifier>financialInstrument</dc-qualifier>
-          <label>Financial Instrument</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required>Please enter a Financial Instrument</required>
           <hint />
         </field>
       </row>

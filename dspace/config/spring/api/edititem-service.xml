@@ -497,7 +497,7 @@
                                     ADMIN
                                 </value>
                             </property>
-                            <property name="submissionDefinition" value="program-general-goal-edit" />
+                            <property name="submissionDefinition" value="program-goal-edit" />
                         </bean>
                     </list>
                 </entry>

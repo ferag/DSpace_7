@@ -152,7 +152,7 @@
 		<collection>
 			<name>Recursos Financieros</name>
 			<entity-type>FinancialResource</entity-type>
-			<submission-type>financial-resources</submission-type>
+			<submission-type>financial-resource</submission-type>
 			<description />
 			<intro />
 			<copyright />
@@ -162,7 +162,7 @@
 		</collection>
 		<collection>
 			<name>Proyecto Programas</name>
-			<entity-type>ProgramProject</entity-type>
+			<entity-type>ProjectProgram</entity-type>
 			<submission-type>project-program</submission-type>
 			<description />
 			<intro />

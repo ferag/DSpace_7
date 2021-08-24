@@ -376,13 +376,8 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-    <step-definition id="program-general-goal" mandatory="true">
-      <heading>submit.progressbar.describe.program-general-goal</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
-    <step-definition id="program-specific-goal" mandatory="true">
-      <heading>submit.progressbar.describe.program-specific-goal</heading>
+    <step-definition id="program-goal" mandatory="true">
+      <heading>submit.progressbar.describe.program-goal</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
@@ -428,21 +423,6 @@
     </step-definition>
     <step-definition id="project-financial-instrument" mandatory="true">
       <heading>submit.progressbar.describe.project-financial-instrument</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
-    <step-definition id="program-goal-subcomponent" mandatory="true">
-      <heading>submit.progressbar.describe.program-goal-subcomponent</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
-    <step-definition id="program-goal-component" mandatory="true">
-      <heading>submit.progressbar.describe.program-goal-component</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
-    <step-definition id="document" mandatory="true">
-      <heading>submit.progressbar.describe.document</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
@@ -748,23 +728,29 @@
     <submission-process name="politic">
       <step id="collection" />
       <step id="politic" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="plan">
       <step id="collection" />
       <step id="plan" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="program">
       <step id="collection" />
       <step id="program" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="politic-edit">
       <step id="politic" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="plan-edit">
       <step id="plan" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="program-edit">
       <step id="program" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="politic-goal">
       <step id="collection" />
@@ -780,19 +766,12 @@
     <submission-process name="indicator-edit">
       <step id="indicator" />
     </submission-process>
-    <submission-process name="program-general-goal">
+    <submission-process name="program-goal">
       <step id="collection" />
-      <step id="program-general-goal" />
+      <step id="program-goal" />
     </submission-process>
-    <submission-process name="program-general-goal-edit">
-      <step id="program-general-goal" />
-    </submission-process>
-    <submission-process name="program-specific-goal">
-      <step id="collection" />
-      <step id="program-specific-goal" />
-    </submission-process>
-    <submission-process name="program-specific-goal-edit">
-      <step id="program-specific-goal" />
+    <submission-process name="program-goal-edit">
+      <step id="program-goal" />
     </submission-process>
     <submission-process name="standard">
       <step id="collection" />
@@ -804,9 +783,11 @@
     <submission-process name="financial-instrument">
       <step id="collection" />
       <step id="financial-instrument" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="financial-instrument-edit">
       <step id="financial-instrument" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="financial-scheme">
       <step id="collection" />
@@ -856,29 +837,6 @@
     </submission-process>
     <submission-process name="project-financial-instrument-edit">
       <step id="project-financial-instrument" />
-    </submission-process>
-    <submission-process name="program-goal-subcomponent">
-      <step id="collection" />
-      <step id="program-goal-subcomponent" />
-    </submission-process>
-    <submission-process name="program-goal-subcomponent-edit">
-      <step id="program-goal-subcomponent" />
-    </submission-process>
-    <submission-process name="program-goal-component">
-      <step id="collection" />
-      <step id="program-goal-component" />
-    </submission-process>
-    <submission-process name="program-goal-component-edit">
-      <step id="program-goal-component" />
-    </submission-process>
-    <submission-process name="document">
-      <step id="collection" />
-      <step id="document" />
-      <step id="upload" />
-    </submission-process>
-    <submission-process name="document-edit">
-      <step id="document" />
-      <step id="upload" />
     </submission-process>
   </submission-definitions>
 </item-submission>

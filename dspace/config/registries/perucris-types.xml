@@ -1726,12 +1726,12 @@
         <scope_note />
     </dc-type>
 
-    <dc-type>
-        <schema>perucris</schema>
-        <element>ppp</element>
-        <qualifier>component</qualifier>
-        <scope_note />
-    </dc-type>
+<!--    <dc-type>-->
+<!--        <schema>perucris</schema>-->
+<!--        <element>ppp</element>-->
+<!--        <qualifier>component</qualifier>-->
+<!--        <scope_note />-->
+<!--    </dc-type>-->
 
     <dc-type>
         <schema>perucris</schema>
@@ -1936,7 +1936,7 @@
     <dc-type>
         <schema>perucris</schema>
         <element>ppp</element>
-        <qualifier>programGeneralGoal</qualifier>
+        <qualifier>programGoal</qualifier>
         <scope_note />
      </dc-type>
 
@@ -1954,12 +1954,6 @@
         <scope_note />
      </dc-type>
 
-    <dc-type>
-        <schema>perucris</schema>
-        <element>ppp</element>
-        <qualifier>programSpecificGoal</qualifier>
-        <scope_note />
-     </dc-type>
 
     <dc-type>
         <schema>perucris</schema>
@@ -2210,12 +2204,12 @@
         <scope_note />
     </dc-type>
 
-    <dc-type>
-        <schema>perucris</schema>
-        <element>ppp</element>
-        <qualifier>subComponent</qualifier>
-        <scope_note />
-    </dc-type>
+<!--    <dc-type>-->
+<!--        <schema>perucris</schema>-->
+<!--        <element>ppp</element>-->
+<!--        <qualifier>subComponent</qualifier>-->
+<!--        <scope_note />-->
+<!--    </dc-type>-->
 
     <dc-type>
         <schema>perucris</schema>

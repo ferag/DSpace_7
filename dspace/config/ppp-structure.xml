@@ -8,7 +8,7 @@
 		<sidebar />
 		<collection>
 			<name>Politicas</name>
-			<entity-type>Politica</entity-type>
+			<entity-type>Politic</entity-type>
 			<submission-type>politic</submission-type>
 			<description />
 			<intro />
@@ -19,7 +19,7 @@
 		</collection>
 		<collection>
 			<name>Programas</name>
-			<entity-type>Programa</entity-type>
+			<entity-type>Program</entity-type>
 			<submission-type>program</submission-type>
 			<description />
 			<intro />
@@ -41,7 +41,7 @@
 		</collection>
 		<collection>
 			<name>Objetivos Politica</name>
-			<entity-type>ObjetivoPolitica</entity-type>
+			<entity-type>PoliticGoal</entity-type>
 			<submission-type>politic-goal</submission-type>
 			<description />
 			<intro />
@@ -52,7 +52,7 @@
 		</collection>
 		<collection>
 			<name>Indicadores</name>
-			<entity-type>Indicador</entity-type>
+			<entity-type>Indicator</entity-type>
 			<submission-type>indicator</submission-type>
 			<description />
 			<intro />
@@ -62,9 +62,9 @@
 			<provenance />
 		</collection>
 		<collection>
-			<name>Objetivos Generales Programas</name>
-			<entity-type>ObjetivoGeneralPrograma</entity-type>
-			<submission-type>program-general-goal</submission-type>
+			<name>Objetivos Programas</name>
+			<entity-type>ProgramGoal</entity-type>
+			<submission-type>program-goal</submission-type>
 			<description />
 			<intro />
 			<copyright />
@@ -72,20 +72,20 @@
 			<license />
 			<provenance />
 		</collection>
-		<collection>
-			<name>Objetivos Especificos Programas</name>
-			<entity-type>ObjetivoEspecificoPrograma</entity-type>
-			<submission-type>program-specific-goal</submission-type>
-			<description />
-			<intro />
-			<copyright />
-			<sidebar />
-			<license />
-			<provenance />
-		</collection>
+<!--		<collection>-->
+<!--			<name>Objetivos Especificos Programas</name>-->
+<!--			<entity-type>ObjetivoEspecificoPrograma</entity-type>-->
+<!--			<submission-type>program-specific-goal</submission-type>-->
+<!--			<description />-->
+<!--			<intro />-->
+<!--			<copyright />-->
+<!--			<sidebar />-->
+<!--			<license />-->
+<!--			<provenance />-->
+<!--		</collection>-->
 		<collection>
 			<name>Estandars</name>
-			<entity-type>Estandar</entity-type>
+			<entity-type>Standard</entity-type>
 			<submission-type>standard</submission-type>
 			<description />
 			<intro />
@@ -96,7 +96,7 @@
 		</collection>
 		<collection>
 			<name>Instrumentos Financieros</name>
-			<entity-type>InstrumentoFinanciero</entity-type>
+			<entity-type>FinancialInstrument</entity-type>
 			<submission-type>financial-instrument</submission-type>
 			<description />
 			<intro />
@@ -107,7 +107,7 @@
 		</collection>
 		<collection>
 			<name>Esquemas Financieros</name>
-			<entity-type>EsquemaFinanciero</entity-type>
+			<entity-type>FinancialScheme</entity-type>
 			<submission-type>financial-scheme</submission-type>
 			<description />
 			<intro />
@@ -118,7 +118,7 @@
 		</collection>
 		<collection>
 			<name>Servicios</name>
-			<entity-type>Servicio</entity-type>
+			<entity-type>Service</entity-type>
 			<submission-type>service</submission-type>
 			<description />
 			<intro />
@@ -129,7 +129,7 @@
 		</collection>
 		<collection>
 			<name>Lineamientos Politicas</name>
-			<entity-type>LineamientoPoliticas</entity-type>
+			<entity-type>PoliticGuidelines</entity-type>
 			<submission-type>politic-guidelines</submission-type>
 			<description />
 			<intro />
@@ -140,7 +140,7 @@
 		</collection>
 		<collection>
 			<name>Actividades</name>
-			<entity-type>Actividad</entity-type>
+			<entity-type>Activity</entity-type>
 			<submission-type>activity</submission-type>
 			<description />
 			<intro />
@@ -151,7 +151,7 @@
 		</collection>
 		<collection>
 			<name>Recursos Financieros</name>
-			<entity-type>RecursoFinanciero</entity-type>
+			<entity-type>FinancialResource</entity-type>
 			<submission-type>financial-resources</submission-type>
 			<description />
 			<intro />
@@ -162,7 +162,7 @@
 		</collection>
 		<collection>
 			<name>Proyecto Programas</name>
-			<entity-type>ProyectoPrograma</entity-type>
+			<entity-type>ProgramProject</entity-type>
 			<submission-type>project-program</submission-type>
 			<description />
 			<intro />
@@ -173,7 +173,7 @@
 		</collection>
 		<collection>
 			<name>Instrumentos Financieros de Proyectos</name>
-			<entity-type>InstrumentoFinancieroProyecto</entity-type>
+			<entity-type>ProjectFinancialInstrument</entity-type>
 			<submission-type>project-financial-instrument</submission-type>
 			<description />
 			<intro />
@@ -182,39 +182,39 @@
 			<license />
 			<provenance />
 		</collection>
-		<collection>
-			<name>SubComponentes Objetivo Especifico Programa</name>
-			<entity-type>SubComponenteObjetivoEspecifico</entity-type>
-			<submission-type>program-goal-subcomponent</submission-type>
-			<description />
-			<intro />
-			<copyright />
-			<sidebar />
-			<license />
-			<provenance />
-		</collection>
-		<collection>
-			<name>Componentes Objetivo Especifico Programa</name>
-			<entity-type>ComponenteObjetivoEspecifico</entity-type>
-			<submission-type>program-goal-component</submission-type>
-			<description />
-			<intro />
-			<copyright />
-			<sidebar />
-			<license />
-			<provenance />
-		</collection>
-		<collection>
-			<name>Documentos</name>
-			<entity-type>Documento</entity-type>
-			<submission-type>document</submission-type>
-			<description />
-			<intro />
-			<copyright />
-			<sidebar />
-			<license />
-			<provenance />
-		</collection>
+<!--		<collection>-->
+<!--			<name>SubComponentes Objetivo Especifico Programa</name>-->
+<!--			<entity-type>SubComponenteObjetivoEspecifico</entity-type>-->
+<!--			<submission-type>program-goal-subcomponent</submission-type>-->
+<!--			<description />-->
+<!--			<intro />-->
+<!--			<copyright />-->
+<!--			<sidebar />-->
+<!--			<license />-->
+<!--			<provenance />-->
+<!--		</collection>-->
+<!--		<collection>-->
+<!--			<name>Componentes Objetivo Especifico Programa</name>-->
+<!--			<entity-type>ComponenteObjetivoEspecifico</entity-type>-->
+<!--			<submission-type>program-goal-component</submission-type>-->
+<!--			<description />-->
+<!--			<intro />-->
+<!--			<copyright />-->
+<!--			<sidebar />-->
+<!--			<license />-->
+<!--			<provenance />-->
+<!--		</collection>-->
+<!--		<collection>-->
+<!--			<name>Documentos</name>-->
+<!--			<entity-type>Documento</entity-type>-->
+<!--			<submission-type>document</submission-type>-->
+<!--			<description />-->
+<!--			<intro />-->
+<!--			<copyright />-->
+<!--			<sidebar />-->
+<!--			<license />-->
+<!--			<provenance />-->
+<!--		</collection>-->
 	</community>
 </import_structure>
 

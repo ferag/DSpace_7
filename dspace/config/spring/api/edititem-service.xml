@@ -423,7 +423,7 @@
                         </bean>
                     </list>
                 </entry>
-                <entry key="politica">
+                <entry key="politic">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
@@ -436,7 +436,7 @@
                         </bean>
                     </list>
                 </entry>
-                <entry key="programa">
+                <entry key="program">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
@@ -462,7 +462,7 @@
                         </bean>
                     </list>
                 </entry>
-                <entry key="objetivopolitica">
+                <entry key="politicgoal">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
@@ -475,7 +475,7 @@
                         </bean>
                     </list>
                 </entry>
-                <entry key="indicador">
+                <entry key="indicator">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
@@ -488,7 +488,7 @@
                         </bean>
                     </list>
                 </entry>
-                <entry key="objetivogeneralprograma">
+                <entry key="programgoal">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
@@ -501,20 +501,7 @@
                         </bean>
                     </list>
                 </entry>
-                <entry key="objetivorspecificoprograma">
-                    <list>
-                        <bean class="org.dspace.content.edit.EditItemMode">
-                            <property name="name" value="FULL" />
-                            <property name="security">
-                                <value type="org.dspace.content.security.CrisSecurity">
-                                    ADMIN
-                                </value>
-                            </property>
-                            <property name="submissionDefinition" value="program-specific-goal-edit" />
-                        </bean>
-                    </list>
-                </entry>
-                <entry key="estandar">
+                <entry key="standard">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
@@ -527,7 +514,7 @@
                         </bean>
                     </list>
                 </entry>
-                <entry key="instrumentofinanciero">
+                <entry key="financialinstrument">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
@@ -540,7 +527,7 @@
                         </bean>
                     </list>
                 </entry>
-                <entry key="EsquemaFinanciero">
+                <entry key="financialscheme">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
@@ -553,7 +540,7 @@
                         </bean>
                     </list>
                 </entry>
-                <entry key="servicio">
+                <entry key="service">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
@@ -566,7 +553,7 @@
                         </bean>
                     </list>
                 </entry>
-                <entry key="lineamientopoliticas">
+                <entry key="politicguidelines">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
@@ -579,7 +566,7 @@
                         </bean>
                     </list>
                 </entry>
-                <entry key="actividad">
+                <entry key="activity">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
@@ -592,7 +579,7 @@
                         </bean>
                     </list>
                 </entry>
-                <entry key="recursofinanciero">
+                <entry key="financialresource">
                     <list>
                         <bean class="org.dspace.content.edit.EditItemMode">
                             <property name="name" value="FULL" />
@@ -602,6 +589,32 @@
                                 </value>
                             </property>
                             <property name="submissionDefinition" value="financial-resources-edit" />
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="projectprogram">
+                    <list>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="FULL" />
+                            <property name="security">
+                                <value type="org.dspace.content.security.CrisSecurity">
+                                    ADMIN
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="project-program-edit" />
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="projectfinancialinstrument">
+                    <list>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="FULL" />
+                            <property name="security">
+                                <value type="org.dspace.content.security.CrisSecurity">
+                                    ADMIN
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="project-financial-instrument-edit" />
                         </bean>
                     </list>
                 </entry>

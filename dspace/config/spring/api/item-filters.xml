@@ -595,13 +595,47 @@
             </bean>
         </property>
     </bean>
+
+    <bean id="program-goal-has-parent-or-program" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="relationship-type-equals-program-goal"/>
+                            </property>
+                        </bean>
+                        <bean class="org.dspace.content.logic.operator.Or">
+                            <property name="statements">
+                                <list>
+                                    <ref bean="has-program"/>
+                                    <ref bean="has-program-goal"/>
+                                </list>
+                            </property>
+                        </bean>
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
     
     <!-- dspace.entity.type is exactly Funding -->
-    <bean id="relationship-type-equals-funding_condition" class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+    <bean id="relationship-type-equals-program-goal" class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
         <property name="parameters">
             <map>
                 <entry key="field" value="dspace.entity.type" />
                 <entry key="pattern" value="^Funding" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- type is exactly ProgramGoal -->
+    <bean id="relationship-type-equals-funding_condition" class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="dspace.entity.type" />
+                <entry key="pattern" value="^ProgramGoal" />
             </map>
         </property>
     </bean>
@@ -610,6 +644,22 @@
         <property name="parameters">
             <map>
                 <entry key="field" value="crisfund.investigators" />
+            </map>
+        </property>
+    </bean>
+
+    <bean id="has-program" class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.ppp.program" />
+            </map>
+        </property>
+    </bean>
+
+    <bean id="has-program-goal" class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.ppp.programGoal" />
             </map>
         </property>
     </bean>

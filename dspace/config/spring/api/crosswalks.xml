@@ -32,7 +32,6 @@
 				<entry key="ctivitae-profile-xml" value-ref="referCrosswalkCvPersonXml"></entry>
 				<entry key="ctivitae-profile-cerif-xml" value-ref="referCrosswalkCvPersonCerifXml"></entry>
                 <entry key="ctivitae-profile-perucris-cerif-xml" value-ref="referCrosswalkCvPersonPerucrisCerifXml"></entry>
-				<entry key="ctivitae-profile-perucris-restricted-cerif-xml" value-ref="referCrosswalkCvPersonPerucrisRestrictedCerifXml"></entry>
 				<entry key="ctivitae-profile-json" value-ref="referCrosswalkCvPersonJson"></entry>
 				<entry key="ctivitae-profile-pdf" value-ref="pdfCrosswalkCvPerson"></entry>
 				<entry key="ctivitae-profile-rtf" value-ref="rtfCrosswalkCvPerson"></entry>
@@ -261,16 +260,6 @@
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-cerif-xml.template"/>
         <property name="converter" ref="xmlValueConverter" />
     </bean>
-
-	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkCvPersonPerucrisRestrictedCerifXml">
-		<property name="templateFileName" value="crosswalks/template/person-perucris-restricted-cerif-xml.template"/>
-		<property name="mimeType" value="application/xml; charset=UTF-8"/>
-		<property name="fileName" value="person.xml"/>
-		<property name="entityType" value="CvPerson"/>
-		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
-		<property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-cerif-xml.template"/>
-		<property name="converter" ref="xmlValueConverter" />
-	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPersonJson">
 		<property name="templateFileName" value="crosswalks/template/person-json.template"/>

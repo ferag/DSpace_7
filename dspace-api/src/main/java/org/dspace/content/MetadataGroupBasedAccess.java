@@ -23,6 +23,9 @@ public class MetadataGroupBasedAccess implements MetadataSecurityEvaluation {
     @Autowired
     private AuthorizeService authorizeService;
 
+    @Autowired
+    private MetadataSecurityEvaluation level2Security;
+
     /**
      * The group in which the used must be part
      */
@@ -39,6 +42,10 @@ public class MetadataGroupBasedAccess implements MetadataSecurityEvaluation {
     @Override
     public boolean allowMetadataFieldReturn(Context context, Item item, MetadataField metadataField)
         throws SQLException {
+        // if user is owner or admin, we consider it allowed
+        if (level2Security.allowMetadataFieldReturn(context, item, metadataField)) {
+            return true;
+        }
         // returns true only if the user is part of the group
         return context != null && authorizeService.isPartOfTheGroup(context, getEgroup());
     }

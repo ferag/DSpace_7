@@ -368,9 +368,11 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
                 .andExpect(jsonPath("$.type", is("item")))
                 .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", name, id.toString(), 0)))
                 .andExpect(jsonPath("$.metadata", matchMetadata("cris.sourceId", id, 0)))
-                                            .andExpect(jsonPath("$.metadata", matchMetadata("cris.policy.group", administrators.getName(),
-                                                                            UUIDUtils.toString(administrators.getID()), 0)))
-                .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)));
+            .andExpect(jsonPath("$.metadata",
+                matchMetadata("cris.policy.group", administrators.getName(),
+                    UUIDUtils.toString(
+                        administrators.getID()), 0)))
+            .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)));
 
         getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", id)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.type", is("eperson"))).andExpect(jsonPath("$.name", is(name)));
@@ -404,8 +406,9 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
                 .andExpect(jsonPath("$.type", is("item")))
                 .andExpect(jsonPath("$.metadata", matchMetadata("cris.owner", name, id.toString(), 0)))
                 .andExpect(jsonPath("$.metadata", matchMetadata("cris.sourceId", id, 0)))
-                .andExpect(jsonPath("$.metadata", matchMetadata("cris.policy.group", administrators.getName(),
-                                                                            UUIDUtils.toString(administrators.getID()), 0)))
+                .andExpect(jsonPath("$.metadata", matchMetadata("cris.policy.group",
+                    administrators.getName(),
+                    UUIDUtils.toString(administrators.getID()), 0)))
                 .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)));
 
         getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", id)).andExpect(status().isOk())

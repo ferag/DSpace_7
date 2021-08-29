@@ -15,7 +15,6 @@ import static org.hamcrest.Matchers.emptyArray;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyString;
 
-
 import org.apache.commons.lang.StringUtils;
 import org.dspace.AbstractIntegrationTestWithDatabase;
 import org.dspace.builder.ItemBuilder;

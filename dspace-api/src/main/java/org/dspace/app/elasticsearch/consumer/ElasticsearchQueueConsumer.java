@@ -80,7 +80,7 @@ public class ElasticsearchQueueConsumer implements Consumer {
                 elasticIndex.setOperationType(operationType);
                 elasticIndex.setInsertionDate(new Date());
                 elasticsearchIndexQueueService.update(context, elasticIndex);
-           } else {
+            } else {
                 elasticsearchIndexQueueService.create(context, item.getID(),
                                                       operationType);
             }

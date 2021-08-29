@@ -23,6 +23,12 @@ public class SolrOaiCore {
     private static final Logger log = LoggerFactory.getLogger(SolrOaiCore.class);
 
     public static SolrRequest.METHOD REQUEST_METHOD = SolrRequest.METHOD.POST;
+
+    public SolrClient getSolrClient() throws SolrServerException {
+        return getSolr();
+    }
+
+    // TODO: refactor it: remove static methods and use a Spring bean . see CSTPER-807
     public static SolrClient getSolr() throws SolrServerException {
         if (solr == null) {
             initSolr();

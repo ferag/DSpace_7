@@ -351,6 +351,81 @@
       <processing-class>org.dspace.app.rest.submit.step.DetectPotentialDuplicateStep</processing-class>
       <type>detect-duplicate</type>
     </step-definition>
+    <step-definition id="politic" mandatory="true">
+      <heading>submit.progressbar.describe.politic</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="plan" mandatory="true">
+      <heading>submit.progressbar.describe.plan</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="program" mandatory="true">
+      <heading>submit.progressbar.describe.program</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="politic-goal" mandatory="true">
+      <heading>submit.progressbar.describe.politic-goal</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="indicator" mandatory="true">
+      <heading>submit.progressbar.describe.indicator</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="program-goal" mandatory="true">
+      <heading>submit.progressbar.describe.program-goal</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="standard" mandatory="true">
+      <heading>submit.progressbar.describe.standard</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="financial-instrument" mandatory="true">
+      <heading>submit.progressbar.describe.financial-instrument</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="financial-scheme" mandatory="true">
+      <heading>submit.progressbar.describe.financial-scheme</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="service" mandatory="true">
+      <heading>submit.progressbar.describe.service</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="politic-guidelines" mandatory="true">
+      <heading>submit.progressbar.describe.politic-guidelines</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="activity" mandatory="true">
+      <heading>submit.progressbar.describe.activity</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="financial-resource" mandatory="true">
+      <heading>submit.progressbar.describe.financial-resource</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="project-program" mandatory="true">
+      <heading>submit.progressbar.describe.project-program</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="project-financial-instrument" mandatory="true">
+      <heading>submit.progressbar.describe.project-financial-instrument</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
   </step-definitions>
   <submission-definitions>
     <submission-process name="institution-product">
@@ -649,6 +724,119 @@
       <step id="detect-duplicate" />
       <step id="upload" />
       <step id="license" />
+    </submission-process>
+    <submission-process name="politic">
+      <step id="collection" />
+      <step id="politic" />
+      <step id="upload" />
+    </submission-process>
+    <submission-process name="plan">
+      <step id="collection" />
+      <step id="plan" />
+      <step id="upload" />
+    </submission-process>
+    <submission-process name="program">
+      <step id="collection" />
+      <step id="program" />
+      <step id="upload" />
+    </submission-process>
+    <submission-process name="politic-edit">
+      <step id="politic" />
+      <step id="upload" />
+    </submission-process>
+    <submission-process name="plan-edit">
+      <step id="plan" />
+      <step id="upload" />
+    </submission-process>
+    <submission-process name="program-edit">
+      <step id="program" />
+      <step id="upload" />
+    </submission-process>
+    <submission-process name="politic-goal">
+      <step id="collection" />
+      <step id="politic-goal" />
+    </submission-process>
+    <submission-process name="politic-goal-edit">
+      <step id="politic-goal" />
+    </submission-process>
+    <submission-process name="indicator">
+      <step id="collection" />
+      <step id="indicator" />
+    </submission-process>
+    <submission-process name="indicator-edit">
+      <step id="indicator" />
+    </submission-process>
+    <submission-process name="program-goal">
+      <step id="collection" />
+      <step id="program-goal" />
+    </submission-process>
+    <submission-process name="program-goal-edit">
+      <step id="program-goal" />
+    </submission-process>
+    <submission-process name="standard">
+      <step id="collection" />
+      <step id="standard" />
+    </submission-process>
+    <submission-process name="standard-edit">
+      <step id="standard" />
+    </submission-process>
+    <submission-process name="financial-instrument">
+      <step id="collection" />
+      <step id="financial-instrument" />
+      <step id="upload" />
+    </submission-process>
+    <submission-process name="financial-instrument-edit">
+      <step id="financial-instrument" />
+      <step id="upload" />
+    </submission-process>
+    <submission-process name="financial-scheme">
+      <step id="collection" />
+      <step id="financial-scheme" />
+    </submission-process>
+    <submission-process name="financial-scheme-edit">
+      <step id="financial-scheme" />
+    </submission-process>
+    <submission-process name="service">
+      <step id="collection" />
+      <step id="service" />
+    </submission-process>
+    <submission-process name="service-edit">
+      <step id="service" />
+    </submission-process>
+    <submission-process name="politic-guidelines">
+      <step id="collection" />
+      <step id="politic-guidelines" />
+    </submission-process>
+    <submission-process name="politic-guidelines-edit">
+      <step id="politic-guidelines" />
+    </submission-process>
+    <submission-process name="activity">
+      <step id="collection" />
+      <step id="activity" />
+    </submission-process>
+    <submission-process name="activity-edit">
+      <step id="activity" />
+    </submission-process>
+    <submission-process name="financial-resource">
+      <step id="collection" />
+      <step id="financial-resource" />
+    </submission-process>
+    <submission-process name="financial-resource-edit">
+      <step id="financial-resource" />
+    </submission-process>
+    <submission-process name="project-program">
+      <step id="collection" />
+      <step id="project-program" />
+    </submission-process>
+    <submission-process name="project-program-edit">
+      <step id="project-program" />
+    </submission-process>
+    <submission-process name="project-financial-instrument">
+      <step id="collection" />
+      <step id="project-financial-instrument" />
+    </submission-process>
+    <submission-process name="project-financial-instrument-edit">
+      <step id="project-financial-instrument" />
     </submission-process>
   </submission-definitions>
 </item-submission>

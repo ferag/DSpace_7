@@ -37,6 +37,30 @@
           <hint>Foto personal, logotipo, artículo principal, etc.</hint>
         </field>
       </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>date</dc-element>
+          <dc-qualifier>issued</dc-qualifier>
+          <label>Fecha de referencia</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>source</dc-qualifier>
+          <label>Fuente</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
     </form>
     <form name="publication-dc-contributor-author">
       <row>
@@ -2281,8 +2305,8 @@
           <repeatable>false</repeatable>
           <required>Debe introducir al menos el año.</required>
           <hint>Indique la fecha de publicación o distribución pública anterior.
-            Puede omitir el día y/o el mes si no son
-            aplicables.</hint>
+                        Puede omitir el día y/o el mes si no son
+                        aplicables.</hint>
         </field>
       </row>
       <row>
@@ -2486,8 +2510,8 @@
           <repeatable>false</repeatable>
           <required>Debe introducir al menos el año.</required>
           <hint>Indique la fecha de publicación o distribución pública anterior.
-            Puede omitir el día y/o el mes si no son
-            aplicables.</hint>
+                        Puede omitir el día y/o el mes si no son
+                        aplicables.</hint>
         </field>
       </row>
       <row>
@@ -2691,8 +2715,8 @@
           <repeatable>false</repeatable>
           <required>Debe introducir al menos el año.</required>
           <hint>Indique la fecha de publicación o distribución pública anterior.
-            Puede omitir el día y/o el mes si no son
-            aplicables.</hint>
+                        Puede omitir el día y/o el mes si no son
+                        aplicables.</hint>
         </field>
       </row>
       <row>
@@ -4918,7 +4942,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Fecha de presentación de la solicitud.
-            Puede omitir el día y/o el mes si no son aplicables.</hint>
+Puede omitir el día y/o el mes si no son aplicables.</hint>
         </field>
         <field>
           <dc-schema>dc</dc-schema>
@@ -4929,7 +4953,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Fecha de puesta a disposición del público mediante impresión o procedimiento similar de un documento de patente cuya concesión haya tenido lugar en dicha fecha o antes.
-            You can leave out the day and/or month if they aren't applicable.</hint>
+You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
       <row>
@@ -5066,7 +5090,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Fecha de presentación de la solicitud.
-            Puede omitir el día y/o el mes si no son aplicables.</hint>
+Puede omitir el día y/o el mes si no son aplicables.</hint>
         </field>
         <field>
           <dc-schema>dc</dc-schema>
@@ -5077,7 +5101,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Fecha de puesta a disposición del público mediante impresión o procedimiento similar de un documento de patente cuya concesión haya tenido lugar en dicha fecha o antes.
-            You can leave out the day and/or month if they aren't applicable.</hint>
+You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
       <row>
@@ -5214,7 +5238,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Fecha de presentación de la solicitud.
-            Puede omitir el día y/o el mes si no son aplicables.</hint>
+Puede omitir el día y/o el mes si no son aplicables.</hint>
         </field>
         <field>
           <dc-schema>dc</dc-schema>
@@ -5225,7 +5249,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Fecha de puesta a disposición del público mediante impresión o procedimiento similar de un documento de patente cuya concesión haya tenido lugar en dicha fecha o antes.
-            You can leave out the day and/or month if they aren't applicable.</hint>
+You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
       <row>
@@ -7750,8 +7774,6 @@
           <required />
           <hint />
         </field>
-      </row>
-      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>description</dc-element>
@@ -9851,6 +9873,1415 @@
         </field>
       </row>
     </form>
+    <form name="politic">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Nombre</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un nombre</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>description</dc-element>
+          <label>Descripción</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Descripción</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>approvalDate</dc-qualifier>
+          <label>Fecha de aprobación</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Fecha de aprobación</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>publicProblem</dc-qualifier>
+          <label>Problema Publico</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Problema Publico</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>planAlignment</dc-qualifier>
+          <label>Alineamientos Planes</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Alineamientos Planes</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>results</dc-qualifier>
+          <label>Resultados</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Resultados</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>conclusions</dc-qualifier>
+          <label>Conclusiones</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Conclusiones</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>recommendations</dc-qualifier>
+          <label>Recomendaciones</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Recomendaciones</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>status</dc-qualifier>
+          <label>Estado</label>
+          <input-type value-pairs-name="perucris_ppp_status">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required>Seleccionar un Estado</required>
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="plan">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Nombre</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un nombre</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>description</dc-element>
+          <label>Descripción</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Descripción</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>politicGoal</dc-qualifier>
+          <label>Objetivo Politica</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Objetivo Politica</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>periodicity</dc-qualifier>
+          <label>Periodicidad</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Periodicidad</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>vision</dc-qualifier>
+          <label>Vision</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Vision</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>approvalDate</dc-qualifier>
+          <label>Fecha de aprobación</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Fecha de aprobación</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>responsibleEntity</dc-qualifier>
+          <label>Entidad Responsable</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Entidad Responsable</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>planType</dc-qualifier>
+          <label>Tipo Plan</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Tipo plan</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>status</dc-qualifier>
+          <label>Estado</label>
+          <input-type value-pairs-name="perucris_ppp_status">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required>Seleccionar un Estado</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>strategicalGoal</dc-qualifier>
+          <label>Objetivo Estrategico</label>
+          <input-type>textarea</input-type>
+          <repeatable>true</repeatable>
+          <required>Ingresar un Objetivo Estrategico</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>strategicalAction</dc-qualifier>
+          <label>Acciones Estrategicos</label>
+          <input-type>textarea</input-type>
+          <repeatable>true</repeatable>
+          <required>Ingresar Acciones Estrategicos</required>
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="program">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Nombre</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un nombre</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>description</dc-element>
+          <label>Descripción</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Descripción</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>plan</dc-qualifier>
+          <label>Plan</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Plan</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>approvalDate</dc-qualifier>
+          <label>Fecha de aprobación</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Fecha de aprobación</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>programType</dc-qualifier>
+          <label>Tipo Programa</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Tipo Programa</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>programOwner</dc-qualifier>
+          <label>Persona Responsable</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Persona Responsable</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>executionYear</dc-qualifier>
+          <label>Año de ejecución</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Año de ejecución</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>status</dc-qualifier>
+          <label>Estado</label>
+          <input-type value-pairs-name="perucris_ppp_status">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required>Seleccionar un Estado</required>
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="politic-goal">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Nombre</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un nombre</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>politic</dc-qualifier>
+          <label>Politica</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Politica</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>responsibleEntity</dc-qualifier>
+          <label>Entidad Responsable</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una  Entidad Responsable</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>adoptedMeasures</dc-qualifier>
+          <label>Medidas Adoptadas</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Medidas Adoptadas</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>ctiInterventions</dc-qualifier>
+          <label>Intervenciones CTI</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Intervenciones CTI</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>progress</dc-qualifier>
+          <label>Avance</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Avance</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>alert</dc-qualifier>
+          <label>Alerta</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar  Alerta</required>
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="indicator">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Nombre</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un nombre</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>politicGoal</dc-qualifier>
+          <label>Objetivo Politica</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Objetivo Politica</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>plan</dc-qualifier>
+          <label>Plan</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Plan</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>program</dc-qualifier>
+          <label>Programa</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Programa</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>programGoal</dc-qualifier>
+          <label>Objetivo General Programa</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Objetivo General Programa</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>activity</dc-qualifier>
+          <label>Actividad</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una  Actividad</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>standard</dc-qualifier>
+          <label>Estandar</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Estandar</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>financialInstrument</dc-qualifier>
+          <label>Instrumento Financiero</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Instrumento Financiero</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>financialScheme</dc-qualifier>
+          <label>Esquema Financiero</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Esquema Financiero</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>responsiblePerson</dc-qualifier>
+          <label>Persona Responsable</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Persona Responsable</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>responsibleEntity</dc-qualifier>
+          <label>Institución Responsable</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Institución Responsable</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>indicatorType</dc-qualifier>
+          <label>Tipo de Indicador</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Tipo de Indicador</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>source</dc-qualifier>
+          <label>Fuente</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Fuente</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>baseLine</dc-qualifier>
+          <label>Linea Base</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Linea Base</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>expectedValue</dc-qualifier>
+          <label>Valor Esperado</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Valor Esperado</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>obtainedValue</dc-qualifier>
+          <label>Valor Obtenido</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Valor Obtenido</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>annualAdvance</dc-qualifier>
+          <label>Avance Anual</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Avance Anual</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>performanceSummary</dc-qualifier>
+          <label>Resumen de Desempeño</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Resumen de Desempeño</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>status</dc-qualifier>
+          <label>Estado</label>
+          <input-type value-pairs-name="perucris_ppp_status">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required>Seleccionar un Estado</required>
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="program-goal">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Nombre</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un nombre</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>program</dc-qualifier>
+          <label>Programa</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>programGoal</dc-qualifier>
+          <label>Objetivo General Programa</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="standard">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Nombre</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un nombre</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>service</dc-qualifier>
+          <label>Servicio</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Servicio</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>standardFulfillment</dc-qualifier>
+          <label>Cumplimiento</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Cumplimiento</required>
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="financial-instrument">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Nombre</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un nombre</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>description</dc-element>
+          <label>Descripción</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Descripción</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>program</dc-qualifier>
+          <label>Programa</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Programa</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>ctiProblem</dc-qualifier>
+          <label>Problema CTI</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Problema CTI</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>researchLine</dc-qualifier>
+          <label>Linea Investigación</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Linea Investigación</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>targetPopulation</dc-qualifier>
+          <label>Poblacion Objetivo</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Poblacion Objetivo</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>status</dc-qualifier>
+          <label>Estado</label>
+          <input-type value-pairs-name="perucris_ppp_status">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required>Seleccionar un Estado</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>generalGoal</dc-qualifier>
+          <label>Objetivo General</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Objetivo General</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>specificGoal</dc-qualifier>
+          <label>Objetivo(s) Especificos</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="financial-scheme">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Nombre</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un nombre</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>description</dc-element>
+          <label>Descripción</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Descripción</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>financialInstrument</dc-qualifier>
+          <label>Instrumento Financiero</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Instrumento Financiero</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>targetPopulation</dc-qualifier>
+          <label>Público Objetivo</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Público Objetivo</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>callDate</dc-qualifier>
+          <label>Fecha Convocatoria</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Fecha Convocatoria</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>approvalDate</dc-qualifier>
+          <label>Fecha Aprobación Ganadores</label>
+          <input-type>date</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Fecha Aprobación Ganadores</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>awardedProjects</dc-qualifier>
+          <label>Proyectos Ganadores</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required>Ingresar Proyectos Ganadores</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>expectedResults</dc-qualifier>
+          <label>Resultados Esperados</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Resultados Esperados</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>reachedResults</dc-qualifier>
+          <label>Resultados Alcanzados</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Resultados Alcanzados</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>conclusions</dc-qualifier>
+          <label>Conclusiones</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Conclusiones</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>recommendations</dc-qualifier>
+          <label>Recomendaciones</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Recomendaciones</required>
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="service">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Nombre</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un nombre</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>politicGuideline</dc-qualifier>
+          <label>Lineamientos Politica</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Lineamientos Politica</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>supplier</dc-qualifier>
+          <label>Proveedor</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Proveedor</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>addressee</dc-qualifier>
+          <label>Destinatario</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Destinatario</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>coverage</dc-qualifier>
+          <label>Cobertura</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Cobertura</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>relevantAction</dc-qualifier>
+          <label>Acciones Relevantes</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required>Ingresar Acciones Relevantes</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>positiveFactor</dc-qualifier>
+          <label>Factores Positivos</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required>Ingresar Factores Positivos</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>negativeFactor</dc-qualifier>
+          <label>Factores Negativos</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required>Ingresar Factores Negativos</required>
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="politic-guidelines">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Nombre</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un nombre</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>politicGoal</dc-qualifier>
+          <label>Objetivo Politica</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Objetivo Politica</required>
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="activity">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Nombre</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un nombre</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>projectProgram</dc-qualifier>
+          <label>Proyecto Programa</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Proyecto Programa</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>involvedInstitution</dc-qualifier>
+          <label>Institución Involucrada</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Institución Involucrada</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>executionResponsible</dc-qualifier>
+          <label>Responsable de la Ejecución</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Responsable de la Ejecución</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>executionYear</dc-qualifier>
+          <label>Año de ejecución</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Año de ejecución</required>
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="financial-resource">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Nombre</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un nombre</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>activity</dc-qualifier>
+          <label>Actividad</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Actividad</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>currency</dc-qualifier>
+          <label>Tipo de Moneda</label>
+          <input-type value-pairs-name="currency">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required>Seleccionar  Tipo de Moneda</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>programmedAmount</dc-qualifier>
+          <label>Monto Programado</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Monto Programado</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>executedAmount</dc-qualifier>
+          <label>Monto Ejecutado</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Monto Ejecutado</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>identifier</dc-qualifier>
+          <label>Nro Identificador</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Nro Identificador</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>fundingCode</dc-qualifier>
+          <label>Codigo Financiamento</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Codigo Financiamento</required>
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="project-program">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Nombre</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un nombre</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>description</dc-element>
+          <label>Descripción</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar una Descripción</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>program</dc-qualifier>
+          <label>Programa</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Programa</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>type</dc-qualifier>
+          <label>Tipo</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Tipo</required>
+          <hint />
+        </field>
+      </row>
+    </form>
+    <form name="project-financial-instrument">
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>title</dc-element>
+          <label>Nombre</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un nombre</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>description</dc-element>
+          <label>Descripción</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Descripción</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>financialScheme</dc-qualifier>
+          <label>Esquema Financiero</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Esquema Financiero</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>program</dc-qualifier>
+          <label>Programa</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar un Programa</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>projectTitle</dc-qualifier>
+          <label>Titulo del Proyecto</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Titulo del Proyecto</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>executionPlace</dc-qualifier>
+          <label>Lugar de ejecución</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Lugar de ejecución</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>subject</dc-element>
+          <dc-qualifier>ocde</dc-qualifier>
+          <label>Area OCDE</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Area OCDE</required>
+          <hint />
+          <vocabulary closed="true">ocde_subjects</vocabulary>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>grantBeneficiary</dc-qualifier>
+          <label>Beneficiario de la subvención</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Beneficiario de la subvención</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>projectAmount</dc-qualifier>
+          <label>Monto del Proyecto</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Monto del Proyecto</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>stateContribution</dc-qualifier>
+          <label>Aporte Estatal</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Aporte Estatal</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>beneficiaryContribution</dc-qualifier>
+          <label>Aporte Beneficiario</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Aporte Beneficiario</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>teamCoordinator</dc-qualifier>
+          <label>Coordinador del equipo</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Coordinador del equipo</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>teamMember</dc-qualifier>
+          <label>Integrantes equipo</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>achievement</dc-qualifier>
+          <label>Logros alcanzados</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required>Ingresar Logros alcanzados</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>status</dc-qualifier>
+          <label>Estado del Proyecto</label>
+          <input-type value-pairs-name="perucris_ppp_status">dropdown</input-type>
+          <repeatable>false</repeatable>
+          <required>Seleccionar  Estado del Proyecto</required>
+          <hint />
+        </field>
+      </row>
+    </form>
   </form-definitions>
   <form-value-pairs>
     <value-pairs value-pairs-name="patent_types" dc-term="patent_types">
@@ -10695,35 +12126,35 @@
         <stored-value />
       </pair>
       <pair>
-        <displayed-value>Author’s Original</displayed-value>
+        <displayed-value>Borrador</displayed-value>
         <stored-value>AO</stored-value>
       </pair>
       <pair>
-        <displayed-value>Submitted Manuscript Under Review</displayed-value>
+        <displayed-value>Preprint</displayed-value>
         <stored-value>SMUR</stored-value>
       </pair>
       <pair>
-        <displayed-value>Accepted Manuscript</displayed-value>
+        <displayed-value>Manuscrito Aceptado</displayed-value>
         <stored-value>AM</stored-value>
       </pair>
       <pair>
-        <displayed-value>Proof</displayed-value>
+        <displayed-value>Prueba de Galera</displayed-value>
         <stored-value>P</stored-value>
       </pair>
       <pair>
-        <displayed-value>Version of Record</displayed-value>
+        <displayed-value>Versión Publicada</displayed-value>
         <stored-value>VoR</stored-value>
       </pair>
       <pair>
-        <displayed-value>Corrected Version of Record</displayed-value>
+        <displayed-value>Versión Corregida</displayed-value>
         <stored-value>CvoR</stored-value>
       </pair>
       <pair>
-        <displayed-value>Enhanced Version of Record</displayed-value>
+        <displayed-value>Versión Mejorada</displayed-value>
         <stored-value>EvoR</stored-value>
       </pair>
       <pair>
-        <displayed-value>Not Applicable (or Unknown)</displayed-value>
+        <displayed-value>Versión Desconocida</displayed-value>
         <stored-value>NA</stored-value>
       </pair>
     </value-pairs>
@@ -11877,6 +13308,40 @@
       <pair>
         <displayed-value>No</displayed-value>
         <stored-value>no</stored-value>
+      </pair>
+    </value-pairs>
+    <value-pairs value-pairs-name="perucris_ppp_status" dc-term="perucris_ppp_status">
+      <pair>
+        <displayed-value>Ejecución Inicial</displayed-value>
+        <stored-value>Ejecución Inicial</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Ejecución de Intermedia</displayed-value>
+        <stored-value>Ejecución de Intermedia</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Ejecución Final</displayed-value>
+        <stored-value>Ejecución Final</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Cierre de la ejecución</displayed-value>
+        <stored-value>Cierre de la ejecución</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Evaluación Inicial</displayed-value>
+        <stored-value>Evaluación Inicial</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Evaluación Intermedia</displayed-value>
+        <stored-value>Evaluación Intermedia</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Evaluación Final</displayed-value>
+        <stored-value>Evaluación Final (evaluación de resultados)</stored-value>
+      </pair>
+      <pair>
+        <displayed-value>Evaluación de Impacto</displayed-value>
+        <stored-value>Evaluación de Impacto (no tiene estados, es solo una)</stored-value>
       </pair>
     </value-pairs>
   </form-value-pairs>

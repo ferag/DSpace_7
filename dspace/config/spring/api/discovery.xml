@@ -135,6 +135,30 @@
                 <entry key="RELATION.CvPerson.allequipments" value-ref="relationCvPersonAllEquipmentsConfiguration"/>
                 <entry key="RELATION.CvPerson.selectedequipments" value-ref="relationCvPersonSelectedEquipmentsConfiguration"/>
                 <entry key="RELATION.CvPerson.hrprofiles" value-ref="relationPersonCv2HRProfilesConfiguration"/>
+                <!-- ppp inverse relations -->
+                <entry key="RELATION.PoliticGoal.plans" value-ref="relationPoliticGoalPlans"/>
+                <entry key="RELATION.PoliticGoal.indicators" value-ref="relationPoliticGoalIndicators"/>
+                <entry key="RELATION.PoliticGoal.guidelines" value-ref="relationPoliticGoalGuildelines"/>
+                <entry key="RELATION.Plan.indicators" value-ref="relationPlanIndicators"/>
+                <entry key="RELATION.Plan.programs" value-ref="relationPlanPrograms"/>
+                <entry key="RELATION.Politic.politicGoals" value-ref="relationPoliticPoliticGoals"/>
+                <entry key="RELATION.Program.indicators" value-ref="relationProgramIndicators"/>
+                <entry key="RELATION.Program.programgoals" value-ref="relationProgramProgramGoals"/>
+                <entry key="RELATION.Program.financialinstruments" value-ref="relationProgramFinancialInstruments"/>
+                <entry key="RELATION.ProgramGoal.indicators" value-ref="relationProgramGoalIndicators"/>
+                <entry key="RELATION.ProgramGoal.programgoals" value-ref="relationProgramGoalProgramGoals"/>
+                <entry key="RELATION.Activity.indicators" value-ref="relationActivityIndicators"/>
+                <entry key="RELATION.Standard.indicators" value-ref="relationStandardIndicators"/>
+                <entry key="RELATION.FinancialInstrument.indicators" value-ref="relationFinancialInstrumentIndicators"/>
+                <entry key="RELATION.FinancialInstrument.financialschemes" value-ref="relationFinancialInstrumentFinancialSchemes"/>
+                <entry key="RELATION.FinancialScheme.indicators" value-ref="relationFinancialSchemeIndicators"/>
+                <entry key="RELATION.PoliticGuidelines.services" value-ref="relationPoliticGuidelinesServices"/>
+                <entry key="RELATION.ProjectProgram.activities" value-ref="relationProjectProgramActivities"/>
+                <entry key="RELATION.Program.projectprograms" value-ref="relationProgramProjectPrograms"/>
+                <entry key="RELATION.Program.projectfinancialinstruments" value-ref="relationProgramProjectFinancialInstruments"/>
+                <entry key="RELATION.Service.standards" value-ref="relationServiceStandards"/>
+
+
                 <entry key="RESUME.rprofiles" value-ref="person"/>
                 <entry key="RESUME.orgunits" value-ref="orgUnit"/>
                 <entry key="RESUME.researchoutputs" value-ref="researchoutputs"/>
@@ -2636,6 +2660,890 @@
                 <value>relation.isEquipmentsSelectedFor:{0}</value>
                 <value>search.resourcetype:Item</value>
             </list>
+        </property>
+    </bean>
+
+    <!-- PPP inverse relations -->
+
+    <bean id="relationPoliticGoalPlans" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:Plan</value>
+                <value>perucris.ppp.politicGoal_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationPoliticGoalIndicators" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:Indicator</value>
+                <value>perucris.ppp.politicGoal_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationPoliticGoalGuildelines" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:PoliticGuidelines</value>
+                <value>perucris.ppp.politicGoal_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationPlanIndicators" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:Indicator</value>
+                <value>perucris.ppp.plan_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationPlanPrograms" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:Program</value>
+                <value>perucris.ppp.plan_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationPoliticPoliticGoals" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:PoliticGoal</value>
+                <value>perucris.ppp.politic_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationProgramIndicators" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:Indicator</value>
+                <value>perucris.ppp.program_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationProgramProgramGoals" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:ProgramGoal</value>
+                <value>perucris.ppp.program_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationProgramFinancialInstruments" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:FinancialInstrument</value>
+                <value>perucris.ppp.program_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationProgramGoalIndicators" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:Indicator</value>
+                <value>perucris.ppp.programGoal_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationFinancialSchemeIndicators" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:Indicator</value>
+                <value>perucris.ppp.financialScheme_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationProgramGoalProgramGoals" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:ProgramGoal</value>
+                <value>perucris.ppp.programGoal_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationActivityIndicators" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:Indicator</value>
+                <value>perucris.ppp.activity_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationStandardIndicators" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:Indicator</value>
+                <value>perucris.ppp.standard_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationFinancialInstrumentIndicators" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:Indicator</value>
+                <value>perucris.ppp.financialInstrument_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationFinancialInstrumentFinancialSchemes" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:FinancialScheme</value>
+                <value>perucris.ppp.financialInstrument_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationPoliticGuidelinesServices" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:Service</value>
+                <value>perucris.ppp.politicGuideline_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationProjectProgramActivities" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:Activity</value>
+                <value>perucris.ppp.projectProgram_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationProgramProjectPrograms" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:ProjectProgram</value>
+                <value>perucris.ppp.program_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationProgramProjectFinancialInstruments" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:FinancialInstrument</value>
+                <value>perucris.ppp.program_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationServiceStandards" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:Standard</value>
+                <value>perucris.ppp.service_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
         </property>
     </bean>
 

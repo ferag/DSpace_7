@@ -57,7 +57,7 @@
         <qualifier>institutional-scoped-role</qualifier>
         <scope_note></scope_note>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>oidc</element>
@@ -71,14 +71,14 @@
         <qualifier>reject</qualifier>
         <scope_note></scope_note>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>authentication</element>
         <qualifier>twophase</qualifier>
         <scope_note></scope_note>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>authentication</element>
@@ -168,7 +168,7 @@
         <element>apellidoPaterno</element>
         <scope_note></scope_note>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>apellidoMaterno</element>
@@ -249,13 +249,13 @@
         <qualifier>sectorInstitucional</qualifier>
         <scope_note></scope_note>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>type</element>
         <qualifier>orgunit</qualifier>
         <scope_note></scope_note>
-    </dc-type>    
+    </dc-type>
 
     <dc-type>
         <schema>perucris</schema>
@@ -263,14 +263,14 @@
         <qualifier>educacionSuperior</qualifier>
         <scope_note></scope_note>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>type</element>
         <qualifier>ciiu</qualifier>
         <scope_note></scope_note>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>type</element>
@@ -664,7 +664,7 @@
         <element>eperson</element>
         <qualifier>orcid</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>eperson</element>
@@ -745,91 +745,91 @@
         <element>cvProject</element>
         <qualifier>syncEnabled</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>dctitle</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>crisrpname</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>crisrpnametranslated</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>crisrpnamevariant</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>persongivenName</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>personfamilyName</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>perucrisapellidoPaterno</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>perucrisapellidoMaterno</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>perucrisapellidoCasada</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>personbirthDate</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>oairecerifpersongender</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>perucrisphone</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>perucrismobilePhone</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>personjobTitle</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
@@ -841,127 +841,127 @@
         <element>flagcv</element>
 	    <qualifier>perucrispersonprofiletype</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>crisrpworkgroup</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>oairecerifidentifierurl</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>personemail</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>dcsubject</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>perucrissubjectocde</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>perucrissubjectminam</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>perucrissubjectins</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>perucrisidentifierpassport</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>perucrisidentifierimmigrationCard</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>perucrisidentifierdina</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>perucrisidentifierrenacyt</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>personidentifierscopus-author-id</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>personidentifierrid</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>perucrisdomicilioubigeoReniec</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>perucrisubigeo</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>perucrisaddressstreetAddress</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>perucrisaddresspostalCode</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>perucrisaddressaddressCountry</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>dcdescriptionabstract</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>crisrpcountry</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
@@ -979,152 +979,152 @@
         <element>flagcv</element>
         <qualifier>crisrpeducation</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
         <qualifier>crisrpeducationstart</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
         <qualifier>crisrpeducationend</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
         <qualifier>crisrpeducationrole</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
         <qualifier>perucriseducationgrantor</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
         <qualifier>perucriseducationcountry</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
         <qualifier>oairecerifpersonaffiliation</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
         <qualifier>oairecerifaffiliationstartDate</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
         <qualifier>oairecerifaffiliationendDate</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
         <qualifier>oairecerifaffiliationrole</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
         <qualifier>crisrpqualification</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
         <qualifier>crisrpqualificationorgunit</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
         <qualifier>crisrpqualificationstart</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
         <qualifier>crisrpqualificationend</qualifier>
     </dc-type>
 
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcrelationfunding</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcrelationgrantno</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dccontributorauthor</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oairecerifauthoraffiliation</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>perucrisauthororcid</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>perucrisauthordni</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oairecerifpatentissuer</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dctermsdateSubmitted</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcdateissued</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oairecerifpatentcountry</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>perucrispaisdeltitular</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
@@ -1136,511 +1136,511 @@
         <element>holder</element>
         <qualifier>ctiprofile</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcpublisher</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcidentifierpatentno</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcidentifierurl</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dctype</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>perucrisdescriptioninternalNote</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dclanguageiso</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcsubjectcip</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcsubjectocde</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcrelationproject</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcrelationpatent</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcrelationreferences</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>datacitegeoLocationPlace</qualifier>
     </dc-type>
-		
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>datacitegeoLocationPointpointLongitude</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>datacitegeoLocationPointpointLatitude</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>datacitegeoLocationBoxwestBoundLongitude</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>datacitegeoLocationBoxeastBoundLongitude</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>datacitegeoLocationBoxsouthBoundLongitude</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>datacitegeoLocationBoxnorthBoundLongitude</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oairecerifacronym</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>crispjcoordinator</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oairecerifinternalid</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>crispjpartnerou</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>crispjinvestigator</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oaireawardURI</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>crispjopenaireid</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>crispjorganization</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oairecerifoamandate</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oairecerifoamandateurl</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oairecerifprojectstartDate</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oairecerifprojectendDate</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oairecerifprojectstatus</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>perucrisprojecttypeOcde</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>perucrisprojecttypeOther</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>crispjcoinvestigators</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>crispjtechniciansAndEquivalentStaff</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>crispjsupportingStaff</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>perucristypeciiu</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>perucrisresearchLine</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oaireceriffunder</qualifier>
     </dc-type>
-        
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcrelationequipment</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dccontributoreditor</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oairecerifeditoraffiliation</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>perucriseditororcid</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>perucriseditordni</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dccontributoradvisor</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>perucrisadvisororcid</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>perucrisadvisordni</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcidentifierisbn</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcidentifierpmid</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcidentifierscopus</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcidentifierdoi</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcidentifierisi</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oaireversion</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcrightsuri</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oairecerifaccess</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oairecerifaccessembargoEnd</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcsubjectddc</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcsubjectloc</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcsubjectmesh</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcrelationpublication</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcrelationisbn</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcrelationdoi</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcrelationispartof</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcrelationispartofseries</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcrelationissn</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dccoveragepublication</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dccoverageisbn</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dccoveragedoi</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcdescriptionsponsorship</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oairecitationvolume</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oairecitationissue</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oairecitationstartPage</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oairecitationendPage</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>renatitype</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>thesisdegreename</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>renatilevel</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>thesisdegreediscipline</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>renatidiscipline</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>renatijuror</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>thesisdegreegrantor</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcrelationconference</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcrelationdataset</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcidentifiercitation</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcdescription</qualifier>
     </dc-type>
-    
+
     <dc-type>
         <schema>perucris</schema>
         <element>ctivitae</element>
@@ -1669,5 +1669,560 @@
         <element>identifier</element>
         <qualifier>cti</qualifier>
     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>achievement</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>activity</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>annualAdvance</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>approvalDate</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>awardedProjects</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>baseLine</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>beneficiaryContribution</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>callDate</qualifier>
+        <scope_note />
+    </dc-type>
+
+<!--    <dc-type>-->
+<!--        <schema>perucris</schema>-->
+<!--        <element>ppp</element>-->
+<!--        <qualifier>component</qualifier>-->
+<!--        <scope_note />-->
+<!--    </dc-type>-->
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>conclusions</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>ctiProblem</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>currency</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>executedAmount</qualifier>
+        <scope_note />
+     </dc-type>
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>executionPlace</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>executionResponsible</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>executionYear</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>expectedResults</qualifier>
+        <scope_note />
+    </dc-type>
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>expectedValue</qualifier>
+        <scope_note />
+    </dc-type>
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>financialInstrument</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>financialScheme</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>fundingCode</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>fundingResource</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>generalGoal</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>grantBeneficiary</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>identifier</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>indicatorType</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>involvedInstitution</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>obtainedValue</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>performanceSummary</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>politicGuideline</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>periodicity</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>plan</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>planAlignment</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>planType</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>politicGoal</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>program</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>program</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>program</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>programGoal</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>programmedAmount</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>programOwner</qualifier>
+        <scope_note />
+     </dc-type>
+
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>programType</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>projectAmount</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>projectProgram</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>projectTitle</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>publicProblem</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>reachedResults</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>recommendations</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>researchLine</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>responsibleEntity</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>responsiblePerson</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>results</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>service</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>source</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>specificGoal</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>standard</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>standardFulfillment</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>stateContribution</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>status</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>strategicalAction</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>strategicalGoal</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>targetPopulation</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>teamCoordinator</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>teamMember</qualifier>
+        <scope_note />
+     </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>vision</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>politic</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>adoptedMeasures</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>ctiInterventions</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>progress</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>alert</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>supplier</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>addressee</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>coverage</qualifier>
+        <scope_note />
+    </dc-type>
+
+
+
+
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>relevantAction</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>positiveFactor</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>negativeFactor</qualifier>
+        <scope_note />
+    </dc-type>
+
+<!--    <dc-type>-->
+<!--        <schema>perucris</schema>-->
+<!--        <element>ppp</element>-->
+<!--        <qualifier>subComponent</qualifier>-->
+<!--        <scope_note />-->
+<!--    </dc-type>-->
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>type</qualifier>
+        <scope_note />
+    </dc-type>
+
+
+
+
+
+
+
 
 </dspace-dc-types>

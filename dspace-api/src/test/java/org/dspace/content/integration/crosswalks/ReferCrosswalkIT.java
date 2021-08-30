@@ -2713,44 +2713,6 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
     }
 
-//    @Test
-//    public void testManyPatentsJsonDisseminate() throws Exception {
-//
-//        Item firstPatent = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Patent")
-//            .withTitle("Test patent")
-//            .withIssueDate("2021-01-01")
-//            .withPublisher("Publisher")
-//            .withPatentNo("12345-666")
-//            .withSubject("subject")
-//            .withRelationProject("Project")
-//            .build();
-//
-//        Item secondPatent = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Patent")
-//            .withTitle("Second patent")
-//            .withIssueDate("2011-01-01")
-//            .withPublisher("First publisher")
-//            .withPublisher("Second publisher")
-//            .withPatentNo("12345-777")
-//            .withAuthor("Walter White")
-//            .withAuthorAffiliation("4Science")
-//            .withRelationPatent("Another patent")
-//            .build();
-//
-//        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-json");
-//        assertThat(referCrossWalk, notNullValue());
-//
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//        referCrossWalk.disseminate(context, Arrays.asList(firstPatent, secondPatent).iterator(), out);
-//
-//        try (FileInputStream fis = getFileInputStream("patents.json")) {
-//            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
-//            compareEachLine(out.toString(), expectedContent);
-//        }
-//
-//    }
-
     @Test
     public void testProductPerucrisCerifXmlDisseminate() throws Exception {
 
@@ -2827,118 +2789,6 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         }
 
     }
-
-//    @Test
-//    public void testPatentCerifXmlDisseminate() throws Exception {
-//
-//        Item patent = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Patent")
-//            .withTitle("Test patent")
-//            .withIssueDate("2021-01-01")
-//            .withPublisher("First publisher")
-//            .withPublisher("Second publisher")
-//            .withPatentNo("12345-666")
-//            .withAuthor("Walter White", "b6ff8101-05ec-49c5-bd12-cba7894012b7")
-//            .withAuthorAffiliation("4Science")
-//            .withAuthor("Jesse Pinkman")
-//            .withAuthorAffiliation(PLACEHOLDER_PARENT_METADATA_VALUE)
-//            .withAuthor("John Smith", "will be referenced::ORCID::0000-0000-0012-3456")
-//            .withAuthorAffiliation("4Science")
-//            .withRightsHolder("Test Organization")
-//            .withDescriptionAbstract("This is a patent")
-//            .withRelationPatent("Another patent")
-//            .build();
-//
-//        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-cerif-xml");
-//        assertThat(referCrossWalk, notNullValue());
-//
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//        referCrossWalk.disseminate(context, patent, out);
-//
-//        try (FileInputStream fis = getFileInputStream("patent.xml")) {
-//            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
-//            compareEachLine(out.toString(), expectedContent);
-//        }
-//
-//    }
-
-//    @Test
-//    public void testManyPatentsCerifXmlDisseminate() throws Exception {
-//
-//        Item firstPatent = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Patent")
-//            .withTitle("Test patent")
-//            .withIssueDate("2021-01-01")
-//            .withPublisher("Publisher")
-//            .withPatentNo("12345-666")
-//            .build();
-//
-//        Item secondPatent = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Patent")
-//            .withTitle("Second patent")
-//            .withIssueDate("2011-01-01")
-//            .withPublisher("First publisher")
-//            .withPublisher("Second publisher")
-//            .withPatentNo("12345-777")
-//            .withAuthor("Walter White")
-//            .withAuthorAffiliation("4Science")
-//            .withRelationPatent("Another patent")
-//            .build();
-//
-//        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-cerif-xml");
-//        assertThat(referCrossWalk, notNullValue());
-//
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//        referCrossWalk.disseminate(context, Arrays.asList(firstPatent, secondPatent).iterator(), out);
-//
-//        try (FileInputStream fis = getFileInputStream("patents.xml")) {
-//            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
-//            compareEachLine(out.toString(), expectedContent);
-//        }
-//
-//    }
-
-//    @Test
-//    public void testPatentJsonDisseminate() throws Exception {
-//
-//        Item patent = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Patent")
-//            .withTitle("Test patent")
-//            .withDateAccepted("2020-01-01")
-//            .withIssueDate("2021-01-01")
-//            .withLanguage("en")
-//            .withType("patent")
-//            .withPublisher("First publisher")
-//            .withPublisher("Second publisher")
-//            .withPatentNo("12345-666")
-//            .withAuthor("Walter White", "b6ff8101-05ec-49c5-bd12-cba7894012b7")
-//            .withAuthorAffiliation("4Science")
-//            .withAuthor("Jesse Pinkman")
-//            .withAuthorAffiliation(PLACEHOLDER_PARENT_METADATA_VALUE)
-//            .withAuthor("John Smith", "will be referenced::ORCID::0000-0000-0012-3456")
-//            .withAuthorAffiliation("4Science")
-//            .withRightsHolder("Test Organization")
-//            .withDescriptionAbstract("This is a patent")
-//            .withRelationPatent("Another patent")
-//            .withSubject("patent")
-//            .withSubject("test")
-//            .withRelationFunding("Test funding")
-//            .withRelationProject("First project")
-//            .withRelationProject("Second project")
-//            .build();
-//
-//        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-json");
-//        assertThat(referCrossWalk, notNullValue());
-//
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//        referCrossWalk.disseminate(context, patent, out);
-//
-//        try (FileInputStream fis = getFileInputStream("patent.json")) {
-//            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
-//            compareEachLine(out.toString(), expectedContent);
-//        }
-//
-//    }
 
     @Test
     public void testManyPatentsJsonDisseminate() throws Exception {
@@ -3065,44 +2915,6 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertTrue(StringUtils.equals(obj.getString("title"), StringUtils.EMPTY));
     }
 
-//    @Test
-//    public void testVirtualFieldDate() throws Exception {
-//
-//        Item publication = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Publication")
-//            .withIssueDate("2020-02-14")
-//            .withDateAccepted("2021")
-//            .withDateAccepted("2022")
-//            .withDateAccepted("2023")
-//            .build();
-//
-//        ReferCrosswalk referCrosswalk = new DSpace().getServiceManager()
-//            .getServiceByName("referCrosswalkVirtualFieldDate", ReferCrosswalk.class);
-//        assertThat(referCrosswalk, notNullValue());
-//
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//        referCrosswalk.disseminate(context, publication, out);
-//
-//        String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-//        String currentYear = new SimpleDateFormat("yyyy").format(new Date());
-//
-//        String[] resultLines = out.toString().split("\n");
-//        assertThat(resultLines.length, is(12));
-//        assertThat(resultLines[0].trim(), is("{"));
-//        assertThat(resultLines[1].trim(), is("\"only-year\": \"2020\","));
-//        assertThat(resultLines[2].trim(), is("\"date-without-time\": \"2020-02-14\","));
-//        assertThat(resultLines[3].trim(), is("\"another-date-without-time\": \"2020\\/02\\/14\","));
-//        assertThat(resultLines[4].trim(), is("\"date-with-time\": \"14-02-2020 00:00:00\","));
-//        assertThat(resultLines[5].trim(), is("\"another-date-with-time\": \"20200214 000000\","));
-//        assertThat(resultLines[6].trim(), is("\"current-timestamp\": \"" + currentDate + "\","));
-//        assertThat(resultLines[7].trim(), is("\"current-year\": \"" + currentYear + "\","));
-//        assertThat(resultLines[8].trim(), is("\"repeatable-date\": \"2021\","));
-//        assertThat(resultLines[9].trim(), is("\"repeatable-date\": \"2022\","));
-//        assertThat(resultLines[10].trim(), is("\"repeatable-date\": \"2023\""));
-//        assertThat(resultLines[11].trim(), is("}"));
-//
-//    }
-
     @Test
     public void testVirtualFieldVocabulary() throws Exception {
 
@@ -3158,21 +2970,21 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         CrisLayoutFieldBuilder.createMetadataField(context, title, 0, 0)
                               .withLabel("LABEL TITLE")
-                              .withRendering("RENDERIGN TITLE")
+                              .withRendering("RENDERING TITLE")
                               .withStyle("STYLE")
                               .withBox(box1)
                               .build();
 
         CrisLayoutFieldBuilder.createMetadataField(context, subject, 1, 0)
                               .withLabel("LABEL SUBJECT")
-                              .withRendering("RENDERIGN SUBJECT")
+                              .withRendering("RENDERING SUBJECT")
                               .withStyle("STYLE")
                               .withBox(box1)
                               .build();
 
         CrisLayoutFieldBuilder.createMetadataField(context, contributor, 2, 0)
                               .withLabel("LABEL CONTRBUTOR")
-                              .withRendering("RENDERIGN CONTRIBUTOR")
+                              .withRendering("RENDERING CONTRIBUTOR")
                               .withStyle("STYLE")
                               .withBox(box1)
                               .build();
@@ -3234,21 +3046,21 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         CrisLayoutFieldBuilder.createMetadataField(context, title, 0, 0)
                               .withLabel("LABEL TITLE")
-                              .withRendering("RENDERIGN TITLE")
+                              .withRendering("RENDERING TITLE")
                               .withStyle("STYLE")
                               .withBox(box1)
                               .build();
 
         CrisLayoutFieldBuilder.createMetadataField(context, subject, 1, 0)
                               .withLabel("LABEL SUBJECT")
-                              .withRendering("RENDERIGN SUBJECT")
+                              .withRendering("RENDERING SUBJECT")
                               .withStyle("STYLE")
                               .withBox(box1)
                               .build();
 
         CrisLayoutFieldBuilder.createMetadataField(context, contributor, 2, 0)
                               .withLabel("LABEL CONTRBUTOR")
-                              .withRendering("RENDERIGN CONTRIBUTOR")
+                              .withRendering("RENDERING CONTRIBUTOR")
                               .withStyle("STYLE")
                               .withBox(box1)
                               .build();
@@ -3317,21 +3129,21 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         CrisLayoutFieldBuilder.createMetadataField(context, title, 0, 0)
                               .withLabel("LABEL TITLE")
-                              .withRendering("RENDERIGN TITLE")
+                              .withRendering("RENDERING TITLE")
                               .withStyle("STYLE")
                               .withBox(box1)
                               .build();
 
         CrisLayoutFieldBuilder.createMetadataField(context, subject, 1, 0)
                               .withLabel("LABEL SUBJECT")
-                              .withRendering("RENDERIGN SUBJECT")
+                              .withRendering("RENDERING SUBJECT")
                               .withStyle("STYLE")
                               .withBox(box1)
                               .build();
 
         CrisLayoutFieldBuilder.createMetadataField(context, contributor, 2, 0)
                               .withLabel("LABEL CONTRBUTOR")
-                              .withRendering("RENDERIGN CONTRIBUTOR")
+                              .withRendering("RENDERING CONTRIBUTOR")
                               .withStyle("STYLE")
                               .withBox(box1)
                               .build();

@@ -82,4 +82,7 @@
 
     <bean class="org.dspace.app.metrics.dao.CrisMetricsDAOImpl" />
 
+    <!-- ElasticsearchIndexQueue DAO --> 
+    <bean class="org.dspace.app.elasticsearch.dao.impl.ElasticsearchIndexQueueDAOImpl" />
+
 </beans>

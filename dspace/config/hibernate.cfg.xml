@@ -109,5 +109,7 @@
 
         <mapping class="org.dspace.app.metrics.CrisMetrics"/>
 
+        <mapping class="org.dspace.app.elasticsearch.ElasticsearchIndexQueue" />
+
     </session-factory>
 </hibernate-configuration>

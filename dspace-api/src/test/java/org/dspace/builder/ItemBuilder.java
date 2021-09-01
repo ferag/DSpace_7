@@ -214,8 +214,12 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "dc", "identifier", "issn", issn);
     }
 
-    public ItemBuilder withIsiIdentifier(String isi) {
-        return addMetadataValue(item, "dc", "identifier", "isi", isi);
+    public ItemBuilder withRelationIssn(String issn) {
+        return addMetadataValue(item, "dc", "relation", "issn", issn);
+    }
+
+    public ItemBuilder withIsiIdentifier(String issn) {
+        return addMetadataValue(item, "dc", "identifier", "isi", issn);
     }
 
     public ItemBuilder withScopusIdentifier(String scopus) {
@@ -268,6 +272,14 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     private ItemBuilder withOrcidSynchronizationMode(String mode) {
         return setMetadataSingleValue(item, "cris", "orcid", "sync-mode", mode);
+    }
+
+    public ItemBuilder withAuthorOrcid(String orcid) {
+        return addMetadataValue(item, "perucris", "author", "orcid", orcid);
+    }
+
+    public ItemBuilder withEditorOrcid(String editorOrcid) {
+        return addMetadataValue(item, "perucris", "editor", "orcid", editorOrcid);
     }
 
     public ItemBuilder withIsniIdentifier(String isni) {
@@ -336,6 +348,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withPersonalSiteUrl(String url) {
         return addMetadataValue(item, "oairecerif", "identifier", "url", url);
+    }
+
+    public ItemBuilder withIdentifierUrl(String url) {
+        return addMetadataValue(item, "dc", "identifier", "url", url);
     }
 
     public ItemBuilder withPersonalSiteTitle(String title) {
@@ -522,6 +538,14 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "dc", "relation", "isbn", isbn);
     }
 
+    public ItemBuilder withCoverageIsbn(String isbn) {
+        return addMetadataValue(item, "dc", "coverage", "isbn", isbn);
+    }
+
+    public ItemBuilder withCoverageDoi(String doi) {
+        return addMetadataValue(item, "dc", "coverage", "doi", doi);
+    }
+
     public ItemBuilder withRelationProject(String project) {
         return addMetadataValue(item, "dc", "relation", "project", project);
     }
@@ -574,6 +598,22 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "perucris", "identifier", "dni", dni);
     }
 
+    public ItemBuilder withPmidIdentifier(String pmid) {
+        return addMetadataValue(item, "dc", "identifier", "pmid", pmid);
+    }
+
+    public ItemBuilder withAdvisorDni(String dni) {
+        return addMetadataValue(item, "perucris", "advisor", "dni", dni);
+    }
+
+    public ItemBuilder withEditorDni(String dni) {
+        return addMetadataValue(item, "perucris", "editor", "dni", dni);
+    }
+
+    public ItemBuilder withAdvisorOrcid(String orcid) {
+        return addMetadataValue(item, "perucris", "advisor", "orcid", orcid);
+    }
+
     public ItemBuilder withTituloProfesional(String tituloProfesional) {
         return addMetadataValue(item, "crisrp", "education", null, tituloProfesional);
     }
@@ -606,6 +646,14 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return withPerucrisSubjectOCDE(ocde);
     }
 
+    public ItemBuilder withSubjectOcde(String ocde) {
+        return addMetadataValue(item, "dc", "subject", "ocde", ocde);
+    }
+
+    public ItemBuilder withSubjectLoc(String loc) {
+        return addMetadataValue(item, "dc", "subject", "loc", loc);
+    }
+
     public ItemBuilder withRightsUri(String uri) {
         return addMetadataValue(item, "dc", "rights", "uri", uri);
     }
@@ -624,6 +672,18 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withRenatiDiscipline(String discipline) {
         return addMetadataValue(item, "renati", "discipline", null, discipline);
+    }
+
+    public ItemBuilder withRenatiType(String renatiType) {
+        return addMetadataValue(item, "renati", "type", null, renatiType);
+    }
+
+    public ItemBuilder withRenatiLevel(String level) {
+        return addMetadataValue(item, "renati", "level", null, level);
+    }
+
+    public ItemBuilder withRenatiJuror(String juror) {
+        return addMetadataValue(item, "renati", "juror", null, juror);
     }
 
     public ItemBuilder makeUnDiscoverable() {
@@ -657,10 +717,6 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withOrgUnitLocality(String addressLocality) {
         return addMetadataValue(item, "organization", "address", "addressLocality", addressLocality);
-    }
-
-    public ItemBuilder withOrgUnitCountry(String addressCountry) {
-        return addMetadataValue(item, "organization", "address", "addressCountry", addressCountry);
     }
 
     public ItemBuilder withOrgUnitRinggoldIdentifier(String identifier) {
@@ -783,6 +839,14 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "organization", "identifier", "ruc", ruc);
     }
 
+    public ItemBuilder withOrgUnitCountry(String addressCountry) {
+        return addMetadataValue(item, "organization", "address", "addressCountry", addressCountry);
+    }
+
+    public ItemBuilder withOrgUnitType(String orgunitType) {
+        return addMetadataValue(item, "perucris", "type", "orgunit", orgunitType);
+    }
+
     public ItemBuilder withUsageType(String usage) {
         return addMetadataValue(item, "perucris", "type", "usage", usage);
     }
@@ -821,6 +885,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withDniIdentifier(String dni) {
         return addMetadataValue(item, "perucris", "identifier", "dni", dni);
+    }
+
+    public ItemBuilder withAuthorDniIdentifier(String dni) {
+        return addMetadataValue(item, "perucris", "author", "dni", dni);
     }
 
     public ItemBuilder withPassport(String passport) {
@@ -958,6 +1026,83 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withPatentCountry(String country) {
         return addMetadataValue(item, "oairecerif", "patent", "country", country);
+    }
+
+    public ItemBuilder withDegreeGrantor(String grantor) {
+        return addMetadataValue(item, "thesis", "degree", "grantor", grantor);
+    }
+
+    public ItemBuilder withDegreeName(String dgreeName) {
+        return addMetadataValue(item, "thesis", "degree", "name", dgreeName);
+    }
+
+    public ItemBuilder withDegreeDiscipline(String discipline) {
+        return addMetadataValue(item, "thesis", "degree", "discipline", discipline);
+    }
+
+    public ItemBuilder withDDC(String dcc) {
+        return addMetadataValue(item, "dc", "subject", "ddc", dcc);
+    }
+
+    public ItemBuilder withRelationIspartofseries(String ispartofseries) {
+        return addMetadataValue(item, "dc", "relation", "ispartofseries", ispartofseries);
+    }
+
+    public ItemBuilder withDescriptionSponsorship(String description) {
+        return addMetadataValue(item, "dc", "description", "sponsorship", description);
+    }
+
+    public ItemBuilder withSubjectMesh(String mesh) {
+        return addMetadataValue(item, "dc", "subject", "mesh", mesh);
+    }
+
+    public ItemBuilder withRegistrationNumber(String registrationNumber) {
+        return addMetadataValue(item, "perucris", "renacyt", "registrationNumber", registrationNumber);
+    }
+
+    public ItemBuilder withRegistration(String registration) {
+        return addMetadataValue(item, "perucris", "renacyt", "registration", registration);
+    }
+
+    public ItemBuilder withDateOfQualification(String dateOfQualification) {
+        return addMetadataValue(item, "perucris", "renacyt", "dateOfQualification",
+                                       new DCDate(dateOfQualification).toString());
+    }
+
+    public ItemBuilder withStiActions(String actions) {
+        return addMetadataValue(item, "perucris", "sti","actions", actions);
+    }
+
+    public ItemBuilder withRenacytOcde(String ocde) {
+        return addMetadataValue(item, "perucris", "renacyt", "ocde", ocde);
+    }
+
+    public ItemBuilder withRenacytStrength(String strength) {
+        return addMetadataValue(item, "perucris", "renacyt", "strength", strength);
+    }
+
+    public ItemBuilder withFormalUnit(String formalUnit) {
+        return addMetadataValue(item, "perucris", "sti", "formalUnit", formalUnit);
+    }
+
+    public ItemBuilder withSectorInstitucional(String sectorInstitucional) {
+        return addMetadataValue(item, "perucris", "type", "sectorInstitucional", sectorInstitucional);
+    }
+
+    public ItemBuilder withEducacionSuperior(String educacionSuperior) {
+        return addMetadataValue(item, "perucris", "type", "educacionSuperior", educacionSuperior);
+    }
+
+    public ItemBuilder withTypeNaturaleza(String naturaleza) {
+        return addMetadataValue(item, "perucris", "type", "naturaleza", naturaleza);
+    }
+
+    public ItemBuilder withValidityOfRegistration(String validityOfRegistration) {
+        return addMetadataValue(item, "perucris", "renacyt", "validityOfRegistration", validityOfRegistration);
+    }
+
+    public ItemBuilder withRenacytClassification(String classification) {
+        return addMetadataValue(item, "perucris", "renacyt", "classification", classification);
     }
 
     /**

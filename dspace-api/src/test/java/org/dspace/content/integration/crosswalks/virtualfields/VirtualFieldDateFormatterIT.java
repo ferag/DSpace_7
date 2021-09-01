@@ -11,6 +11,7 @@ import static org.dspace.builder.CollectionBuilder.createCollection;
 import static org.dspace.builder.CommunityBuilder.createCommunity;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -159,11 +160,13 @@ public class VirtualFieldDateFormatterIT extends AbstractIntegrationTestWithData
     @Test
     public void testWithInvalidVirtualField() {
 
-        Item item = ItemBuilder.createItem(context, collection)
-            .build();
+        String format = "yyyy";
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        String date = sdf.format(new Date());
 
-        String[] dates = virtualField.getMetadata(context, item, "virtual.date.dc-date-issued");
-        assertThat(dates.length, is(0));
+        String[] dates = virtualField.getMetadata(context, null, "virtual.date." + format);
+        assertThat(dates.length, is(1));
+        assertEquals(date, dates[0]);
 
     }
 

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,7 +27,6 @@ import org.dspace.app.rest.SearchRestMethod;
 import org.dspace.app.rest.model.EntityTypeRest;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.EntityType;
-import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.EntityTypeService;
 import org.dspace.core.Context;
 import org.dspace.discovery.SearchService;
@@ -51,8 +51,6 @@ public class EntityTypeRestRepository extends DSpaceRestRepository<EntityTypeRes
 
     @Autowired
     private EntityTypeService entityTypeService;
-    @Autowired
-    private CollectionService collectionService;
     @Autowired
     private ExternalDataService externalDataService;
     @Autowired(required = true)
@@ -107,7 +105,7 @@ public class EntityTypeRestRepository extends DSpaceRestRepository<EntityTypeRes
                 } catch (SQLException e) {
                     throw new RuntimeException(e.getMessage(), e);
                 }
-            }).filter(x -> x != null).collect(Collectors.toList());
+            }).filter(x -> Objects.nonNull(x) && !x.getLabel().startsWith("Cv")).collect(Collectors.toList());
             return converter.toRestPage(entityTypes, pageable, utils.obtainProjection());
         } catch (SQLException | SolrServerException | IOException e) {
             throw new RuntimeException(e);

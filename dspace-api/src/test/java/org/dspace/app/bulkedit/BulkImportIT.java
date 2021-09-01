@@ -1591,6 +1591,53 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
 
     }
 
+    @Test
+    @SuppressWarnings("unchecked")
+    public void createCvPersonInWorkspaceWithOcdeMetadataTest() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Collection publications = createCollection(context, community)
+            .withAdminGroup(eperson)
+            .withSubmissionDefinition("cvperson")
+            .withWorkflowGroup(1, eperson)
+            .build();
+
+        context.commit();
+        context.restoreAuthSystemState();
+
+        String publicationCollectionId = publications.getID().toString();
+        String fileLocation = getXlsFilePath("test-ocde.xls");
+        String[] args = new String[] { "bulk-import", "-c", publicationCollectionId, "-f", fileLocation, "-e" };
+        TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
+
+        handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, eperson);
+        assertThat("Expected no errors", handler.getErrorMessages(), empty());
+        assertThat("Expected no warnings", handler.getWarningMessages(), empty());
+
+        List<String> infoMessages = handler.getInfoMessages();
+        assertThat("Expected 4 info messages", infoMessages, hasSize(4));
+
+        assertThat(infoMessages.get(0), containsString("Start reading all the metadata group rows"));
+        assertThat(infoMessages.get(1), containsString("Found 0 metadata groups to process"));
+        assertThat(infoMessages.get(2), containsString("Found 1 items to process"));
+        assertThat(infoMessages.get(3), containsString("Row 2 - Item archived successfully"));
+
+        // verify created item (ROW 2)
+        String createdItemId = getItemUuidFromMessage(infoMessages.get(3));
+
+        Item createdItem = itemService.findByIdOrLegacyId(context, createdItemId);
+        assertThat("Item expected to be created", createdItem, notNullValue());
+        assertThat(createdItem.isArchived(), is(true));
+        assertThat(findWorkspaceItem(createdItem), nullValue());
+
+        List<MetadataValue> metadata = createdItem.getMetadata();
+        assertThat(metadata, hasItems(with("dc.title", "Test Title")));
+        assertThat(metadata, hasItems(with("perucris.subject.ocde", "oecd::Ciencias naturales::Matemáticas",
+                                      null, "ocde_subjects:1.01.00", 0, 600)));
+
+    }
+
     private WorkspaceItem findWorkspaceItem(Item item) throws SQLException {
         return workspaceItemService.findByItem(context, item);
     }

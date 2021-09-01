@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/util
+           http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <context:annotation-config /> <!-- allows us to use spring annotations in beans -->
+    
+    <bean class="org.dspace.app.elasticsearch.service.impl.ElasticsearchIndexQueueServiceImpl" />
+
+    <bean class="org.dspace.app.elasticsearch.service.ElasticsearchItemBuilder">
+         <constructor-arg>
+			<map>
+				<entry key="Publication" value-ref= "referCrosswalkElasticsearchPublication" />
+				<entry key="Person" value-ref= "referCrosswalkElasticsearchPerson" />
+				<entry key="OrgUnit" value-ref= "referCrosswalkElasticsearchOrgUnit" />
+			</map>
+		</constructor-arg>
+	</bean>
+
+    <bean class="org.dspace.app.elasticsearch.externalservice.ElasticsearchProvider" />
+
+    <bean class="org.dspace.app.elasticsearch.externalservice.ElasticsearchConnectorImpl">
+        <property name="user" value="${elasticsearch.clientId}" />
+        <property name="password" value="${elasticsearch.password}" />
+        <property name="url" value="${elasticsearch.url}" />
+    </bean>
+
+    <bean class="org.dspace.app.elasticsearch.externalservice.ElasticsearchIndexProvider" />
+
+    <bean class="org.dspace.app.elasticsearch.consumer.ElasticsearchIndexManager">
+        <constructor-arg>
+			<map>
+				<entry key="Publication" value= "publications-v1" />
+				<entry key="Person" value= "persons-{DATE.yyyy}" />
+				<entry key="OrgUnit" value= "orgunits-v1" />
+			</map>
+		</constructor-arg>
+		<constructor-arg>
+		    <map>
+				<entry key="Person" value-ref="currentDateGenerator"> </entry>
+			</map>
+		</constructor-arg>
+	</bean>
+
+    <bean id="currentDateGenerator" class="org.dspace.content.template.generator.ElasticsearchIndexCurrentDateGenerator" />
+
+    <bean class="org.dspace.app.elasticsearch.service.ElasticsearchDenormalizer">
+            <property name="denormalizationMapping">
+            <map>
+                <entry key="Publication" value-ref="publicationsMetadataToDenormalize"/>
+            </map>
+        </property>
+    </bean>
+
+
+	<util:list id="publicationsMetadataToDenormalize" value-type="java.lang.String">
+    	<value>dc_contributor_authors</value>
+	</util:list>
+
+</beans>

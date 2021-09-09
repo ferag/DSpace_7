@@ -73,6 +73,7 @@ import org.dspace.services.factory.DSpaceServicesFactory;
 import org.dspace.util.SolrUtils;
 import org.dspace.xoai.app.XOAIExtensionItemCompilePlugin;
 import org.dspace.xoai.services.api.CollectionsService;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockedStatic;
@@ -88,7 +89,6 @@ import com.nimbusds.jwt.JWTClaimsSet.Builder;
 
 public class PgcApiRestIT extends AbstractControllerIntegrationTest {
     private static final Logger log = LogManager.getLogger(DSpaceSolrCoreServer.class);
-
     protected CollectionService collectionService = ContentServiceFactory.getInstance().getCollectionService();
     protected CommunityService communityService = ContentServiceFactory.getInstance().getCommunityService();
     @Autowired
@@ -97,12 +97,15 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
     protected AuthorizeService authorizeService;
     @Autowired
     private CollectionsService collectionsService;
-
     private Community community;
     private Collection collection;
     @OrderBy("id ASC")
     private List<Handle> handles = new ArrayList<>();
     private List<XOAIExtensionItemCompilePlugin> xOAIItemCompilePlugins;
+    private KeyPair keyPair;
+    private String key;
+    private String token;
+    MockedStatic signatureValidationUtil;
 
     @Before
     @Override
@@ -110,15 +113,27 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
         super.setUp();
         // Explicitly use solr commit in SolrLoggerServiceImpl#postView
         configurationService.setProperty("solr-oai.autoCommit", false);
-        requestFilters.add(new TwoLeggedTokenFilter());
-        requestFilters.add(new ThreeLeggedTokenFilter());
+    }
+
+    @Before
+    public void generateKeys() throws Exception {
+        keyPair = generateKeyPair();
+        key = getRsaKeyAsString(keyPair);
+        token = getTokenPublic(DateUtils.addHours(new Date(), 1), keyPair.getPrivate());
+        signatureValidationUtil = Mockito.mockStatic(SignatureValidationUtil.class, CALLS_REAL_METHODS);
+        signatureValidationUtil.when(SignatureValidationUtil::getKey).thenReturn(key);
+        signatureValidationUtil.when(SignatureValidationUtil::validateSignature).thenCallRealMethod();  // Real implementation
+    }
+
+    @After
+    public void closeMockInstance() {
+        requestFilters.remove(requestFilters.size() - 1);
+        signatureValidationUtil.close();
     }
 
     @Test
     public void itemsOaiPeopleCollection() throws Exception {
-        KeyPair keyPair = generateKeyPair();
-        String key = getRsaKeyAsString(keyPair);
-        String token = getTokenPublic(DateUtils.addHours(new Date(), 1), keyPair.getPrivate());
+        requestFilters.add(new TwoLeggedTokenFilter());
         // ** WHEN **
         context.turnOffAuthorisationSystem();
         community = CommunityBuilder.createCommunity(context).build();
@@ -135,11 +150,7 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
                 .withTitle("other")
                 .build();
         addNewOaiSolrDocument(item2);
-//        String token = getTokenPublic(DateUtils.addHours(new Date(), 1));
         configurationService.setProperty("pgc-api." + "people" + ".id", collection.getID().toString());
-        MockedStatic signatureValidationUtil = Mockito.mockStatic(SignatureValidationUtil.class, CALLS_REAL_METHODS);
-        signatureValidationUtil.when(SignatureValidationUtil::getKey).thenReturn(key);
-        signatureValidationUtil.when(SignatureValidationUtil::validateSignature).thenCallRealMethod();  // Real implementation
         getClient(token).perform(
                         get("/pgc-api/people?query=dc.title:title*&page=0&size=10"))
                 .andExpect(status().isOk())
@@ -151,14 +162,13 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
                 .andExpect(xpath("Search-API/Header/totalResults").string("1"))
                 .andExpect(xpath("Search-API/Header/resultsInPage").string("1"))
                 .andExpect(xpath("Search-API/Payload/Cerif/Person/Affiliation/OrgUnit/Name").string("OrgUnit"));
-        signatureValidationUtil.close();
     }
+
     @Test
     public void requestTwoLeggedTokenWithDifferentSignTokenFromPkPair() throws Exception {
-        KeyPair keyPair = generateKeyPair();
+        requestFilters.add(new TwoLeggedTokenFilter());
         KeyPair keyPair1 = generateKeyPair();
-        String key = getRsaKeyAsString(keyPair);
-        String token = getTokenPublic(DateUtils.addHours(new Date(), 1), keyPair1.getPrivate());
+        String tokenFail = getTokenPublic(DateUtils.addHours(new Date(), 1), keyPair1.getPrivate());
         // ** WHEN **
         context.turnOffAuthorisationSystem();
         community = CommunityBuilder.createCommunity(context).build();
@@ -175,30 +185,22 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
                 .withTitle("other")
                 .build();
         addNewOaiSolrDocument(item2);
-//        String token = getTokenPublic(DateUtils.addHours(new Date(), 1));
         configurationService.setProperty("pgc-api." + "people" + ".id", collection.getID().toString());
-        MockedStatic signatureValidationUtil = Mockito.mockStatic(SignatureValidationUtil.class, CALLS_REAL_METHODS);
-        signatureValidationUtil.when(SignatureValidationUtil::getKey).thenReturn(key);
-        signatureValidationUtil.when(SignatureValidationUtil::validateSignature).thenCallRealMethod();  // Real implementation
-        getClient(token).perform(
+        getClient(tokenFail).perform(
                         get("/pgc-api/people?query=dc.title:title*&page=0&size=10"))
                 .andExpect(status().isUnauthorized());
-        signatureValidationUtil.close();
     }
+
     @Test
     public void requestThreeLeggedTokenWithDifferentSignTokenFromPkPair() throws Exception {
-        KeyPair keyPair = generateKeyPair();
+        requestFilters.add(new ThreeLeggedTokenFilter());
         KeyPair keyPairFail = generateKeyPair();
-        String key = getRsaKeyAsString(keyPair);
-        String token = getTokenPublic(DateUtils.addHours(new Date(), 1), keyPairFail.getPrivate());
+        String tokenFail = getTokenPublic(DateUtils.addHours(new Date(), 1), keyPairFail.getPrivate());
         // ** WHEN **
         context.turnOffAuthorisationSystem();
         community = CommunityBuilder.createCommunity(context).build();
         // create People collection
         collection = CollectionBuilder.createCollection(context, community).build();
-        MockedStatic signatureValidationUtil = Mockito.mockStatic(SignatureValidationUtil.class, CALLS_REAL_METHODS);
-        signatureValidationUtil.when(SignatureValidationUtil::getKey).thenReturn(key);
-        signatureValidationUtil.when(SignatureValidationUtil::validateSignature).thenCallRealMethod();  // Real implementation
         // create the item to be set into items table
         Item item = ItemBuilder.createItem(context, collection).build();
         Item item_related = ItemBuilder
@@ -208,16 +210,14 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
                 .build();
         addNewOaiSolrDocument(item);
         addNewOaiSolrDocument(item_related);
-        getClient(token).perform(
+        getClient(tokenFail).perform(
                         get("/pgc-api/ctivitae/" + item.getID() + "/patents?page=0&size=5"))
                 .andExpect(status().isUnauthorized());
-        signatureValidationUtil.close();
     }
+
     @Test
     public void itemsOaiPeopleCollectionExpiredToken() throws Exception {
-        KeyPair keyPair = generateKeyPair();
-        String key = getRsaKeyAsString(keyPair);
-        String token = getTokenPublic(DateUtils.addHours(new Date(), -1), keyPair.getPrivate());
+        requestFilters.add(new TwoLeggedTokenFilter());
         // ** WHEN **
         context.turnOffAuthorisationSystem();
         community = CommunityBuilder.createCommunity(context).build();
@@ -234,23 +234,17 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
                 .withTitle("other")
                 .build();
         addNewOaiSolrDocument(item2);
-//        String token = getTokenPublic(DateUtils.addHours(new Date(), 1));
+        token = getTokenPublic(DateUtils.addHours(new Date(), -1), keyPair.getPrivate());
         configurationService.setProperty("pgc-api." + "people" + ".id", collection.getID().toString());
-        MockedStatic signatureValidationUtil = Mockito.mockStatic(SignatureValidationUtil.class, CALLS_REAL_METHODS);
-        signatureValidationUtil.when(SignatureValidationUtil::getKey).thenReturn(key);
-        signatureValidationUtil.when(SignatureValidationUtil::validateSignature).thenCallRealMethod();  // Real implementation
         getClient(token).perform(
                         get("/pgc-api/people?query=dc.title:title*&page=0&size=10"))
                 .andExpect(status().isUnauthorized());
-        signatureValidationUtil.close();
     }
 
     @Test
     public void itemsOaiPublicationCollection() throws Exception {
+        requestFilters.add(new TwoLeggedTokenFilter());
         // ** WHEN **
-        KeyPair keyPair = generateKeyPair();
-        String key = getRsaKeyAsString(keyPair);
-        String token = getTokenPublic(DateUtils.addHours(new Date(), 1), keyPair.getPrivate());
         context.turnOffAuthorisationSystem();
         EPerson eperson1 = EPersonBuilder.createEPerson(context)
                 .withEmail("eperson1@mail.com")
@@ -264,9 +258,6 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
                 .createItem(context, collection).withEntityType("Publication")
                 .withTitle("Publ1").withAuthor("Author1").build();
         configurationService.setProperty("pgc-api." + "publications" + ".id", collection.getID().toString());
-        MockedStatic signatureValidationUtil = Mockito.mockStatic(SignatureValidationUtil.class, CALLS_REAL_METHODS);
-        signatureValidationUtil.when(SignatureValidationUtil::getKey).thenReturn(key);
-        signatureValidationUtil.when(SignatureValidationUtil::validateSignature).thenCallRealMethod();  // Real implementation
         String[] args = new String[]{"oai", "import", "-c"};
         addNewOaiSolrDocument(item);
         getClient(token).perform(
@@ -280,14 +271,11 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
                 .andExpect(xpath("Search-API/Header/totalResults").string("1"))
                 .andExpect(xpath("Search-API/Header/resultsInPage").string("1"))
                 .andExpect(xpath("Search-API/Payload/Cerif/Publication/Title").string("Publ1"));
-        signatureValidationUtil.close();
     }
 
     @Test
     public void itemsOaiOrgUnitsCollection() throws Exception {
-        KeyPair keyPair = generateKeyPair();
-        String key = getRsaKeyAsString(keyPair);
-        String token = getTokenPublic(DateUtils.addHours(new Date(), 1), keyPair.getPrivate());
+        requestFilters.add(new TwoLeggedTokenFilter());
         // ** WHEN **
         context.turnOffAuthorisationSystem();
         community = CommunityBuilder.createCommunity(context).build();
@@ -296,9 +284,6 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
         // create the item to be set into items table
         Item item = ItemBuilder.createItem(context, collection).withEntityType("Item").build();
         configurationService.setProperty("pgc-api." + "orgunits" + ".id", collection.getID().toString());
-        MockedStatic signatureValidationUtil = Mockito.mockStatic(SignatureValidationUtil.class, CALLS_REAL_METHODS);
-        signatureValidationUtil.when(SignatureValidationUtil::getKey).thenReturn(key);
-        signatureValidationUtil.when(SignatureValidationUtil::validateSignature).thenCallRealMethod();  // Real implementation
         addNewOaiSolrDocument(item);
         getClient(token).perform(
                         get("/pgc-api/orgunits?query=*:*&page=0&size=5"))
@@ -310,14 +295,11 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
                 .andExpect(xpath("Search-API/Header/size").string("5")) // default values
                 .andExpect(xpath("Search-API/Header/totalResults").string("1"))
                 .andExpect(xpath("Search-API/Header/resultsInPage").string("1"));
-        signatureValidationUtil.close();
     }
 
     @Test
     public void missingQueryEndsInBadRequest() throws Exception {
-        KeyPair keyPair = generateKeyPair();
-        String key = getRsaKeyAsString(keyPair);
-        String token = getTokenPublic(DateUtils.addHours(new Date(), 1), keyPair.getPrivate());
+        requestFilters.add(new TwoLeggedTokenFilter());
         // ** WHEN **
         context.turnOffAuthorisationSystem();
         community = CommunityBuilder.createCommunity(context).build();
@@ -326,21 +308,15 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
         // create the item to be set into items table
         Item item = ItemBuilder.createItem(context, collection).withEntityType("Item").build();
         configurationService.setProperty("pgc-api." + "orgunits" + ".id", collection.getID().toString());
-        MockedStatic signatureValidationUtil = Mockito.mockStatic(SignatureValidationUtil.class, CALLS_REAL_METHODS);
-        signatureValidationUtil.when(SignatureValidationUtil::getKey).thenReturn(key);
-        signatureValidationUtil.when(SignatureValidationUtil::validateSignature).thenCallRealMethod();  // Real implementationmentation
         addNewOaiSolrDocument(item);
         getClient(token).perform(
                         get("/pgc-api/orgunits?page=0&size=5"))
                 .andExpect(status().isBadRequest());
-        signatureValidationUtil.close();
     }
 
     @Test
     public void oaiXmlRepresentationPeopleCollectionPerId() throws Exception {
-        KeyPair keyPair = generateKeyPair();
-        String key = getRsaKeyAsString(keyPair);
-        String token = getTokenPublic(DateUtils.addHours(new Date(), 1), keyPair.getPrivate());
+        requestFilters.add(new TwoLeggedTokenFilter());
         // ** WHEN **
         context.turnOffAuthorisationSystem();
         community = CommunityBuilder.createCommunity(context).build();
@@ -351,9 +327,6 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
                 .withPersonAffiliation("OrgUnit")
                 .build();
         addNewOaiSolrDocument(item);
-        MockedStatic signatureValidationUtil = Mockito.mockStatic(SignatureValidationUtil.class, CALLS_REAL_METHODS);
-        signatureValidationUtil.when(SignatureValidationUtil::getKey).thenReturn(key);
-        signatureValidationUtil.when(SignatureValidationUtil::validateSignature).thenCallRealMethod();  // Real implementation
         getClient(token).perform(
                         get("/pgc-api/people/" + item.getID()))
                 .andExpect(status().isOk())
@@ -365,11 +338,11 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
                 .andExpect(xpath("Search-API/Header/totalResults").string("1"))
                 .andExpect(xpath("Search-API/Header/resultsInPage").string("1"))
                 .andExpect(xpath("Search-API/Payload/Cerif/Person/Affiliation/OrgUnit/Name").string("OrgUnit"));
-        signatureValidationUtil.close();
     }
 
     @Test
     public void oaiXmlRepresentationCtivitaeCollectionPerIdNotValidToken() throws Exception {
+        requestFilters.add(new TwoLeggedTokenFilter());
         // ** WHEN **
         context.turnOffAuthorisationSystem();
         EPerson eperson1 = EPersonBuilder.createEPerson(context)
@@ -384,13 +357,11 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
         addNewOaiSolrDocument(item);
         getClient("").perform(get("/pgc-api/people/" + item.getID()))
                 .andExpect(status().isUnauthorized());
-     }
+    }
 
     @Test
     public void expiredTokenReturnsUnauthorized() throws Exception {
-        KeyPair keyPair = generateKeyPair();
-        String key = getRsaKeyAsString(keyPair);
-        String token = getTokenPublic(DateUtils.addHours(new Date(), -1), keyPair.getPrivate());
+        requestFilters.add(new TwoLeggedTokenFilter());
         // ** WHEN **
         context.turnOffAuthorisationSystem();
         community = CommunityBuilder.createCommunity(context).build();
@@ -398,28 +369,19 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
         collection = CollectionBuilder.createCollection(context, community).build();
         // create the item to be set into items table
         Item item = ItemBuilder.createItem(context, collection).withEntityType("Person").build();
-        MockedStatic signatureValidationUtil = Mockito.mockStatic(SignatureValidationUtil.class, CALLS_REAL_METHODS);
-        signatureValidationUtil.when(SignatureValidationUtil::getKey).thenReturn(key);
-        signatureValidationUtil.when(SignatureValidationUtil::validateSignature).thenCallRealMethod();  // Real implementation
         addNewOaiSolrDocument(item);
         getClient("").perform(get("/pgc-api/people/" + item.getID()))
                 .andExpect(status().isUnauthorized());
-        signatureValidationUtil.close();
     }
 
     @Test
     public void oaiXmlRepresentationPatentsPerIdAndInverseRelation() throws Exception {
-        KeyPair keyPair = generateKeyPair();
-        String key = getRsaKeyAsString(keyPair);
-        String token = getTokenPublic(DateUtils.addHours(new Date(), 1), keyPair.getPrivate());
+        requestFilters.add(new ThreeLeggedTokenFilter());
         // ** WHEN **
         context.turnOffAuthorisationSystem();
         community = CommunityBuilder.createCommunity(context).build();
         // create People collection
         collection = CollectionBuilder.createCollection(context, community).build();
-        MockedStatic signatureValidationUtil = Mockito.mockStatic(SignatureValidationUtil.class, CALLS_REAL_METHODS);
-        signatureValidationUtil.when(SignatureValidationUtil::getKey).thenReturn(key);
-        signatureValidationUtil.when(SignatureValidationUtil::validateSignature).thenCallRealMethod();  // Real implementation
         // create the item to be set into items table
         Item item = ItemBuilder.createItem(context, collection).build();
         Item item_related = ItemBuilder
@@ -439,7 +401,6 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
                 .andExpect(xpath("Search-API/Header/size").string("5")) // default values
                 .andExpect(xpath("Search-API/Header/totalResults").string("1"))
                 .andExpect(xpath("Search-API/Header/resultsInPage").string("1"));
-        signatureValidationUtil.close();
     }
 
     private String getTokenPublic(final Date expirationTIme, PrivateKey privateKey) throws Exception {

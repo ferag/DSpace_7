@@ -10,7 +10,6 @@ package org.dspace.app.configuration;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
-import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 
-@SuppressWarnings("checkstyle:HideUtilityClassConstructor")
 public class SignatureValidationUtil {
     private static final Logger log = getLogger(PgcApiDataProviderServiceImpl.class);
     private static final ConfigurationService configurationService =
@@ -43,7 +41,7 @@ public class SignatureValidationUtil {
     private static String token;
 
     public static JWTClaimsSet validateSignature() throws BadJOSEException,
-            ParseException, JOSEException, MalformedURLException {
+            ParseException, JOSEException {
         try {
             String key = getKey();
             String token = getToken();
@@ -57,8 +55,7 @@ public class SignatureValidationUtil {
                     new JWSVerificationKeySelector<>(expectedJWSAlg, jwkSource);
             DefaultJWTProcessor<SecurityContext> jwtProcessor1 = new DefaultJWTProcessor<>();
             jwtProcessor1.setJWSKeySelector(jwsKeySelector);
-            SecurityContext ctx = null; // optional context parameter, not required here
-            JWTClaimsSet claimsSet = jwtProcessor1.process(token, ctx);
+            JWTClaimsSet claimsSet = jwtProcessor1.process(token, null);
             return claimsSet;
             // Print out the token claims set
         } catch (BadJOSEException | ParseException | JOSEException e) {
@@ -80,6 +77,11 @@ public class SignatureValidationUtil {
 
     public static void setToken(String token) {
         SignatureValidationUtil.token = token;
+    }
+
+    private SignatureValidationUtil() {
+        // Throw an exception if this ever *is* called
+        throw new AssertionError("Instantiating utility class.");
     }
 
 }

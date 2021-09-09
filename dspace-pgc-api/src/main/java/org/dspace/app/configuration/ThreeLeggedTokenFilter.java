@@ -10,10 +10,7 @@ package org.dspace.app.configuration;
 import static org.apache.logging.log4j.LogManager.getLogger;
 
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -23,16 +20,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.nimbusds.jose.JWSObject;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.proc.BadJOSEException;
 import com.nimbusds.jwt.JWTClaimsSet;
 import org.apache.logging.log4j.Logger;
 import org.dspace.services.factory.DSpaceServicesFactory;
 
 
-
 /**
  * @author Alba Aliu
- *
+ * <p>
  * Filters all request to the path /pgc-api/ctivitae/**
  */
 
@@ -40,23 +37,39 @@ public class ThreeLeggedTokenFilter implements Filter {
     private static final Logger log = getLogger(ThreeLeggedTokenFilter.class);
     private final org.dspace.services.ConfigurationService configurationService
             = DSpaceServicesFactory.getInstance().getConfigurationService();
-    JWTClaimsSet claims = null;
+
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
             throws IOException, ServletException {
+        JWTClaimsSet claimsSet = null;
         String token = resolveToken((HttpServletRequest) req);
         try {
-            if (token == null || !validateToken(token)) {
+            if (token == null) {
                 throwUNAUTHORIZED((HttpServletResponse) res);
                 return;
             }
-        } catch (ParseException e) {
+            SignatureValidationUtil.setToken(token);
+            claimsSet = SignatureValidationUtil.validateSignature();
+            if (!validateScopes(claimsSet)) {
+                throwUNAUTHORIZED((HttpServletResponse) res);
+                return;
+            }
+        } catch (BadJOSEException | JOSEException | ParseException e) {
             log.error(e.getMessage());
             throwUNAUTHORIZED((HttpServletResponse) res);
+            return;
         }
-        computeNodeBasedOnScopeToken((HttpServletRequest) req);
-        filterChain.doFilter(req, res);
+        if (claimsSet != null) {
+            computeNodeBasedOnScopeToken((HttpServletRequest) req, claimsSet);
+            filterChain.doFilter(req, res);
+        } else {
+            log.error("Missing claims");
+            throwUNAUTHORIZED((HttpServletResponse) res);
+            return;
+        }
+
     }
+
     /**
      * Resolve token from the request done
      *
@@ -69,6 +82,7 @@ public class ThreeLeggedTokenFilter implements Filter {
         }
         return null;
     }
+
     /**
      * Adds error code to the response
      *
@@ -78,36 +92,28 @@ public class ThreeLeggedTokenFilter implements Filter {
         res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
+
     /**
      * Validates the token from request
      *
-     * @param token Token to be verified that is not expired
+     * @param claimsSet JWTClaimsSet
      */
-    public boolean validateToken(String token) throws ParseException {
-        try {
-            JWSObject jwsObject = JWSObject.parse(token);
-            claims = JWTClaimsSet.parse(jwsObject.getPayload().toJSONObject());
-        } catch (java.text.ParseException e) {
-            throw e;
-        }
-        Object expiry = claims.getClaim("exp");
-        Object scope = claims.getClaim("scope");
-        DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-        if (expiry != null && scope.toString().contains("pgc-restricted") || scope.toString().contains("pgc-public")) {
-            if (dateFormat.parse(expiry.toString()).compareTo(new Date()) > 0) {
-                return true;
-            }
+    public boolean validateScopes(JWTClaimsSet claimsSet) {
+        Object scope = claimsSet.getClaim("scope");
+        if (scope.toString().contains("pgc-restricted") || scope.toString().contains("pgc-public")) {
+            return true;
         }
         return false;
     }
+
     /**
      * Gets scope and sub from request  and sets them to the request
      *
      * @param request HttpServletRequest in which to add attributes for scope and sub
      */
-    private void computeNodeBasedOnScopeToken(HttpServletRequest request) {
-        Object scope = claims.getClaim("scope");
-        Object sub = claims.getClaim("sub");
+    private void computeNodeBasedOnScopeToken(HttpServletRequest request, JWTClaimsSet claimsSet) {
+        Object scope = claimsSet.getClaim("scope");
+        Object sub = claimsSet.getClaim("sub");
         if (scope != null) {
             HttpSession session = request.getSession();
             String restrictedScope = this.configurationService.getProperty("restricted-scope");

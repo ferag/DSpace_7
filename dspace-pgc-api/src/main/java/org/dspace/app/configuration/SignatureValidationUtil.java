@@ -14,6 +14,10 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWK;
@@ -65,10 +69,18 @@ public class SignatureValidationUtil {
     }
 
     public static String getKey() {
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response
-                = restTemplate.getForEntity(configurationService.getProperty("jwks-url"), String.class);
-        return response.getBody().replace("{\"keys\":[", "").replace("]}", "");
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response
+                    = restTemplate.getForEntity(configurationService.getProperty("jwks-url"), String.class);
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode rootNode = mapper.readValue(response.getBody(), JsonNode.class);
+            ArrayNode keys = (ArrayNode) rootNode.get("keys");
+            return keys.get(0).toString();
+        } catch (JsonProcessingException jsonMappingException) {
+            log.error(jsonMappingException);
+            return null;
+        }
     }
 
     public static String getToken() {

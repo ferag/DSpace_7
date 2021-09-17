@@ -29,7 +29,7 @@ import org.dspace.services.factory.DSpaceServicesFactory;
 
 /**
  * @author Alba Aliu
- * <p>
+ *
  * Filters all request to the path /pgc-api/ctivitae/**
  */
 
@@ -48,8 +48,7 @@ public class ThreeLeggedTokenFilter implements Filter {
                 throwUNAUTHORIZED((HttpServletResponse) res);
                 return;
             }
-            SignatureValidationUtil.setToken(token);
-            claimsSet = SignatureValidationUtil.validateSignature();
+            claimsSet = SignatureValidationUtil.claimsSetExtract(token);
             if (!validateScopes(claimsSet)) {
                 throwUNAUTHORIZED((HttpServletResponse) res);
                 return;
@@ -75,7 +74,7 @@ public class ThreeLeggedTokenFilter implements Filter {
      *
      * @param req Servlet Request used to resolve token from
      */
-    public String resolveToken(HttpServletRequest req) {
+    private String resolveToken(HttpServletRequest req) {
         String bearerToken = req.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
@@ -88,7 +87,7 @@ public class ThreeLeggedTokenFilter implements Filter {
      *
      * @param res HttpServletResponse to put the error code
      */
-    public void throwUNAUTHORIZED(HttpServletResponse res) throws IOException {
+    private void throwUNAUTHORIZED(HttpServletResponse res) throws IOException {
         res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
@@ -98,7 +97,7 @@ public class ThreeLeggedTokenFilter implements Filter {
      *
      * @param claimsSet JWTClaimsSet
      */
-    public boolean validateScopes(JWTClaimsSet claimsSet) {
+    private boolean validateScopes(JWTClaimsSet claimsSet) {
         Object scope = claimsSet.getClaim("scope");
         if (scope.toString().contains("pgc-restricted") || scope.toString().contains("pgc-public")) {
             return true;

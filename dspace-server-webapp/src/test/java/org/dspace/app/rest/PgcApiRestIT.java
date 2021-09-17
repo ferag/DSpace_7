@@ -122,7 +122,6 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
         token = getTokenPublic(DateUtils.addHours(new Date(), 1), keyPair.getPrivate());
         signatureValidationUtil = Mockito.mockStatic(SignatureValidationUtil.class, CALLS_REAL_METHODS);
         signatureValidationUtil.when(SignatureValidationUtil::getKey).thenReturn(key);
-        signatureValidationUtil.when(SignatureValidationUtil::validateSignature).thenCallRealMethod();  // Real implementation
     }
 
     @After
@@ -203,13 +202,13 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
         collection = CollectionBuilder.createCollection(context, community).build();
         // create the item to be set into items table
         Item item = ItemBuilder.createItem(context, collection).build();
-        Item item_related = ItemBuilder
+        Item itemRelated = ItemBuilder
                 .createItem(context, collection)
                 .withEntityType("Patent")
                 .withCtiVitaeOwner("600", item.getID().toString())
                 .build();
         addNewOaiSolrDocument(item);
-        addNewOaiSolrDocument(item_related);
+        addNewOaiSolrDocument(itemRelated);
         getClient(tokenFail).perform(
                         get("/pgc-api/ctivitae/" + item.getID() + "/patents?page=0&size=5"))
                 .andExpect(status().isUnauthorized());
@@ -384,13 +383,13 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
         collection = CollectionBuilder.createCollection(context, community).build();
         // create the item to be set into items table
         Item item = ItemBuilder.createItem(context, collection).build();
-        Item item_related = ItemBuilder
+        Item itemRelated = ItemBuilder
                 .createItem(context, collection)
                 .withEntityType("Patent")
                 .withCtiVitaeOwner("600", item.getID().toString())
                 .build();
         addNewOaiSolrDocument(item);
-        addNewOaiSolrDocument(item_related);
+        addNewOaiSolrDocument(itemRelated);
         getClient(token).perform(
                         get("/pgc-api/ctivitae/" + item.getID() + "/patents?page=0&size=5"))
                 .andExpect(status().isOk())

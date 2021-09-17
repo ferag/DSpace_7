@@ -38,17 +38,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 
+@SuppressWarnings("checkstyle:HideUtilityClassConstructor")
 public class SignatureValidationUtil {
     private static final Logger log = getLogger(PgcApiDataProviderServiceImpl.class);
     private static final ConfigurationService configurationService =
             DSpaceServicesFactory.getInstance().getConfigurationService();
-    private static String token;
 
-    public static JWTClaimsSet validateSignature() throws BadJOSEException,
+    public static JWTClaimsSet claimsSetExtract(String token) throws BadJOSEException,
             ParseException, JOSEException {
         try {
             String key = getKey();
-            String token = getToken();
             JWSAlgorithm expectedJWSAlg = JWSAlgorithm.RS512;
             JWK jwk = JWK.parse(key);
             List<JWK> jwkList = new ArrayList<>();
@@ -59,8 +58,7 @@ public class SignatureValidationUtil {
                     new JWSVerificationKeySelector<>(expectedJWSAlg, jwkSource);
             DefaultJWTProcessor<SecurityContext> jwtProcessor1 = new DefaultJWTProcessor<>();
             jwtProcessor1.setJWSKeySelector(jwsKeySelector);
-            JWTClaimsSet claimsSet = jwtProcessor1.process(token, null);
-            return claimsSet;
+            return jwtProcessor1.process(token, null);
             // Print out the token claims set
         } catch (BadJOSEException | ParseException | JOSEException e) {
             log.error(e.getMessage());
@@ -81,19 +79,6 @@ public class SignatureValidationUtil {
             log.error(jsonMappingException);
             return null;
         }
-    }
-
-    public static String getToken() {
-        return token;
-    }
-
-    public static void setToken(String token) {
-        SignatureValidationUtil.token = token;
-    }
-
-    private SignatureValidationUtil() {
-        // Throw an exception if this ever *is* called
-        throw new AssertionError("Instantiating utility class.");
     }
 
 }

@@ -46,8 +46,7 @@ public class TwoLeggedTokenFilter implements Filter {
                 throwUNAUTHORIZED((HttpServletResponse) res);
                 return;
             }
-            SignatureValidationUtil.setToken(token);
-            JWTClaimsSet claimsSet = SignatureValidationUtil.validateSignature();
+            JWTClaimsSet claimsSet = SignatureValidationUtil.claimsSetExtract(token);
             if (!validateScopes(claimsSet)) {
                 throwUNAUTHORIZED((HttpServletResponse) res);
                 return;
@@ -66,7 +65,7 @@ public class TwoLeggedTokenFilter implements Filter {
      *
      * @param req Servlet Request used to resolve token from
      */
-    public String resolveToken(HttpServletRequest req) {
+    private String resolveToken(HttpServletRequest req) {
         String bearerToken = req.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
@@ -79,7 +78,7 @@ public class TwoLeggedTokenFilter implements Filter {
      *
      * @param res HttpServletResponse to put the error code
      */
-    public void throwUNAUTHORIZED(HttpServletResponse res) throws IOException {
+    private void throwUNAUTHORIZED(HttpServletResponse res) throws IOException {
         res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
@@ -89,7 +88,7 @@ public class TwoLeggedTokenFilter implements Filter {
      *
      * @param claimsSet Claims set
      */
-    public boolean validateScopes(JWTClaimsSet claimsSet) {
+    private boolean validateScopes(JWTClaimsSet claimsSet) {
         Object scope = claimsSet.getClaim("scope");
         if (scope != null) {
             String publicScope = this.configurationService.getProperty("public-scope");

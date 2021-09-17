@@ -69,5 +69,7 @@ public interface IndexingService {
 
     public QueryResponse retriveSolrDocByUniqueID(String uniqueID);
 
+    public QueryResponse retriveSolrDocByTypeAndUniqueID(String type, String uniqueID);
+
     void updateRelationForItem(String itemId, String relationLabel, List<String> relatedItems);
 }

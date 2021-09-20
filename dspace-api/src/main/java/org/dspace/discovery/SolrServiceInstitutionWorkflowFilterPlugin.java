@@ -67,6 +67,9 @@ public class SolrServiceInstitutionWorkflowFilterPlugin implements SolrServiceIn
                                                            context, item, false,
                                                            ConcytecWorkflowRelation.SHADOW_COPY.getLeftType(),
                                                            ConcytecWorkflowRelation.SHADOW_COPY.getRightType());
+                if (relationshipTypes.isEmpty()) {
+                    return;
+                }
                 List<Relationship> relationships = relationshipService.findByItemAndRelationshipType(context,
                                                                        item, relationshipTypes.get(0));
                 if (!relationships.isEmpty()) {

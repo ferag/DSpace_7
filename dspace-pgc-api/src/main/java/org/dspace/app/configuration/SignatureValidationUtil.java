@@ -70,7 +70,7 @@ public class SignatureValidationUtil {
         try {
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<String> response
-                    = restTemplate.getForEntity(configurationService.getProperty("jwks-url"), String.class);
+                    = restTemplate.getForEntity(configurationService.getProperty("pgc-api.jwks-url"), String.class);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode rootNode = mapper.readValue(response.getBody(), JsonNode.class);
             ArrayNode keys = (ArrayNode) rootNode.get("keys");

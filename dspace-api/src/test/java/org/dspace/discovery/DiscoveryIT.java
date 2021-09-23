@@ -7,25 +7,36 @@
  */
 package org.dspace.discovery;
 
+import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
+import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.SHADOW_COPY;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.SolrDocument;
 import org.dspace.AbstractIntegrationTestWithDatabase;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.builder.ClaimedTaskBuilder;
 import org.dspace.builder.CollectionBuilder;
 import org.dspace.builder.CommunityBuilder;
+import org.dspace.builder.EntityTypeBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.builder.PoolTaskBuilder;
+import org.dspace.builder.RelationshipBuilder;
+import org.dspace.builder.RelationshipTypeBuilder;
 import org.dspace.builder.WorkflowItemBuilder;
 import org.dspace.builder.WorkspaceItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
+import org.dspace.content.EntityType;
 import org.dspace.content.Item;
+import org.dspace.content.RelationshipType;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.content.authority.Choices;
 import org.dspace.content.authority.factory.ContentAuthorityServiceFactory;
@@ -34,6 +45,7 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.ItemService;
 import org.dspace.content.service.WorkspaceItemService;
+import org.dspace.core.Context;
 import org.dspace.discovery.indexobject.IndexableClaimedTask;
 import org.dspace.discovery.indexobject.IndexableCollection;
 import org.dspace.discovery.indexobject.IndexableItem;
@@ -44,6 +56,7 @@ import org.dspace.eperson.EPerson;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 import org.dspace.workflow.WorkflowException;
+import org.dspace.workflow.WorkflowItem;
 import org.dspace.xmlworkflow.WorkflowConfigurationException;
 import org.dspace.xmlworkflow.factory.XmlWorkflowServiceFactory;
 import org.dspace.xmlworkflow.service.WorkflowRequirementsService;
@@ -549,6 +562,84 @@ public class DiscoveryIT extends AbstractIntegrationTestWithDatabase {
         // check Item type with start=0 and limit=default,
         // we expect: indexableObjects=3, totalFound=should be 3 but we have 6 ->(3 stale objects here)
         assertSearchQuery(IndexableItem.TYPE, 3, 6, 0, -1);
+    }
+
+    @Test
+    public void checkSubmittingFieldsInSolrDocTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        Community directorio = CommunityBuilder.createCommunity(context)
+                                               .withName("directorio")
+                                               .build();
+
+        Collection publicationCollection = CollectionBuilder.createCollection(context, directorio)
+                                           .withName("Collection 2")
+                                           .withEntityType("Publication")
+                                           .withSubmitterGroup(eperson)
+                                           .withWorkflowGroup(1, admin)
+                                           .build();
+
+        Community institutionCommunity = CommunityBuilder.createCommunity(context)
+                                                      .withName("InstitutionCommunity")
+                                                      .build();
+
+        Collection institutionCollection = CollectionBuilder.createCollection(context, institutionCommunity)
+                                           .withName("Collection")
+                                           .withEntityType("InstitutionPublication")
+                                           .withSubmitterGroup(eperson)
+                                           .withWorkflowGroup(1, admin)
+                                           .build();
+
+        ClaimedTask directorioSubmission = ClaimedTaskBuilder.createClaimedTask(context, publicationCollection, admin)
+                                                             .withTitle("Test workflow item to approve")
+                                                             .withIssueDate("2019-03-06")
+                                                             .withSubject("ExtraEntry")
+                                                             .build();
+
+        WorkflowItem institutionSubmission = WorkflowItemBuilder.createWorkflowItem(context, institutionCollection)
+                                                                .withTitle("Workflow Item 1")
+                                                                .build();
+
+        EntityType publicationType = EntityTypeBuilder.createEntityTypeBuilder(context, "Publication").build();
+        EntityType institutionPublicationType = EntityTypeBuilder
+                                                .createEntityTypeBuilder(context, "InstitutionPublication").build();
+
+        RelationshipType relationshipType = RelationshipTypeBuilder.createRelationshipTypeBuilder(context,
+                                            institutionPublicationType , publicationType,
+                                            "hasShadowCopy","isShadowCopy", 0, 1, 0, 1).build();
+
+        RelationshipBuilder.createRelationshipBuilder(context, institutionSubmission.getItem(),
+                            directorioSubmission.getWorkflowItem().getItem(), relationshipType)
+                           .build();
+
+        context.restoreAuthSystemState();
+        assertSearchQuery(IndexableClaimedTask.TYPE, 1);
+        SolrDocument document = findDocumentInSolrByTypeAndId(context,IndexableClaimedTask.TYPE ,
+                                                              directorioSubmission.getID());
+        assertNotNull(document);
+        assertTrue(document.getFieldNames().contains("submitting"));
+        assertTrue(document.getFieldNames().contains("submitting_keyword"));
+        assertTrue(document.getFieldNames().contains("submitting_filter"));
+        assertEquals(institutionCommunity.getName(),
+                     document.getFieldValues("submitting").iterator().next().toString());
+        assertEquals(institutionCommunity.getName(),
+                     document.getFieldValues("submitting_keyword").iterator().next().toString());
+        assertEquals(institutionCommunity.getName(),
+                     document.getFieldValues("submitting_filter").iterator().next().toString());
+    }
+
+    private SolrDocument findDocumentInSolrByTypeAndId(Context context, String type, Integer id) {
+        QueryResponse queryResponse = indexer.retriveSolrDocByTypeAndUniqueID(type, id.toString());
+        List<SolrDocument> solrDocuments = queryResponse.getResults();
+        if (solrDocuments.size() == 0) {
+            return null;
+        }
+        SolrDocument solrDocument = solrDocuments.get(0);
+        return solrDocument;
+    }
+
+    private RelationshipType createHasShadowCopyRelationship(EntityType leftType, EntityType rightType) {
+        return createRelationshipTypeBuilder(context, leftType, rightType, SHADOW_COPY.getLeftType(),
+            SHADOW_COPY.getRightType(), 0, 1, 0, 1).build();
     }
 
     private void assertSearchQuery(String resourceType, int size) throws SearchServiceException {

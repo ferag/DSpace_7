@@ -47,9 +47,6 @@ public class CrisSecurityServiceImpl implements CrisSecurityService {
     @Autowired
     private AuthorizeService authorizeService;
 
-    @Autowired
-    private GroupService groupService;
-
     @Override
     public boolean hasAccess(Context context, Item item, EPerson user, AccessItemMode accessMode)
         throws SQLException {

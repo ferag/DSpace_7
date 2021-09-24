@@ -728,12 +728,12 @@
             <artifactId>guava</artifactId>
         </dependency>
 
-        <!-- To extract metadata from Json response, e.g. SimpleJsonPathMetadataContributor -->
-        <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
-            <version>${json-path.version}</version>
-        </dependency>
+<!--        &lt;!&ndash; To extract metadata from Json response, e.g. SimpleJsonPathMetadataContributor &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.jayway.jsonpath</groupId>-->
+<!--            <artifactId>json-path</artifactId>-->
+<!--            <version>${json-path.version}</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.postgresql</groupId>

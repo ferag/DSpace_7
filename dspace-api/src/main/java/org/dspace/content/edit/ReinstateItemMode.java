@@ -62,6 +62,11 @@ public class ReinstateItemMode implements AccessItemMode {
         return items;
     }
 
+    @Override
+    public List<String> getGroups() {
+        return groups;
+    }
+
     public void setSecurity(CrisSecurity security) {
         this.security = security;
     }

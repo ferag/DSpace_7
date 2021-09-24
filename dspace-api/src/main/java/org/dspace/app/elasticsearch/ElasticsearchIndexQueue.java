@@ -20,8 +20,8 @@ import org.dspace.core.ReloadableEntity;
 /**
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
-@Entity
-@Table(name = "elasticsearch_index_queue")
+//@Entity
+//@Table(name = "elasticsearch_index_queue")
 public class ElasticsearchIndexQueue implements ReloadableEntity<UUID> {
 
     @Id

@@ -1369,7 +1369,7 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
     }
 
 
-    private String getShortLivedToken(EPerson requestUser) throws Exception {
+//    private String getShortLivedToken(EPerson requestUser) throws Exception {
     // Get a short-lived token based on an active login token
     private String getShortLivedToken(String loginToken) throws Exception {
         ObjectMapper mapper = new ObjectMapper();

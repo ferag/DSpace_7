@@ -67,6 +67,7 @@ import org.dspace.discovery.indexobject.IndexableWorkflowItem;
 import org.dspace.discovery.indexobject.IndexableWorkspaceItem;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.service.SubscribeService;
 import org.dspace.event.Event;
 import org.dspace.harvest.HarvestedItem;
 import org.dspace.harvest.service.HarvestedItemService;
@@ -151,6 +152,9 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
 
     @Autowired(required = true)
     private OrcidSynchronizationService orcidSynchronizationService;
+
+    @Autowired(required = true)
+    protected SubscribeService subscribeService;
 
     protected ItemServiceImpl() {
         super();
@@ -723,6 +727,8 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
             resetWillBeReferencedAuthorities(context, item);
         }
 
+        //remove subscription related with it
+        subscribeService.deleteByDspaceObject(context, item);
         // Remove relationships
         for (Relationship relationship : relationshipService.findByItem(context, item)) {
             relationshipService.forceDelete(context, relationship, false, false);
@@ -1563,7 +1569,23 @@ prevent the generation of resource policy entry values with null dspace_object a
                 .stream().findFirst().orElse(null);
     }
 
+    @Override
+    public MetadataValue addMetadataInPlaceSecured(Context context, Item dso, String schema, String element,
+        String qualifier, String lang, String value, String authority, int confidence, int place, Integer securityValue)
+        throws SQLException {
 
+        // We will not verify that they are valid entries in the registry
+        // until update() is called.
+        MetadataField metadataField = metadataFieldService.findByElement(context, schema, element, qualifier);
+        if (metadataField == null) {
+            throw new SQLException("bad_dublin_core schema=" + schema + "." + element + "." + qualifier +
+                ". Metadata field does not exist!");
+        }
+        final Supplier<Integer> placeSupplier =  () -> place;
+        return addSecuredMetadataAtPlace(context, dso, metadataField, lang, Arrays.asList(value),
+                Arrays.asList(authority), Arrays.asList(confidence), placeSupplier, securityValue)
+                .stream().findFirst().orElse(null);
+    }
     private void removeOrcidSynchronizationStuff(Context context, Item item) throws SQLException, AuthorizeException {
 
         try {

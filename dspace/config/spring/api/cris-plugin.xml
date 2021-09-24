@@ -110,6 +110,8 @@
 				<entry key="ISNI" value-ref="itemSearcherByISNI"/>
 				<entry key="DOI" value-ref="itemSearcherByDOI"/>
 				<entry key="SHADOW" value-ref="itemSearcherByShadowCopyRelation"/>
+				<entry key="URL" value-ref="itemSearcherByURL"/>
+				<entry key="LEGACY-ID" value-ref="itemSearcherByLegacyId"/>
 			</map>
 		</constructor-arg>
 		<constructor-arg index="1">
@@ -129,16 +131,26 @@
 
 	<bean class="org.dspace.authority.service.impl.ItemSearcherByMetadata" name="itemSearcherByDOI">
 		<constructor-arg value="dc.identifier.doi"></constructor-arg>
-		<constructor-arg value="DOI"></constructor-arg>
+		<constructor-arg value="URL"></constructor-arg>
+	</bean>
+
+	<bean class="org.dspace.authority.service.impl.ItemSearcherByMetadata" name="itemSearcherByURL">
+		<constructor-arg value="oairecerif.identifier.url"></constructor-arg>
+		<constructor-arg value="URL"></constructor-arg>
 	</bean>
 
 	<bean class="org.dspace.authority.service.impl.ItemSearcherByMetadata" name="itemSearcherByISNI">
 		<constructor-arg value="person.identifier.isni"></constructor-arg>
 		<constructor-arg value="ISNI"></constructor-arg>
 	</bean>
-    
+
     <bean class="org.dspace.authority.service.impl.ItemSearchByShadowCopyRelation" name="itemSearcherByShadowCopyRelation" />
-	
+
+	<bean class="org.dspace.authority.service.impl.ItemSearcherByMetadata" name="itemSearcherByLegacyId">
+		<constructor-arg value="cris.legacyId"></constructor-arg>
+		<constructor-arg value="LEGACY-ID"></constructor-arg>
+	</bean>
+
 	<bean class="org.dspace.authority.service.impl.ItemSearchServiceImpl" name="org.dspace.authority.service.ItemSearchService"/>
 	<bean class="org.dspace.authority.service.impl.ItemReferenceResolverServiceImpl" name="org.dspace.authority.service.ItemReferenceResolverService"/>
 

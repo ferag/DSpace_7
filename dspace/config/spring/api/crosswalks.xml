@@ -74,7 +74,7 @@
                 <entry key="patent-pdf" value-ref="pdfCrosswalkPatent"></entry>
                 <entry key="patent-csv" value-ref="csvCrosswalkPatent"></entry>
                 <entry key="patent-xls" value-ref="xlsCrosswalkPatent"></entry>
-                
+
                 <entry key="product-perucris-cerif-xml" value-ref="referCrosswalkProductPerucrisCerifXml"></entry>
 
                 <entry key="institutionpublication-bibtex" value-ref="cslItemDataCrosswalkInstitutionPublicationBibtex"></entry>
@@ -1421,6 +1421,7 @@
 				<entry key="vocabulary" value-ref="virtualFieldVocabulary" />
 				<entry key="vocabulary2mapConverter" value-ref="virtualFieldVocabulary2mapConverter" />
 				<entry key="metric" value-ref="virtualFieldMetric" />
+                <entry key="metric" value-ref="virtualFieldMetric" />
 			</map>
 		</constructor-arg>
 	</bean>
@@ -1451,6 +1452,8 @@
 	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldDateFormatter" id="virtualFieldDateFormatter"/>
 	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldVocabulary" id="virtualFieldVocabulary"/>
 	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldMetric" id="virtualFieldMetric"/>
+
+    <bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldMetric" id="virtualFieldMetric"/>
 
 	<!-- MapConverter configuration -->
 

@@ -37,18 +37,34 @@ import org.dspace.AbstractIntegrationTestWithDatabase;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.builder.BitstreamBuilder;
 import org.dspace.builder.BundleBuilder;
+import org.dspace.builder.CollectionBuilder;
+import org.dspace.builder.CommunityBuilder;
+import org.dspace.builder.CrisLayoutBoxBuilder;
+import org.dspace.builder.CrisLayoutFieldBuilder;
+import org.dspace.builder.EPersonBuilder;
+import org.dspace.builder.EntityTypeBuilder;
+import org.dspace.builder.GroupBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Bitstream;
 import org.dspace.content.Bundle;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
+import org.dspace.content.EntityType;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
+import org.dspace.content.ItemServiceImpl;
+import org.dspace.content.MetadataField;
+import org.dspace.content.MetadataFieldServiceImpl;
 import org.dspace.content.crosswalk.StreamDisseminationCrosswalk;
 import org.dspace.content.integration.crosswalks.virtualfields.VirtualField;
 import org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldMapper;
+import org.dspace.content.service.ItemService;
+import org.dspace.content.service.MetadataFieldService;
 import org.dspace.core.CrisConstants;
 import org.dspace.core.factory.CoreServiceFactory;
+import org.dspace.eperson.EPerson;
+import org.dspace.layout.CrisLayoutBox;
+import org.dspace.layout.LayoutSecurity;
 import org.dspace.utils.DSpace;
 import org.json.JSONObject;
 import org.junit.After;
@@ -65,6 +81,10 @@ import org.junit.Test;
 public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
     private static final String BASE_OUTPUT_DIR_PATH = "./target/testing/dspace/assetstore/crosswalk/";
+
+    private ItemService itemService;
+
+    private MetadataFieldService mfss;
 
     private StreamDisseminationCrosswalkMapper crosswalkMapper;
 
@@ -84,6 +104,9 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         this.virtualFieldMapper = new DSpace().getSingletonService(VirtualFieldMapper.class);
         assertThat(crosswalkMapper, notNullValue());
+
+        this.itemService = new DSpace().getSingletonService(ItemServiceImpl.class);
+        this.mfss = new DSpace().getSingletonService(MetadataFieldServiceImpl.class);
 
         this.virtualFieldId = this.virtualFieldMapper.getVirtualField("id");
 
@@ -2690,44 +2713,6 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
     }
 
-//    @Test
-//    public void testManyPatentsJsonDisseminate() throws Exception {
-//
-//        Item firstPatent = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Patent")
-//            .withTitle("Test patent")
-//            .withIssueDate("2021-01-01")
-//            .withPublisher("Publisher")
-//            .withPatentNo("12345-666")
-//            .withSubject("subject")
-//            .withRelationProject("Project")
-//            .build();
-//
-//        Item secondPatent = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Patent")
-//            .withTitle("Second patent")
-//            .withIssueDate("2011-01-01")
-//            .withPublisher("First publisher")
-//            .withPublisher("Second publisher")
-//            .withPatentNo("12345-777")
-//            .withAuthor("Walter White")
-//            .withAuthorAffiliation("4Science")
-//            .withRelationPatent("Another patent")
-//            .build();
-//
-//        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-json");
-//        assertThat(referCrossWalk, notNullValue());
-//
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//        referCrossWalk.disseminate(context, Arrays.asList(firstPatent, secondPatent).iterator(), out);
-//
-//        try (FileInputStream fis = getFileInputStream("patents.json")) {
-//            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
-//            compareEachLine(out.toString(), expectedContent);
-//        }
-//
-//    }
-
     @Test
     public void testProductPerucrisCerifXmlDisseminate() throws Exception {
 
@@ -2805,118 +2790,6 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
     }
 
-//    @Test
-//    public void testPatentCerifXmlDisseminate() throws Exception {
-//
-//        Item patent = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Patent")
-//            .withTitle("Test patent")
-//            .withIssueDate("2021-01-01")
-//            .withPublisher("First publisher")
-//            .withPublisher("Second publisher")
-//            .withPatentNo("12345-666")
-//            .withAuthor("Walter White", "b6ff8101-05ec-49c5-bd12-cba7894012b7")
-//            .withAuthorAffiliation("4Science")
-//            .withAuthor("Jesse Pinkman")
-//            .withAuthorAffiliation(PLACEHOLDER_PARENT_METADATA_VALUE)
-//            .withAuthor("John Smith", "will be referenced::ORCID::0000-0000-0012-3456")
-//            .withAuthorAffiliation("4Science")
-//            .withRightsHolder("Test Organization")
-//            .withDescriptionAbstract("This is a patent")
-//            .withRelationPatent("Another patent")
-//            .build();
-//
-//        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-cerif-xml");
-//        assertThat(referCrossWalk, notNullValue());
-//
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//        referCrossWalk.disseminate(context, patent, out);
-//
-//        try (FileInputStream fis = getFileInputStream("patent.xml")) {
-//            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
-//            compareEachLine(out.toString(), expectedContent);
-//        }
-//
-//    }
-
-//    @Test
-//    public void testManyPatentsCerifXmlDisseminate() throws Exception {
-//
-//        Item firstPatent = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Patent")
-//            .withTitle("Test patent")
-//            .withIssueDate("2021-01-01")
-//            .withPublisher("Publisher")
-//            .withPatentNo("12345-666")
-//            .build();
-//
-//        Item secondPatent = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Patent")
-//            .withTitle("Second patent")
-//            .withIssueDate("2011-01-01")
-//            .withPublisher("First publisher")
-//            .withPublisher("Second publisher")
-//            .withPatentNo("12345-777")
-//            .withAuthor("Walter White")
-//            .withAuthorAffiliation("4Science")
-//            .withRelationPatent("Another patent")
-//            .build();
-//
-//        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-cerif-xml");
-//        assertThat(referCrossWalk, notNullValue());
-//
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//        referCrossWalk.disseminate(context, Arrays.asList(firstPatent, secondPatent).iterator(), out);
-//
-//        try (FileInputStream fis = getFileInputStream("patents.xml")) {
-//            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
-//            compareEachLine(out.toString(), expectedContent);
-//        }
-//
-//    }
-
-//    @Test
-//    public void testPatentJsonDisseminate() throws Exception {
-//
-//        Item patent = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Patent")
-//            .withTitle("Test patent")
-//            .withDateAccepted("2020-01-01")
-//            .withIssueDate("2021-01-01")
-//            .withLanguage("en")
-//            .withType("patent")
-//            .withPublisher("First publisher")
-//            .withPublisher("Second publisher")
-//            .withPatentNo("12345-666")
-//            .withAuthor("Walter White", "b6ff8101-05ec-49c5-bd12-cba7894012b7")
-//            .withAuthorAffiliation("4Science")
-//            .withAuthor("Jesse Pinkman")
-//            .withAuthorAffiliation(PLACEHOLDER_PARENT_METADATA_VALUE)
-//            .withAuthor("John Smith", "will be referenced::ORCID::0000-0000-0012-3456")
-//            .withAuthorAffiliation("4Science")
-//            .withRightsHolder("Test Organization")
-//            .withDescriptionAbstract("This is a patent")
-//            .withRelationPatent("Another patent")
-//            .withSubject("patent")
-//            .withSubject("test")
-//            .withRelationFunding("Test funding")
-//            .withRelationProject("First project")
-//            .withRelationProject("Second project")
-//            .build();
-//
-//        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("patent-json");
-//        assertThat(referCrossWalk, notNullValue());
-//
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//        referCrossWalk.disseminate(context, patent, out);
-//
-//        try (FileInputStream fis = getFileInputStream("patent.json")) {
-//            String expectedContent = IOUtils.toString(fis, Charset.defaultCharset());
-//            compareEachLine(out.toString(), expectedContent);
-//        }
-//
-//    }
-
     @Test
     public void testManyPatentsJsonDisseminate() throws Exception {
 
@@ -2992,33 +2865,6 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(resultLines[11].trim(), is("}"));
 
     }
-
-//    @Test
-//    public void testVirtualFieldVocabulary() throws Exception {
-//
-//        Item publication = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Publication")
-//            .withType("Resource Type Genres::software::research software")
-//            .build();
-//
-//        ReferCrosswalk referCrosswalk = new DSpace().getServiceManager()
-//            .getServiceByName("referCrosswalkVirtualFieldVocabulary", ReferCrosswalk.class);
-//        assertThat(referCrosswalk, notNullValue());
-//
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//        referCrosswalk.disseminate(context, publication, out);
-//
-//        String[] resultLines = out.toString().split("\n");
-//        assertThat(resultLines.length, is(7));
-//        assertThat(resultLines[0].trim(), is("{"));
-//        assertThat(resultLines[1].trim(), is("\"first-element\": \"Resource Type Genres\","));
-//        assertThat(resultLines[2].trim(), is("\"second-element\": \"software\","));
-//        assertThat(resultLines[3].trim(), is("\"last-element\": \"research software\","));
-//        assertThat(resultLines[4].trim(), is("\"second-last-element\": \"software\","));
-//        assertThat(resultLines[5].trim(), is("\"deep-element\": \"research software\""));
-//        assertThat(resultLines[6].trim(), is("}"));
-//
-//    }
 
     @Test
     public void placeholderFieldMustBeReplacedWithEmptyStringTest() throws Exception {
@@ -3104,6 +2950,240 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(resultLines[4].trim(), is("\"second-last-element\": \"software\""));
         assertThat(resultLines[5].trim(), is("}"));
 
+    }
+
+    @Test
+    public void xmlDisseminateMetadataSecurityFirstLevelTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        parentCommunity = CommunityBuilder.createCommunity(context).build();
+        Collection col = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withEntityType("Publication")
+                                          .withName("Collection Title").build();
+
+        Item item = ItemBuilder.createItem(context, col)
+                               .withDoiIdentifier("doi:111.111/publication")
+                               .withIssueDate("2020-01-01")
+                               .build();
+
+        itemService.addSecuredMetadata(context, item, "dc", "title", null, null, "Title test", null, 0, 0);
+        itemService.addSecuredMetadata(context, item, "dc", "subject", null, null, "Subject test", null, 0, 1);
+        itemService.addSecuredMetadata(context, item, "dc", "contributor", "author", null, "John Smith", null, 0, 2);
+
+        MetadataField subject = mfss.findByElement(context, "dc", "subject", null);
+        MetadataField title = mfss.findByElement(context, "dc", "title", null);
+        MetadataField contributor = mfss.findByElement(context, "dc", "contributor", "author");
+
+        EntityType eType = EntityTypeBuilder.createEntityTypeBuilder(context, "Publication").build();
+        CrisLayoutBox box1 = CrisLayoutBoxBuilder.createBuilder(context, eType, true, true)
+                                                 .withShortname("box-shortname-one")
+                                                 .withSecurity(LayoutSecurity.PUBLIC)
+                                                 .build();
+
+        CrisLayoutFieldBuilder.createMetadataField(context, title, 0, 0)
+                              .withLabel("LABEL TITLE")
+                              .withRendering("RENDERIGN TITLE")
+                              .withStyle("STYLE")
+                              .withBox(box1)
+                              .build();
+
+        CrisLayoutFieldBuilder.createMetadataField(context, subject, 1, 0)
+                              .withLabel("LABEL SUBJECT")
+                              .withRendering("RENDERIGN SUBJECT")
+                              .withStyle("STYLE")
+                              .withBox(box1)
+                              .build();
+
+        CrisLayoutFieldBuilder.createMetadataField(context, contributor, 2, 0)
+                              .withLabel("LABEL CONTRBUTOR")
+                              .withRendering("RENDERIGN CONTRIBUTOR")
+                              .withStyle("STYLE")
+                              .withBox(box1)
+                              .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+        context.setCurrentUser(null);
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("publication-cerif-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, Arrays.asList(item).iterator(), out);
+
+        try (FileInputStream fis = getFileInputStream("publications2.xml")) {
+            String expectedXml = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedXml);
+        }
+    }
+
+    @Test
+    public void xmlDisseminateMetadataSecuritySecondLevelTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        EPerson user = EPersonBuilder.createEPerson(context)
+                                      .withEmail("test-email@test.com")
+                                      .withPassword(password)
+                                      .withNameInMetadata("Bob", "Charlton")
+                                      .build();
+
+        GroupBuilder.createGroup(context)
+                    .withName("Trusted")
+                    .addMember(user)
+                    .build();
+
+        parentCommunity = CommunityBuilder.createCommunity(context).build();
+        Collection col = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withEntityType("Publication")
+                                          .withName("Collection Title").build();
+
+        Item item = ItemBuilder.createItem(context, col)
+                               .withDoiIdentifier("doi:111.111/publication")
+                               .withIssueDate("2020-01-01")
+                               .build();
+
+        itemService.addSecuredMetadata(context, item, "dc", "title", null, null, "Title test", null, 0, 0);
+        itemService.addSecuredMetadata(context, item, "dc", "subject", null, null, "Subject test", null, 0, 1);
+        itemService.addSecuredMetadata(context, item, "dc", "contributor", "author", null, "John Smith", null, 0, 2);
+
+        MetadataField subject = mfss.findByElement(context, "dc", "subject", null);
+        MetadataField title = mfss.findByElement(context, "dc", "title", null);
+        MetadataField contributor = mfss.findByElement(context, "dc", "contributor", "author");
+
+        EntityType eType = EntityTypeBuilder.createEntityTypeBuilder(context, "Publication").build();
+        CrisLayoutBox box1 = CrisLayoutBoxBuilder.createBuilder(context, eType, true, true)
+                                                 .withShortname("box-shortname-one")
+                                                 .withSecurity(LayoutSecurity.PUBLIC)
+                                                 .build();
+
+        CrisLayoutFieldBuilder.createMetadataField(context, title, 0, 0)
+                              .withLabel("LABEL TITLE")
+                              .withRendering("RENDERIGN TITLE")
+                              .withStyle("STYLE")
+                              .withBox(box1)
+                              .build();
+
+        CrisLayoutFieldBuilder.createMetadataField(context, subject, 1, 0)
+                              .withLabel("LABEL SUBJECT")
+                              .withRendering("RENDERIGN SUBJECT")
+                              .withStyle("STYLE")
+                              .withBox(box1)
+                              .build();
+
+        CrisLayoutFieldBuilder.createMetadataField(context, contributor, 2, 0)
+                              .withLabel("LABEL CONTRBUTOR")
+                              .withRendering("RENDERIGN CONTRIBUTOR")
+                              .withStyle("STYLE")
+                              .withBox(box1)
+                              .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+
+        // disseminate with user that belongs to 'Trusted' group
+        context.setCurrentUser(user);
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("publication-cerif-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, Arrays.asList(item).iterator(), out);
+
+        try (FileInputStream fis = getFileInputStream("publications3.xml")) {
+            compareEachLine(out.toString(), IOUtils.toString(fis, Charset.defaultCharset()));
+        }
+
+        // disseminate with user that does not belongs to 'Trusted' group
+        context.setCurrentUser(eperson);
+
+        ByteArrayOutputStream out2 = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, Arrays.asList(item).iterator(), out2);
+
+        try (FileInputStream fis = getFileInputStream("publications2.xml")) {
+            compareEachLine(out2.toString(), IOUtils.toString(fis, Charset.defaultCharset()));
+        }
+    }
+
+    @Test
+    public void xmlDisseminateMetadataSecurityThirdLevelTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        EPerson owner = EPersonBuilder.createEPerson(context)
+                                      .withEmail("test-email@test.com")
+                                      .withPassword(password)
+                                      .withNameInMetadata("Bob", "Charlton")
+                                      .build();
+
+        parentCommunity = CommunityBuilder.createCommunity(context).build();
+        Collection col = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withEntityType("Publication")
+                                          .withName("Collection Title").build();
+
+        Item item = ItemBuilder.createItem(context, col)
+                               .withDoiIdentifier("doi:111.111/publication")
+                               .withCrisOwner("Owner", owner.getID().toString())
+                               .withIssueDate("2020-01-01")
+                               .build();
+
+        itemService.addSecuredMetadata(context, item, "dc", "title", null, null, "Title test", null, 0, 0);
+        itemService.addSecuredMetadata(context, item, "dc", "subject", null, null, "Subject test", null, 0, 1);
+        itemService.addSecuredMetadata(context, item, "dc", "contributor", "author", null, "John Smith", null, 0, 2);
+
+        MetadataField subject = mfss.findByElement(context, "dc", "subject", null);
+        MetadataField title = mfss.findByElement(context, "dc", "title", null);
+        MetadataField contributor = mfss.findByElement(context, "dc", "contributor", "author");
+
+        EntityType eType = EntityTypeBuilder.createEntityTypeBuilder(context, "Publication").build();
+        CrisLayoutBox box1 = CrisLayoutBoxBuilder.createBuilder(context, eType, true, true)
+                                                 .withShortname("box-shortname-one")
+                                                 .withSecurity(LayoutSecurity.PUBLIC)
+                                                 .build();
+
+        CrisLayoutFieldBuilder.createMetadataField(context, title, 0, 0)
+                              .withLabel("LABEL TITLE")
+                              .withRendering("RENDERIGN TITLE")
+                              .withStyle("STYLE")
+                              .withBox(box1)
+                              .build();
+
+        CrisLayoutFieldBuilder.createMetadataField(context, subject, 1, 0)
+                              .withLabel("LABEL SUBJECT")
+                              .withRendering("RENDERIGN SUBJECT")
+                              .withStyle("STYLE")
+                              .withBox(box1)
+                              .build();
+
+        CrisLayoutFieldBuilder.createMetadataField(context, contributor, 2, 0)
+                              .withLabel("LABEL CONTRBUTOR")
+                              .withRendering("RENDERIGN CONTRIBUTOR")
+                              .withStyle("STYLE")
+                              .withBox(box1)
+                              .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+
+        // disseminate with admin
+        context.setCurrentUser(admin);
+
+        ReferCrosswalk referCrossWalk = (ReferCrosswalk) crosswalkMapper.getByType("publication-cerif-xml");
+        assertThat(referCrossWalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, Arrays.asList(item).iterator(), out);
+
+        try (FileInputStream fis = getFileInputStream("publications4.xml")) {
+            compareEachLine(out.toString(), IOUtils.toString(fis, Charset.defaultCharset()));
+        }
+
+        // disseminate with owner of item
+        context.setCurrentUser(owner);
+
+        ByteArrayOutputStream out2 = new ByteArrayOutputStream();
+        referCrossWalk.disseminate(context, Arrays.asList(item).iterator(), out2);
+
+        try (FileInputStream fis = getFileInputStream("publications4.xml")) {
+            compareEachLine(out2.toString(), IOUtils.toString(fis, Charset.defaultCharset()));
+        }
     }
 
     private void compareEachLine(String result, String expectedResult) {

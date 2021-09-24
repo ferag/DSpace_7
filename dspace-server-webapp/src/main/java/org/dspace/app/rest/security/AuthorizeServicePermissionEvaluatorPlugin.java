@@ -99,13 +99,19 @@ public class AuthorizeServicePermissionEvaluatorPlugin extends RestObjectPermiss
                     // If the item is still inprogress we can process here only the READ permission.
                     // Other actions need to be evaluated against the wrapper object (workspace or workflow item)
                     if (dSpaceObject instanceof Item) {
-                        if (isCvEntity((Item)dSpaceObject)) {
+                        Item item = (Item) dSpaceObject;
+                        if (DSpaceRestPermission.STATUS.equals(restPermission) && item.isWithdrawn()) {
+                            return true;
+                        }
+                        if (isCvEntity(item)) {
                             // cv* type items are managed in a specific plagin :
                             // org.dspace.app.rest.security.CvEntityPermissionEvaluatorPlugin
                             return false;
                         }
-                        if (!DSpaceRestPermission.READ.equals(restPermission)
-                            && !((Item) dSpaceObject).isArchived() && !((Item) dSpaceObject).isWithdrawn()) {
+                        // If the item is still inprogress we can process here only the READ permission.
+                        // Other actions need to be evaluated against the wrapper object (workspace or workflow item)
+                        if (!DSpaceRestPermission.READ.equals(restPermission) &&
+                            !item.isArchived() && !item.isWithdrawn()) {
                             return false;
                         }
                     }

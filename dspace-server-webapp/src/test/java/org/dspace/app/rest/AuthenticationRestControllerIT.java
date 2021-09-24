@@ -368,6 +368,10 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
                          .andExpect(jsonPath("$._embedded.eperson",
                                 EPersonMatcher.matchEPersonOnEmail(eperson.getEmail())));
 
+        // Logout, this will invalidate both tokens
+        getClient(token1).perform(post("/api/authn/logout"))
+                .andExpect(status().isNoContent());
+
     }
 
     @Test
@@ -409,6 +413,10 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
                                 .andExpect(jsonPath("$.okay", is(true)))
                                 .andExpect(jsonPath("$.authenticated", is(false)))
                                 .andExpect(jsonPath("$.type", is("status")));
+
+        // Logout, invalidating token
+        getClient(token).perform(post("/api/authn/logout"))
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -510,6 +518,10 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
                            .andExpect(jsonPath("$.okay", is(true)))
                            .andExpect(jsonPath("$.authenticated", is(true)))
                            .andExpect(jsonPath("$.type", is("status")));
+
+        // Logout, invalidating token
+        getClient(token).perform(post("/api/authn/logout"))
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -627,6 +639,10 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
                         .andExpect(jsonPath("$.okay", is(true)))
                         .andExpect(jsonPath("$.authenticated", is(true)))
                         .andExpect(jsonPath("$.type", is("status")));
+
+        // Logout, invalidating token
+        getClient(token).perform(post("/api/authn/logout"))
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -683,7 +699,9 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
                         .andExpect(jsonPath("$.authenticated", is(true)))
                         .andExpect(jsonPath("$.type", is("status")));
 
-
+        // Logout, invalidating token
+        getClient(token).perform(post("/api/authn/logout"))
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -846,6 +864,10 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
                 .andExpect(jsonPath("$._links.eperson.href", startsWith(REST_SERVER_URL)))
                 .andExpect(jsonPath("$._embedded.eperson",
                         EPersonMatcher.matchEPersonWithGroups(eperson.getEmail(), "Anonymous", "Reviewers")));
+
+        // Logout, invalidating token
+        getClient(token).perform(post("/api/authn/logout"))
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -905,6 +927,10 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
                 .andExpect(jsonPath("$._links.eperson.href", startsWith(REST_SERVER_URL)))
                 .andExpect(jsonPath("$._embedded.eperson",
                         EPersonMatcher.matchEPersonWithGroups(eperson.getEmail(), "Anonymous")));
+
+        // Logout, invalidating token
+        getClient(token).perform(post("/api/authn/logout"))
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -1083,6 +1109,10 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
             .andExpect(header().doesNotExist("DSPACE-XSRF-TOKEN"));
 
         assertEquals(salt, eperson.getSessionSalt());
+
+        // Logout, invalidating token
+        getClient(token).perform(post("/api/authn/logout"))
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -1106,6 +1136,10 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
             .andExpect(header().doesNotExist("DSPACE-XSRF-TOKEN"));
 
         assertEquals(salt, eperson.getSessionSalt());
+
+        // Logout, invalidating token
+        getClient(token).perform(post("/api/authn/logout"))
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -1117,6 +1151,10 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
                 .with(ip(UNTRUSTED_IP))
         )
             .andExpect(status().isForbidden());
+
+        // Logout, invalidating token
+        getClient(token).perform(post("/api/authn/logout"))
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -1129,6 +1167,10 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
                 .header("X-Forwarded-For", TRUSTED_IP) // this should not affect the test result
         )
             .andExpect(status().isForbidden());
+
+        // Logout, invalidating token
+        getClient(token).perform(post("/api/authn/logout"))
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -1142,6 +1184,10 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
             // is sent back (in cookie and header).
             .andExpect(cookie().exists("DSPACE-XSRF-COOKIE"))
             .andExpect(header().exists("DSPACE-XSRF-TOKEN"));
+
+        // Logout, invalidating token
+        getClient(token).perform(post("/api/authn/logout"))
+                .andExpect(status().isNoContent());
     }
 
 
@@ -1163,11 +1209,17 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
     @Test
     public void testShortLivedTokenToDownloadBitstream() throws Exception {
         Bitstream bitstream = createPrivateBitstream();
-        String shortLivedToken = getShortLivedToken(eperson);
+        String token = getAuthToken(eperson.getEmail(), password);
+        String shortLivedToken = getShortLivedToken(token);
 
         getClient().perform(get("/api/core/bitstreams/" + bitstream.getID()
                 + "/content?authentication-token=" + shortLivedToken))
             .andExpect(status().isOk());
+
+        // Logout, invalidating token
+        getClient(token).perform(post("/api/authn/logout"))
+                .andExpect(status().isNoContent());
+
     }
 
     @Test
@@ -1182,10 +1234,15 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
             .build();
         context.restoreAuthSystemState();
 
-        String shortLivedToken = getShortLivedToken(testEPerson);
+        String token = getAuthToken(testEPerson.getEmail(), password);
+        String shortLivedToken = getShortLivedToken(token);
         getClient().perform(get("/api/core/bitstreams/" + bitstream.getID()
                 + "/content?authentication-token=" + shortLivedToken))
             .andExpect(status().isForbidden());
+
+        // Logout, invalidating token
+        getClient(token).perform(post("/api/authn/logout"))
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -1196,17 +1253,26 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
         getClient().perform(get("/api/core/bitstreams/" + bitstream.getID()
                 + "/content?authentication-token=" + loginToken))
             .andExpect(status().isUnauthorized());
+
+        // Logout, invalidating token
+        getClient(loginToken).perform(post("/api/authn/logout"))
+                .andExpect(status().isNoContent());
     }
 
     @Test
     public void testExpiredShortLivedTokenToDownloadBitstream() throws Exception {
         Bitstream bitstream = createPrivateBitstream();
         configurationService.setProperty("jwt.shortLived.token.expiration", "1");
-        String shortLivedToken = getShortLivedToken(eperson);
+        String token = getAuthToken(eperson.getEmail(), password);
+        String shortLivedToken = getShortLivedToken(token);
         Thread.sleep(1);
         getClient().perform(get("/api/core/bitstreams/" + bitstream.getID()
                 + "/content?authentication-token=" + shortLivedToken))
             .andExpect(status().isUnauthorized());
+
+        // Logout, invalidating token
+        getClient(token).perform(post("/api/authn/logout"))
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -1218,36 +1284,55 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
         getClient(token).perform(get("/api/authn/status").param("projection", "full"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.authenticated", is(true)));
+
+        // Logout, invalidating token
+        getClient(token).perform(post("/api/authn/logout"))
+                .andExpect(status().isNoContent());
     }
 
     // TODO: fix the exception. For now we want to verify a short lived token can't be used to login
     @Test(expected = Exception.class)
     public void testLoginWithShortLivedToken() throws Exception {
-        String shortLivedToken = getShortLivedToken(eperson);
+        String token = getAuthToken(eperson.getEmail(), password);
+        String shortLivedToken = getShortLivedToken(token);
 
         getClient().perform(post("/api/authn/login?authentication-token=" + shortLivedToken))
             .andExpect(status().isInternalServerError());
         // TODO: This internal server error needs to be fixed. This should actually produce a forbidden status
         //.andExpect(status().isForbidden());
+
+        // Logout, invalidating token
+        getClient(token).perform(post("/api/authn/logout"))
+                .andExpect(status().isNoContent());
     }
 
     @Test
     public void testGenerateShortLivedTokenWithShortLivedToken() throws Exception {
-        String shortLivedToken = getShortLivedToken(eperson);
+        String token = getAuthToken(eperson.getEmail(), password);
+        String shortLivedToken = getShortLivedToken(token);
 
         getClient().perform(post("/api/authn/shortlivedtokens?authentication-token=" + shortLivedToken))
             .andExpect(status().isForbidden());
+
+        // Logout, invalidating token
+        getClient(token).perform(post("/api/authn/logout"))
+                .andExpect(status().isNoContent());
     }
 
     @Test
     public void testGenerateShortLivedTokenWithShortLivedTokenUsingGet() throws Exception {
-        String shortLivedToken = getShortLivedToken(eperson);
+        String token = getAuthToken(eperson.getEmail(), password);
+        String shortLivedToken = getShortLivedToken(token);
 
         getClient().perform(
             get("/api/authn/shortlivedtokens?authentication-token=" + shortLivedToken)
                 .with(ip(TRUSTED_IP))
         )
             .andExpect(status().isForbidden());
+
+        // Logout, invalidating token
+        getClient(token).perform(post("/api/authn/logout"))
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -1285,10 +1370,11 @@ public class AuthenticationRestControllerIT extends AbstractControllerIntegratio
 
 
     private String getShortLivedToken(EPerson requestUser) throws Exception {
+    // Get a short-lived token based on an active login token
+    private String getShortLivedToken(String loginToken) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
 
-        String token = getAuthToken(requestUser.getEmail(), password);
-        MvcResult mvcResult = getClient(token).perform(post("/api/authn/shortlivedtokens"))
+        MvcResult mvcResult = getClient(loginToken).perform(post("/api/authn/shortlivedtokens"))
             .andReturn();
 
         String content = mvcResult.getResponse().getContentAsString();

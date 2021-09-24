@@ -188,8 +188,6 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
     @Autowired
     private OrcidQueueService orcidQueueService;
 
-    @Autowired
-    private GroupService groupService;
 
     private EPerson user;
 

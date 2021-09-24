@@ -9,7 +9,6 @@ package org.dspace.app.elasticsearch.externalservice;
 
 import java.io.IOException;
 
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;

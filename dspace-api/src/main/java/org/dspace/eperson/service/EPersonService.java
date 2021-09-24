@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.content.MetadataField;
 import org.dspace.content.Item;
+import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataFieldName;
 import org.dspace.content.service.DSpaceObjectLegacySupportService;
 import org.dspace.content.service.DSpaceObjectService;

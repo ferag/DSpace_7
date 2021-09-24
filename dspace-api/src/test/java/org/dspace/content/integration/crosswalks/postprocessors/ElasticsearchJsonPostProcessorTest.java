@@ -13,7 +13,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.util.Arrays;
 import java.util.List;
 
-
 import org.hamcrest.core.Is;
 import org.junit.Test;
 

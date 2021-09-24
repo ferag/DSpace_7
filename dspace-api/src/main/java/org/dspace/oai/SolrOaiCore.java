@@ -23,7 +23,8 @@ public class SolrOaiCore {
     private static final Logger log = LoggerFactory.getLogger(SolrOaiCore.class);
 
     public static SolrRequest.METHOD REQUEST_METHOD = SolrRequest.METHOD.POST;
-    public static SolrClient getSolr() throws SolrServerException {
+//    public static SolrClient getSolr() throws SolrServerException {
+    public SolrClient getSolr() throws SolrServerException {
         if (solr == null) {
             initSolr();
         }

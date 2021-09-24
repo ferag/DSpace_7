@@ -83,7 +83,7 @@ public class BitstreamMetadataReadPermissionEvaluatorPlugin extends RestObjectPe
         }
 
         if (context.getCurrentUser() == null
-            && bitstreamService.isRelatedToAProcessStartedByDefaultUser(context, (Bitstream) dso)) {
+            && bitstreamService.isRelatedToAProcessStartedByDefaultUser(context, bitstream)) {
             return true;
         }
 

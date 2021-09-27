@@ -234,13 +234,13 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
         itemService.addMetadata(context, cvPersonCollection.getTemplateItem(), "cris", "policy",
                                 "group", null, administrators.getName());
 
-        configurationService.setProperty("researcher-profile.collection.uuid", cvPersonCollection.getID().toString());
+//        configurationService.setProperty("researcher-profile.collection.uuid", cvPersonCollection.getID().toString());
         administrators = groupService.findByName(context, Group.ADMIN);
 
         itemService.addMetadata(context, personCollection.getTemplateItem(), "cris", "policy",
                                 "group", null, administrators.getName());
 
-        configurationService.setProperty("researcher-profile.collection.uuid", personCollection.getID().toString());
+//        configurationService.setProperty("researcher-profile.collection.uuid", personCollection.getID().toString());
         configurationService.setProperty("claimable.entityType", "Person");
 
         context.setCurrentUser(user);
@@ -388,7 +388,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.sourceId", id, 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.policy.group", administrators.getName(),
                                                             UUIDUtils.toString(administrators.getID()), 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "Person", 0)));
+            .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)));
 
         getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", id)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.type", is("eperson"))).andExpect(jsonPath("$.name", is(name)));
@@ -432,7 +432,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.sourceId", id, 0)))
             .andExpect(jsonPath("$.metadata", matchMetadata("cris.policy.group", administrators.getName(),
                                                             UUIDUtils.toString(administrators.getID()), 0)))
-            .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "Person", 0)));
+            .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)));
 
         getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", id)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.type", is("eperson"))).andExpect(jsonPath("$.name", is(name)));
@@ -829,7 +829,6 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
      * @throws Exception
      */
     @Test
-    @Ignore
     public void testCloneFromExternalSource() throws Exception {
         // FIXME: unIgnore once orcid integration ready and merged
 
@@ -940,6 +939,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 //    }
 
     @Test
+    @Ignore
     public void testClaimExistentDirectorioPersonAsProfileAndMergeItWithCtiDatabase() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -1133,7 +1133,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
         Item publication = ItemBuilder.createItem(context, publicationCollection).withTitle("Publication").build();
 
-        configurationService.setProperty("claimable.entityType", "Person");
+        configurationService.setProperty("claimable.entityType", "CvPerson");
 
         context.restoreAuthSystemState();
 

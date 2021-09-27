@@ -1,82 +1,69 @@
-<oai_cerif:Publication xmlns:oai_cerif="https://www.openaire.eu/cerif-profile/1.1/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:doc="http://www.lyncode.com/xoai" id="123456789/6">
-   <oai_cerif:Type xmlns:oai_cerif="https://www.openaire.eu/cerif-profile/vocab/COAR_Publication_Types">http://purl.org/coar/resource_type/c_5794</oai_cerif:Type>
-   <oai_cerif:Title xml:lang="en">Metadata and Semantics Research</oai_cerif:Title>
-   <oai_cerif:Subtitle xml:lang="en">6th Research Conference, MTSR 2012, Cádiz, Spain, November 28-30, 2012. Proceedings</oai_cerif:Subtitle>
-   <oai_cerif:PartOf>
-      <oai_cerif:DisplayName>The International Journal of Digital Curation</oai_cerif:DisplayName>
-      <oai_cerif:Publication id="c3ae30ae-ddc4-4c25-b0b8-c87a3f850bca">
-         <oai_cerif:Type xmlns:oai_cerif="https://www.openaire.eu/cerif-profile/vocab/COAR_Publication_Types">http://purl.org/coar/resource_type/c_0640</oai_cerif:Type>
-         <oai_cerif:Title xml:lang="en">The International Journal of Digital Curation</oai_cerif:Title>
-         <oai_cerif:ISSN>1746-8256</oai_cerif:ISSN>
-      </oai_cerif:Publication>
-   </oai_cerif:PartOf>
-   <oai_cerif:PartOf>
-      <oai_cerif:DisplayName>Digital Curation</oai_cerif:DisplayName>
-   </oai_cerif:PartOf>
-   <oai_cerif:PublicationDate>2020-03-30</oai_cerif:PublicationDate>
-   <oai_cerif:StartPage>10</oai_cerif:StartPage>
-   <oai_cerif:EndPage>20</oai_cerif:EndPage>
-   <oai_cerif:DOI>10.1007/978-3-642-35233-1</oai_cerif:DOI>
-   <oai_cerif:Handle>123456789/6</oai_cerif:Handle>
-   <oai_cerif:ISBN>9783642352324</oai_cerif:ISBN>
-   <oai_cerif:Publishers>
-      <oai_cerif:Publisher>
-         <oai_cerif:DisplayName>Springer, Berlin, Heidelberg</oai_cerif:DisplayName>
-         <oai_cerif:OrgUnit id="56df5c8e-a9da-45b4-93d8-3d384d233aee">
-            <oai_cerif:Name xml:lang="en">Springer</oai_cerif:Name>
-         </oai_cerif:OrgUnit>
-      </oai_cerif:Publisher>
-   </oai_cerif:Publishers>
-   <oai_cerif:Keyword xml:lang="en">cultural heritage</oai_cerif:Keyword>
-   <oai_cerif:Keyword xml:lang="en">digital libraries</oai_cerif:Keyword>
-   <oai_cerif:Keyword xml:lang="en">learning objects</oai_cerif:Keyword>
-   <oai_cerif:Keyword xml:lang="en">linked open data</oai_cerif:Keyword>
-   <oai_cerif:Keyword xml:lang="en">scholarly publications</oai_cerif:Keyword>
-   <oai_cerif:OriginatesFrom>
-	   <oai_cerif:Project id="e9ed438e-c7f7-4a18-95e5-3f635ea65fee">
-	      <oai_cerif:Title xml:lang="en">2nd-Generation Open Access Infrastructure</oai_cerif:Title>
-	      <oai_cerif:Team>
-	         <oai_cerif:PrincipalInvestigator>
-	            <oai_cerif:DisplayName>4Science, Team</oai_cerif:DisplayName>
-	            <oai_cerif:Person />
-	         </oai_cerif:PrincipalInvestigator>
-	      </oai_cerif:Team>
-	      <oai_cerif:Funded>
-	         <oai_cerif:By>
-	            <oai_cerif:DisplayName>EC</oai_cerif:DisplayName>
-	            <oai_cerif:OrgUnit>
-	               <oai_cerif:Name xml:lang="en" />
-	            </oai_cerif:OrgUnit>
-	         </oai_cerif:By>
-	         <oai_cerif:As xmlns:oafunding="https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types">
-	            <oai_cerif:Funding>
-	               <oafunding:Type>https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types#Grant</oafunding:Type>
-	               <oai_cerif:Amount currency="EUR">99999</oai_cerif:Amount>
-	               <oai_cerif:Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#ProjectReference">283595</oai_cerif:Identifier>
-	               <oai_cerif:PartOf>
-	                  <oai_cerif:Funding>
-	                     <oafunding:Type>https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types#FundingProgramme</oafunding:Type>
-	                     <oai_cerif:Name xml:lang="en">FP7</oai_cerif:Name>
-	                  </oai_cerif:Funding>
-	               </oai_cerif:PartOf>
-	            </oai_cerif:Funding>
-	         </oai_cerif:As>
-	      </oai_cerif:Funded>
-	      <oai_cerif:OAMandate mandated="true" />
-	   </oai_cerif:Project>
-   </oai_cerif:OriginatesFrom>
-   <oai_cerif:PresentedAt>
-      <oai_cerif:Event id="05af052c-6ba7-4a1b-86cd-50bec84323e3">
-         <oai_cerif:Type scheme="https://w3id.org/cerif/vocab/EventTypes">https://w3id.org/cerif/vocab/EventTypes#Conference</oai_cerif:Type>
-         <oai_cerif:Acronym>MTSR 2012</oai_cerif:Acronym>
-         <oai_cerif:Name xml:lang="en">6th Research Conference on Metadata and Semantics Research</oai_cerif:Name>
-         <oai_cerif:Place>Roma</oai_cerif:Place>
-         <oai_cerif:Country>IT</oai_cerif:Country>
-         <oai_cerif:StartDate>2019-10-01</oai_cerif:StartDate>
-         <oai_cerif:EndDate>2019-10-04</oai_cerif:EndDate>
-         <oai_cerif:Description xml:lang="en">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</oai_cerif:Description>
-         <oai_cerif:Keyword xml:lang="en">test</oai_cerif:Keyword>
-      </oai_cerif:Event>
-   </oai_cerif:PresentedAt>
-   <ns4:Access xmlns:ns4="http://purl.org/coar/access_right">http://purl.org/coar/access_right/c_abf2</ns4:Access>
-</oai_cerif:Publication>
+<?xml version="1.0" encoding="UTF-8"?>
+<cerif:Publication xmlns:cerif="https://www.openaire.eu/cerif-profile/1.1/" xmlns:ar="http://purl.org/coar/access_right" xmlns:funt="https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types" xmlns:patt="https://www.openaire.eu/cerif-profile/vocab/COAR_Patent_Types" xmlns:prot="https://www.openaire.eu/cerif-profile/vocab/COAR_Product_Types" xmlns:pubt="https://www.openaire.eu/cerif-profile/vocab/COAR_Publication_Types" xmlns:sc="https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Service_Compatibility" id="f387fa61-8ce7-443e-a14b-5583460bfc2b">
+   <pubt:Type>http://purl.org/coar/resource_type/c_6501</pubt:Type>
+   <cerif:Language>English</cerif:Language>
+   <cerif:Title xml:lang="it">Durability of thermally modified sapwood and heartwood of Scots pine and Norway spruce in the modified double layer test</cerif:Title>
+   <cerif:Subtitle xml:lang="it" />
+   <cerif:PublishedIn>
+      <cerif:Publication id="560db477-638d-4097-abcc-3410836b9770">
+         <pubt:Type>http://purl.org/coar/resource_type/c_0640</pubt:Type>
+         <cerif:Title xml:lang="it">Wood Material Science and Engineering</cerif:Title>
+      </cerif:Publication>
+   </cerif:PublishedIn>
+   <cerif:PublicationDate>2017-05-27</cerif:PublicationDate>
+   <cerif:Volume>12</cerif:Volume>
+   <cerif:Issue>3</cerif:Issue>
+   <cerif:StartPage>129</cerif:StartPage>
+   <cerif:EndPage>139</cerif:EndPage>
+   <cerif:DOI>10.1080/17480272.2015.1061596</cerif:DOI>
+   <cerif:SCP-Number>84941368060</cerif:SCP-Number>
+   <cerif:ISSN medium="http://issn.org/vocabularies/Medium#Print">1748-0272</cerif:ISSN>
+   <cerif:ISSN medium="http://issn.org/vocabularies/Medium#Online">1748-0280</cerif:ISSN>
+   <cerif:URL>https://cris.vtt.fi/en/publications/f387fa61-8ce7-443e-a14b-5583460bfc2b</cerif:URL>
+   <cerif:Authors>
+      <cerif:Author>
+         <cerif:Person id="0d9dfbba-44a4-480d-a3f5-7690adfd7d10">
+            <cerif:PersonName>
+               <cerif:FamilyNames>Metsä-Kortelainen</cerif:FamilyNames>
+               <cerif:FirstNames>Sini</cerif:FirstNames>
+            </cerif:PersonName>
+         </cerif:Person>
+         <cerif:Affiliation>
+            <cerif:OrgUnit id="e8d60e26-7264-4925-92d0-a781657f9d3a">
+               <cerif:Name xml:lang="en">BA2405 Advanced manufacturing technologies</cerif:Name>
+            </cerif:OrgUnit>
+         </cerif:Affiliation>
+      </cerif:Author>
+      <cerif:Author>
+         <cerif:Person id="ea98bc38-dcba-41f0-a08f-d6b73fd6c431">
+            <cerif:PersonName>
+               <cerif:FamilyNames>Viitanen</cerif:FamilyNames>
+               <cerif:FirstNames>Hannu</cerif:FirstNames>
+            </cerif:PersonName>
+         </cerif:Person>
+         <cerif:Affiliation>
+            <cerif:OrgUnit id="6f450daa-5b6d-4d18-926d-e1bbe3314fb9">
+               <cerif:Acronym>VTT</cerif:Acronym>
+               <cerif:Name xml:lang="en">VTT (former employee or external)</cerif:Name>
+            </cerif:OrgUnit>
+         </cerif:Affiliation>
+      </cerif:Author>
+   </cerif:Authors>
+   <cerif:Publishers>
+      <cerif:Publisher>
+         <cerif:OrgUnit>
+            <cerif:Name xml:lang="it">Taylor &amp; Francis</cerif:Name>
+         </cerif:OrgUnit>
+      </cerif:Publisher>
+   </cerif:Publishers>
+   <cerif:Keyword xml:lang="en">biological durability</cerif:Keyword>
+   <cerif:Keyword xml:lang="en">decay resistance</cerif:Keyword>
+   <cerif:Keyword xml:lang="en">ground contact</cerif:Keyword>
+   <cerif:Keyword xml:lang="en">heartwood</cerif:Keyword>
+   <cerif:Keyword xml:lang="en">Norway spruce</cerif:Keyword>
+   <cerif:Keyword xml:lang="en">sapwood</cerif:Keyword>
+   <cerif:Keyword xml:lang="en">Scots pine</cerif:Keyword>
+   <cerif:Keyword xml:lang="en">thermal modification</cerif:Keyword>
+   <cerif:Abstract xml:lang="en">In the present study, durability of untreated and thermally modified sapwood and heartwood of Scots pine and Norway spruce was examined.</cerif:Abstract>
+   <cerif:Status scheme="/dk/atira/pure/researchoutput/status/published">Published</cerif:Status>
+</cerif:Publication>

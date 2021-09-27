@@ -129,7 +129,7 @@ public class CERIFIngestionCrosswalkIT extends AbstractIntegrationTestWithDataba
         crosswalk.ingest(context, item, document.getRootElement(), false);
 
         List<MetadataValue> values = item.getMetadata();
-        assertThat(values, hasSize(22));
+        assertThat(values, hasSize(23));
 
         assertThat(values, hasItems(with("dc.type",
             "Controlled Vocabulary for Resource Type Genres::text::conference object::conference proceedings"

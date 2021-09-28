@@ -19,13 +19,18 @@ import org.slf4j.LoggerFactory;
 
 public class SolrOaiCore {
 
+    // FIXME: this class should be refactored in order not to be an utility class, but a bean as per other SolrCore
+    //  classes.
     protected static SolrClient solr;
-//    protected SolrClient solr;
     private static final Logger log = LoggerFactory.getLogger(SolrOaiCore.class);
 
     public static SolrRequest.METHOD REQUEST_METHOD = SolrRequest.METHOD.POST;
+
+    public SolrClient getSolrClient() throws SolrServerException {
+        return getSolr();
+    }
+
     public static SolrClient getSolr() throws SolrServerException {
-//    public SolrClient getSolr() throws SolrServerException {
         if (solr == null) {
             initSolr();
         }
@@ -39,7 +44,6 @@ public class SolrOaiCore {
         return solr;
     }
     private static void initSolr() throws SolrServerException {
-//    private void initSolr() throws SolrServerException {
         if (solr == null) {
             ConfigurationService configurationService
                     = DSpaceServicesFactory.getInstance().getConfigurationService();

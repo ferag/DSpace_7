@@ -19,6 +19,7 @@ import org.dspace.authorize.service.ResourcePolicyService;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
+import org.dspace.content.authority.Choices;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
@@ -91,6 +92,8 @@ public class NotificationConsumer implements Consumer {
                                     crisOwner.get(0).getAuthority());
                                 continue;
                             }
+                            itemService.addMetadata(context, item, "cris", "owner", null,
+                                null, cvOwner.getFullName(), cvOwner.getID().toString(), Choices.CF_ACCEPTED);
                             authorizeService.addPolicy(context, item, Constants.READ, cvOwner);
                         }
 

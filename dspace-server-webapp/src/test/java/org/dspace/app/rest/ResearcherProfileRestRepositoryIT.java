@@ -73,6 +73,7 @@ import org.dspace.app.orcid.model.OrcidTokenResponseDTO;
 import org.dspace.app.orcid.service.OrcidQueueService;
 import org.dspace.app.orcid.webhook.OrcidWebhookServiceImpl;
 import org.dspace.app.profile.ResearcherProfile;
+import org.dspace.app.profile.importproviders.impl.ResearcherProfileReniecProvider;
 import org.dspace.app.profile.service.ResearcherProfileService;
 import org.dspace.app.rest.matcher.ItemMatcher;
 import org.dspace.app.rest.model.MetadataValueRest;
@@ -101,6 +102,7 @@ import org.dspace.content.MetadataSchema;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.Relationship;
 import org.dspace.content.RelationshipType;
+import org.dspace.content.authority.Choices;
 import org.dspace.content.service.ItemService;
 import org.dspace.content.service.MetadataFieldService;
 import org.dspace.content.service.MetadataSchemaService;
@@ -110,6 +112,7 @@ import org.dspace.discovery.SearchServiceException;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.service.GroupService;
+import org.dspace.external.service.ExternalDataService;
 import org.dspace.importer.external.ctidb.CtiDatabaseDao;
 import org.dspace.importer.external.ctidb.CtiDatabaseImportFacadeImpl;
 import org.dspace.importer.external.ctidb.model.CtiDatosConfidenciales;
@@ -175,6 +178,9 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
     @Autowired
     private CtiDatabaseImportFacadeImpl ctiDatabaseImportFacade;
+
+    @Autowired
+    public ResearcherProfileReniecProvider researcherProfileReniecProvider;
 
     @Autowired
     private ItemService itemService;
@@ -777,169 +783,7 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
                 .andExpect(jsonPath("$.visible", is(true)));
     }
 
-    /**
-     * Verify that after an user login an automatic claim between the logged eperson
-     * and possible profiles without eperson is done.
-     *
-     * @throws Exception
-     */
     @Test
-    public void testAutomaticProfileClaimByEmail() throws Exception {
-
-        configurationService.setProperty("researcher-profile.hard-delete.enabled", false);
-
-        String id = user.getID().toString();
-
-        String adminToken = getAuthToken(admin.getEmail(), password);
-
-        // create and delete a profile
-        getClient(adminToken)
-                .perform(post("/api/cris/profiles/").param("eperson", id).contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isCreated());
-
-        String firstItemId = getItemIdByProfileId(adminToken, id);
-
-        MetadataValueRest valueToAdd = new MetadataValueRest(user.getEmail());
-        List<Operation> operations = asList(new AddOperation("/metadata/person.email", valueToAdd));
-
-        getClient(adminToken)
-                .perform(patch(BASE_REST_SERVER_URL + "/api/core/items/{id}", firstItemId)
-                        .contentType(MediaType.APPLICATION_JSON).content(getPatchContent(operations)))
-                .andExpect(status().isOk());
-
-        getClient(adminToken).perform(delete("/api/cris/profiles/{id}", id)).andExpect(status().isNoContent());
-
-        getClient(adminToken).perform(get("/api/cris/profiles/{id}", id)).andExpect(status().isNotFound());
-
-        // the automatic claim is done after the user login
-        String userToken = getAuthToken(user.getEmail(), password);
-
-        getClient(userToken).perform(get("/api/cris/profiles/{id}", id)).andExpect(status().isOk());
-
-        // the profile item should be the same
-        String secondItemId = getItemIdByProfileId(adminToken, id);
-        assertEquals("The item should be the same", firstItemId, secondItemId);
-
-    }
-
-    /**
-     * Given a request containing an external reference URI, verifies that a
-     * researcherProfile is created with data cloned from source object.
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testCloneFromExternalSource() throws Exception {
-        // FIXME: unIgnore once orcid integration ready and merged
-
-        context.turnOffAuthorisationSystem();
-        ItemBuilder.createItem(context, cvPersonCollection).withFullName("Giuseppe Garibaldi")
-                .withBirthDate("1807-07-04").withOrcidIdentifier("0000-1111-2222-3333").build();
-
-        EntityType entityType = EntityTypeBuilder.createEntityTypeBuilder(context, "CvPerson").build();
-
-        CrisLayoutBox publicBox = CrisLayoutBoxBuilder.createBuilder(context, entityType, false, false)
-                .withSecurity(LayoutSecurity.PUBLIC).build();
-
-        CrisLayoutBox ownerAndAdministratorBox = CrisLayoutBoxBuilder.createBuilder(context, entityType, false, false)
-                .withSecurity(LayoutSecurity.OWNER_AND_ADMINISTRATOR).build();
-
-        CrisLayoutFieldBuilder.createMetadataField(context, metadataField("crisrp", "name", Optional.empty()), 1, 1)
-                .withBox(publicBox).build();
-
-        CrisLayoutFieldBuilder
-                .createMetadataField(context, metadataField("person", "birthDate", Optional.empty()), 2, 1)
-                .withBox(publicBox).build();
-
-        CrisLayoutFieldBuilder
-                .createMetadataField(context, metadataField("perucris", "identifier", Optional.of("dni")), 1, 1)
-                .withBox(ownerAndAdministratorBox).build();
-
-        context.restoreAuthSystemState();
-
-        String authToken = getAuthToken(user.getEmail(), password);
-
-        getClient(authToken).perform(post("/api/cris/profiles/").contentType(TEXT_URI_LIST).content(
-                "http://localhost:8080/server/api/integration/externalsources/orcid/entryValues/0000-1111-2222-3333"))
-                .andExpect(status().isCreated()).andExpect(jsonPath("$.id", is(user.getID().toString())))
-                .andExpect(jsonPath("$.visible", is(false))).andExpect(jsonPath("$.type", is("profile")))
-                .andExpect(jsonPath("$",
-                        matchLinks("http://localhost/api/cris/profiles/" + user.getID(), "item", "eperson")));
-
-        getClient(authToken).perform(get("/api/cris/profiles/{id}", user.getID())).andExpect(status().isOk());
-
-        getClient(authToken).perform(get("/api/cris/profiles/{id}/item", user.getID())).andExpect(status().isOk())
-                .andExpect(jsonPath("$.type", is("item")))
-                .andExpect(
-                        jsonPath("$.metadata", matchMetadata("cris.owner", user.getName(), user.getID().toString(), 0)))
-                .andExpect(jsonPath("$.metadata", matchMetadata("crisrp.name", "Giuseppe Garibaldi", 0)))
-                .andExpect(jsonPath("$.metadata", matchMetadata("dspace.entity.type", "CvPerson", 0)))
-                .andExpect(jsonPath("$.metadata", matchMetadata("person.birthDate", "1807-07-04", 0)));
-
-        getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", user.getID())).andExpect(status().isOk())
-                .andExpect(jsonPath("$.type", is("eperson"))).andExpect(jsonPath("$.name", is(user.getName())));
-    }
-
-//    @Test
-//    public void testCloneFromExternalSourceRecordNotFound() throws Exception {
-//
-//        String authToken = getAuthToken(user.getEmail(), password);
-//
-//        getClient(authToken)
-//                .perform(post("/api/cris/profiles/").contentType(TEXT_URI_LIST)
-//                        .content("http://localhost:8080/server/api/integration/externalsources/orcid/entryValues/FAKE"))
-//                .andExpect(status().isBadRequest());
-//    }
-
-//    @Test
-//    public void testCloneFromExternalSourceMultipleUri() throws Exception {
-//
-//        String authToken = getAuthToken(user.getEmail(), password);
-//
-//        getClient(authToken)
-//                .perform(post("/api/cris/profiles/").contentType(TEXT_URI_LIST)
-//                        .content("http://localhost:8080/server/api/integration/externalsources/orcid/entryValues/id \n "
-//                                + "http://localhost:8080/server/api/integration/externalsources/dspace/entryValues/id"))
-//                .andExpect(status().isBadRequest());
-//
-//    }
-
-//    @Test
-//    public void testCloneFromExternalProfileAlreadyAssociated() throws Exception {
-//
-//        String id = user.getID().toString();
-//        String authToken = getAuthToken(user.getEmail(), password);
-//
-//        getClient(authToken).perform(post("/api/cris/profiles/").contentType(MediaType.APPLICATION_JSON_VALUE))
-//                .andExpect(status().isCreated()).andExpect(jsonPath("$.id", is(id.toString())))
-//                .andExpect(jsonPath("$.visible", is(false))).andExpect(jsonPath("$.type", is("profile")));
-//
-//        getClient(authToken)
-//                .perform(post("/api/cris/profiles/").contentType(TEXT_URI_LIST)
-//                        .content("http://localhost:8080/server/api/integration/externalsources/orcid/entryValues/id"))
-//                .andExpect(status().isConflict());
-//    }
-
-//    @Test
-//    public void testCloneFromExternalCollectionNotSet() throws Exception {
-//
-//        configurationService.setProperty("researcher-profile.collection.uuid", "not-existing");
-//        String id = user.getID().toString();
-//        String authToken = getAuthToken(user.getEmail(), password);
-//
-//        getClient(authToken).perform(post("/api/cris/profiles/").contentType(MediaType.APPLICATION_JSON_VALUE))
-//                .andExpect(status().isCreated()).andExpect(jsonPath("$.id", is(id.toString())))
-//                .andExpect(jsonPath("$.visible", is(false))).andExpect(jsonPath("$.type", is("profile")));
-//
-//        getClient(authToken)
-//                .perform(post("/api/cris/profiles/").contentType(TEXT_URI_LIST)
-//                        .content("http://localhost:8080/server/api/integration/externalsources/orcid/entryValues/id \n "
-//                                + "http://localhost:8080/server/api/integration/externalsources/dspace/entryValues/id"))
-//                .andExpect(status().isBadRequest());
-//    }
-
-    @Test
-    @Ignore
     public void testClaimExistentDirectorioPersonAsProfileAndMergeItWithCtiDatabase() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -976,6 +820,8 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
         mockCtiDatabaseDao(ctiDatabaseDaoMock);
 
+        mockExternalDniDataService();
+
         CrisLayoutBox publicBox = CrisLayoutBoxBuilder.createBuilder(context, personType, false, false)
                 .withSecurity(LayoutSecurity.PUBLIC).build();
 
@@ -1009,6 +855,13 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
         getClient(authToken).perform(get("/api/cris/profiles/{id}/eperson", userWithDni.getID()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.type", is("eperson"))).andExpect(jsonPath("$.name", is(userWithDni.getName())));
+    }
+
+    private void mockExternalDniDataService() {
+        ExternalDataService mockedExternalDataService = mock(ExternalDataService.class);
+        when(mockedExternalDataService.getExternalDataObject(any(), any()))
+            .thenReturn(Optional.empty());
+        researcherProfileReniecProvider.setExternalDataService(mockedExternalDataService);
     }
 
     @Test
@@ -1824,36 +1677,6 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
         getClient().perform(get("/api/core/items/" + CvPatent.getID())).andExpect(status().isOk()).andExpect(
                 jsonPath("$", ItemMatcher.matchItemWithTitleAndDateIssued(CvPatent, "CvPatent Title", "2020-10-11")));
-    }
-
-    /**
-     * Verify that after an user login an automatic claim between the logged eperson
-     * and possible profiles without eperson is done.
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testAutomaticProfileClaimByOrcid() throws Exception {
-
-        context.turnOffAuthorisationSystem();
-
-        EPerson ePerson = EPersonBuilder.createEPerson(context).withCanLogin(true).withNameInMetadata("Test", "User")
-                .withPassword(password).withEmail("test@email.it").withOrcid("0000-1111-2222-3333").build();
-
-        Item item = ItemBuilder.createItem(context, cvPersonCollection).withTitle("Test User")
-                .withOrcidIdentifier("0000-1111-2222-3333").build();
-
-        context.restoreAuthSystemState();
-
-        String epersonId = ePerson.getID().toString();
-
-        String token = getAuthToken(ePerson.getEmail(), password);
-
-        getClient(token).perform(get("/api/cris/profiles/{id}", epersonId)).andExpect(status().isOk());
-
-        String profileItemId = getItemIdByProfileId(token, epersonId);
-        assertEquals("The item should be the same", item.getID().toString(), profileItemId);
-
     }
 
     @Test

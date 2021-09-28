@@ -30,6 +30,7 @@ import org.dspace.content.Item;
 import org.dspace.content.ProcessStatus;
 import org.dspace.scripts.DSpaceCommandLineParameter;
 import org.hamcrest.Matchers;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -39,6 +40,7 @@ import org.junit.Test;
 public class SuneduUpdateIT extends AbstractControllerIntegrationTest {
 
     @Test
+    @Ignore("external services temporarily not available")
     public void updateItemWithInformationFromSuneduByCollectionTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
@@ -117,6 +119,7 @@ public class SuneduUpdateIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    @Ignore("external services temporarily not available")
     public void updateAllItemsWithInformationFromSuneduTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
@@ -201,6 +204,7 @@ public class SuneduUpdateIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    @Ignore("external services temporarily not available")
     public void updateItemsWithInformationFromSuneduByWrongIDColTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
@@ -268,6 +272,7 @@ public class SuneduUpdateIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    @Ignore("external services temporarily not available")
     public void updateSingleItemWithInformationFromSuneduTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
@@ -339,6 +344,7 @@ public class SuneduUpdateIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    @Ignore("external services temporarily not available")
     public void updateItemWithInformationFromSuneduAndLimitTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
@@ -412,6 +418,7 @@ public class SuneduUpdateIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    @Ignore("external services temporarily not available")
     public void updateItemWithInformationFromSuneduAndLastProcessCompletedTest() throws Exception {
         context.turnOffAuthorisationSystem();
 

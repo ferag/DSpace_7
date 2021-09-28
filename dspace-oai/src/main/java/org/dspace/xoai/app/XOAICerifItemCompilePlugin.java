@@ -11,7 +11,6 @@ package org.dspace.xoai.app;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Objects;
-import java.util.Objects;
 import java.util.Optional;
 
 import com.lyncode.xoai.dataprovider.xml.xoai.Element;

@@ -66,33 +66,39 @@ public class BrowsesResourceControllerIT extends AbstractControllerIntegrationTe
                    //Our default Discovery config has 36 browse indexes so we expect this to be reflected in the page
                    // object
                    .andExpect(jsonPath("$.page.size", is(20)))
-                   .andExpect(jsonPath("$.page.totalElements", is(36)))
-                   .andExpect(jsonPath("$.page.totalPages", is(2)))
+                   .andExpect(jsonPath("$.page.totalElements", is(42)))
+                   .andExpect(jsonPath("$.page.totalPages", is(3)))
                    .andExpect(jsonPath("$.page.number", is(0)))
 
-                   //The array of browse index should have a size 36
-                   .andExpect(jsonPath("$._embedded.browses", hasSize(36)))
+                   //The array of browse index should have a size 42
+                   .andExpect(jsonPath("$._embedded.browses", hasSize(42)))
 
                    //Check that all (and only) the default browse indexes are present
                    .andExpect(jsonPath("$._embedded.browses", containsInAnyOrder(
                        BrowseIndexMatcher.dateIssuedBrowseIndex("asc", "dateissued"),
                        BrowseIndexMatcher.dateIssuedBrowseIndex("asc", "instdateissued"),
+                       BrowseIndexMatcher.dateIssuedBrowseIndex("asc", "ctidateissued"),
                        BrowseIndexMatcher.contributorBrowseIndex("asc", "author"),
                        BrowseIndexMatcher.contributorBrowseIndex("asc", "instauthor"),
+                       BrowseIndexMatcher.contributorBrowseIndex("asc", "ctiauthor"),
                        BrowseIndexMatcher.titleBrowseIndex("asc", "title"),
                        BrowseIndexMatcher.titleBrowseIndex("asc", "insttitle"),
+                       BrowseIndexMatcher.titleBrowseIndex("asc", "ctititle"),
                        BrowseIndexMatcher.subjectBrowseIndex("asc", "subject"),
                        BrowseIndexMatcher.subjectBrowseIndex("asc", "instsubject"),
+                       BrowseIndexMatcher.subjectBrowseIndex("asc", "ctisubject"),
                        BrowseIndexMatcher.rodeptBrowseIndex("asc", "rodept"),
                        BrowseIndexMatcher.rodeptBrowseIndex("asc", "instrodept"),
                        BrowseIndexMatcher.typeBrowseIndex("asc", "type"),
                        BrowseIndexMatcher.typeBrowseIndex("asc", "insttype"),
                        BrowseIndexMatcher.rpnameBrowseIndex("asc", "rpname"),
+                       BrowseIndexMatcher.rpnameBrowseIndex("asc", "ctirpname"),
                        BrowseIndexMatcher.rpnameBrowseIndex("asc", "instrpname"),
                        BrowseIndexMatcher.ounameBrowseIndex("asc", "ouname"),
                        BrowseIndexMatcher.ounameBrowseIndex("asc", "instouname"),
                        BrowseIndexMatcher.pjtitleBrowseIndex("asc", "pjtitle"),
                        BrowseIndexMatcher.pjtitleBrowseIndex("asc", "instpjtitle"),
+                       BrowseIndexMatcher.pjtitleBrowseIndex("asc", "ctipjtitle"),
                        BrowseIndexMatcher.rpdeptBrowseIndex("asc", "rpdept"),
                        BrowseIndexMatcher.rpdeptBrowseIndex("asc", "instrpdept"),
                        BrowseIndexMatcher.eqtitleBrowseIndex("asc"),

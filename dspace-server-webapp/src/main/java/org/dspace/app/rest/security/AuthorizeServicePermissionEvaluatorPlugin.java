@@ -104,7 +104,7 @@ public class AuthorizeServicePermissionEvaluatorPlugin extends RestObjectPermiss
                             return true;
                         }
                         if (isCvEntity(item)) {
-                            // cv* type items are managed in a specific plagin :
+                            // cv* type items are managed in a specific plugin :
                             // org.dspace.app.rest.security.CvEntityPermissionEvaluatorPlugin
                             return false;
                         }

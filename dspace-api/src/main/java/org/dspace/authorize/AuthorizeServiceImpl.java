@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -250,16 +251,18 @@ public class AuthorizeServiceImpl implements AuthorizeService {
         EPerson userToCheck = null;
         if (e != null) {
             userToCheck = e;
-
-            // perform isAdmin check to see
-            // if user is an Admin on this object
-            DSpaceObject adminObject = useInheritance ? serviceFactory.getDSpaceObjectService(o)
-                                                                      .getAdminObject(c, o, action) : null;
-
-            if (isAdmin(c, e, adminObject)) {
-                c.cacheAuthorizedAction(o, action, e, true, null);
+            if (isAdmin(c, e)) {
                 return true;
             }
+//            // perform isAdmin check to see
+//            // if user is an Admin on this object
+//            DSpaceObject adminObject = useInheritance ? serviceFactory.getDSpaceObjectService(o)
+//                                                                      .getAdminObject(c, o, action) : null;
+//
+//            if (isAdmin(c, e, adminObject)) {
+//                c.cacheAuthorizedAction(o, action, e, true, null);
+//                return true;
+//            }
         }
 
         // In case the dso is an bundle or bitstream we must ignore custom
@@ -320,6 +323,18 @@ public class AuthorizeServiceImpl implements AuthorizeService {
                 //When we are in read-only mode, we will cache authorized actions in a different way
                 //So we remove this resource policy from the cache.
                 c.uncacheEntity(rp);
+            }
+        }
+
+        if (Objects.nonNull(e)) {
+            // perform isAdmin check to see
+            // if user is an Admin on this object
+            DSpaceObject adminObject = useInheritance ? serviceFactory.getDSpaceObjectService(o)
+                .getAdminObject(c, o, action) : null;
+
+            if (isAdmin(c, e, adminObject)) {
+                c.cacheAuthorizedAction(o, action, e, true, null);
+                return true;
             }
         }
 

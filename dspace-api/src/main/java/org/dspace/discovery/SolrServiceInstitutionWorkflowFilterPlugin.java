@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.common.SolrInputDocument;
 import org.dspace.content.Community;
@@ -64,17 +65,26 @@ public class SolrServiceInstitutionWorkflowFilterPlugin implements SolrServiceIn
             try {
                 Item item = xmlWorkflowItem.getItem();
                 List<RelationshipType> relationshipTypes = relationshipTypeService.findByItemAndTypeNames(
-                                                           context, item, false,
-                                                           ConcytecWorkflowRelation.SHADOW_COPY.getLeftType(),
-                                                           ConcytecWorkflowRelation.SHADOW_COPY.getRightType());
+                    context, item, false,
+                    ConcytecWorkflowRelation.SHADOW_COPY.getLeftType(),
+                    ConcytecWorkflowRelation.SHADOW_COPY.getRightType());
                 if (relationshipTypes.isEmpty()) {
                     return;
                 }
                 List<Relationship> relationships = relationshipService.findByItemAndRelationshipType(context,
-                                                                       item, relationshipTypes.get(0));
+                    item, relationshipTypes.get(0));
                 if (!relationships.isEmpty()) {
                     Item leftItem = relationships.get(0).getLeftItem();
+                    if (Objects.isNull(leftItem)) {
+                        return;
+                    }
                     WorkflowItem workflowItem = workflowItemService.findByItem(context, leftItem);
+                    if (Objects.isNull(workflowItem)
+                        || Objects.isNull(workflowItem.getCollection())
+                        || CollectionUtils.isEmpty(workflowItem.getCollection().getCommunities())
+                    ) {
+                        return;
+                    }
                     Community com = workflowItem.getCollection().getCommunities().get(0);
                     if (StringUtils.isNotBlank(com.getName())) {
                         document.addField("submitting", com.getName());

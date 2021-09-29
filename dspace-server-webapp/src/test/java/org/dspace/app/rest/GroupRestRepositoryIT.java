@@ -357,7 +357,7 @@ public class GroupRestRepositoryIT extends AbstractControllerIntegrationTest {
                    //The array of groups should have a size 2
 //                   .andExpect(jsonPath("$._embedded.groups", hasSize(2)))
                    // The default groups should consist of "Anonymous" and "Anonymous"
-                   .andExpect(jsonPath("$._embedded.groups", Matchers.contains(
+                   .andExpect(jsonPath("$._embedded.groups", Matchers.hasItems(
                        GroupMatcher.matchGroupWithName("Administrator"),
                        GroupMatcher.matchGroupWithName("Anonymous")
                    )))

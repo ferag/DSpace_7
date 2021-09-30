@@ -3288,7 +3288,7 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-
+                <ref bean="searchFilterAccessioned"/>
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -3296,7 +3296,7 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <ref bean="sortScore" />
+<!--                        <ref bean="sortScore" />-->
                         <ref bean="sortTitle" />
                         <ref bean="sortDateIssued" />
                         <ref bean="sortDateAccessioned"/>
@@ -4916,6 +4916,17 @@
         <property name="exposeMinAndMaxValue" value="true"/>
 
     </bean>
+
+    <bean id="searchFilterAccessioned" class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="dateAccessioned"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.date.accessioned</value>
+            </list>
+        </property>
+        <property name="type" value="date"/>
+    </bean>
+
 
     <bean id="searchFilterContentInOriginalBundle" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
         <property name="indexFieldName" value="has_content_in_original_bundle"/>

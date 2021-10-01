@@ -5,12 +5,13 @@
 ## See org.dspace.core.Email for information on the format of this file.
 ##
 #set($subject = "${config.get('dspace.name')} Account Registration")
-To complete registration for a DSpace account, please click the link
-below:
+Para completar el registro de una cuenta en PerúCRIS, por favor haga clic en el enlace
+siguiente:
 
-  ${params[0]}
+    ${params[0]}
 
-If you need assistance with your account, please email
-${config.get("mail.admin")} or call us at xxx-555-xxxx.
+Si necesita ayuda con su cuenta, envíe un correo electrónico a
 
-The DSpace Team
+${config.get("mail.admin")} o llámenos al 0051-1-399-0030.
+
+Equipo PerúCRIS

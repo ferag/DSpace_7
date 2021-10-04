@@ -73,6 +73,7 @@ import org.dspace.app.orcid.model.OrcidTokenResponseDTO;
 import org.dspace.app.orcid.service.OrcidQueueService;
 import org.dspace.app.orcid.webhook.OrcidWebhookServiceImpl;
 import org.dspace.app.profile.ResearcherProfile;
+import org.dspace.app.profile.importproviders.impl.ResearcherProfileReniecProvider;
 import org.dspace.app.profile.service.ResearcherProfileService;
 import org.dspace.app.rest.matcher.ItemMatcher;
 import org.dspace.app.rest.model.MetadataValueRest;
@@ -110,6 +111,7 @@ import org.dspace.discovery.SearchServiceException;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.service.GroupService;
+import org.dspace.external.service.ExternalDataService;
 import org.dspace.importer.external.ctidb.CtiDatabaseDao;
 import org.dspace.importer.external.ctidb.CtiDatabaseImportFacadeImpl;
 import org.dspace.importer.external.ctidb.model.CtiDatosConfidenciales;
@@ -185,6 +187,9 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
     @Autowired
     private OrcidQueueService orcidQueueService;
+
+    @Autowired
+    private ResearcherProfileReniecProvider researcherProfileReniecProvider;
 
     private EPerson user;
 
@@ -952,6 +957,8 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
         createIsPersonOwnerRelationship(cvPersonType, personType);
 
         mockCtiDatabaseDao(ctiDatabaseDaoMock);
+
+        mockExternalDniDataService();
 
         CrisLayoutBox publicBox = CrisLayoutBoxBuilder.createBuilder(context, personType, false, false)
                 .withSecurity(LayoutSecurity.PUBLIC).build();
@@ -3530,6 +3537,13 @@ public class ResearcherProfileRestRepositoryIT extends AbstractControllerIntegra
 
         this.ctiDatabaseImportFacade.setCtiDatabaseDao(ctiDatabaseDaoMock);
 
+    }
+
+    private void mockExternalDniDataService() {
+        ExternalDataService mockedExternalDataService = mock(ExternalDataService.class);
+        when(mockedExternalDataService.getExternalDataObject(any(), any()))
+            .thenReturn(Optional.empty());
+        researcherProfileReniecProvider.setExternalDataService(mockedExternalDataService);
     }
 
     private ResultMatcher mergeDirectorioCtiResultMatcher(EPerson user) {

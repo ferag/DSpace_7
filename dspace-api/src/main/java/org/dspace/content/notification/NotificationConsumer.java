@@ -8,6 +8,7 @@
 package org.dspace.content.notification;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ import org.dspace.authorize.service.ResourcePolicyService;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
+import org.dspace.content.authority.Choices;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
@@ -27,6 +29,8 @@ import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
 import org.dspace.event.Consumer;
 import org.dspace.event.Event;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Consumer that takes care of manage resourcepolicy for Notification items
@@ -44,6 +48,8 @@ public class NotificationConsumer implements Consumer {
     private ResourcePolicyService resourcePolicyService;
 
     private Set<Item> itemsAlreadyProcessed = new HashSet<Item>();
+
+    private static final Logger log = LoggerFactory.getLogger(NotificationConsumer.class);
 
     /**
      * Initalise the consumer
@@ -80,6 +86,14 @@ public class NotificationConsumer implements Consumer {
                                 resourcePolicyService.removeAllPolicies(context, item);
                                 isTheFirstRecipient = false;
                             }
+                            if (Objects.isNull(cvOwner)) {
+                                log.warn("cvOwner not found for person {} with authority {}",
+                                    crisOwner.get(0).getValue(),
+                                    crisOwner.get(0).getAuthority());
+                                continue;
+                            }
+                            itemService.addMetadata(context, item, "cris", "owner", null,
+                                null, cvOwner.getFullName(), cvOwner.getID().toString(), Choices.CF_ACCEPTED);
                             authorizeService.addPolicy(context, item, Constants.READ, cvOwner);
                         }
 

@@ -55,9 +55,23 @@ public class ORCIDRegistrationProvider extends AbstractExternalRegistrationProvi
         eperson.setEmail(email.get().getEmail());
         if (StringUtils.isNotBlank(userData.getGivenName())) {
             eperson.setFirstName(context, userData.getGivenName());
+        } else {
+            String orcidGivenName = orcidGivenName(orcidPerson);
+            if (StringUtils.isNotBlank(orcidGivenName)) {
+                eperson.setFirstName(context, orcidGivenName);
+            } else {
+                eperson.setFirstName(context, "");
+            }
         }
         if (StringUtils.isNotBlank(userData.getFamilyName())) {
             eperson.setLastName(context, userData.getFamilyName());
+        } else {
+            String orcidFamilyName = orcidFamilyName(orcidPerson);
+            if (StringUtils.isNotBlank(orcidFamilyName)) {
+                eperson.setLastName(context, orcidFamilyName);
+            } else {
+                eperson.setLastName(context, "");
+            }
         }
         if (StringUtils.isNotBlank(userData.getBirthdate())) {
             vals = new ArrayList<String>();
@@ -66,6 +80,22 @@ public class ORCIDRegistrationProvider extends AbstractExternalRegistrationProvi
         }
 
         return eperson;
+    }
+
+    private String orcidGivenName(Person orcidPerson) {
+        if (orcidPerson.getName() == null
+            || orcidPerson.getName().getGivenNames() == null) {
+            return "";
+        }
+        return orcidPerson.getName().getGivenNames().getContent();
+    }
+
+    private String orcidFamilyName(Person orcidPerson) {
+        if (orcidPerson.getName() == null
+            || orcidPerson.getName().getFamilyName() == null) {
+            return "";
+        }
+        return orcidPerson.getName().getFamilyName().getContent();
     }
 
     public OrcidV3AuthorDataProvider getOrcidV3AuthorDataProvider() {

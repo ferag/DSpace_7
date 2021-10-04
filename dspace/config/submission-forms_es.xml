@@ -8976,7 +8976,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>amount</dc-element>
-          <label>Cantidad</label>
+          <label>Monto</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -9193,7 +9193,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>amount</dc-element>
-          <label>Cantidad</label>
+          <label>Monto</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -9470,7 +9470,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>amount</dc-element>
-          <label>Cantidad</label>
+          <label>Monto</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -9661,7 +9661,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>amount</dc-element>
-          <label>Cantidad</label>
+          <label>Monto</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />

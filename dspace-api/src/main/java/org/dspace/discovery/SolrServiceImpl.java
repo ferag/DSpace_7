@@ -1564,6 +1564,19 @@ public class SolrServiceImpl implements SearchService, IndexingService {
     }
 
     @Override
+    public QueryResponse retriveSolrDocByTypeAndUniqueID(String type ,String uniqueID) {
+        SolrClient solrClient =  solrSearchCore.getSolr();
+        SolrQuery solrQuery = new SolrQuery(SearchUtils.RESOURCE_UNIQUE_ID + ":" + type + "-" + uniqueID);
+        QueryResponse queryResponse = null;;
+        try {
+            queryResponse = solrClient.query(solrQuery);
+        } catch (SolrServerException | IOException e) {
+            log.error(e.getMessage(), e);
+        }
+        return queryResponse;
+    }
+
+    @Override
     public void updateRelationForItem(final String itemId, final String relationLabel,
                                       final List<String> relatedItems) {
 

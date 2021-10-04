@@ -746,8 +746,8 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         assertThat(getMetadata(personCorrection, "crisrp", "qualification", "start"), empty());
         assertThat(getMetadata(personCorrection, "crisrp", "qualification", "end"), empty());
         assertThat(getMetadata(personCorrection, "crisrp", "qualification", "orgunit"), empty());
-        assertThat(personCorrection.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0,
-            Choices.CF_AMBIGUOUS)));
+        assertThat(personCorrection.getMetadata(),
+                   hasItem(with("perucris.subject.ocde", "OCDE", 0, Choices.CF_AMBIGUOUS)));
         assertThat(personCorrection.getMetadata(), hasItem(with("perucris.address.streetAddress", "My street", 0)));
 
     }
@@ -1078,8 +1078,8 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         assertThat(personCorrectionRelations, hasSize(1));
 
         Item personCorrection = personCorrectionRelations.get(0).getLeftItem();
-        assertThat(personCorrection.getMetadata(), hasItem(with("perucris.subject.ocde",
-            "OCDE", 0, Choices.CF_AMBIGUOUS)));
+        assertThat(personCorrection.getMetadata(),
+                   hasItem(with("perucris.subject.ocde", "OCDE", 0, Choices.CF_AMBIGUOUS)));
 
         removeMetadata(profile, "perucris", "subject", "ocde");
 

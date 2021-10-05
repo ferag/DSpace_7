@@ -62,6 +62,7 @@ import org.dspace.discovery.DiscoverResultIterator;
 import org.dspace.discovery.configuration.DiscoveryConfiguration;
 import org.dspace.discovery.configuration.DiscoveryConfigurationService;
 import org.dspace.discovery.indexobject.IndexableItem;
+import org.dspace.metadataSecurity.MetadataSecurityService;
 import org.dspace.services.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
@@ -93,6 +94,9 @@ public class ReferCrosswalk implements ItemExportCrosswalk {
 
     @Autowired
     private ConditionEvaluatorMapper conditionEvaluatorMapper;
+
+    @Autowired
+    private MetadataSecurityService metadataSecurityService;
 
     private Converter<String, String> converter;
 
@@ -316,9 +320,11 @@ public class ReferCrosswalk implements ItemExportCrosswalk {
             String[] values = virtualField.getMetadata(context, item, line.getField());
             return values != null ? Arrays.asList(values) : Collections.emptyList();
         } else {
-            return itemService.getMetadataByMetadataString(item, line.getField()).stream()
-                .map(MetadataValue::getValue)
-                .collect(Collectors.toList());
+            List<MetadataValue> metadataValues = itemService.getMetadataByMetadataString(item, line.getField());
+            return metadataSecurityService.getPermissionFilteredMetadata(context, item, metadataValues)
+                                          .stream()
+                                          .map(MetadataValue::getValue)
+                                          .collect(Collectors.toList());
         }
     }
 

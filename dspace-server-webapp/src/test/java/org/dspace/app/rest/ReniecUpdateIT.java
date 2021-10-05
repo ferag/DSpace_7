@@ -27,6 +27,7 @@ import org.dspace.content.Item;
 import org.dspace.perucris.externalservices.reniec.ReniecProvider;
 import org.dspace.perucris.externalservices.reniec.UpdateItemWithInformationFromReniecService;
 import org.hamcrest.Matchers;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -44,6 +45,7 @@ public class ReniecUpdateIT extends AbstractControllerIntegrationTest {
     UpdateItemWithInformationFromReniecService updateItemWithInformationFromReniec;
 
     @Test
+    @Ignore("endpoints currently unavailable")
     public void updateItemWithInformationFromReniecByCollectionTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
@@ -150,6 +152,7 @@ public class ReniecUpdateIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    @Ignore("endpoints currently unavailable")
     public void updateAllItemsWithInformationFromReniecTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
@@ -261,6 +264,7 @@ public class ReniecUpdateIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    @Ignore("endpoints currently unavailable")
     public void updateItemsWithInformationFromReniecByWrongIDColTest() throws Exception {
         context.turnOffAuthorisationSystem();
 

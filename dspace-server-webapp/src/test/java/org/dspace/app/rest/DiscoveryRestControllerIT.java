@@ -4541,7 +4541,7 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.resourceTypeFacet(false),
                         FacetEntryMatcher.typeFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
+                        FacetEntryMatcher.submittingInstitutionTypeFacet(false),
                         FacetEntryMatcher.submitterFacet(false)
                 )))
                 //There always needs to be a self link
@@ -4592,7 +4592,7 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.resourceTypeFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.typeFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
+                        FacetEntryMatcher.submittingInstitutionTypeFacet(false),
                         FacetEntryMatcher.submitterFacet(false)
                 )))
                 //There always needs to be a self link
@@ -4626,7 +4626,7 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.resourceTypeFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.typeFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
+                        FacetEntryMatcher.submittingInstitutionTypeFacet(false),
                         FacetEntryMatcher.submitterFacet(false)
                 )))
                 //There always needs to be a self link

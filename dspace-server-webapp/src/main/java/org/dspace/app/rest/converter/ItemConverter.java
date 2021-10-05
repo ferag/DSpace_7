@@ -9,11 +9,14 @@ package org.dspace.app.rest.converter;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import javax.annotation.Resource;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,8 +31,8 @@ import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataValue;
-import org.dspace.content.authority.service.ChoiceAuthorityService;
 import org.dspace.content.service.ItemService;
+import org.dspace.content.service.MetadataSecurityEvaluation;
 import org.dspace.core.Context;
 import org.dspace.discovery.IndexableObject;
 import org.dspace.eperson.EPerson;
@@ -59,14 +62,14 @@ public class ItemConverter
     @Autowired
     private ItemService itemService;
 
+    @Resource(name = "securityLevelsMap")
+    private final Map<String, MetadataSecurityEvaluation> securityLevelsMap = new HashMap<>();
+
     @Autowired
     private CrisLayoutBoxService crisLayoutBoxService;
 
     @Autowired
     private AuthorizeService authorizeService;
-
-    @Autowired
-    private ChoiceAuthorityService cas;
 
     @Autowired
     GroupService groupService;
@@ -128,7 +131,15 @@ public class ItemConverter
             for (MetadataValue metadataValue : fullList) {
                 MetadataField metadataField = metadataValue.getMetadataField();
                 if (checkMetadataFieldVisibility(context, boxes, obj, metadataField)) {
-                    returnList.add(metadataValue);
+                    if (metadataValue.getSecurityLevel() != null) {
+                        MetadataSecurityEvaluation metadataSecurityEvaluation =
+                            mapBetweenSecurityLevelAndClassSecurityLevel( metadataValue.getSecurityLevel());
+                        if (metadataSecurityEvaluation.allowMetadataFieldReturn(context, obj ,metadataField)) {
+                            returnList.add(metadataValue);
+                        }
+                    } else {
+                        returnList.add(metadataValue);
+                    }
                 }
             }
         } catch (SQLException e ) {
@@ -290,5 +301,9 @@ public class ItemConverter
     @Override
     public boolean supportsModel(IndexableObject idxo) {
         return idxo.getIndexedObject() instanceof Item;
+    }
+
+    public MetadataSecurityEvaluation mapBetweenSecurityLevelAndClassSecurityLevel(int securityValue) {
+        return securityLevelsMap.get(securityValue + "");
     }
 }

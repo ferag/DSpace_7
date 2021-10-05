@@ -66,12 +66,12 @@ public class BrowsesResourceControllerIT extends AbstractControllerIntegrationTe
                    //Our default Discovery config has 42 browse indexes so we expect this to be reflected in the page
                    // object
                    .andExpect(jsonPath("$.page.size", is(20)))
-                   .andExpect(jsonPath("$.page.totalElements", is(42)))
+                   .andExpect(jsonPath("$.page.totalElements", is(44)))
                    .andExpect(jsonPath("$.page.totalPages", is(3)))
                    .andExpect(jsonPath("$.page.number", is(0)))
 
                    //The array of browse index should have a size 42
-                   .andExpect(jsonPath("$._embedded.browses", hasSize(42)))
+                   .andExpect(jsonPath("$._embedded.browses", hasSize(44)))
 
                    //Check that all (and only) the default browse indexes are present
                    .andExpect(jsonPath("$._embedded.browses", containsInAnyOrder(
@@ -114,9 +114,11 @@ public class BrowsesResourceControllerIT extends AbstractControllerIntegrationTe
                        BrowseIndexMatcher.rpnameBrowseIndex("asc", "ctirpname"),
                        BrowseIndexMatcher.contributorBrowseIndex("asc", "ctiauthor"),
                        BrowseIndexMatcher.dateIssuedBrowseIndex("asc", "ctidateissued"),
+                       BrowseIndexMatcher.dateIssuedBrowseIndex("asc", "ctiptdateissued"),
                        BrowseIndexMatcher.subjectBrowseIndex("asc", "ctisubject"),
                        BrowseIndexMatcher.titleBrowseIndex("asc", "ctititle"),
-                       BrowseIndexMatcher.pjtitleBrowseIndex("asc", "ctipjtitle")
+                       BrowseIndexMatcher.pjtitleBrowseIndex("asc", "ctipjtitle"),
+                       BrowseIndexMatcher.pjtitleBrowseIndex("asc", "ctipttitle")
                    )))
         ;
     }

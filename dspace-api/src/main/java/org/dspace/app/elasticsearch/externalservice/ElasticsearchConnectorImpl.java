@@ -7,7 +7,6 @@
  */
 package org.dspace.app.elasticsearch.externalservice;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
@@ -18,7 +17,7 @@ import java.security.cert.X509Certificate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
+import javax.annotation.PostConstruct;
 
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;

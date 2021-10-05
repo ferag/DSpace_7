@@ -196,6 +196,12 @@ public class PgcApiDataProviderServiceImpl implements PgcApiDataProviderService 
                 tokenScope = pgc_public;
             }
             // search with id that comes from url
+            DiscoverQuery discoverQuery = new DiscoverQuery();
+            discoverQuery.setQuery("search.resourceid: " + id);
+            DiscoverResult discoverResult = searchService.search(context, discoverQuery);
+            if (discoverResult.getIndexableObjects().isEmpty()) {
+                return null;
+            }
             SolrQuery params = new SolrQuery("item.id:" + id).addField("item.compile");
             try {
                 SolrDocumentList documents = DSpaceSolrCoreSearch.query(DSpaceSolrCoreServer.getServer(), params);

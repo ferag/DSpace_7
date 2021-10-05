@@ -60,9 +60,8 @@ public class FulltextAccessElementItemCompilePlugin implements XOAIExtensionItem
 
             main: for (Bundle bnd : bnds) {
                 for (Bitstream b : bnd.getBitstreams()) {
-                    List<ResourcePolicy> rps = rpServ.findByResouceUuidAndActionId(context, b.getID(), Constants.READ,
-                        0, Integer.MAX_VALUE);
-                    for (ResourcePolicy rp : rps) {
+                    for (ResourcePolicy rp : rpServ.findByResouceUuidAndActionId(context, b.getID(), Constants.READ, 0,
+                        Integer.MAX_VALUE)) {
                         if (rp.getGroup() != null && rp.getGroup().getID().equals(anonGroup.getID())) {
                             // we found an embargo or an openaccess bitstream
                             // exclude temporary access from computation

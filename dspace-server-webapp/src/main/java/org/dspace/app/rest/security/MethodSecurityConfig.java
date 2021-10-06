@@ -9,6 +9,7 @@ package org.dspace.app.rest.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
@@ -27,6 +28,7 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
         DefaultMethodSecurityExpressionHandler expressionHandler =
                 new DefaultMethodSecurityExpressionHandler();
         expressionHandler.setPermissionEvaluator(dSpacePermissionEvaluator);
+        expressionHandler.setParameterNameDiscoverer(new LocalVariableTableParameterNameDiscoverer());
         return expressionHandler;
     }
 }

@@ -3271,7 +3271,7 @@
 
     <!-- CtiVitae imported from previous database -->
     <bean id="importedCtiVitae" class="org.dspace.discovery.configuration.DiscoveryConfiguration" scope="prototype">
-        <property name="id" value="publication"/>
+        <property name="id" value="importedCtiVitae"/>
         <property name="indexAlways" value="true"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">

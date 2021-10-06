@@ -10,9 +10,11 @@ package org.dspace.app.rest.utils;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.Logger;
 import org.dspace.core.Context;
+import org.dspace.core.Context.Mode;
 
 /**
  * Miscellaneous UI utility methods methods for managing DSpace context.
@@ -65,7 +67,7 @@ public class ContextUtil {
 
         if (context == null) {
             try {
-                context = ContextUtil.initializeContext();
+                context = ContextUtil.initializeContext((HttpServletRequest) request);
             } catch (SQLException e) {
                 log.error("Unable to initialize context", e);
                 return null;
@@ -84,9 +86,9 @@ public class ContextUtil {
      * @return a DSpace Context Object
      * @throws SQLException
      */
-    private static Context initializeContext() throws SQLException {
+    private static Context initializeContext(HttpServletRequest request) throws SQLException {
         // Create a new Context
-        Context context = new Context();
+        Context context = request.getMethod().equals("GET") ? new Context(Mode.READ_ONLY) : new Context();
 
         // Set the session ID
         /**context.setExtraLogInfo("session_id="

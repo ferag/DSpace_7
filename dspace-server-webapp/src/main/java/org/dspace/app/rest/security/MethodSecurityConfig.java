@@ -7,6 +7,10 @@
  */
 package org.dspace.app.rest.security;
 
+import java.util.Optional;
+
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
@@ -21,14 +25,27 @@ import org.springframework.security.config.annotation.method.configuration.Globa
 public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 
     @Autowired
-    private PermissionEvaluator dSpacePermissionEvaluator;
+    private BeanFactory context;
+
+    private DefaultMethodSecurityExpressionHandler expressionHandler;
 
     @Override
     protected MethodSecurityExpressionHandler createExpressionHandler() {
-        DefaultMethodSecurityExpressionHandler expressionHandler =
-                new DefaultMethodSecurityExpressionHandler();
-        expressionHandler.setPermissionEvaluator(dSpacePermissionEvaluator);
-        expressionHandler.setParameterNameDiscoverer(new LocalVariableTableParameterNameDiscoverer());
+        this.expressionHandler = new DefaultMethodSecurityExpressionHandler();
+        this.expressionHandler.setParameterNameDiscoverer(new LocalVariableTableParameterNameDiscoverer());
         return expressionHandler;
+    }
+
+    @Override
+    public void afterSingletonsInstantiated() {
+        getSingleBeanOrNull(PermissionEvaluator.class).ifPresent(this.expressionHandler::setPermissionEvaluator);
+    }
+
+    private <T> Optional<T> getSingleBeanOrNull(Class<T> type) {
+        try {
+            return Optional.of(context.getBean(type));
+        } catch (NoSuchBeanDefinitionException e) {
+            return Optional.empty();
+        }
     }
 }

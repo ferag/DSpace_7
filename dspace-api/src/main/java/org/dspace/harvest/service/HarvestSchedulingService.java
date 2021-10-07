@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.eperson.EPerson;
 
 /**
  * Service interface class for the scheduling of harvesting tasks.
@@ -28,7 +29,7 @@ public interface HarvestSchedulingService {
      * @throws AuthorizeException Exception indicating the current user of the context does not have permission
      *                            to perform a particular action.
      */
-    void startNewScheduler() throws SQLException, AuthorizeException;
+    void startNewScheduler(boolean isLocal, EPerson admin) throws SQLException, AuthorizeException;
 
     /**
      * Stop an active harvest scheduler.

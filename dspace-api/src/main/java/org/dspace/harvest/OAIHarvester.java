@@ -80,6 +80,7 @@ import org.dspace.core.Context;
 import org.dspace.core.Utils;
 import org.dspace.core.exception.SQLRuntimeException;
 import org.dspace.core.service.PluginService;
+import org.dspace.eperson.EPerson;
 import org.dspace.handle.service.HandleService;
 import org.dspace.harvest.model.OAIHarvesterAction;
 import org.dspace.harvest.model.OAIHarvesterOptions;
@@ -93,6 +94,7 @@ import org.dspace.harvest.service.OAIHarvesterClient;
 import org.dspace.harvest.service.OAIHarvesterEmailSender;
 import org.dspace.harvest.service.OAIHarvesterValidator;
 import org.dspace.harvest.util.NamespaceUtils;
+import org.dspace.service.impl.SqsService;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 import org.dspace.util.ExceptionMessageUtils;
@@ -190,7 +192,8 @@ public class OAIHarvester {
      * OAI-PMH provider, check for updates since last harvest, and ingest the
      * returned items.
      */
-    public void runHarvest(Context context, HarvestedCollection harvestRow, OAIHarvesterOptions options) {
+    public void runHarvest(Context context, HarvestedCollection harvestRow, OAIHarvesterOptions options,
+        EPerson eperson) {
 
         context.setMode(Context.Mode.BATCH_EDIT);
 
@@ -198,7 +201,7 @@ public class OAIHarvester {
 
         try {
 
-            if (harvestRow == null || !harvestedCollectionService.isHarvestable(harvestRow)) {
+            if (harvestRow == null || !harvestedCollectionService.isHarvestable(harvestRow, options.isLocal())) {
                 throw new HarvestingException("Provided collection is not set up for harvesting");
             }
 
@@ -206,21 +209,26 @@ public class OAIHarvester {
             if (isForceSynchronization(harvestRow.getCollection(), options)) {
                 fromDate = null;
             }
+            if (options.isLocal()) {
+                harvestRow = setBusyStatus(context, harvestRow, toDate);
+                OAIHarvesterReport report = startHarvest(context, harvestRow, fromDate, toDate, options);
 
-            harvestRow = setBusyStatus(context, harvestRow, toDate);
+                if (report.noRecordImportFails()) {
+                    setReadyStatus(context, harvestRow, getReportMessage(report), toDate);
+                } else {
+                    setRetryStatus(context, harvestRow, getReportMessage(report));
+                }
 
-            OAIHarvesterReport report = startHarvest(context, harvestRow, fromDate, toDate, options);
-
-            if (report.noRecordImportFails()) {
-                setReadyStatus(context, harvestRow, getReportMessage(report), toDate);
+                if (report.hasErrors()) {
+                    oaiHarvesterEmailSender.notifyCompletionWithErrors(getEmailRecipient(harvestRow),
+                         harvestRow, report);
+                }
             } else {
-                setRetryStatus(context, harvestRow, getReportMessage(report));
+                SqsService.enqueueCommand(configurationService.getProperty("dspace.serviceid"),
+                        new String[] { "harvest", "-r", "-c", harvestRow.getCollection().getID().toString(),
+                            "-e", eperson.getEmail() },
+                        "harvestingcollection_" + harvestRow.getCollection().getID().toString());
             }
-
-            if (report.hasErrors()) {
-                oaiHarvesterEmailSender.notifyCompletionWithErrors(getEmailRecipient(harvestRow), harvestRow, report);
-            }
-
         } catch (NoRecordsMatchException nrme) {
             setReadyStatus(context, harvestRow, nrme.getMessage(), toDate);
             log.info(nrme.getMessage());

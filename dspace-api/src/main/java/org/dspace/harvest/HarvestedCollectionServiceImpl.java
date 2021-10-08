@@ -76,31 +76,40 @@ public class HarvestedCollectionServiceImpl implements HarvestedCollectionServic
     }
 
     @Override
-    public boolean isHarvestable(Context context, Collection collection) throws SQLException {
-        return isHarvestable(find(context, collection));
+    public boolean isHarvestable(Context context, Collection collection, boolean local) throws SQLException {
+        return isHarvestable(find(context, collection), local);
     }
 
     @Override
-    public boolean isHarvestable(HarvestedCollection harvestedCollection) throws SQLException {
-        if (harvestedCollection.getHarvestType() > 0 && harvestedCollection.getOaiSource() != null &&
-            harvestedCollection.getOaiSetId() != null && harvestedCollection.getCollection() != null &&
-            harvestedCollection.getHarvestStatus() != HarvestedCollection.STATUS_UNKNOWN_ERROR &&
-            harvestedCollection.getHarvestStatus() != HarvestedCollection.STATUS_BUSY) {
-            return true;
+    public boolean isHarvestable(HarvestedCollection harvestedCollection, boolean local) throws SQLException {
+        if (local) {
+            if (harvestedCollection.getHarvestType() > 0 && harvestedCollection.getOaiSource() != null &&
+                harvestedCollection.getOaiSetId() != null && harvestedCollection.getCollection() != null &&
+                harvestedCollection.getHarvestStatus() != HarvestedCollection.STATUS_UNKNOWN_ERROR &&
+                harvestedCollection.getHarvestStatus() != HarvestedCollection.STATUS_BUSY) {
+                return true;
+            }
+
+            return false;
+        } else {
+            if (harvestedCollection.getHarvestType() > 0 && harvestedCollection.getOaiSource() != null &&
+                harvestedCollection.getOaiSetId() != null && harvestedCollection.getCollection() != null &&
+                harvestedCollection.getHarvestStatus() != HarvestedCollection.STATUS_BATCH_QUEUE) {
+                return true;
+            }
+            return false;
         }
-
-        return false;
     }
 
     @Override
-    public boolean isReady(Context context, Collection collection) throws SQLException {
+    public boolean isReady(Context context, Collection collection, boolean local) throws SQLException {
         HarvestedCollection hc = find(context, collection);
-        return isReady(hc);
+        return isReady(hc, local);
     }
 
     @Override
-    public boolean isReady(HarvestedCollection harvestedCollection) throws SQLException {
-        if (isHarvestable(harvestedCollection) && (harvestedCollection
+    public boolean isReady(HarvestedCollection harvestedCollection, boolean local) throws SQLException {
+        if (isHarvestable(harvestedCollection, local) && (harvestedCollection
             .getHarvestStatus() == HarvestedCollection.STATUS_READY || harvestedCollection
             .getHarvestStatus() == HarvestedCollection.STATUS_OAI_ERROR)) {
             return true;
@@ -262,6 +271,7 @@ public class HarvestedCollectionServiceImpl implements HarvestedCollectionServic
 
         return errorSet;
     }
+
 
 
 }

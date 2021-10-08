@@ -36,6 +36,7 @@ import org.dspace.services.factory.DSpaceServicesFactory;
 public class HarvestScheduler implements Runnable {
     protected static Logger log = LogManager.getLogger(HarvestScheduler.class);
 
+    protected boolean isLocal;
 
     protected static EPerson harvestAdmin;
 
@@ -123,13 +124,18 @@ public class HarvestScheduler implements Runnable {
         }
     }
 
-    public HarvestScheduler() throws SQLException, AuthorizeException {
+    public HarvestScheduler(boolean isLocal, EPerson admin) throws SQLException, AuthorizeException {
+        this.isLocal = isLocal;
         mainContext = new Context();
         String harvestAdminParam = configurationService.getProperty("oai.harvester.eperson");
         harvestAdmin = null;
-        if (harvestAdminParam != null && harvestAdminParam.length() > 0) {
-            harvestAdmin = EPersonServiceFactory.getInstance().getEPersonService()
-                                                .findByEmail(mainContext, harvestAdminParam);
+        if (isLocal) {
+            if (harvestAdminParam != null && harvestAdminParam.length() > 0) {
+                harvestAdmin = EPersonServiceFactory.getInstance().getEPersonService()
+                    .findByEmail(mainContext, harvestAdminParam);
+            }
+        } else {
+            harvestAdmin = admin;
         }
 
         harvestThreads = new Stack<>();
@@ -168,7 +174,8 @@ public class HarvestScheduler implements Runnable {
                         case HARVESTER_INTERRUPT_INSERT_THREAD:
                             interrupt = HARVESTER_INTERRUPT_NONE;
                             addThread(mainContext, harvestedCollectionService
-                                .find(mainContext, collectionService.find(mainContext, interruptValue)));
+                                .find(mainContext, collectionService.find(mainContext, interruptValue)), isLocal,
+                                harvestAdmin);
                             interruptValue = null;
                             break;
                         case HARVESTER_INTERRUPT_PAUSE:
@@ -201,7 +208,7 @@ public class HarvestScheduler implements Runnable {
                 log.info("Collections ready for immediate harvest: " + cids.toString());
 
                 for (HarvestedCollection harvestedCollection : cids) {
-                    addThread(mainContext, harvestedCollection);
+                    addThread(mainContext, harvestedCollection, isLocal, harvestAdmin);
                 }
 
                 // Stage #2: start up all the threads currently in the queue up to the maximum number
@@ -258,7 +265,11 @@ public class HarvestScheduler implements Runnable {
                 long nextHarvest = 0;
                 if (hc != null) {
                     Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(hc.getLastHarvestDate());
+                    if (hc.getLastHarvestDate() != null) {
+                        calendar.setTime(hc.getLastHarvestDate());
+                    } else {
+                        calendar.setTime(new Date());
+                    }
                     calendar.add(Calendar.MINUTE, harvestInterval);
                     nextTime = calendar.getTime();
                     nextHarvest = nextTime.getTime() + -new Date().getTime();
@@ -298,16 +309,19 @@ public class HarvestScheduler implements Runnable {
      * @throws AuthorizeException Exception indicating the current user of the context does not have permission
      *                            to perform a particular action.
      */
-    public void addThread(Context context, HarvestedCollection harvestedCollection)
+    public void addThread(Context context, HarvestedCollection harvestedCollection, boolean isLocal, EPerson eperson)
         throws SQLException, IOException, AuthorizeException {
         log.debug("****** Entered the addThread method. Active threads: " + harvestThreads.toString());
         context.setCurrentUser(harvestAdmin);
-
-        harvestedCollection.setHarvestStatus(HarvestedCollection.STATUS_QUEUED);
+        if (isLocal) {
+            harvestedCollection.setHarvestStatus(HarvestedCollection.STATUS_BATCH_QUEUE);
+        } else {
+            harvestedCollection.setHarvestStatus(HarvestedCollection.STATUS_QUEUED);
+        }
         harvestedCollectionService.update(context, harvestedCollection);
         context.dispatchEvents();
 
-        HarvestThread ht = new HarvestThread(harvestedCollection.getCollection().getID());
+        HarvestThread ht = new HarvestThread(harvestedCollection.getCollection().getID(), isLocal, harvestAdmin);
         harvestThreads.push(ht);
 
         log.debug("****** Queued up a thread. Active threads: " + harvestThreads.toString());

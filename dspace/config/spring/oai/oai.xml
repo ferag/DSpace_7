@@ -27,8 +27,9 @@
         <property name="fieldName" value="pgc-openaire"/>
     </bean>
     <bean id="xoaiPgcCerifRestrictedGenerator" class="org.dspace.xoai.app.XOAICerifItemCompilePlugin">
-        <property name="generator" value="perucris-restricted-cerif-xml"/>
+        <property name="generator" value="perucris-cerif-xml"/>
         <property name="fieldName" value="pgc-openaire-restricted"/>
+        <property name="ePersonName" value="trusted-oai@mailinator.com"/>
     </bean>
 
 	<!-- Additional item.compile plugin to enrich field with information about

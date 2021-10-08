@@ -111,6 +111,9 @@ public class DSpacePgcApiDataController {
                 tempFileXml = pgcApiDataProviderService.scopeData(scope, pageable, query, context, request);
             } else {
                 tempFileXml = pgcApiDataProviderService.scopeData(scope, id, context, pageable, request);
+                if (Objects.isNull(tempFileXml)) {
+                    return ResponseEntity.notFound().build();
+                }
             }
             tempFileXml.deleteOnExit();
             final FileSystemResource fileSystemResource = new FileSystemResource(tempFileXml.getPath());

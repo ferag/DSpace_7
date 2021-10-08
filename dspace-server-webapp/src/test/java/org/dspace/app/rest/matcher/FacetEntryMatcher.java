@@ -159,6 +159,15 @@ public class FacetEntryMatcher {
         );
     }
 
+    public static Matcher<? super Object> submittingInstitutionTypeFacet(boolean hasNext) {
+        return allOf(
+            hasJsonPath("$.name", is("submitting")),
+            hasJsonPath("$.facetLimit", any(Integer.class)),
+            hasJsonPath("$._links.self.href", containsString("api/discover/facets/submitting")),
+            hasJsonPath("$._links", matchNextLink(hasNext, "api/discover/facets/submitting"))
+        );
+    }
+
     public static Matcher<? super Object> anyFacet(String name, String facetType) {
         return allOf(
             hasJsonPath("$.name", is(name)),

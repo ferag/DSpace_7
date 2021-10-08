@@ -1028,16 +1028,10 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                        SearchFilterMatcher.titleFilter(),
                        SearchFilterMatcher.authorFilter(),
                        SearchFilterMatcher.subjectFilter(),
-//                       SearchFilterMatcher.dateIssuedFilter(),
                        SearchFilterMatcher.hasContentInOriginalBundleFilter(),
                        SearchFilterMatcher.hasFileNameInOriginalBundleFilter(),
                        SearchFilterMatcher.hasFileDescriptionInOriginalBundleFilter(),
-                       SearchFilterMatcher.entityTypeFilter(),
-                       SearchFilterMatcher.isAuthorOfPublicationRelation(),
-                       SearchFilterMatcher.isProjectOfPublicationRelation(),
-                       SearchFilterMatcher.isOrgUnitOfPublicationRelation(),
-                       SearchFilterMatcher.isPublicationOfJournalIssueRelation(),
-                       SearchFilterMatcher.isJournalOfPublicationRelation()
+                       SearchFilterMatcher.entityTypeFilter()
                    )))
                    //These sortOptions need to be present as it's the default in the configuration
                    .andExpect(jsonPath("$.sortOptions", contains(
@@ -4541,7 +4535,7 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.resourceTypeFacet(false),
                         FacetEntryMatcher.typeFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
-                        FacetEntryMatcher.submittingInstitutionFacet(false),
+                        FacetEntryMatcher.submittingInstitutionTypeFacet(false),
                         FacetEntryMatcher.submitterFacet(false)
                 )))
                 //There always needs to be a self link
@@ -4592,7 +4586,7 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.resourceTypeFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.typeFacet(false),
-                        FacetEntryMatcher.submittingInstitutionFacet(false),
+                        FacetEntryMatcher.submittingInstitutionTypeFacet(false),
                         FacetEntryMatcher.submitterFacet(false)
                 )))
                 //There always needs to be a self link
@@ -4626,7 +4620,7 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.resourceTypeFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.typeFacet(false),
-                        FacetEntryMatcher.submittingInstitutionFacet(false),
+                        FacetEntryMatcher.submittingInstitutionTypeFacet(false),
                         FacetEntryMatcher.submitterFacet(false)
                 )))
                 //There always needs to be a self link

@@ -2888,44 +2888,6 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertTrue(StringUtils.equals(obj.getString("title"), StringUtils.EMPTY));
     }
 
-//    @Test
-//    public void testVirtualFieldDate() throws Exception {
-//
-//        Item publication = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Publication")
-//            .withIssueDate("2020-02-14")
-//            .withDateAccepted("2021")
-//            .withDateAccepted("2022")
-//            .withDateAccepted("2023")
-//            .build();
-//
-//        ReferCrosswalk referCrosswalk = new DSpace().getServiceManager()
-//            .getServiceByName("referCrosswalkVirtualFieldDate", ReferCrosswalk.class);
-//        assertThat(referCrosswalk, notNullValue());
-//
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//        referCrosswalk.disseminate(context, publication, out);
-//
-//        String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-//        String currentYear = new SimpleDateFormat("yyyy").format(new Date());
-//
-//        String[] resultLines = out.toString().split("\n");
-//        assertThat(resultLines.length, is(12));
-//        assertThat(resultLines[0].trim(), is("{"));
-//        assertThat(resultLines[1].trim(), is("\"only-year\": \"2020\","));
-//        assertThat(resultLines[2].trim(), is("\"date-without-time\": \"2020-02-14\","));
-//        assertThat(resultLines[3].trim(), is("\"another-date-without-time\": \"2020\\/02\\/14\","));
-//        assertThat(resultLines[4].trim(), is("\"date-with-time\": \"14-02-2020 00:00:00\","));
-//        assertThat(resultLines[5].trim(), is("\"another-date-with-time\": \"20200214 000000\","));
-//        assertThat(resultLines[6].trim(), is("\"current-timestamp\": \"" + currentDate + "\","));
-//        assertThat(resultLines[7].trim(), is("\"current-year\": \"" + currentYear + "\","));
-//        assertThat(resultLines[8].trim(), is("\"repeatable-date\": \"2021\","));
-//        assertThat(resultLines[9].trim(), is("\"repeatable-date\": \"2022\","));
-//        assertThat(resultLines[10].trim(), is("\"repeatable-date\": \"2023\""));
-//        assertThat(resultLines[11].trim(), is("}"));
-//
-//    }
-
     @Test
     public void testVirtualFieldVocabulary() throws Exception {
 

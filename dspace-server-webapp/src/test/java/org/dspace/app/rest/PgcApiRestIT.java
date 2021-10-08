@@ -89,7 +89,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 
 public class PgcApiRestIT extends AbstractControllerIntegrationTest {
-    private static final Logger log = LogManager.getLogger(DSpaceSolrCoreServer.class);
+    private static final Logger log = LogManager.getLogger(PgcApiRestIT.class);
+
     protected CollectionService collectionService = ContentServiceFactory.getInstance().getCollectionService();
     protected CommunityService communityService = ContentServiceFactory.getInstance().getCommunityService();
     @Autowired
@@ -98,6 +99,7 @@ public class PgcApiRestIT extends AbstractControllerIntegrationTest {
     protected AuthorizeService authorizeService;
     @Autowired
     private CollectionsService collectionsService;
+
     private Community community;
     private Collection collection;
     @OrderBy("id ASC")

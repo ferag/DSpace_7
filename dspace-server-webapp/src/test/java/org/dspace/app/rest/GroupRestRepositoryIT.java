@@ -354,8 +354,6 @@ public class GroupRestRepositoryIT extends AbstractControllerIntegrationTest {
                    //The status has to be 200 OK
                    .andExpect(status().isOk())
                    .andExpect(content().contentType(contentType))
-                   //The array of groups should have a size 2
-//                   .andExpect(jsonPath("$._embedded.groups", hasSize(2)))
                    // The default groups should consist of "Anonymous" and "Anonymous"
                    .andExpect(jsonPath("$._embedded.groups", Matchers.hasItems(
                        GroupMatcher.matchGroupWithName("Administrator"),
@@ -557,7 +555,7 @@ public class GroupRestRepositoryIT extends AbstractControllerIntegrationTest {
                                              .param("query", group1.getName()))
                             .andExpect(status().isOk())
                             .andExpect(content().contentType(contentType))
-                            .andExpect(jsonPath("$._embedded.groups", Matchers.containsInAnyOrder(
+                            .andExpect(jsonPath("$._embedded.groups", Matchers.hasItems(
                                     GroupMatcher.matchGroupEntry(group1.getID(), group1.getName()),
                                     GroupMatcher.matchGroupEntry(group2.getID(), group2.getName()),
                                     GroupMatcher.matchGroupEntry(group3.getID(), group3.getName())
@@ -569,7 +567,7 @@ public class GroupRestRepositoryIT extends AbstractControllerIntegrationTest {
                                              .param("query", String.valueOf(group1.getID())))
                             .andExpect(status().isOk())
                             .andExpect(content().contentType(contentType))
-                            .andExpect(jsonPath("$._embedded.groups", Matchers.contains(
+                            .andExpect(jsonPath("$._embedded.groups", Matchers.hasItems(
                                     GroupMatcher.matchGroupEntry(group1.getID(), group1.getName())
                             )))
                             .andExpect(jsonPath("$.page.totalElements", is(1)));

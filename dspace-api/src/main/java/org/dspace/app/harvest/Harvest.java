@@ -103,8 +103,10 @@ public class Harvest {
                               "crosswalk in dspace.cfg");
 
         options.addOption("h", "help", false, "help");
+        options.addOption("batch", "batch", false, "Execute the scheduler on spot instances, usable only with -S flag");
+        options.addOption("task_id", "execute on local machine", false, "This is managed by the script");
 
-        CommandLine line = parser.parse(options, argv);
+        CommandLine line = parser.parse(options, argv, false);
 
         String command = null;
         String eperson = null;
@@ -117,6 +119,7 @@ public class Harvest {
         Boolean itemValidation = null;
         Boolean recordValidation = null;
         Boolean submitEnabled = true;
+        boolean local = true;
 
         if (line.hasOption('h')) {
             HelpFormatter myhelp = new HelpFormatter();
@@ -196,6 +199,9 @@ public class Harvest {
         if (line.hasOption('w')) {
             submitEnabled = false;
         }
+        if (line.hasOption("batch")) {
+            local = false;
+        }
 
 
         // Instantiate our class
@@ -218,11 +224,11 @@ public class Harvest {
             }
 
             harvester.runHarvest(collection, eperson, new OAIHarvesterOptions(forceSynch, recordValidation,
-                itemValidation, submitEnabled));
+                itemValidation, submitEnabled ,local));
 
         } else if ("start".equals(command)) {
             // start the harvest loop
-            startHarvester();
+            startHarvester(local, eperson);
         } else if ("reset".equals(command)) {
             // reset harvesting status
             resetHarvesting();
@@ -437,7 +443,7 @@ public class Harvest {
 
             logProcess(options.getProcessId(), hc, true, startTimestamp);
 
-            harvester.runHarvest(context, hc, options);
+            harvester.runHarvest(context, hc, options, eperson);
             context.complete();
 
             logProcess(options.getProcessId(), hc, false, startTimestamp);
@@ -474,10 +480,14 @@ public class Harvest {
     /**
      * Starts up the harvest scheduler. Terminating this process will stop the scheduler.
      */
-    private static void startHarvester() {
+    private static void startHarvester(boolean local, String admin) {
         try {
             System.out.print("Starting harvest loop... ");
-            HarvestServiceFactory.getInstance().getHarvestSchedulingService().startNewScheduler();
+            EPerson eperson = null;
+            if (!local) {
+                eperson = ePersonService.findByEmail(context, admin);
+            }
+            HarvestServiceFactory.getInstance().getHarvestSchedulingService().startNewScheduler(local, eperson);
             System.out.println("running. ");
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -89,6 +89,8 @@ public class HarvestedCollection implements ReloadableEntity<Integer> {
     @Transient
     public static final int STATUS_RETRY = 4;
     @Transient
+    public static final int STATUS_BATCH_QUEUE = 5;
+    @Transient
     public static final int STATUS_UNKNOWN_ERROR = -1;
 
     /**

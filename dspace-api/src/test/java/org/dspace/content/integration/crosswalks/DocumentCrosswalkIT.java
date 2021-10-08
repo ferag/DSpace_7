@@ -835,7 +835,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     private void assertThatOrgUnitDocumentHasContent(String content) {
         assertThat(content, containsString("Test OrgUnit"));
 
-        assertThat(content, containsString("Información baáica"));
+        assertThat(content, containsString("Información basica"));
         assertThat(content, containsString("Acrónimo: TOU"));
         assertThat(content, containsString("Tipo: https://w3id.org/cerif/vocab/OrganisationTypes"
             + "#StrategicResearchInsitute"));

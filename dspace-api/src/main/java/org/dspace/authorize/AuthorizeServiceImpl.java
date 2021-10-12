@@ -249,13 +249,9 @@ public class AuthorizeServiceImpl implements AuthorizeService {
         EPerson userToCheck = null;
         if (e != null) {
             userToCheck = e;
-            // perform isAdmin check to see
-            // if user is an Admin on this object
-            DSpaceObject adminObject = useInheritance ? serviceFactory.getDSpaceObjectService(o)
-                                                                      .getAdminObject(c, o, action) : null;
 
-            if (isAdmin(c, e, adminObject)) {
-                c.cacheAuthorizedAction(o, action, e, useInheritance, true, null);
+            // perform immediately isAdmin check as this is cheap
+            if (isAdmin(c, e)) {
                 return true;
             }
         }
@@ -329,7 +325,7 @@ public class AuthorizeServiceImpl implements AuthorizeService {
                                                                       .getAdminObject(c, o, action) : null;
 
             if (isAdmin(c, e, adminObject)) {
-                c.cacheAuthorizedAction(o, action, e, true, null);
+                c.cacheAuthorizedAction(o, action, e, useInheritance, true, null);
                 return true;
             }
         }

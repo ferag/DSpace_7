@@ -325,7 +325,7 @@ public class AuthorizeServiceImpl implements AuthorizeService {
                                                                       .getAdminObject(c, o, action) : null;
 
             if (isAdmin(c, e, adminObject)) {
-                c.cacheAuthorizedAction(o, action, e, true, null);
+                c.cacheAuthorizedAction(o, action, e, useInheritance, true, null);
                 return true;
             }
         }

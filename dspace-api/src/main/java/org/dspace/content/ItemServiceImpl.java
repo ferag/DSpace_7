@@ -67,6 +67,7 @@ import org.dspace.discovery.indexobject.IndexableWorkflowItem;
 import org.dspace.discovery.indexobject.IndexableWorkspaceItem;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.service.SubscribeService;
 import org.dspace.event.Event;
 import org.dspace.harvest.HarvestedItem;
 import org.dspace.harvest.service.HarvestedItemService;
@@ -151,6 +152,9 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
 
     @Autowired(required = true)
     private OrcidSynchronizationService orcidSynchronizationService;
+
+    @Autowired(required = true)
+    protected SubscribeService subscribeService;
 
     protected ItemServiceImpl() {
         super();
@@ -723,6 +727,8 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
             resetWillBeReferencedAuthorities(context, item);
         }
 
+        //remove subscription related with it
+        subscribeService.deleteByDspaceObject(context, item);
         // Remove relationships
         for (Relationship relationship : relationshipService.findByItem(context, item)) {
             relationshipService.forceDelete(context, relationship, false, false);

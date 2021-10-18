@@ -57,7 +57,9 @@ public class ResearcherProfileValueGeneratorTest {
     @Test
     public void testWithoutUserInTheContext() {
 
-        MetadataValueVO metadataValue = generator.generator(context, targetItem, templateItem, extraParams);
+        MetadataValueVO metadataValue = generator
+            .generator(context, targetItem, templateItem, extraParams)
+            .get(0);
 
         assertThat(metadataValue, notNullValue());
         assertThat(metadataValue.getValue(), is(""));
@@ -72,7 +74,9 @@ public class ResearcherProfileValueGeneratorTest {
         EPerson currentUser = buildEPersonMock(UUID.fromString("25ad8d1a-e00f-4077-b2a2-326822d6aea4"));
         when(context.getCurrentUser()).thenReturn(currentUser);
 
-        MetadataValueVO metadataValue = generator.generator(context, targetItem, templateItem, extraParams);
+        MetadataValueVO metadataValue = generator
+            .generator(context, targetItem, templateItem, extraParams)
+            .get(0);
 
         assertThat(metadataValue, notNullValue());
         assertThat(metadataValue.getValue(), is(""));
@@ -92,7 +96,9 @@ public class ResearcherProfileValueGeneratorTest {
         ResearcherProfile researcherProfile = buildResearcherProfile("72d8ff65-619e-4f78-b005-78db7a2c835c", "Profile");
         when(researcherProfileService.findById(context, userId)).thenReturn(researcherProfile);
 
-        MetadataValueVO metadataValue = generator.generator(context, targetItem, templateItem, extraParams);
+        MetadataValueVO metadataValue = generator
+            .generator(context, targetItem, templateItem, extraParams)
+            .get(0);
 
         assertThat(metadataValue, notNullValue());
         assertThat(metadataValue.getValue(), is("Profile"));

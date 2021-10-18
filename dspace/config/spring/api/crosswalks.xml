@@ -73,7 +73,7 @@
                 <entry key="patent-pdf" value-ref="pdfCrosswalkPatent"></entry>
                 <entry key="patent-csv" value-ref="csvCrosswalkPatent"></entry>
                 <entry key="patent-xls" value-ref="xlsCrosswalkPatent"></entry>
-                
+
                 <entry key="product-perucris-cerif-xml" value-ref="referCrosswalkProductPerucrisCerifXml"></entry>
 
                 <entry key="institutionpublication-bibtex" value-ref="cslItemDataCrosswalkInstitutionPublicationBibtex"></entry>

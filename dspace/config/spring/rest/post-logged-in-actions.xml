@@ -5,14 +5,5 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-	<bean id="researcherProfileClaimByEmail" class="org.dspace.app.rest.login.impl.ResearcherProfileAutomaticClaim">
-		<constructor-arg name="ePersonField" value="email" />
-		<constructor-arg name="profileField" value="person.email" />
-	</bean>
 
-	<bean id="researcherProfileClaimByOrcid" class="org.dspace.app.rest.login.impl.ResearcherProfileAutomaticClaim">
-		<constructor-arg name="ePersonField" value="eperson.orcid" />
-		<constructor-arg name="profileField" value="person.identifier.orcid" />
-	</bean>
-           
 </beans>

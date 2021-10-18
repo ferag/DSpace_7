@@ -67,6 +67,17 @@ public class FacetEntryMatcher {
         );
     }
 
+    public static Matcher<? super Object> submittingInstitutionFacet(boolean hasNext) {
+        return allOf(
+            hasJsonPath("$.name", is("submitting")),
+            hasJsonPath("$.facetType", is("text")),
+            hasJsonPath("$.facetLimit", any(Integer.class)),
+            hasJsonPath("$._links.self.href", containsString("api/discover/facets/submitting")),
+            hasJsonPath("$._links", matchNextLink(hasNext, "api/discover/facets/submitting"))
+
+        );
+    }
+
     public static Matcher<? super Object> dateIssuedFacet(boolean hasNext) {
         return allOf(
             hasJsonPath("$.name", is("dateIssued")),

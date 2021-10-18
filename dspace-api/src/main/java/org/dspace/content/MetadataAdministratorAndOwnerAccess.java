@@ -47,7 +47,7 @@ public class MetadataAdministratorAndOwnerAccess implements MetadataSecurityEval
             }
             List<MetadataValue> owners = itemService.getMetadataByMetadataString(item, "cris.owner");
             return owners.stream()
-                .anyMatch(v -> StringUtils.equals(v.getAuthority(), context.getCurrentUser().id + ""));
+                         .anyMatch(v -> StringUtils.equals(v.getAuthority(), context.getCurrentUser().id + ""));
         }
 
         return false;

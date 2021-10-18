@@ -35,7 +35,7 @@ import org.junit.Test;
 public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
 
     @Test
-    @Ignore("endpoints currently unavailable")
+    @Ignore("external services temporarily not available")
     public void updateItemWithInformationFromRenacytByCollectionTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
@@ -120,7 +120,7 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
-    @Ignore("endpoints currently unavailable")
+    @Ignore("external services temporarily not available")
     public void updateAllItemsWithInformationFromRenacytTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
@@ -206,7 +206,7 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
-    @Ignore("endpoints currently unavailable")
+    @Ignore("external services temporarily not available")
     public void updateItemsWithInformationFromReniecByWrongIDColTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
@@ -290,7 +290,7 @@ public class RenacytUpdateIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
-    @Ignore("endpoints currently unavailable")
+    @Ignore("external services temporarily not available")
     public void updateItemByCollectionTest() throws Exception {
         context.turnOffAuthorisationSystem();
 

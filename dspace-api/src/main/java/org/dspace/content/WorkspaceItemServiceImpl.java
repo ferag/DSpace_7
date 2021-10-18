@@ -139,17 +139,24 @@ public class WorkspaceItemServiceImpl implements WorkspaceItemService {
                 MetadataField metadataField = templateMetadataValue.getMetadataField();
                 MetadataSchema metadataSchema = metadataField.getMetadataSchema();
 
-                MetadataValueVO metadataValueFromTemplate = templateItemValueService.value(context, item,
+                List<MetadataValueVO> metadataValueFromTemplateList = templateItemValueService.value(context, item,
                     templateItem, templateMetadataValue);
 
-                if (StringUtils.isEmpty(metadataValueFromTemplate.getValue())) {
+                if (metadataValueFromTemplateList.isEmpty() || StringUtils.isEmpty(metadataValueFromTemplateList.get(0)
+                    .getValue())) {
                     continue;
                 }
 
-                itemService.addMetadata(context, item, metadataSchema.getName(), metadataField.getElement(),
-                    metadataField.getQualifier(), templateMetadataValue.getLanguage(),
-                    metadataValueFromTemplate.getValue(), metadataValueFromTemplate.getAuthority(),
-                    metadataValueFromTemplate.getConfidence());
+//                itemService.addMetadata(context, item, metadataSchema.getName(), metadataField.getElement(),
+//                    metadataField.getQualifier(), templateMetadataValue.getLanguage(),
+//                    metadataValueFromTemplate.getValue(), metadataValueFromTemplate.getAuthority(),
+//                    metadataValueFromTemplate.getConfidence());
+                for (MetadataValueVO metadataValueFromTemplate : metadataValueFromTemplateList) {
+                    itemService.addMetadata(context, item, metadataSchema.getName(), metadataField.getElement(),
+                        metadataField.getQualifier(), templateMetadataValue.getLanguage(),
+                        metadataValueFromTemplate.getValue(), metadataValueFromTemplate.getAuthority(),
+                        metadataValueFromTemplate.getConfidence());
+                }
             }
         }
 

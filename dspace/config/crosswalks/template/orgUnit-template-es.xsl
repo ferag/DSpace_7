@@ -24,7 +24,7 @@
 					</fo:block>
 					
 					<xsl:call-template name="section-title">
-				    	<xsl:with-param name="label" select="'Información baáica'" />
+				    	<xsl:with-param name="label" select="'Información basica'" />
 			    	</xsl:call-template>
 			    	
 					<xsl:call-template name="print-value">

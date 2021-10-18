@@ -274,8 +274,7 @@ public class DCInputsReader {
         if (pages == null) {
             throw new DCInputsReaderException("Missing the " + formName + " form");
         }
-        lastInputSet = new DCInputSet(formName,
-                                      pages, valuePairs);
+        lastInputSet = new DCInputSet(this, formName, pages, valuePairs);
         return lastInputSet;
     }
 
@@ -936,7 +935,7 @@ public class DCInputsReader {
     }
 
     private boolean isGroupType(DCInput dcInput) {
-        return "group".equals(dcInput.getInputType());
+        return "group".equals(dcInput.getInputType()) || "inline-group".equals(dcInput.getInputType());
     }
 
 }

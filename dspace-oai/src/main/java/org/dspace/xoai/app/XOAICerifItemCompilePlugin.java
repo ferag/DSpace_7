@@ -63,12 +63,16 @@ public class XOAICerifItemCompilePlugin implements XOAIExtensionItemCompilePlugi
         this.fieldName = fieldName;
     }
 
+    public void setePersonName(String ePersonName) {
+        this.ePersonName = ePersonName;
+    }
+
     @Override
     public Metadata additionalMetadata(Context context, Metadata metadata, Item item) {
         EPerson currentUser = context.getCurrentUser();
         try {
             if (StringUtils.isNotBlank(ePersonName)) {
-                EPerson ePerson = ePersonService.findByUsername(context, ePersonName);
+                EPerson ePerson = ePersonService.findByEmail(context, ePersonName);
                 Optional.ofNullable(ePerson).ifPresent(context::setCurrentUser);
             }
             StreamDisseminationCrosswalkMapper crosswalkMapper = new DSpace().getSingletonService(
@@ -93,9 +97,10 @@ public class XOAICerifItemCompilePlugin implements XOAIExtensionItemCompilePlugi
                 cerif.getElement().add(fieldname);
                 Element none = ItemUtils.create("none");
                 fieldname.getElement().add(none);
-                String xmlPresentation = out.toString();
-                String toWrite = xmlPresentation.replace("\n", "");
-                none.getField().add(ItemUtils.createValue("value", toWrite));
+                String xml_presentation = out.toString();
+                // replace \n to avoid invalid element in the xml
+                String toWrite = xml_presentation.replace("\n", "");
+                none.getField().add(ItemUtils.createValue("value", xml_presentation));
                 none.getField().add(ItemUtils.createValue("authority", ""));
                 none.getField().add(ItemUtils.createValue("confidence", "-1"));
                 return metadata;
@@ -123,9 +128,5 @@ public class XOAICerifItemCompilePlugin implements XOAIExtensionItemCompilePlugi
 
 
         return entityPrefix + "-" + generator;
-    }
-
-    public void setePersonName(String ePersonName) {
-        this.ePersonName = ePersonName;
     }
 }

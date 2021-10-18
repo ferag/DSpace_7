@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataFieldName;
 import org.dspace.content.service.DSpaceObjectLegacySupportService;
@@ -317,4 +318,16 @@ public interface EPersonService extends DSpaceObjectService<EPerson>, DSpaceObje
      */
     public Iterator<EPerson> findByAuthorityValue(Context context, String schema, String element, String qualifier,
         String value) throws SQLException, AuthorizeException;
+
+    /**
+     * Find the EPerson related to the given profile item. If the given item is not
+     * a profile item, null is returned.
+     *
+     * @param  context      The relevant DSpace Context.
+     * @param  profile      the profile item to search for
+     * @return              the EPerson, if any
+     * @throws SQLException An exception that provides information on a database
+     *                      access error or other errors.
+     */
+    EPerson findByProfileItem(Context context, Item profile) throws SQLException;
 }

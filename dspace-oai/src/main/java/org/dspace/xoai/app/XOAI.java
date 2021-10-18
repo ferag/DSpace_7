@@ -474,10 +474,12 @@ public class XOAI {
         xmlContext.getWriter().flush();
         xmlContext.getWriter().close();
         doc.addField("item.compile", out.toString());
+
         if (verbose) {
             println(String.format("Item %s with handle %s indexed",
                     item.getID().toString(), handle));
         }
+
         return doc;
     }
 

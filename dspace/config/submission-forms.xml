@@ -12024,24 +12024,24 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <stored-value />
       </pair>
       <pair>
-        <displayed-value>Empresa</displayed-value>
-        <stored-value>Company</stored-value>
+        <displayed-value>Company</displayed-value>
+        <stored-value>Empresa</stored-value>
       </pair>
       <pair>
-        <displayed-value>Enseñanza superior</displayed-value>
-        <stored-value>Higher education</stored-value>
+        <displayed-value>Higher education</displayed-value>
+        <stored-value>Enseñanza superior</stored-value>
       </pair>
       <pair>
-        <displayed-value>Administración pública</displayed-value>
-        <stored-value>Public administration</stored-value>
+        <displayed-value>Public administration</displayed-value>
+        <stored-value>Administración pública</stored-value>
       </pair>
       <pair>
-        <displayed-value>Instituciones privadas sin fines de lucro</displayed-value>
-        <stored-value>Private non-profit institutions</stored-value>
+        <displayed-value>Private non-profit institutions</displayed-value>
+        <stored-value>Instituciones privadas sin fines de lucro</stored-value>
       </pair>
       <pair>
-        <displayed-value>Resto del mundo</displayed-value>
-        <stored-value>Rest of the world</stored-value>
+        <displayed-value>Rest of the world</displayed-value>
+        <stored-value>Resto del mundo</stored-value>
       </pair>
     </value-pairs>
     <value-pairs value-pairs-name="peru_ou_nature" dc-term="peru_ou_nature">
@@ -12050,12 +12050,12 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <stored-value />
       </pair>
       <pair>
-        <displayed-value>Pública</displayed-value>
-        <stored-value>Public</stored-value>
+        <displayed-value>Public</displayed-value>
+        <stored-value>Pública</stored-value>
       </pair>
       <pair>
-        <displayed-value>Privada</displayed-value>
-        <stored-value>Private</stored-value>
+        <displayed-value>Private</displayed-value>
+        <stored-value>Privada</stored-value>
       </pair>
     </value-pairs>
     <value-pairs value-pairs-name="peru_ou_types" dc-term="peru_ou_types">
@@ -12064,16 +12064,16 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <stored-value />
       </pair>
       <pair>
-        <displayed-value>Unidad de investigación o innovación</displayed-value>
-        <stored-value>Research or innovation unit</stored-value>
+        <displayed-value>Research or innovation unit</displayed-value>
+        <stored-value>Unidad de investigación o innovación</stored-value>
       </pair>
       <pair>
-        <displayed-value>Grupo de investigación</displayed-value>
-        <stored-value>Research group</stored-value>
+        <displayed-value>Research group</displayed-value>
+        <stored-value>Grupo de investigación</stored-value>
       </pair>
       <pair>
-        <displayed-value>Línea de investigación</displayed-value>
-        <stored-value>Research line</stored-value>
+        <displayed-value>Research line</displayed-value>
+        <stored-value>Línea de investigación</stored-value>
       </pair>
     </value-pairs>
     <value-pairs value-pairs-name="sunedu_tipoInstitucion" dc-term="sunedu_tipoInstitucion">

@@ -4449,7 +4449,8 @@
             queries done by discovery for this configuration -->
         <property name="defaultFilterQueries">
             <list>
-                <value>search.resourcetype:Item AND entityType_keyword:OrgUnit AND perucris.type.sectorInstitucional:Empresa</value>
+                <value>search.resourcetype:Item AND entityType_keyword:OrgUnit AND
+                    (perucris.type.sectorInstitucional:Empresa OR perucris.type.sectorInstitucional:Company)</value>
             </list>
         </property>
         <property name="defaultRpp" value="10"/>

@@ -177,13 +177,6 @@ public class ItemSearcherByMetadata implements ItemSearcher, ItemReferenceResolv
         metadataValue.setConfidence(Choices.CF_ACCEPTED);
     }
 
-    @SuppressWarnings("unchecked")
-    private Item getNextItem(ReloadableEntity<?> nextEntity) {
-        if (nextEntity instanceof Item) {
-            return (Item) nextEntity;
-        }
-        return ((InProgressSubmission<Integer>) nextEntity).getItem();
-    }
 
     private String getFieldFilter(String field, List<String> authorities) {
         return authorities.stream()

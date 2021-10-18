@@ -129,7 +129,9 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
                                 ScriptMatcher.matchScript(scriptConfigurations.get(19).getName(),
                                                           scriptConfigurations.get(19).getDescription()),
                                 ScriptMatcher.matchScript(scriptConfigurations.get(20).getName(),
-                                                          scriptConfigurations.get(20).getDescription())
+                                                          scriptConfigurations.get(20).getDescription()),
+                            ScriptMatcher.matchScript(scriptConfigurations.get(21).getName(),
+                                                          scriptConfigurations.get(21).getDescription())
                         )));
 
     }
@@ -158,8 +160,8 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
                                                           scriptConfigurations.get(7).getDescription())
                         ))))
                         .andExpect(jsonPath("$._embedded.scripts", hasItem(
-                                ScriptMatcher.matchScript(scriptConfigurations.get(18).getName(),
-                                                          scriptConfigurations.get(18).getDescription())
+                                ScriptMatcher.matchScript(scriptConfigurations.get(20).getName(),
+                                                          scriptConfigurations.get(20).getDescription())
                         )))
                         .andExpect(jsonPath("$._links.first.href", Matchers.allOf(
                                 Matchers.containsString("/api/system/scripts?"),
@@ -172,11 +174,11 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
                                 Matchers.containsString("page=1"), Matchers.containsString("size=1"))))
                         .andExpect(jsonPath("$._links.last.href", Matchers.allOf(
                                 Matchers.containsString("/api/system/scripts?"),
-                                Matchers.containsString("page=19"), Matchers.containsString("size=1"))))
+                                Matchers.containsString("page=21"), Matchers.containsString("size=1"))))
                         .andExpect(jsonPath("$.page.size", is(1)))
                         .andExpect(jsonPath("$.page.number", is(0)))
-                        .andExpect(jsonPath("$.page.totalPages", is(20)))
-                        .andExpect(jsonPath("$.page.totalElements", is(20)));
+                        .andExpect(jsonPath("$.page.totalPages", is(22)))
+                        .andExpect(jsonPath("$.page.totalElements", is(22)));
 
 
         getClient(token).perform(get("/api/system/scripts").param("size", "1").param("page", "1"))
@@ -186,8 +188,8 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
                                                           scriptConfigurations.get(7).getDescription())
                         )))
                         .andExpect(jsonPath("$._embedded.scripts", Matchers.not(hasItem(
-                                ScriptMatcher.matchScript(scriptConfigurations.get(18).getName(),
-                                                          scriptConfigurations.get(18).getDescription())
+                                ScriptMatcher.matchScript(scriptConfigurations.get(20).getName(),
+                                                          scriptConfigurations.get(20).getDescription())
                         ))))
                         .andExpect(jsonPath("$._links.first.href", Matchers.allOf(
                                 Matchers.containsString("/api/system/scripts?"),
@@ -203,11 +205,11 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
                                 Matchers.containsString("page=2"), Matchers.containsString("size=1"))))
                         .andExpect(jsonPath("$._links.last.href", Matchers.allOf(
                                 Matchers.containsString("/api/system/scripts?"),
-                                Matchers.containsString("page=19"), Matchers.containsString("size=1"))))
+                                Matchers.containsString("page=21"), Matchers.containsString("size=1"))))
                         .andExpect(jsonPath("$.page.size", is(1)))
                         .andExpect(jsonPath("$.page.number", is(1)))
-                        .andExpect(jsonPath("$.page.totalPages", is(20)))
-                        .andExpect(jsonPath("$.page.totalElements", is(20)));
+                        .andExpect(jsonPath("$.page.totalPages", is(22)))
+                        .andExpect(jsonPath("$.page.totalElements", is(22)));
     }
 
     @Test

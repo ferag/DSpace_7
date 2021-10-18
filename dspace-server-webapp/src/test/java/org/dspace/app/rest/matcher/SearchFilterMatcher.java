@@ -186,4 +186,15 @@ public class SearchFilterMatcher {
                 checkOperators()
         );
     }
+
+    public static Matcher<? super Object> withdrawnFilter() {
+        return allOf(
+                hasJsonPath("$.filter", is("withdrawn")),
+                hasJsonPath("$.hasFacets", is(false)),
+                hasJsonPath("$.type", is("standard")),
+                hasJsonPath("$.openByDefault", is(true)),
+                checkOperators()
+        );
+    }
+
 }

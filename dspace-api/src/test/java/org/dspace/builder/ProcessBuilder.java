@@ -66,6 +66,11 @@ public class ProcessBuilder extends AbstractBuilder<Process, ProcessService> {
         return this;
     }
 
+    public ProcessBuilder withCreationTime(Date creationTime) {
+        process.setCreationTime(creationTime);
+        return this;
+    }
+
     public ProcessBuilder withStartAndEndTime(String startTime, String endTime) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         process.setStartTime(simpleDateFormat.parse(startTime));

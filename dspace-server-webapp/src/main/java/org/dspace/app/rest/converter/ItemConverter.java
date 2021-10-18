@@ -113,7 +113,8 @@ public class ItemConverter
      * When the context is null, it will return the metadatalist as for an anonymous user
      * Overrides the parent method to include virtual metadata
      * @param context The context
-     * @param obj     The object of which the filtered metadata will be retrieved
+     * @param obj     The object of which the filtered metadata will be retrieved6
+     * @param projection The projection(s) used into current request
      * @return A list of object metadata (including virtual metadata) filtered based on the the hidden metadata
      * configuration
      */
@@ -165,7 +166,6 @@ public class ItemConverter
         return new MetadataValueList(returnList);
     }
 
-//    @Override
     public boolean checkMetadataFieldVisibility(Context context, Item item,
                                                 MetadataField metadataField) throws SQLException {
         return checkMetadataFieldVisibility(context, item, metadataField, null);
@@ -239,30 +239,30 @@ public class ItemConverter
         List<String> allPublicMetadata = performSecurityCheck ? getPublicMetadata(boxes) : publicMetadataFromConfig();
         if (isPublicMetadataField(metadataField, allPublicMetadata)) {
             return true;
-        } else {
-            if (performSecurityCheck) {
+        } else if (performSecurityCheck) {
 
-                EPerson currentUser = context.getCurrentUser();
-                List<CrisLayoutBox> boxesWithMetadataFieldExcludedPublic = getBoxesWithMetadataFieldExcludedPublic(
-                    metadataField, boxes);
+            EPerson currentUser = context.getCurrentUser();
+            List<CrisLayoutBox> boxesWithMetadataFieldExcludedPublic = getBoxesWithMetadataFieldExcludedPublic(
+                metadataField, boxes);
+
+            if (Objects.nonNull(currentUser)) {
 
                 for (CrisLayoutBox box : boxesWithMetadataFieldExcludedPublic) {
                     if (crisLayoutBoxAccessService.hasAccess(context, currentUser, box, item)) {
                         return true;
                     }
                 }
-                // the metadata is not included in any box so use the default dspace security
-                if (boxesWithMetadataFieldExcludedPublic.size() == 0) {
-                    if (!metadataExposureService
-                        .isHidden(context, metadataField.getMetadataSchema().getName(),
-                            metadataField.getElement(),
-                            metadataField.getQualifier())) {
-                        return true;
-                    }
+            }
+            // the metadata is not included in any box so use the default dspace security
+            if (boxesWithMetadataFieldExcludedPublic.size() == 0) {
+                if (!metadataExposureService
+                    .isHidden(context, metadataField.getMetadataSchema().getName(),
+                        metadataField.getElement(),
+                        metadataField.getQualifier())) {
+                    return true;
                 }
             }
         }
-
         return false;
     }
 

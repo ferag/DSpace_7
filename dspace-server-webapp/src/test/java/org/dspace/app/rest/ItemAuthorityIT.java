@@ -34,7 +34,8 @@ import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.Item;
-import org.dspace.content.authority.SimpleQueryCustomAuthorityFilter;
+import org.dspace.content.authority.EntityTypeAuthorityFilter;
+import org.dspace.content.authority.LinkableEntityAuthority;
 import org.dspace.content.authority.service.ChoiceAuthorityService;
 import org.dspace.core.service.PluginService;
 import org.dspace.eperson.EPerson;
@@ -44,6 +45,7 @@ import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.orcid.jaxb.model.v3.release.search.expanded.ExpandedSearch;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -64,7 +66,7 @@ public class ItemAuthorityIT extends AbstractControllerIntegrationTest {
     private ChoiceAuthorityService choiceAuthorityService;
 
     @Resource(name = "directorioCommunityFilter")
-    private SimpleQueryCustomAuthorityFilter directorioCommunityFilter;
+    private EntityTypeAuthorityFilter directorioCommunityFilter;
 
     @Autowired
     private OrcidClient orcidClient;
@@ -650,6 +652,118 @@ public class ItemAuthorityIT extends AbstractControllerIntegrationTest {
                             .andExpect(jsonPath("$.page.totalElements", Matchers.is(2)));
     }
 
+    @Test
+    public void entityTypeAuthorityFilters() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        configurationService.setProperty("plugin.named.org.dspace.content.authority.ChoiceAuthority",
+            new String[] { "org.dspace.content.authority.ItemAuthority = PersonAuthority" });
+
+        configurationService.setProperty("choices.presentation.dc.contributor.author", "suggest");
+        configurationService.setProperty("authority.controlled.dc.contributor.author", "true");
+
+        configurationService.setProperty("cris.ItemAuthority.PersonAuthority.entityType", "EntityPerson");
+
+        // These clears have to happen so that the config is actually reloaded in those
+        // classes. This is needed for
+        // the properties that we're altering above and this is only used within the
+        // tests
+        pluginService.clearNamedPluginClasses();
+        choiceAuthorityService.clearCache();
+
+        parentCommunity = CommunityBuilder.createCommunity(context).build();
+        Collection col1 = CollectionBuilder.createCollection(context, parentCommunity).build();
+
+        Item person1 = ItemBuilder.createItem(context, col1)
+            .withTitle("Person 1")
+            .withType("mytype")
+            .withEntityType("EntityPerson").build();
+
+        ItemBuilder.createItem(context, col1)
+            .withTitle("Person 2")
+            .withEntityType("EntityPerson")
+            .build();
+
+        ItemBuilder.createItem(context, col1)
+            .withTitle("Person 3")
+            .withType("anotherType")
+            .withEntityType("EntityPerson").build();
+
+        context.restoreAuthSystemState();
+
+        String token = getAuthToken(eperson.getEmail(), password);
+        getClient(token)
+            .perform(get("/api/submission/vocabularies/PersonAuthority/entries").param("filter", "Person"))
+            .andExpect(status().isOk()).andExpect(jsonPath("$.page.totalElements", Matchers.is(1)))
+            .andExpect(jsonPath("$._embedded.entries",
+                Matchers.containsInAnyOrder(ItemAuthorityMatcher.matchItemAuthorityProperties(
+                    person1.getID().toString(), "Person 1", "Person 1", "vocabularyEntry"))));
+
+    }
+
+    @Test
+    public void authorityNameAuthorityFilters() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        configurationService.setProperty("plugin.named.org.dspace.content.authority.ChoiceAuthority",
+            new String[] { "org.dspace.content.authority.ItemAuthority = EntityPersonAuthority",
+                "org.dspace.content.authority.ItemAuthority = PersonAuthority" });
+
+        configurationService.setProperty("choices.plugin.dc.contributor.author", "EntityPersonAuthority");
+        configurationService.setProperty("choices.presentation.dc.contributor.author", "suggest");
+        configurationService.setProperty("authority.controlled.dc.contributor.author", "true");
+        configurationService.setProperty("cris.ItemAuthority.EntityPersonAuthority.entityType", "Person");
+        configurationService.setProperty("cris.ItemAuthority.PersonAuthority.entityType", "Person");
+
+        // These clears have to happen so that the config is actually reloaded in those
+        // classes. This is needed for
+        // the properties that we're altering above and this is only used within the
+        // tests
+        pluginService.clearNamedPluginClasses();
+        choiceAuthorityService.clearCache();
+
+        parentCommunity = CommunityBuilder.createCommunity(context).build();
+        Collection col1 = CollectionBuilder.createCollection(context, parentCommunity).build();
+
+        Item person1 = ItemBuilder.createItem(context, col1)
+            .withTitle("Author 1")
+            .withType("mytype")
+            .withEntityType("Person").build();
+
+        Item person2 = ItemBuilder.createItem(context, col1)
+            .withTitle("Author 2")
+            .withEntityType("Person")
+            .build();
+
+        Item person3 = ItemBuilder.createItem(context, col1)
+            .withTitle("Author 3")
+            .withType("anotherType")
+            .withEntityType("Person").build();
+
+        context.restoreAuthSystemState();
+
+        String token = getAuthToken(eperson.getEmail(), password);
+        getClient(token)
+            .perform(get("/api/submission/vocabularies/EntityPersonAuthority/entries").param("filter", "Author"))
+            .andExpect(status().isOk()).andExpect(jsonPath("$.page.totalElements", Matchers.is(1)))
+            .andExpect(jsonPath("$._embedded.entries",
+                Matchers.containsInAnyOrder(ItemAuthorityMatcher.matchItemAuthorityProperties(
+                    person1.getID().toString(), "Author 1", "Author 1", "vocabularyEntry"))));
+
+        getClient(token).perform(get("/api/submission/vocabularies/PersonAuthority/entries").param("filter", "Author"))
+            .andExpect(status().isOk()).andExpect(jsonPath("$.page.totalElements", Matchers.is(3)))
+            .andExpect(jsonPath("$._embedded.entries",
+                Matchers.containsInAnyOrder(
+                    ItemAuthorityMatcher.matchItemAuthorityProperties(person1.getID().toString(),
+                        "Author 1", "Author 1", "vocabularyEntry"),
+                    ItemAuthorityMatcher.matchItemAuthorityProperties(person2.getID().toString(),
+                        "Author 2", "Author 2", "vocabularyEntry"),
+                    ItemAuthorityMatcher.matchItemAuthorityProperties(person3.getID().toString(),
+                        "Author 3", "Author 3", "vocabularyEntry"))));
+
+
+    }
+
     @Override
     @After
     // We need to cleanup the authorities cache once than the configuration has been restored
@@ -660,7 +774,10 @@ public class ItemAuthorityIT extends AbstractControllerIntegrationTest {
     }
 
     private void setCommunityIdInQuery(UUID directorioCommunityId, String entityType) {
-        List<String> filterQueries = directorioCommunityFilter.getFilterQueries(entityType);
+    	LinkableEntityAuthority authority=Mockito.mock(LinkableEntityAuthority.class);
+    	Mockito.when(authority.getLinkedEntityType()).thenReturn(entityType);
+    	
+        List<String> filterQueries = directorioCommunityFilter.getFilterQueries(authority);
         for (int i = 0; i < filterQueries.size(); i++) {
             String s = filterQueries.get(i);
             if (s.contains("location.comm")) {

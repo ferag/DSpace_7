@@ -1427,6 +1427,7 @@
           <label>Author’s ORCID</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
+          <validation>^[0-9]\d*(\.\d+)?$</validation>
           <required />
           <hint />
         </field>

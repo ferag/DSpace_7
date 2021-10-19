@@ -660,6 +660,7 @@
             <list>
                 <ref bean="searchFilterObjectNamedType" />
                 <ref bean="searchFilterEntityType" />
+                <ref bean="searchFilterHiddenWithdrawn" />
 <!--                <ref bean="searchFilterIssued" />-->
             </list>
         </property>
@@ -3349,6 +3350,7 @@
                 <ref bean="searchFilterFileDescriptionInOriginalBundle" />
                 <ref bean="searchFilterEntityType"/>
                 <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterHiddenWithdrawn"/>
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -3412,6 +3414,7 @@
                 <ref bean="searchFilterPersonOrgUnit"/>
                 <ref bean="searchFilterUbigeo"/>
                 <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterWithdrawn"/>
                 <!--                <ref bean="searchFilterBirthdate"/>-->
             </list>
         </property>
@@ -3543,6 +3546,7 @@
                 <ref bean="searchFilterIdentifier"/>
                 <ref bean="searchFilterOcde" />
                 <ref bean="searchFilterGeolocation" />
+                <ref bean="searchFilterHiddenWithdrawn" />
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -3754,6 +3758,7 @@
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+                <ref bean="searchFilterHiddenWithdrawn"/>
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -3865,6 +3870,7 @@
                 <ref bean="searchFilterPeruCrisEquipmentResearchLine"/>
                 <ref bean="searchFilterFunding"/>
                 <ref bean="searchFilterPeruCrisEquipmentManufacturingCountry"/>
+                <ref bean="searchFilterHiddenWithdrawn"/>
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -4632,6 +4638,17 @@
 
     <bean id="searchFilterWithdrawn" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
         <property name="indexFieldName" value="withdrawn"/>
+        <property name="type" value="standard"/>
+        <property name="metadataFields">
+            <list>
+            </list>
+        </property>
+        <property name="isOpenByDefault" value="true"/>
+        <property name="pageSize" value="10"/>
+    </bean>
+
+    <bean id="searchFilterHiddenWithdrawn" class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="hidden.withdrawn"/>
         <property name="type" value="standard"/>
         <property name="metadataFields">
             <list>

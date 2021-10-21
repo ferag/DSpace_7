@@ -3414,7 +3414,7 @@
                 <ref bean="searchFilterPersonOrgUnit"/>
                 <ref bean="searchFilterUbigeo"/>
                 <ref bean="searchFilterOcde"/>
-                <ref bean="searchFilterWithdrawn"/>
+                <ref bean="searchFilterHiddenWithdrawn"/>
                 <!--                <ref bean="searchFilterBirthdate"/>-->
             </list>
         </property>

@@ -38,7 +38,7 @@ public abstract class CustomAuthorityFilter {
      */
     public abstract boolean appliesTo(LinkableEntityAuthority linkableEntityAuthority);
 
-    protected final List<String> createFilterQueries() {
+    protected List<String> createFilterQueries() {
         return Optional.ofNullable(customQueries).orElseGet(Collections::emptyList);
     }
 

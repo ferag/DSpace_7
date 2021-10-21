@@ -14,6 +14,15 @@ import org.apache.commons.collections.CollectionUtils;
 public class EntityTypeAuthorityFilter extends CustomAuthorityFilter {
 
     private List<String> supportedEntities;
+    
+
+    public EntityTypeAuthorityFilter(List<String> customQueries) {
+        super.customQueries = customQueries;
+    }
+    
+    public EntityTypeAuthorityFilter() {
+        customQueries=List.of();
+    }
 
     public void setSupportedEntities(List<String> supportedEntities) {
         this.supportedEntities = supportedEntities;
@@ -25,7 +34,4 @@ public class EntityTypeAuthorityFilter extends CustomAuthorityFilter {
             || supportedEntities.contains(linkableEntityAuthority.getLinkedEntityType());
     }
 
-    public EntityTypeAuthorityFilter(List<String> customQueries) {
-        super.customQueries = customQueries;
-    }
 }

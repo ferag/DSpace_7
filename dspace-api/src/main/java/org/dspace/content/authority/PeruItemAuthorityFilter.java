@@ -33,7 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Corrado Lombardi (corrado.lombardi at 4science.it)
  *
  */
-public class PeruItemAuthorityFilter extends CustomAuthorityFilter {
+public class PeruItemAuthorityFilter extends EntityTypeAuthorityFilter {
 
     private static final Logger log = LoggerFactory.getLogger(PeruItemAuthorityFilter.class);
 
@@ -42,11 +42,10 @@ public class PeruItemAuthorityFilter extends CustomAuthorityFilter {
 
     @Autowired
     public PeruItemAuthorityFilter(RequestService requestService,
-                                   CollectionService collectionService) {
+        CollectionService collectionService) {
         this.requestService = requestService;
         this.collectionService = collectionService;
     }
-
 
     @Override
     protected List<String> createFilterQueries() {
@@ -85,4 +84,5 @@ public class PeruItemAuthorityFilter extends CustomAuthorityFilter {
         }
         return "location.comm:" + communities.get(0).getID();
     }
+
 }

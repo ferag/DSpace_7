@@ -14,14 +14,14 @@ import org.apache.commons.collections.CollectionUtils;
 public class EntityTypeAuthorityFilter extends CustomAuthorityFilter {
 
     private List<String> supportedEntities;
-    
+
 
     public EntityTypeAuthorityFilter(List<String> customQueries) {
         super.customQueries = customQueries;
     }
-    
+
     public EntityTypeAuthorityFilter() {
-        customQueries=List.of();
+        customQueries = List.of();
     }
 
     public void setSupportedEntities(List<String> supportedEntities) {

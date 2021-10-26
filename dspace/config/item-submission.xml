@@ -2,65 +2,10 @@
 <!DOCTYPE item-submission SYSTEM "item-submission.dtd">
 
 <item-submission>
-
-    <!-- The process-map maps collection handles to a particular Item -->
-    <!-- Submission Process. This requires that a collection's name be -->
-    <!-- unique, even within a community. DSpace does however ensure that each -->
-    <!-- collection's handle is unique. Process-map provides the means to -->
-    <!-- associate a unique collection name with an Item Submission process. -->
-    <!-- The process-map also provides the special handle "default" (which is -->
-    <!-- never a collection), here mapped to "traditional". Any collection -->
-    <!-- which does not appear in this map will be associated with the mapping -->
-    <!-- for handle "default". -->
-    <submission-map>
-        <!-- Default submission process -->
-        <name-map collection-handle="default" submission-name="publication"/>
-
-        <!-- Sample Entities Collection configuration based on the demo Entities dataset available at:
-             https://github.com/DSpace-Labs/AIP-Files/releases/tag/demo-entities-data
-             This sets up the following Entity-based Collections in that dataset:
-                "Publication" Collections = "Publications" -> "Articles", "Books", "Publications 2", & "Theses"
-                "OrgUnit" Collection = "Related Objects" -> "OrgUnits"
-                "Person" Collections = "Related Objects" -> "People" & "People 2"
-                "Project" Collections = "Related Objects" -> "Projects" & "Projects 2"
-                "Journal" Collection = "Compound Journals" -> "Journals"
-                "Journal Volume" Collection = "Compound Journals" -> "Journal Volumes"
-                "Journal Issue" Collection = "Compound Journals" ->  "Journal Issues"
-             If you are using that demo dataset, you can simply uncomment the below configuration to enable Entity
-             submission into all of the above Collections.
-        -->
-    </submission-map>
-
-    <!-- The 'step-definitions' allows you to define steps which you may wish -->
-    <!-- to "share" amongst multiple submission-item definitions. In order to -->
-    <!-- share the same step definition, you can refer to it by its unique id -->
-    <!-- defined in this section. EVERY 'step' in this section MUST have a -->
-    <!-- unique identifier in the 'id' attribute! -->
-    <!-- -->
-    <!-- Each <step-definition> REQUIRES the following attributes (@) and properties: -->
-    <!-- @id - The unique identifier for this step -->
-    <!-- -->
-    <!-- <processing-class> - The class which will process all information for -->
-    <!-- this step. The class must implement -->
-    <!-- 'org.dspace.app.rest.submit.RestProcessingStep' -->
-    <!-- (or one of the org.dspace.rest.submit.step.* classes) -->
-    <!-- This property should reference the full path of the class -->
-    <!-- (e.g. org.dspace.app.rest.submit.step.MyCustomStep) -->
-    <!-- -->
-    <!-- The following properties are OPTIONAL for each <step-definition>: -->
-    <!-- <heading> - References the message key, from the -->
-    <!-- Messages.properties -->
-    <!-- -->
+  <submission-map>
+    <name-map collection-handle="default" submission-name="institution-product" />
+  </submission-map>
   <step-definitions>
-    <!-- The "collection" step is a "special step" which is *REQUIRED* -->
-    <!-- In DSpace, all submitted items must be immediately assigned -->
-    <!-- to a collection. This step ensures that a collection is always selected. -->
-    <step-definition id="collection" mandatory="true">
-      <heading>submit.progressbar.collection</heading>
-      <processing-class>org.dspace.app.rest.submit.step.CollectionStep</processing-class>
-      <type>collection</type>
-      <scope visibility="hidden" visibilityOutside="hidden">submission</scope>
-    </step-definition>
     <step-definition id="upload" mandatory="true">
       <heading>submit.progressbar.upload</heading>
       <processing-class>org.dspace.app.rest.submit.step.UploadStep</processing-class>
@@ -181,7 +126,7 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-    <step-definition id="project_openaire_id" mandatory="false">
+    <step-definition id="project_openaire_id" mandatory="true">
       <heading>submit.progressbar.describe.project_openaire_id</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
@@ -326,21 +271,7 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-        <!-- This optional step may allow the user to select a Creative Commons license -->
-    <step-definition id="cclicense" mandatory="false">
-      <heading>submit.progressbar.CClicense</heading>
-      <processing-class>org.dspace.app.rest.submit.step.CCLicenseStep</processing-class>
-      <type>cclicense</type>
-    </step-definition>
-    <!-- This optional step may enrich the current submission using information extracted
-             from uploaded files or metadata.  -->
-    <!-- Please note that this step will be triggered only when a request is performed,
-           e.g. when a file is uploaded or the form is saved. The Angular UI also supports an
-           autosave feature based on a timer, or the input of specific metadata such as identifiers,
-           see the 'submission.autosave' settings in the 'environment.common.ts'.
-           See also 'config/spring/api/step-processing-listener.xml' for further server side configuration
-           -->
-    <step-definition id="extractionstep" mandatory="true">
+    <step-definition id="extraction" mandatory="false">
       <heading>submit.progressbar.ExtractMetadataStep</heading>
       <processing-class>org.dspace.app.rest.submit.step.ExtractMetadataStep</processing-class>
       <type>extract</type>
@@ -426,10 +357,14 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
+    <step-definition id="component" mandatory="true">
+      <heading>submit.progressbar.describe.component</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
   </step-definitions>
   <submission-definitions>
     <submission-process name="institution-product">
-      <step id="collection" />
       <step id="institution-product" />
       <step id="institution-product_indexing" />
       <step id="institution-product_references" />
@@ -443,7 +378,6 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="product">
-      <step id="collection" />
       <step id="product" />
       <step id="product_indexing" />
       <step id="product_references" />
@@ -463,7 +397,6 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="institution-orgunit">
-      <step id="collection" />
       <step id="institution-orgunit" />
       <step id="upload" />
       <step id="license" />
@@ -474,7 +407,6 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="orgunit">
-      <step id="collection" />
       <step id="orgunit" />
       <step id="detect-duplicate" />
       <step id="upload" />
@@ -486,7 +418,6 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="institution-project">
-      <step id="collection" />
       <step id="institution-project" />
       <step id="institution-project_openaire_id" />
       <step id="upload" />
@@ -498,7 +429,6 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="cvproject">
-      <step id="collection" />
       <step id="cv-project" />
       <step id="cv-project_openaire_id" />
       <step id="upload" />
@@ -511,7 +441,6 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="project">
-      <step id="collection" />
       <step id="project" />
       <step id="project_openaire_id" />
       <step id="detect-duplicate" />
@@ -519,14 +448,13 @@
       <step id="license" />
     </submission-process>
     <submission-process name="journal">
-      <step id="collection" />
       <step id="journal" />
       <step id="detect-duplicate" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="institution-publication-edit">
-      <step id="extractionstep" />
+      <step id="extraction" />
       <step id="institution-publication" />
       <step id="institution-publication_indexing" />
       <step id="institution-publication_bibliographic_details" />
@@ -535,8 +463,7 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="institution-publication">
-      <step id="collection" />
-      <step id="extractionstep" />
+      <step id="extraction" />
       <step id="institution-publication" />
       <step id="institution-publication_indexing" />
       <step id="institution-publication_bibliographic_details" />
@@ -546,7 +473,7 @@
       <step id="license" />
     </submission-process>
     <submission-process name="publication-edit">
-      <step id="extractionstep" />
+      <step id="extraction" />
       <step id="publication" />
       <step id="publication_indexing" />
       <step id="publication_bibliographic_details" />
@@ -556,8 +483,7 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="publication">
-      <step id="collection" />
-      <step id="extractionstep" />
+      <step id="extraction" />
       <step id="publication" />
       <step id="publication_indexing" />
       <step id="publication_bibliographic_details" />
@@ -568,7 +494,7 @@
       <step id="license" />
     </submission-process>
     <submission-process name="cvpublication-edit">
-      <step id="extractionstep" />
+      <step id="extraction" />
       <step id="cv-publication" />
       <step id="cv-publication_indexing" />
       <step id="cv-publication_bibliographic_details" />
@@ -577,8 +503,7 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="cvpublication">
-      <step id="collection" />
-      <step id="extractionstep" />
+      <step id="extraction" />
       <step id="cv-publication" />
       <step id="cv-publication_indexing" />
       <step id="cv-publication_bibliographic_details" />
@@ -592,7 +517,6 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="institution-person">
-      <step id="collection" />
       <step id="institution-person" />
       <step id="upload" />
       <step id="license" />
@@ -603,7 +527,6 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="person">
-      <step id="collection" />
       <step id="person" />
       <step id="detect-duplicate" />
       <step id="upload" />
@@ -611,10 +534,12 @@
     </submission-process>
     <submission-process name="cvperson">
       <step id="cv-person" />
+      <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="cvperson-edit">
       <step id="cv-person" />
+      <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="cvperson-edit-education">
@@ -627,11 +552,9 @@
       <step id="cv-person-edit-qualification" />
     </submission-process>
     <submission-process name="notification">
-      <step id="collection" />
       <step id="notification-form" />
     </submission-process>
     <submission-process name="event">
-      <step id="collection" />
       <step id="event" />
       <step id="detect-duplicate" />
       <step id="upload" />
@@ -642,7 +565,6 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="institution-equipment">
-      <step id="collection" />
       <step id="institution-equipment" />
       <step id="upload" />
       <step id="license" />
@@ -653,7 +575,6 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="equipment">
-      <step id="collection" />
       <step id="equipment" />
       <step id="detect-duplicate" />
       <step id="upload" />
@@ -666,7 +587,6 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="institution-patent">
-      <step id="collection" />
       <step id="institution-patent" />
       <step id="institution-patent_indexing" />
       <step id="institution-patent_references" />
@@ -680,7 +600,6 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="cvpatent">
-      <step id="collection" />
       <step id="cv-patent" />
       <step id="cv-patent_indexing" />
       <step id="cv-patent_references" />
@@ -695,7 +614,6 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="patent">
-      <step id="collection" />
       <step id="patent" />
       <step id="patent_indexing" />
       <step id="patent_references" />
@@ -708,7 +626,6 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="institution-funding">
-      <step id="collection" />
       <step id="institution-funding" />
       <step id="upload" />
       <step id="license" />
@@ -719,24 +636,20 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="funding">
-      <step id="collection" />
       <step id="funding" />
       <step id="detect-duplicate" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="politic">
-      <step id="collection" />
       <step id="politic" />
       <step id="upload" />
     </submission-process>
     <submission-process name="plan">
-      <step id="collection" />
       <step id="plan" />
       <step id="upload" />
     </submission-process>
     <submission-process name="program">
-      <step id="collection" />
       <step id="program" />
       <step id="upload" />
     </submission-process>
@@ -753,35 +666,38 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="politic-goal">
-      <step id="collection" />
       <step id="politic-goal" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="politic-goal-edit">
       <step id="politic-goal" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="indicator">
-      <step id="collection" />
       <step id="indicator" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="indicator-edit">
       <step id="indicator" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="program-goal">
-      <step id="collection" />
       <step id="program-goal" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="program-goal-edit">
       <step id="program-goal" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="standard">
-      <step id="collection" />
       <step id="standard" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="standard-edit">
       <step id="standard" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="financial-instrument">
-      <step id="collection" />
       <step id="financial-instrument" />
       <step id="upload" />
     </submission-process>
@@ -790,53 +706,68 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="financial-scheme">
-      <step id="collection" />
       <step id="financial-scheme" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="financial-scheme-edit">
       <step id="financial-scheme" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="service">
-      <step id="collection" />
       <step id="service" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="service-edit">
       <step id="service" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="politic-guidelines">
-      <step id="collection" />
       <step id="politic-guidelines" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="politic-guidelines-edit">
       <step id="politic-guidelines" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="activity">
-      <step id="collection" />
       <step id="activity" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="activity-edit">
       <step id="activity" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="financial-resource">
-      <step id="collection" />
       <step id="financial-resource" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="financial-resource-edit">
       <step id="financial-resource" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="project-program">
-      <step id="collection" />
       <step id="project-program" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="project-program-edit">
       <step id="project-program" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="project-financial-instrument">
-      <step id="collection" />
       <step id="project-financial-instrument" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="project-financial-instrument-edit">
       <step id="project-financial-instrument" />
+      <step id="upload" />
+    </submission-process>
+    <submission-process name="component">
+      <step id="component" />
+      <step id="upload" />
+    </submission-process>
+    <submission-process name="component-edit">
+      <step id="component" />
+      <step id="upload" />
     </submission-process>
   </submission-definitions>
 </item-submission>

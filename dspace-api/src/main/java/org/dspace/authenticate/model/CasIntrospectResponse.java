@@ -35,7 +35,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Pasquale Cavallo (pasquale.cavallo at 4science dot it)
  *
  */
-public class OIDCIntrospectResponse {
+public class CasIntrospectResponse {
 
     private boolean active;
 

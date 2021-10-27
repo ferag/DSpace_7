@@ -7,7 +7,7 @@
  */
 package org.dspace.authenticate.model;
 
-public class OIDCProfileElementsResponse {
+public class CasProfileElementsResponse {
 
     private String sub;
 

@@ -36,8 +36,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.dspace.authenticate.factory.AuthenticateServiceFactory;
-import org.dspace.authenticate.model.OIDCProfileElementsResponse;
-import org.dspace.authenticate.model.OIDCTokenResponse;
+import org.dspace.authenticate.model.CasProfileElementsResponse;
+import org.dspace.authenticate.model.CasTokenResponse;
 import org.dspace.authenticate.service.AuthenticationService;
 import org.dspace.content.MetadataField;
 import org.dspace.content.factory.ContentServiceFactory;
@@ -60,16 +60,17 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * OpenID Connect Authentication for DSpace.
+ * Custom OpenID Connect Authentication for DSpace to use perucas. For the
+ * general oidc authentication see {@link OidcAuthentication}.
  * 
- * This implementation doesn't allow/needs to register user,
- * which may be holder by the openID authentication server.
+ * This implementation doesn't allow/needs to register user, which may be holder
+ * by the openID authentication server.
  * 
  * @link https://openid.net/developers/specs/
  * 
  * @author pasquale.cavallo at 4science dot it
  */
-public class OIDCAuthentication implements AuthenticationMethod {
+public class CasAuthentication implements AuthenticationMethod {
 
     protected EPersonService ePersonService = EPersonServiceFactory.getInstance().getEPersonService();
     protected GroupService groupService = EPersonServiceFactory
@@ -85,7 +86,7 @@ public class OIDCAuthentication implements AuthenticationMethod {
     protected ExternalRegistrationService externalRegistrationService = ExternalRegistrationServiceFactory.getInstance()
             .getExternalRegistrationService();
 
-    private static final Logger log = LoggerFactory.getLogger(OIDCAuthentication.class);
+    private static final Logger log = LoggerFactory.getLogger(CasAuthentication.class);
 
     /**
      * User are not allow to set/change password to them users
@@ -154,13 +155,13 @@ public class OIDCAuthentication implements AuthenticationMethod {
      */
     @Override
     public List<Group> getSpecialGroups(Context context, HttpServletRequest request) throws SQLException {
-        Boolean isUserAuthenticated = (Boolean) request.getAttribute("oidc.isuserauthenticate");
-        log.debug("OIDCAuthentication entered getSpecialGroups, isuserauthenticate" + isUserAuthenticated);
+        Boolean isUserAuthenticated = (Boolean) request.getAttribute("cas.isuserauthenticate");
+        log.debug("CasAuthentication entered getSpecialGroups, isuserauthenticate" + isUserAuthenticated);
         Group choosedGroup = null;
         if (isUserAuthenticated != null && isUserAuthenticated == true) {
-            choosedGroup = (Group)request.getAttribute("oidc.epersonauthenticated.groups");
+            choosedGroup = (Group)request.getAttribute("cas.epersonauthenticated.groups");
         }
-        log.debug("OIDCAuthentication entered getSpecialGroups, choosedGroup" + choosedGroup);
+        log.debug("CasAuthentication entered getSpecialGroups, choosedGroup" + choosedGroup);
         if (choosedGroup != null) {
             return Arrays.asList(choosedGroup);
         } else {
@@ -198,11 +199,11 @@ public class OIDCAuthentication implements AuthenticationMethod {
             return BAD_ARGS;
         }
 
-        Boolean isUserAuthenticated = (Boolean) request.getAttribute("oidc.isuserauthenticate");
+        Boolean isUserAuthenticated = (Boolean) request.getAttribute("cas.isuserauthenticate");
         if (isUserAuthenticated == null || isUserAuthenticated == false) {
             attachUserDataToRequest(request,context);
         }
-        EPerson eperson  = (EPerson) request.getAttribute("oidc.epersonauthenticated");
+        EPerson eperson  = (EPerson) request.getAttribute("cas.epersonauthenticated");
         if (eperson  != null) {
             context.setCurrentUser(eperson);
             AuthenticateServiceFactory.getInstance().getAuthenticationService()
@@ -214,8 +215,8 @@ public class OIDCAuthentication implements AuthenticationMethod {
         }
     }
 
-    private OIDCProfileElementsResponse getUserData(HttpServletRequest request, OIDCTokenResponse tokens) {
-        OIDCProfileElementsResponse userData = null;
+    private CasProfileElementsResponse getUserData(HttpServletRequest request, CasTokenResponse tokens) {
+        CasProfileElementsResponse userData = null;
         if (tokens != null && tokens.getAccessToken() != null && !tokens.getAccessToken().isEmpty()) {
             userData = checkFieldAndExtractEperson(tokens);
         }
@@ -223,7 +224,7 @@ public class OIDCAuthentication implements AuthenticationMethod {
     }
 
     private EPerson getEPerson(Context context, HttpServletRequest request,
-            OIDCTokenResponse tokens, OIDCProfileElementsResponse userData)
+            CasTokenResponse tokens, CasProfileElementsResponse userData)
             throws SQLException {
 
         EPerson eperson = null;
@@ -265,15 +266,15 @@ public class OIDCAuthentication implements AuthenticationMethod {
 
     private void attachUserDataToRequest(HttpServletRequest request, Context context) throws SQLException {
 
-        OIDCTokenResponse tokens = getAuthToken(request);
+        CasTokenResponse tokens = getAuthToken(request);
 
-        OIDCProfileElementsResponse userData = getUserData(request, tokens);
+        CasProfileElementsResponse userData = getUserData(request, tokens);
 
         EPerson eperson = getEPerson(context, request, tokens, userData);
 
         if (eperson != null) {
-            request.setAttribute("oidc.epersonauthenticated", eperson);
-            request.setAttribute("oidc.isuserauthenticate", true);
+            request.setAttribute("cas.epersonauthenticated", eperson);
+            request.setAttribute("cas.isuserauthenticate", true);
             String role = userData.getPgcRole();
             log.debug("Released role: " + role);
             if (role != null) {
@@ -281,16 +282,16 @@ public class OIDCAuthentication implements AuthenticationMethod {
                 if (group == null) {
                     log.warn("Role not found: " + role);
                 } else {
-                    request.setAttribute("oidc.epersonauthenticated.groups", group);
+                    request.setAttribute("cas.epersonauthenticated.groups", group);
                 }
             }
         }
     }
 
-    private OIDCTokenResponse getAuthToken(HttpServletRequest request) {
-        String clientId = configurationService.getProperty("authentication-oidc.clientid");
-        String clientSecret = configurationService.getProperty("authentication-oidc.clientsecret");
-        String tokenEndpoint = configurationService.getProperty("authentication-oidc.tokenendpoint");
+    private CasTokenResponse getAuthToken(HttpServletRequest request) {
+        String clientId = configurationService.getProperty("authentication-cas.client-id");
+        String clientSecret = configurationService.getProperty("authentication-cas.client-secret");
+        String tokenEndpoint = configurationService.getProperty("authentication-cas.token-endpoint");
         HttpClient client = HttpClientBuilder.create().build();
         HttpPost post = new HttpPost(tokenEndpoint);
         post.addHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -300,7 +301,7 @@ public class OIDCAuthentication implements AuthenticationMethod {
         params.add(new BasicNameValuePair("code", (String) request.getParameter("code")));
         params.add(new BasicNameValuePair("grant_type", "authorization_code"));
         params.add(new BasicNameValuePair("redirect_uri", configurationService.getProperty("dspace.server.url") +
-                "/api/authn/oidc"));
+            "/api/authn/cas"));
         params.add(new BasicNameValuePair("client_id", clientId));
         try {
             HttpEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
@@ -312,24 +313,26 @@ public class OIDCAuthentication implements AuthenticationMethod {
             IOUtils.copy(response.getEntity().getContent(), writer, "UTF-8");
             String body = writer.toString();
             ObjectMapper om = new ObjectMapper();
-            return om.readValue(body, OIDCTokenResponse.class);
+            return om.readValue(body, CasTokenResponse.class);
         } catch (Exception e) {
+            log.error("An error occurs retrieving CAS token: ", e);
             return null;
         }
     }
+
     /**
-     * This method is responsible to call the userinfo endpoint of the OIDC
+     * This method is responsible to call the userinfo endpoint of the CAS
      * authorization server in order to load the user data.
      * 
      * @param tokens The auth token
      * @return data get from the instrospect endpoint
      * 
      */
-    private OIDCProfileElementsResponse checkFieldAndExtractEperson(OIDCTokenResponse tokens) {
+    private CasProfileElementsResponse checkFieldAndExtractEperson(CasTokenResponse tokens) {
 
         try {
-            OIDCProfileElementsResponse data = new OIDCProfileElementsResponse();
-            String userinfoEndpoint = configurationService.getProperty("authentication-oidc.userinfoendpoint");
+            CasProfileElementsResponse data = new CasProfileElementsResponse();
+            String userinfoEndpoint = configurationService.getProperty("authentication-cas.user-info-endpoint");
             HttpClient client = HttpClientBuilder.create().build();
             HttpGet get = new HttpGet(userinfoEndpoint + "?access_token=" + tokens.getAccessToken());
             HttpResponse response = client.execute(get);
@@ -385,7 +388,7 @@ public class OIDCAuthentication implements AuthenticationMethod {
             return data;
         } catch (IOException e) {
             log.error("Exception throwing trying to load data from userInfo, URL: "
-                + configurationService.getProperty("authentication-oidc.userinfoendpoint"));
+                + configurationService.getProperty("authentication-cas.user-info-endpoint"));
             //null managed in caller
             return null;
         }
@@ -403,11 +406,11 @@ public class OIDCAuthentication implements AuthenticationMethod {
      */
     @Override
     public String loginPageURL(Context context, HttpServletRequest request, HttpServletResponse response) {
-        String authorizeUrl = configurationService.getProperty("authentication-oidc.authorizeendpoint");
-        String clientId = configurationService.getProperty("authentication-oidc.clientid");
-        String redirectUri = configurationService.getProperty("dspace.server.url") + "/api/authn/oidc";
+        String authorizeUrl = configurationService.getProperty("authentication-cas.authorize-endpoint");
+        String clientId = configurationService.getProperty("authentication-cas.client-id");
+        String redirectUri = configurationService.getProperty("dspace.server.url") + "/api/authn/cas";
         if (StringUtils.isAnyBlank(authorizeUrl, clientId, redirectUri)) {
-            log.error("Missing mandatory configuration properties for OIDCAuthentication");
+            log.error("Missing mandatory configuration properties for CasAuthentication");
             // empty return force the caller to skip this entry
             return "";
         }
@@ -423,7 +426,7 @@ public class OIDCAuthentication implements AuthenticationMethod {
 
     @Override
     public String getName() {
-        return "oidc";
+        return "cas";
     }
 
 

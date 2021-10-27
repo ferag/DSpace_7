@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.dspace.authenticate.model.OIDCProfileElementsResponse;
-import org.dspace.authenticate.model.OIDCTokenResponse;
+import org.dspace.authenticate.model.CasProfileElementsResponse;
+import org.dspace.authenticate.model.CasTokenResponse;
 import org.dspace.authenticate.service.AuthenticationService;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.Context;
@@ -41,7 +41,7 @@ public class ExternalRegistrationServiceImpl implements ExternalRegistrationServ
     private EPersonService ePersonService;
 
     @Override
-    public boolean canRegister(OIDCProfileElementsResponse userData) {
+    public boolean canRegister(CasProfileElementsResponse userData) {
         return getProvider(userData).isPresent();
     }
 
@@ -50,8 +50,8 @@ public class ExternalRegistrationServiceImpl implements ExternalRegistrationServ
     public EPerson registerEPerson(
             Context context,
             HttpServletRequest request,
-            OIDCTokenResponse tokens,
-            OIDCProfileElementsResponse userData)
+            CasTokenResponse tokens,
+            CasProfileElementsResponse userData)
             throws SQLException {
 
         EPerson eperson;
@@ -93,7 +93,7 @@ public class ExternalRegistrationServiceImpl implements ExternalRegistrationServ
      * @throws SQLException
      */
     private void createInitialGrant(Context context,
-            OIDCTokenResponse tokens, EPerson eperson) throws JsonProcessingException, SQLException {
+            CasTokenResponse tokens, EPerson eperson) throws JsonProcessingException, SQLException {
 
         ClientModel clientModel = new ClientModel();
         clientModel.setClientName(tokens.getRelationshipClientName());
@@ -107,7 +107,7 @@ public class ExternalRegistrationServiceImpl implements ExternalRegistrationServ
         ePersonService.addMetadata(context, eperson, "perucris", "oidc", "granted", null, client);
     }
 
-    private Optional<ExternalRegistrationProvider> getProvider(OIDCProfileElementsResponse userData) {
+    private Optional<ExternalRegistrationProvider> getProvider(CasProfileElementsResponse userData) {
         return getExternalRegistrationProviders().stream()
                 .filter(provider -> provider.support(userData))
                 .findFirst();

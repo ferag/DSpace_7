@@ -10,8 +10,8 @@ package org.dspace.externalregistration.service;
 import java.sql.SQLException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.dspace.authenticate.model.OIDCProfileElementsResponse;
-import org.dspace.authenticate.model.OIDCTokenResponse;
+import org.dspace.authenticate.model.CasProfileElementsResponse;
+import org.dspace.authenticate.model.CasTokenResponse;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
@@ -27,7 +27,7 @@ public interface ExternalRegistrationService {
      * This method will return whether a suitable registration provider exists for a given userData context.
      * @return  true if a suitable registration provider exists, false otherwise
      */
-    boolean canRegister(OIDCProfileElementsResponse userData);
+    boolean canRegister(CasProfileElementsResponse userData);
 
     /**
      * Register the ePerson in DSpace after an successful authentication event.
@@ -39,7 +39,7 @@ public interface ExternalRegistrationService {
      * @throws AuthorizeException
      * @throws JsonProcessingException
      */
-    EPerson registerEPerson(Context context, HttpServletRequest request, OIDCTokenResponse tokens,
-            OIDCProfileElementsResponse userData) throws SQLException;
+    EPerson registerEPerson(Context context, HttpServletRequest request, CasTokenResponse tokens,
+            CasProfileElementsResponse userData) throws SQLException;
 
 }

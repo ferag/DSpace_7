@@ -10892,7 +10892,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
     </form>
-    <form name="indicator-perucris-ppp-annualAdvance">
+    <form name="indicator-perucris-ppp-year">
       <row>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -11163,7 +11163,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
-          <dc-qualifier>annualAdvance</dc-qualifier>
+          <dc-qualifier>year</dc-qualifier>
           <label>Avance Anual</label>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
@@ -11224,6 +11224,18 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-element>ppp</dc-element>
           <dc-qualifier>programGoal</dc-qualifier>
           <label>Objetivo General Programa</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>component</dc-qualifier>
+          <label>Componente</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />

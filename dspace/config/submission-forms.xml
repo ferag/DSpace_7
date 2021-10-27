@@ -10988,6 +10988,16 @@
             <required>Please enter a Program General Goal</required>
             <hint />
           </field>
+          <field>
+            <dc-schema>perucris</dc-schema>
+            <dc-element>ppp</dc-element>
+            <dc-qualifier>programSpecificGoal</dc-qualifier>
+            <label>Program Specific Goal</label>
+            <input-type>onebox</input-type>
+            <repeatable>false</repeatable>
+            <required>Please enter a Program Specific Goal</required>
+            <hint />
+          </field>
         </row>
         <row>
           <field>

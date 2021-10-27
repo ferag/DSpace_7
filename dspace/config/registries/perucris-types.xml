@@ -1943,6 +1943,13 @@
     <dc-type>
         <schema>perucris</schema>
         <element>ppp</element>
+        <qualifier>programSpecificGoal</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
         <qualifier>programmedAmount</qualifier>
         <scope_note />
      </dc-type>

@@ -58,4 +58,74 @@
         <scope_note></scope_note>
     </dc-type>
 
+    <dc-type>
+        <schema>crispj</schema>
+        <element>contractorou</element>
+        <qualifier></qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>crispj</schema>
+        <element>contractorper</element>
+        <qualifier></qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>crispj</schema>
+        <element>partnerper</element>
+        <qualifier></qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>crispj</schema>
+        <element>inKindContributorou</element>
+        <qualifier></qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>crispj</schema>
+        <element>inKindContributorper</element>
+        <qualifier></qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>crispj</schema>
+        <element>organizationper</element>
+        <qualifier></qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>crispj</schema>
+        <element>contact</element>
+        <qualifier></qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>crispj</schema>
+        <element>contact</element>
+        <qualifier>address</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>crispj</schema>
+        <element>contact</element>
+        <qualifier>email</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>crispj</schema>
+        <element>coinvestigators</element>
+        <qualifier>role</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
 </dspace-dc-types>

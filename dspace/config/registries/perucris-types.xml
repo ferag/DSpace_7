@@ -430,14 +430,21 @@
     <dc-type>
         <schema>datacite</schema>
         <element>geoLocationBox</element>
-        <qualifier>southBoundLongitude</qualifier>
+        <qualifier>southBoundLatitude</qualifier>
         <scope_note></scope_note>
     </dc-type>
 
     <dc-type>
         <schema>datacite</schema>
         <element>geoLocationBox</element>
-        <qualifier>northBoundLongitude</qualifier>
+        <qualifier>northBoundLatitude</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>datacite</schema>
+        <element>version</element>
+        <qualifier></qualifier>
         <scope_note></scope_note>
     </dc-type>
 
@@ -750,6 +757,12 @@
         <schema>perucris</schema>
         <element>flagcv</element>
 	    <qualifier>dctitle</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>flagcv</element>
+        <qualifier>dctitlealternative</qualifier>
     </dc-type>
 
     <dc-type>
@@ -1098,6 +1111,12 @@
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
+        <qualifier>dccontributorcorporatename</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>flagcv</element>
 		<qualifier>oairecerifpatentissuer</qualifier>
     </dc-type>
 
@@ -1129,6 +1148,12 @@
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dctermsrightsHolder</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>flagcv</element>
+        <qualifier>dctermsrightsHolderper</qualifier>
     </dc-type>
 
     <dc-type>
@@ -1236,13 +1261,19 @@
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
-		<qualifier>datacitegeoLocationBoxsouthBoundLongitude</qualifier>
+		<qualifier>datacitegeoLocationBoxsouthBoundLatitude</qualifier>
     </dc-type>
 
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
-		<qualifier>datacitegeoLocationBoxnorthBoundLongitude</qualifier>
+		<qualifier>datacitegeoLocationBoxnorthBoundLatitude</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>flagcv</element>
+        <qualifier>dataciteversion</qualifier>
     </dc-type>
 
     <dc-type>
@@ -1296,6 +1327,60 @@
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
+        <qualifier>crispjcontractorou</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>flagcv</element>
+        <qualifier>crispjcontractorper</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>flagcv</element>
+        <qualifier>crispjpartnerper</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>flagcv</element>
+        <qualifier>crispjinKindContributorou</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>flagcv</element>
+        <qualifier>crispjinKindContributorper</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>flagcv</element>
+        <qualifier>crispjorganizationper</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>flagcv</element>
+        <qualifier>crispjcontact</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>flagcv</element>
+        <qualifier>crispjcontactaddress</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>flagcv</element>
+        <qualifier>crispjcontactemail</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>flagcv</element>
 		<qualifier>oairecerifoamandate</qualifier>
     </dc-type>
 
@@ -1344,6 +1429,12 @@
     <dc-type>
         <schema>perucris</schema>
         <element>flagcv</element>
+        <qualifier>crispjcoinvestigatorsrole</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>flagcv</element>
 		<qualifier>crispjtechniciansAndEquivalentStaff</qualifier>
     </dc-type>
 
@@ -1381,6 +1472,12 @@
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dccontributoreditor</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>flagcv</element>
+        <qualifier>dccontributoreditorou</qualifier>
     </dc-type>
 
     <dc-type>
@@ -1435,6 +1532,12 @@
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>dcidentifierscopus</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>flagcv</element>
+        <qualifier>dcidentifierark</qualifier>
     </dc-type>
 
     <dc-type>
@@ -1573,6 +1676,18 @@
         <schema>perucris</schema>
         <element>flagcv</element>
 		<qualifier>oairecitationendPage</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>flagcv</element>
+        <qualifier>oairecitationedition</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>flagcv</element>
+        <qualifier>oairecitationnumber</qualifier>
     </dc-type>
 
     <dc-type>
@@ -2200,9 +2315,39 @@
         <scope_note />
     </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>orgunit</element>
+        <qualifier>ipi</qualifier>
+        <scope_note />
+    </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>orgunit</element>
+        <qualifier>funder</qualifier>
+        <scope_note />
+    </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>renacyt</element>
+        <qualifier>contact</qualifier>
+    </dc-type>
 
+    <dc-type>
+        <schema>dc</schema>
+        <element>contributor</element>
+        <qualifier>corporatename</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>contributor</element>
+        <qualifier>editorou</qualifier>
+        <scope_note></scope_note>
+    </dc-type>
 
     <dc-type>
         <schema>perucris</schema>
@@ -2660,5 +2805,11 @@
         <scope_note />
     </dc-type>
 
+    <dc-type>
+        <schema>oaire</schema>
+        <element>citation</element>
+        <qualifier>number</qualifier>
+        <scope_note />
+    </dc-type>
 
 </dspace-dc-types>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node id="minam" label="minam">
+    <isComposedBy>
+        <node id="ambienteYEconomia" label="Ambiente y economía"></node>
+        <node id="aprovechamientoResiduosSolidos" label="Aprovechamiento de residuos sólidos"></node>
+        <node id="atmosferaEHidrosfera" label="Atmósfera e hidrósfera"></node>
+        <node id="biocomercio" label="Biocomercio"></node>
+        <node id="biodiversidadAcuatica" label="Biodiversidad acuática"></node>
+        <node id="biotecnologiaYRecursosGeneticos" label="Biotecnología y recursos genéticos"></node>
+        <node id="calidadAmbientalEcosistemasAcuaticos" label="Calidad ambiental de los ecosistemas acuáticos"></node>
+        <node id="conflictividadRecursosNaturalesYCalidadAmbiente"
+              label="Conflictividad en torno a los recursos naturales y calidad del ambiente"></node>
+        <node id="conservacionDiversidadBiologica" label="Conservación de la diversidad biológica"></node>
+        <node id="controlDeEmisiones" label="Control de emisiones"></node>
+        <node id="dinamicaRegionalAmazonica" label="Dinámica regional amazónica"></node>
+        <node id="disposicionDeResiduosSolidos" label="Disposición de residuos sólidos"></node>
+        <node id="ecologiaAplicada" label="Ecología aplicada"></node>
+        <node id="ecologiaDeSistemasProductivos" label="Ecología de sistemas productivos"></node>
+        <node id="energia" label="Energía"></node>
+        <node id="estudiosSocialEcologicos" label="Estudios social-ecológicos"></node>
+        <node id="evaluacionCalidadDelAgua" label="Evaluación de la calidad del agua"></node>
+        <node id="evaluacionCalidadDelAire" label="Evaluación de la calidad del aire"></node>
+        <node id="evaluacionCalidadDelSuelo" label="Evaluación de la calidad del suelo"></node>
+        <node id="generoYAmbiente" label="Género y ambiente"></node>
+        <node id="geoespacio" label="Geoespacio"></node>
+        <node id="interculturalidadYAmbiente" label="Interculturalidad y ambiente"></node>
+        <node id="investigacionEnLaAntartida" label="Investigación en la Antártida"></node>
+        <node id="investigacionSocioeconomicaPeligrosGeofisicos"
+              label="Investigación socioeconómica sobre vulnerabilidades asociadas a peligros geofísicos"></node>
+        <node id="limnologia" label="Limnología"></node>
+        <node id="manejoDeBosques" label="Manejo de bosques"></node>
+        <node id="manejoDeTerritoriosComunalesAmazonicos" label="Manejo de territorios comunales amazónicos"></node>
+        <node id="mineria" label="Minería"></node>
+        <node id="mitigacionDeGasesEfectoInvernadero" label="Mitigación de gases de efecto invernadero"></node>
+        <node id="modelosClimaticosYEscenariosFuturos" label="Modelos climáticos y escenarios futuros del clima"></node>
+        <node id="normatividadYPoliticasAmbientales" label="Normatividad y políticas ambientales"></node>
+        <node id="oceonografia" label="Oceanografía"></node>
+        <node id="recursosHidricos" label="Recursos hídricos"></node>
+        <node id="reforestaciónYRecuperacionDeAreasDegradadas"
+              label="Reforestación y recuperación de áreas degradadas"></node>
+        <node id="retosParaGestionAmbiental" label="Retos para la gestión ambiental"></node>
+        <node id="suelos" label="Suelos"></node>
+        <node id="tecnologiaEInnovacionAmbiental" label="Tecnología e innovación Ambiental"></node>
+        <node id="tierraSolida" label="Tierra sólida"></node>
+        <node id="toxicologiaYEcotoxicologia" label="Toxicología y ecotoxicología"></node>
+        <node id="tratamientoDeResiduosSolidosYPeligrosos" label="Tratamiento de residuos sólidos y peligrosos"></node>
+        <node id="usoYTratamiendoDeAgua" label="Uso y tratamiento de agua"></node>
+        <node id="usoYTratamiendoDelSuelo" label="Uso y tratamiento del suelo"></node>
+        <node id="valoracionCulturalDelPatrimonioNatural" label="Valoración cultural del patrimonio natural"></node>
+        <node id="valoracionEconomicaDelPatrimonioNatural" label="Valoración económica del patrimonio natural"></node>
+        <node id="vulnerabilidadYAdaptacionAlCambioClimatico"
+              label="Vulnerabilidad y adaptación al cambio climático"></node>
+    </isComposedBy>
+</node>

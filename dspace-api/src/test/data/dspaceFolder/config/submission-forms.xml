@@ -792,7 +792,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>datacite</dc-schema>
           <dc-element>geoLocationBox</dc-element>
-          <dc-qualifier>southBoundLongitude</dc-qualifier>
+          <dc-qualifier>southBoundLatitude</dc-qualifier>
           <label>Southbound Longitude</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
@@ -802,7 +802,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>datacite</dc-schema>
           <dc-element>geoLocationBox</dc-element>
-          <dc-qualifier>northBoundLongitude</dc-qualifier>
+          <dc-qualifier>northBoundLatitude</dc-qualifier>
           <label>Northbound Longitude</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
@@ -2999,7 +2999,7 @@ it, please enter the types and the actual numbers or codes.</hint>
     </form>
 
 
-   <form name="institution-publication-dc-contributor-editor">
+   <form name="institution-publication_bibliographic_details-dc-contributor-editor">
      <row>
        <field>
          <dc-schema>dc</dc-schema>
@@ -4179,7 +4179,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
      </row>
    </form>
 
-   <form name="institution-publication-dc-contributor-author">
+   <form name="institution-publication_bibliographic_details-dc-contributor-author">
      <row>
        <field>
          <dc-schema>dc</dc-schema>

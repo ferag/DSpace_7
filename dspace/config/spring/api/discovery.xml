@@ -106,10 +106,14 @@
                 <entry key="RELATION.Project.grants" value-ref="relationProjectFundingsConfiguration"/>
                 <entry key="RELATION.Project.researchoutputs" value-ref="relationProjectPublicationConfiguration"/>
                 <entry key="RELATION.Project.patents" value-ref="relationProjectPatentConfiguration"/>
+                <!-- Patent Related items -->
+                <entry key="RELATION.Patent.patents" value-ref="relationPatentPatentConfiguration"/>
                 <!-- InstitutionPerson Related items -->
                 <entry key="RELATION.InstitutionPerson.ipprojects" value-ref="relationInvestigatorInstitutionProjectsConfiguration"/>
                 <entry key="RELATION.InstitutionPerson.ipresearchoutputs" value-ref="relationInstitutionAuthorResearchOutputsConfiguration"/>
                 <entry key="RELATION.InstitutionPerson.ippatents" value-ref="relationInstitutionAuthorPatentsConfiguration"/>
+                <!-- InstitutionPerson Related items -->
+                <entry key="RELATION.InstitutionPatent.ipatpatents" value-ref="relationInstitutionPatentPatentConfiguration"/>
                 <!-- InstitutionOrgUnit Related items -->
                 <entry key="RELATION.InstitutionOrgUnit.iourpprojects" value-ref="relationOrgunitRPProjectConfiguration"/>
                 <entry key="RELATION.InstitutionOrgUnit.ioupublications" value-ref="relationOrgunitPublicationsConfiguration"/>
@@ -1408,7 +1412,8 @@
         <property name="defaultFilterQueries">
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
-                <value>dc.description.sponsorship_authority:{0}</value>
+<!--                <value>dc.description.sponsorship_authority:{0}</value>-->
+                <value>(dc.contributor.corporatename_authority:{0} OR dc.contributor.editorou_authority:{0})</value>
             </list>
         </property>
     </bean>
@@ -1563,7 +1568,8 @@
         <property name="defaultFilterQueries">
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
-                <value>crispj.organization_authority:{0} AND entityType_keyword:Project</value>
+<!--                <value>crispj.organization_authority:{0} AND entityType_keyword:Project</value>-->
+                <value>projectOrgUnits_authority:{0} AND entityType_keyword:Project</value>
             </list>
         </property>
     </bean>
@@ -1605,7 +1611,8 @@
         <property name="defaultFilterQueries">
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
-                <value>crispj.organization_authority:{0} AND entityType_keyword:InstitutionProject</value>
+<!--                <value>crispj.organization_authority:{0} AND entityType_keyword:InstitutionProject</value>-->
+                <value>(crispj.organization_authority:{0} OR crispj.contractorou_authority:{0} ) AND entityType_keyword:InstitutionProject</value>
             </list>
         </property>
     </bean>
@@ -1835,6 +1842,68 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>dc.relation.project_authority:{0} AND entityType_keyword:Patent</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- patents related to a patent -->
+    <bean id="relationPatentPatentConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+
+	    <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                 <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                        <ref bean="sortTitle" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+                queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>dc.relation.patent_authority:{0} AND entityType_keyword:Patent</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- institution patents related to an institution patent -->
+    <bean id="relationInstitutionPatentPatentConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                        <ref bean="sortTitle" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+                queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>dc.relation.patent_authority:{0} AND entityType_keyword:InstitutionPatent</value>
             </list>
         </property>
     </bean>
@@ -3349,7 +3418,7 @@
         <property name="defaultFilterQueries">
             <list>
                 <!--Only find items, communities and collections-->
-                <value>search.resourcetype:Item AND entityType_keyword:CvPerson AND perucris.identifier.cti:* </value>
+                <value>search.resourcetype:Item AND entityType_keyword:CvPerson AND (perucris.identifier.cti:* OR perucris.identifier.dina:*) </value>
             </list>
         </property>
     </bean>
@@ -4887,11 +4956,11 @@
         <property name="facetLimit" value="5"/>
         <property name="sortOrderSidebar" value="COUNT"/>
         <property name="sortOrderFilterPage" value="COUNT"/>
-        <property name="splitter" value="::"/>
+<!--        <property name="splitter" value="::"/>-->
 
     </bean>
 
-    <bean id="searchFilterEquipmentOwner" class="org.dspace.discovery.configuration.HierarchicalSidebarFacetConfiguration">
+    <bean id="searchFilterEquipmentOwner" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
         <property name="indexFieldName" value="eqowner"/>
         <property name="metadataFields">
             <list>
@@ -4901,11 +4970,11 @@
         <property name="facetLimit" value="5"/>
         <property name="sortOrderSidebar" value="COUNT"/>
         <property name="sortOrderFilterPage" value="COUNT"/>
-        <property name="splitter" value="::"/>
+<!--        <property name="splitter" value="::"/>-->
 
     </bean>
 
-    <bean id="searchFilterEquipmentOrgUnit" class="org.dspace.discovery.configuration.HierarchicalSidebarFacetConfiguration">
+    <bean id="searchFilterEquipmentOrgUnit" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
         <property name="indexFieldName" value="eqorgunit"/>
         <property name="metadataFields">
             <list>
@@ -4915,27 +4984,31 @@
         <property name="facetLimit" value="5"/>
         <property name="sortOrderSidebar" value="COUNT"/>
         <property name="sortOrderFilterPage" value="COUNT"/>
-        <property name="splitter" value="::"/>
+<!--        <property name="splitter" value="::"/>-->
 
     </bean>
 
-    <bean id="searchFilterInvestigators" class="org.dspace.discovery.configuration.HierarchicalSidebarFacetConfiguration">
+    <bean id="searchFilterInvestigators" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
         <property name="indexFieldName" value="investigators"/>
         <property name="metadataFields">
             <list>
                 <value>crispj.investigator</value>
                 <value>crispj.coinvestigators</value>
                 <value>oairecerif.fundingProgram</value>
+                <value>crispj.contractorper</value>
+                <value>crispj.partnerper</value>
+                <value>crispj.inKindContributorper</value>
+
             </list>
         </property>
         <property name="facetLimit" value="5"/>
         <property name="sortOrderSidebar" value="COUNT"/>
         <property name="sortOrderFilterPage" value="COUNT"/>
-        <property name="splitter" value="::"/>
+<!--        <property name="splitter" value="::"/>-->
 
     </bean>
 
-    <bean id="searchFilterProjectOrgUnits" class="org.dspace.discovery.configuration.HierarchicalSidebarFacetConfiguration">
+    <bean id="searchFilterProjectOrgUnits" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
         <property name="indexFieldName" value="projectOrgUnits"/>
         <property name="metadataFields">
             <list>
@@ -4943,12 +5016,15 @@
                 <value>crispj.partnerou</value>
                 <value>crispj.organization</value>
                 <value>oairecerif.funder</value>
+                <value>crispj.contractorou</value>
+                <value>crispj.inKindContributorou</value>
+                <value>crispj.organizationper</value>
             </list>
         </property>
         <property name="facetLimit" value="5"/>
         <property name="sortOrderSidebar" value="COUNT"/>
         <property name="sortOrderFilterPage" value="COUNT"/>
-        <property name="splitter" value="::"/>
+<!--        <property name="splitter" value="::"/>-->
 
     </bean>
 

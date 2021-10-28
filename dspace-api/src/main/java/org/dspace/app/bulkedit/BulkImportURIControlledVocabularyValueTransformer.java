@@ -7,7 +7,6 @@
  */
 package org.dspace.app.bulkedit;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.dspace.content.Item;
 import org.dspace.content.authority.Choice;
 import org.dspace.content.authority.ChoiceAuthority;
-import org.dspace.content.authority.Choices;
 import org.dspace.content.authority.service.ChoiceAuthorityService;
 import org.dspace.content.vo.MetadataValueVO;
 import org.dspace.core.Context;

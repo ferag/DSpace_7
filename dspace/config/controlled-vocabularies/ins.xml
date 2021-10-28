@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ The contents of this file are subject to the license and copyright
+  ~ detailed in the LICENSE and NOTICE files at the root of the source
+  ~ tree and available online at
+  ~
+  ~  http://www.dspace.org/license/
+  -->
+<node id="ins" label="ins">
+    <isComposedBy>
+        <node id="saludMaternaPerinatalYNeonatal" label="Salud materna perinatal y neonatal"></node>
+        <node id="cancer" label="Cáncer"></node>
+        <node id="malnutricionYAnemia" label="Malnutrición y anemia (incluye obesidad)"></node>
+        <node id="saludMental" label="Salud mental"></node>
+        <node id="hipertensionArterialYEnfermedadesVasculares"
+              label="Hipertensión arterial, dislipidemias, enfermedades cardiovasculares y cerebrovasculares"></node>
+        <node id="politicasYGestionEnSalud" label="Políticas y gestión en salud"></node>
+        <node id="diabetesMellitus" label="Diabetes mellitus"></node>
+        <node id="otrosTranstornosMetabolicos"
+              label="Otros trastornos metabólicos (no incluye Diabetes mellitus)"></node>
+        <node id="tuberculosis" label="Tuberculosis"></node>
+        <node id="recursosHumanos" label="Recursos humanos"></node>
+        <node id="infeccionesRespiratoriasYNeumonia" label="Infecciones respiratorias y neumonía"></node>
+        <node id="accidentesDeTransito" label="Accidentes de tránsito"></node>
+        <node id="otrosAccidentesYdanos" label="Otros accidentes y daños (no incluye accidentes de tránsito)"></node>
+        <node id="saludAmbientalYOcupacional" label="Salud ambiental y ocupacional"></node>
+        <node id="itsYVihSida" label="ITS y VIH-SIDA"></node>
+        <node id="infeccionesIntrahospitalarias" label="Infecciones intrahospitalarias"></node>
+        <node id="emergenciaYDesastres" label="Emergencias y desastres"></node>
+        <node id="metaxenicasYZoonoticas" label="Metaxénicas y zoonóticas"></node>
+        <node id="artritis" label="Artritis"></node>
+        <node id="infeccionesIntestinales" label="Infecciones intestinales"></node>
+        <node id="hepatitis" label="Hepatitis"></node>
+        <node id="saludBucal" label="Salud bucal"></node>
+        <node id="saludOcular" label="Salud ocular"></node>
+        <node id="saludAuditiva" label="Salud auditiva"></node>
+        <node id="enfermedadRenalYUrogenital" label="Enfermedad renal y urogenital"></node>
+        <node id="enfermedadesNeurologicas" label="Enfermedades neurológicas"></node>
+        <node id="saludPoblacionesIndigenasYOtrosGruposVulnerables"
+              label="Salud de poblaciones indígenas, migrantes, minorías y grupos vulnerables"></node>
+        <node id="medicinaTradicionalYAlternativa" label="Medicina tradicional y alternativa"></node>
+        <node id="genero" label="Género"></node>
+        <node id="tabaquismoyConsumoDeTabaco" label="Tabaquismo y consumo de tabaco"></node>
+        <node id="ejercicioYActividadFisica" label="Ejercicio y actividad física"></node>
+        <node id="saludDelAdolescente" label="Salud del adolescente"></node>
+        <node id="saludDelHombre" label="Salud del hombre"></node>
+        <node id="saludInfantil" label="Salud infantil"></node>
+        <node id="enfermedadesDeLaSangre" label="Enfermedades de la sangre (no incluye ferropénica)"></node>
+        <node id="sistemaInmune" label="Sistema inmune"></node>
+        <node id="piel" label="Piel"></node>
+        <node id="otros" label="Otros"></node>
+    </isComposedBy>
+</node>

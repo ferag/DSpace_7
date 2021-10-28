@@ -1456,6 +1456,8 @@
 				<entry key="cerifToFundingTypes" value-ref="mapConverterCerifToFundingTypes" />
 				<entry key="elasticsearchGender" value-ref="mapConverterGenderTypes" />
 				<entry key="elasticsearchUbigeoRegion" value-ref="mapConverterUbigeoRegion" />
+				<entry key="minamTypes" value-ref="mapConverterMinamTypes" />
+				<entry key="insTypes" value-ref="mapConverterInsTypes" />
 			</map>
 		</constructor-arg>
 	</bean>
@@ -1522,6 +1524,18 @@
 		<property name="converterNameFile" value="mapConverter-openAccesFlag.properties" />
 		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
 		<property name="defaultValue" value="Unspecified"/>
+	</bean>
+
+	<bean name="mapConverterMinamTypes" class="org.dspace.util.SimpleMapConverter" init-method="init">
+		<property name="converterNameFile" value="mapConverter-minam.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+		<property name="defaultValue" value=""/>
+	</bean>
+
+	<bean name="mapConverterInsTypes" class="org.dspace.util.SimpleMapConverter" init-method="init">
+		<property name="converterNameFile" value="mapConverter-ins.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+		<property name="defaultValue" value=""/>
 	</bean>
 
 	<!-- CONDITION EVALUATORS CONFIGURATION -->

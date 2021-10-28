@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Logger;
 import org.dspace.app.util.SubmissionConfigReader;
 import org.dspace.app.util.SubmissionConfigReaderException;
 import org.dspace.authority.service.FormNameLookup;
@@ -54,6 +55,8 @@ public class LayoutSecurityServiceImpl implements LayoutSecurityService {
     private final FormNameLookup formNameLookup;
 
     private Group anonymousGroup;
+
+    private static Logger log = org.apache.logging.log4j.LogManager.getLogger(LayoutSecurityServiceImpl.class);
 
     @Autowired
     public LayoutSecurityServiceImpl(AuthorizeService authorizeService,
@@ -165,6 +168,8 @@ public class LayoutSecurityServiceImpl implements LayoutSecurityService {
         String element = metadataValue.getMetadataField().getElement();
         String qualifier = metadataValue.getMetadataField().getQualifier();
         Collection collection = item.getOwningCollection();
+        log.info("item " + item);
+        log.info("item id" + item.getID());
         String submissionName = submissionConfigReader.getSubmissionConfigByCollection(collection)
                                                       .getSubmissionName();
         String fieldKey = metadataValue.getMetadataField().toString('_');

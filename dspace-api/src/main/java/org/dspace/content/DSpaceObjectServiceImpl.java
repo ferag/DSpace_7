@@ -141,7 +141,14 @@ public abstract class DSpaceObjectServiceImpl<T extends DSpaceObject> implements
     public List<MetadataValue> getMetadata(T dso, String schema, String element, String qualifier, String lang) {
         // Build up list of matching values
         List<MetadataValue> values = new ArrayList<>();
-        log.info("dso: " + dso);
+        try {
+            log.info("dso: " + (dso != null));
+            if (dso != null) {
+                log.info("dso metadata: " + dso.getMetadata());
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
         for (MetadataValue dcv : dso.getMetadata()) {
             if (match(schema, element, qualifier, lang, dcv)) {
                 values.add(dcv);

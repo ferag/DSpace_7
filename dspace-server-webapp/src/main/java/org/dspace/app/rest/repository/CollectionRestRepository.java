@@ -11,8 +11,10 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.SortedMap;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 
@@ -200,7 +202,9 @@ public class CollectionRestRepository extends DSpaceObjectRestRepository<Collect
             Context context = obtainContext();
             List<Collection> collections = cs.findCollectionsWithSubmit(q, context, null, null,
                                               Math.toIntExact(pageable.getOffset()),
-                                              Math.toIntExact(pageable.getPageSize()));
+                                              Math.toIntExact(pageable.getPageSize()))
+                .stream().filter(c -> Objects.isNull(c.getEntityType()) || c.getEntityType().startsWith("Cv"))
+                .collect(Collectors.toList());
             int tot = cs.countCollectionsWithSubmit(q, context, null, null);
             return converter.toRestPage(collections, pageable, tot, utils.obtainProjection());
         } catch (SQLException e) {

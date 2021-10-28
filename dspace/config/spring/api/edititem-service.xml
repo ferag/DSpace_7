@@ -337,7 +337,7 @@
                             <property name="name" value="FULL" />
                             <property name="security">
                                 <value type="org.dspace.content.security.CrisSecurity">
-                                    ADMIN_OWNER
+                                    CV_PROFILE_USER
                                 </value>
                             </property>
                             <property name="submissionDefinition" value="cvperson-edit" />
@@ -346,7 +346,7 @@
                             <property name="name" value="EDUCATION" />
                             <property name="security">
                                 <value type="org.dspace.content.security.CrisSecurity">
-                                    ADMIN_OWNER
+                                    CV_PROFILE_USER
                                 </value>
                             </property>
                             <property name="submissionDefinition" value="cvperson-edit-education" />
@@ -355,7 +355,7 @@
                             <property name="name" value="AFFILIATION" />
                             <property name="security">
                                 <value type="org.dspace.content.security.CrisSecurity">
-                                    ADMIN_OWNER
+                                    CV_PROFILE_USER
                                 </value>
                             </property>
                             <property name="submissionDefinition" value="cvperson-edit-affiliation" />
@@ -364,7 +364,7 @@
                             <property name="name" value="QUALIFICATION" />
                             <property name="security">
                                 <value type="org.dspace.content.security.CrisSecurity">
-                                    ADMIN_OWNER
+                                    CV_PROFILE_USER
                                 </value>
                             </property>
                             <property name="submissionDefinition" value="cvperson-edit-qualification" />

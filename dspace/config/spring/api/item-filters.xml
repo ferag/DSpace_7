@@ -93,7 +93,7 @@
         <property name="parameters">
             <map>
                 <entry key="field" value="dspace.entity.type" />
-                <entry key="pattern" value="^Person$|^InstitutionPerson$" />
+                <entry key="pattern" value="^Person|InstitutionPerson$" />
             </map>
         </property>
     </bean>
@@ -104,7 +104,18 @@
         <property name="parameters">
             <map>
                 <entry key="field" value="dspace.entity.type" />
-                <entry key="pattern" value="^Project$|^InstitutionProject$|^CvProject$|" />
+                <entry key="pattern" value="^Project|InstitutionProject|CvProject$" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- dspace.entity.type is exactly Publication or InstitutionPublication or CvPublication-->
+    <bean id="relationship-type-equals-publication_condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="dspace.entity.type" />
+                <entry key="pattern" value="^Publication|InstitutionPublication|CvPublication$" />
             </map>
         </property>
     </bean>
@@ -116,6 +127,17 @@
             <map>
                 <entry key="field" value="dspace.entity.type" />
                 <entry key="pattern" value="^CvPerson$" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- dspace.entity.type is exactly Equipment or InstitutionEquipment -->
+    <bean id="relationship-type-equals-equipment_condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="dspace.entity.type" />
+                <entry key="pattern" value="^Equipment|InstitutionEquipment$" />
             </map>
         </property>
     </bean>
@@ -223,7 +245,260 @@
     </bean>
 
 
-    
+    <!-- has perucris.subject.ocde set-->
+    <bean id="has-perucris-subject-ocde-set"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.subject.ocde" />
+            </map>
+        </property>
+    </bean>
+    <!-- perucris.subject.ocde starts with controlled vocabulary prefix -->
+    <bean id="ocde-starts-with-ocde_condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.subject.ocde" />
+                <entry key="pattern" value="^$|^oecd::" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has perucris.subject.minam set-->
+    <bean id="has-perucris-subject-minam-set"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.subject.minam" />
+            </map>
+        </property>
+    </bean>
+    <!-- perucris.subject.minam starts with controlled vocabulary prefix -->
+    <bean id="minam-starts-with-minam_condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.subject.minam" />
+                <entry key="pattern" value="^$|^minam::" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has perucris.subject.ins set-->
+    <bean id="has-perucris-subject-ins-set"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.subject.ins" />
+            </map>
+        </property>
+    </bean>
+    <!-- perucris.subject.ins starts with controlled vocabulary prefix -->
+    <bean id="ins-starts-with-ins_condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.subject.ins" />
+                <entry key="pattern" value="^$|^ins::" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has perucris.project.typeOcde set-->
+    <bean id="has-perucris-ocde-project-type-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.project.typeOcde" />
+            </map>
+        </property>
+    </bean>
+    <!-- perucris.project.typeOcde starts with controlled vocabulary prefix -->
+    <bean id="ocde-project-type-starts-with-oecd_condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.project.typeOcde" />
+                <entry key="pattern" value="^$|^oecd_project_type::" />
+            </map>
+        </property>
+    </bean>
+    <!-- dc.type starts with http:// or https:// -->
+    <bean id="dc-type-starts-with-http_condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="dc.type" />
+                <entry key="pattern" value="$|^(http|https):\/\/" />
+            </map>
+        </property>
+    </bean>
+    <!-- perucris.type.usage starts with http:// or https:// -->
+    <bean id="perucris-usage-type-starts-with-http_condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.type.usage" />
+                <entry key="pattern" value="$|^(http|https):\/\/" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- perucris.type.sectorInstitucional set to Enseñanza superior  -->
+    <bean id="sectorinstitucional-higher-education_condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.type.sectorInstitucional" />
+                <entry key="pattern" value="Enseñanza superior" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has perucris.type.educacionSuperior set-->
+    <bean id="has-education-superior-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.type.educacionSuperior" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has datacite.geoLocationPlace set-->
+    <bean id="geolocation-place-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="datacite.geoLocationPlace" />
+            </map>
+        </property>
+    </bean>
+    <!-- has datacite.geoLocationPoint.pointLatitude set-->
+    <bean id="geolocation-point-latitude-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="datacite.geoLocationPoint.pointLatitude" />
+            </map>
+        </property>
+    </bean>
+    <!-- has datacite.geoLocationPoint.pointLongitude set-->
+    <bean id="geolocation-point-longitude-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="datacite.geoLocationPoint.pointLongitude" />
+            </map>
+        </property>
+    </bean>
+    <!-- has datacite.geoLocationBox.northBoundLatitude set-->
+    <bean id="geolocation-box-northern-latitude-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="datacite.geoLocationBox.northBoundLatitude" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has datacite.geoLocationBox.southBoundLatitude set-->
+    <bean id="geolocation-box-southern-latitude-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="datacite.geoLocationBox.southBoundLatitude" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has datacite.geoLocationBox.eastBoundLongitude set-->
+    <bean id="geolocation-box-eastern-longitude-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="datacite.geoLocationBox.eastBoundLongitude" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has datacite.geoLocationBox.westBoundLongitude set-->
+    <bean id="geolocation-box-western-longitude-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="datacite.geoLocationBox.westBoundLongitude" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has person.knowsLanguage set-->
+    <bean id="knows-language-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="person.knowsLanguage" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- person.knowsLanguage from common_iso_languages value-pair condition-->
+    <bean id="knows-language-from-controlled-list_condition"
+          class="org.dspace.content.logic.condition.ValueInControlledListCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="person.knowsLanguage" />
+                <entry key="authorityName" value="common_iso_languages" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has dc.type set-->
+    <bean id="has-dc-type-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="dc.type" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has dc.type set-->
+    <bean id="has-perucris-type-usage-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.type.usage" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- dc.type from peru_equipment_type value-pair condition-->
+    <bean id="equipment-dc-type-from-controlled-list_condition"
+          class="org.dspace.content.logic.condition.ValueInControlledListCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="dc.type" />
+                <entry key="authorityName" value="peru_equipment_type" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- perucris.type.usage from peru_type_usages value-pair condition-->
+    <bean id="perucris-type-usage-from-controlled-list_condition"
+          class="org.dspace.content.logic.condition.ValueInControlledListCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.type.usage" />
+                <entry key="authorityName" value="peru_type_usages" />
+            </map>
+        </property>
+    </bean>
+
+
+
+
 
     <!--
          A filter that checks if any value of dc.identifier.uri contains "10.12345/".
@@ -506,15 +781,250 @@
                         </bean>
                         <ref bean="has-orcid-set_condition" />
                         <ref bean="has-dni-set_condition" />
-                        <ref bean="has-dina-set_condition" />
-                        <ref bean="has-renacyt-set_condition" />
-                        <ref bean="has-scopus-author-id-set_condition" />
-                        <ref bean="has-researcher-id-set_condition" />
                     </list>
                 </property>
             </bean>
         </property>
     </bean>
+
+    <bean id="item-has-valid-ocde-value" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="has-perucris-subject-ocde-set"/>
+                            </property>
+                        </bean>
+                        <ref bean="ocde-starts-with-ocde_condition" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="item-has-valid-minam-value" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="has-perucris-subject-minam-set"/>
+                            </property>
+                        </bean>
+                        <ref bean="minam-starts-with-minam_condition" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="item-has-valid-ins-value" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="has-perucris-subject-ins-set"/>
+                            </property>
+                        </bean>
+                        <ref bean="ins-starts-with-ins_condition" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="item-has-valid-ocde-project-type-value" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="has-perucris-ocde-project-type-set_condition"/>
+                            </property>
+                        </bean>
+                        <ref bean="ocde-project-type-starts-with-oecd_condition" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="higher-education-type_filter" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="sectorinstitucional-higher-education_condition"/>
+                            </property>
+                        </bean>
+                        <ref bean="has-education-superior-set_condition" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="item-has-valid-geolocation_filter" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="geolocation-place-set_condition"/>
+                            </property>
+                        </bean>
+                        <bean class="org.dspace.content.logic.operator.Or">
+                            <property name="statements">
+                                <list>
+                                    <bean class="org.dspace.content.logic.operator.And">
+                                        <property name="statements">
+                                            <list>
+                                                <ref bean="geolocation-point-latitude-set_condition" />
+                                                <ref bean="geolocation-point-longitude-set_condition" />
+                                            </list>
+                                        </property>
+                                    </bean>
+                                    <bean class="org.dspace.content.logic.operator.And">
+                                        <property name="statements">
+                                            <list>
+                                                <ref bean="geolocation-box-northern-latitude-set_condition" />
+                                                <ref bean="geolocation-box-southern-latitude-set_condition" />
+                                                <ref bean="geolocation-box-eastern-longitude-set_condition" />
+                                                <ref bean="geolocation-box-western-longitude-set_condition" />
+                                            </list>
+                                        </property>
+                                    </bean>
+                                </list>
+                            </property>
+                        </bean>
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="item-has-valid-dc-type_filter" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.And">
+                            <property name="statements">
+                                <list>
+                                    <bean class="org.dspace.content.logic.operator.Not">
+                                        <property name="statements">
+                                            <ref bean="relationship-type-equals-publication_condition"/>
+                                        </property>
+                                    </bean>
+                                    <bean class="org.dspace.content.logic.operator.Not">
+                                        <property name="statements">
+                                            <ref bean="relationship-type-equals-project_condition"/>
+                                        </property>
+                                    </bean>
+                                </list>
+                            </property>
+                        </bean>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="dc-type-starts-with-http_condition"/>
+                            </property>
+                        </bean>
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="equipment-has-valid-dc-type_filter" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="relationship-type-equals-equipment_condition"/>
+                            </property>
+                        </bean>
+                        <ref bean="equipment-dc-type-from-controlled-list_condition"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+<!--    <bean id="item-has-valid-dc-type_filter" class="org.dspace.content.logic.DefaultFilter">-->
+<!--        <property name="statement">-->
+<!--            <bean class="org.dspace.content.logic.operator.Or">-->
+<!--                <property name="statements">-->
+<!--                    <list>-->
+<!--                        <bean class="org.dspace.content.logic.operator.Not">-->
+<!--                            <property name="statements">-->
+<!--                                <ref bean="relationship-type-equals-publication_condition"/>-->
+<!--                            </property>-->
+<!--                        </bean>-->
+<!--                        <bean class="org.dspace.content.logic.operator.Not">-->
+<!--                            <property name="statements">-->
+<!--                                <ref bean="relationship-type-equals-publication_condition"/>-->
+<!--                            </property>-->
+<!--                        </bean>-->
+<!--                        <bean class="org.dspace.content.logic.operator.Not">-->
+<!--                            <property name="statements">-->
+<!--                                <ref bean="dc-type-starts-with-http_condition"/>-->
+<!--                            </property>-->
+<!--                        </bean>-->
+<!--                    </list>-->
+<!--                </property>-->
+<!--            </bean>            -->
+<!--        </property>-->
+<!--    </bean>-->
+    <bean id="equipment-has-valid-usage-type_filter" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="relationship-type-equals-equipment_condition"/>
+                            </property>
+                        </bean>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="has-perucris-type-usage-set_condition"/>
+                            </property>
+                        </bean>
+                        <ref bean="perucris-type-usage-from-controlled-list_condition"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="person-has-valid-knows-language_filter" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="relationship-type-equals-person_condition"/>
+                            </property>
+                        </bean>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="knows-language-set_condition"/>
+                            </property>
+                        </bean>
+                        <ref bean="knows-language-from-controlled-list_condition"/>
+                    </list>
+
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+
 
     <bean id="project-without-oa-mandate-requires-policy-url" class="org.dspace.content.logic.DefaultFilter">
         <property name="statement">

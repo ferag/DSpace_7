@@ -3,7 +3,7 @@
 
 <item-submission>
   <submission-map>
-    <name-map collection-handle="default" submission-name="institution-product" />
+    <name-map collection-handle="default" submission-name="institution-orgunit-edit" />
   </submission-map>
   <step-definitions>
     <step-definition id="collection" mandatory="true">
@@ -21,36 +21,6 @@
       <heading>submit.progressbar.license</heading>
       <processing-class>org.dspace.app.rest.submit.step.LicenseStep</processing-class>
       <type>license</type>
-    </step-definition>
-    <step-definition id="institution-product" mandatory="true">
-      <heading>submit.progressbar.describe.institution-product</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
-    <step-definition id="institution-product_indexing" mandatory="true">
-      <heading>submit.progressbar.describe.institution-product_indexing</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
-    <step-definition id="institution-product_references" mandatory="true">
-      <heading>submit.progressbar.describe.institution-product_references</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
-    <step-definition id="product" mandatory="true">
-      <heading>submit.progressbar.describe.product</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
-    <step-definition id="product_indexing" mandatory="true">
-      <heading>submit.progressbar.describe.product_indexing</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
-    <step-definition id="product_references" mandatory="true">
-      <heading>submit.progressbar.describe.product_references</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
     </step-definition>
     <step-definition id="orgunit" mandatory="true">
       <heading>submit.progressbar.describe.orgunit</heading>

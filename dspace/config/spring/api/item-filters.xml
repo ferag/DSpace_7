@@ -330,7 +330,7 @@
         <property name="parameters">
             <map>
                 <entry key="field" value="dc.type" />
-                <entry key="pattern" value="$|^(http|https):\/\/" />
+                <entry key="pattern" value="^(http:|https:)$" />
             </map>
         </property>
     </bean>
@@ -340,7 +340,7 @@
         <property name="parameters">
             <map>
                 <entry key="field" value="perucris.type.usage" />
-                <entry key="pattern" value="$|^(http|https):\/\/" />
+                <entry key="pattern" value="^(http:|https:)$" />
             </map>
         </property>
     </bean>

@@ -16,6 +16,7 @@ import static org.dspace.builder.CommunityBuilder.createCommunity;
 import static org.dspace.builder.ItemBuilder.createItem;
 import static org.dspace.builder.WorkspaceItemBuilder.createWorkspaceItem;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasItems;
@@ -1635,6 +1636,50 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
         assertThat(metadata, hasItems(with("dc.title", "Test Title")));
         assertThat(metadata, hasItems(with("perucris.subject.ocde", "oecd::Ciencias naturales::Matemáticas",
                                       null, "ocde_subjects:1.01.00", 0, 600)));
+        assertThat(metadata, hasItems(with("perucris.subject.minam", "minam::Atmósfera e hidrósfera",
+            null, "minam:atmosferaEHidrosfera", 0, 600)));
+        assertThat(metadata, hasItems(with("perucris.subject.ins", "ins::Salud ocular",
+            null, "ins:saludOcular", 0, 600)));
+        assertThat(metadata, hasItems(with("person.knowsLanguage", "it",
+            null, null, 0, -1)));
+        assertThat(metadata, hasItems(with("person.knowsLanguage", "en",
+            null, null, 1, -1)));
+        assertThat(metadata, hasItems(with("person.knowsLanguage", "fr",
+            null, null, 2, -1)));
+
+
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void createCvPersonInWorkspaceWithInvalidIdentifierURITest() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Collection publications = createCollection(context, community)
+            .withAdminGroup(eperson)
+            .withSubmissionDefinition("cvperson")
+            .withWorkflowGroup(1, eperson)
+            .build();
+
+        context.commit();
+        context.restoreAuthSystemState();
+
+        String publicationCollectionId = publications.getID().toString();
+        String fileLocation = getXlsFilePath("test-invalid-subject-uris.xls");
+        String[] args = new String[] { "bulk-import", "-c", publicationCollectionId, "-f", fileLocation, "-e" };
+        TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
+
+        handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, eperson);
+        assertThat("Expected no errors", handler.getErrorMessages(), empty());
+        assertThat("Expected invalid ocde error", handler.getWarningMessages(),
+            contains(containsString("error.validation.invalidOcde")));
+        assertThat("Expected invalid minam error", handler.getWarningMessages(),
+            contains(containsString("error.validation.invalidMinam")));
+        assertThat("Expected invalid ins error", handler.getWarningMessages(),
+            contains(containsString("error.validation.invalidIns")));
+        assertThat("Expected invalid ins error", handler.getWarningMessages(),
+            contains(containsString("error.validation.invalidLanguage")));
 
     }
 

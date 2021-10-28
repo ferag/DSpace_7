@@ -26,7 +26,8 @@ public enum CrisSecurity {
     ITEM_ADMIN("5"),
     SUBMITTER("6"),
     SUBMITTER_GROUP("7"),
-    GROUP("8");
+    GROUP("8"),
+    CV_PROFILE_USER("9");
 
     private final String value;
 

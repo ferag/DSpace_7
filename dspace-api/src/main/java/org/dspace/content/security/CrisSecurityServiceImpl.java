@@ -68,11 +68,19 @@ public class CrisSecurityServiceImpl implements CrisSecurityService {
                 return user != null && user.equals(item.getSubmitter());
             case SUBMITTER_GROUP:
                 return isUserInSubmitterGroup(context, item, user);
+            case CV_PROFILE_USER:
+                return isCTIVitaeUser(context, item);
             case NONE:
             default:
                 return false;
         }
 
+    }
+
+    private boolean isCTIVitaeUser(Context context, Item item) throws SQLException {
+        String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
+        return (StringUtils.equals(entityType, "CvPerson") && authorizeService.isAdmin(context)) ||
+               (this.isOwner(context.getCurrentUser(), item) && groupService.isMemberOfCTIVitaeGroup(context));
     }
 
     @Override

@@ -177,6 +177,8 @@ public interface GroupService extends DSpaceObjectService<Group>, DSpaceObjectLe
      */
     public boolean isMember(Context context, EPerson eperson, Group group) throws SQLException;
 
+    public boolean isMemberOfCTIVitaeGroup(Context context) throws SQLException;
+
     /**
      * Get all of the groups that an eperson is a member of.
      *

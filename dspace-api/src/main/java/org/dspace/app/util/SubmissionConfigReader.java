@@ -220,6 +220,7 @@ public class SubmissionConfigReader {
 
         CollectionService collService = ContentServiceFactory.getInstance().getCollectionService();
 
+        log.info("collection:", collection);
         log.info("Trying to get submit name for collection: {}-{}", collection.getID(),
             collection.getName());
         String submitName = collService.getMetadataFirstValue(collection, "cris", "submission", "definition", null);

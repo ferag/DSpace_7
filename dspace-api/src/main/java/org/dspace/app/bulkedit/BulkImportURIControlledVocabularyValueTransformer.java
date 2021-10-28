@@ -3,10 +3,11 @@
  * detailed in the LICENSE and NOTICE files at the root of the source
  * tree and available online at
  *
- * http://www.dspace.org/license/
+ *  http://www.dspace.org/license/
  */
 package org.dspace.app.bulkedit;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.dspace.content.Item;
 import org.dspace.content.authority.Choice;
 import org.dspace.content.authority.ChoiceAuthority;
+import org.dspace.content.authority.Choices;
 import org.dspace.content.authority.service.ChoiceAuthorityService;
 import org.dspace.content.vo.MetadataValueVO;
 import org.dspace.core.Context;
@@ -22,9 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
-public class BulkImportOcdeValueTransformer implements BulkImportValueTransformer {
+public class BulkImportURIControlledVocabularyValueTransformer implements BulkImportValueTransformer {
 
-    private static final String PATTERN = "^https.*[#](\\d[.]\\d\\d[.]\\d\\d)$";
+    private static final String PATTERN = "^http.*[#|/](.+)$";
 
     private String authorityName;
 
@@ -60,5 +62,4 @@ public class BulkImportOcdeValueTransformer implements BulkImportValueTransforme
     public void setAuthorityName(String authorityName) {
         this.authorityName = authorityName;
     }
-
 }

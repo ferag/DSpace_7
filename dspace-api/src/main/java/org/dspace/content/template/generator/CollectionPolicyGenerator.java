@@ -8,6 +8,8 @@
 package org.dspace.content.template.generator;
 
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
 
 import org.dspace.authorize.ResourcePolicy;
@@ -39,14 +41,16 @@ public class CollectionPolicyGenerator implements TemplateValueGenerator {
 
 
     @Override
-    public MetadataValueVO generator(Context context, Item targetItem, Item templateItem, String extraParams) {
+    public List<MetadataValueVO> generator(Context context, Item targetItem, Item templateItem, String extraParams) {
         try {
             return
-                findValue(context, templateItem.getTemplateItemOf(), extraParams.split("\\."));
+                Collections.singletonList(
+                    findValue(context,
+                        templateItem.getTemplateItemOf(), extraParams.split("\\.")));
         } catch (Exception e) {
             log.error("Error while evaluating resource policies for collection {}: {}",
                 templateItem.getTemplateItemOf().getID(), e.getMessage(), e);
-            return new MetadataValueVO("");
+            return Collections.singletonList(new MetadataValueVO(""));
         }
     }
 

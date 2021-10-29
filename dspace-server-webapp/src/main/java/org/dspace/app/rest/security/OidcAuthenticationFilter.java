@@ -7,6 +7,8 @@
  */
 package org.dspace.app.rest.security;
 
+import static org.dspace.authenticate.OidcAuthenticationBean.OIDC_AUTH_ATTRIBUTE;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.servlet.FilterChain;
@@ -33,20 +35,16 @@ public class OidcAuthenticationFilter extends StatelessLoginFilter {
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest req,
-                                                HttpServletResponse res) throws AuthenticationException {
-        return authenticationManager.authenticate(
-                new DSpaceAuthentication(null, null, new ArrayList<>())
-        );
+    public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res)
+        throws AuthenticationException {
+        req.setAttribute(OIDC_AUTH_ATTRIBUTE, OIDC_AUTH_ATTRIBUTE);
+        return authenticationManager.authenticate(new DSpaceAuthentication(null, null, new ArrayList<>()));
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest req,
-                                            HttpServletResponse res,
-                                            FilterChain chain,
-                                            Authentication auth) throws IOException, ServletException {
-        DSpaceAuthentication dSpaceAuthentication = (DSpaceAuthentication) auth;
-        restAuthenticationService.addAuthenticationDataForUser(req, res, dSpaceAuthentication, true);
+    protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain,
+        Authentication auth) throws IOException, ServletException {
+        restAuthenticationService.addAuthenticationDataForUser(req, res, (DSpaceAuthentication) auth, true);
         chain.doFilter(req, res);
     }
 

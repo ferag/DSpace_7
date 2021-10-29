@@ -221,21 +221,13 @@ public class LogicalStatementValidatorIT extends AbstractIntegrationTestWithData
         SubmissionConfig submissionConfig = getSubmissionConfig(personCollection);
         assertThat(validator.validate(context, itemWithOrcid, submissionConfig), empty());
         assertThat(validator.validate(context, itemWithDni, submissionConfig), empty());
-        assertThat(validator.validate(context, itemWithDina, submissionConfig), empty());
-        assertThat(validator.validate(context, itemWithRenacyt, submissionConfig), empty());
-        assertThat(validator.validate(context, itemWithScopusAuthor, submissionConfig), empty());
-        assertThat(validator.validate(context, itemWithResearcherId, submissionConfig), empty());
 
         List<ValidationError> errors = validator.validate(context, itemWithoutIds, submissionConfig);
         assertThat(errors, hasSize(1));
         assertThat(errors.get(0).getMessage(), equalTo("error.validation.personIdRequired"));
         assertThat(errors.get(0).getPaths(),
             contains("/section/person/person.identifier.orcid",
-                "/section/person/perucris.identifier.dni",
-                "/section/person/perucris.identifier.dina",
-                "/section/person/perucris.identifier.renacyt",
-                "/section/person/person.identifier.scopus-author-id",
-                "/section/person/person.identifier.rid"));
+                "/section/person/perucris.identifier.dni"));
 
     }
 
@@ -291,21 +283,13 @@ public class LogicalStatementValidatorIT extends AbstractIntegrationTestWithData
         SubmissionConfig submissionConfig = getSubmissionConfig(personCollection);
         assertThat(validator.validate(context, itemWithOrcid, submissionConfig), empty());
         assertThat(validator.validate(context, itemWithDni, submissionConfig), empty());
-        assertThat(validator.validate(context, itemWithDina, submissionConfig), empty());
-        assertThat(validator.validate(context, itemWithRenacyt, submissionConfig), empty());
-        assertThat(validator.validate(context, itemWithScopusAuthor, submissionConfig), empty());
-        assertThat(validator.validate(context, itemWithResearcherId, submissionConfig), empty());
 
         List<ValidationError> errors = validator.validate(context, itemWithoutIds, submissionConfig);
         assertThat(errors, hasSize(1));
         assertThat(errors.get(0).getMessage(), equalTo("error.validation.personIdRequired"));
         assertThat(errors.get(0).getPaths(),
             contains("/section/person/person.identifier.orcid",
-                "/section/person/perucris.identifier.dni",
-                "/section/person/perucris.identifier.dina",
-                "/section/person/perucris.identifier.renacyt",
-                "/section/person/person.identifier.scopus-author-id",
-                "/section/person/person.identifier.rid"));
+                "/section/person/perucris.identifier.dni"));
 
     }
 

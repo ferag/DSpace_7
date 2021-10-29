@@ -75,13 +75,15 @@
     <bean class="org.dspace.core.LegacyPluginServiceImpl" init-method="init"/>
     <bean class="org.dspace.core.LicenseServiceImpl"/>
     <bean class="org.dspace.core.NewsServiceImpl">
-   		<property name="acceptableFilenames">
-			<list>
-				<value>news-top.html</value>
-				<value>news-side.html</value>
-			</list>
-		</property>
-	</bean>
+        <property name="acceptableFilenames">
+            <list>
+                <value>news-top.html</value>
+                <value>news-side.html</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean class='org.dspace.curate.XmlWorkflowCuratorServiceImpl'/>
 
     <bean class="org.dspace.disseminate.CitationDocumentServiceImpl"/>
 
@@ -95,6 +97,7 @@
     <bean class="org.dspace.eperson.GroupServiceImpl"/>
     <bean class="org.dspace.eperson.RegistrationDataServiceImpl"/>
     <bean class="org.dspace.eperson.SubscribeServiceImpl"/>
+    <bean class="org.dspace.eperson.SubscribeParameterServiceImpl"/>
     <bean class="org.dspace.eperson.SupervisorServiceImpl"/>
 
     <bean class="org.dspace.event.EventServiceImpl"/>
@@ -109,7 +112,6 @@
     <bean class="org.dspace.harvest.OAIHarvesterValidatorImpl"/>
     <bean class="org.dspace.harvest.OAIHarvesterEmailSenderImpl"/>
     <bean class="org.dspace.harvest.OAIHarvesterXlsReportGeneratorImpl"/>
-    
 
     <bean class="org.dspace.identifier.DOIServiceImpl"/>
 
@@ -122,6 +124,7 @@
     <bean class="org.dspace.versioning.VersionHistoryServiceImpl"/>
 
     <bean class="org.dspace.metadataSecurity.MetadataSecurityService"/>
+    <bean class="org.dspace.metricsSecurity.BoxMetricsLayoutConfigurationService"/>
 
     <!-- Configurable workflow services -->
     <bean class="org.dspace.xmlworkflow.storedcomponents.ClaimedTaskServiceImpl"/>
@@ -166,5 +169,9 @@
     <bean class="org.dspace.app.metrics.service.CrisMetricsServiceImpl" />
 
     <bean class="org.dspace.app.source.service.ItemSourceServiceImpl" />
+
+    <bean class="org.dspace.authenticate.OidcAuthenticationBean" id="oidcAuthentication"/>
+    <bean class="org.dspace.authenticate.oidc.impl.OidcClientImpl" />
+
 </beans>
 

@@ -27,6 +27,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.util.ClientUtils;
+import org.dspace.app.metrics.service.CrisMetricsService;
 import org.dspace.app.util.AuthorizeUtil;
 import org.dspace.authorize.AuthorizeConfiguration;
 import org.dspace.authorize.AuthorizeException;
@@ -107,6 +108,8 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
     protected LicenseService licenseService;
     @Autowired(required = true)
     protected SubscribeService subscribeService;
+    @Autowired(required = true)
+    protected CrisMetricsService crisMetricsService;
     @Autowired(required = true)
     protected WorkspaceItemService workspaceItemService;
     @Autowired(required = true)
@@ -204,7 +207,7 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
                                                                      "title", null);
         if (nameField == null) {
             throw new IllegalArgumentException(
-                "Required metadata field '" + MetadataSchemaEnum.DC.getName() + ".title' doesn't exist!");
+                    "Required metadata field '" + MetadataSchemaEnum.DC.getName() + ".title' doesn't exist!");
         }
 
         return collectionDAO.findAll(context, nameField, limit, offset);
@@ -318,7 +321,7 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
             throws MissingResourceException, SQLException {
         if (field.equals(MD_NAME) && (value == null || value.trim().equals(""))) {
             try {
-                value = I18nUtil.getMessage("org.dspace.workflow.WorkflowManager.untitled");
+                value = I18nUtil.getMessage("org.dspace.content.untitled");
             } catch (MissingResourceException e) {
                 value = "Untitled";
             }
@@ -620,7 +623,7 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
 
     @Override
     public void removeTemplateItem(Context context, Collection collection)
-        throws SQLException, AuthorizeException, IOException {
+            throws SQLException, AuthorizeException, IOException {
         // Check authorisation
         AuthorizeUtil.authorizeManageTemplateItem(context, collection);
 
@@ -745,6 +748,7 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
 
     @Override
     public void delete(Context context, Collection collection) throws SQLException, AuthorizeException, IOException {
+        crisMetricsService.deleteByResourceID(context, collection);
         log.info(LogManager.getHeader(context, "delete_collection",
                                       "collection_id=" + collection.getID()));
 
@@ -758,8 +762,8 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
                                    collection.getID(), collection.getHandle(), getIdentifiers(context, collection)));
 
         // remove subscriptions - hmm, should this be in Subscription.java?
-        subscribeService.deleteByCollection(context, collection);
-
+        subscribeService.deleteByDspaceObject(context, collection);
+        crisMetricsService.deleteByResourceID(context, collection);
         // Remove Template Item
         removeTemplateItem(context, collection);
 
@@ -957,7 +961,8 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
 
     @Override
     public List<Collection> findCollectionsWithSubmit(String q, Context context, Community community,
-        String entityType, int offset, int limit) throws SQLException, SearchServiceException {
+                                                      String entityType, int offset,
+                                                      int limit) throws SQLException, SearchServiceException {
 
         List<Collection> collections = new ArrayList<>();
         DiscoverQuery discoverQuery = new DiscoverQuery();
@@ -981,7 +986,7 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
         discoverQuery.setMaxResults(0);
         discoverQuery.setDSpaceObjectFilter(IndexableCollection.TYPE);
         DiscoverResult resp = retrieveCollectionsWithSubmit(context, discoverQuery, entityType, community, q);
-        return (int)resp.getTotalSearchResults();
+        return (int) resp.getTotalSearchResults();
     }
 
     @Override
@@ -1142,6 +1147,22 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
     }
 
     @Override
+    public List<Collection> findCollectionsAdministeredByEntityType(String query, String entityType,
+                                                                    Context context, int offset, int limit)
+            throws SQLException, SearchServiceException {
+
+        DiscoverQuery discoverQuery = new DiscoverQuery();
+        discoverQuery.setDSpaceObjectFilter(IndexableCollection.TYPE);
+        discoverQuery.setStart(offset);
+        discoverQuery.setMaxResults(limit);
+
+        return retrieveCollectionsAdministeredByEntityType(context, discoverQuery,
+                query, entityType).getIndexableObjects().stream()
+                .map(indexableObject -> ((IndexableCollection) indexableObject).getIndexedObject())
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public int countCollectionsAdministered(String query, Context context) throws SQLException, SearchServiceException {
         DiscoverQuery discoverQuery = new DiscoverQuery();
         discoverQuery.setMaxResults(0);
@@ -1171,4 +1192,39 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
         return searchService.search(context, discoverQuery);
     }
 
+    private DiscoverResult retrieveCollectionsAdministeredByEntityType(Context context,
+                                                                       DiscoverQuery discoverQuery,
+                                                                       String query, String entityType)
+            throws SQLException, SearchServiceException {
+        String filterQuery = "";
+        if (!authorizeService.isAdmin(context)) {
+            filterQuery = groupService.allMemberGroupsSet(context, context.getCurrentUser()).stream()
+                    .map(group -> "g" + group.getID())
+                    .collect(Collectors.joining(" OR ", "admin:(", ")"));
+            discoverQuery.addFilterQueries(filterQuery);
+        }
+        if (StringUtils.isNoneBlank(entityType)) {
+            if (filterQuery.length() > 0) {
+                filterQuery += " AND ";
+            }
+            filterQuery += "search.entitytype: " + entityType;
+            discoverQuery.addFilterQueries(filterQuery);
+        }
+        if (StringUtils.isNotBlank(query)) {
+            StringBuilder buildQuery = new StringBuilder();
+            String escapedQuery = ClientUtils.escapeQueryChars(query);
+            buildQuery.append(escapedQuery).append(" OR ").append(escapedQuery).append("*");
+            discoverQuery.setQuery(buildQuery.toString());
+        }
+        return searchService.search(context, discoverQuery);
+    }
+    @Override
+    public int countCollectionsAdministeredByEntityType(String query, String entityType, Context context)
+            throws SQLException, SearchServiceException {
+        DiscoverQuery discoverQuery = new DiscoverQuery();
+        discoverQuery.setMaxResults(0);
+        discoverQuery.setDSpaceObjectFilter(IndexableCollection.TYPE);
+        return (int) retrieveCollectionsAdministeredByEntityType(context,
+                discoverQuery, query, entityType).getTotalSearchResults();
+    }
 }

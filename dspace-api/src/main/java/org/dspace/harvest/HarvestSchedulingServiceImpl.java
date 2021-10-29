@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.Context;
+import org.dspace.eperson.EPerson;
 import org.dspace.harvest.service.HarvestSchedulingService;
 import org.dspace.harvest.service.HarvestedCollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,8 @@ public class HarvestSchedulingServiceImpl implements HarvestSchedulingService {
     protected HarvestScheduler harvester;
     protected Thread mainHarvestThread;
     protected HarvestScheduler harvestScheduler;
-
+    protected boolean isLocal;
+    protected EPerson eperson;
     @Autowired(required = true)
     protected HarvestedCollectionService harvestedCollectionService;
 
@@ -39,7 +41,10 @@ public class HarvestSchedulingServiceImpl implements HarvestSchedulingService {
     }
 
     @Override
-    public synchronized void startNewScheduler() throws SQLException, AuthorizeException {
+    public synchronized void startNewScheduler(boolean isLocal, EPerson eperson)
+        throws SQLException, AuthorizeException {
+        this.isLocal = isLocal;
+        this.eperson = eperson;
         Context c = new Context();
         harvestedCollectionService.exists(c);
         c.complete();
@@ -47,7 +52,7 @@ public class HarvestSchedulingServiceImpl implements HarvestSchedulingService {
         if (mainHarvestThread != null && harvester != null) {
             stopScheduler();
         }
-        harvester = new HarvestScheduler();
+        harvester = new HarvestScheduler(isLocal, eperson);
         HarvestScheduler.setInterrupt(HarvestScheduler.HARVESTER_INTERRUPT_NONE);
         mainHarvestThread = new Thread(harvester);
         mainHarvestThread.start();
@@ -86,5 +91,4 @@ public class HarvestSchedulingServiceImpl implements HarvestSchedulingService {
             harvestedCollectionService.update(context, hc);
         }
     }
-
 }

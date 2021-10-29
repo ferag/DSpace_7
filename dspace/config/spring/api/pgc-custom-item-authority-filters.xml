@@ -11,7 +11,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-    <bean id="directorioCommunityFilter" class="org.dspace.content.authority.SimpleQueryCustomAuthorityFilter">
+    <bean id="directorioCommunityFilter" class="org.dspace.content.authority.EntityTypeAuthorityFilter">
         <constructor-arg name="customQueries">
             <list>
                 <value>location.comm:${directorios.community-id}</value>
@@ -30,7 +30,7 @@
         </property>
     </bean>
 
-    <bean id="onlyCvPersonFilter" class="org.dspace.content.authority.SimpleQueryCustomAuthorityFilter">
+    <bean id="onlyCvPersonFilter" class="org.dspace.content.authority.EntityTypeAuthorityFilter">
         <constructor-arg name="customQueries">
             <list>
                 <value>search.entitytype:CvPerson</value>

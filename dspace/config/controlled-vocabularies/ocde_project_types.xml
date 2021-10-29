@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node id="oecd_pt" label="oecd_project_type">
+    <isComposedBy>
+        <node id="investigacionYDesarrolloExperimental"
+              label="Investigación y desarrollo experimental">
+            <isComposedBy>
+                <node
+                        id="investigacionBasica"
+                        label="Investigación básica">
+
+                </node>
+                <node
+                        id="investigacionAplicada"
+                        label="Investigación aplicada">
+
+                </node>
+                <node
+                        id="desarrolloExperimental"
+                        label="Desarrollo experimental">
+
+                </node>
+            </isComposedBy>
+        </node>
+      <node id="innovacionTecnologica"
+            label="Innovación tecnológica">
+        <isComposedBy>
+          <node
+                  id="innovacionDeProducto"
+                  label="Innovación de producto">
+              <isComposedBy>
+                  <node id="#innovacionDeBien" label="Innovación de un bien"/>
+                  <node id="#innovacionDeServicio" label="Innovación de un servicio"/>
+              </isComposedBy>
+
+          </node>
+          <node
+                  id="innovacionDeProcesoNegocio"
+                  label="Innovación de procesos de negocio">
+              <isComposedBy>
+                  <node id="innovacionEnProduccion" label="Innovación en la producción de un bien o servicio"/>
+                  <node id="innovacionEnDistribucionYLogistica" label="Innovación en la distribución y logística"/>
+                  <node id="innovacionEnMercadotecniaYVentas" label="Innovación en mercadotecnia y ventas"/>
+                  <node id="innovacionEnTIC" label="Innovación en sistemas de información y comunicación"/>
+                  <node id="innovacionEnAdministracionYGestion" label="Innovación en administración y gestión"/>
+                  <node id="innovacionEnProductosYProcesosNegocio" label="Innovación en el desarrollo de producto y procesos de negocio"/>
+              </isComposedBy>
+
+          </node>
+        </isComposedBy>
+      </node>
+    </isComposedBy>
+</node>

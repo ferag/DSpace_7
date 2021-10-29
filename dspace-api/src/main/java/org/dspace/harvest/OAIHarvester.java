@@ -80,6 +80,7 @@ import org.dspace.core.Context;
 import org.dspace.core.Utils;
 import org.dspace.core.exception.SQLRuntimeException;
 import org.dspace.core.service.PluginService;
+import org.dspace.eperson.EPerson;
 import org.dspace.handle.service.HandleService;
 import org.dspace.harvest.model.OAIHarvesterAction;
 import org.dspace.harvest.model.OAIHarvesterOptions;
@@ -93,6 +94,7 @@ import org.dspace.harvest.service.OAIHarvesterClient;
 import org.dspace.harvest.service.OAIHarvesterEmailSender;
 import org.dspace.harvest.service.OAIHarvesterValidator;
 import org.dspace.harvest.util.NamespaceUtils;
+import org.dspace.service.impl.SqsService;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 import org.dspace.util.ExceptionMessageUtils;
@@ -190,7 +192,8 @@ public class OAIHarvester {
      * OAI-PMH provider, check for updates since last harvest, and ingest the
      * returned items.
      */
-    public void runHarvest(Context context, HarvestedCollection harvestRow, OAIHarvesterOptions options) {
+    public void runHarvest(Context context, HarvestedCollection harvestRow, OAIHarvesterOptions options,
+        EPerson eperson) {
 
         context.setMode(Context.Mode.BATCH_EDIT);
 
@@ -198,7 +201,7 @@ public class OAIHarvester {
 
         try {
 
-            if (harvestRow == null || !harvestedCollectionService.isHarvestable(harvestRow)) {
+            if (harvestRow == null || !harvestedCollectionService.isHarvestable(harvestRow, options.isLocal())) {
                 throw new HarvestingException("Provided collection is not set up for harvesting");
             }
 
@@ -206,21 +209,26 @@ public class OAIHarvester {
             if (isForceSynchronization(harvestRow.getCollection(), options)) {
                 fromDate = null;
             }
+            if (options.isLocal()) {
+                harvestRow = setBusyStatus(context, harvestRow, toDate);
+                OAIHarvesterReport report = startHarvest(context, harvestRow, fromDate, toDate, options);
 
-            harvestRow = setBusyStatus(context, harvestRow, toDate);
+                if (report.noRecordImportFails()) {
+                    setReadyStatus(context, harvestRow, getReportMessage(report), toDate);
+                } else {
+                    setRetryStatus(context, harvestRow, getReportMessage(report));
+                }
 
-            OAIHarvesterReport report = startHarvest(context, harvestRow, fromDate, toDate, options);
-
-            if (report.noRecordImportFails()) {
-                setReadyStatus(context, harvestRow, getReportMessage(report), toDate);
+                if (report.hasErrors()) {
+                    oaiHarvesterEmailSender.notifyCompletionWithErrors(getEmailRecipient(harvestRow),
+                         harvestRow, report);
+                }
             } else {
-                setRetryStatus(context, harvestRow, getReportMessage(report));
+                SqsService.enqueueCommand(configurationService.getProperty("dspace.serviceid"),
+                        new String[] { "harvest", "-r", "-c", harvestRow.getCollection().getID().toString(),
+                            "-e", eperson.getEmail() },
+                        "harvestingcollection_" + harvestRow.getCollection().getID().toString());
             }
-
-            if (report.hasErrors()) {
-                oaiHarvesterEmailSender.notifyCompletionWithErrors(getEmailRecipient(harvestRow), harvestRow, report);
-            }
-
         } catch (NoRecordsMatchException nrme) {
             setReadyStatus(context, harvestRow, nrme.getMessage(), toDate);
             log.info(nrme.getMessage());
@@ -382,7 +390,11 @@ public class OAIHarvester {
     }
 
     private Item searchItem(Context context, Element record, String repositoryId, Collection collection) {
-        Item item = itemSearchService.search(context, calculateCrisSourceId(record, repositoryId));
+        Optional<String> crisSourceId = calculateCrisSourceId(record, repositoryId);
+        if (crisSourceId.isEmpty()) {
+            return null;
+        }
+        Item item = itemSearchService.search(context, crisSourceId.get());
         return item != null && collection.equals(item.getOwningCollection()) ? item : null;
     }
 
@@ -557,8 +569,10 @@ public class OAIHarvester {
         }
 
         if (CollectionUtils.isEmpty(itemService.getMetadata(item, CRIS.getName(), "sourceId", null, null))) {
-            String crisSourceId = calculateCrisSourceId(record, repositoryId);
-            itemService.addMetadata(context, item, CRIS.getName(), "sourceId", null, null, crisSourceId);
+            Optional<String> crisSourceId = calculateCrisSourceId(record, repositoryId);
+            if (crisSourceId.isPresent()) {
+                itemService.addMetadata(context, item, CRIS.getName(), "sourceId", null, null, crisSourceId.get());
+            }
         }
 
         itemService.update(context, item);
@@ -585,8 +599,8 @@ public class OAIHarvester {
         itemService.addMetadata(context, item, "dc", "description", "provenance", "en", provenanceMsg);
     }
 
-    private String calculateCrisSourceId(Element record, String repositoryId) {
-        return repositoryId + SPLIT + getMetadataIdentifier(record);
+    private Optional<String> calculateCrisSourceId(Element record, String repositoryId) {
+        return getMetadataIdentifier(record).map(identifier -> repositoryId + SPLIT + identifier);
     }
 
     private Set<String> getMetadataFieldsToKeep() {
@@ -848,13 +862,13 @@ public class OAIHarvester {
         return getHeader(record).getChild("identifier", OAI_NS).getText();
     }
 
-    private String getMetadataIdentifier(Element record) {
+    private Optional<String> getMetadataIdentifier(Element record) {
         List<Element> metadataElements = getMetadataElements(record);
         if (CollectionUtils.isEmpty(metadataElements)) {
-            return null;
+            return Optional.empty();
         }
 
-        return metadataElements.get(0).getAttributeValue("id");
+        return Optional.ofNullable(metadataElements.get(0).getAttributeValue("id"));
     }
 
     /**

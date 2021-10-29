@@ -85,9 +85,9 @@
         <property name="dspaceRunnableClass" value="org.dspace.perucris.externalservices.UpdateItemWithExternalSourceCli"/>
     </bean>
 
-    <bean id="import-publications" class="org.dspace.perucris.externalservices.CreateWorkspaceItemWithExternalSourceCliScriptConfiguration">
+    <bean id="import-publications" class="org.dspace.script2externalservices.CreateWorkspaceItemWithExternalSourceCliScriptConfiguration">
         <property name="description" value="Perform the creating of workspace item using external source"/>
-        <property name="dspaceRunnableClass" value="org.dspace.perucris.externalservices.CreateWorkspaceItemWithExternalSourceCli"/>
+        <property name="dspaceRunnableClass" value="org.dspace.script2externalservices.CreateWorkspaceItemWithExternalSourceCli"/>
     </bean>
     
     <bean id="orcid-bulk-push" class="org.dspace.app.orcid.script.OrcidBulkPushScriptConfiguration">
@@ -108,6 +108,11 @@
     <bean id="elasticsearch-bulk-indexing" class="org.dspace.app.elasticsearch.script.bulkindex.ElasticsearchBulkIndexCliScriptConfiguration">
         <property name="description" value="Perform bulk inswxing of Elasticsearch"/>
         <property name="dspaceRunnableClass" value="org.dspace.app.elasticsearch.script.bulkindex.ElasticsearchBulkIndexCli"/>
+    </bean>
+
+    <bean id="process-cleaner" class="org.dspace.administer.ProcessCleanerCliConfiguration">
+        <property name="description" value="Cleanup all the old processes in the specified state"/>
+        <property name="dspaceRunnableClass" value="org.dspace.administer.ProcessCleanerCli"/>
     </bean>
 
     <!-- Keep as last script; for test ScriptRestRepository#findOneScriptByNameTest -->

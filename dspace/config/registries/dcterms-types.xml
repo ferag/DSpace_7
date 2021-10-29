@@ -308,7 +308,13 @@
   <dc-type>
 	<schema>dcterms</schema>
     <element>rightsHolder</element>
-    <scope_note>A person or organization owning or managing rights over the resource.</scope_note>
+    <scope_note>An  organization owning or managing rights over the resource.</scope_note>
+  </dc-type>
+
+  <dc-type>
+    <schema>dcterms</schema>
+    <element>rightsHolderper</element>
+    <scope_note>A person owning or managing rights over the resource.</scope_note>
   </dc-type>
 
   <dc-type>

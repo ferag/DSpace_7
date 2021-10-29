@@ -23,6 +23,7 @@ import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
+import org.dspace.content.authority.Choices;
 import org.dspace.content.authority.service.ChoiceAuthorityService;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
@@ -141,7 +142,7 @@ public class ItemSearcherByMetadata implements ItemSearcher, ItemReferenceResolv
 
             itemWithReference.getMetadata().stream()
                 .filter(metadataValue -> authorities.contains(metadataValue.getAuthority()))
-                .forEach(metadataValue -> metadataValue.setAuthority(item.getID().toString()));
+                .forEach(metadataValue -> setAuthority(metadataValue, item.getID().toString()));
 
             itemService.update(context, itemWithReference);
         }
@@ -170,6 +171,12 @@ public class ItemSearcherByMetadata implements ItemSearcher, ItemReferenceResolv
         return new DiscoverResultItemIterator(context, scopeObject, discoverQuery);
 
     }
+
+    private void setAuthority(MetadataValue metadataValue, String authority) {
+        metadataValue.setAuthority(authority);
+        metadataValue.setConfidence(Choices.CF_ACCEPTED);
+    }
+
 
     private String getFieldFilter(String field, List<String> authorities) {
         return authorities.stream()

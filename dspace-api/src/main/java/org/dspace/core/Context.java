@@ -596,6 +596,10 @@ public class Context implements AutoCloseable {
         }
     }
 
+    /**
+     * Close this Context, discarding any uncommitted changes and releasing its
+     * database connection.
+     */
     @Override
     public void close() {
         if (isValid()) {
@@ -851,8 +855,13 @@ public class Context implements AutoCloseable {
     }
 
     public Boolean getCachedAuthorizationResult(DSpaceObject dspaceObject, int action, EPerson eperson) {
+        return getCachedAuthorizationResult(dspaceObject, action, eperson, null);
+    }
+
+    public Boolean getCachedAuthorizationResult(DSpaceObject dspaceObject, int action,
+        EPerson eperson, Boolean inheritance) {
         if (isReadOnly()) {
-            return readOnlyCache.getCachedAuthorizationResult(dspaceObject, action, eperson);
+            return readOnlyCache.getCachedAuthorizationResult(dspaceObject, action, eperson, inheritance);
         } else {
             return null;
         }
@@ -860,8 +869,13 @@ public class Context implements AutoCloseable {
 
     public void cacheAuthorizedAction(DSpaceObject dspaceObject, int action, EPerson eperson, Boolean result,
                                       ResourcePolicy rp) {
+        cacheAuthorizedAction(dspaceObject, action, eperson, null, result, rp);
+    }
+
+    public void cacheAuthorizedAction(DSpaceObject dspaceObject, int action, EPerson eperson,
+        Boolean inheritance, Boolean result, ResourcePolicy rp) {
         if (isReadOnly()) {
-            readOnlyCache.cacheAuthorizedAction(dspaceObject, action, eperson, result);
+            readOnlyCache.cacheAuthorizedAction(dspaceObject, action, eperson, inheritance, result);
             try {
                 uncacheEntity(rp);
             } catch (SQLException e) {

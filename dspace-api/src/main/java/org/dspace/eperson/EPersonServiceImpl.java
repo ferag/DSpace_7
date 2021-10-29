@@ -7,6 +7,8 @@
  */
 package org.dspace.eperson;
 
+import static org.dspace.content.Item.ANY;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ import org.dspace.content.DSpaceObjectServiceImpl;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataSchema;
+import org.dspace.content.MetadataValue;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
@@ -48,6 +51,7 @@ import org.dspace.eperson.service.EPersonService;
 import org.dspace.eperson.service.GroupService;
 import org.dspace.eperson.service.SubscribeService;
 import org.dspace.event.Event;
+import org.dspace.util.UUIDUtils;
 import org.dspace.versioning.Version;
 import org.dspace.versioning.VersionHistory;
 import org.dspace.versioning.dao.VersionDAO;
@@ -635,4 +639,13 @@ public class EPersonServiceImpl extends DSpaceObjectServiceImpl<EPerson> impleme
         return ePersonDAO.findByAuthorityValue(context, mdf, value);
     }
 
+
+    @Override
+    public EPerson findByProfileItem(Context context, Item profile) throws SQLException {
+        List<MetadataValue> crisOwners = itemService.getMetadata(profile, "cris", "owner", null, ANY);
+        if (CollectionUtils.isEmpty(crisOwners)) {
+            return null;
+        }
+        return find(context, UUIDUtils.fromString(crisOwners.get(0).getAuthority()));
+    }
 }

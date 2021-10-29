@@ -20,7 +20,7 @@ public class OidcLogoutSuccessHandler implements LogoutSuccessHandler {
 
     private final static String OIDC_LOGOUT_HEADER = "Oidc-Logout";
 
-    @Value("${authentication-oidc.logoutUrl}")
+    @Value("${authentication-oidc.logout-url}")
     private String logoutUrl;
 
     @Override

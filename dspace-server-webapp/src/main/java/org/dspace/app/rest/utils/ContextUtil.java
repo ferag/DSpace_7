@@ -7,12 +7,20 @@
  */
 package org.dspace.app.rest.utils;
 
+import static java.util.Arrays.asList;
+
 import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.Logger;
 import org.dspace.core.Context;
+import org.dspace.core.Context.Mode;
+import org.dspace.services.ConfigurationService;
+import org.dspace.services.factory.DSpaceServicesFactory;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * Miscellaneous UI utility methods methods for managing DSpace context.
@@ -65,7 +73,7 @@ public class ContextUtil {
 
         if (context == null) {
             try {
-                context = ContextUtil.initializeContext();
+                context = ContextUtil.initializeContext((HttpServletRequest) request);
             } catch (SQLException e) {
                 log.error("Unable to initialize context", e);
                 return null;
@@ -84,45 +92,8 @@ public class ContextUtil {
      * @return a DSpace Context Object
      * @throws SQLException
      */
-    private static Context initializeContext() throws SQLException {
-        // Create a new Context
-        Context context = new Context();
-
-        // Set the session ID
-        /**context.setExtraLogInfo("session_id="
-         + request.getSession().getId());
-
-         AuthenticationUtil.resumeLogin(context, request);
-
-         // Set any special groups - invoke the authentication mgr.
-         int[] groupIDs = AuthenticationManager.getSpecialGroups(context, request);
-
-         for (int i = 0; i < groupIDs.length; i++)
-         {
-         context.setSpecialGroup(groupIDs[i]);
-         log.debug("Adding Special Group id="+String.valueOf(groupIDs[i]));
-         }
-
-         // Set the session ID and IP address
-         String ip = request.getRemoteAddr();
-         if (useProxies == null) {
-         useProxies = ConfigurationManager.getBooleanProperty("useProxies", false);
-         }
-         if(useProxies && request.getHeader("X-Forwarded-For") != null)
-         {
-         // This header is a comma delimited list
-         for(String xfip : request.getHeader("X-Forwarded-For").split(","))
-         {
-         if(!request.getHeader("X-Forwarded-For").contains(ip))
-         {
-         ip = xfip.trim();
-         }
-         }
-         }
-         context.setExtraLogInfo("session_id=" + request.getSession().getId() + ":ip_addr=" + ip);
-         */
-
-        return context;
+    private static Context initializeContext(HttpServletRequest request) throws SQLException {
+        return requestShouldBeInReadOnlyMode(request) ? new Context(Mode.READ_ONLY) : new Context();
     }
 
     /**
@@ -148,5 +119,17 @@ public class ContextUtil {
         if (context != null && context.isValid()) {
             context.abort();
         }
+    }
+
+    private static boolean requestShouldBeInReadOnlyMode(HttpServletRequest request) {
+
+        if (!request.getMethod().equals(HttpMethod.GET.name())) {
+            return false;
+        }
+
+        ConfigurationService configurationService = DSpaceServicesFactory.getInstance().getConfigurationService();
+        return asList(configurationService.getArrayProperty("rest.get-in-read-only-mode.exception-patterns")).stream()
+            .map(path -> new AntPathRequestMatcher(path))
+            .noneMatch(openPath -> openPath.matches(request));
     }
 }

@@ -38,8 +38,9 @@ import org.dspace.builder.CommunityBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
+import org.dspace.content.authority.EntityTypeAuthorityFilter;
+import org.dspace.content.authority.LinkableEntityAuthority;
 import org.dspace.content.authority.OrcidAuthority;
-import org.dspace.content.authority.SimpleQueryCustomAuthorityFilter;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 import org.hamcrest.Matcher;
@@ -47,6 +48,7 @@ import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.orcid.jaxb.model.v3.release.search.expanded.ExpandedResult;
 import org.orcid.jaxb.model.v3.release.search.expanded.ExpandedSearch;
 
@@ -71,7 +73,7 @@ public class OrcidAuthorityIT extends AbstractControllerIntegrationTest {
     private OrcidConfiguration orcidConfiguration = OrcidServiceFactory.getInstance().getOrcidConfiguration();
 
     @Resource(name = "directorioCommunityFilter")
-    private SimpleQueryCustomAuthorityFilter directorioCommunityFilter;
+    private EntityTypeAuthorityFilter directorioCommunityFilter;
 
     private OrcidClient orcidClientMock = mock(OrcidClient.class);
 
@@ -154,7 +156,6 @@ public class OrcidAuthorityIT extends AbstractControllerIntegrationTest {
             .andExpect(jsonPath("$.page.size", Matchers.is(20)))
             .andExpect(jsonPath("$.page.totalPages", Matchers.is(1)))
             .andExpect(jsonPath("$.page.totalElements", Matchers.is(7)));
-
 
         verify(orcidClientMock).getReadPublicAccessToken();
         verify(orcidClientMock).expandedSearch(READ_PUBLIC_TOKEN, expectedQuery, 0, 16);
@@ -697,7 +698,10 @@ public class OrcidAuthorityIT extends AbstractControllerIntegrationTest {
     }
 
     private void setCommunityIdInQuery(UUID directorioCommunityId, String entityType) {
-        List<String> filterQueries = directorioCommunityFilter.getFilterQueries(entityType);
+        LinkableEntityAuthority authority = Mockito.mock(LinkableEntityAuthority.class);
+        Mockito.when(authority.getLinkedEntityType()).thenReturn(entityType);
+
+        List<String> filterQueries = directorioCommunityFilter.getFilterQueries(authority);
         for (int i = 0; i < filterQueries.size(); i++) {
             String s = filterQueries.get(i);
             if (s.contains("location.comm")) {

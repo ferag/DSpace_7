@@ -95,6 +95,34 @@ public class BitstreamMetadataReadPermissionEvaluatorPlugin extends RestObjectPe
         return false;
     }
 
+    public boolean metadataReadPermissionOnBitstream(Context context, Bitstream bitstream) throws SQLException {
+        if (authorizeService.isAdmin(context, bitstream)) {
+            // Is Admin on bitstream
+            return true;
+        }
+        if (authorizeService.authorizeActionBoolean(context, bitstream, Constants.READ)) {
+            // Has READ rights on bitstream
+            return true;
+        }
+
+        if (context.getCurrentUser() == null
+            && bitstreamService.isRelatedToAProcessStartedByDefaultUser(context, bitstream)) {
+            return true;
+        }
+
+        DSpaceObject bitstreamParentObject = bitstreamService.getParentObject(context, bitstream);
+        if (bitstreamParentObject instanceof Item && !(bitstream).getBundles().isEmpty()) {
+            // If parent is item and it is in a bundle
+            Bundle firstBundle = (bitstream).getBundles().get(0);
+            if (authorizeService.authorizeActionBoolean(context, bitstreamParentObject, Constants.READ)
+                && authorizeService.authorizeActionBoolean(context, firstBundle, Constants.READ)) {
+                // Has READ rights on bitstream's parent item AND first bundle bitstream is in
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean hasDSpacePermission(Authentication authentication, Serializable targetId, String targetType,
                                        DSpaceRestPermission restPermission) {

@@ -106,6 +106,9 @@ public class LayoutSecurityServiceImpl implements LayoutSecurityService {
                 return customDataGrantAccess(context, user, metadataSecurityFields, item);
             case ADMINISTRATOR:
                 return authorizeService.isAdmin(context);
+            case CUSTOM_DATA_AND_ADMINISTRATOR:
+                return authorizeService.isAdmin(context)
+                    || customDataGrantAccess(context, user, metadataSecurityFields, item);
             case OWNER_AND_ADMINISTRATOR:
                 return authorizeService.isAdmin(context) || crisSecurityService.isOwner(user, item);
             default:
@@ -162,6 +165,9 @@ public class LayoutSecurityServiceImpl implements LayoutSecurityService {
         String element = metadataValue.getMetadataField().getElement();
         String qualifier = metadataValue.getMetadataField().getQualifier();
         Collection collection = item.getOwningCollection();
+        if (Objects.isNull(collection)) {
+            return null;
+        }
         String submissionName = submissionConfigReader.getSubmissionConfigByCollection(collection)
                                                       .getSubmissionName();
         String fieldKey = metadataValue.getMetadataField().toString('_');

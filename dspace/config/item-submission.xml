@@ -2,59 +2,10 @@
 <!DOCTYPE item-submission SYSTEM "item-submission.dtd">
 
 <item-submission>
-
-    <!-- The process-map maps collection handles to a particular Item -->
-    <!-- Submission Process. This requires that a collection's name be -->
-    <!-- unique, even within a community. DSpace does however ensure that each -->
-    <!-- collection's handle is unique. Process-map provides the means to -->
-    <!-- associate a unique collection name with an Item Submission process. -->
-    <!-- The process-map also provides the special handle "default" (which is -->
-    <!-- never a collection), here mapped to "traditional". Any collection -->
-    <!-- which does not appear in this map will be associated with the mapping -->
-    <!-- for handle "default". -->
-    <submission-map>
-        <!-- Default submission process -->
-        <name-map collection-handle="default" submission-name="publication"/>
-
-        <!-- Sample Entities Collection configuration based on the demo Entities dataset available at:
-             https://github.com/DSpace-Labs/AIP-Files/releases/tag/demo-entities-data
-             This sets up the following Entity-based Collections in that dataset:
-                "Publication" Collections = "Publications" -> "Articles", "Books", "Publications 2", & "Theses"
-                "OrgUnit" Collection = "Related Objects" -> "OrgUnits"
-                "Person" Collections = "Related Objects" -> "People" & "People 2"
-                "Project" Collections = "Related Objects" -> "Projects" & "Projects 2"
-                "Journal" Collection = "Compound Journals" -> "Journals"
-                "Journal Volume" Collection = "Compound Journals" -> "Journal Volumes"
-                "Journal Issue" Collection = "Compound Journals" ->  "Journal Issues"
-             If you are using that demo dataset, you can simply uncomment the below configuration to enable Entity
-             submission into all of the above Collections.
-        -->
-    </submission-map>
-
-    <!-- The 'step-definitions' allows you to define steps which you may wish -->
-    <!-- to "share" amongst multiple submission-item definitions. In order to -->
-    <!-- share the same step definition, you can refer to it by its unique id -->
-    <!-- defined in this section. EVERY 'step' in this section MUST have a -->
-    <!-- unique identifier in the 'id' attribute! -->
-    <!-- -->
-    <!-- Each <step-definition> REQUIRES the following attributes (@) and properties: -->
-    <!-- @id - The unique identifier for this step -->
-    <!-- -->
-    <!-- <processing-class> - The class which will process all information for -->
-    <!-- this step. The class must implement -->
-    <!-- 'org.dspace.app.rest.submit.RestProcessingStep' -->
-    <!-- (or one of the org.dspace.rest.submit.step.* classes) -->
-    <!-- This property should reference the full path of the class -->
-    <!-- (e.g. org.dspace.app.rest.submit.step.MyCustomStep) -->
-    <!-- -->
-    <!-- The following properties are OPTIONAL for each <step-definition>: -->
-    <!-- <heading> - References the message key, from the -->
-    <!-- Messages.properties -->
-    <!-- -->
+  <submission-map>
+    <name-map collection-handle="default" submission-name="institution-orgunit-edit" />
+  </submission-map>
   <step-definitions>
-    <!-- The "collection" step is a "special step" which is *REQUIRED* -->
-    <!-- In DSpace, all submitted items must be immediately assigned -->
-    <!-- to a collection. This step ensures that a collection is always selected. -->
     <step-definition id="collection" mandatory="true">
       <heading>submit.progressbar.collection</heading>
       <processing-class>org.dspace.app.rest.submit.step.CollectionStep</processing-class>
@@ -71,38 +22,33 @@
       <processing-class>org.dspace.app.rest.submit.step.LicenseStep</processing-class>
       <type>license</type>
     </step-definition>
-    <step-definition id="institution-product" mandatory="true">
-      <heading>submit.progressbar.describe.institution-product</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
-    <step-definition id="institution-product_indexing" mandatory="true">
-      <heading>submit.progressbar.describe.institution-product_indexing</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
-    <step-definition id="institution-product_references" mandatory="true">
-      <heading>submit.progressbar.describe.institution-product_references</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
-    <step-definition id="product" mandatory="true">
-      <heading>submit.progressbar.describe.product</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
-    <step-definition id="product_indexing" mandatory="true">
-      <heading>submit.progressbar.describe.product_indexing</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
-    <step-definition id="product_references" mandatory="true">
-      <heading>submit.progressbar.describe.product_references</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
     <step-definition id="orgunit" mandatory="true">
       <heading>submit.progressbar.describe.orgunit</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="orgunit-sinacyt" mandatory="true">
+      <heading>submit.progressbar.describe.orgunit-sinacyt</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="orgunit-other-data" mandatory="true">
+      <heading>submit.progressbar.describe.orgunit-other-data</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="orgunit-classifications" mandatory="true">
+      <heading>submit.progressbar.describe.orgunit-classifications</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="orgunit-concytec" mandatory="true">
+      <heading>submit.progressbar.describe.orgunit-concytec</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="orgunit-indicators" mandatory="true">
+      <heading>submit.progressbar.describe.orgunit-indicators</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
@@ -111,18 +57,38 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
+    <step-definition id="institution-orgunit-sinacyt" mandatory="true">
+      <heading>submit.progressbar.describe.institution-orgunit-sinacyt</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="institution-orgunit-other-data" mandatory="true">
+      <heading>submit.progressbar.describe.institution-orgunit-other-data</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="institution-orgunit-classifications" mandatory="true">
+      <heading>submit.progressbar.describe.institution-orgunit-classifications</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="institution-orgunit-concytec" mandatory="true">
+      <heading>submit.progressbar.describe.institution-orgunit-concytec</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="institution-orgunit-indicators" mandatory="true">
+      <heading>submit.progressbar.describe.institution-orgunit-indicators</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
     <step-definition id="institution-patent" mandatory="true">
       <heading>submit.progressbar.describe.institution-patent</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-    <step-definition id="institution-patent_indexing" mandatory="true">
-      <heading>submit.progressbar.describe.institution-patent_indexing</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
-    <step-definition id="institution-patent_references" mandatory="true">
-      <heading>submit.progressbar.describe.institution-patent_references</heading>
+    <step-definition id="institution-patent_other_data" mandatory="true">
+      <heading>submit.progressbar.describe.institution-patent_other_data</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
@@ -131,13 +97,8 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-    <step-definition id="cv-patent_indexing" mandatory="true">
-      <heading>submit.progressbar.describe.cv-patent_indexing</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
-    <step-definition id="cv-patent_references" mandatory="true">
-      <heading>submit.progressbar.describe.cv-patent_references</heading>
+    <step-definition id="cv-patent_other_data" mandatory="true">
+      <heading>submit.progressbar.describe.cv-patent_other_data</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
@@ -146,13 +107,8 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-    <step-definition id="patent_indexing" mandatory="true">
-      <heading>submit.progressbar.describe.patent_indexing</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
-    <step-definition id="patent_references" mandatory="true">
-      <heading>submit.progressbar.describe.patent_references</heading>
+    <step-definition id="patent_other_data" mandatory="true">
+      <heading>submit.progressbar.describe.patent_other_data</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
@@ -161,8 +117,18 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-    <step-definition id="institution-project_openaire_id" mandatory="false">
-      <heading>submit.progressbar.describe.institution-project_openaire_id</heading>
+    <step-definition id="institution-project-entities" mandatory="true">
+      <heading>submit.progressbar.describe.institution-project-entities</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="institution-project-team" mandatory="true">
+      <heading>submit.progressbar.describe.institution-project-team</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="institution-project-other-data" mandatory="true">
+      <heading>submit.progressbar.describe.institution-project-other-data</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
@@ -171,8 +137,18 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-    <step-definition id="cv-project_openaire_id" mandatory="false">
-      <heading>submit.progressbar.describe.cv-project_openaire_id</heading>
+    <step-definition id="cv-project-entities" mandatory="true">
+      <heading>submit.progressbar.describe.cv-project-entities</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="cv-project-team" mandatory="true">
+      <heading>submit.progressbar.describe.cv-project-team</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="cv-project-other-data" mandatory="true">
+      <heading>submit.progressbar.describe.cv-project-other-data</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
@@ -181,8 +157,18 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-    <step-definition id="project_openaire_id" mandatory="false">
-      <heading>submit.progressbar.describe.project_openaire_id</heading>
+    <step-definition id="project-entities" mandatory="true">
+      <heading>submit.progressbar.describe.project-entities</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="project-team" mandatory="true">
+      <heading>submit.progressbar.describe.project-team</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="project-other-data" mandatory="true">
+      <heading>submit.progressbar.describe.project-other-data</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
@@ -196,11 +182,6 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-    <step-definition id="publication_indexing" mandatory="false">
-      <heading>submit.progressbar.describe.publication_indexing</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
     <step-definition id="publication_bibliographic_details" mandatory="true">
       <heading>submit.progressbar.describe.publication_bibliographic_details</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
@@ -208,6 +189,11 @@
     </step-definition>
     <step-definition id="publication_references" mandatory="false">
       <heading>submit.progressbar.describe.publication_references</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="publication_indexing" mandatory="false">
+      <heading>submit.progressbar.describe.publication_indexing</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
@@ -221,33 +207,28 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-    <step-definition id="institution-publication_indexing" mandatory="false">
-      <heading>submit.progressbar.describe.institution-publication_indexing</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
     <step-definition id="institution-publication_bibliographic_details" mandatory="true">
       <heading>submit.progressbar.describe.institution-publication_bibliographic_details</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-    <step-definition id="institution-publication_references" mandatory="false">
+    <step-definition id="institution-publication_references" mandatory="true">
       <heading>submit.progressbar.describe.institution-publication_references</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-    <step-definition id="institution-publication_thesis" mandatory="false">
+    <step-definition id="institution-publication_indexing" mandatory="true">
+      <heading>submit.progressbar.describe.institution-publication_indexing</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="institution-publication_thesis" mandatory="true">
       <heading>submit.progressbar.describe.institution-publication_thesis</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
     <step-definition id="cv-publication" mandatory="true">
       <heading>submit.progressbar.describe.cv-publication</heading>
-      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
-      <type>submission-form</type>
-    </step-definition>
-    <step-definition id="cv-publication_indexing" mandatory="false">
-      <heading>submit.progressbar.describe.cv-publication_indexing</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
@@ -261,6 +242,11 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
+    <step-definition id="cv-publication_indexing" mandatory="false">
+      <heading>submit.progressbar.describe.cv-publication_indexing</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
     <step-definition id="cv-publication_thesis" mandatory="false">
       <heading>submit.progressbar.describe.cv-publication_thesis</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
@@ -271,8 +257,18 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
+    <step-definition id="equipment-other-data" mandatory="true">
+      <heading>submit.progressbar.describe.equipment-other-data</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
     <step-definition id="institution-equipment" mandatory="true">
       <heading>submit.progressbar.describe.institution-equipment</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="institution-equipment-other-data" mandatory="true">
+      <heading>submit.progressbar.describe.institution-equipment-other-data</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
@@ -296,13 +292,73 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
+    <step-definition id="person-reniec-data" mandatory="true">
+      <heading>submit.progressbar.describe.person-reniec-data</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="person-affiliation" mandatory="true">
+      <heading>submit.progressbar.describe.person-affiliation</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="person-other-identifiers" mandatory="true">
+      <heading>submit.progressbar.describe.person-other-identifiers</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="person-other-informations" mandatory="true">
+      <heading>submit.progressbar.describe.person-other-informations</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
     <step-definition id="institution-person" mandatory="true">
       <heading>submit.progressbar.describe.institution-person</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
+    <step-definition id="institution-person-reniec-data" mandatory="true">
+      <heading>submit.progressbar.describe.institution-person-reniec-data</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="institution-person-affiliation" mandatory="true">
+      <heading>submit.progressbar.describe.institution-person-affiliation</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="institution-person-other-identifiers" mandatory="true">
+      <heading>submit.progressbar.describe.institution-person-other-identifiers</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="institution-person-other-informations" mandatory="true">
+      <heading>submit.progressbar.describe.institution-person-other-informations</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
     <step-definition id="cv-person" mandatory="true">
       <heading>submit.progressbar.describe.cv-person</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="cv-person-reniec-data" mandatory="true">
+      <heading>submit.progressbar.describe.cv-person-reniec-data</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="cv-person-affiliation" mandatory="true">
+      <heading>submit.progressbar.describe.cv-person-affiliation</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="cv-person-other-identifiers" mandatory="true">
+      <heading>submit.progressbar.describe.cv-person-other-identifiers</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="cv-person-other-informations" mandatory="true">
+      <heading>submit.progressbar.describe.cv-person-other-informations</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
@@ -326,21 +382,7 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-        <!-- This optional step may allow the user to select a Creative Commons license -->
-    <step-definition id="cclicense" mandatory="false">
-      <heading>submit.progressbar.CClicense</heading>
-      <processing-class>org.dspace.app.rest.submit.step.CCLicenseStep</processing-class>
-      <type>cclicense</type>
-    </step-definition>
-    <!-- This optional step may enrich the current submission using information extracted
-             from uploaded files or metadata.  -->
-    <!-- Please note that this step will be triggered only when a request is performed,
-           e.g. when a file is uploaded or the form is saved. The Angular UI also supports an
-           autosave feature based on a timer, or the input of specific metadata such as identifiers,
-           see the 'submission.autosave' settings in the 'environment.common.ts'.
-           See also 'config/spring/api/step-processing-listener.xml' for further server side configuration
-           -->
-    <step-definition id="extractionstep" mandatory="true">
+    <step-definition id="extraction" mandatory="false">
       <heading>submit.progressbar.ExtractMetadataStep</heading>
       <processing-class>org.dspace.app.rest.submit.step.ExtractMetadataStep</processing-class>
       <type>extract</type>
@@ -426,94 +468,101 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
+    <step-definition id="component" mandatory="true">
+      <heading>submit.progressbar.describe.component</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
   </step-definitions>
   <submission-definitions>
-    <submission-process name="institution-product">
-      <step id="collection" />
-      <step id="institution-product" />
-      <step id="institution-product_indexing" />
-      <step id="institution-product_references" />
-      <step id="upload" />
-      <step id="license" />
-    </submission-process>
-    <submission-process name="institution-product-edit">
-      <step id="institution-product" />
-      <step id="institution-product_indexing" />
-      <step id="institution-product_references" />
-      <step id="upload" />
-    </submission-process>
-    <submission-process name="product">
-      <step id="collection" />
-      <step id="product" />
-      <step id="product_indexing" />
-      <step id="product_references" />
-      <step id="detect-duplicate" />
-      <step id="upload" />
-      <step id="license" />
-    </submission-process>
-    <submission-process name="product-edit">
-      <step id="product" />
-      <step id="product_indexing" />
-      <step id="product_references" />
-      <step id="detect-duplicate" />
-      <step id="upload" />
-    </submission-process>
     <submission-process name="institution-orgunit-edit">
       <step id="institution-orgunit" />
+      <step id="institution-orgunit-sinacyt" />
+      <step id="institution-orgunit-other-data" />
+      <step id="institution-orgunit-classifications" />
+      <step id="institution-orgunit-concytec" />
+      <step id="institution-orgunit-indicators" />
       <step id="upload" />
     </submission-process>
     <submission-process name="institution-orgunit">
       <step id="collection" />
       <step id="institution-orgunit" />
+      <step id="institution-orgunit-sinacyt" />
+      <step id="institution-orgunit-other-data" />
+      <step id="institution-orgunit-classifications" />
+      <step id="institution-orgunit-concytec" />
+      <step id="institution-orgunit-indicators" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="orgunit-edit">
       <step id="orgunit" />
+      <step id="orgunit-sinacyt" />
+      <step id="orgunit-other-data" />
+      <step id="orgunit-classifications" />
+      <step id="orgunit-concytec" />
+      <step id="orgunit-indicators" />
       <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="orgunit">
       <step id="collection" />
       <step id="orgunit" />
+      <step id="orgunit-sinacyt" />
+      <step id="orgunit-other-data" />
+      <step id="orgunit-classifications" />
+      <step id="orgunit-concytec" />
+      <step id="orgunit-indicators" />
       <step id="detect-duplicate" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="institution-project-edit">
       <step id="institution-project" />
-      <step id="institution-project_openaire_id" />
+      <step id="institution-project-entities" />
+      <step id="institution-project-team" />
+      <step id="institution-project-other-data" />
       <step id="upload" />
     </submission-process>
     <submission-process name="institution-project">
       <step id="collection" />
       <step id="institution-project" />
-      <step id="institution-project_openaire_id" />
+      <step id="institution-project-entities" />
+      <step id="institution-project-team" />
+      <step id="institution-project-other-data" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="cvproject-edit">
       <step id="cv-project" />
-      <step id="cv-project_openaire_id" />
+      <step id="cv-project-entities" />
+      <step id="cv-project-team" />
+      <step id="cv-project-other-data" />
       <step id="upload" />
     </submission-process>
     <submission-process name="cvproject">
       <step id="collection" />
       <step id="cv-project" />
-      <step id="cv-project_openaire_id" />
+      <step id="cv-project-entities" />
+      <step id="cv-project-team" />
+      <step id="cv-project-other-data" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="project-edit">
       <step id="project" />
-      <step id="project_openaire_id" />
+      <step id="project-entities" />
+      <step id="project-team" />
+      <step id="project-other-data" />
       <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="project">
       <step id="collection" />
       <step id="project" />
-      <step id="project_openaire_id" />
+      <step id="project-entities" />
+      <step id="project-team" />
+      <step id="project-other-data" />
       <step id="detect-duplicate" />
       <step id="upload" />
       <step id="license" />
@@ -526,49 +575,49 @@
       <step id="license" />
     </submission-process>
     <submission-process name="institution-publication-edit">
-      <step id="extractionstep" />
+      <step id="extraction" />
       <step id="institution-publication" />
-      <step id="institution-publication_indexing" />
       <step id="institution-publication_bibliographic_details" />
       <step id="institution-publication_references" />
+      <step id="institution-publication_indexing" />
       <step id="institution-publication_thesis" />
       <step id="upload" />
     </submission-process>
     <submission-process name="institution-publication">
       <step id="collection" />
-      <step id="extractionstep" />
+      <step id="extraction" />
       <step id="institution-publication" />
-      <step id="institution-publication_indexing" />
       <step id="institution-publication_bibliographic_details" />
       <step id="institution-publication_references" />
+      <step id="institution-publication_indexing" />
       <step id="institution-publication_thesis" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="publication-edit">
-      <step id="extractionstep" />
+      <step id="extraction" />
       <step id="publication" />
-      <step id="publication_indexing" />
       <step id="publication_bibliographic_details" />
       <step id="publication_references" />
+      <step id="publication_indexing" />
       <step id="publication_thesis" />
       <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="publication">
       <step id="collection" />
-      <step id="extractionstep" />
+      <step id="extraction" />
       <step id="publication" />
-      <step id="publication_indexing" />
       <step id="publication_bibliographic_details" />
       <step id="publication_references" />
+      <step id="publication_indexing" />
       <step id="publication_thesis" />
       <step id="detect-duplicate" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="cvpublication-edit">
-      <step id="extractionstep" />
+      <step id="extraction" />
       <step id="cv-publication" />
       <step id="cv-publication_indexing" />
       <step id="cv-publication_bibliographic_details" />
@@ -578,7 +627,7 @@
     </submission-process>
     <submission-process name="cvpublication">
       <step id="collection" />
-      <step id="extractionstep" />
+      <step id="extraction" />
       <step id="cv-publication" />
       <step id="cv-publication_indexing" />
       <step id="cv-publication_bibliographic_details" />
@@ -589,32 +638,59 @@
     </submission-process>
     <submission-process name="institution-person-edit">
       <step id="institution-person" />
+      <step id="institution-person-reniec-data" />
+      <step id="institution-person-affiliation" />
+      <step id="institution-person-other-identifiers" />
+      <step id="institution-person-other-informations" />
       <step id="upload" />
     </submission-process>
     <submission-process name="institution-person">
       <step id="collection" />
       <step id="institution-person" />
+      <step id="institution-person-reniec-data" />
+      <step id="institution-person-affiliation" />
+      <step id="institution-person-other-identifiers" />
+      <step id="institution-person-other-informations" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="person-edit">
       <step id="person" />
+      <step id="person-reniec-data" />
+      <step id="person-affiliation" />
+      <step id="person-other-identifiers" />
+      <step id="person-other-informations" />
       <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="person">
       <step id="collection" />
       <step id="person" />
+      <step id="person-reniec-data" />
+      <step id="person-affiliation" />
+      <step id="person-other-identifiers" />
+      <step id="person-other-informations" />
       <step id="detect-duplicate" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="cvperson">
+      <step id="collection" />
       <step id="cv-person" />
+      <step id="cv-person-reniec-data" />
+      <step id="cv-person-affiliation" />
+      <step id="cv-person-other-identifiers" />
+      <step id="cv-person-other-informations" />
+      <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="cvperson-edit">
       <step id="cv-person" />
+      <step id="cv-person-reniec-data" />
+      <step id="cv-person-affiliation" />
+      <step id="cv-person-other-identifiers" />
+      <step id="cv-person-other-informations" />
+      <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="cvperson-edit-education">
@@ -639,66 +715,64 @@
     </submission-process>
     <submission-process name="institution-equipment-edit">
       <step id="institution-equipment" />
+      <step id="institution-equipment-other-data" />
       <step id="upload" />
     </submission-process>
     <submission-process name="institution-equipment">
       <step id="collection" />
       <step id="institution-equipment" />
+      <step id="institution-equipment-other-data" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="equipment-edit">
       <step id="equipment" />
+      <step id="equipment-other-data" />
       <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="equipment">
       <step id="collection" />
       <step id="equipment" />
+      <step id="equipment-other-data" />
       <step id="detect-duplicate" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="institution-patent-edit">
       <step id="institution-patent" />
-      <step id="institution-patent_indexing" />
-      <step id="institution-patent_references" />
+      <step id="institution-patent_other_data" />
       <step id="upload" />
     </submission-process>
     <submission-process name="institution-patent">
       <step id="collection" />
       <step id="institution-patent" />
-      <step id="institution-patent_indexing" />
-      <step id="institution-patent_references" />
+      <step id="institution-patent_other_data" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="cvpatent-edit">
       <step id="cv-patent" />
-      <step id="cv-patent_indexing" />
-      <step id="cv-patent_references" />
+      <step id="cv-patent_other_data" />
       <step id="upload" />
     </submission-process>
     <submission-process name="cvpatent">
       <step id="collection" />
       <step id="cv-patent" />
-      <step id="cv-patent_indexing" />
-      <step id="cv-patent_references" />
+      <step id="cv-patent_other_data" />
       <step id="upload" />
       <step id="license" />
     </submission-process>
     <submission-process name="patent-edit">
       <step id="patent" />
-      <step id="patent_indexing" />
-      <step id="patent_references" />
+      <step id="patent_other_data" />
       <step id="detect-duplicate" />
       <step id="upload" />
     </submission-process>
     <submission-process name="patent">
       <step id="collection" />
       <step id="patent" />
-      <step id="patent_indexing" />
-      <step id="patent_references" />
+      <step id="patent_other_data" />
       <step id="detect-duplicate" />
       <step id="upload" />
       <step id="license" />
@@ -726,17 +800,14 @@
       <step id="license" />
     </submission-process>
     <submission-process name="politic">
-      <step id="collection" />
       <step id="politic" />
       <step id="upload" />
     </submission-process>
     <submission-process name="plan">
-      <step id="collection" />
       <step id="plan" />
       <step id="upload" />
     </submission-process>
     <submission-process name="program">
-      <step id="collection" />
       <step id="program" />
       <step id="upload" />
     </submission-process>
@@ -753,35 +824,38 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="politic-goal">
-      <step id="collection" />
       <step id="politic-goal" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="politic-goal-edit">
       <step id="politic-goal" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="indicator">
-      <step id="collection" />
       <step id="indicator" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="indicator-edit">
       <step id="indicator" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="program-goal">
-      <step id="collection" />
       <step id="program-goal" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="program-goal-edit">
       <step id="program-goal" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="standard">
-      <step id="collection" />
       <step id="standard" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="standard-edit">
       <step id="standard" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="financial-instrument">
-      <step id="collection" />
       <step id="financial-instrument" />
       <step id="upload" />
     </submission-process>
@@ -790,53 +864,68 @@
       <step id="upload" />
     </submission-process>
     <submission-process name="financial-scheme">
-      <step id="collection" />
       <step id="financial-scheme" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="financial-scheme-edit">
       <step id="financial-scheme" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="service">
-      <step id="collection" />
       <step id="service" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="service-edit">
       <step id="service" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="politic-guidelines">
-      <step id="collection" />
       <step id="politic-guidelines" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="politic-guidelines-edit">
       <step id="politic-guidelines" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="activity">
-      <step id="collection" />
       <step id="activity" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="activity-edit">
       <step id="activity" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="financial-resource">
-      <step id="collection" />
       <step id="financial-resource" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="financial-resource-edit">
       <step id="financial-resource" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="project-program">
-      <step id="collection" />
       <step id="project-program" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="project-program-edit">
       <step id="project-program" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="project-financial-instrument">
-      <step id="collection" />
       <step id="project-financial-instrument" />
+      <step id="upload" />
     </submission-process>
     <submission-process name="project-financial-instrument-edit">
       <step id="project-financial-instrument" />
+      <step id="upload" />
+    </submission-process>
+    <submission-process name="component">
+      <step id="component" />
+      <step id="upload" />
+    </submission-process>
+    <submission-process name="component-edit">
+      <step id="component" />
+      <step id="upload" />
     </submission-process>
   </submission-definitions>
 </item-submission>

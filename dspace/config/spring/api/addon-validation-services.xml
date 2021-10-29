@@ -34,14 +34,106 @@
            <list>
                <value>person.identifier.orcid</value>
                <value>perucris.identifier.dni</value>
-               <value>perucris.identifier.dina</value>
-               <value>perucris.identifier.renacyt</value>
-               <value>person.identifier.scopus-author-id</value>
-               <value>person.identifier.rid</value>
            </list>
         </property>
         <property name="filter" ref="person-has-at-least-one-id_filter"/>
     </bean>
+
+    <bean name="itemHasOcdeFromControlledVocabulary" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.invalidOcde"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.subject.ocde</value>
+            </list>
+        </property>
+        <property name="filter" ref="item-has-valid-ocde-value"/>
+    </bean>
+    <bean name="itemHasMinamFromControlledVocabulary" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.invalidMinam"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.subject.minam</value>
+            </list>
+        </property>
+        <property name="filter" ref="item-has-valid-minam-value"/>
+    </bean>
+    <bean name="itemHasInsFromControlledVocabulary" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.invalidIns"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.subject.ins</value>
+            </list>
+        </property>
+        <property name="filter" ref="item-has-valid-ins-value"/>
+    </bean>
+
+    <bean name="itemHasOcdeProjectTypeFromControlledVocabulary" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.invalidOcdeProjectType"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.project.typeOcde</value>
+            </list>
+        </property>
+        <property name="filter" ref="item-has-valid-ocde-project-type-value"/>
+    </bean>
+
+    <bean name="itemHasValidGeoLocationData" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.invalidGeoLocation"/>
+        <property name="metadataFields">
+            <list>
+                <value>datacite.geoLocationPlace</value>
+                <value>datacite.geoLocationPoint.pointLatitude</value>
+                <value>datacite.geoLocationPoint.pointLongitude</value>
+                <value>datacite.geoLocationBox.westBoundLongitude</value>
+                <value>datacite.geoLocationBox.eastBoundLongitude</value>
+                <value>datacite.geoLocationBox.southBoundLatitude</value>
+                <value>datacite.geoLocationBox.northBoundLatitude</value>
+            </list>
+        </property>
+        <property name="filter" ref="item-has-valid-geolocation_filter"/>
+    </bean>
+
+    <bean name="itemHasValidType" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.invalidItemType"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.type</value>
+            </list>
+        </property>
+        <property name="filter" ref="item-has-valid-dc-type_filter"/>
+    </bean>
+
+    <bean name="equipmentHasValidType" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.invalidItemType"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.type</value>
+            </list>
+        </property>
+        <property name="filter" ref="equipment-has-valid-dc-type_filter"/>
+    </bean>
+
+    <bean name="equipmentHasValidUsageType" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.invalidUsageType"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.type.usage</value>
+            </list>
+        </property>
+        <property name="filter" ref="equipment-has-valid-usage-type_filter"/>
+    </bean>
+
+    <!-- FIXME: CHECK SUBMISSION FORM BEHAVIOUR CSTPER-874 -->
+<!--    <bean name="higherEducationTypeFilterSet" class="org.dspace.validation.LogicalStatementValidator">-->
+<!--        <property name="errorKey" value="error.validation.HigherEducationNotSet"/>-->
+<!--        <property name="metadataFields">-->
+<!--            <list>-->
+<!--                <value>perucris.type.educacionSuperior</value>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--        <property name="filter" ref="higher-education-type_filter"/>-->
+<!--    </bean>-->
+
 
     <bean name="peruvianHasUbigeoSet" class="org.dspace.validation.LogicalStatementValidator">
         <property name="errorKey" value="error.validation.ubigeoRequired"/>
@@ -62,5 +154,27 @@
     </property>
     <property name="filter" ref="project-without-oa-mandate-requires-policy-url"/>
 </bean>
+
+    <!-- FIXME: CHECK SUBMISSION FORM BEHAVIOUR CSTPER-874 -->
+<!--    <bean name="institutionalSectorSet" class="org.dspace.validation.LogicalStatementValidator">-->
+<!--        <property name="errorKey" value="error.validation.institutionalSectorMandatory"/>-->
+<!--        <property name="metadataFields">-->
+<!--            <list>-->
+<!--                <value>perucris.type.sectorInstitucional</value>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--        <property name="filter" ref="institutional-sector_filter"/>-->
+<!--    </bean>-->
+
+    <!-- FIXME: CHECK SUBMISSION FORM BEHAVIOUR CSTPER-874 -->
+<!--    <bean name="juridicalNatureSet" class="org.dspace.validation.LogicalStatementValidator">-->
+<!--        <property name="errorKey" value="error.validation.juridicalNatureMandatory"/>-->
+<!--        <property name="metadataFields">-->
+<!--            <list>-->
+<!--                <value>perucris.type.naturaleza</value>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--        <property name="filter" ref="juridical-nature_filter"/>-->
+<!--    </bean>-->
 
 </beans>

@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
 
 public class SolrOaiCore {
 
+    // FIXME: this class should be refactored in order not to be an utility class, but a bean as per other SolrCore
+    //  classes.
     protected static SolrClient solr;
     private static final Logger log = LoggerFactory.getLogger(SolrOaiCore.class);
 
@@ -28,7 +30,6 @@ public class SolrOaiCore {
         return getSolr();
     }
 
-    // TODO: refactor it: remove static methods and use a Spring bean . see CSTPER-807
     public static SolrClient getSolr() throws SolrServerException {
         if (solr == null) {
             initSolr();

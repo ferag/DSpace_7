@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
+import org.dspace.app.metrics.service.CrisMetricsService;
 import org.dspace.app.util.AuthorizeUtil;
 import org.dspace.authorize.AuthorizeConfiguration;
 import org.dspace.authorize.AuthorizeException;
@@ -47,6 +48,7 @@ import org.dspace.core.exception.SQLRuntimeException;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.GroupType;
 import org.dspace.eperson.service.GroupService;
+import org.dspace.eperson.service.SubscribeService;
 import org.dspace.event.Event;
 import org.dspace.identifier.IdentifierException;
 import org.dspace.identifier.service.IdentifierService;
@@ -107,6 +109,10 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
     @Autowired(required = true)
     protected ConfigurationService configurationService;
 
+    @Autowired(required = true)
+    protected SubscribeService subscribeService;
+    @Autowired(required = true)
+    protected CrisMetricsService crisMetricsService;
     protected CommunityServiceImpl() {
         super();
 
@@ -225,7 +231,7 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
             throws MissingResourceException, SQLException {
         if (field.equals(MD_NAME) && (value == null || value.trim().equals(""))) {
             try {
-                value = I18nUtil.getMessage("org.dspace.workflow.WorkflowManager.untitled");
+                value = I18nUtil.getMessage("org.dspace.content.untitled");
             } catch (MissingResourceException e) {
                 value = "Untitled";
             }
@@ -248,12 +254,12 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
 
     @Override
     public Bitstream setLogo(Context context, Community community, InputStream is)
-        throws AuthorizeException, IOException, SQLException {
+            throws AuthorizeException, IOException, SQLException {
         // Check authorisation
         // authorized to remove the logo when DELETE rights
         // authorized when canEdit
         if (!((is == null) && authorizeService.authorizeActionBoolean(
-            context, community, Constants.DELETE))) {
+                context, community, Constants.DELETE))) {
             canEdit(context, community);
         }
 
@@ -261,7 +267,7 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
         Bitstream oldLogo = community.getLogo();
         if (oldLogo != null) {
             log.info(LogManager.getHeader(context, "remove_logo",
-                                          "community_id=" + community.getID()));
+                    "community_id=" + community.getID()));
             community.setLogo(null);
             bitstreamService.delete(context, oldLogo);
         }
@@ -273,12 +279,12 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
             // now create policy for logo bitstream
             // to match our READ policy
             List<ResourcePolicy> policies = authorizeService
-                .getPoliciesActionFilter(context, community, Constants.READ);
+                    .getPoliciesActionFilter(context, community, Constants.READ);
             authorizeService.addPolicies(context, policies, newLogo);
 
             log.info(LogManager.getHeader(context, "set_logo",
-                                          "community_id=" + community.getID() + "logo_bitstream_id="
-                                              + newLogo.getID()));
+                    "community_id=" + community.getID() + "logo_bitstream_id="
+                            + newLogo.getID()));
         }
 
         return community.getLogo();
@@ -515,6 +521,7 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
 
     @Override
     public void delete(Context context, Community community) throws SQLException, AuthorizeException, IOException {
+        crisMetricsService.deleteByResourceID(context, community);
         // Check authorisation
         // FIXME: If this was a subcommunity, it is first removed from it's
         // parent.
@@ -529,6 +536,7 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
         String removedHandle = community.getHandle();
         UUID removedId = community.getID();
 
+        subscribeService.deleteByDspaceObject(context, community);
 
         // If not a top-level community, have parent remove me; this
         // will call rawDelete() before removing the linkage

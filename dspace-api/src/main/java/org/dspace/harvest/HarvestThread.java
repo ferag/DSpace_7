@@ -15,9 +15,12 @@ import org.dspace.content.Collection;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.CollectionService;
 import org.dspace.core.Context;
+import org.dspace.eperson.EPerson;
 import org.dspace.harvest.factory.HarvestServiceFactory;
 import org.dspace.harvest.model.OAIHarvesterOptions;
 import org.dspace.harvest.service.HarvestedCollectionService;
+import org.dspace.services.ConfigurationService;
+import org.dspace.services.factory.DSpaceServicesFactory;
 
 /**
  * A harvester thread used to execute a single harvest cycle on a collection
@@ -28,14 +31,22 @@ public class HarvestThread extends Thread {
 
     private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(HarvestThread.class);
     protected UUID collectionId;
+
+    protected Boolean local = Boolean.TRUE;
+    protected EPerson eperson;
+
     protected CollectionService collectionService = ContentServiceFactory.getInstance().getCollectionService();
+
+    protected ConfigurationService configurationService = DSpaceServicesFactory.getInstance().getConfigurationService();
+
     protected HarvestedCollectionService harvestedCollectionService =
         HarvestServiceFactory.getInstance().getHarvestedCollectionService();
     protected OAIHarvester harvester = HarvestServiceFactory.getInstance().getOAIHarvester();
 
-
-    protected HarvestThread(UUID collectionId) throws SQLException {
+    protected HarvestThread(UUID collectionId, boolean local, EPerson eperson) throws SQLException {
         this.collectionId = collectionId;
+        this.local = local;
+        this.eperson = eperson;
     }
 
     @Override
@@ -43,6 +54,7 @@ public class HarvestThread extends Thread {
         log.info("Thread for collection " + collectionId + " starts.");
         runHarvest();
     }
+
 
     private void runHarvest() {
         Context context;
@@ -53,7 +65,8 @@ public class HarvestThread extends Thread {
             dso = collectionService.find(context, collectionId);
             hc = harvestedCollectionService.find(context, dso);
             try {
-                harvester.runHarvest(context, hc, new OAIHarvesterOptions(false, false, false, true));
+                harvester.runHarvest(context, hc, new OAIHarvesterOptions(false, false, false, true, this.local),
+                    eperson);
             } catch (RuntimeException e) {
                 log.error("Runtime exception in thread: " + this.toString());
                 log.error(e.getMessage() + " " + e.getCause());

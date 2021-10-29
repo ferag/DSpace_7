@@ -45,7 +45,7 @@ public class ReniecUpdateIT extends AbstractControllerIntegrationTest {
     UpdateItemWithInformationFromReniecService updateItemWithInformationFromReniec;
 
     @Test
-    @Ignore("endpoints currently unavailable")
+    @Ignore("external services temporarily not available")
     public void updateItemWithInformationFromReniecByCollectionTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
@@ -152,7 +152,7 @@ public class ReniecUpdateIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
-    @Ignore("endpoints currently unavailable")
+    @Ignore("external services temporarily not available")
     public void updateAllItemsWithInformationFromReniecTest() throws Exception {
         context.turnOffAuthorisationSystem();
 
@@ -264,7 +264,7 @@ public class ReniecUpdateIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
-    @Ignore("endpoints currently unavailable")
+    @Ignore("external services temporarily not available")
     public void updateItemsWithInformationFromReniecByWrongIDColTest() throws Exception {
         context.turnOffAuthorisationSystem();
 

@@ -48,6 +48,7 @@ import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
 import org.dspace.eperson.service.GroupService;
 import org.dspace.eperson.service.RegistrationDataService;
+import org.dspace.eperson.service.SubscribeService;
 import org.dspace.externalservices.scopus.factory.CrisMetricsServiceFactory;
 import org.dspace.harvest.factory.HarvestServiceFactory;
 import org.dspace.harvest.service.HarvestedCollectionService;
@@ -123,6 +124,7 @@ public abstract class AbstractBuilder<T, S> {
     static SolrSuggestionStorageService solrSuggestionService;
     static CollectionRoleService collectionRoleService;
     static ElasticsearchIndexQueueService elasticsearchIndexQueueService;
+    static SubscribeService subscribeService;
 
     protected Context context;
 
@@ -193,6 +195,7 @@ public abstract class AbstractBuilder<T, S> {
         crisLayoutMetric2BoxService = CrisLayoutServiceFactory.getInstance().getMetric2BoxService();
         nbEventService = new DSpace().getSingletonService(NBEventService.class);
         solrSuggestionService = new DSpace().getSingletonService(SolrSuggestionStorageService.class);
+        subscribeService = ContentServiceFactory.getInstance().getSubscribeService();
     }
 
 
@@ -234,6 +237,7 @@ public abstract class AbstractBuilder<T, S> {
         nbEventService = null;
         harvestedCollectionService = null;
         elasticsearchIndexQueueService = null;
+        subscribeService = null;
     }
 
     public static void cleanupObjects() throws Exception {
@@ -269,12 +273,32 @@ public abstract class AbstractBuilder<T, S> {
      */
     public abstract void cleanup() throws Exception;
 
+    /**
+     * Create the object from the values that have been set on this builder.
+     * @return the initialized object.
+     * @throws SQLException passed through.
+     * @throws AuthorizeException passed through.
+     */
     public abstract T build() throws SQLException, AuthorizeException;
 
+    /**
+     * Remove the object from the persistence store.
+     *
+     * @param c current DSpace session.
+     * @param dso the object to be removed.
+     * @throws Exception passed through.
+     */
     public abstract void delete(Context c, T dso) throws Exception;
 
     protected abstract S getService();
 
+    /**
+     * Log an exception.
+     *
+     * @param <B> type of Builder which caught the exception.
+     * @param e exception to be handled.
+     * @return {@code null} always.
+     */
     protected <B> B handleException(final Exception e) {
         log.error(e.getMessage(), e);
         return null;

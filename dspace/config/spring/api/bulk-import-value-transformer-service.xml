@@ -15,13 +15,37 @@
     <bean class="org.dspace.app.bulkedit.BulkImportTransformerService">
         <constructor-arg>
 			<map>
-			 <entry  key="perucris.subject.ocde" value-ref= "ocdeTransformer"> </entry>       
+			 <entry  key="perucris.subject.ocde" value-ref= "ocdeTransformer"> </entry>
+			 <entry  key="perucris.subject.minam" value-ref= "minamTransformer"> </entry>
+			 <entry  key="perucris.subject.ins" value-ref= "insTransformer"> </entry>
+			 <entry  key="perucris.project.typeOcde" value-ref= "ocdeProjectTypeTransformer"> </entry>
+			 <entry  key="perucris.project.typeOcde" value-ref= "ocdeProjectTypeTransformer"> </entry>
+			 <entry  key="dc.type" value-ref= "publicationTypeTransformer"> </entry>
 			</map>
 		</constructor-arg>
 	</bean>
 
-    <bean id="ocdeTransformer" class="org.dspace.app.bulkedit.BulkImportOcdeValueTransformer">
+
+    <bean id="ocdeTransformer" class="org.dspace.app.bulkedit.BulkImportURIControlledVocabularyValueTransformer">
          <property name="authorityName" value="ocde_subjects" />
-    </bean>   
+    </bean>
+
+    <bean id="minamTransformer" class="org.dspace.app.bulkedit.BulkImportURIControlledVocabularyValueTransformer">
+        <property name="authorityName" value="minam" />
+    </bean>
+
+    <bean id="insTransformer" class="org.dspace.app.bulkedit.BulkImportURIControlledVocabularyValueTransformer">
+        <property name="authorityName" value="ins" />
+    </bean>
+
+    <bean id="ocdeProjectTypeTransformer" class="org.dspace.app.bulkedit.BulkImportURIControlledVocabularyValueTransformer">
+        <property name="authorityName" value="ocde_project_type" />
+    </bean>
+
+    <bean id="publicationTypeTransformer" class="org.dspace.app.bulkedit.BulkImportURIControlledVocabularyValueTransformer">
+        <property name="authorityName" value="peru_publication_types"/>
+    </bean>
+
+
 
 </beans>

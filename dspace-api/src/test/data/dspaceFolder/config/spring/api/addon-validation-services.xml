@@ -34,10 +34,6 @@
            <list>
                <value>/section/person/person.identifier.orcid</value>
                <value>/section/person/perucris.identifier.dni</value>
-               <value>/section/person/perucris.identifier.dina</value>
-               <value>/section/person/perucris.identifier.renacyt</value>
-               <value>/section/person/person.identifier.scopus-author-id</value>
-               <value>/section/person/person.identifier.rid</value>
            </list>
         </property>
         <property name="filter" ref="person-has-at-least-one-id_filter"/>
@@ -92,6 +88,43 @@
                 </property>
             </bean>
         </property>
+    </bean>
+
+    <bean name="itemHasOcdeFromControlledVocabulary" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.invalidOcde"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.subject.ocde</value>
+            </list>
+        </property>
+        <property name="filter" ref="item-has-valid-ocde-value"/>
+    </bean>
+    <bean name="itemHasMinamFromControlledVocabulary" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.invalidMinam"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.subject.minam</value>
+            </list>
+        </property>
+        <property name="filter" ref="item-has-valid-minam-value"/>
+    </bean>
+    <bean name="itemHasInsFromControlledVocabulary" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.invalidIns"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.subject.ins</value>
+            </list>
+        </property>
+        <property name="filter" ref="item-has-valid-ins-value"/>
+    </bean>
+    <bean name="itemHasLanguageFromControlledList" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.invalidLanguage"/>
+        <property name="metadataFields">
+            <list>
+                <value>person.knowsLanguage</value>
+            </list>
+        </property>
+        <property name="filter" ref="item-has-valid-ins-value"/>
     </bean>
 
 </beans>

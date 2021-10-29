@@ -8,6 +8,8 @@
 package org.dspace.content.template.generator;
 
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.dspace.app.profile.ResearcherProfile;
@@ -36,10 +38,11 @@ public class ResearcherProfileValueGenerator implements TemplateValueGenerator {
     private ResearcherProfileService researcherProfileService;
 
     @Override
-    public MetadataValueVO generator(Context context, Item targetItem, Item templateItem, String extraParams) {
-        return findCurrentUserProfile(context)
+    public List<MetadataValueVO> generator(Context context, Item targetItem, Item templateItem, String extraParams) {
+        MetadataValueVO metadataValueVO = findCurrentUserProfile(context)
             .map(profile -> new MetadataValueVO(profile.getItemFullName(), profile.getItemId().toString()))
             .orElseGet(() -> new MetadataValueVO(""));
+        return Collections.singletonList(metadataValueVO);
     }
 
     private Optional<ResearcherProfile> findCurrentUserProfile(Context context) {

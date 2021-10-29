@@ -48,9 +48,9 @@ public class CanManageCTIVitaeFeature implements AuthorizationFeature {
         if (object instanceof ItemRest) {
             Item item = itemService.find(context, UUID.fromString(((ItemRest) object).getUuid()));
             String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
-            return (StringUtils.equals(entityType, "CvPerson") && authorizeService.isAdmin(context)) ||
+            return StringUtils.equals(entityType, "CvPerson") && (authorizeService.isAdmin(context) ||
                        (crisSecurityService.isOwner(context.getCurrentUser(), item) &&
-                        groupService.isMemberOfCTIVitaeGroup(context));
+                        groupService.isMemberOfCTIVitaeGroup(context)));
         }
         return false;
     }

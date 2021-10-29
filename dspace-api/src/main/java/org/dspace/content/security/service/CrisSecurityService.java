@@ -43,4 +43,15 @@ public interface CrisSecurityService {
      * @return         true if the given eperson is the owner, false otherwise
      */
     boolean isOwner(EPerson eperson, Item item);
+
+    /**
+     * true if the current user admin or is the owner of item and belongs to cv group, false otherwise
+     * 
+     * @param context           the DSpace context
+     * @param item              the item
+     * @return
+     * @throws SQLException     is an SQL error occurs
+     */
+    public boolean isCTIVitaeUser(Context context, Item item) throws SQLException;
+
 }

@@ -74,13 +74,18 @@ public class CrisSecurityServiceImpl implements CrisSecurityService {
             default:
                 return false;
         }
-
     }
 
-    private boolean isCTIVitaeUser(Context context, Item item) throws SQLException {
+    @Override
+    public boolean isCTIVitaeUser(Context context, Item item) throws SQLException {
         String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
-        return StringUtils.equals(entityType, "CvPerson") && (authorizeService.isAdmin(context)
-                || (this.isOwner(context.getCurrentUser(), item) && groupService.isMemberOfCTIVitaeGroup(context)));
+        if (!StringUtils.equals(entityType, "CvPerson")) {
+            return false;
+        }
+        if (authorizeService.isAdmin(context)) {
+            return true;
+        }
+        return isOwner(context.getCurrentUser(), item) && groupService.isMemberOfCTIVitaeGroup(context);
     }
 
     @Override

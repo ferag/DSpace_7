@@ -257,8 +257,11 @@ public class GroupServiceImpl extends DSpaceObjectServiceImpl<Group> implements 
 
     @Override
     public boolean isMemberOfCTIVitaeGroup(Context context) throws SQLException {
-        UUID uuid = UUID.fromString(configurationService.getProperty("cti-vitae.group.id"));
-        return this.isMember(context, this.find(context, uuid));
+        String uuid = configurationService.getProperty("cti-vitae.group.id");
+        if (StringUtils.isBlank(uuid)) {
+            throw new RuntimeException("The 'cti-vitae.group.id' property has not been set for the cv group");
+        }
+        return this.isMember(context, this.find(context, UUID.fromString(uuid)));
     }
 
     @Override

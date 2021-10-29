@@ -173,4 +173,45 @@ public class CanManageCTIVitaeFeatureIT extends AbstractControllerIntegrationTes
                    .andExpect(status().isNotFound());
     }
 
+    @Test
+    public void canManageCTIVitaeAndOwnerWithoutSettingCvGroupTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        EPerson owner = EPersonBuilder.createEPerson(context)
+                                      .withNameInMetadata("Viktok", "Bandola")
+                                      .withEmail("viktor.bandola@example.test")
+                                      .withPassword(password)
+                                      .build();
+
+        parentCommunity = CommunityBuilder.createCommunity(context)
+                                          .withName("Root Community")
+                                          .build();
+
+        Collection cvPersonCol = CollectionBuilder.createCollection(context, parentCommunity)
+                                                  .withName("Collection cvPerson")
+                                                  .withEntityType("CvPerson")
+                                                  .build();
+
+        Item cvPerson = ItemBuilder.createItem(context, cvPersonCol)
+                                   .withTitle("cv person user")
+                                   .withCrisOwner(owner.getName(), owner.getID().toString())
+                                   .build();
+
+        context.restoreAuthSystemState();
+
+        ItemRest itemRest = itemConverter.convert(cvPerson, DefaultProjection.DEFAULT);
+
+        String tokenAdmin = getAuthToken(admin.getEmail(), password);
+        String tokenOwner = getAuthToken(owner.getEmail(), password);
+
+        Authorization admin2Item = new Authorization(admin, canManageCTIVitaeFeature, itemRest);
+        Authorization owner2Item = new Authorization(owner, canManageCTIVitaeFeature, itemRest);
+
+        getClient(tokenAdmin).perform(get("/api/authz/authorizations/" + admin2Item.getID()))
+                             .andExpect(status().isOk())
+                             .andExpect(jsonPath("$",Matchers.is(AuthorizationMatcher.matchAuthorization(admin2Item))));
+
+        getClient(tokenOwner).perform(get("/api/authz/authorizations/" + owner2Item.getID()))
+                             .andExpect(status().is(500));
+    }
+
 }

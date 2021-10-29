@@ -9,17 +9,14 @@ package org.dspace.app.rest.authorization.impl;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import org.apache.commons.codec.binary.StringUtils;
 import org.dspace.app.rest.authorization.AuthorizationFeature;
 import org.dspace.app.rest.authorization.AuthorizationFeatureDocumentation;
 import org.dspace.app.rest.model.BaseObjectRest;
 import org.dspace.app.rest.model.ItemRest;
-import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.Item;
 import org.dspace.content.security.service.CrisSecurityService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
-import org.dspace.eperson.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,10 +33,6 @@ public class CanManageCTIVitaeFeature implements AuthorizationFeature {
     @Autowired
     private ItemService itemService;
     @Autowired
-    private GroupService groupService;
-    @Autowired
-    private AuthorizeService authorizeService;
-    @Autowired
     private CrisSecurityService crisSecurityService;
 
     @Override
@@ -47,10 +40,7 @@ public class CanManageCTIVitaeFeature implements AuthorizationFeature {
     public boolean isAuthorized(Context context,  BaseObjectRest object) throws SQLException {
         if (object instanceof ItemRest) {
             Item item = itemService.find(context, UUID.fromString(((ItemRest) object).getUuid()));
-            String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
-            return StringUtils.equals(entityType, "CvPerson") && (authorizeService.isAdmin(context) ||
-                       (crisSecurityService.isOwner(context.getCurrentUser(), item) &&
-                        groupService.isMemberOfCTIVitaeGroup(context)));
+            return crisSecurityService.isCTIVitaeUser(context, item);
         }
         return false;
     }

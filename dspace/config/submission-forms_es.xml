@@ -3041,6 +3041,8 @@ o “Caja de geolocalización”</hint>
           <required />
           <hint />
         </field>
+      </row>
+      <row>
         <field>
           <dc-schema>dc</dc-schema>
           <dc-element>publisher</dc-element>
@@ -3214,6 +3216,8 @@ ejemplo: el volumen de una revista.</hint>
           <required />
           <hint />
         </field>
+      </row>
+      <row>
         <field>
           <dc-schema>dc</dc-schema>
           <dc-element>publisher</dc-element>
@@ -5039,7 +5043,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Género</label>
           <input-type value-pairs-name="gender">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Debe seleccionar un Género</required>
           <hint>Podrá ser actualizado por Reniec</hint>
         </field>
       </row>
@@ -5098,7 +5102,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Ingrese un resumen de un perfil profesional y académico, relacionado con la CTI. (Máximo 2000 caracteres)</hint>
-          <regex>^.{0,2000}$</regex>
         </field>
       </row>
       <row>
@@ -5358,7 +5361,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>person</dc-schema>
           <dc-element>knowsLanguage</dc-element>
-          <label>Lengua(s) escrita(s)</label>
+          <label>Idiomas</label>
           <input-type value-pairs-name="common_iso_languages">dropdown</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -5477,7 +5480,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Género</label>
           <input-type value-pairs-name="gender">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Debe seleccionar un Género</required>
           <hint>Podrá ser actualizado por Reniec</hint>
         </field>
       </row>
@@ -5536,7 +5539,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Ingrese un resumen de un perfil profesional y académico, relacionado con la CTI. (Máximo 2000 caracteres)</hint>
-          <regex>^[a-zA-Z0-9]{0,2000}$</regex>
         </field>
       </row>
       <row>
@@ -5692,6 +5694,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint />
+          <readonly>all</readonly>
         </field>
       </row>
       <row>
@@ -5785,7 +5788,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>person</dc-schema>
           <dc-element>knowsLanguage</dc-element>
-          <label>Lengua(s) escrita(s)</label>
+          <label>Idiomas</label>
           <input-type value-pairs-name="common_iso_languages">dropdown</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -5870,7 +5873,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Género</label>
           <input-type value-pairs-name="gender">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Debe seleccionar un Género</required>
           <hint>Podrá ser actualizado por Reniec</hint>
         </field>
       </row>
@@ -5929,7 +5932,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Ingrese un resumen de un perfil profesional y académico, relacionado con la CTI. (Máximo 2000 caracteres)</hint>
-          <regex>^[a-zA-Z0-9]{0,2000}$</regex>
         </field>
       </row>
       <row>
@@ -6204,7 +6206,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>person</dc-schema>
           <dc-element>knowsLanguage</dc-element>
-          <label>Lengua(s) escrita(s)</label>
+          <label>Idiomas</label>
           <input-type value-pairs-name="common_iso_languages">dropdown</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -6453,8 +6455,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
         </field>
-      </row>
-      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>orgunit</dc-element>
@@ -6474,7 +6474,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Sector institucional  (Obligatorio sólo para instituciones principales)</label>
           <input-type value-pairs-name="ocde_sectorInstitucional">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required>Debe introducir el Sector institucional</required>
+<!--          <required>Debe introducir el Sector institucional</required>-->
+          <required></required>
           <hint />
           <type-bind>Institución principal</type-bind>
         </field>
@@ -6585,7 +6586,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Naturaleza jurídica</label>
           <input-type value-pairs-name="peru_ou_nature">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required>Obligatorio para instituciones principales</required>
+<!--          <required>Obligatorio para instituciones principales</required>-->
+          <required></required>
           <hint>Obligatorio para instituciones principales</hint>
           <type-bind>Institución principal</type-bind>
         </field>
@@ -6780,8 +6782,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
         </field>
-      </row>
-      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>orgunit</dc-element>
@@ -6801,7 +6801,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Sector institucional  (Obligatorio sólo para instituciones principales)</label>
           <input-type value-pairs-name="ocde_sectorInstitucional">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required>Debe introducir el Sector institucional</required>
+<!--          <required>Debe introducir el Sector institucional</required>-->
+          <required></required>
           <hint />
           <type-bind>Institución principal</type-bind>
         </field>
@@ -6912,7 +6913,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Naturaleza jurídica</label>
           <input-type value-pairs-name="peru_ou_nature">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required>Obligatorio para instituciones principales</required>
+<!--          <required>Obligatorio para instituciones principales</required>-->
+          <required></required>
           <hint>Obligatorio para instituciones principales</hint>
           <type-bind>Institución principal</type-bind>
         </field>
@@ -8282,10 +8284,10 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>dc</dc-schema>
           <dc-element>title</dc-element>
-          <label>Nombre</label>
+          <label>Nombre del financiamiento</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>Debe introducir el nombre del equipo.</required>
+          <required>Debe introducir el nombre del financiamiento.</required>
           <hint />
         </field>
         <field>
@@ -8351,16 +8353,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Vincular esta financiación con su nivel superior, si procede</hint>
-        </field>
-        <field>
-          <dc-schema>crisfund</dc-schema>
-          <dc-element>award</dc-element>
-          <dc-qualifier>url</dc-qualifier>
-          <label>Premio Url</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required>La url preferentemente en el sitio web del financiador del anuncio de adjudicación</required>
-          <hint />
         </field>
       </row>
       <row>
@@ -8499,10 +8491,10 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>dc</dc-schema>
           <dc-element>title</dc-element>
-          <label>Nombre</label>
+          <label>Nombre del financiamiento</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>Debe introducir el nombre del equipo.</required>
+          <required>Debe introducir el nombre del financiamiento.</required>
           <hint />
         </field>
         <field>
@@ -8568,16 +8560,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Vincular esta financiación con su nivel superior, si procede</hint>
-        </field>
-        <field>
-          <dc-schema>crisfund</dc-schema>
-          <dc-element>award</dc-element>
-          <dc-qualifier>url</dc-qualifier>
-          <label>Premio Url</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required>La url preferentemente en el sitio web del financiador del anuncio de adjudicación</required>
-          <hint />
         </field>
       </row>
       <row>
@@ -8788,8 +8770,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required>Debe seleccionar un tipo de equipamiento</required>
           <hint />
         </field>
-      </row>
-      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>type</dc-element>
@@ -8994,8 +8974,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required>Debe seleccionar un tipo de equipamiento</required>
           <hint />
         </field>
-      </row>
-      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>type</dc-element>

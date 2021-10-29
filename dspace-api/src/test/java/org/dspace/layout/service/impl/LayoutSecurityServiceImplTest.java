@@ -28,6 +28,7 @@ import org.dspace.app.util.SubmissionConfig;
 import org.dspace.app.util.SubmissionConfigReader;
 import org.dspace.authority.service.FormNameLookup;
 import org.dspace.authorize.service.AuthorizeService;
+import org.dspace.content.Collection;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataSchema;
@@ -276,6 +277,8 @@ public class LayoutSecurityServiceImplTest {
         UUID userUuid = UUID.randomUUID();
 
         Item item = mock(Item.class);
+        Collection coll = mock(Collection.class);
+        when(item.getOwningCollection()).thenReturn(coll);
 
         MetadataField securityMetadataField = securityMetadataField();
 
@@ -373,6 +376,9 @@ public class LayoutSecurityServiceImplTest {
         UUID securityAuthorityUuid = UUID.randomUUID();
 
         Item item = mock(Item.class);
+        Collection coll = mock(Collection.class);
+        when(item.getOwningCollection()).thenReturn(coll);
+
         Context context = mock(Context.class);
 
         EPerson user = ePerson(userUuid, UUID.randomUUID(), groupUuid);
@@ -418,9 +424,10 @@ public class LayoutSecurityServiceImplTest {
     public void customSecurityNullUserAsAnonymousAndGroupAllowed() throws SQLException {
 
         UUID anonymousGroupUuid = UUID.randomUUID();
-        UUID securityAuthorityUuid = UUID.randomUUID();
 
         Item item = mock(Item.class);
+        Collection coll = mock(Collection.class);
+        when(item.getOwningCollection()).thenReturn(coll);
         Context context = mock(Context.class);
 
         EPerson user = null;

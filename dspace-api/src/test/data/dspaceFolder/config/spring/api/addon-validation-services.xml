@@ -34,10 +34,6 @@
            <list>
                <value>/section/person/person.identifier.orcid</value>
                <value>/section/person/perucris.identifier.dni</value>
-               <value>/section/person/perucris.identifier.dina</value>
-               <value>/section/person/perucris.identifier.renacyt</value>
-               <value>/section/person/person.identifier.scopus-author-id</value>
-               <value>/section/person/person.identifier.rid</value>
            </list>
         </property>
         <property name="filter" ref="person-has-at-least-one-id_filter"/>

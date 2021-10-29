@@ -3094,12 +3094,89 @@ it, please enter the types and the actual numbers or codes.</hint>
        <field>
          <dc-schema>dc</dc-schema>
          <dc-element>identifier</dc-element>
-         <label>Identifiers</label>
-         <input-type value-pairs-name="common_identifiers">qualdrop_value</input-type>
+         <dc-qualifier>doi</dc-qualifier>
+         <label>DOI</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>DOI (Digital Object Identifier) of the publication, if any. The main data of the publication will be autocompleted automatically, according to the source.</hint>
+       </field>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>identifier</dc-element>
+         <dc-qualifier>scopus</dc-qualifier>
+         <label>Scopus EID</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>ID of the publication in Scopus, i.e. the EID of the publication, if any.  The main data of the publication will be autocompleted automatically, according to the source.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>identifier</dc-element>
+         <dc-qualifier>pmid</dc-qualifier>
+         <label>PubMed ID</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>Publication ID in PubMed, if available.  The main data of the publication will be autocompleted automatically, according to the source.</hint>
+       </field>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>identifier</dc-element>
+         <dc-qualifier>isi</dc-qualifier>
+         <label>ISI – number</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>Web of Science publication ID (WOS ID), if available.  The main data of the publication will be autocompleted automatically, according to the source.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>identifier</dc-element>
+         <dc-qualifier>isbn</dc-qualifier>
+         <label>ISBN</label>
+         <input-type>onebox</input-type>
          <repeatable>true</repeatable>
          <required />
-         <hint>If the item has any identification numbers or codes associated with
-           it, please enter the types and the actual numbers or codes.</hint>
+         <hint>Register the publication's own ISBN. Do not use it for chapters of a book or journal articles in which the publication is contained. publication is contained, use the field "ISBN of the container" for this.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>identifier</dc-element>
+         <dc-qualifier>url</dc-qualifier>
+         <label>Handle or URL</label>
+         <input-type>onebox</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint>Enter a URL if the publication does not have a persistent identifier (Handle, DOI, ISBN, ISSN, PubMed, ISI-Number, SCP-Number).</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>identifier</dc-element>
+         <dc-qualifier>ark</dc-qualifier>
+         <label>ARK Identifier</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>ARK id of the publication, if available</hint>
+       </field>
+       <field>
+         <dc-schema>datacite</dc-schema>
+         <dc-element>version</dc-element>
+         <label>Product version</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>Example: 2.0</hint>
        </field>
      </row>
      <row>
@@ -3112,6 +3189,16 @@ it, please enter the types and the actual numbers or codes.</hint>
          <required>You must enter a main title for this item.</required>
          <hint>Enter the main title of the item.</hint>
        </field>
+       <field>
+         <dc-schema>cris</dc-schema>
+         <dc-element>sourceId</dc-element>
+         <label>Publication id in source system</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>Internal code of the publication in the source system</hint>
+         <readonly>all</readonly>
+       </field>
      </row>
      <row>
        <field>
@@ -3122,7 +3209,40 @@ it, please enter the types and the actual numbers or codes.</hint>
          <input-type>onebox</input-type>
          <repeatable>true</repeatable>
          <required />
-         <hint>If the item has any alternative titles, please enter them here.</hint>
+         <hint>Record other (parallel or alternative) titles. To do so, use this field recursively.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>type</dc-element>
+         <label>Resource type</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required>You must select a resource type</required>
+         <hint>Example: Artículo de revista científica.</hint>
+         <vocabulary closed="true">types</vocabulary>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>oairecerif</dc-schema>
+         <dc-element>access</dc-element>
+         <label>Open Access (OA) level</label>
+         <input-type value-pairs-name="peru_oairecerif_access">dropdown</input-type>
+         <repeatable>false</repeatable>
+         <required>You must select an Open Access level</required>
+         <hint>Information on the rights or means of access to the content of this publication</hint>
+       </field>
+       <field>
+         <dc-schema>oairecerif</dc-schema>
+         <dc-element>access</dc-element>
+         <dc-qualifier>embargoEnd</dc-qualifier>
+         <label>Open Access (OA) embargo end date</label>
+         <input-type>date</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>The end of embargo date is considered to be the date when the publication is has as its open access level: Embargoed</hint>
        </field>
      </row>
      <row>
@@ -3137,42 +3257,6 @@ it, please enter the types and the actual numbers or codes.</hint>
          <hint>Please give the date of previous publication or public distribution.
            You can leave out the day and/or month if they aren't
            applicable.</hint>
-       </field>
-     </row>
-     <row>
-       <field>
-         <dc-schema>dc</dc-schema>
-         <dc-element>contributor</dc-element>
-         <dc-qualifier>author</dc-qualifier>
-         <label>Authors</label>
-         <input-type>group</input-type>
-         <repeatable>true</repeatable>
-         <required />
-         <hint>Enter the names of the authors of this item.</hint>
-       </field>
-     </row>
-     <row>
-       <field>
-         <dc-schema>dc</dc-schema>
-         <dc-element>contributor</dc-element>
-         <dc-qualifier>editor</dc-qualifier>
-         <label>Editors</label>
-         <input-type>group</input-type>
-         <repeatable>true</repeatable>
-         <required />
-         <hint>The editors of this publication.</hint>
-       </field>
-     </row>
-     <row>
-       <field>
-         <dc-schema>dc</dc-schema>
-         <dc-element>type</dc-element>
-         <label>Type</label>
-         <input-type>onebox</input-type>
-         <repeatable>false</repeatable>
-         <required>You must select a publication type</required>
-         <hint>Select the type of content of the item.</hint>
-         <vocabulary>types</vocabulary>
        </field>
      </row>
    </form>
@@ -3217,175 +3301,173 @@ it, please enter the types and the actual numbers or codes.</hint>
      <row>
        <field>
          <dc-schema>dc</dc-schema>
-         <dc-element>relation</dc-element>
-         <dc-qualifier>publication</dc-qualifier>
-         <label>Part Of</label>
-         <input-type>onebox</input-type>
-         <repeatable>false</repeatable>
-         <required />
-         <hint>The publication where this publication is included. E.g. a book chapter lists here the book, a contribution to a conference lists here the conference proceeding.</hint>
-         <type-bind>book part</type-bind>
-       </field>
-     </row>
-     <row>
-       <field>
-         <dc-schema>dc</dc-schema>
-         <dc-element>relation</dc-element>
-         <dc-qualifier>isbn</dc-qualifier>
-         <label>ISBN (of the container)</label>
-         <input-type>onebox</input-type>
-         <repeatable>false</repeatable>
-         <required />
-         <hint>The ISBN of the book/report if it was not found in the system</hint>
-         <type-bind>book part</type-bind>
-       </field>
-     </row>
-     <row>
-       <field>
-         <dc-schema>dc</dc-schema>
-         <dc-element>relation</dc-element>
-         <dc-qualifier>doi</dc-qualifier>
-         <label>DOI (of the container)</label>
-         <input-type>onebox</input-type>
-         <repeatable>false</repeatable>
-         <required />
-         <hint>The DOI of the book/report if it was not found in the system</hint>
-         <type-bind>book part</type-bind>
-       </field>
-     </row>
-     <row>
-       <field>
-         <dc-schema>dc</dc-schema>
-         <dc-element>relation</dc-element>
-         <dc-qualifier>ispartof</dc-qualifier>
-         <label>Journal or Serie</label>
-         <input-type>onebox</input-type>
-         <repeatable>false</repeatable>
-         <required />
-         <hint>The journal or Serie where this publication has been published</hint>
-       </field>
-     </row>
-     <row>
-       <field>
-         <dc-schema>dc</dc-schema>
-         <dc-element>relation</dc-element>
-         <dc-qualifier>ispartofseries</dc-qualifier>
-         <label>Series/Report No.</label>
-         <input-type>series</input-type>
+         <dc-element>contributor</dc-element>
+         <dc-qualifier>author</dc-qualifier>
+         <label>Person Author(s)</label>
+         <input-type>group</input-type>
          <repeatable>true</repeatable>
          <required />
-         <hint>Enter the series and number assigned to this item by your community.</hint>
+         <hint />
        </field>
      </row>
      <row>
        <field>
          <dc-schema>dc</dc-schema>
-         <dc-element>relation</dc-element>
-         <dc-qualifier>issn</dc-qualifier>
-         <label>ISSN</label>
-         <input-type>onebox</input-type>
-         <repeatable>false</repeatable>
-         <required />
-         <hint>The journal or Serie ISSN if it was not found in the system</hint>
-       </field>
-     </row>
-     <row>
-       <field>
-         <dc-schema>dc</dc-schema>
-         <dc-element>coverage</dc-element>
-         <dc-qualifier>publication</dc-qualifier>
-         <label>Review of</label>
-         <input-type>onebox</input-type>
-         <repeatable>false</repeatable>
-         <required />
-         <hint>The publication object of the review</hint>
-         <type-bind>review,book review</type-bind>
-       </field>
-     </row>
-     <row>
-       <field>
-         <dc-schema>dc</dc-schema>
-         <dc-element>coverage</dc-element>
-         <dc-qualifier>isbn</dc-qualifier>
-         <label>ISBN (of the reviewed item)</label>
-         <input-type>onebox</input-type>
-         <repeatable>false</repeatable>
-         <required />
-         <hint>The ISBN of the reviewed item if it was not found in the system</hint>
-         <type-bind>review,book review</type-bind>
-       </field>
-     </row>
-     <row>
-       <field>
-         <dc-schema>dc</dc-schema>
-         <dc-element>coverage</dc-element>
-         <dc-qualifier>doi</dc-qualifier>
-         <label>DOI (of the reviewed item)</label>
-         <input-type>onebox</input-type>
-         <repeatable>false</repeatable>
-         <required />
-         <hint>The DOI of the reviewed item if it was not found in the system</hint>
-         <type-bind>review,book review</type-bind>
-       </field>
-     </row>
-     <row>
-       <field>
-         <dc-schema>dc</dc-schema>
-         <dc-element>description</dc-element>
-         <dc-qualifier>sponsorship</dc-qualifier>
-         <label>Sponsors</label>
+         <dc-element>contributor</dc-element>
+         <dc-qualifier>corporatename</dc-qualifier>
+         <label>Institution Author(s)</label>
          <input-type>onebox</input-type>
          <repeatable>true</repeatable>
          <required />
-         <hint>Enter the name of any sponsors.</hint>
+         <hint />
        </field>
      </row>
      <row>
        <field>
          <dc-schema>dc</dc-schema>
-         <dc-element>description</dc-element>
-         <dc-qualifier>volume</dc-qualifier>
-         <label>Volume</label>
+         <dc-element>contributor</dc-element>
+         <dc-qualifier>editor</dc-qualifier>
+         <label>Person Editor(s)</label>
+         <input-type>group</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>contributor</dc-element>
+         <dc-qualifier>editorou</dc-qualifier>
+         <label>Institution Editor(s)</label>
+         <input-type>onebox</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>publisher</dc-element>
+         <label>Publisher(s)</label>
+         <input-type>onebox</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>oaire</dc-schema>
+         <dc-element>version</dc-element>
+         <label>Publication Version</label>
+         <input-type value-pairs-name="coar_versions">dropdown</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>rights</dc-element>
+         <dc-qualifier>uri</dc-qualifier>
+         <label>License Conditions</label>
          <input-type>onebox</input-type>
          <repeatable>false</repeatable>
          <required />
-         <hint>If applicable, the volume of the publishing channel where this publication appeared</hint>
+         <hint>Example: licencia de acceso abierto Creative Commons.</hint>
        </field>
      </row>
      <row>
        <field>
          <dc-schema>dc</dc-schema>
-         <dc-element>description</dc-element>
-         <dc-qualifier>issue</dc-qualifier>
-         <label>Issue</label>
-         <input-type>onebox</input-type>
-         <repeatable>false</repeatable>
+         <dc-element>language</dc-element>
+         <dc-qualifier>iso</dc-qualifier>
+         <label>Language</label>
+         <input-type value-pairs-name="common_iso_languages">dropdown</input-type>
+         <repeatable>true</repeatable>
          <required />
-         <hint>If applicable, the issue of the publishing channel where this publication appeared</hint>
+         <hint />
        </field>
      </row>
      <row>
        <field>
-         <dc-schema>dc</dc-schema>
-         <dc-element>description</dc-element>
-         <dc-qualifier>startpage</dc-qualifier>
+         <dc-schema>oaire</dc-schema>
+         <dc-element>citation</dc-element>
+         <dc-qualifier>startPage</dc-qualifier>
          <label>Start Page</label>
          <input-type>onebox</input-type>
          <repeatable>false</repeatable>
          <required />
          <hint>If applicable, the page where this publication starts</hint>
        </field>
-     </row>
-     <row>
        <field>
-         <dc-schema>dc</dc-schema>
-         <dc-element>description</dc-element>
-         <dc-qualifier>endpage</dc-qualifier>
+         <dc-schema>oaire</dc-schema>
+         <dc-element>citation</dc-element>
+         <dc-qualifier>endPage</dc-qualifier>
          <label>End Page</label>
          <input-type>onebox</input-type>
          <repeatable>false</repeatable>
          <required />
          <hint>If applicable, the page where this publication ends</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>oaire</dc-schema>
+         <dc-element>citation</dc-element>
+         <dc-qualifier>edition</dc-qualifier>
+         <label>Edition</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>The edition number of this publication. For example: 2nd edition of a book</hint>
+       </field>
+       <field>
+         <dc-schema>oaire</dc-schema>
+         <dc-element>citation</dc-element>
+         <dc-qualifier>number</dc-qualifier>
+         <label>Number</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>If applicable, the number of the publication channel in which this publication appeared. For example, the number of the journal in which an article was published.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>oaire</dc-schema>
+         <dc-element>citation</dc-element>
+         <dc-qualifier>volume</dc-qualifier>
+         <label>Volume</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>The volume of this publication, normally one issue. For example: the volume of a journal.</hint>
+       </field>
+       <field>
+         <dc-schema>oaire</dc-schema>
+         <dc-element>citation</dc-element>
+         <dc-qualifier>issue</dc-qualifier>
+         <label>Issue</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>The number of the issue in which this publication appeared. For for example, the issue of the journal in which an article was published.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>description</dc-element>
+         <dc-qualifier>abstract</dc-qualifier>
+         <label>Abstract</label>
+         <input-type>textarea</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint>Provide a textual description of the content. Consider first the original language and then the language(s) in which it is available. available.</hint>
        </field>
      </row>
    </form>

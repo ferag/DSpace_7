@@ -1264,7 +1264,7 @@ esta publicación.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Introduzca el número de DNI (8 dígitos) del autor</hint>
           <regex>^[0-9]{8}$</regex>
         </field>
       </row>
@@ -1289,7 +1289,7 @@ esta publicación.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Introduzca el identificador ORCID (es decir, 0000-0005-1111-2547) del autor</hint>
           <regex>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</regex>
         </field>
       </row>
@@ -1316,7 +1316,7 @@ esta publicación.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Introduzca el número de DNI (8 dígitos) del autor</hint>
           <regex>^[0-9]{8}$</regex>
         </field>
       </row>
@@ -1341,7 +1341,8 @@ esta publicación.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Introduzca el identificador ORCID (es decir, 0000-0005-1111-2547) del autor</hint>
+          <regex>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</regex>
         </field>
       </row>
     </form>
@@ -1367,7 +1368,7 @@ esta publicación.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Introduzca el número de DNI (8 dígitos) del autor</hint>
           <regex>^[0-9]{8}$</regex>
         </field>
       </row>
@@ -1392,7 +1393,8 @@ esta publicación.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Introduzca el identificador ORCID (es decir, 0000-0005-1111-2547) del autor</hint>
+          <regex>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</regex>
         </field>
       </row>
     </form>
@@ -2354,27 +2356,6 @@ o “Caja de geolocalización”</hint>
       <row>
         <field>
           <dc-schema>dc</dc-schema>
-          <dc-element>identifier</dc-element>
-          <dc-qualifier>ark</dc-qualifier>
-          <label>Identificador ARK</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint>Id ARK de la publicación o producto, si lo hay.</hint>
-        </field>
-        <field>
-          <dc-schema>datacite</dc-schema>
-          <dc-element>version</dc-element>
-          <label>Versión del producto</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint>Ejemplo: 2.0</hint>
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>dc</dc-schema>
           <dc-element>title</dc-element>
           <label>Título</label>
           <input-type>onebox</input-type>
@@ -2524,28 +2505,7 @@ o “Caja de geolocalización”</hint>
       </row>
       <row>
         <field>
-          <dc-schema>dc</dc-schema>
-          <dc-element>identifier</dc-element>
-          <dc-qualifier>ark</dc-qualifier>
-          <label>Identificador ARK</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint>Id ARK de la publicación o producto, si lo hay.</hint>
-        </field>
-        <field>
-          <dc-schema>datacite</dc-schema>
-          <dc-element>version</dc-element>
-          <label>Versión del producto</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint>Ejemplo: 2.0</hint>
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>dc</dc-schema>
+          <dc-schema>dc"</dc-schema>
           <dc-element>title</dc-element>
           <label>Título</label>
           <input-type>onebox</input-type>
@@ -2691,27 +2651,6 @@ o “Caja de geolocalización”</hint>
           <repeatable>true</repeatable>
           <required />
           <hint>Ingresar una URL excepcionalmente si la publicación no cuenta con un identificador persistente (Handle, DOI, ISBN, ISSN, PubMed, ISI-Number, SCP-Number)</hint>
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>dc</dc-schema>
-          <dc-element>identifier</dc-element>
-          <dc-qualifier>ark</dc-qualifier>
-          <label>Identificador ARK</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint>Id ARK de la publicación o producto, si lo hay.</hint>
-        </field>
-        <field>
-          <dc-schema>datacite</dc-schema>
-          <dc-element>version</dc-element>
-          <label>Versión del producto</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint>Ejemplo: 2.0</hint>
         </field>
       </row>
       <row>
@@ -6605,6 +6544,20 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <vocabulary closed="true">ocde_subjects</vocabulary>
         </field>
       </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>type</dc-element>
+          <dc-qualifier>ciiu</dc-qualifier>
+          <label>CIIU - Clasificación Industrial Uniforme</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>Aplica para instituciones principales</hint>
+          <type-bind>Institución principal</type-bind>
+          <vocabulary closed="true">peru_ciiu</vocabulary>
+        </field>
+      </row>
     </form>
     <form name="orgunit-concytec">
       <row>
@@ -6932,6 +6885,20 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <required />
           <hint />
           <vocabulary closed="true">ocde_subjects</vocabulary>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>type</dc-element>
+          <dc-qualifier>ciiu</dc-qualifier>
+          <label>CIIU - Clasificación Industrial Uniforme</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>Aplica para instituciones principales</hint>
+          <type-bind>Institución principal</type-bind>
+          <vocabulary closed="true">peru_ciiu</vocabulary>
         </field>
       </row>
     </form>
@@ -12355,10 +12322,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
       <pair>
         <displayed-value>Mujer</displayed-value>
         <stored-value>f</stored-value>
-      </pair>
-      <pair>
-        <displayed-value>No especificado</displayed-value>
-        <stored-value>n/a</stored-value>
       </pair>
     </value-pairs>
     <value-pairs value-pairs-name="orgunit_identifiers" dc-term="orgunit_identifiers">

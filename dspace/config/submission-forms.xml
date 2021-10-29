@@ -1261,7 +1261,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Enter the DNI number (8 digits) of the author</hint>
           <regex>^[0-9]{8}$</regex>
         </field>
       </row>
@@ -1274,7 +1274,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Enter the affiliation of the author as stated on the publication.</hint>
+          <hint />
         </field>
       </row>
       <row>
@@ -1286,8 +1286,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
-          <regex>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</regex>
+          <hint>Enter the ORCID identifier (i.e.0000-0005-1111-2547) of the author</hint>
         </field>
       </row>
     </form>
@@ -1313,7 +1312,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Enter the DNI number (8 digits) of the author</hint>
           <regex>^[0-9]{8}$</regex>
         </field>
       </row>
@@ -1326,7 +1325,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Enter the affiliation of the author as stated on the publication.</hint>
+          <hint />
         </field>
       </row>
       <row>
@@ -1338,7 +1337,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Enter the ORCID identifier (i.e.0000-0005-1111-2547) of the author</hint>
         </field>
       </row>
     </form>
@@ -1364,7 +1363,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Enter the DNI number (8 digits) of the author</hint>
           <regex>^[0-9]{8}$</regex>
         </field>
       </row>
@@ -1377,7 +1376,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Enter the affiliation of the author as stated on the publication.</hint>
+          <hint />
         </field>
       </row>
       <row>
@@ -1389,7 +1388,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Enter the ORCID identifier (i.e.0000-0005-1111-2547) of the author</hint>
         </field>
       </row>
     </form>
@@ -2348,27 +2347,6 @@
       <row>
         <field>
           <dc-schema>dc</dc-schema>
-          <dc-element>identifier</dc-element>
-          <dc-qualifier>ark</dc-qualifier>
-          <label>ARK Identifier</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint>ARK id of the publication, if available</hint>
-        </field>
-        <field>
-          <dc-schema>datacite</dc-schema>
-          <dc-element>version</dc-element>
-          <label>Product version</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint>Example: 2.0</hint>
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>dc</dc-schema>
           <dc-element>title</dc-element>
           <label>Title</label>
           <input-type>onebox</input-type>
@@ -2519,27 +2497,6 @@
       <row>
         <field>
           <dc-schema>dc</dc-schema>
-          <dc-element>identifier</dc-element>
-          <dc-qualifier>ark</dc-qualifier>
-          <label>ARK Identifier</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint>ARK id of the publication, if available</hint>
-        </field>
-        <field>
-          <dc-schema>datacite</dc-schema>
-          <dc-element>version</dc-element>
-          <label>Product version</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint>Example: 2.0</hint>
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>dc</dc-schema>
           <dc-element>title</dc-element>
           <label>Title</label>
           <input-type>onebox</input-type>
@@ -2685,27 +2642,6 @@
           <repeatable>true</repeatable>
           <required />
           <hint>Enter a URL if the publication does not have a persistent identifier (Handle, DOI, ISBN, ISSN, PubMed, ISI-Number, SCP-Number).</hint>
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>dc</dc-schema>
-          <dc-element>identifier</dc-element>
-          <dc-qualifier>ark</dc-qualifier>
-          <label>ARK Identifier</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint>ARK id of the publication, if available</hint>
-        </field>
-        <field>
-          <dc-schema>datacite</dc-schema>
-          <dc-element>version</dc-element>
-          <label>Product version</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint>Example: 2.0</hint>
         </field>
       </row>
       <row>
@@ -6593,6 +6529,20 @@
           <vocabulary closed="true">ocde_subjects</vocabulary>
         </field>
       </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>type</dc-element>
+          <dc-qualifier>ciiu</dc-qualifier>
+          <label>Industrial Uniform Classification – CIIU</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>Applies on Main organizations</hint>
+          <type-bind>Institución principal</type-bind>
+          <vocabulary closed="true">peru_ciiu</vocabulary>
+        </field>
+      </row>
     </form>
     <form name="orgunit-concytec">
       <row>
@@ -6920,6 +6870,20 @@
           <required />
           <hint />
           <vocabulary closed="true">ocde_subjects</vocabulary>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>type</dc-element>
+          <dc-qualifier>ciiu</dc-qualifier>
+          <label>Industrial Uniform Classification – CIIU</label>
+          <input-type>onebox</input-type>
+          <repeatable>true</repeatable>
+          <required />
+          <hint>Applies on Main organizations</hint>
+          <type-bind>Institución principal</type-bind>
+          <vocabulary closed="true">peru_ciiu</vocabulary>
         </field>
       </row>
     </form>
@@ -12347,10 +12311,6 @@
       <pair>
         <displayed-value>Woman</displayed-value>
         <stored-value>f</stored-value>
-      </pair>
-      <pair>
-        <displayed-value>Unspecifiied</displayed-value>
-        <stored-value>n/a</stored-value>
       </pair>
     </value-pairs>
     <value-pairs value-pairs-name="orgunit_identifiers" dc-term="orgunit_identifiers">

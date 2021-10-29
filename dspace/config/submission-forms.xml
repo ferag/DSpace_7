@@ -2347,6 +2347,27 @@
       <row>
         <field>
           <dc-schema>dc</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>ark</dc-qualifier>
+          <label>ARK Identifier</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>ARK id of the publication, if available</hint>
+        </field>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>version</dc-element>
+          <label>Product version</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Example: 2.0</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
           <dc-element>title</dc-element>
           <label>Title</label>
           <input-type>onebox</input-type>
@@ -2497,6 +2518,27 @@
       <row>
         <field>
           <dc-schema>dc</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>ark</dc-qualifier>
+          <label>ARK Identifier</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>ARK id of the publication, if available</hint>
+        </field>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>version</dc-element>
+          <label>Product version</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Example: 2.0</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
           <dc-element>title</dc-element>
           <label>Title</label>
           <input-type>onebox</input-type>
@@ -2642,6 +2684,27 @@
           <repeatable>true</repeatable>
           <required />
           <hint>Enter a URL if the publication does not have a persistent identifier (Handle, DOI, ISBN, ISSN, PubMed, ISI-Number, SCP-Number).</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>ark</dc-qualifier>
+          <label>ARK Identifier</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>ARK id of the publication, if available</hint>
+        </field>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>version</dc-element>
+          <label>Product version</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Example: 2.0</hint>
         </field>
       </row>
       <row>

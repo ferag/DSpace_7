@@ -2356,6 +2356,27 @@ o “Caja de geolocalización”</hint>
       <row>
         <field>
           <dc-schema>dc</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>ark</dc-qualifier>
+          <label>Identificador ARK</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Id ARK de la publicación o producto, si lo hay.</hint>
+        </field>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>version</dc-element>
+          <label>Versión del producto</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Ejemplo: 2.0</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
           <dc-element>title</dc-element>
           <label>Título</label>
           <input-type>onebox</input-type>
@@ -2501,6 +2522,27 @@ o “Caja de geolocalización”</hint>
           <repeatable>true</repeatable>
           <required />
           <hint>Ingresar una URL excepcionalmente si la publicación no cuenta con un identificador persistente (Handle, DOI, ISBN, ISSN, PubMed, ISI-Number, SCP-Number)</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>ark</dc-qualifier>
+          <label>Identificador ARK</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Id ARK de la publicación o producto, si lo hay.</hint>
+        </field>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>version</dc-element>
+          <label>Versión del producto</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Ejemplo: 2.0</hint>
         </field>
       </row>
       <row>
@@ -2651,6 +2693,27 @@ o “Caja de geolocalización”</hint>
           <repeatable>true</repeatable>
           <required />
           <hint>Ingresar una URL excepcionalmente si la publicación no cuenta con un identificador persistente (Handle, DOI, ISBN, ISSN, PubMed, ISI-Number, SCP-Number)</hint>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>ark</dc-qualifier>
+          <label>Identificador ARK</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Id ARK de la publicación o producto, si lo hay.</hint>
+        </field>
+        <field>
+          <dc-schema>datacite</dc-schema>
+          <dc-element>version</dc-element>
+          <label>Versión del producto</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Ejemplo: 2.0</hint>
         </field>
       </row>
       <row>

@@ -120,6 +120,17 @@
         </property>
     </bean>
 
+    <!-- dspace.entity.type is exactly Publication or InstitutionPublication or CvPublication-->
+    <bean id="relationship-type-equals-orgunit_condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="dspace.entity.type" />
+                <entry key="pattern" value="^OrgUnit|InstitutionOrgUnit$" />
+            </map>
+        </property>
+    </bean>
+
     <!-- dspace.entity.type is exactly CvPerson -->
     <bean id="relationship-type-equals-cv-person_condition"
           class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
@@ -138,6 +149,17 @@
             <map>
                 <entry key="field" value="dspace.entity.type" />
                 <entry key="pattern" value="^Equipment|InstitutionEquipment$" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- dc.type is Institución principal  -->
+    <bean id="dc-type-main-institution_condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="dc.type" />
+                <entry key="pattern" value="^Institución principal$" />
             </map>
         </property>
     </bean>
@@ -492,6 +514,28 @@
             <map>
                 <entry key="field" value="perucris.type.usage" />
                 <entry key="authorityName" value="peru_type_usages" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has perucris.type.sectorInstitucional set -->
+    <bean id="has-ocde-institutional-sector-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.type.sectorInstitucional" />
+            </map>
+        </property>
+    </bean>
+
+
+
+    <bean id="has-juridical-nature-set_condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="perucris.type.naturaleza" />
+                <entry key="pattern" value="^Pública|Privada$" />
             </map>
         </property>
     </bean>
@@ -868,6 +912,50 @@
             </bean>
         </property>
     </bean>
+
+    <bean id="institutional-sector_filter" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="relationship-type-equals-orgunit_condition"/>
+                            </property>
+                        </bean>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="dc-type-main-institution_condition"/>
+                            </property>
+                        </bean>
+                        <ref bean="has-ocde-institutional-sector-set_condition" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="juridical-nature_filter" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="relationship-type-equals-orgunit_condition"/>
+                            </property>
+                        </bean>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="dc-type-main-institution_condition"/>
+                            </property>
+                        </bean>
+                        <ref bean="has-juridical-nature-set_condition" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
     <bean id="item-has-valid-geolocation_filter" class="org.dspace.content.logic.DefaultFilter">
         <property name="statement">
             <bean class="org.dspace.content.logic.operator.Or">
@@ -1031,7 +1119,7 @@
             <bean class="org.dspace.content.logic.operator.Or">
                 <property name="statements">
                     <list>
-                        <bean class="org.dspace.content.logic.operator.Not">
+                        <bean class="org.dspace.content.logic.operator.And">
                             <property name="statements">
                                 <ref bean="relationship-type-equals-project_condition"/>
                             </property>

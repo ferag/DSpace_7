@@ -34,10 +34,6 @@
            <list>
                <value>person.identifier.orcid</value>
                <value>perucris.identifier.dni</value>
-<!--               <value>perucris.identifier.dina</value>-->
-<!--               <value>perucris.identifier.renacyt</value>-->
-<!--               <value>person.identifier.scopus-author-id</value>-->
-<!--               <value>person.identifier.rid</value>-->
            </list>
         </property>
         <property name="filter" ref="person-has-at-least-one-id_filter"/>
@@ -127,15 +123,16 @@
         <property name="filter" ref="equipment-has-valid-usage-type_filter"/>
     </bean>
 
-    <bean name="higherEducationTypeFilterSet" class="org.dspace.validation.LogicalStatementValidator">
-        <property name="errorKey" value="error.validation.HigherEducationNotSet"/>
-        <property name="metadataFields">
-            <list>
-                <value>perucris.type.educacionSuperior</value>
-            </list>
-        </property>
-        <property name="filter" ref="higher-education-type_filter"/>
-    </bean>
+    <!-- FIXME: CHECK SUBMISSION FORM BEHAVIOUR CSTPER-874 -->
+<!--    <bean name="higherEducationTypeFilterSet" class="org.dspace.validation.LogicalStatementValidator">-->
+<!--        <property name="errorKey" value="error.validation.HigherEducationNotSet"/>-->
+<!--        <property name="metadataFields">-->
+<!--            <list>-->
+<!--                <value>perucris.type.educacionSuperior</value>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--        <property name="filter" ref="higher-education-type_filter"/>-->
+<!--    </bean>-->
 
 
     <bean name="peruvianHasUbigeoSet" class="org.dspace.validation.LogicalStatementValidator">
@@ -157,5 +154,27 @@
     </property>
     <property name="filter" ref="project-without-oa-mandate-requires-policy-url"/>
 </bean>
+
+    <!-- FIXME: CHECK SUBMISSION FORM BEHAVIOUR CSTPER-874 -->
+<!--    <bean name="institutionalSectorSet" class="org.dspace.validation.LogicalStatementValidator">-->
+<!--        <property name="errorKey" value="error.validation.institutionalSectorMandatory"/>-->
+<!--        <property name="metadataFields">-->
+<!--            <list>-->
+<!--                <value>perucris.type.sectorInstitucional</value>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--        <property name="filter" ref="institutional-sector_filter"/>-->
+<!--    </bean>-->
+
+    <!-- FIXME: CHECK SUBMISSION FORM BEHAVIOUR CSTPER-874 -->
+<!--    <bean name="juridicalNatureSet" class="org.dspace.validation.LogicalStatementValidator">-->
+<!--        <property name="errorKey" value="error.validation.juridicalNatureMandatory"/>-->
+<!--        <property name="metadataFields">-->
+<!--            <list>-->
+<!--                <value>perucris.type.naturaleza</value>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--        <property name="filter" ref="juridical-nature_filter"/>-->
+<!--    </bean>-->
 
 </beans>

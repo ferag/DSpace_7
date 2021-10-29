@@ -21,7 +21,6 @@
 			 <entry  key="perucris.project.typeOcde" value-ref= "ocdeProjectTypeTransformer"> </entry>
 			 <entry  key="perucris.project.typeOcde" value-ref= "ocdeProjectTypeTransformer"> </entry>
 			 <entry  key="dc.type" value-ref= "publicationTypeTransformer"> </entry>
-			 <entry  key="perucris.type.usage" value-ref= "typeUsageTransformer"> </entry>
 			</map>
 		</constructor-arg>
 	</bean>
@@ -41,10 +40,6 @@
 
     <bean id="ocdeProjectTypeTransformer" class="org.dspace.app.bulkedit.BulkImportURIControlledVocabularyValueTransformer">
         <property name="authorityName" value="ocde_project_type" />
-    </bean>
-
-    <bean id="typeUsageTransformer" class="org.dspace.app.bulkedit.BulkImportURIControlledVocabularyValueTransformer">
-        <property name="authorityName" value="peru_type_usages" />
     </bean>
 
     <bean id="publicationTypeTransformer" class="org.dspace.app.bulkedit.BulkImportURIControlledVocabularyValueTransformer">

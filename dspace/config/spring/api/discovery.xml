@@ -4436,7 +4436,7 @@
             queries done by discovery for this configuration -->
         <property name="defaultFilterQueries">
             <list>
-                <value>search.resourcetype:Item AND entityType_keyword:OrgUnit AND perucris.type.ipi:Si</value>
+                <value>search.resourcetype:Item AND entityType_keyword:OrgUnit AND perucris.orgunit.ipi:yes</value>
             </list>
         </property>
         <property name="defaultRpp" value="10"/>

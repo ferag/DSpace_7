@@ -48,7 +48,7 @@ public class BulkImportURIControlledVocabularyValueTransformer implements BulkIm
         Pattern pattern = Pattern.compile(PATTERN);
         Matcher matcher = pattern.matcher(metadataValue.getValue());
         if (matcher.matches()) {
-            return matcher.group(1);
+            return matcher.group(1).trim();
         }
         return StringUtils.EMPTY;
     }

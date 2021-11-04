@@ -135,6 +135,12 @@
                 <entry key="RELATION.CvPerson.equipments" value-ref="relationCvPersonEquipmentsConfiguration"/>
                 <entry key="RELATION.CvPerson.selectedequipments" value-ref="relationCvPersonSelectedEquipmentsConfiguration"/>
                 <entry key="RELATION.CvPerson.hrprofiles" value-ref="relationPersonCv2HRProfilesConfiguration"/>
+
+                <!-- CvProject Related items -->
+                <entry key="RELATION.CvProject.grants" value-ref="relationProjectFundingsConfiguration"/>
+                <entry key="RELATION.CvProject.researchoutputs" value-ref="relationProjectPublicationConfiguration"/>
+                <entry key="RELATION.CvProject.patents" value-ref="relationProjectPatentConfiguration"/>
+
                 <!-- ppp inverse relations -->
                 <entry key="RELATION.PoliticGoal.plans" value-ref="relationPoliticGoalPlans"/>
                 <entry key="RELATION.PoliticGoal.indicators" value-ref="relationPoliticGoalIndicators"/>
@@ -158,6 +164,7 @@
                 <entry key="RELATION.Program.projectprograms" value-ref="relationProgramProjectPrograms"/>
                 <entry key="RELATION.Program.projectfinancialinstruments" value-ref="relationProgramProjectFinancialInstruments"/>
                 <entry key="RELATION.Service.standards" value-ref="relationServiceStandards"/>
+                <entry key="RELATION.Component.programGoals" value-ref="relationComponentProgramGoals"/>
 
 
                 <entry key="RESUME.rprofiles" value-ref="person"/>
@@ -3370,6 +3377,48 @@
                 <value>search.resourcetype:Item</value>
                 <value>entityType_keyword:Standard</value>
                 <value>perucris.ppp.service_authority:{0}</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10" />
+        <property name="hitHighlightingConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration">
+                <property name="metadataFields">
+                    <list/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="relationComponentProgramGoals" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list/>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!-- <property name="tagCloudFacetConfiguration" ref="defaultTagCloudFacetConfiguration"/> -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list/>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>search.resourcetype:Item</value>
+                <value>entityType_keyword:ProgramGoal</value>
+                <value>perucris.ppp.component_authority:{0}</value>
             </list>
         </property>
         <!--Default result per page  -->

@@ -6795,7 +6795,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Es un Instituto Público de Investigación (IPI)</label>
           <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
-<!--          <readonly>all</readonly>-->
+          <readonly>all</readonly>
           <required />
           <hint />
         </field>
@@ -6806,7 +6806,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Es una entidad fnanciadora (funder)</label>
           <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
-<!--          <readonly>all</readonly>-->
+          <readonly>all</readonly>
           <required />
           <hint />
         </field>
@@ -9558,7 +9558,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
           <dc-qualifier>recommendations</dc-qualifier>
-          <label>Traducción realizada con la versión gratuita del traductor www.DeepL.com/Translator</label>
+          <label>Recomendaciones</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required>Ingresar Recomendaciones</required>

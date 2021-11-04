@@ -6780,7 +6780,7 @@
           <label>Is a Research Public Institution (IPI) ?</label>
           <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
-<!--          <readonly>all</readonly>-->
+          <readonly>all</readonly>
           <required />
           <hint />
         </field>
@@ -6791,7 +6791,7 @@
           <label>Is a funder entity ?</label>
           <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
-<!--          <readonly>all</readonly>-->
+          <readonly>all</readonly>
           <required />
           <hint />
         </field>

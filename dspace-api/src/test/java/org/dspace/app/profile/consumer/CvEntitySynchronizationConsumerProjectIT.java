@@ -9,6 +9,7 @@ package org.dspace.app.profile.consumer;
 
 import static org.dspace.app.matcher.MetadataValueMatcher.with;
 import static org.dspace.builder.RelationshipTypeBuilder.createRelationshipTypeBuilder;
+import static org.dspace.content.authority.Choices.CF_UNSET;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.CLONE;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.CORRECTION;
 import static org.dspace.xmlworkflow.ConcytecWorkflowRelation.SHADOW_COPY;
@@ -292,7 +293,8 @@ public class CvEntitySynchronizationConsumerProjectIT extends AbstractIntegratio
         assertThat(newProjectClone.isArchived(), is(false));
         assertThat(newProjectClone.getMetadata(), hasItem(with("dc.title", "Test Project")));
         assertThat(newProjectClone.getMetadata(), hasItem(with("oairecerif.acronym", "TP")));
-        assertThat(newProjectClone.getMetadata(), hasItem(with("crispj.coordinator", "White, Walter", 0, 400)));
+        assertThat(newProjectClone.getMetadata(), hasItem(with("crispj.coordinator", "White, Walter",
+            0, CF_UNSET)));
 
         List<XmlWorkflowItem> workflowItems = workflowItemService.findByCollection(context, projects);
         assertThat(workflowItems, hasSize(1));
@@ -300,7 +302,8 @@ public class CvEntitySynchronizationConsumerProjectIT extends AbstractIntegratio
         Item project = workflowItems.get(0).getItem();
         assertThat(project.getMetadata(), hasItem(with("dc.title", "Test Project")));
         assertThat(project.getMetadata(), hasItem(with("oairecerif.acronym", "TP")));
-        assertThat(project.getMetadata(), hasItem(with("crispj.coordinator", "White, Walter", 0, 400)));
+        assertThat(project.getMetadata(), hasItem(with("crispj.coordinator", "White, Walter",
+            0, CF_UNSET)));
 
         List<Relationship> shadowCopyRelations = findRelations(newProjectClone, shadowCopy);
         assertThat(shadowCopyRelations, hasSize(1));
@@ -361,7 +364,8 @@ public class CvEntitySynchronizationConsumerProjectIT extends AbstractIntegratio
         assertThat(cvProjectClone.isArchived(), is(false));
         assertThat(cvProjectClone.getMetadata(), hasItem(with("dc.title", "Test Project")));
         assertThat(cvProjectClone.getMetadata(), hasItem(with("oairecerif.acronym", "TP")));
-        assertThat(cvProjectClone.getMetadata(), hasItem(with("crispj.coordinator", "White, Walter", 0, 400)));
+        assertThat(cvProjectClone.getMetadata(), hasItem(with("crispj.coordinator", "White, Walter",
+            0, CF_UNSET)));
 
         List<XmlWorkflowItem> workflowItems = workflowItemService.findByCollection(context, projects);
         assertThat(workflowItems, hasSize(1));
@@ -369,7 +373,8 @@ public class CvEntitySynchronizationConsumerProjectIT extends AbstractIntegratio
         Item project = workflowItems.get(0).getItem();
         assertThat(project.getMetadata(), hasItem(with("dc.title", "Test Project")));
         assertThat(project.getMetadata(), hasItem(with("oairecerif.acronym", "TP")));
-        assertThat(project.getMetadata(), hasItem(with("crispj.coordinator", "White, Walter", 0, 400)));
+        assertThat(project.getMetadata(), hasItem(with("crispj.coordinator", "White, Walter",
+            0, CF_UNSET)));
 
         List<Relationship> shadowCopyRelations = findRelations(cvProjectClone, shadowCopy);
         assertThat(shadowCopyRelations, hasSize(1));
@@ -462,7 +467,8 @@ public class CvEntitySynchronizationConsumerProjectIT extends AbstractIntegratio
         assertThat(cloneCorrection.isArchived(), is(false));
         assertThat(cloneCorrection.getMetadata(), hasItem(with("dc.title", "Test Project")));
         assertThat(cloneCorrection.getMetadata(), hasItem(with("oairecerif.acronym", "TP")));
-        assertThat(cloneCorrection.getMetadata(), hasItem(with("crispj.coordinator", "White, Walter", 0, 400)));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("crispj.coordinator", "White, Walter",
+            0, CF_UNSET)));
 
         List<Relationship> projectCorrectionRelations = findRelations(project, isCorrectionOf);
         assertThat(projectCorrectionRelations, hasSize(1));
@@ -471,7 +477,8 @@ public class CvEntitySynchronizationConsumerProjectIT extends AbstractIntegratio
         assertThat(correction.isArchived(), is(false));
         assertThat(correction.getMetadata(), hasItem(with("dc.title", "Test Project")));
         assertThat(correction.getMetadata(), hasItem(with("oairecerif.acronym", "TP")));
-        assertThat(correction.getMetadata(), hasItem(with("crispj.coordinator", "White, Walter", 0, 400)));
+        assertThat(correction.getMetadata(), hasItem(with("crispj.coordinator", "White, Walter",
+            0, CF_UNSET)));
 
         removeMetadata(cvProject, "oairecerif", "acronym", null);
         cvProject = updateItem(cvProject);
@@ -494,7 +501,8 @@ public class CvEntitySynchronizationConsumerProjectIT extends AbstractIntegratio
         assertThat(cloneCorrection.isArchived(), is(false));
         assertThat(cloneCorrection.getMetadata(), hasItem(with("dc.title", "Test Project")));
         assertThat(cloneCorrection.getMetadata(), hasItem(not(with("oairecerif.acronym", "TP"))));
-        assertThat(cloneCorrection.getMetadata(), hasItem(with("crispj.coordinator", "White, Walter", 0, 400)));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("crispj.coordinator", "White, Walter",
+            0, CF_UNSET)));
 
         projectCorrectionRelations = findRelations(project, isCorrectionOf);
         assertThat(projectCorrectionRelations, hasSize(1));
@@ -503,7 +511,8 @@ public class CvEntitySynchronizationConsumerProjectIT extends AbstractIntegratio
         assertThat(correction.isArchived(), is(false));
         assertThat(correction.getMetadata(), hasItem(with("dc.title", "Test Project")));
         assertThat(correction.getMetadata(), hasItem(not(with("oairecerif.acronym", "TP"))));
-        assertThat(correction.getMetadata(), hasItem(with("crispj.coordinator", "White, Walter", 0, 400)));
+        assertThat(correction.getMetadata(), hasItem(with("crispj.coordinator", "White, Walter",
+            0, CF_UNSET)));
 
     }
 

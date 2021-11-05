@@ -708,8 +708,10 @@ public class SubmissionFormsControllerIT extends AbstractControllerIntegrationTe
                  .andExpect(status().isOk())
                  .andExpect(content().contentType(contentType))
                  .andExpect(
-                    jsonPath("$._embedded.submissionforms[0].id", is("institution-publication_bibliographic_details-dc-contributor-author")))
-                 .andExpect(jsonPath("$._embedded.submissionforms[1].id", is("institution-publication_bibliographic_details-dc-contributor-editor")))
+                    jsonPath("$._embedded.submissionforms[0].id",
+                        is("institution-publication_bibliographic_details-dc-contributor-author")))
+                 .andExpect(jsonPath("$._embedded.submissionforms[1].id",
+                     is("institution-publication_bibliographic_details-dc-contributor-editor")))
                  .andExpect(jsonPath("$._links.first.href", Matchers.allOf(
                          Matchers.containsString("/api/config/submissionforms?"),
                          Matchers.containsString("page=0"), Matchers.containsString("size=2"))))

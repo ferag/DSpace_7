@@ -58,6 +58,7 @@ import org.dspace.subscriptions.service.DSpaceObjectUpdates;
 import org.dspace.subscriptions.service.SubscriptionGenerator;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -123,6 +124,7 @@ public class SubscriptionsSendEmailNotificationIT extends AbstractControllerInte
 
     //verify that method that invokes mail send is called correctly for type content and frequence weekly
     @Test
+    @Ignore("feature not active")
     public void sendSubscriptionMailTypeContentWeekly() throws Exception {
         context.turnOffAuthorisationSystem();
         Community community = CommunityBuilder.createCommunity(context).build();
@@ -175,6 +177,7 @@ public class SubscriptionsSendEmailNotificationIT extends AbstractControllerInte
 
     //verify that method that invokes mail send is called correctly for type content and frequence weekly
     @Test
+    @Ignore("feature not active")
     public void sendSubscriptionMailTypeContentNoSubscription() throws Exception {
         context.turnOffAuthorisationSystem();
         Community community = CommunityBuilder.createCommunity(context).build();
@@ -217,6 +220,7 @@ public class SubscriptionsSendEmailNotificationIT extends AbstractControllerInte
     //verify that method that invokes mail send is called correctly for type
     // content and frequence weekly for two different users
     @Test
+    @Ignore("feature not active")
     public void sendSubscriptionMailTypeContentWeeklyForTwoPersons() throws Exception {
         context.turnOffAuthorisationSystem();
         Community community = CommunityBuilder.createCommunity(context).build();
@@ -272,6 +276,7 @@ public class SubscriptionsSendEmailNotificationIT extends AbstractControllerInte
 
     //verify that method that invokes mail send is called correctly for type content and frequence weekly
     @Test
+    @Ignore("feature not active")
     public void sendSubscriptionMailTypeContentMonthly() throws Exception {
         context.turnOffAuthorisationSystem();
         Community community = CommunityBuilder.createCommunity(context).build();
@@ -333,6 +338,7 @@ public class SubscriptionsSendEmailNotificationIT extends AbstractControllerInte
 
     //verify that method that invokes mail send is called correctly for type content and frequence weekly
     @Test
+    @Ignore("feature not active")
     public void sendSubscriptionMailTypeContentDaily() throws Exception {
         context.turnOffAuthorisationSystem();
         Community community = CommunityBuilder.createCommunity(context).build();
@@ -384,6 +390,7 @@ public class SubscriptionsSendEmailNotificationIT extends AbstractControllerInte
 
     //verify that method that invokes mail send is called correctly for type statistics and frequence monthly
     @Test
+    @Ignore("feature not active")
     public void sendSubscriptionMailTypeStatisticsWeekly() throws Exception {
         context.turnOffAuthorisationSystem();
         Community community = CommunityBuilder.createCommunity(context).build();
@@ -456,6 +463,7 @@ public class SubscriptionsSendEmailNotificationIT extends AbstractControllerInte
 
     //verify that method that invokes mail send is called correctly for type statistics and frequence monthly
     @Test
+    @Ignore("feature not active")
     public void sendSubscriptionMailTypeStatisticsMonthly() throws Exception {
         context.turnOffAuthorisationSystem();
         Community community = CommunityBuilder.createCommunity(context).build();
@@ -524,6 +532,7 @@ public class SubscriptionsSendEmailNotificationIT extends AbstractControllerInte
 
     //verify that method that invokes mail send is called correctly for type statistics and frequence monthly
     @Test
+    @Ignore("feature not active")
     public void sendSubscriptionMailTypeStatisticsDaily() throws Exception {
         context.turnOffAuthorisationSystem();
         Community community = CommunityBuilder.createCommunity(context).build();

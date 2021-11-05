@@ -209,7 +209,8 @@ public class DCInput {
         visibility = fieldMap.get("visibility");
         readOnly = fieldMap.get("readonly");
         vocabulary = fieldMap.get("vocabulary");
-        regex = fieldMap.get("regex");
+        regex = StringUtils.isBlank(fieldMap.get("regex")) ?
+            fieldMap.get("validation") : fieldMap.get("regex");
         String closedVocabularyStr = fieldMap.get("closedVocabulary");
         closedVocabulary = "true".equalsIgnoreCase(closedVocabularyStr)
             || "yes".equalsIgnoreCase(closedVocabularyStr);

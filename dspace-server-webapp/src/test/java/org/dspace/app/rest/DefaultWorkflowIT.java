@@ -135,6 +135,7 @@ public class DefaultWorkflowIT extends AbstractControllerIntegrationTest {
             .withFulltext("simple-article.pdf", "/local/path/simple-article.pdf", simpleArticle.getInputStream())
             .withIssueDate("2016-10-17")
             .withType("Controlled Vocabulary for Resource Type Genres::sound")
+            .withMetadata("oairecerif", "access", null, "OA")
             .grantLicense()
             .build();
 
@@ -203,6 +204,7 @@ public class DefaultWorkflowIT extends AbstractControllerIntegrationTest {
             .withFulltext("simple-article.pdf", "/local/path/simple-article.pdf", simpleArticle.getInputStream())
             .withIssueDate("2016-10-17")
             .withType("Controlled Vocabulary for Resource Type Genres::sound")
+            .withMetadata("oairecerif", "access", null, "OA")
             .grantLicense()
             .build();
 
@@ -271,6 +273,7 @@ public class DefaultWorkflowIT extends AbstractControllerIntegrationTest {
             .withFulltext("simple-article.pdf", "/local/path/simple-article.pdf", simpleArticle.getInputStream())
             .withIssueDate("2016-10-17")
             .withType("Controlled Vocabulary for Resource Type Genres::sound")
+            .withMetadata("oairecerif", "access", null, "OA")
             .grantLicense()
             .build();
 

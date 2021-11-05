@@ -708,8 +708,8 @@ public class SubmissionFormsControllerIT extends AbstractControllerIntegrationTe
                  .andExpect(status().isOk())
                  .andExpect(content().contentType(contentType))
                  .andExpect(
-                    jsonPath("$._embedded.submissionforms[0].id", is("publication_references")))
-                 .andExpect(jsonPath("$._embedded.submissionforms[1].id", is("patent_references")))
+                    jsonPath("$._embedded.submissionforms[0].id", is("institution-publication_bibliographic_details-dc-contributor-author")))
+                 .andExpect(jsonPath("$._embedded.submissionforms[1].id", is("institution-publication_bibliographic_details-dc-contributor-editor")))
                  .andExpect(jsonPath("$._links.first.href", Matchers.allOf(
                          Matchers.containsString("/api/config/submissionforms?"),
                          Matchers.containsString("page=0"), Matchers.containsString("size=2"))))
@@ -732,9 +732,9 @@ public class SubmissionFormsControllerIT extends AbstractControllerIntegrationTe
                  .param("page", "1"))
                  .andExpect(status().isOk())
                  .andExpect(content().contentType(contentType))
-                 .andExpect(jsonPath("$._embedded.submissionforms[0].id", is("cv-publication_references")))
+                 .andExpect(jsonPath("$._embedded.submissionforms[0].id", is("publication_references")))
                  .andExpect(jsonPath("$._embedded.submissionforms[1].id",
-                     is("publication_references-dc-relation-project")))
+                     is("patent_references")))
                  .andExpect(jsonPath("$._links.first.href", Matchers.allOf(
                          Matchers.containsString("/api/config/submissionforms?"),
                          Matchers.containsString("page=0"), Matchers.containsString("size=2"))))

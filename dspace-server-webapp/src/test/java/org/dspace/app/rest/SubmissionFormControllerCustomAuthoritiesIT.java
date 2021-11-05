@@ -182,14 +182,15 @@ public class SubmissionFormControllerCustomAuthoritiesIT extends AbstractControl
 
         String token = getAuthToken(admin.getEmail(), password);
 
-        getClient(token).perform(get("/api/config/submissionforms/institution-publication-dc-contributor-author"))
+        getClient(token).perform(
+            get("/api/config/submissionforms/institution-publication_bibliographic_details-dc-contributor-author"))
             //The status has to be 200 OK
             .andExpect(status().isOk())
             //We expect the content type to be "application/hal+json;charset=UTF-8"
             .andExpect(content().contentType(contentType))
             //Check that the JSON root matches the expected "sampleauthority" input forms
-            .andExpect(jsonPath("$.id", is("institution-publication-dc-contributor-author")))
-            .andExpect(jsonPath("$.name", is("institution-publication-dc-contributor-author")))
+            .andExpect(jsonPath("$.id", is("institution-publication_bibliographic_details-dc-contributor-author")))
+            .andExpect(jsonPath("$.name", is("institution-publication_bibliographic_details-dc-contributor-author")))
             .andExpect(jsonPath("$.type", is("submissionform")))
             .andExpect(jsonPath("$.rows[0].fields", contains(
                 SubmissionFormFieldMatcher.matchFormFieldDefinition("onebox", "Author",

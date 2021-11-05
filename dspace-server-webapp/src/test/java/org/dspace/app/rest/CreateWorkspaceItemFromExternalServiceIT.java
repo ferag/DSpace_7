@@ -46,7 +46,7 @@ import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.external.model.ExternalDataObject;
 import org.dspace.external.provider.impl.LiveImportDataProvider;
-import org.dspace.perucris.externalservices.CreateWorkspaceItemWithExternalSource;
+import org.dspace.script2externalservices.CreateWorkspaceItemWithExternalSource;
 import org.dspace.services.ConfigurationService;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.dspace.xmlworkflow.storedcomponents.service.CollectionRoleService;

@@ -38,6 +38,7 @@ import org.dspace.discovery.DiscoverResultIterator;
 import org.dspace.discovery.SearchServiceException;
 import org.dspace.discovery.indexobject.IndexableCollection;
 import org.dspace.discovery.indexobject.IndexableItem;
+import org.dspace.discovery.indexobject.IndexableWorkflowItem;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
@@ -316,6 +317,15 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
                     if (itemIterator.hasNext()) {
                         return true;
                     }
+                    itemIterator = findItemsByCollection(context, filter.toString(), IndexableItem.TYPE);
+                    if (itemIterator.hasNext()) {
+                        return true;
+                    }
+                    Iterator<Item> wItemIterator = findItemsByCollection(context, filter.toString(),
+                        IndexableWorkflowItem.TYPE);
+                    if (wItemIterator.hasNext()) {
+                        return true;
+                    }
                 } catch (SearchServiceException e) {
                     log.error(e.getMessage(), e);
                 }
@@ -362,6 +372,16 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
         return new DiscoverResultIterator<Item, UUID>(context, discoverQuery);
     }
 
+    private Iterator<Item> findItemsByCollection(Context context, String filter, String indexableObjType)
+        throws SQLException, SearchServiceException {
+        DiscoverQuery discoverQuery = new DiscoverQuery();
+        discoverQuery.setDSpaceObjectFilter(indexableObjType);
+        discoverQuery.setMaxResults(20);
+        discoverQuery.addFilterQueries(filter);
+        discoverQuery.addFilterQueries("location.coll:" + this.collection.getID());
+        return new DiscoverResultIterator<Item, UUID>(context, discoverQuery);
+    }
+
     private void setFilter(DiscoverQuery discoverQuery, String service) {
         if ("scopus".equals(service)) {
             discoverQuery.addFilterQueries("person.identifier.scopus-author-id:*");
@@ -388,7 +408,7 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
     private List<MetadataValueDTO> metadataList(Item item, String identifier) {
         return itemService.getMetadata(item, "person", "identifier", identifier, Item.ANY)
             .stream().sorted(Comparator.comparingInt(MetadataValue::getPlace))
-            .map(md -> new MetadataValueDTO("cris", "author", identifier, null,
+            .map(md -> new MetadataValueDTO("perucris", "author", identifier, null,
                 md.getValue()))
             .collect(Collectors.toList());
     }

@@ -25,7 +25,9 @@
       "dc_type" : "@dc.type@",
       "organization_identifier" : "@organization.identifier@",
       "perucris_type_orgunit" : "@perucris.type.orgunit@",
-      "perucris_type_ciiu" : "@perucris.type.ciiu@",
+      "perucris_type_ciiu" : [
+           "@perucris.type.ciiu@",
+        ],
       "perucris_type_naturaleza" : "@perucris.type.naturaleza@",
       "dc_title" : "@dc.title@",
       "organization_identifier_crossrefid" : "@organization.identifier.crossrefid@",

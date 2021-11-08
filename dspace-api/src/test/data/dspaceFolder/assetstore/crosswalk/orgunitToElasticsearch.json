@@ -25,7 +25,7 @@
       "dc_type" : "type-1",
       "organization_identifier" : "ID-01",
       "perucris_type_orgunit" : "Research group",
-      "perucris_type_ciiu" : "IND-CLASS",
+      "perucris_type_ciiu" : ["IND-CLASS"],
       "perucris_type_naturaleza" : "Public",
       "dc_title" : "Universidad Nacional de Trujillo",
       "organization_identifier_crossrefid" : "CRF-01",

@@ -83,12 +83,12 @@ public class DSpaceControlledVocabulary extends SelfNamedPlugin implements Hiera
 
     @Override
     public boolean isPublic() {
-    	return true;
+        return true;
     }
 
     @Override
     public boolean isScrollable() {
-    	return true;
+        return true;
     }
 
     @Override

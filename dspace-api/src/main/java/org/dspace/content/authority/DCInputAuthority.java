@@ -74,7 +74,7 @@ public class DCInputAuthority extends SelfNamedPlugin implements ChoiceAuthority
 
     @Override
     public boolean isPublic() {
-    	return true;
+        return true;
     }
 
     @Override

@@ -182,39 +182,17 @@
 			<license />
 			<provenance />
 		</collection>
-<!--		<collection>-->
-<!--			<name>SubComponentes Objetivo Especifico Programa</name>-->
-<!--			<entity-type>SubComponenteObjetivoEspecifico</entity-type>-->
-<!--			<submission-type>program-goal-subcomponent</submission-type>-->
-<!--			<description />-->
-<!--			<intro />-->
-<!--			<copyright />-->
-<!--			<sidebar />-->
-<!--			<license />-->
-<!--			<provenance />-->
-<!--		</collection>-->
-<!--		<collection>-->
-<!--			<name>Componentes Objetivo Especifico Programa</name>-->
-<!--			<entity-type>ComponenteObjetivoEspecifico</entity-type>-->
-<!--			<submission-type>program-goal-component</submission-type>-->
-<!--			<description />-->
-<!--			<intro />-->
-<!--			<copyright />-->
-<!--			<sidebar />-->
-<!--			<license />-->
-<!--			<provenance />-->
-<!--		</collection>-->
-<!--		<collection>-->
-<!--			<name>Documentos</name>-->
-<!--			<entity-type>Documento</entity-type>-->
-<!--			<submission-type>document</submission-type>-->
-<!--			<description />-->
-<!--			<intro />-->
-<!--			<copyright />-->
-<!--			<sidebar />-->
-<!--			<license />-->
-<!--			<provenance />-->
-<!--		</collection>-->
+		<collection>
+			<name>Componentes</name>
+			<entity-type>Component</entity-type>
+			<submission-type>component</submission-type>
+			<description />
+			<intro />
+			<copyright />
+			<sidebar />
+			<license />
+			<provenance />
+		</collection>
 	</community>
 </import_structure>
 

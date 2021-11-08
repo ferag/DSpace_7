@@ -42,6 +42,7 @@ import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
 import org.dspace.eperson.service.GroupService;
 import org.dspace.event.Event;
+import org.dspace.services.ConfigurationService;
 import org.dspace.util.UUIDUtils;
 import org.dspace.xmlworkflow.Role;
 import org.dspace.xmlworkflow.factory.XmlWorkflowFactory;
@@ -95,6 +96,9 @@ public class GroupServiceImpl extends DSpaceObjectServiceImpl<Group> implements 
     protected ClaimedTaskService claimedTaskService;
     @Autowired(required = true)
     protected XmlWorkflowFactory workflowFactory;
+
+    @Autowired(required = true)
+    protected ConfigurationService configurationService;
 
     protected GroupServiceImpl() {
         super();
@@ -249,6 +253,15 @@ public class GroupServiceImpl extends DSpaceObjectServiceImpl<Group> implements 
     @Override
     public boolean isMember(Context context, Group group) throws SQLException {
         return isMember(context, context.getCurrentUser(), group);
+    }
+
+    @Override
+    public boolean isMemberOfCTIVitaeGroup(Context context) throws SQLException {
+        String uuid = configurationService.getProperty("cti-vitae.group.id");
+        if (StringUtils.isBlank(uuid)) {
+            throw new RuntimeException("The 'cti-vitae.group.id' property has not been set for the cv group");
+        }
+        return this.isMember(context, this.find(context, UUID.fromString(uuid)));
     }
 
     @Override

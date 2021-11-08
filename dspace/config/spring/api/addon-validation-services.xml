@@ -155,26 +155,24 @@
     <property name="filter" ref="project-without-oa-mandate-requires-policy-url"/>
 </bean>
 
-    <!-- FIXME: CHECK SUBMISSION FORM BEHAVIOUR CSTPER-874 -->
-<!--    <bean name="institutionalSectorSet" class="org.dspace.validation.LogicalStatementValidator">-->
-<!--        <property name="errorKey" value="error.validation.institutionalSectorMandatory"/>-->
-<!--        <property name="metadataFields">-->
-<!--            <list>-->
-<!--                <value>perucris.type.sectorInstitucional</value>-->
-<!--            </list>-->
-<!--        </property>-->
-<!--        <property name="filter" ref="institutional-sector_filter"/>-->
-<!--    </bean>-->
+    <bean name="institutionalSectorSet" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.institutionalSectorMandatory"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.type.sectorInstitucional</value>
+            </list>
+        </property>
+        <property name="filter" ref="institutional-sector_filter"/>
+    </bean>
 
-    <!-- FIXME: CHECK SUBMISSION FORM BEHAVIOUR CSTPER-874 -->
-<!--    <bean name="juridicalNatureSet" class="org.dspace.validation.LogicalStatementValidator">-->
-<!--        <property name="errorKey" value="error.validation.juridicalNatureMandatory"/>-->
-<!--        <property name="metadataFields">-->
-<!--            <list>-->
-<!--                <value>perucris.type.naturaleza</value>-->
-<!--            </list>-->
-<!--        </property>-->
-<!--        <property name="filter" ref="juridical-nature_filter"/>-->
-<!--    </bean>-->
+    <bean name="juridicalNatureSet" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.juridicalNatureMandatory"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.type.naturaleza</value>
+            </list>
+        </property>
+        <property name="filter" ref="juridical-nature_filter"/>
+    </bean>
 
 </beans>

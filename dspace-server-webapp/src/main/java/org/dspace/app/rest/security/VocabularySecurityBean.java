@@ -35,7 +35,7 @@ public class VocabularySecurityBean {
      */
     public boolean isVocabularyPublic(String name) {
         ChoiceAuthority choiceAuthority = choiceAuthorityService.getChoiceAuthorityByAuthorityName(name);
-        return choiceAuthority.isPublic(); // configurationService.getBooleanProperty("authority." + name + ".public", false);
+        return choiceAuthority.isPublic();
     }
-    
+
 }

@@ -2407,7 +2407,7 @@
           <repeatable>false</repeatable>
           <required>You must select a resource type</required>
           <hint>Example: Artículo de revista científica.</hint>
-          <vocabulary closed="true">types</vocabulary>
+          <vocabulary closed="true">peru_publication_types</vocabulary>
         </field>
       </row>
       <row>
@@ -2578,7 +2578,7 @@
           <repeatable>false</repeatable>
           <required>You must select a resource type</required>
           <hint>Example: Artículo de revista científica.</hint>
-          <vocabulary closed="true">types</vocabulary>
+          <vocabulary closed="true">peru_publication_types</vocabulary>
         </field>
       </row>
       <row>
@@ -2749,7 +2749,7 @@
           <repeatable>false</repeatable>
           <required>You must select a resource type</required>
           <hint>Example: Artículo de revista científica.</hint>
-          <vocabulary closed="true">types</vocabulary>
+          <vocabulary closed="true">peru_publication_types</vocabulary>
         </field>
       </row>
       <row>
@@ -3795,7 +3795,7 @@
           <dc-element>relation</dc-element>
           <dc-qualifier>ispartofseries</dc-qualifier>
           <label>Source</label>
-          <input-type>series</input-type>
+          <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint>The source (another publication) where this publication appeared. For example: a journal article lists here the journal where it appeared.</hint>
@@ -3913,7 +3913,7 @@
           <dc-element>relation</dc-element>
           <dc-qualifier>ispartofseries</dc-qualifier>
           <label>Source</label>
-          <input-type>series</input-type>
+          <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint>The source (another publication) where this publication appeared. For example: a journal article lists here the journal where it appeared.</hint>
@@ -4031,7 +4031,7 @@
           <dc-element>relation</dc-element>
           <dc-qualifier>ispartofseries</dc-qualifier>
           <label>Source</label>
-          <input-type>series</input-type>
+          <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint>The source (another publication) where this publication appeared. For example: a journal article lists here the journal where it appeared.</hint>

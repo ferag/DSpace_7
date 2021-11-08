@@ -2416,7 +2416,7 @@ o “Caja de geolocalización”</hint>
           <repeatable>false</repeatable>
           <required>Debe seleccionar un tipo de recurso</required>
           <hint>Ejemplo: Artículo de revista científica.</hint>
-          <vocabulary closed="true">types</vocabulary>
+          <vocabulary closed="true">peru_publication_types</vocabulary>
         </field>
       </row>
       <row>
@@ -2547,7 +2547,7 @@ o “Caja de geolocalización”</hint>
       </row>
       <row>
         <field>
-          <dc-schema>dc"</dc-schema>
+          <dc-schema>dc</dc-schema>
           <dc-element>title</dc-element>
           <label>Título</label>
           <input-type>onebox</input-type>
@@ -2587,7 +2587,7 @@ o “Caja de geolocalización”</hint>
           <repeatable>false</repeatable>
           <required>Debe seleccionar un tipo de recurso</required>
           <hint>Ejemplo: Artículo de revista científica.</hint>
-          <vocabulary closed="true">types</vocabulary>
+          <vocabulary closed="true">peru_publication_types</vocabulary>
         </field>
       </row>
       <row>
@@ -2758,7 +2758,7 @@ o “Caja de geolocalización”</hint>
           <repeatable>false</repeatable>
           <required>Debe seleccionar un tipo de recurso</required>
           <hint>Ejemplo: Artículo de revista científica.</hint>
-          <vocabulary closed="true">types</vocabulary>
+          <vocabulary closed="true">peru_publication_types</vocabulary>
         </field>
       </row>
       <row>
@@ -3807,7 +3807,7 @@ ejemplo: el volumen de una revista.</hint>
           <dc-element>relation</dc-element>
           <dc-qualifier>ispartofseries</dc-qualifier>
           <label>Fuente</label>
-          <input-type>series</input-type>
+          <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint>La fuente (otra publicación) donde apareció esta publicación. Por ejemplo: un artículo de revista enumera aquí la revista donde apareció.</hint>
@@ -3925,7 +3925,7 @@ ejemplo: el volumen de una revista.</hint>
           <dc-element>relation</dc-element>
           <dc-qualifier>ispartofseries</dc-qualifier>
           <label>Fuente</label>
-          <input-type>series</input-type>
+          <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint>La fuente (otra publicación) donde apareció esta publicación. Por ejemplo: un artículo de revista enumera aquí la revista donde apareció.</hint>
@@ -4043,7 +4043,7 @@ ejemplo: el volumen de una revista.</hint>
           <dc-element>relation</dc-element>
           <dc-qualifier>ispartofseries</dc-qualifier>
           <label>Fuente</label>
-          <input-type>series</input-type>
+          <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint>La fuente (otra publicación) donde apareció esta publicación. Por ejemplo: un artículo de revista enumera aquí la revista donde apareció.</hint>

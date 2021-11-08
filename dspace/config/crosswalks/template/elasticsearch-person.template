@@ -2,16 +2,22 @@
     "oairecerif_person_gender" : "@oairecerif.person.gender@",
     "resourceId" : "@virtual.id@",
     "crisrp_name" : "@crisrp.name@",
-    "perucris_identifier_passport" : "@perucris.identifier.passport@",
-    "perucris_subject_ocde" : [
+    "perucris_identifier_passport" : [
+	   "@perucris.identifier.passport@",
+	],
+	"perucris_subject_ocde" : [
 	   "@perucris.subject.ocde@",
 	],
     "crisrp_education_start" : [
 	   "@crisrp.education.start@",
 	],
-    "dc_subject" : "@dc.subject@",
+	"dc_subject" : [
+	   "@dc.subject@",
+	],
     "perucris_ubigeo" : "@virtual.vocabulary.perucris-ubigeo.1@",
-    "perucris_identifier_immigrationCard" : "@perucris.identifier.immigrationCard@",
+    "perucris_identifier_immigrationCard" : [
+           "@perucris.identifier.immigrationCard@",
+        ],
     "perucris_address_streetAddress" : "@perucris.address.streetAddress@",
     "crisrp_education_role" : [
            "@crisrp.education.role@",
@@ -44,7 +50,9 @@
     "dc_title" : "@dc.title@",
     "crisrp_name_translated" : "@crisrp.name.translated@",
     "perucris_identifier_renacyt" : "@perucris.identifier.renacyt@",
-    "oairecerif_identifier_url" : "@oairecerif.identifier.url@",
+    "oairecerif_identifier_url" : [
+           "@oairecerif.identifier.url@",
+        ],
     "crisrp_education_end" : [
            "@crisrp.education.end@",
         ],
@@ -73,8 +81,12 @@
            "@crisrp_qualification_orgunit@",
         ],
     "crisrp_name_variant" : "@crisrp.name.variant@",
-    "person_email" : "@person_email@",
-    "perucris_subject_ins" : "@perucris.subject.ins@",
+    "person_email" : [
+           "@person_email@",
+        ],
+     "perucris_subject_ins" : [
+                "@perucris.subject.ins@",
+             ],
     "perucris_apellidoPaterno" : "@perucris.apellidoPaterno@",
     "perucris_identifier_dni" : "@perucris.identifier.dni@",
     "perucris_ubigeoRegionIso" : "@virtual.vocabulary2mapConverter.perucris-ubigeo.1_elasticsearchUbigeoRegion@",
@@ -93,11 +105,15 @@
     "person_identifier_scopus-author-id" : [
             "@person.identifier.scopus-author-id@",
         ],     
-    "perucris_phone" : "@perucris_phone@,
+    "perucris_phone" : [
+            "@perucris_phone@",
+        ],
     "oairecerif_affiliation_startDate" : [
             "@oairecerif.affiliation.startDate@",
         ],
     "perucris_apellidoCasada" : "@perucris_apellidoCasada@",
     "person_profile_type" : "@perucris.personProfile.type@",
-    "perucris_subject_minam" : "@perucris.subject.minam@"
+    "perucris_subject_minam" : [
+       "@perucris.subject.minam@",
+    ]
 }

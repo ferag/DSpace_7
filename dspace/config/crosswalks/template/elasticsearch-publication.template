@@ -1,7 +1,9 @@
 {
     "resourceId" : "@virtual.id@",
     "dc_relation_ispartof" : "@dc.relation.ispartof@",
-    "dc_relation_funding" : "@dc.relation.funding@",
+    "dc_relation_funding" : [
+                "@dc.relation.funding@",
+            ],
     "dc_contributor_authors" : [
            @group.dc-contributor-author.start@
            {
@@ -39,13 +41,17 @@
     "oairecerif_access" : "@oairecerif.access@",
     "oaire_citation_endPage" : "@oaire.citation.endPage@",
     "renati_type" : "@renati.type@",
-    "dc_subject_loc" : "@dc.subject.loc@",
+    "dc_subject_loc" : [
+        "@dc.subject.loc@",
+        ],
     "dc_type" : [
          "@dc.type@",
         ],
     "dc_relation_isbn" : "@dc.relation.isbn@",
     "dc_relation_dataset" : "@dc.relation.dataset@",
-    "dc_identifier_isbn" : "@dc.identifier.isbn@",
+    "dc_identifier_isbn" : [
+          "@dc.identifier.isbn@",
+     ],
     "dc_contributor_editors" : [
            @group.dc-contributor-editor.start@
            {
@@ -68,7 +74,9 @@
     "dc_subject_ocde_macrosector" : [
             "@virtual.vocabulary.perucris-subject-ocde.1@",
         ],
-    "perucris_advisor_orcid" : "@perucris.advisor.orcid@",
+    "perucris_advisor_orcid" : [
+            "@perucris.advisor.orcid@",
+        ],
     "perucris_author_orcid" : [
             "@perucris.author.orcid@",
         ],
@@ -85,16 +93,24 @@
     "dc_relation_grantno" : "@dc.relation.grantno@",
     "dc_identifier_isi" : "@dc.identifier.isi@",
     "dc_coverage_publication" : "@dc.coverage.publication@",
-    "dc_contributor_advisor" : "@dc.contributor.advisor@",
-    "dc_subject_ddc" : "@dc.subject.ddc@",
+    "dc_contributor_advisor" : [
+            "@dc.contributor.advisor@",
+        ],
+    "dc_subject_ddc" : [
+            "@dc.subject.ddc@",
+        ],
     "dc_rights_uri" : "@dc.rights.uri@",
     "dc_relation_ispartofseries" : "@dc.relation.ispartofseries@",
-    "dc_identifier_url" : "dc.identifier.url",
+    "dc_identifier_url" : [
+        "@dc.identifier.url@",
+        ],
     "thesis_degree_discipline" : "@thesis.degree.discipline@",
     "dc_description_abstract" : [
              "@dc.description.abstract@",
         ],
-    "dc_description_sponsorship" : "@dc.description.sponsorship@",
+    "dc_description_sponsorship" : [
+                "@dc.description.sponsorship@",
+            ],
     "renati_level" : "@renati.level@",
     "dc_subject_ocde" : "@dc.subject.ocde@",
     "dc_contributor_editor" : [
@@ -102,7 +118,9 @@
         ],
     "perucris_description_internalNote" : "@perucris.description.internalNote@",
     "dc_relation_publication" : "@dc.relation.publication@",
-    "dc_relation_conference" : "@dc.relation.conference@",
+    "dc_relation_conference" : [
+        "@dc.relation.conference@",
+        ],
     "oairecerif_editor_affiliation" : [
               "@oairecerif.editor.affiliation@",
         ],
@@ -110,7 +128,9 @@
               "@perucris.author.dni@",
         ],
     "dc_identifier_scopus" : "@dc.identifier.scopus@",
-    "renati_juror" : "@renati.juror@",
+    "renati_juror" : [
+        "@renati.juror@",
+    ],
     "dc_coverage_doi" : "@dc.coverage.doi@",
     "dc_date_issued" : "@virtual.date.dc-date-issued.yyyy-MM-dd@",
     "dc_subject_ocde_sector" : [

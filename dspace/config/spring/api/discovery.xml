@@ -906,6 +906,7 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>investigators_authority:{0} AND entityType_keyword:Project</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
         <!--Default result per page  -->
@@ -959,6 +960,7 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>investigators_authority:{0} AND entityType_keyword:InstitutionProject</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
         <!--Default result per page  -->
@@ -1043,6 +1045,7 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>author_authority:{0} AND entityType_keyword:Publication</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
         <!--Default result per page  -->
@@ -1113,6 +1116,7 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>author_authority:{0} AND entityType_keyword:InstitutionPublication</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
         <!--Default result per page  -->
@@ -1171,6 +1175,7 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>author_authority:{0} AND entityType_keyword:Patent</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
         <!--Default result per page  -->
@@ -1315,6 +1320,7 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>author_authority:{0} AND entityType_keyword:InstitutionPatent</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
         <!--Default result per page  -->
@@ -1375,6 +1381,7 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>'{'!join from=search.resourceid to=investigators_authority fromIndex=${solr.multicorePrefix}search'}'person.affiliation.name_authority:{0}</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
     </bean>
@@ -1421,6 +1428,7 @@
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
 <!--                <value>dc.description.sponsorship_authority:{0}</value>-->
                 <value>(dc.contributor.corporatename_authority:{0} OR dc.contributor.editorou_authority:{0})</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
     </bean>
@@ -1465,6 +1473,7 @@
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>'{'!join from=search.resourceid to=author_authority fromIndex=${solr.multicorePrefix}search'}'person.affiliation.name_authority:{0}</value>
                 <value>entityType_keyword:Publication</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
     </bean>
@@ -1509,6 +1518,7 @@
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>'{'!join from=search.resourceid to=author_authority fromIndex=${solr.multicorePrefix}search'}'person.affiliation.name_authority:{0}</value>
                 <value>entityType_keyword:InstitutionPublication</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
     </bean>
@@ -1533,6 +1543,7 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>person.affiliation.name_authority:{0}</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
     </bean>
@@ -1577,6 +1588,7 @@
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
 <!--                <value>crispj.organization_authority:{0} AND entityType_keyword:Project</value>-->
                 <value>projectOrgUnits_authority:{0} AND entityType_keyword:Project</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
     </bean>
@@ -1620,6 +1632,7 @@
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
 <!--                <value>crispj.organization_authority:{0} AND entityType_keyword:InstitutionProject</value>-->
                 <value>(crispj.organization_authority:{0} OR crispj.contractorou_authority:{0} ) AND entityType_keyword:InstitutionProject</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
     </bean>
@@ -1643,6 +1656,7 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>organization.parentOrganization_authority:{0}</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
     </bean>
@@ -1668,6 +1682,7 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>dc.relation.project_authority:{0} AND entityType_keyword:Project</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
     </bean>
@@ -1693,6 +1708,7 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>dc.relation.project_authority:{0} AND entityType_keyword:Funding</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
     </bean>
@@ -1716,6 +1732,7 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>dc.relation.project_authority:{0} AND entityType_keyword:InstitutionFunding</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
     </bean>
@@ -1762,6 +1779,7 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>dc.relation.project_authority:{0} AND entityType_keyword:Publication</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
     </bean>
@@ -1806,6 +1824,7 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>dc.relation.project_authority:{0} AND entityType_keyword:InstitutionPublication</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
     </bean>
@@ -1849,6 +1868,7 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>dc.relation.project_authority:{0} AND entityType_keyword:Patent</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
     </bean>
@@ -1880,6 +1900,7 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>dc.relation.patent_authority:{0} AND entityType_keyword:Patent</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
     </bean>
@@ -1911,6 +1932,7 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>dc.relation.patent_authority:{0} AND entityType_keyword:InstitutionPatent</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
     </bean>
@@ -1954,6 +1976,7 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>dc.relation.project_authority:{0} AND entityType_keyword:InstitutionPatent</value>
+                <value>search.resourcetype:Item</value>
             </list>
         </property>
     </bean>

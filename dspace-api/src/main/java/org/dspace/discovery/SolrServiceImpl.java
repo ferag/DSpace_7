@@ -1543,6 +1543,7 @@ public class SolrServiceImpl implements SearchService, IndexingService {
         Optional<String> id = findUniqueId(metric);
         if (id.isEmpty()) {
             log.warn("Unable to define unique id for item {}", metric.getResource().getID());
+            return;
         }
         try {
             SolrInputDocument solrInDoc = new SolrInputDocument();

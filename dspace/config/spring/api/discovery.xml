@@ -4469,12 +4469,24 @@
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
                 <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
-                <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
-            <list/>
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationPeruCrisSector"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationSuneduClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+            </list>
         </property>
         <!--The sort filters for the discovery search-->
         <property name="searchSortConfiguration">
@@ -4516,12 +4528,24 @@
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
                 <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
-                <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
-            <list/>
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationPeruCrisSector"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationSuneduClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+            </list>
         </property>
         <!--The sort filters for the discovery search-->
         <property name="searchSortConfiguration">
@@ -4566,7 +4590,20 @@
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
-            <list/>
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationPeruCrisSector"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationSuneduClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+            </list>
         </property>
         <!--The sort filters for the discovery search-->
         <property name="searchSortConfiguration">
@@ -4608,12 +4645,24 @@
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
                 <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
-                <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
-            <list/>
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationPeruCrisSector"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationSuneduClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+            </list>
         </property>
         <!--The sort filters for the discovery search-->
         <property name="searchSortConfiguration">
@@ -4655,12 +4704,24 @@
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
                 <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
-                <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
-            <list/>
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationPeruCrisSector"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationSuneduClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+            </list>
         </property>
         <!--The sort filters for the discovery search-->
         <property name="searchSortConfiguration">
@@ -4702,12 +4763,24 @@
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
                 <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
-                <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
-            <list/>
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationPeruCrisSector"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationSuneduClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+            </list>
         </property>
         <!--The sort filters for the discovery search-->
         <property name="searchSortConfiguration">
@@ -4749,12 +4822,24 @@
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
                 <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
-                <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
-            <list/>
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationPeruCrisSector"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationSuneduClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+            </list>
         </property>
         <!--The sort filters for the discovery search-->
         <property name="searchSortConfiguration">
@@ -4801,7 +4886,20 @@
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
-            <list/>
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationPeruCrisSector"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationSuneduClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+            </list>
         </property>
         <!--The sort filters for the discovery search-->
         <property name="searchSortConfiguration">

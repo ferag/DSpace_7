@@ -10019,7 +10019,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required>Ingresar un Horizonte de Ejecución</required>
           <hint>Del – al años</hint>
-          <regex>^[0-9]{0,4}$</regex>
         </field>
       </row>
       <row>

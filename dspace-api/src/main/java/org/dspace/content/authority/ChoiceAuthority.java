@@ -31,7 +31,6 @@ public interface ChoiceAuthority extends NameAwarePlugin {
     public default boolean isPublic() {
         ConfigurationService configurationService = DSpaceServicesFactory.getInstance().getConfigurationService();
         String authorityName = getPluginInstanceName();
-        System.out.println("AUTH NAME = " + authorityName);
         return configurationService.getBooleanProperty("authority." + authorityName + ".public");
     }
 

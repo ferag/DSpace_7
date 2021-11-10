@@ -180,6 +180,7 @@
                 <entry key="RESUME.orgunit.enterprises" value-ref="resumeOrgunitEnterprises"/>
                 <entry key="RESUME.orgunit.cti_funders" value-ref="resumeOrgunitCtiFunders"/>
                 <entry key="RESUME.orgunit.renacyt_centres" value-ref="resumeOrgunitRenacytCentres"/>
+
                 <!-- Notification Related items -->
                 <entry key="RELATION.CvPerson.notifications" value-ref="relationCvPersonToNotificationConfiguration"/>
                 <entry key="RELATION.CvPerson.hiddennotifications" value-ref="relationCvPersonToHiddenNotificationConfiguration"/>
@@ -4455,7 +4456,21 @@
         <property name="indexAlways" value="true"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
-            <list/>
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationPeruCrisSector"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationSuneduClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+                <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
+            </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
@@ -4488,7 +4503,21 @@
         <property name="indexAlways" value="true"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
-            <list/>
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationPeruCrisSector"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationSuneduClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+                <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
+            </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
@@ -4521,7 +4550,19 @@
         <property name="indexAlways" value="true"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
-            <list/>
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationPeruCrisSector"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationSuneduClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+            </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
@@ -4541,7 +4582,7 @@
             queries done by discovery for this configuration -->
         <property name="defaultFilterQueries">
             <list>
-                <value>search.resourcetype:Item AND entityType_keyword:OrgUnit AND perucris.type.orgunit:Research or innovation unit</value>
+                    <value>search.resourcetype:Item AND entityType_keyword:OrgUnit AND (perucris.type.orgunit:("Research or innovation unit" OR "Unidad de investigación o innovación"))</value>
             </list>
         </property>
         <property name="defaultRpp" value="10"/>
@@ -4554,7 +4595,21 @@
         <property name="indexAlways" value="true"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
-            <list/>
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationPeruCrisSector"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationSuneduClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+                <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
+            </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
@@ -4574,7 +4629,7 @@
             queries done by discovery for this configuration -->
         <property name="defaultFilterQueries">
             <list>
-                <value>search.resourcetype:Item AND entityType_keyword:OrgUnit AND perucris.type.orgunit:Research group</value>
+                <value>search.resourcetype:Item AND entityType_keyword:OrgUnit AND perucris.type.orgunit:("Research group" OR "Grupo de investigación")</value>
             </list>
         </property>
         <property name="defaultRpp" value="10"/>
@@ -4587,7 +4642,21 @@
         <property name="indexAlways" value="true"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
-            <list/>
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationPeruCrisSector"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationSuneduClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+                <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
+            </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
@@ -4607,7 +4676,7 @@
             queries done by discovery for this configuration -->
         <property name="defaultFilterQueries">
             <list>
-                <value>search.resourcetype:Item AND entityType_keyword:OrgUnit AND perucris.type.orgunit:Research line</value>
+                <value>search.resourcetype:Item AND entityType_keyword:OrgUnit AND perucris.type.orgunit:("Research line" OR "Línea de investigación")</value>
             </list>
         </property>
         <property name="defaultRpp" value="10"/>
@@ -4620,7 +4689,21 @@
         <property name="indexAlways" value="true"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
-            <list/>
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationPeruCrisSector"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationSuneduClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+                <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
+            </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
@@ -4640,8 +4723,7 @@
             queries done by discovery for this configuration -->
         <property name="defaultFilterQueries">
             <list>
-                <value>search.resourcetype:Item AND entityType_keyword:OrgUnit AND
-                    (perucris.type.sectorInstitucional:Empresa OR perucris.type.sectorInstitucional:Company)</value>
+                <value>search.resourcetype:Item AND entityType_keyword:OrgUnit AND perucris.type.sectorInstitucional:(Empresa OR Company)</value>
             </list>
         </property>
         <property name="defaultRpp" value="10"/>
@@ -4654,7 +4736,21 @@
         <property name="indexAlways" value="true"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
-            <list/>
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationPeruCrisSector"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationSuneduClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+                <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
+            </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
@@ -4674,7 +4770,7 @@
             queries done by discovery for this configuration -->
         <property name="defaultFilterQueries">
             <list>
-                <value>search.resourcetype:Item AND entityType_keyword:OrgUnit AND perucris.type.funder:Si</value>
+                <value>search.resourcetype:Item AND entityType_keyword:OrgUnit AND perucris.type.funder:(Si OR Yes)</value>
             </list>
         </property>
         <property name="defaultRpp" value="10"/>
@@ -4687,7 +4783,21 @@
         <property name="indexAlways" value="true"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
-            <list/>
+            <list>
+                <ref bean="graphPublicationByType" />
+                <ref bean="graphPublicationByDate" />
+
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterOrganizationPeruCrisSector"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationSuneduClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+                <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
+            </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">

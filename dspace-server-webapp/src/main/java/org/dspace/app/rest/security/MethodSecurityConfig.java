@@ -9,9 +9,9 @@ package org.dspace.app.rest.security;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.security.access.PermissionEvaluator;
@@ -20,12 +20,23 @@ import org.springframework.security.access.expression.method.MethodSecurityExpre
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 
+/**
+ * Extension of {@link GlobalMethodSecurityConfiguration} that allow to override
+ * the {@link DefaultMethodSecurityExpressionHandler} standard configuration to
+ * set a specific ParameterNameDiscoverer. This customization is done to avoid
+ * Spring to use the {@link AnnotationParameterNameDiscoverer} when resolving
+ * parameters of under security methods for performance reasons. For this reason
+ * it is not possible to use the {@link P} and {@link Param} annotations to
+ * indicate the name of the parameters referenced in the methods.
+ *
+ * @author Luca Giamminonni (luca.giamminonni at 4science.it)
+ */
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 
     @Autowired
-    private BeanFactory context;
+    private ApplicationContext context;
 
     private DefaultMethodSecurityExpressionHandler expressionHandler;
 
@@ -33,15 +44,16 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
     protected MethodSecurityExpressionHandler createExpressionHandler() {
         this.expressionHandler = new DefaultMethodSecurityExpressionHandler();
         this.expressionHandler.setParameterNameDiscoverer(new LocalVariableTableParameterNameDiscoverer());
+        this.expressionHandler.setApplicationContext(context);
         return expressionHandler;
     }
 
     @Override
     public void afterSingletonsInstantiated() {
-        getSingleBeanOrNull(PermissionEvaluator.class).ifPresent(this.expressionHandler::setPermissionEvaluator);
+        getSingleBean(PermissionEvaluator.class).ifPresent(this.expressionHandler::setPermissionEvaluator);
     }
 
-    private <T> Optional<T> getSingleBeanOrNull(Class<T> type) {
+    private <T> Optional<T> getSingleBean(Class<T> type) {
         try {
             return Optional.of(context.getBean(type));
         } catch (NoSuchBeanDefinitionException e) {

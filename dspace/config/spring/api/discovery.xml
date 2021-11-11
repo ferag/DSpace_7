@@ -38,7 +38,7 @@
     <bean id="solrServiceIndexCtiVitaeDirectorioRelationshipsPlugin" class="org.dspace.discovery.SolrServiceIndexCtiVitaeDirectorioRelationshipsPlugin"/>
     <bean id="solrServiceHiddenRelationsRestrictionPlugin" class="org.dspace.discovery.SolrServiceHiddenRelationsRestrictionPlugin"/>
     <bean id="solrServiceMetricsIndexPlugin" class="org.dspace.discovery.SolrServiceMetricsIndexPlugin"/>
-    <bean id="solrServiceCrisValuePairsIndexPlugin" class="org.dspace.discovery.CrisValuePairsIndexPlugin"/>
+    <bean id="solrServiceCrisValuePairsIndexPlugin" class="org.dspace.discovery.SolrServiceValuePairsIndexPlugin"/>
 
     <bean id="solrServiceInstitutionWorkflowFilterPlugin" class="org.dspace.discovery.SolrServiceInstitutionWorkflowFilterPlugin"/>
 

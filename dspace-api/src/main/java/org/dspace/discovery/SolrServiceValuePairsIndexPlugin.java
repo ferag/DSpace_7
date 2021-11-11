@@ -1,0 +1,182 @@
+/**
+ * The contents of this file are subject to the license and copyright
+ * detailed in the LICENSE and NOTICE files at the root of the source
+ * tree and available online at
+ *
+ * http://www.dspace.org/license/
+ */
+package org.dspace.discovery;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.dspace.discovery.SearchUtils.AUTHORITY_SEPARATOR;
+import static org.dspace.discovery.SearchUtils.FILTER_SEPARATOR;
+
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.annotation.PostConstruct;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.solr.common.SolrInputDocument;
+import org.dspace.app.util.DCInput;
+import org.dspace.app.util.DCInputSet;
+import org.dspace.app.util.DCInputsReader;
+import org.dspace.app.util.DCInputsReaderException;
+import org.dspace.content.Collection;
+import org.dspace.content.Item;
+import org.dspace.content.MetadataValue;
+import org.dspace.content.service.ItemService;
+import org.dspace.core.Context;
+import org.dspace.core.I18nUtil;
+import org.dspace.core.exception.SQLRuntimeException;
+import org.dspace.discovery.configuration.DiscoveryConfiguration;
+import org.dspace.discovery.configuration.DiscoverySearchFilter;
+import org.dspace.discovery.indexobject.IndexableItem;
+import org.dspace.services.ConfigurationService;
+import org.springframework.beans.factory.annotation.Autowired;
+
+/**
+ * Implementation of {@link SolrServiceIndexPlugin} to add indexes for value
+ * pairs.
+ *
+ * @author Luca Giamminonni (luca.giamminonni at 4science.it)
+ *
+ */
+public class SolrServiceValuePairsIndexPlugin implements SolrServiceIndexPlugin {
+
+    private Map<String, DCInputsReader> dcInputsReaders = new HashMap<>();
+
+    private String separator;
+
+    @Autowired
+    private ItemService itemService;
+
+    @Autowired
+    private ConfigurationService configurationService;
+
+    @PostConstruct
+    public void setup() throws DCInputsReaderException {
+        separator = configurationService.getProperty("discovery.solr.facets.split.char", FILTER_SEPARATOR);
+        for (Locale locale : I18nUtil.getSupportedLocales()) {
+            dcInputsReaders.put(locale.getLanguage(), new DCInputsReader(I18nUtil.getInputFormsFileName(locale)));
+        }
+    }
+
+    @Override
+    @SuppressWarnings("rawtypes")
+    public void additionalIndex(Context context, IndexableObject object, SolrInputDocument document) {
+
+        if (isNotIndexableItem(object)) {
+            return;
+        }
+
+        Item item = ((IndexableItem)object).getIndexedObject();
+
+        for (String language : dcInputsReaders.keySet()) {
+            List<DCInput> dropdownInputs = getAllDropdownInputs(context, language, item);
+            for (DCInput dropdownInput : dropdownInputs) {
+                additionalIndex(dropdownInput, item, language, document);
+            }
+        }
+
+    }
+
+    private void additionalIndex(DCInput dropdownInput, Item item, String language, SolrInputDocument document) {
+
+        String metadataField = dropdownInput.getFieldName();
+        List<DiscoverySearchFilter> searchFilters = findSearchFiltersByMetadataField(item, metadataField);
+        List<MetadataValue> metadataValues = itemService.getMetadataByMetadataString(item, metadataField);
+
+        for (MetadataValue metadataValue : metadataValues) {
+
+            String value = getDisplayValue(dropdownInput, metadataValue);
+            String authority = metadataValue.getAuthority();
+
+            for (DiscoverySearchFilter searchFilter : searchFilters) {
+                addDiscoveryFieldFields(language, document, value, authority, searchFilter);
+            }
+
+        }
+
+    }
+
+    private void addDiscoveryFieldFields(String language, SolrInputDocument document, String value, String authority,
+        DiscoverySearchFilter searchFilter) {
+
+        String fieldName = searchFilter.getIndexFieldName();
+        String valueLowerCase = value.toLowerCase();
+
+        String keywordField = appendAuthorityIfNotBlank(value, authority);
+        String acidField = appendAuthorityIfNotBlank(valueLowerCase + separator + value, authority);
+        String filterField = appendAuthorityIfNotBlank(valueLowerCase + separator + value, authority);
+
+        document.addField(language + "_" + fieldName + "_keyword", keywordField);
+        document.addField(language + "_" + fieldName + "_acid", acidField);
+        document.addField(language + "_" + fieldName + "_filter", filterField);
+        document.addField(language + "_" + fieldName + "_ac", valueLowerCase + separator + value);
+        if (!document.containsKey(fieldName + "_authority")) {
+            document.addField(fieldName + "_authority", authority);
+        }
+
+    }
+
+    private String appendAuthorityIfNotBlank(String fieldValue, String authority) {
+        return isNotBlank(authority) ? fieldValue + AUTHORITY_SEPARATOR + authority : fieldValue;
+    }
+
+    private List<DiscoverySearchFilter> findSearchFiltersByMetadataField(Item item, String metadataField) {
+        return getAllDiscoveryConfiguration(item).stream()
+            .flatMap(discoveryConfiguration -> discoveryConfiguration.getSearchFilters().stream())
+            .filter(searchFilter -> searchFilter.getMetadataFields().contains(metadataField))
+            .distinct()
+            .collect(Collectors.toList());
+    }
+
+    private List<DiscoveryConfiguration> getAllDiscoveryConfiguration(Item item) {
+        try {
+            return SearchUtils.getAllDiscoveryConfigurations(item);
+        } catch (SQLException e) {
+            throw new SQLRuntimeException(e);
+        }
+    }
+
+    private String getDisplayValue(DCInput dropdownInput, MetadataValue metadataValue) {
+        String displayValue = dropdownInput.getDisplayString(metadataValue.getValue());
+        if (StringUtils.isEmpty(displayValue)) {
+            displayValue = metadataValue.getValue();
+        }
+        return displayValue;
+    }
+
+    private List<DCInput> getAllDropdownInputs(Context context, String language, Item item) {
+        return getInputs(context, language, item).stream()
+            .flatMap(this::getAllDCInput)
+            .filter(DCInput::isDropDown)
+            .collect(Collectors.toList());
+    }
+
+    private List<DCInputSet> getInputs(Context context, String language, Item item) {
+        try {
+            Collection collection = (Collection) itemService.getParentObject(context, item);
+            return dcInputsReaders.get(language).getInputsByCollection(collection);
+        } catch (DCInputsReaderException | SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Stream<DCInput> getAllDCInput(DCInputSet dcInputSet) {
+        return Arrays.stream(dcInputSet.getFields())
+            .flatMap(dcInputs -> Arrays.stream(dcInputs));
+    }
+
+    @SuppressWarnings("rawtypes")
+    private boolean isNotIndexableItem(IndexableObject object) {
+        return !(object instanceof IndexableItem);
+    }
+
+}

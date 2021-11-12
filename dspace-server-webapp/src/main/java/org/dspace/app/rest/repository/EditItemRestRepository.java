@@ -304,7 +304,7 @@ public class EditItemRestRepository extends DSpaceRestRepository<EditItemRest, S
 
         List<ValidationError> errors = validationService.validate(context, source);
         if (CollectionUtils.isNotEmpty(errors)) {
-            throw new UnprocessableEntityException("Mandatory fields must be compile!");
+            throw new UnprocessableEntityException("Mandatory fields must be compiled!");
         }
 
         eis.update(context, source);

@@ -51,7 +51,6 @@ public class DiscoveryRestControllerMultiLanguageIT extends AbstractControllerIn
         context.turnOffAuthorisationSystem();
 
         String[] supportedLanguage = { "it", "uk" };
-        configurationService.setProperty("default.locale", "it");
         configurationService.setProperty("webui.supported.locales", supportedLanguage);
         solrServiceValuePairsIndexPlugin.setup();
 
@@ -128,6 +127,19 @@ public class DiscoveryRestControllerMultiLanguageIT extends AbstractControllerIn
             .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.hasItem(
                 SearchResultMatcher.match("core", "item", "items"))));
 
+        getClient().perform(get("/api/discover/search/objects")
+            .param("sort", "dc.date.accessioned, ASC")
+            .param("f.language", "Italiano,equals")
+            .header("Accept-Language", Locale.ITALIAN.getLanguage()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.type", is("discover")))
+            .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.hasItem(
+                SearchResultMatcher.matchOnItemName("item", "items", item1.getName()))))
+            .andExpect(jsonPath("$._embedded.searchResult.page", is(
+                PageMatcher.pageEntryWithTotalPagesAndElements(0, 20, 1, 1))))
+            .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.hasItem(
+                SearchResultMatcher.match("core", "item", "items"))));
+
     }
 
     @Test
@@ -135,7 +147,6 @@ public class DiscoveryRestControllerMultiLanguageIT extends AbstractControllerIn
         context.turnOffAuthorisationSystem();
 
         String[] supportedLanguage = { "it", "uk" };
-        configurationService.setProperty("default.locale", "it");
         configurationService.setProperty("webui.supported.locales", supportedLanguage);
         solrServiceValuePairsIndexPlugin.setup();
 
@@ -194,7 +205,6 @@ public class DiscoveryRestControllerMultiLanguageIT extends AbstractControllerIn
         context.turnOffAuthorisationSystem();
 
         String[] supportedLanguage = { "it", "uk" };
-        configurationService.setProperty("default.locale", "it");
         configurationService.setProperty("webui.supported.locales", supportedLanguage);
         solrServiceValuePairsIndexPlugin.setup();
 
@@ -227,7 +237,7 @@ public class DiscoveryRestControllerMultiLanguageIT extends AbstractControllerIn
 
         getClient().perform(get("/api/discover/facets/language")
             .header("Accept-Language", Locale.ITALIAN.getLanguage())
-            .param("prefix", "Ucra"))
+            .param("prefix", "ucra"))
             .andExpect(jsonPath("$.type", is("discover")))
             .andExpect(jsonPath("$.name", is("language")))
             .andExpect(jsonPath("$.facetType", is("text")))

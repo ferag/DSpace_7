@@ -416,8 +416,13 @@ public class DiscoverQueryBuilder implements InitializingBean {
                     throw new DSpaceBadRequestException(searchFilter.getName() + " is not a valid search filter");
                 }
 
+                String field = filter.getIndexFieldName();
+                if (filter instanceof MultiLanguageDiscoverSearchFilterFacet) {
+                    field = context.getCurrentLocale().getLanguage() + "_" + field;
+                }
+
                 DiscoverFilterQuery filterQuery = searchService.toFilterQuery(context,
-                                                                              filter.getIndexFieldName(),
+                                                                              field,
                                                                               searchFilter.getOperator(),
                                                                               searchFilter.getValue(),
                                                                               discoveryConfiguration);

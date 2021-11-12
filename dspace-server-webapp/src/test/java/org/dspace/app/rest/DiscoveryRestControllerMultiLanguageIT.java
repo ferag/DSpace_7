@@ -143,6 +143,66 @@ public class DiscoveryRestControllerMultiLanguageIT extends AbstractControllerIn
     }
 
     @Test
+    public void discoverSearchByLanguageQueryTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        String[] supportedLanguage = { "it", "uk" };
+        configurationService.setProperty("webui.supported.locales", supportedLanguage);
+        solrServiceValuePairsIndexPlugin.setup();
+
+        parentCommunity = CommunityBuilder.createCommunity(context)
+            .withName("Parent Community")
+            .build();
+
+        Collection col1 = CollectionBuilder.createCollection(context, parentCommunity, "123456789/language-test-1")
+            .withName("Collection 1")
+            .withEntityType("Publication")
+            .build();
+
+        Item item1 = ItemBuilder.createItem(context, col1)
+            .withTitle("Test 1")
+            .withIssueDate("2010-10-17")
+            .withAuthor("Testing, Works")
+            .withLanguage("it")
+            .build();
+
+        Item item2 = ItemBuilder.createItem(context, col1)
+            .withTitle("Test 2")
+            .withIssueDate("2010-10-17")
+            .withAuthor("Testing, Works")
+            .withLanguage("uk")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        getClient().perform(get("/api/discover/search/objects")
+            .param("sort", "dc.date.accessioned, ASC")
+            .param("query", "language:(Український)"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.type", is("discover")))
+            .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.hasItem(
+                SearchResultMatcher.matchOnItemName("item", "items", item2.getName()))))
+            .andExpect(jsonPath("$._embedded.searchResult.page", is(
+                PageMatcher.pageEntryWithTotalPagesAndElements(0, 20, 1, 1))))
+            .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.hasItem(
+                SearchResultMatcher.match("core", "item", "items"))));
+
+        getClient().perform(get("/api/discover/search/objects")
+            .param("sort", "dc.date.accessioned, ASC")
+            .param("query", "language:(Ucraino)"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.type", is("discover")))
+            .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.hasItem(
+                SearchResultMatcher.matchOnItemName("item", "items", item2.getName()))))
+            .andExpect(jsonPath("$._embedded.searchResult.page", is(
+                PageMatcher.pageEntryWithTotalPagesAndElements(0, 20, 1, 1))))
+            .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.hasItem(
+                SearchResultMatcher.match("core", "item", "items"))));
+
+
+    }
+
+    @Test
     public void discoverFacetsLanguageTest() throws Exception {
         context.turnOffAuthorisationSystem();
 

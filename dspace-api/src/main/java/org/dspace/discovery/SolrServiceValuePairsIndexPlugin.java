@@ -100,6 +100,7 @@ public class SolrServiceValuePairsIndexPlugin implements SolrServiceIndexPlugin 
 
             for (DiscoverySearchFilter searchFilter : searchFilters) {
                 addDiscoveryFieldFields(language, document, value, authority, searchFilter);
+                document.addField(searchFilter.getIndexFieldName(), value.toLowerCase());
             }
 
         }

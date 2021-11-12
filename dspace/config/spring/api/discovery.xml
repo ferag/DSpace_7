@@ -3586,7 +3586,8 @@
             <list>
                 <ref bean="graphOcdeArea"/>
                 <ref bean="searchFilterJobtitle"/>
-                <ref bean="searchFilterKnowsLanguage"/>
+<!--                <ref bean="searchFilterKnowsLanguage"/>-->
+                <ref bean="searchFilterLanguage"/>
                 <ref bean="searchFilterPersonOrgUnit"/>
                 <ref bean="searchFilterUbigeo"/>
                 <ref bean="searchFilterOcde"/>
@@ -3600,7 +3601,8 @@
                 <ref bean="searchFilterFamilyName"/>
                 <ref bean="searchFilterGivenName"/>
                 <ref bean="searchFilterJobtitle"/>
-                <ref bean="searchFilterKnowsLanguage"/>
+<!--                <ref bean="searchFilterKnowsLanguage"/>-->
+                <ref bean="searchFilterLanguage"/>
                 <ref bean="searchFilterPersonOrgUnit"/>
                 <ref bean="searchFilterUbigeo"/>
                 <ref bean="searchFilterOcde"/>

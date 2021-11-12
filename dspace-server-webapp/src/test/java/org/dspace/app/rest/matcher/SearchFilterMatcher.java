@@ -208,4 +208,14 @@ public class SearchFilterMatcher {
         );
     }
 
+    public static Matcher<? super Object> hiddenWithdrawnFilter() {
+        return allOf(
+            hasJsonPath("$.filter", is("hidden.withdrawn")),
+            hasJsonPath("$.hasFacets", is(false)),
+            hasJsonPath("$.type", is("standard")),
+            hasJsonPath("$.openByDefault", is(true)),
+            checkOperators()
+        );
+    }
+
 }

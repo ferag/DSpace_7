@@ -29,7 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -78,7 +77,6 @@ import org.dspace.content.authority.service.MetadataAuthorityService;
 import org.dspace.content.service.EntityTypeService;
 import org.dspace.core.CrisConstants;
 import org.dspace.discovery.SearchService;
-import org.dspace.discovery.SolrServiceValuePairsIndexPlugin;
 import org.dspace.discovery.configuration.DiscoveryConfigurationService;
 import org.dspace.discovery.configuration.DiscoverySortFieldConfiguration;
 import org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet;
@@ -110,9 +108,6 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
 
     @Autowired
     private EntityTypeService entityTypeService;
-
-    @Autowired
-    private SolrServiceValuePairsIndexPlugin solrServiceValuePairsIndexPlugin;
 
     @Test
     public void rootDiscoverTest() throws Exception {
@@ -7326,196 +7321,5 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                 .andExpect(jsonPath("$._embedded.values", contains(
                         FacetValueMatcher.entryDateIssuedWithLabelAndCount("journal article", 1)
                 )));
-    }
-
-    @Test
-    public void discoverSearchByknowsLanguageTest() throws Exception {
-        context.turnOffAuthorisationSystem();
-
-        String[] supportedLanguage = {"it","uk"};
-        configurationService.setProperty("default.locale","it");
-        configurationService.setProperty("webui.supported.locales",supportedLanguage);
-        solrServiceValuePairsIndexPlugin.setup();
-
-        parentCommunity = CommunityBuilder.createCommunity(context)
-                                          .withName("Parent Community")
-                                          .build();
-
-        Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withName("Collection 1")
-                                           .withSubmissionDefinition("languagetestprocess")
-                                           .build();
-
-        Item item1 = ItemBuilder.createItem(context, col1)
-                                .withTitle("Test 1")
-                                .withIssueDate("2010-10-17")
-                                .withAuthor("Testing, Works")
-                                .withEntityType("Publication")
-                                .withLanguage("it")
-                                .build();
-
-        Item item2 = ItemBuilder.createItem(context, col1)
-                                .withTitle("Test 2")
-                                .withIssueDate("2010-10-17")
-                                .withAuthor("Testing, Works")
-                                .withEntityType("Publication")
-                                .withLanguage("uk")
-                                .build();
-
-        context.restoreAuthSystemState();
-
-        getClient().perform(get("/api/discover/search/objects")
-                   .param("sort", "dc.date.accessioned, ASC")
-                   .param("query", "language:(it)"))
-                   .andExpect(status().isOk())
-                   .andExpect(jsonPath("$.type", is("discover")))
-                   .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.hasItem(
-                              SearchResultMatcher.matchOnItemName("item", "items", item1.getName())
-                              )))
-                   .andExpect(jsonPath("$._embedded.searchResult.page", is(
-                              PageMatcher.pageEntryWithTotalPagesAndElements(0, 20, 1, 1)
-                              )))
-                   .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.hasItem(
-                              SearchResultMatcher.match("core", "item", "items")
-                              )));
-
-        getClient().perform(get("/api/discover/search/objects")
-                   .param("sort", "dc.date.accessioned, ASC")
-                   .param("query", "language:(uk)"))
-                   .andExpect(status().isOk())
-                   .andExpect(jsonPath("$.type", is("discover")))
-                   .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.hasItem(
-                              SearchResultMatcher.matchOnItemName("item", "items", item1.getName())
-                              )))
-                   .andExpect(jsonPath("$._embedded.searchResult.page", is(
-                              PageMatcher.pageEntryWithTotalPagesAndElements(0, 20, 1, 1)
-                              )))
-                   .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.hasItem(
-                              SearchResultMatcher.match("core", "item", "items")
-                              )));
-
-        getClient().perform(get("/api/discover/search/objects")
-                   .param("sort", "dc.date.accessioned, ASC")
-                   .param("query", "language:(Italiano)"))
-                   .andExpect(status().isOk())
-                   .andExpect(jsonPath("$.type", is("discover")))
-                   .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.hasItem(
-                              SearchResultMatcher.matchOnItemName("item", "items", item2.getName())
-                              )))
-                   .andExpect(jsonPath("$._embedded.searchResult.page", is(
-                              PageMatcher.pageEntryWithTotalPagesAndElements(0, 20, 1, 1)
-                              )))
-                   .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.hasItem(
-                              SearchResultMatcher.match("core", "item", "items")
-                              )));
-
-        getClient().perform(get("/api/discover/search/objects")
-                   .param("sort", "dc.date.accessioned, ASC")
-                   .param("query", "language:(Англiйська)"))
-                   .andExpect(status().isOk())
-                   .andExpect(jsonPath("$.type", is("discover")))
-                   .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.hasItem(
-                              SearchResultMatcher.matchOnItemName("item", "items", item1.getName())
-                              )))
-                   .andExpect(jsonPath("$._embedded.searchResult.page", is(
-                              PageMatcher.pageEntryWithTotalPagesAndElements(0, 20, 1, 1)
-                              )))
-                   .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.hasItem(
-                              SearchResultMatcher.match("core", "item", "items")
-                              )));
-
-    }
-
-    @Test
-    public void discoverFacetsLanguageTest() throws Exception {
-        context.turnOffAuthorisationSystem();
-
-        String[] supportedLanguage = {"it","uk"};
-        configurationService.setProperty("default.locale","it");
-        configurationService.setProperty("webui.supported.locales",supportedLanguage);
-        solrServiceValuePairsIndexPlugin.setup();
-
-        parentCommunity = CommunityBuilder.createCommunity(context)
-                                          .withName("Parent Community")
-                                          .build();
-
-        Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withName("Collection 1")
-                                           .build();
-
-        Item item1 = ItemBuilder.createItem(context, col1)
-                                .withTitle("Test")
-                                .withIssueDate("2010-10-17")
-                                .withAuthor("Testing, Works")
-                                .withEntityType("Person")
-                                .withPersonKnowsLanguages("en")
-                                .withSubject("ExtraEntry")
-                                .build();
-
-        Locale it = new Locale("it");
-        context.restoreAuthSystemState();
-
-        getClient().perform(get("/api/discover/facets/language").locale(it)
-                   .param("prefix", "en"))
-                   .andExpect(jsonPath("$.type", is("discover")))
-                   .andExpect(jsonPath("$.name", is("language")))
-                   .andExpect(jsonPath("$.facetType", is("text")))
-                   .andExpect(jsonPath("$._links.self.href", containsString("api/discover/facets/language")))
-                   .andExpect(jsonPath("$.page", is(PageMatcher.pageEntry(0, 1))))
-                   .andExpect(jsonPath("$._embedded.values", containsInAnyOrder(
-                              FacetValueMatcher.entryLanguage("Inglese")
-                              )));
-
-    }
-
-
-    @Test
-    public void discoverFacetsLanguage2Test() throws Exception {
-        context.turnOffAuthorisationSystem();
-
-        String[] supportedLanguage = {"it","uk"};
-        configurationService.setProperty("default.locale","it");
-        configurationService.setProperty("webui.supported.locales",supportedLanguage);
-        solrServiceValuePairsIndexPlugin.setup();
-
-        parentCommunity = CommunityBuilder.createCommunity(context)
-                                          .withName("Parent Community")
-                                          .build();
-
-        Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
-                                           .withName("Collection 1")
-                                           .build();
-
-        Item publicItem1 = ItemBuilder.createItem(context, col1)
-                                      .withTitle("Public item 1")
-                                      .withIssueDate("2020-11-21")
-                                      .withAuthor("Smith, Donald")
-                                      .withLanguage("en")
-                                      .withSubject("ExtraEntry")
-                                      .build();
-
-        Item publicItem3 = ItemBuilder.createItem(context, col1)
-                                      .withTitle("Public item 3")
-                                      .withIssueDate("2006-01-23")
-                                      .withAuthor("Smith, Maria")
-                                      .withLanguage("uk")
-                                      .withSubject("TestingForMore")
-                                      .withSubject("ExtraEntry")
-                                      .build();
-
-        Locale it = new Locale("it");
-        context.restoreAuthSystemState();
-
-        getClient().perform(get("/api/discover/facets/language").locale(it))
-                   .andExpect(status().isOk())
-                   .andExpect(jsonPath("$.type", is("discover")))
-                   .andExpect(jsonPath("$.name", is("language")))
-                   .andExpect(jsonPath("$.facetType", is("text")))
-                   .andExpect(jsonPath("$._links.self.href", containsString("api/discover/facets/language")))
-                   .andExpect(jsonPath("$.page", is(PageMatcher.pageEntry(0, 2))))
-                   .andExpect(jsonPath("$._embedded.values", containsInAnyOrder(
-                              FacetValueMatcher.entryLanguage("Inglese"),
-                              FacetValueMatcher.entryLanguage("Ucraino")
-                              )));
     }
 }

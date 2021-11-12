@@ -36,6 +36,7 @@ import org.dspace.core.I18nUtil;
 import org.dspace.core.exception.SQLRuntimeException;
 import org.dspace.discovery.configuration.DiscoveryConfiguration;
 import org.dspace.discovery.configuration.DiscoverySearchFilter;
+import org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet;
 import org.dspace.discovery.indexobject.IndexableItem;
 import org.dspace.services.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,23 +79,23 @@ public class SolrServiceValuePairsIndexPlugin implements SolrServiceIndexPlugin 
         Item item = ((IndexableItem)object).getIndexedObject();
 
         for (String language : dcInputsReaders.keySet()) {
-            List<DCInput> dropdownInputs = getAllDropdownInputs(context, language, item);
-            for (DCInput dropdownInput : dropdownInputs) {
-                additionalIndex(dropdownInput, item, language, document);
+            List<DCInput> valueListInputs = getAllValueListInputs(context, language, item);
+            for (DCInput valueListInput : valueListInputs) {
+                additionalIndex(valueListInput, item, language, document);
             }
         }
 
     }
 
-    private void additionalIndex(DCInput dropdownInput, Item item, String language, SolrInputDocument document) {
+    private void additionalIndex(DCInput valueListInput, Item item, String language, SolrInputDocument document) {
 
-        String metadataField = dropdownInput.getFieldName();
+        String metadataField = valueListInput.getFieldName();
         List<DiscoverySearchFilter> searchFilters = findSearchFiltersByMetadataField(item, metadataField);
         List<MetadataValue> metadataValues = itemService.getMetadataByMetadataString(item, metadataField);
 
         for (MetadataValue metadataValue : metadataValues) {
 
-            String value = getDisplayValue(dropdownInput, metadataValue);
+            String value = getDisplayValue(valueListInput, metadataValue);
             String authority = metadataValue.getAuthority();
 
             for (DiscoverySearchFilter searchFilter : searchFilters) {
@@ -108,19 +109,19 @@ public class SolrServiceValuePairsIndexPlugin implements SolrServiceIndexPlugin 
     private void addDiscoveryFieldFields(String language, SolrInputDocument document, String value, String authority,
         DiscoverySearchFilter searchFilter) {
 
-        String fieldName = searchFilter.getIndexFieldName();
+        String fieldNameWithLanguage = language + "_" + searchFilter.getIndexFieldName();
         String valueLowerCase = value.toLowerCase();
 
         String keywordField = appendAuthorityIfNotBlank(value, authority);
         String acidField = appendAuthorityIfNotBlank(valueLowerCase + separator + value, authority);
         String filterField = appendAuthorityIfNotBlank(valueLowerCase + separator + value, authority);
 
-        document.addField(language + "_" + fieldName + "_keyword", keywordField);
-        document.addField(language + "_" + fieldName + "_acid", acidField);
-        document.addField(language + "_" + fieldName + "_filter", filterField);
-        document.addField(language + "_" + fieldName + "_ac", valueLowerCase + separator + value);
-        if (!document.containsKey(fieldName + "_authority")) {
-            document.addField(fieldName + "_authority", authority);
+        document.addField(fieldNameWithLanguage + "_keyword", keywordField);
+        document.addField(fieldNameWithLanguage + "_acid", acidField);
+        document.addField(fieldNameWithLanguage + "_filter", filterField);
+        document.addField(fieldNameWithLanguage + "_ac", valueLowerCase + separator + value);
+        if (document.containsKey(searchFilter.getIndexFieldName() + "_authority")) {
+            document.addField(fieldNameWithLanguage + "_authority", authority);
         }
 
     }
@@ -129,6 +130,12 @@ public class SolrServiceValuePairsIndexPlugin implements SolrServiceIndexPlugin 
         return isNotBlank(authority) ? fieldValue + AUTHORITY_SEPARATOR + authority : fieldValue;
     }
 
+    /**
+     * Returns all the search fields configured for the given metadataField. Filters
+     * returned are not filtered by instance type equal to
+     * {@link MultiLanguageDiscoverSearchFilterFacet} to allow for language-based
+     * searches
+     */
     private List<DiscoverySearchFilter> findSearchFiltersByMetadataField(Item item, String metadataField) {
         return getAllDiscoveryConfiguration(item).stream()
             .flatMap(discoveryConfiguration -> discoveryConfiguration.getSearchFilters().stream())
@@ -145,18 +152,18 @@ public class SolrServiceValuePairsIndexPlugin implements SolrServiceIndexPlugin 
         }
     }
 
-    private String getDisplayValue(DCInput dropdownInput, MetadataValue metadataValue) {
-        String displayValue = dropdownInput.getDisplayString(metadataValue.getValue());
+    private String getDisplayValue(DCInput valueListInput, MetadataValue metadataValue) {
+        String displayValue = valueListInput.getDisplayString(metadataValue.getValue());
         if (StringUtils.isEmpty(displayValue)) {
             displayValue = metadataValue.getValue();
         }
         return displayValue;
     }
 
-    private List<DCInput> getAllDropdownInputs(Context context, String language, Item item) {
+    private List<DCInput> getAllValueListInputs(Context context, String language, Item item) {
         return getInputs(context, language, item).stream()
             .flatMap(this::getAllDCInput)
-            .filter(DCInput::isDropDown)
+            .filter(dcInput -> dcInput.isDropDown() || dcInput.isList())
             .collect(Collectors.toList());
     }
 

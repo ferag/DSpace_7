@@ -5421,7 +5421,7 @@
         </property>
     </bean>
 
-    <bean id="searchFilterLanguage" class="org.dspace.discovery.configuration.HierarchicalSidebarFacetConfiguration">
+    <bean id="searchFilterLanguage" class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
         <property name="indexFieldName" value="language" />
         <property name="metadataFields">
             <list>

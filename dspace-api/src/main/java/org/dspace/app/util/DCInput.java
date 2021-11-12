@@ -380,7 +380,7 @@ public class DCInput {
 
     /**
      * Get the style for this form field
-     * 
+     *
      * @return the style
      */
     public String getStyle() {
@@ -569,6 +569,10 @@ public class DCInput {
 
     public boolean isDropDown() {
         return "dropdown".equals(getInputType());
+    }
+
+    public boolean isList() {
+        return "list".equals(getInputType());
     }
 
     public boolean validate(String value) {

@@ -115,7 +115,7 @@ public class FacetValueMatcher {
             hasJsonPath("$.label", is(label)),
             hasJsonPath("$.type", is("discover")),
             hasJsonPath("$._links.search.href", containsString("api/discover/search/objects")),
-            hasJsonPath("$._links.search.href", containsString("f.dateIssued="))
+            hasJsonPath("$._links.search.href", containsString("f.language="))
         );
     }
 

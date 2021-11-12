@@ -39,6 +39,8 @@ import org.dspace.discovery.configuration.DiscoverySearchFilter;
 import org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet;
 import org.dspace.discovery.indexobject.IndexableItem;
 import org.dspace.services.ConfigurationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -49,6 +51,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  */
 public class SolrServiceValuePairsIndexPlugin implements SolrServiceIndexPlugin {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SolrServiceValuePairsIndexPlugin.class);
 
     private Map<String, DCInputsReader> dcInputsReaders = new HashMap<>();
 
@@ -78,11 +82,17 @@ public class SolrServiceValuePairsIndexPlugin implements SolrServiceIndexPlugin 
 
         Item item = ((IndexableItem)object).getIndexedObject();
 
-        for (String language : dcInputsReaders.keySet()) {
-            List<DCInput> valueListInputs = getAllValueListInputs(context, language, item);
-            for (DCInput valueListInput : valueListInputs) {
-                additionalIndex(valueListInput, item, language, document);
+        try {
+
+            for (String language : dcInputsReaders.keySet()) {
+                List<DCInput> valueListInputs = getAllValueListInputs(context, language, item);
+                for (DCInput valueListInput : valueListInputs) {
+                    additionalIndex(valueListInput, item, language, document);
+                }
             }
+
+        } catch (Exception ex) {
+            LOGGER.error("An error occurs indexing value pairs for item " + item.getID(), ex);
         }
 
     }

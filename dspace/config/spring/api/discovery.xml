@@ -3586,8 +3586,7 @@
             <list>
                 <ref bean="graphOcdeArea"/>
                 <ref bean="searchFilterJobtitle"/>
-<!--                <ref bean="searchFilterKnowsLanguage"/>-->
-                <ref bean="searchFilterLanguage"/>
+                <ref bean="searchFilterKnowsLanguage"/>
                 <ref bean="searchFilterPersonOrgUnit"/>
                 <ref bean="searchFilterUbigeo"/>
                 <ref bean="searchFilterOcde"/>
@@ -3601,8 +3600,7 @@
                 <ref bean="searchFilterFamilyName"/>
                 <ref bean="searchFilterGivenName"/>
                 <ref bean="searchFilterJobtitle"/>
-<!--                <ref bean="searchFilterKnowsLanguage"/>-->
-                <ref bean="searchFilterLanguage"/>
+                <ref bean="searchFilterKnowsLanguage"/>
                 <ref bean="searchFilterPersonOrgUnit"/>
                 <ref bean="searchFilterUbigeo"/>
                 <ref bean="searchFilterOcde"/>
@@ -5478,7 +5476,7 @@
         <property name="exposeMinAndMaxValue" value="true"/>
     </bean>
 
-    <bean id="searchFilterKnowsLanguage" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+    <bean id="searchFilterKnowsLanguage" class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
         <property name="indexFieldName" value="knowsLanguage"/>
         <property name="metadataFields">
             <list>

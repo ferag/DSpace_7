@@ -8777,7 +8777,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Código institucional del equipamiento</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Debe especificar el Código institucional del equipamiento</required>
           <hint>El código registrado o declarado en los sistemas internos de la institución, por ejemplo, en el inventario de activos. Ejemplo: F.4925</hint>
         </field>
       </row>
@@ -8981,7 +8981,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Código institucional del equipamiento</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Debe especificar el Código institucional del equipamiento</required>
           <hint>El código registrado o declarado en los sistemas internos de la institución, por ejemplo, en el inventario de activos. Ejemplo: F.4925</hint>
         </field>
       </row>

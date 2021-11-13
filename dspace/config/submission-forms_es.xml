@@ -7169,7 +7169,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>internalid</dc-element>
-          <label>Código o identifcador público del proyect</label>
+          <label>Código o identificador público del proyect</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -7562,7 +7562,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>internalid</dc-element>
-          <label>Código o identifcador público del proyect</label>
+          <label>Código o identifcador público del proyecto</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -7955,7 +7955,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>internalid</dc-element>
-          <label>Código o identifcador público del proyect</label>
+          <label>Código o identifcador público del proyecto</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -8348,7 +8348,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>internalid</dc-element>
-          <label>Código del fnanciamiento</label>
+          <label>Código del financiamiento</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required>Debe introducir el código del fnanciamiento</required>
@@ -8555,7 +8555,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>internalid</dc-element>
-          <label>Código del fnanciamiento</label>
+          <label>Código del financiamiento</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required>Debe introducir el código del fnanciamiento</required>

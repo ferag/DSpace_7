@@ -253,6 +253,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         List<String> groupIds = of(directorioReviewGroup.getID().toString(), directorioEditorGroup.getID().toString());
         configurationService.setProperty("directorio.security.policy-groups", groupIds);
         configurationService.setProperty("item.enable-virtual-metadata", false);
+        configurationService.setProperty("webui.submit.upload.required", false);
 
     }
 
@@ -266,6 +267,7 @@ public class ConcytecWorkflowIT extends AbstractControllerIntegrationTest {
         workflowItemService.deleteByCollection(context, directorioPublications);
         workspaceItemService.findAll(context).forEach(this::deleteWorkspaceItem);
         context.restoreAuthSystemState();
+        configurationService.setProperty("webui.submit.upload.required", true);
 
         super.destroy();
     }

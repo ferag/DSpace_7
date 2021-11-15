@@ -40,6 +40,17 @@ public class SearchFilterMatcher {
         );
     }
 
+    public static Matcher<? super Object> languageFilter() {
+        return allOf(
+                hasJsonPath("$.filter", is("language")),
+                hasJsonPath("$.hasFacets", is(true)),
+                hasJsonPath("$.type", is("text")),
+                hasJsonPath("$.openByDefault", is(false)),
+                checkOperators()
+
+        );
+    }
+
     public static Matcher<? super Object> subjectFilter() {
         return allOf(
                 hasJsonPath("$.filter", is("subject")),
@@ -194,6 +205,16 @@ public class SearchFilterMatcher {
                 hasJsonPath("$.type", is("standard")),
                 hasJsonPath("$.openByDefault", is(true)),
                 checkOperators()
+        );
+    }
+
+    public static Matcher<? super Object> hiddenWithdrawnFilter() {
+        return allOf(
+            hasJsonPath("$.filter", is("hidden.withdrawn")),
+            hasJsonPath("$.hasFacets", is(false)),
+            hasJsonPath("$.type", is("standard")),
+            hasJsonPath("$.openByDefault", is(true)),
+            checkOperators()
         );
     }
 

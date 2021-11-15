@@ -10004,7 +10004,6 @@
           <repeatable>false</repeatable>
           <required>Please enter Execution Range</required>
           <hint>From – To Year(s)</hint>
-          <regex>^[0-9]{0,4}$</regex>
         </field>
       </row>
       <row>

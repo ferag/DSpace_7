@@ -165,7 +165,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         assertThat(getRowValues(sheet.getRow(0)),
             contains("Nombre preferido", "Nombre completo", "Nombre vernacular", "Variantes", "Nombre de pila",
-                "Apellido", "Apellido paterno", "Apellido materno", "Appelido casada", "Fecha de nacimiento", "Sexo",
+                "Apellido", "Apellido paterno", "Apellido materno", "Apellido casada", "Fecha de nacimiento", "Sexo",
                 "Puesto de trabajo", "Afiliación principal", "Grupos de trabajo", "Web personal", "Email", "Teléfono",
                 "Teléfono móvil", "Intereses", "ORCID", "Dina", "Dni", "Pasaporte", "Tarjeta de inmigración", "Renacyt",
                 "ID Scopus del autor", "IDs Investigador", "Afiliaciones", "Biografía", "Educación", "País",
@@ -242,7 +242,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         assertThat(getRowValues(sheet.getRow(0)),
             contains("Nombre preferido", "Nombre completo", "Nombre vernacular", "Variantes", "Nombre de pila",
-                "Apellido", "Apellido paterno", "Apellido materno", "Appelido casada", "Fecha de nacimiento", "Sexo",
+                "Apellido", "Apellido paterno", "Apellido materno", "Apellido casada", "Fecha de nacimiento", "Sexo",
                 "Puesto de trabajo", "Afiliación principal", "Grupos de trabajo", "Web personal", "Email", "Teléfono",
                 "Teléfono móvil", "Intereses", "ORCID", "Dina", "Dni", "Pasaporte", "Tarjeta de inmigración", "Renacyt",
                 "ID Scopus del autor", "IDs Investigador", "Afiliaciones", "Biografía", "Educación", "País",

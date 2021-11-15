@@ -86,7 +86,6 @@ import org.dspace.eperson.Group;
 import org.dspace.eperson.GroupType;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
-import org.dspace.util.UUIDUtils;
 import org.dspace.utils.DSpace;
 import org.dspace.xmlworkflow.storedcomponents.ClaimedTask;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
@@ -148,7 +147,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.entityTypeFacet(false),
 //                        FacetEntryMatcher.dateIssuedFacet(false),
                         FacetEntryMatcher.subjectFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)))
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)))
         );
     }
 
@@ -636,78 +636,6 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
     }
 
     @Test
-    @Ignore
-    public void discoverFacetsDateTest() throws Exception {
-        //We turn off the authorization system in order to create the structure defined below
-        context.turnOffAuthorisationSystem();
-
-        //** GIVEN **
-        //1. A community-collection structure with one parent community with sub-community and two collections.
-        parentCommunity = CommunityBuilder.createCommunity(context)
-                .withName("Parent Community")
-                .build();
-        Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity)
-                .withName("Sub Community")
-                .build();
-        Collection col1 = CollectionBuilder.createCollection(context, child1).withName("Collection 1").build();
-        Collection col2 = CollectionBuilder.createCollection(context, child1).withName("Collection 2").build();
-
-        //2. Three public items that are readable by Anonymous with different subjects
-        Item publicItem1 = ItemBuilder.createItem(context, col1)
-                .withTitle("Test")
-                .withIssueDate("2010-10-17")
-                .withAuthor("Smith, Donald").withAuthor("Testing, Works")
-                .withSubject("ExtraEntry")
-                .build();
-
-        Item publicItem2 = ItemBuilder.createItem(context, col2)
-                .withTitle("Public item 2")
-                .withIssueDate("1990-02-13")
-                .withAuthor("Smith, Maria").withAuthor("Doe, Jane").withAuthor("Testing, Works")
-                .withSubject("TestingForMore").withSubject("ExtraEntry")
-                .build();
-
-        Item publicItem3 = ItemBuilder.createItem(context, col2)
-                .withTitle("Public item 2")
-                .withIssueDate("2000-02-13")
-                .withAuthor("Smith, Maria").withAuthor("Doe, Jane").withAuthor("test,test")
-                .withAuthor("test2, test2").withAuthor("Maybe, Maybe")
-                .withSubject("AnotherTest").withSubject("TestingForMore")
-                .withSubject("ExtraEntry")
-                .build();
-
-        context.restoreAuthSystemState();
-
-        //** WHEN **
-        //An anonymous user browses this endpoint to find the dateIssued results by the facet
-        getClient().perform(get("/api/discover/facets/dateIssued"))
-
-                //** THEN **
-                //The status has to be 200 OK
-                .andExpect(status().isOk())
-                //The type has to be 'discover'
-                .andExpect(jsonPath("$.type", is("discover")))
-                //The name has to be 'dateIssued' as that's the facet that we've called
-                .andExpect(jsonPath("$.name", is("dateIssued")))
-                //The facetType has to be 'date' because that's the default configuration for this facet
-                .andExpect(jsonPath("$.facetType", is("date")))
-                //There always needs to be a self link available
-                .andExpect(jsonPath("$._links.self.href", containsString("api/discover/facets/dateIssued")))
-                //This is how the page object must look like because it's the default with size 20
-                .andExpect(jsonPath("$.page",
-                        is(PageMatcher.pageEntry(0, 20))))
-                //The date values need to be as specified below
-                .andExpect(jsonPath("$._embedded.values", containsInAnyOrder(
-                        //We'll always get atleast two intervals with the items specified above, so we ask to match
-                        // twice atleast
-                        FacetValueMatcher.entryDateIssued(),
-                        FacetValueMatcher.entryDateIssued()
-                )))
-        ;
-    }
-
-
-    @Test
     public void discoverFacetsTestWithScope() throws Exception {
         //We turn off the authorization system in order to create the structure defined below
         context.turnOffAuthorisationSystem();
@@ -807,202 +735,6 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
         ;
     }
 
-    @Test
-    @Ignore
-    public void discoverFacetsDateTestForHasMore() throws Exception {
-        //We turn off the authorization system to create the structure defined below
-        context.turnOffAuthorisationSystem();
-
-        //** GIVEN **
-        //1. A community-collection structure with one parent community with sub-community and two collections.
-        parentCommunity = CommunityBuilder.createCommunity(context)
-                .withName("Parent Community")
-                .build();
-        Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity)
-                .withName("Sub Community")
-                .build();
-        Collection col1 = CollectionBuilder.createCollection(context, child1).withName("Collection 1").build();
-        Collection col2 = CollectionBuilder.createCollection(context, child1).withName("Collection 2").build();
-
-        //2. 7 public items that are readable by Anonymous with different subjects
-        Item publicItem1 = ItemBuilder.createItem(context, col1)
-                .withTitle("Test")
-                .withIssueDate("2010-10-17")
-                .withAuthor("Smith, Donald").withAuthor("Testing, Works")
-                .withSubject("ExtraEntry")
-                .build();
-
-        Item publicItem2 = ItemBuilder.createItem(context, col2)
-                .withTitle("Public item 2")
-                .withIssueDate("1990-02-13")
-                .withAuthor("Smith, Maria").withAuthor("Doe, Jane").withAuthor("Testing, Works")
-                .withSubject("TestingForMore").withSubject("ExtraEntry")
-                .build();
-
-        Item publicItem3 = ItemBuilder.createItem(context, col2)
-                .withTitle("Public item 2")
-                .withIssueDate("1940-02-13")
-                .withAuthor("Smith, Maria").withAuthor("Doe, Jane").withAuthor("test,test")
-                .withAuthor("test2, test2").withAuthor("Maybe, Maybe")
-                .withSubject("AnotherTest").withSubject("TestingForMore")
-                .withSubject("ExtraEntry")
-                .build();
-
-        Item publicItem4 = ItemBuilder.createItem(context, col2)
-                .withTitle("Public item 2")
-                .withIssueDate("1950-02-13")
-                .withAuthor("Smith, Maria").withAuthor("Doe, Jane").withAuthor("test,test")
-                .withAuthor("test2, test2").withAuthor("Maybe, Maybe")
-                .withSubject("AnotherTest").withSubject("TestingForMore")
-                .withSubject("ExtraEntry")
-                .build();
-
-        Item publicItem5 = ItemBuilder.createItem(context, col2)
-                .withTitle("Public item 2")
-                .withIssueDate("1960-02-13")
-                .withAuthor("Smith, Maria").withAuthor("Doe, Jane").withAuthor("test,test")
-                .withAuthor("test2, test2").withAuthor("Maybe, Maybe")
-                .withSubject("AnotherTest").withSubject("TestingForMore")
-                .withSubject("ExtraEntry")
-                .build();
-
-        Item publicItem6 = ItemBuilder.createItem(context, col2)
-                .withTitle("Public item 2")
-                .withIssueDate("1970-02-13")
-                .withAuthor("Smith, Maria").withAuthor("Doe, Jane").withAuthor("test,test")
-                .withAuthor("test2, test2").withAuthor("Maybe, Maybe")
-                .withSubject("AnotherTest").withSubject("TestingForMore")
-                .withSubject("ExtraEntry")
-                .build();
-
-        Item publicItem7 = ItemBuilder.createItem(context, col2)
-                .withTitle("Public item 2")
-                .withIssueDate("1980-02-13")
-                .withAuthor("Smith, Maria").withAuthor("Doe, Jane").withAuthor("test,test")
-                .withAuthor("test2, test2").withAuthor("Maybe, Maybe")
-                .withSubject("AnotherTest").withSubject("TestingForMore")
-                .withSubject("ExtraEntry")
-                .build();
-
-        context.restoreAuthSystemState();
-
-        //** WHEN **
-        //An anonymous user browses this endpoint to find the dateIssued results by the facet
-        //And a size of 2
-        getClient().perform(get("/api/discover/facets/dateIssued")
-                .param("size", "2"))
-
-                //** THEN **
-                //The status has to be 200 OK
-                .andExpect(status().isOk())
-                //The type has to be 'discover'
-                .andExpect(jsonPath("$.type", is("discover")))
-                //The name needs to be dateIssued as that's the facet that we've called
-                .andExpect(jsonPath("$.name", is("dateIssued")))
-                //the facetType needs to be 'date' as that's the default facetType for this facet in the
-                // configuration
-                .andExpect(jsonPath("$.facetType", is("date")))
-                //There always needs to be a self link available
-                .andExpect(jsonPath("$._links.self.href", containsString("api/discover/facets/dateIssued")))
-                //Seeing as we've entered a size of two and there are more dates than just two, we'll need a next
-                // link to go to the next page to see the rest of the dates
-                .andExpect(jsonPath("$._links.next.href", Matchers.allOf(
-                        containsString("api/discover/facets/dateIssued"),
-                        containsString("page=1"))))
-                //The page object needs to look like this because we've entered a size of 2 and we didn't specify
-                // a starting page so it defaults to 0
-                .andExpect(jsonPath("$.page",
-                        is(PageMatcher.pageEntry(0, 2))))
-                //There needs to be two date results in the embedded values section because that's what we've
-                // specified
-                .andExpect(jsonPath("$._embedded.values", containsInAnyOrder(
-                        FacetValueMatcher.entryDateIssued(),
-                        FacetValueMatcher.entryDateIssued()
-                )))
-        ;
-    }
-
-
-    @Test
-    @Ignore
-    public void discoverFacetsDateTestWithSearchFilter() throws Exception {
-
-        //We turn off the authorization system in order to create the structure as defined below
-        context.turnOffAuthorisationSystem();
-
-        //** GIVEN **
-        //1. A community-collection structure with one parent community with sub-community and two collections.
-        parentCommunity = CommunityBuilder.createCommunity(context)
-                .withName("Parent Community")
-                .build();
-        Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity)
-                .withName("Sub Community")
-                .build();
-        Collection col1 = CollectionBuilder.createCollection(context, child1).withName("Collection 1").build();
-        Collection col2 = CollectionBuilder.createCollection(context, child1).withName("Collection 2").build();
-
-        //2. Three public items that are readable by Anonymous with different subjects
-        Item publicItem1 = ItemBuilder.createItem(context, col1)
-                .withTitle("Test")
-                .withIssueDate("2010-10-17")
-                .withAuthor("Smith, Donald").withAuthor("Testing, Works")
-                .withSubject("ExtraEntry")
-                .build();
-
-        Item publicItem2 = ItemBuilder.createItem(context, col2)
-                .withTitle("Test 2")
-                .withIssueDate("1990-02-13")
-                .withAuthor("Smith, Maria").withAuthor("Doe, Jane").withAuthor("Testing, Works")
-                .withSubject("TestingForMore").withSubject("ExtraEntry")
-                .build();
-
-        Item publicItem3 = ItemBuilder.createItem(context, col2)
-                .withTitle("Public item 2")
-                .withIssueDate("2010-02-13")
-                .withAuthor("Smith, Maria").withAuthor("Doe, Jane").withAuthor("test,test")
-                .withAuthor("test2, test2").withAuthor("Maybe, Maybe")
-                .withSubject("AnotherTest").withSubject("TestingForMore")
-                .withSubject("ExtraEntry")
-                .build();
-
-        context.restoreAuthSystemState();
-
-        //** WHEN **
-        //An anonymous user browses this endpoint to find the dateIssued results by the facet
-        //With a query stating that the title needs to contain 'test'
-        //And a size of 2
-        getClient().perform(get("/api/discover/facets/dateIssued")
-                .param("f.title", "test,contains")
-                .param("size", "2"))
-
-                //** THEN **
-                //The status has to be 200 OK
-                .andExpect(status().isOk())
-                //The type has to be 'discover'
-                .andExpect(jsonPath("$.type", is("discover")))
-                //The name has to be dateIssued because that's the facet that we called
-                .andExpect(jsonPath("$.name", is("dateIssued")))
-                //The facetType needs to be 'date' as that's the default facetType for this facet in the
-                // configuration
-                .andExpect(jsonPath("$.facetType", is("date")))
-                //There always needs to be a self link
-                .andExpect(jsonPath("$._links.self.href", containsString("api/discover/facets/dateIssued")))
-                //There needs to be an appliedFilters section that looks like this because we've specified a query
-                // in the parameters
-                .andExpect(jsonPath("$.appliedFilters", containsInAnyOrder(
-                        AppliedFilterMatcher.appliedFilterEntry("title", "contains", "test", "test")
-                )))
-                //The page object needs to look like this because we entered a size of 2 and we didn't specify a
-                // starting page so it defaults to 0
-                .andExpect(jsonPath("$.page",
-                        is(PageMatcher.pageEntry(0, 2))))
-                //There needs to be only two date intervals with a count of 1 because of the query we specified
-                .andExpect(jsonPath("$._embedded.values", containsInAnyOrder(
-                        FacetValueMatcher.entryDateIssuedWithCountOne(),
-                        FacetValueMatcher.entryDateIssuedWithCountOne()
-                )))
-        ;
-    }
 
 
     @Test
@@ -1032,7 +764,9 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                        SearchFilterMatcher.hasFileNameInOriginalBundleFilter(),
                        SearchFilterMatcher.hasFileDescriptionInOriginalBundleFilter(),
                        SearchFilterMatcher.entityTypeFilter(),
-                       SearchFilterMatcher.withdrawnFilter()
+                       SearchFilterMatcher.withdrawnFilter(),
+                       SearchFilterMatcher.languageFilter(),
+                       SearchFilterMatcher.hiddenWithdrawnFilter()
                    )))
                    //These sortOptions need to be present as it's the default in the configuration
                    .andExpect(jsonPath("$.sortOptions", contains(
@@ -1048,7 +782,6 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
     }
 
     @Test
-//    @Ignore
     public void checkSortOrderInPersonOrOrgunitConfigurationTest() throws Exception {
         getClient().perform(get("/api/discover/search")
                    .param("configuration", "personOrOrgunit"))
@@ -1061,11 +794,11 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                                          DiscoverySortFieldConfiguration.SORT_ORDER.desc.name()),
                        SortOptionMatcher.sortOptionMatcher("organization.legalName",
                                          DiscoverySortFieldConfiguration.SORT_ORDER.asc.name()),
-                       SortOptionMatcher.sortOptionMatcher("organisation.address.addressCountry",
+                       SortOptionMatcher.sortOptionMatcher("organization.address.addressCountry",
                                          DiscoverySortFieldConfiguration.SORT_ORDER.asc.name()),
-                       SortOptionMatcher.sortOptionMatcher("organisation.address.addressLocality",
+                       SortOptionMatcher.sortOptionMatcher("organization.address.addressLocality",
                                          DiscoverySortFieldConfiguration.SORT_ORDER.asc.name()),
-                       SortOptionMatcher.sortOptionMatcher("organisation.foundingDate",
+                       SortOptionMatcher.sortOptionMatcher("organization.foundingDate",
                                          DiscoverySortFieldConfiguration.SORT_ORDER.desc.name()),
                        SortOptionMatcher.sortOptionMatcher("dc.date.accessioned",
                                          DiscoverySortFieldConfiguration.SORT_ORDER.desc.name()),
@@ -1177,8 +910,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -1314,8 +1047,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacet(true),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -1402,8 +1135,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(true),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -1485,8 +1218,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -1568,8 +1301,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -1651,8 +1384,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")));
@@ -1690,8 +1423,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")));
@@ -1730,8 +1463,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")));
@@ -1774,8 +1507,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")));
@@ -1864,8 +1597,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //We want to get the sort that's been used as well in the response
                 .andExpect(jsonPath("$.sort", is(
@@ -2079,9 +1812,9 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.typeFacet(false),
                         FacetEntryMatcher.authorFacet(true),
                         FacetEntryMatcher.subjectFacet(true),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
                         FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
-                        FacetEntryMatcher.entityTypeFacet(false)
+                        FacetEntryMatcher.entityTypeFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -2173,8 +1906,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -2262,8 +1995,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -2428,8 +2161,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -2516,8 +2249,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -2699,8 +2432,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -2846,8 +2579,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -2925,8 +2658,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                        FacetEntryMatcher.authorFacet(false),
                        FacetEntryMatcher.entityTypeFacet(false),
                        FacetEntryMatcher.subjectFacet(false),
-//                      FacetEntryMatcher.dateIssuedFacet(false),
-                       FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                       FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                       FacetEntryMatcher.languageFacet(false)
                                                                                         )))
                    //There always needs to be a self link available
                    .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -3002,8 +2735,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -3079,9 +2812,9 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                        FacetEntryMatcher.typeFacet(false),
                        FacetEntryMatcher.authorFacet(false),
                        FacetEntryMatcher.subjectFacet(false),
-//                      FacetEntryMatcher.dateIssuedFacet(false),
                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
-                       FacetEntryMatcher.entityTypeFacet(false)
+                       FacetEntryMatcher.entityTypeFacet(false),
+                       FacetEntryMatcher.languageFacet(false)
                                                                                         )))
                    //There always needs to be a self link available
                    .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -3168,8 +2901,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacetWithMinMax(true, "Doe, Jane", "Testing, Works"),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(true),
-//                        FacetEntryMatcher.dateIssuedFacetWithMinMax(false, "1990-02-13", "2010-10-17"),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -3240,8 +2973,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacetWithMinMax(true, "Doe, Jane", "Testing, Works"),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(true),
-//                        FacetEntryMatcher.dateIssuedFacetWithMinMax(false, "1990-02-13", "2010-10-17"),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/facets")))
@@ -3317,8 +3050,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -3395,8 +3128,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                        FacetEntryMatcher.authorFacet(false),
                        FacetEntryMatcher.entityTypeFacet(false),
                        FacetEntryMatcher.subjectFacet(false),
-//                       FacetEntryMatcher.dateIssuedFacet(false),
-                       FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                       FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                       FacetEntryMatcher.languageFacet(false)
                                                                                         )))
                    //There always needs to be a self link available
                    .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -3473,8 +3206,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -3552,8 +3285,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                        FacetEntryMatcher.authorFacet(false),
                        FacetEntryMatcher.entityTypeFacet(false),
                        FacetEntryMatcher.subjectFacet(false),
-//                       FacetEntryMatcher.dateIssuedFacet(false),
-                       FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                       FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                       FacetEntryMatcher.languageFacet(false)
                                                                                         )))
                    //There always needs to be a self link available
                    .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -3629,8 +3362,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                         FacetEntryMatcher.authorFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false),
                         FacetEntryMatcher.subjectFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
-                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false)
+                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
+                        FacetEntryMatcher.languageFacet(false)
                 )))
                 //There always needs to be a self link available
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -3706,9 +3439,9 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                        FacetEntryMatcher.typeFacet(false),
                        FacetEntryMatcher.authorFacet(false),
                        FacetEntryMatcher.subjectFacet(false),
-//                     FacetEntryMatcher.dateIssuedFacet(false),
                        FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
-                       FacetEntryMatcher.entityTypeFacet(false)
+                       FacetEntryMatcher.entityTypeFacet(false),
+                       FacetEntryMatcher.languageFacet(false)
                                                                                         )))
                    //There always needs to be a self link available
                    .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -4149,9 +3882,9 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                             FacetEntryMatcher.typeFacet(false),
                             FacetEntryMatcher.authorFacet(false),
                             FacetEntryMatcher.subjectFacet(false),
-//                            FacetEntryMatcher.dateIssuedFacet(false),
                             FacetEntryMatcher.hasContentInOriginalBundleFacet(false),
-                            FacetEntryMatcher.entityTypeFacet(false)
+                            FacetEntryMatcher.entityTypeFacet(false),
+                            FacetEntryMatcher.languageFacet(false)
                     )))
                     //There always needs to be a self link
                     .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -4305,7 +4038,6 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                 .andExpect(jsonPath("$._embedded.facets", Matchers.containsInAnyOrder(
                         FacetEntryMatcher.resourceTypeFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false)
-//                        FacetEntryMatcher.dateIssuedFacet(false)
                 )))
                 //There always needs to be a self link
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -4351,7 +4083,6 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                 .andExpect(jsonPath("$._embedded.facets", Matchers.containsInAnyOrder(
                         FacetEntryMatcher.resourceTypeFacet(false),
                         FacetEntryMatcher.entityTypeFacet(false)
-//                        FacetEntryMatcher.dateIssuedFacet(false)
                 )))
                 //There always needs to be a self link
                 .andExpect(jsonPath("$._links.self.href", containsString("/api/discover/search/objects")))
@@ -4835,7 +4566,6 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                 .andExpect(jsonPath("$._embedded.facets", Matchers.containsInAnyOrder(
                         FacetEntryMatcher.resourceTypeFacet(false),
                         FacetEntryMatcher.typeFacet(false),
-//                        FacetEntryMatcher.dateIssuedFacet(false),
                         FacetEntryMatcher.submitterFacet(false)
                 )))
                 //There always needs to be a self link
@@ -6553,313 +6283,6 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
 
     }
 
-//    @Test
-////    @Ignore
-//    public void hiddenItemsTest() throws Exception {
-//
-//        context.turnOffAuthorisationSystem();
-//        parentCommunity = CommunityBuilder.createCommunity(context)
-//                                          .withName("Parent Community")
-//                                          .build();
-//
-//        final Collection publications = CollectionBuilder.createCollection(context, parentCommunity)
-//                                                         .withEntityType("Publication")
-//                                                         .build();
-//        final Collection projects = CollectionBuilder.createCollection(context, parentCommunity)
-//                                                     .withEntityType("Project")
-//                                                     .build();
-//        final Collection people = CollectionBuilder.createCollection(context, parentCommunity)
-//                                                   .withEntityType("Person")
-//                                                   .build();
-//        EPerson owner = EPersonBuilder.createEPerson(context)
-//                                      .withEmail("test@test.com")
-//                                      .withPassword("password")
-//                                      .withCanLogin(true)
-//                                      .withNameInMetadata("John", "Doe").build();
-//
-//        Item author = ItemBuilder.createItem(context, people)
-//                                 .withCrisOwner(owner.getFullName(), UUIDUtils.toString(owner.getID()))
-//                                 .withTitle("Doe, John").build();
-//
-//        Item publication1 = ItemBuilder.createItem(context, publications).withTitle("Publication 1")
-//                                       .withAuthor(author.getName(), author.getID().toString()).build();
-//        Item publication2 = ItemBuilder.createItem(context, publications).withTitle("Publication 2")
-//                                       .withAuthor(author.getName(), author.getID().toString())
-//                                       .build();
-//
-//
-//        Item project2 = ItemBuilder.createItem(context, projects).withTitle("Project 2")
-//                                   .withProjectInvestigator(author.getName(), author.getID().toString())
-//                                   .build();
-//
-//        final EntityType personEntity = Optional.ofNullable(entityTypeService.findByEntityType(context, "Person"))
-//                                                .orElseGet(() -> EntityTypeBuilder
-//                                                                     .createEntityTypeBuilder(
-//                                                                         context, "Person").build());
-//        final RelationshipType hiddenResearchOutput = RelationshipTypeBuilder
-//                                                          .createRelationshipTypeBuilder(
-//                                                              context,
-//                                                              null,
-//                                                              personEntity,
-//                                                              "isResearchoutputsHiddenFor",
-//                                                              "notDisplayingResearchoutputs",
-//                                                              0, null,
-//                                                              0, null).build();
-//
-//        final RelationshipType hiddenProject = RelationshipTypeBuilder
-//                                                   .createRelationshipTypeBuilder(
-//                                                       context,
-//                                                       null,
-//                                                       personEntity,
-//                                                       "isProjectsHiddenFor",
-//                                                       "notDisplayingProjects",
-//                                                       0, null,
-//                                                       0, null).build();
-//
-//        RelationshipBuilder.createRelationshipBuilder(context, publication1, author, hiddenResearchOutput)
-//                           .build();
-//        RelationshipBuilder.createRelationshipBuilder(context, project2, author, hiddenProject)
-//                           .build();
-//
-//        context.restoreAuthSystemState();
-//
-//        getClient().perform(get("/api/discover/search/objects")
-//                                .param("configuration", "RELATION.Person.researchoutputs")
-//                                .param("scope", author.getID().toString()))
-//                   .andExpect(status().isOk())
-//                   .andExpect(jsonPath("$.configuration", is("RELATION.Person.researchoutputs")))
-//                   .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.containsInAnyOrder(
-//                       SearchResultMatcher.matchOnItemName("item", "items", "Publication 2"))))
-//                   .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(1)));
-//
-//
-//        final String ownerToken = getAuthToken(owner.getEmail(), "password");
-//
-//        getClient(ownerToken).perform(get("/api/discover/search/objects")
-//                                          .param("configuration", "RELATION.Person.researchoutputs")
-//                                          .param("scope", author.getID().toString()))
-//                             .andExpect(status().isOk())
-//                             .andExpect(jsonPath("$.configuration", is("RELATION.Person.researchoutputs")))
-//                             .andExpect(
-//                                 jsonPath("$._embedded.searchResult._embedded.objects", Matchers.containsInAnyOrder(
-//                                     SearchResultMatcher.matchOnItemName("item", "items", "Publication 2"),
-//                                     SearchResultMatcher.matchOnItemName("item", "items", "Publication 1"))))
-//                             .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(2)));
-//
-//
-//    }
-
-//    @Test
-//    public void relevanceByRelationPlacesTest() throws Exception {
-//
-//        configurationService.setProperty("relationship.places.onlyright",
-//                                         "null::Person::isResearchoutputsSelectedFor::hasSelectedResearchoutputs");
-//        context.turnOffAuthorisationSystem();
-//        parentCommunity = CommunityBuilder.createCommunity(context)
-//                                          .withName("Parent Community")
-//                                          .build();
-//
-//        final Collection publications = CollectionBuilder.createCollection(context, parentCommunity)
-//                                                         .withEntityType("Publication")
-//                                                         .build();
-//        final Collection patents = CollectionBuilder.createCollection(context, parentCommunity)
-//                                                    .withEntityType("Patent")
-//                                                    .build();
-//        final Collection people = CollectionBuilder.createCollection(context, parentCommunity)
-//                                                   .withEntityType("Person")
-//                                                   .build();
-//
-//        Item author1 = ItemBuilder.createItem(context, people)
-//                                  .withTitle("Doe, John").build();
-//        Item author2 = ItemBuilder.createItem(context, people)
-//                                  .withTitle("Smith, John").build();
-//
-//        Item publication1 = ItemBuilder.createItem(context, publications).withTitle("Publication 1")
-//                                       .withAuthor(author1.getName(), author1.getID().toString()).build();
-//        Item publication2 = ItemBuilder.createItem(context, publications).withTitle("Publication 2")
-//                                       .withAuthor(author1.getName(), author1.getID().toString())
-//                                       .withAuthor(author2.getName(), author2.getID().toString())
-//                                       .build();
-//        Item publication3 = ItemBuilder.createItem(context, publications).withTitle("Publication 3")
-//                                       .withAuthor(author2.getName(), author2.getID().toString())
-//                                       .build();
-//        Item patent1 = ItemBuilder.createItem(context, patents).withTitle("Patent 1")
-//                                  .withAuthor(author1.getName(), author1.getID().toString())
-//                                  .build();
-//
-//        final EntityType personEntity = Optional.ofNullable(entityTypeService.findByEntityType(context, "Person"))
-//            .orElseGet(() -> EntityTypeBuilder.createEntityTypeBuilder(context, "Person").build());
-//        final RelationshipType selectedResearchOutput = RelationshipTypeBuilder
-//                                                            .createRelationshipTypeBuilder(
-//                                                                context,
-//                                                                null,
-//                                                                personEntity,
-//                                                                "isResearchoutputsSelectedFor",
-//                                                                "hasSelectedResearchoutputs",
-//                                                                0, null,
-//                                                                0, null).build();
-//
-//        final Relationship publication2ToAuthor1 =
-//            RelationshipBuilder.createRelationshipBuilder(context, publication2, author1, selectedResearchOutput,
-//                                                          -1, -1).build();
-//
-//        final Relationship publication1ToAuthor1 =
-//            RelationshipBuilder.createRelationshipBuilder(context, publication1,
-//                                                          author1, selectedResearchOutput, -1, -1)
-//                               .build();
-//        final Relationship publication3ToAuthor2 =
-//            RelationshipBuilder.createRelationshipBuilder(context, publication3, author2, selectedResearchOutput,
-//                                                          -1, -1)
-//                               .build();
-//
-//        final Relationship publication2ToAuthor2 =
-//            RelationshipBuilder.createRelationshipBuilder(context, publication2, author2, selectedResearchOutput,
-//                                                          -1, -1)
-//                               .build();
-//
-//        final Relationship patent1ToAuthor1 =
-//            RelationshipBuilder.createRelationshipBuilder(context, patent1, author1, selectedResearchOutput,
-//                                                          -1, -1)
-//                               .build();
-//
-//        context.restoreAuthSystemState();
-//
-//        getClient().perform(get("/api/discover/search/objects")
-//                                          .param("configuration", "RELATION.Person.researchoutputs")
-//                                          .param("scope", author1.getID().toString()))
-//                             .andExpect(status().isOk())
-//                             .andExpect(jsonPath("$.configuration", is("RELATION.Person.researchoutputs")))
-//                             .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.contains(
-//                                 SearchResultMatcher.matchOnItemName("item", "items", "Publication 2"),
-//                                 SearchResultMatcher.matchOnItemName("item", "items", "Publication 1"),
-//                                 SearchResultMatcher.matchOnItemName("item", "items", "Patent 1"))))
-//                             .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(3)));
-//
-//        getClient().perform(get("/api/discover/search/objects")
-//                                .param("configuration", "RELATION.Person.researchoutputs")
-//                                .param("scope", author2.getID().toString()))
-//                   .andExpect(status().isOk())
-//                   .andExpect(jsonPath("$.configuration", is("RELATION.Person.researchoutputs")))
-//                   .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.contains(
-//                       SearchResultMatcher.matchOnItemName("item", "items", "Publication 3"),
-//                       SearchResultMatcher.matchOnItemName("item", "items", "Publication 2"))))
-//                   .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(2)));
-//
-//        configurationService.setProperty("relationship.places.onlyright", "");
-//
-//
-//    }
-
-    @Test
-    @Ignore
-    public void hiddenItemsTest() throws Exception {
-
-        context.turnOffAuthorisationSystem();
-        parentCommunity = CommunityBuilder.createCommunity(context)
-                                          .withName("Parent Community")
-                                          .build();
-
-        final Collection publications = CollectionBuilder.createCollection(context, parentCommunity)
-                                                         .withEntityType("Publication")
-                                                         .build();
-        final Collection projects = CollectionBuilder.createCollection(context, parentCommunity)
-                                                    .withEntityType("Project")
-                                                    .build();
-        final Collection people = CollectionBuilder.createCollection(context, parentCommunity)
-                                                   .withEntityType("Person")
-                                                   .build();
-        EPerson owner = EPersonBuilder.createEPerson(context)
-                                      .withEmail("test@test.com")
-                                      .withPassword("password")
-                                      .withCanLogin(true)
-            .withNameInMetadata("John", "Doe").build();
-
-        Item author = ItemBuilder.createItem(context, people)
-                                  .withCrisOwner(owner.getFullName(), UUIDUtils.toString(owner.getID()))
-                                  .withTitle("Doe, John").build();
-
-        Item publication1 = ItemBuilder.createItem(context, publications).withTitle("Publication 1")
-                                       .withAuthor(author.getName(), author.getID().toString()).build();
-        Item publication2 = ItemBuilder.createItem(context, publications).withTitle("Publication 2")
-                                       .withAuthor(author.getName(), author.getID().toString())
-                                       .build();
-
-
-        Item project2 = ItemBuilder.createItem(context, projects).withTitle("Project 2")
-                                   .withProjectInvestigator(author.getName(), author.getID().toString())
-                                   .build();
-
-        final EntityType personEntity = Optional.ofNullable(entityTypeService.findByEntityType(context, "Person"))
-                                                .orElseGet(() -> EntityTypeBuilder
-                                                                     .createEntityTypeBuilder(
-                                                                         context, "Person").build());
-        final RelationshipType hiddenResearchOutput = RelationshipTypeBuilder
-                                                            .createRelationshipTypeBuilder(
-                                                                context,
-                                                                null,
-                                                                personEntity,
-                                                                "isResearchoutputsHiddenFor",
-                                                                "notDisplayingResearchoutputs",
-                                                                0, null,
-                                                                0, null).build();
-
-        final RelationshipType hiddenProject = RelationshipTypeBuilder
-                                                          .createRelationshipTypeBuilder(
-                                                              context,
-                                                              null,
-                                                              personEntity,
-                                                              "isProjectsHiddenFor",
-                                                              "notDisplayingProjects",
-                                                              0, null,
-                                                              0, null).build();
-
-        RelationshipBuilder.createRelationshipBuilder(context, publication1, author, hiddenResearchOutput)
-                           .build();
-        RelationshipBuilder.createRelationshipBuilder(context, project2, author, hiddenProject)
-                           .build();
-
-        context.restoreAuthSystemState();
-
-        getClient().perform(get("/api/discover/search/objects")
-                                .param("configuration", "RELATION.Person.researchoutputs")
-                                .param("scope", author.getID().toString()))
-                   .andExpect(status().isOk())
-                   .andExpect(jsonPath("$.configuration", is("RELATION.Person.researchoutputs")))
-                   .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.containsInAnyOrder(
-                       SearchResultMatcher.matchOnItemName("item", "items", "Publication 2"))))
-                   .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(1)));
-
-
-        final String ownerToken = getAuthToken(owner.getEmail(), "password");
-
-        getClient(ownerToken).perform(get("/api/discover/search/objects")
-                                .param("configuration", "RELATION.Person.researchoutputs")
-                                .param("scope", author.getID().toString()))
-                   .andExpect(status().isOk())
-                   .andExpect(jsonPath("$.configuration", is("RELATION.Person.researchoutputs")))
-                   .andExpect(jsonPath("$._embedded.searchResult._embedded.objects", Matchers.containsInAnyOrder(
-                       SearchResultMatcher.matchOnItemName("item", "items", "Publication 2"),
-                       SearchResultMatcher.matchOnItemName("item", "items", "Publication 1"))))
-                   .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(2)));
-
-
-        final String adminToken = getAuthToken(admin.getEmail(), password);
-        getClient(adminToken).perform(get("/api/discover/search/objects")
-                                          .param("configuration", "RELATION.Person.researchoutputs")
-                                          .param("scope", author.getID().toString()))
-                             .andExpect(status().isOk())
-                             .andExpect(jsonPath("$.configuration", is("RELATION.Person.researchoutputs")))
-                             .andExpect(
-                                 jsonPath("$._embedded.searchResult._embedded.objects",
-                                          Matchers.containsInAnyOrder(
-                                              SearchResultMatcher
-                                                  .matchOnItemName("item", "items", "Publication 2"),
-                                              SearchResultMatcher
-                                                  .matchOnItemName("item", "items", "Publication 1"))))
-                             .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(2)));
-
-
-    }
 
     /**
      * This test checks the scenario when an item is related to many owners and it is hidden by only one, many or all of
@@ -7210,20 +6633,6 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                                                   .matchOnItemName("item", "items", "Publication 1"))))
                              .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(2)));
 
-//        final String adminToken = getAuthToken(admin.getEmail(), password);
-//        getClient(adminToken).perform(get("/api/discover/search/objects")
-//                                          .param("configuration", "RELATION.Person.researchoutputs")
-//                                          .param("scope", author.getID().toString()))
-//                             .andExpect(status().isOk())
-//                             .andExpect(jsonPath("$.configuration", is("RELATION.Person.researchoutputs")))
-//                             .andExpect(
-//                                 jsonPath("$._embedded.searchResult._embedded.objects",
-//                                          Matchers.containsInAnyOrder(
-//                                              SearchResultMatcher
-//                                                  .matchOnItemName("item", "items", "Publication 2"),
-//                                              SearchResultMatcher
-//                                                  .matchOnItemName("item", "items", "Publication 1"))))
-//                             .andExpect(jsonPath("$._embedded.searchResult.page.totalElements", is(2)));
 
     }
 

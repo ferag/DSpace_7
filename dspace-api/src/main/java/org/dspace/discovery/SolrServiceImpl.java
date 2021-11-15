@@ -1025,6 +1025,9 @@ public class SolrServiceImpl implements SearchService, IndexingService {
                             }
 
                             String field = transformFacetField(facetFieldConfig, facetField.getName(), true);
+                            String currentLocalePrefix = context.getCurrentLocale().getLanguage() + "_";
+                            field = StringUtils.removeStart(field, currentLocalePrefix);
+
                             long countInPage = 0;
                             int idxFC = 0;
                             long missing = 0;
@@ -1543,6 +1546,7 @@ public class SolrServiceImpl implements SearchService, IndexingService {
         Optional<String> id = findUniqueId(metric);
         if (id.isEmpty()) {
             log.warn("Unable to define unique id for item {}", metric.getResource().getID());
+            return;
         }
         try {
             SolrInputDocument solrInDoc = new SolrInputDocument();

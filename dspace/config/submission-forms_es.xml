@@ -7169,7 +7169,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>internalid</dc-element>
-          <label>Código o identifcador público del proyect</label>
+          <label>Código o identificador público del proyect</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -7562,7 +7562,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>internalid</dc-element>
-          <label>Código o identifcador público del proyect</label>
+          <label>Código o identifcador público del proyecto</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -7955,7 +7955,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>internalid</dc-element>
-          <label>Código o identifcador público del proyect</label>
+          <label>Código o identifcador público del proyecto</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -8348,7 +8348,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>internalid</dc-element>
-          <label>Código del fnanciamiento</label>
+          <label>Código del financiamiento</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required>Debe introducir el código del fnanciamiento</required>
@@ -8555,7 +8555,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>internalid</dc-element>
-          <label>Código del fnanciamiento</label>
+          <label>Código del financiamiento</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required>Debe introducir el código del fnanciamiento</required>
@@ -8777,7 +8777,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Código institucional del equipamiento</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Debe especificar el Código institucional del equipamiento</required>
           <hint>El código registrado o declarado en los sistemas internos de la institución, por ejemplo, en el inventario de activos. Ejemplo: F.4925</hint>
         </field>
       </row>
@@ -8981,7 +8981,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Código institucional del equipamiento</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Debe especificar el Código institucional del equipamiento</required>
           <hint>El código registrado o declarado en los sistemas internos de la institución, por ejemplo, en el inventario de activos. Ejemplo: F.4925</hint>
         </field>
       </row>
@@ -10019,7 +10019,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required>Ingresar un Horizonte de Ejecución</required>
           <hint>Del – al años</hint>
-          <regex>^[0-9]{0,4}$</regex>
         </field>
       </row>
       <row>

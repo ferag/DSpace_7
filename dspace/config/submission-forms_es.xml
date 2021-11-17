@@ -97,6 +97,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
       <row>
@@ -109,6 +110,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
     </form>
@@ -147,6 +149,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
       <row>
@@ -159,6 +162,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
     </form>
@@ -197,6 +201,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
       <row>
@@ -209,6 +214,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
     </form>
@@ -543,17 +549,17 @@ esta publicación.</hint>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>person</dc-element>
           <dc-qualifier>affiliation</dc-qualifier>
-          <label>Filiación</label>
+          <label>Institución</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>Debe introducir al menos la filiación.</required>
+          <required>Debe introducir al menos la institución.</required>
           <hint />
         </field>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>affiliation</dc-element>
           <dc-qualifier>role</dc-qualifier>
-          <label>Papel</label>
+          <label>Puesto de trabajo</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -589,17 +595,17 @@ esta publicación.</hint>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>person</dc-element>
           <dc-qualifier>affiliation</dc-qualifier>
-          <label>Filiación</label>
+          <label>Institución</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>Debe introducir al menos la filiación.</required>
+          <required>Debe introducir al menos la institución.</required>
           <hint />
         </field>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>affiliation</dc-element>
           <dc-qualifier>role</dc-qualifier>
-          <label>Papel</label>
+          <label>Puesto de trabajo</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -805,7 +811,7 @@ esta publicación.</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>education</dc-element>
           <dc-qualifier>grantor</dc-qualifier>
-          <label>Donante</label>
+          <label>Centro de estudios</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -876,7 +882,7 @@ esta publicación.</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>education</dc-element>
           <dc-qualifier>grantor</dc-qualifier>
-          <label>Donante</label>
+          <label>Centro de estudios</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -902,17 +908,17 @@ esta publicación.</hint>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>person</dc-element>
           <dc-qualifier>affiliation</dc-qualifier>
-          <label>Filiación</label>
+          <label>Institución</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>Debe introducir al menos la filiación.</required>
+          <required>Debe introducir al menos la institución.</required>
           <hint />
         </field>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>affiliation</dc-element>
           <dc-qualifier>role</dc-qualifier>
-          <label>Papel</label>
+          <label>Puesto de trabajo</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -1054,7 +1060,7 @@ esta publicación.</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>education</dc-element>
           <dc-qualifier>grantor</dc-qualifier>
-          <label>Donante</label>
+          <label>Centro de estudios</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -1125,7 +1131,7 @@ esta publicación.</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>education</dc-element>
           <dc-qualifier>grantor</dc-qualifier>
-          <label>Donante</label>
+          <label>Centro de estudios</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -1151,10 +1157,20 @@ esta publicación.</hint>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>person</dc-element>
           <dc-qualifier>affiliation</dc-qualifier>
-          <label>Filiación</label>
+          <label>Institución</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>Debe introducir al menos la filiación.</required>
+          <required>Debe introducir al menos la institución.</required>
+          <hint />
+        </field>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>affiliation</dc-element>
+          <dc-qualifier>role</dc-qualifier>
+          <label>Puesto de trabajo</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
           <hint />
         </field>
       </row>
@@ -1175,18 +1191,6 @@ esta publicación.</hint>
           <dc-qualifier>endDate</dc-qualifier>
           <label>Fecha de finalización</label>
           <input-type>date</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>oairecerif</dc-schema>
-          <dc-element>affiliation</dc-element>
-          <dc-qualifier>role</dc-qualifier>
-          <label>Papel</label>
-          <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -1265,7 +1269,7 @@ esta publicación.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Introduzca el número de DNI (8 dígitos) del autor</hint>
-          <regex>^[0-9]{8}$</regex>
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
       <row>
@@ -1290,7 +1294,7 @@ esta publicación.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Introduzca el identificador ORCID (es decir, 0000-0005-1111-2547) del autor</hint>
-          <regex>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</regex>
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
     </form>
@@ -1317,7 +1321,7 @@ esta publicación.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Introduzca el número de DNI (8 dígitos) del autor</hint>
-          <regex>^[0-9]{8}$</regex>
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
       <row>
@@ -1342,7 +1346,7 @@ esta publicación.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Introduzca el identificador ORCID (es decir, 0000-0005-1111-2547) del autor</hint>
-          <regex>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</regex>
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
     </form>
@@ -1369,7 +1373,7 @@ esta publicación.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Introduzca el número de DNI (8 dígitos) del autor</hint>
-          <regex>^[0-9]{8}$</regex>
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
       <row>
@@ -1394,7 +1398,7 @@ esta publicación.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Introduzca el identificador ORCID (es decir, 0000-0005-1111-2547) del autor</hint>
-          <regex>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</regex>
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
     </form>
@@ -4978,7 +4982,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required>Introduzca al menos DNI (8 dígitos) u ORCID (16 dígitos)</required>
           <hint />
-          <regex>^[0-9]{8}$</regex>
+          <validation>^[0-9]{8}$</validation>
         </field>
         <field>
           <dc-schema>person</dc-schema>
@@ -4989,7 +4993,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required>Introduzca al menos DNI (8 dígitos) u ORCID (16 dígitos)</required>
           <hint />
-          <regex>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</regex>
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
       <row>
@@ -4997,12 +5001,12 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>identifier</dc-element>
           <dc-qualifier>immigrationCard</dc-qualifier>
-          <label>Tarjeta de Inmigración</label>
+          <label>Carné de extranjería</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
           <hint />
-          <regex>^[a-zA-Z0-9]{0,12}$</regex>
+          <validation>^[a-zA-Z0-9]{0,12}$</validation>
         </field>
       </row>
       <row>
@@ -5036,7 +5040,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Podrá ser actualizado por Reniec</hint>
         </field>
         <field>
           <dc-schema>oairecerif</dc-schema>
@@ -5099,7 +5103,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>description</dc-element>
           <dc-qualifier>abstract</dc-qualifier>
-          <label>Biografía</label>
+          <label>Resumen de biografía</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -5327,7 +5331,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ins</dc-qualifier>
-          <label>INS Materia(s)</label>
+          <label>Áreas Temáticas Médicas y de la Salud asociadas a las líneas de investigación del INS</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -5415,7 +5419,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required>Introduzca al menos DNI (8 dígitos) u ORCID (16 dígitos)</required>
           <hint />
-          <regex>^[0-9]{8}$</regex>
+          <validation>^[0-9]{8}$</validation>
         </field>
         <field>
           <dc-schema>person</dc-schema>
@@ -5426,7 +5430,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required>Introduzca al menos DNI (8 dígitos) u ORCID (16 dígitos)</required>
           <hint />
-          <regex>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</regex>
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
       <row>
@@ -5434,12 +5438,12 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>identifier</dc-element>
           <dc-qualifier>immigrationCard</dc-qualifier>
-          <label>Tarjeta de Inmigración</label>
+          <label>Carné de extranjería</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
           <hint />
-          <regex>^[a-zA-Z0-9]{0,12}$</regex>
+          <validation>^[a-zA-Z0-9]{0,12}$</validation>
         </field>
       </row>
       <row>
@@ -5473,7 +5477,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Podrá ser actualizado por Reniec</hint>
         </field>
         <field>
           <dc-schema>oairecerif</dc-schema>
@@ -5536,7 +5540,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>description</dc-element>
           <dc-qualifier>abstract</dc-qualifier>
-          <label>Biografía</label>
+          <label>Resumen de biografía</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -5765,7 +5769,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ins</dc-qualifier>
-          <label>INS Materia(s)</label>
+          <label>Áreas Temáticas Médicas y de la Salud asociadas a las líneas de investigación del INS</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -5827,12 +5831,12 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>identifier</dc-element>
           <dc-qualifier>immigrationCard</dc-qualifier>
-          <label>Tarjeta de Inmigración</label>
+          <label>Carné de extranjería</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
           <hint />
-          <regex>^[a-zA-Z0-9]{0,12}$</regex>
+          <validation>^[a-zA-Z0-9]{0,12}$</validation>
         </field>
       </row>
       <row>
@@ -5866,7 +5870,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Podrá ser actualizado por Reniec</hint>
         </field>
         <field>
           <dc-schema>oairecerif</dc-schema>
@@ -5929,7 +5933,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>description</dc-element>
           <dc-qualifier>abstract</dc-qualifier>
-          <label>Biografía</label>
+          <label>Resumen de biografía</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -6194,7 +6198,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ins</dc-qualifier>
-          <label>INS Materia(s)</label>
+          <label>Áreas Temáticas Médicas y de la Salud asociadas a las líneas de investigación del INS</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -6461,7 +6465,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>orgunit</dc-element>
           <dc-qualifier>funder</dc-qualifier>
-          <label>Es una entidad fnanciadora (funder)</label>
+          <label>Es una entidad financiadora (funder)</label>
           <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -6476,8 +6480,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Sector institucional  (Obligatorio sólo para instituciones principales)</label>
           <input-type value-pairs-name="ocde_sectorInstitucional">dropdown</input-type>
           <repeatable>false</repeatable>
-<!--          <required>Debe introducir el Sector institucional</required>-->
-          <required></required>
+          <required />
           <hint />
           <type-bind>Institución principal</type-bind>
         </field>
@@ -6588,8 +6591,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Naturaleza jurídica</label>
           <input-type value-pairs-name="peru_ou_nature">dropdown</input-type>
           <repeatable>false</repeatable>
-<!--          <required>Obligatorio para instituciones principales</required>-->
-          <required></required>
+          <required />
           <hint>Obligatorio para instituciones principales</hint>
           <type-bind>Institución principal</type-bind>
         </field>
@@ -6795,20 +6797,20 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Es un Instituto Público de Investigación (IPI)</label>
           <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
-          <readonly>all</readonly>
           <required />
           <hint />
+          <readonly>all</readonly>
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>orgunit</dc-element>
           <dc-qualifier>funder</dc-qualifier>
-          <label>Es una entidad fnanciadora (funder)</label>
+          <label>Es una entidad financiadora (funder)</label>
           <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
-          <readonly>all</readonly>
           <required />
           <hint />
+          <readonly>all</readonly>
         </field>
       </row>
       <row>
@@ -6819,8 +6821,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Sector institucional  (Obligatorio sólo para instituciones principales)</label>
           <input-type value-pairs-name="ocde_sectorInstitucional">dropdown</input-type>
           <repeatable>false</repeatable>
-<!--          <required>Debe introducir el Sector institucional</required>-->
-          <required></required>
+          <required />
           <hint />
           <type-bind>Institución principal</type-bind>
         </field>
@@ -6931,8 +6932,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Naturaleza jurídica</label>
           <input-type value-pairs-name="peru_ou_nature">dropdown</input-type>
           <repeatable>false</repeatable>
-<!--          <required>Obligatorio para instituciones principales</required>-->
-          <required></required>
+          <required />
           <hint>Obligatorio para instituciones principales</hint>
           <type-bind>Institución principal</type-bind>
         </field>
@@ -7169,7 +7169,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>internalid</dc-element>
-          <label>Código o identificador público del proyect</label>
+          <label>Código o identificador público del proyecto</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -7328,7 +7328,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>crispj</dc-schema>
           <dc-element>organization</dc-element>
-          <label>Organización(es) participante(s)</label>
+          <label>Organización miembro de consorcio (Member)</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -7562,7 +7562,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>internalid</dc-element>
-          <label>Código o identifcador público del proyecto</label>
+          <label>Código o identificador público del proyecto</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -7721,7 +7721,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>crispj</dc-schema>
           <dc-element>organization</dc-element>
-          <label>Organización(es) participante(s)</label>
+          <label>Organización miembro de consorcio (Member)</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -7955,7 +7955,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>oairecerif</dc-schema>
           <dc-element>internalid</dc-element>
-          <label>Código o identifcador público del proyecto</label>
+          <label>Código o identificador público del proyecto</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -8114,7 +8114,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>crispj</dc-schema>
           <dc-element>organization</dc-element>
-          <label>Organización(es) participante(s)</label>
+          <label>Organización miembro de consorcio (Member)</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -8767,7 +8767,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Acrónimo, sigla o forma abrevida del equipamiento.</hint>
+          <hint>Acrónimo, sigla o forma abreviada del equipamiento</hint>
         </field>
       </row>
       <row>
@@ -8885,7 +8885,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>relation</dc-element>
           <dc-qualifier>funding</dc-qualifier>
-          <label>Financiación(es)</label>
+          <label>Financiamiento de origen</label>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -8971,7 +8971,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Acrónimo, sigla o forma abrevida del equipamiento.</hint>
+          <hint>Acrónimo, sigla o forma abreviada del equipamiento</hint>
         </field>
       </row>
       <row>
@@ -9089,7 +9089,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>relation</dc-element>
           <dc-qualifier>funding</dc-qualifier>
-          <label>Financiación(es)</label>
+          <label>Financiamiento de origen</label>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -9370,7 +9370,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required>Seleccionar un Año de término</required>
           <hint />
-          <regex>^[0-9]{0,4}$</regex>
+          <validation>^[0-9]{0,4}$</validation>
         </field>
       </row>
       <row>
@@ -9691,7 +9691,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required>Ingresar Año de término</required>
           <hint />
-          <regex>^[0-9]{0,4}$</regex>
+          <validation>^[0-9]{0,4}$</validation>
         </field>
       </row>
       <row>
@@ -9769,7 +9769,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
           <dc-qualifier>hinderingEvents</dc-qualifier>
-          <label>Principales eventos que dificultaron avances:</label>
+          <label>Principales eventos que dificultaron avances</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required>Ingresar Principales eventos que dificultaron avances:</required>
@@ -9810,7 +9810,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required>Ingresar Año de evaluación</required>
           <hint />
-          <regex>^[0-9]{0,4}$</regex>
+          <validation>^[0-9]{0,4}$</validation>
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -10325,10 +10325,10 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
           <dc-qualifier>relationshipActions</dc-qualifier>
-          <label>Relationship Actions</label>
+          <label>Acciones de relación</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <required>Please enter Relationship Actions</required>
+          <required>Ingresar Acciones de relación</required>
           <hint />
         </field>
       </row>
@@ -10344,7 +10344,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required>Ingresar un Año</required>
           <hint />
-          <regex>^[0-9]{0,4}$</regex>
+          <validation>^[0-9]{0,4}$</validation>
         </field>
       </row>
       <row>
@@ -10357,7 +10357,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required>Ingresar Valor Esperado</required>
           <hint />
-          <regex>^[0-9]{8}$</regex>
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
       <row>
@@ -10370,7 +10370,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required>Ingresar Valor Obtenido</required>
           <hint />
-          <regex>^[0-9]{8}$</regex>
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
     </form>
@@ -10572,7 +10572,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required>Ingresar una Linea Base</required>
           <hint />
-          <regex>^[0-9]+$</regex>
+          <validation>^[0-9]+$</validation>
         </field>
       </row>
       <row>
@@ -10597,7 +10597,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required>Ingresar Año Base</required>
           <hint />
-          <regex>^[0-9]{0,4}$</regex>
+          <validation>^[0-9]{0,4}$</validation>
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -11432,7 +11432,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <repeatable>false</repeatable>
           <required>Ingresar Año de Ejecución</required>
           <hint />
-          <regex>^[0-9]{0,4}$</regex>
+          <validation>^[0-9]{0,4}$</validation>
         </field>
         <field>
           <dc-schema>perucris</dc-schema>

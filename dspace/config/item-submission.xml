@@ -187,17 +187,17 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-    <step-definition id="publication_references" mandatory="false">
+    <step-definition id="publication_references" mandatory="true">
       <heading>submit.progressbar.describe.publication_references</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-    <step-definition id="publication_indexing" mandatory="false">
+    <step-definition id="publication_indexing" mandatory="true">
       <heading>submit.progressbar.describe.publication_indexing</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-    <step-definition id="publication_thesis" mandatory="false">
+    <step-definition id="publication_thesis" mandatory="true">
       <heading>submit.progressbar.describe.publication_thesis</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
@@ -237,17 +237,17 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-    <step-definition id="cv-publication_references" mandatory="false">
+    <step-definition id="cv-publication_references" mandatory="true">
       <heading>submit.progressbar.describe.cv-publication_references</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-    <step-definition id="cv-publication_indexing" mandatory="false">
+    <step-definition id="cv-publication_indexing" mandatory="true">
       <heading>submit.progressbar.describe.cv-publication_indexing</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
-    <step-definition id="cv-publication_thesis" mandatory="false">
+    <step-definition id="cv-publication_thesis" mandatory="true">
       <heading>submit.progressbar.describe.cv-publication_thesis</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>

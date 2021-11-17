@@ -15,7 +15,7 @@
     <Identifier type="Scopus Affiliation">@organization.identifier.scopusaffid@</Identifier>
     <Identifier type="CrossRef Funder">@organization.identifier.crossrefid@</Identifier>
     <ParentOrganization>@organization.parentOrganization@</ParentOrganization>
-    <Subject>@perucris.subject.ocde@</Subject>
+    <Subject scheme="http://purl.org/pe-repo/ocde/ford">@virtual.mapConverter.ocdeSubjects.perucris-subject-ocde@</Subject>
     <Keyword>@dc.subject@</Keyword>
     <PostAddress>
         <AddressLocality>@organization.address.addressLocality@</AddressLocality>

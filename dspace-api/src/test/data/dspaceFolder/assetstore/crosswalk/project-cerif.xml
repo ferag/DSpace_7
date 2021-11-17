@@ -41,8 +41,8 @@
 			</Funding>
 		</As>
 	</Funded>
-    <Subject scheme="http://purl.org/pe-repo/ocde/ford">First OCDE Subject</Subject>
-    <Subject scheme="http://purl.org/pe-repo/ocde/ford">Second OCDE Subject</Subject>
+	<Subject scheme="http://purl.org/pe-repo/ocde/ford">https://purl.org/pe-repo/ocde/ford/#5.06.02</Subject>
+    <Subject scheme="http://purl.org/pe-repo/ocde/ford">https://purl.org/pe-repo/ocde/ford/#5.07.01</Subject>
 	<Keyword>project</Keyword>
 	<Keyword>test</Keyword>
 	<Abstract>This is a project to test the export</Abstract>

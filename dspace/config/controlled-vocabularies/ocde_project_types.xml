@@ -28,8 +28,8 @@
                   id="innovacionDeProducto"
                   label="Innovación de producto">
               <isComposedBy>
-                  <node id="#innovacionDeBien" label="Innovación de un bien"/>
-                  <node id="#innovacionDeServicio" label="Innovación de un servicio"/>
+                  <node id="innovacionDeBien" label="Innovación de un bien"/>
+                  <node id="innovacionDeServicio" label="Innovación de un servicio"/>
               </isComposedBy>
 
           </node>

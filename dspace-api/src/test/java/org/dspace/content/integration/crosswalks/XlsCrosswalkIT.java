@@ -383,6 +383,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withSubject("project")
             .withSubject("test")
             .withOAMandate("false")
+            .withTypeOCDE("oecd_project_type::Innovación tecnológica::Innovación de producto")
             .withOAMandateURL("www.oamandate.com")
             .build();
 
@@ -423,7 +424,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
                 ""));
 
         assertThat(getRowValues(sheet.getRow(3)),
-            contains("", "", "Third Test Project", "TTP", "88-22-33", "www.project.test", "2020-01-01", "2020-12-31",
+            contains("https://purl.org/pe-repo/ocde/tipoProyecto#innovacionDeProducto", "", "Third Test Project", "TTP", "88-22-33", "www.project.test", "2020-01-01", "2020-12-31",
                 "OPEN", "Third Coordinator OrgUnit", "Partner OrgUnit", "Member OrgUnit", "Investigator",
                 "First coinvestigator||Second coinvestigator", "", "project||test", "", "false", "www.oamandate.com",
                 "", "", "", "", ""));
@@ -456,6 +457,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withOrgUnitCrossRefFunderIdentifier("CRF-01")
             .withOrgUnitAddressLocality("via del canale")
             .withOrgUnitAddressCountry("Italy")
+            .withSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Estudios urbanos")
             .withUbigeo("010201")
             .build();
 
@@ -506,7 +508,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             contains("Test OrgUnit", "Test OrgUnit LegalName", "TOU",
                 "https://w3id.org/cerif/vocab/OrganisationTypes#StrategicResearchInsitute", "OU Director", "1990-05-12",
                 "board1||board2", "Parent OrgUnit", "ID-01||ID-02", "www.orgUnit.com||www.orgUnit.it", "RUC-01", "",
-                "ROR-01", "RIN-01", "", "", "", "", "Italy", "via del canale", "", "010201"));
+                "ROR-01", "RIN-01", "", "", "https://purl.org/pe-repo/ocde/ford/#5.07.03", "", "Italy", "via del canale", "", "010201"));
 
         assertThat(getRowValues(sheet.getRow(2)),
             contains("Another Test OrgUnit", "", "ATOU",
@@ -534,8 +536,8 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withEquipmentOwnerOrgUnit("Test OrgUnit")
             .withEquipmentOwnerPerson("Walter White")
             .withUsageType("Investigacion cientifica y desarrollo experimental")
-            .withSubjectOCDE("First subject")
-            .withSubjectOCDE("Second subject")
+            .withSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Planificación del transporte y aspectos sociales del transporte")
+            .withSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Estudios urbanos")
             .withResearchLine("ResearchLine")
             .withRelationFunding("Funding")
             .withManufacturingCountry("IT")
@@ -553,7 +555,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withInternalId("ID-02")
             .withDescription("This is another equipment to test the export functionality")
             .withEquipmentOwnerPerson("John Smith")
-            .withSubjectOCDE("Subject")
+            .withSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Estudios urbanos")
             .withRelationFunding("First funding")
             .withRelationFunding("Second funding")
             .withAcquisitionDate("2021-02-01")
@@ -591,11 +593,13 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         assertThat(getRowValues(sheet.getRow(1)), contains("First Test Equipment", "FT-EQ", "Type", "ID-01",
             "This is an equipment to test the export functionality", "Test OrgUnit", "Walter White",
-            "Investigacion cientifica y desarrollo experimental", "First subject||Second subject", "ResearchLine",
-            "Funding", "IT", "2020-01-01", "2021-01-01", "4000", "€", "Note"));
+            "Investigacion cientifica y desarrollo experimental",
+            "https://purl.org/pe-repo/ocde/ford/#5.07.04||https://purl.org/pe-repo/ocde/ford/#5.07.03",
+            "ResearchLine", "Funding", "IT", "2020-01-01", "2021-01-01", "4000", "€", "Note"));
 
         assertThat(getRowValues(sheet.getRow(2)), contains("Second Test Equipment", "ST-EQ", "", "ID-02",
-            "This is another equipment to test the export functionality", "", "John Smith", "", "Subject", "",
+            "This is another equipment to test the export functionality", "", "John Smith", "",
+            "https://purl.org/pe-repo/ocde/ford/#5.07.03", "",
             "First funding||Second funding", "", "", "2021-02-01", "5000", "€", ""));
 
         assertThat(getRowValues(sheet.getRow(3)), contains("Third Test Equipment", "TT-EQ", "", "ID-03", "", "", "", "",

@@ -1,4 +1,4 @@
-Tipo OCDE = perucris.project.typeOcde
+Tipo OCDE = virtual.mapConverter.ocdeProjectTypes.perucris-project-typeOcde
 Otro tipo = perucris.project.typeOther
 Título = dc.title
 Acrónimo = oairecerif.acronym

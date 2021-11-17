@@ -42,7 +42,7 @@
         "@organization.identifier.crossrefid@",
     ],
     "subjects": [
-        "@perucris.subject.ocde@",
+        "@virtual.mapConverter.ocdeSubjects.perucris-subject-ocde@",
     ],
     "keywords": [
         "@dc.subject@",

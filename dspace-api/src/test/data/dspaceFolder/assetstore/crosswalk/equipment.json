@@ -8,8 +8,8 @@
     "ownerPerson": "Walter White",
     "usage": "Investigacion cientifica y desarrollo experimental",
     "subjects": [
-       "First subject",
-       "Second subject"
+       "https:\/\/purl.org\/pe-repo\/ocde\/ford\/#5.07.03",
+       "https:\/\/purl.org\/pe-repo\/ocde\/ford\/#5.07.04"
     ],
     "researchLine": "ResearchLine",
     "fundings": [

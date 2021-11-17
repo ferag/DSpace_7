@@ -1458,6 +1458,8 @@
 				<entry key="elasticsearchUbigeoRegion" value-ref="mapConverterUbigeoRegion" />
 				<entry key="minamTypes" value-ref="mapConverterMinamTypes" />
 				<entry key="insTypes" value-ref="mapConverterInsTypes" />
+				<entry key="ocdeSubjects" value-ref="mapConverterOcdeSubjects" />
+				<entry key="ocdeProjectTypes" value-ref="mapConverterOcdeProjectTypes" />
 			</map>
 		</constructor-arg>
 	</bean>
@@ -1472,10 +1474,11 @@
 		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
 	</bean>
 
-	<bean name="mapConverterCoarTypes" class="org.dspace.util.SimpleMapConverter" init-method="init">
+	<bean name="mapConverterCoarTypes" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
 		<property name="converterNameFile" value="mapConverter-coarTypes.properties" />
 		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
 		<property name="defaultValue" value="http://purl.org/coar/resource_type/c_1843"/>
+		<property name="charset" value="UTF-8"/>
 	</bean>
 	
 	<bean name="mapConverterFundingTypes" class="org.dspace.util.SimpleMapConverter" init-method="init">
@@ -1526,16 +1529,32 @@
 		<property name="defaultValue" value="Unspecified"/>
 	</bean>
 
-	<bean name="mapConverterMinamTypes" class="org.dspace.util.SimpleMapConverter" init-method="init">
+	<bean name="mapConverterMinamTypes" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
 		<property name="converterNameFile" value="mapConverter-minam.properties" />
 		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
 		<property name="defaultValue" value=""/>
+		<property name="charset" value="UTF-8"/>
 	</bean>
 
-	<bean name="mapConverterInsTypes" class="org.dspace.util.SimpleMapConverter" init-method="init">
+	<bean name="mapConverterInsTypes" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
 		<property name="converterNameFile" value="mapConverter-ins.properties" />
 		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
 		<property name="defaultValue" value=""/>
+		<property name="charset" value="UTF-8"/>
+	</bean>
+
+	<bean name="mapConverterOcdeSubjects" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
+		<property name="converterNameFile" value="mapConverter-ocdeSubjects.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+		<property name="defaultValue" value=""/>
+		<property name="charset" value="UTF-8"/>
+	</bean>
+
+	<bean name="mapConverterOcdeProjectTypes" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
+		<property name="converterNameFile" value="mapConverter-ocdeProjectTypes.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+		<property name="defaultValue" value=""/>
+		<property name="charset" value="UTF-8"/>
 	</bean>
 
 	<!-- CONDITION EVALUATORS CONFIGURATION -->

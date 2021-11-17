@@ -17,6 +17,7 @@
     <Identifier type="Scopus Affiliation">SCOPUS-01</Identifier>
     <Identifier type="CrossRef Funder">CRF-01</Identifier>
     <ParentOrganization>Parent OrgUnit</ParentOrganization>
+    <Subject scheme="http://purl.org/pe-repo/ocde/ford">https://purl.org/pe-repo/ocde/ford/#5.07.03</Subject>
     <PostAddress>
         <AddressLocality>via del canale</AddressLocality>
         <AddressCountry>Italy</AddressCountry>

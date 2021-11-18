@@ -13802,10 +13802,6 @@
     </value-pairs>
     <value-pairs value-pairs-name="peru_oairecerif_access" dc-term="peru_oairecerif_access">
       <pair>
-        <displayed-value>Unspecified</displayed-value>
-        <stored-value />
-      </pair>
-      <pair>
         <displayed-value>open access</displayed-value>
         <stored-value>http://purl.org/coar/access_right/c_abf2</stored-value>
       </pair>

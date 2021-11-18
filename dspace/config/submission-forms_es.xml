@@ -13810,10 +13810,6 @@ You can leave out the day and/or month if they aren't applicable.</hint>
     </value-pairs>
     <value-pairs value-pairs-name="peru_oairecerif_access" dc-term="peru_oairecerif_access">
       <pair>
-        <displayed-value>Sin especificar</displayed-value>
-        <stored-value />
-      </pair>
-      <pair>
         <displayed-value>acceso abierto</displayed-value>
         <stored-value>http://purl.org/coar/access_right/c_abf2</stored-value>
       </pair>

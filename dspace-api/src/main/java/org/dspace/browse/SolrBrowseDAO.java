@@ -32,6 +32,9 @@ import org.dspace.discovery.SearchService;
 import org.dspace.discovery.SearchServiceException;
 import org.dspace.discovery.configuration.DiscoveryConfigurationParameters;
 import org.dspace.discovery.indexobject.IndexableItem;
+import org.dspace.eperson.GroupType;
+import org.dspace.eperson.factory.EPersonServiceFactory;
+import org.dspace.eperson.service.GroupService;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 
@@ -164,6 +167,8 @@ public class SolrBrowseDAO implements BrowseDAO {
 
     protected ConfigurationService configurationService = DSpaceServicesFactory.getInstance().getConfigurationService();
 
+    private GroupService groupService = EPersonServiceFactory.getInstance().getGroupService();
+
     // administrative attributes for this class
 
 
@@ -236,6 +241,7 @@ public class SolrBrowseDAO implements BrowseDAO {
     private void addStatusFilter(DiscoverQuery query) {
         try {
             if (!authorizeService.isAdmin(context)
+                && notAScopedRole()
                 && (authorizeService.isCommunityAdmin(context)
                 || authorizeService.isCollectionAdmin(context))) {
                 query.addFilterQueries(searcher.createLocationQueryForAdministrableItems(context));
@@ -243,6 +249,13 @@ public class SolrBrowseDAO implements BrowseDAO {
         } catch (SQLException ex) {
             log.error("Error looking up authorization rights of current user", ex);
         }
+    }
+
+    private boolean notAScopedRole() throws SQLException {
+        return context.getSpecialGroups()
+            .stream()
+            .map(groupService::getGroupType)
+            .noneMatch(GroupType.SCOPED::equals);
     }
 
     private void addLocationScopeFilter(DiscoverQuery query) {

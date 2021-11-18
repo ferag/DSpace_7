@@ -681,7 +681,8 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 //            .withRelationDataset("DataSet")
             .withEmbargoEnd("2021-01-01")
             .withAccess("embargoed access")
-            .withSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Planificación del transporte y aspectos sociales del transporte")
+            .withSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Planificación del " +
+                "transporte y aspectos sociales del transporte")
             .withSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Estudios urbanos")
             .withRightsUri("rights-uri")
             .withCoveragePublication("Coverage publication")
@@ -765,7 +766,8 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withEmbargoEnd("2021-01-01")
             .withAccess("embargoed access")
             .withPerucrisSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Estudios urbanos")
-            .withPerucrisSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Planificación del transporte y aspectos sociales del transporte")
+            .withPerucrisSubjectOCDE("oecd::Ciencias sociales::Geografía social, " +
+                "Geografía económica::Planificación del transporte y aspectos sociales del transporte")
             .withRightsUri("rights-uri")
             .withCoveragePublication("Coverage publication")
             .withVersion("V01")
@@ -1036,7 +1038,8 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withSubject("project")
             .withSubject("test")
             .withPerucrisSubjectOCDE("oecd::Ciencias sociales::Ciencias políticas::Administración pública")
-            .withPerucrisSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Ciencias ambientales")
+            .withPerucrisSubjectOCDE("oecd::Ciencias sociales::Geografía social, " +
+                "Geografía económica::Ciencias ambientales")
             .withDescriptionAbstract("This is a project to test the export")
             .withOAMandate("true")
             .withOAMandateURL("oamandate-url")
@@ -1094,8 +1097,10 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withRelationEquipment("Test equipment")
             .withSubject("project")
             .withSubject("test")
-            .withPerucrisSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Ciencias ambientales")
-            .withPerucrisSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Estudios urbanos")
+            .withPerucrisSubjectOCDE("oecd::Ciencias sociales::Geografía social, " +
+                "Geografía económica::Ciencias ambientales")
+            .withPerucrisSubjectOCDE("oecd::Ciencias sociales::Geografía social, " +
+                "Geografía económica::Estudios urbanos")
             .withDescriptionAbstract("This is a project to test the export")
             .withOAMandate("true")
             .withOAMandateURL("oamandate-url")
@@ -1159,8 +1164,10 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withRelationEquipment("Test equipment")
             .withSubject("project")
             .withSubject("test")
-            .withPerucrisSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Estudios urbanos")
-            .withPerucrisSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Planificación del transporte y aspectos sociales del transporte")
+            .withPerucrisSubjectOCDE("oecd::Ciencias sociales::Geografía social, " +
+                "Geografía económica::Estudios urbanos")
+            .withPerucrisSubjectOCDE("oecd::Ciencias sociales::Geografía social, " +
+                "Geografía económica::Planificación del transporte y aspectos sociales del transporte")
             .withDescriptionAbstract("This is a project to test the export")
             .withOAMandate("true")
             .withOAMandateURL("oamandate-url")
@@ -1655,7 +1662,8 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withEquipmentOwnerPerson("Walter White")
             .withUsageType("Investigacion cientifica y desarrollo experimental")
             .withSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Estudios urbanos")
-            .withSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Planificación del transporte y aspectos sociales del transporte")
+            .withSubjectOCDE("oecd::Ciencias sociales::Geografía social, " +
+                "Geografía económica::Planificación del transporte y aspectos sociales del transporte")
             .withResearchLine("ResearchLine")
             .withRelationFunding("Funding")
             .withRelationFunding("Another Funding")

@@ -227,7 +227,8 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withVolume("V-02")
             .withCitationStartPage("1")
             .withCitationEndPage("20")
-            .withPerucrisSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Planificación del transporte y aspectos sociales del transporte")
+            .withPerucrisSubjectOCDE("oecd::Ciencias sociales::Geografía social, " +
+                "Geografía económica::Planificación del transporte y aspectos sociales del transporte")
             .withAuthorAffiliation(CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE)
             .build();
 
@@ -276,7 +277,8 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withCitationStartPage("1")
             .withCitationEndPage("20")
             .withAuthorAffiliation(CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE)
-            .withPerucrisSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Planificación del transporte y aspectos sociales del transporte")
+            .withPerucrisSubjectOCDE("oecd::Ciencias sociales::Geografía social, " +
+                "Geografía económica::Planificación del transporte y aspectos sociales del transporte")
             .build();
 
         Item thirdItem = ItemBuilder.createItem(context, collection)
@@ -469,7 +471,8 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withInternalId("ID-02")
             .withDescription("This is another equipment to test the export functionality")
             .withEquipmentOwnerPerson("John Smith")
-            .withSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Planificación del transporte y aspectos sociales del transporte")
+            .withSubjectOCDE("oecd::Ciencias sociales::Geografía social, " +
+                "Geografía económica::Planificación del transporte y aspectos sociales del transporte")
             .withRelationFunding("First funding")
             .withRelationFunding("Second funding")
             .withAcquisitionDate("2021-02-01")

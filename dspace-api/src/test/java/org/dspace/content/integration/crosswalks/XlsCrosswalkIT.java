@@ -536,7 +536,8 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withEquipmentOwnerOrgUnit("Test OrgUnit")
             .withEquipmentOwnerPerson("Walter White")
             .withUsageType("Investigacion cientifica y desarrollo experimental")
-            .withSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Planificación del transporte y aspectos sociales del transporte")
+            .withSubjectOCDE("oecd::Ciencias sociales::Geografía social, " +
+                "Geografía económica::Planificación del transporte y aspectos sociales del transporte")
             .withSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Estudios urbanos")
             .withResearchLine("ResearchLine")
             .withRelationFunding("Funding")

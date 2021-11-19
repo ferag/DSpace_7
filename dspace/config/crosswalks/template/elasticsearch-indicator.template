@@ -12,7 +12,7 @@
 	"perucris_ppp_financialScheme" : "@perucris.ppp.financialScheme@",
 	"perucris_ppp_responsiblePerson" : "@perucris.ppp.responsiblePerson@",
 	"perucris_ppp_responsibleEntity" : "@perucris.ppp.responsibleEntity@",
-	"perucris_ppp_indicatorType" : "@perucris.ppp.indicatorType@"
+	"perucris_ppp_indicatorType" : "@perucris.ppp.indicatorType@",
 	"perucris_ppp_measurementFrequency" : "@perucris.ppp.measurementFrequency@",
 	"perucris_ppp_measurementLimitations" : "@perucris.ppp.measurementLimitations@",
 	"perucris_ppp_measurementTechnicalSpecifications" : "@perucris.ppp.measurementTechnicalSpecifications@",

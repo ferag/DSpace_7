@@ -12375,7 +12375,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
     <value-pairs value-pairs-name="gender" dc-term="gender">
       <pair>
         <displayed-value>Desconocido</displayed-value>
-        <stored-value />
+        <stored-value>unknown</stored-value>
       </pair>
       <pair>
         <displayed-value>Hombre</displayed-value>

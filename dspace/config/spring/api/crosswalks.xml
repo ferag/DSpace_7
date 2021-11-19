@@ -1393,6 +1393,41 @@
 		<property name="converter" ref="jsonValueConverter"/>
 	</bean>
 
+	<bean id="referCrosswalkElasticsearchPolitic" class="org.dspace.content.integration.crosswalks.ReferCrosswalk">
+		<property name="templateFileName" value="crosswalks/template/elasticsearch-politic.template"/>
+		<property name="mimeType" value="application/json; charset=UTF-8"/>
+		<property name="entityType" value="Politic"/>
+		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="linesPostProcessor" ref="elasticSearchJsonPostProcessor"/>
+		<property name="converter" ref="jsonValueConverter"/>
+	</bean>
+
+	<bean id="referCrosswalkElasticsearchPlan" class="org.dspace.content.integration.crosswalks.ReferCrosswalk">
+		<property name="templateFileName" value="crosswalks/template/elasticsearch-plan.template"/>
+		<property name="mimeType" value="application/json; charset=UTF-8"/>
+		<property name="entityType" value="Plan"/>
+		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="linesPostProcessor" ref="elasticSearchJsonPostProcessor"/>
+		<property name="converter" ref="jsonValueConverter"/>
+	</bean>
+
+	<bean id="referCrosswalkElasticsearchProgram" class="org.dspace.content.integration.crosswalks.ReferCrosswalk">
+		<property name="templateFileName" value="crosswalks/template/elasticsearch-program.template"/>
+		<property name="mimeType" value="application/json; charset=UTF-8"/>
+		<property name="entityType" value="Program"/>
+		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="linesPostProcessor" ref="elasticSearchJsonPostProcessor"/>
+		<property name="converter" ref="jsonValueConverter"/>
+	</bean>
+
+	<bean id="referCrosswalkElasticsearchIndicator" class="org.dspace.content.integration.crosswalks.ReferCrosswalk">
+		<property name="templateFileName" value="crosswalks/template/elasticsearch-indicator.template"/>
+		<property name="mimeType" value="application/json; charset=UTF-8"/>
+		<property name="entityType" value="Indicator"/>
+		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="linesPostProcessor" ref="elasticSearchJsonPostProcessor"/>
+		<property name="converter" ref="jsonValueConverter"/>
+	</bean>
 	<!-- VIRTUAL FIELDS CONFIGURATION -->
 	
 	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldMapper">

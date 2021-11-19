@@ -1,0 +1,35 @@
+{
+    "resourceId" : "@virtual.id@",
+	"dc_title" : "@dc.title@",
+	"perucris.ppp_politicGoal" : "@perucris.ppp.politicGoal@",
+	"perucris_ppp_plan" : "@perucris.ppp.plan@",
+	"perucris_ppp_program" : "@perucris.ppp.program@",
+	"perucris_ppp_programGoal" : "@perucris.ppp.programGoal@",
+	"perucris_ppp_programSpecificGoal" : "@perucris.ppp.programSpecificGoal@",
+	"perucris_ppp_activity" : "@perucris.ppp.activity@",
+	"perucris_ppp_standard" : "@perucris.ppp.standard@",
+	"perucris_ppp_financialInstrument" : "@perucris.ppp.financialInstrument@",
+	"perucris_ppp_financialScheme" : "@perucris.ppp.financialScheme@",
+	"perucris_ppp_responsiblePerson" : "@perucris.ppp.responsiblePerson@",
+	"perucris_ppp_responsibleEntity" : "@perucris.ppp.responsibleEntity@",
+	"perucris_ppp_indicatorType" : "@perucris.ppp.indicatorType@"
+	"perucris_ppp_measurementFrequency" : "@perucris.ppp.measurementFrequency@",
+	"perucris_ppp_measurementLimitations" : "@perucris.ppp.measurementLimitations@",
+	"perucris_ppp_measurementTechnicalSpecifications" : "@perucris.ppp.measurementTechnicalSpecifications@",
+	"perucris_ppp_source" : "@perucris.ppp.source@",
+	"perucris_ppp_baseLine" : "@perucris.ppp.baseLine@",
+	"perucris_ppp_unitOfMeasure" : "@perucris.ppp.unitOfMeasure@",
+	"perucris_ppp_startingYear" : "@perucris.ppp.startingYear@",
+	"perucris_ppp_progress" : "@perucris.ppp.progress@",
+	"perucris_ppp_performanceSummary" : "@perucris.ppp.performanceSummary@",
+	"perucris_ppp_status" : "@perucris.ppp.status@",
+    "perucris_ppp_year" : [
+           @group.perucris-ppp-year.start@
+           {
+              "year" : "@perucris.ppp.year@",
+              "expectedValuey": "@perucris.ppp.expectedValuey@",
+              "obtainedValue": "@perucris.ppp.obtainedValue@"
+           },
+           @group.perucris-ppp-year.end@2
+           ]
+}

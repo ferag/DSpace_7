@@ -26,12 +26,14 @@ import org.dspace.app.rest.matcher.ItemMatcher;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
 import org.dspace.builder.CollectionBuilder;
 import org.dspace.builder.CommunityBuilder;
+import org.dspace.builder.EPersonBuilder;
 import org.dspace.builder.GroupBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.Item;
 import org.dspace.content.authority.service.MetadataAuthorityService;
+import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
@@ -463,6 +465,87 @@ public class BrowsesResourceControllerIT extends AbstractControllerIntegrationTe
                        ItemMatcher.matchItemWithTitleAndDateIssued(publicItem1, "zPublic item more", "2017-10-17")
                    )));
 
+    }
+
+    @Test
+    public void differentCommunityAdminCannotFindResults() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        //** GIVEN **
+        //1. A community-collection structure with one parent community with sub-community and two collections,
+        // and a person administrator of a different community
+        EPerson communityAdmin = EPersonBuilder.createEPerson(context)
+            .withEmail("mail@dspace.org")
+            .withPassword("password")
+            .build();
+        CommunityBuilder.createCommunity(context)
+            .withAdminGroup(communityAdmin).build();
+
+        parentCommunity = CommunityBuilder.createCommunity(context)
+            .withName("Parent Community")
+            .build();
+        Community child1 = CommunityBuilder.createSubCommunity(context, parentCommunity)
+            .withName("Sub Community")
+            .build();
+        Collection col1 = CollectionBuilder.createCollection(context, child1)
+            .withEntityType("Publication")
+            .withName("Collection 1").build();
+        Collection col2 = CollectionBuilder.createCollection(context, child1)
+            .withEntityType("Publication")
+            .withName("Collection 2").build();
+
+        //2. Two public items with the same subject and another public item that contains that same subject, but also
+        // another one
+        //   All of the items are readable by an Anonymous user
+        Item publicItem1 = ItemBuilder.createItem(context, col1)
+            .withTitle("zPublic item more")
+            .withIssueDate("2017-10-17")
+            .withAuthor("Smith, Donald").withAuthor("Doe, John")
+            .withSubject("ExtraEntry").withSubject("AnotherTest")
+            .build();
+
+        Item publicItem2 = ItemBuilder.createItem(context, col2)
+            .withTitle("Public item 2")
+            .withIssueDate("2016-02-13")
+            .withAuthor("Smith, Maria").withAuthor("Doe, Jane")
+            .withSubject("AnotherTest")
+            .build();
+
+        Item publicItem3 = ItemBuilder.createItem(context, col2)
+            .withTitle("Public item 3")
+            .withIssueDate("2016-02-14")
+            .withAuthor("Smith, Maria").withAuthor("Doe, Jane")
+            .withSubject("AnotherTest")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken("mail@dspace.org", "password");
+        //** WHEN **
+        //The other community admin user browses the items that correspond with the ExtraEntry subject query
+        getClient(authToken).perform(get("/api/discover/browses/subject/items")
+            .param("filterValue", "ExtraEntry"))
+            //** THEN **
+            //The status has to be 200
+            .andExpect(status().isOk())
+            //We expect the content type to be "application/hal+json;charset=UTF-8"
+            .andExpect(content().contentType(contentType))
+            //We expect there to be only one element, the one that we've added with the requested subject
+            .andExpect(jsonPath("$.page.totalElements", is(0)))
+            .andExpect(jsonPath("$.page.size", is(20)));
+
+        //** WHEN **
+        //The other community admin user browses the items that correspond with the ExtraEntry subject query
+        getClient(authToken).perform(get("/api/discover/browses/subject/items")
+            .param("filterValue", "AnotherTest"))
+            //** THEN **
+            //The status has to be 200
+            .andExpect(status().isOk())
+            //We expect the content type to be "application/hal+json;charset=UTF-8"
+            .andExpect(content().contentType(contentType))
+            //We expect there to be only three elements, the ones that we've added with the requested subject
+            .andExpect(jsonPath("$.page.totalElements", is(0)))
+            .andExpect(jsonPath("$.page.size", is(20)));
     }
 
     @Test

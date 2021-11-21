@@ -97,6 +97,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
       <row>
@@ -109,6 +110,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
     </form>
@@ -147,6 +149,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
       <row>
@@ -159,6 +162,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
     </form>
@@ -197,6 +201,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
       <row>
@@ -209,6 +214,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
     </form>
@@ -1154,6 +1160,16 @@
           <required>You must enter at least the affiliation.</required>
           <hint />
         </field>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>affiliation</dc-element>
+          <dc-qualifier>role</dc-qualifier>
+          <label>Role</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
       </row>
       <row>
         <field>
@@ -1172,18 +1188,6 @@
           <dc-qualifier>endDate</dc-qualifier>
           <label>End Date</label>
           <input-type>date</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>oairecerif</dc-schema>
-          <dc-element>affiliation</dc-element>
-          <dc-qualifier>role</dc-qualifier>
-          <label>Role</label>
-          <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -1262,7 +1266,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Enter the DNI number (8 digits) of the author</hint>
-          <regex>^[0-9]{8}$</regex>
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
       <row>
@@ -1287,6 +1291,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Enter the ORCID identifier (i.e.0000-0005-1111-2547) of the author</hint>
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
     </form>
@@ -1313,7 +1318,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Enter the DNI number (8 digits) of the author</hint>
-          <regex>^[0-9]{8}$</regex>
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
       <row>
@@ -1338,6 +1343,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Enter the ORCID identifier (i.e.0000-0005-1111-2547) of the author</hint>
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
     </form>
@@ -1364,7 +1370,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Enter the DNI number (8 digits) of the author</hint>
-          <regex>^[0-9]{8}$</regex>
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
       <row>
@@ -1389,6 +1395,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Enter the ORCID identifier (i.e.0000-0005-1111-2547) of the author</hint>
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
     </form>
@@ -2349,16 +2356,16 @@
           <dc-schema>dc</dc-schema>
           <dc-element>identifier</dc-element>
           <dc-qualifier>ark</dc-qualifier>
-          <label>ARK Identifier</label>
+          <label>ARK identifier</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>ARK id of the publication, if available</hint>
+          <hint>Ark id of the publication or product, if available</hint>
         </field>
         <field>
           <dc-schema>datacite</dc-schema>
           <dc-element>version</dc-element>
-          <label>Product version</label>
+          <label>Product Version</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -2520,16 +2527,16 @@
           <dc-schema>dc</dc-schema>
           <dc-element>identifier</dc-element>
           <dc-qualifier>ark</dc-qualifier>
-          <label>ARK Identifier</label>
+          <label>ARK identifier</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>ARK id of the publication, if available</hint>
+          <hint>Ark id of the publication or product, if available</hint>
         </field>
         <field>
           <dc-schema>datacite</dc-schema>
           <dc-element>version</dc-element>
-          <label>Product version</label>
+          <label>Product Version</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -2691,16 +2698,16 @@
           <dc-schema>dc</dc-schema>
           <dc-element>identifier</dc-element>
           <dc-qualifier>ark</dc-qualifier>
-          <label>ARK Identifier</label>
+          <label>ARK identifier</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>ARK id of the publication, if available</hint>
+          <hint>Ark id of the publication or product, if available</hint>
         </field>
         <field>
           <dc-schema>datacite</dc-schema>
           <dc-element>version</dc-element>
-          <label>Product version</label>
+          <label>Product Version</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -4963,7 +4970,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Please enter at least DNI (8 digits) or ORCID (16 digits)</hint>
-          <regex>^[0-9]{8}$</regex>
+          <validation>^[0-9]{8}$</validation>
         </field>
         <field>
           <dc-schema>person</dc-schema>
@@ -4974,7 +4981,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Please enter at least DNI (8 digits) or ORCID (16 digits)</hint>
-          <regex>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</regex>
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
       <row>
@@ -4987,7 +4994,7 @@
           <repeatable>true</repeatable>
           <required />
           <hint />
-          <regex>^[a-zA-Z0-9]{0,12}$</regex>
+          <validation>^[a-zA-Z0-9]{0,12}$</validation>
         </field>
       </row>
       <row>
@@ -5021,7 +5028,7 @@
           <input-type>date</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Might be updated by Reniec</hint>
         </field>
         <field>
           <dc-schema>oairecerif</dc-schema>
@@ -5312,7 +5319,7 @@
           <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ins</dc-qualifier>
-          <label>INS Subject(s)</label>
+          <label>Medical and Health Thematic Areas associated with INS research lines</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -5400,7 +5407,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Please enter at least DNI (8 digits) or ORCID (16 digits)</hint>
-          <regex>^[0-9]{8}$</regex>
+          <validation>^[0-9]{8}$</validation>
         </field>
         <field>
           <dc-schema>person</dc-schema>
@@ -5411,7 +5418,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Please enter at least DNI (8 digits) or ORCID (16 digits)</hint>
-          <regex>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</regex>
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
       <row>
@@ -5424,7 +5431,7 @@
           <repeatable>true</repeatable>
           <required />
           <hint />
-          <regex>^[a-zA-Z0-9]{0,12}$</regex>
+          <validation>^[a-zA-Z0-9]{0,12}$</validation>
         </field>
       </row>
       <row>
@@ -5750,7 +5757,7 @@
           <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ins</dc-qualifier>
-          <label>INS Subject(s)</label>
+          <label>Medical and Health Thematic Areas associated with INS research lines</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -5817,7 +5824,7 @@
           <repeatable>true</repeatable>
           <required />
           <hint />
-          <regex>^[a-zA-Z0-9]{0,12}$</regex>
+          <validation>^[a-zA-Z0-9]{0,12}$</validation>
         </field>
       </row>
       <row>
@@ -5851,7 +5858,7 @@
           <input-type>date</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Might be updated by Reniec</hint>
         </field>
         <field>
           <dc-schema>oairecerif</dc-schema>
@@ -6179,7 +6186,7 @@
           <dc-schema>perucris</dc-schema>
           <dc-element>subject</dc-element>
           <dc-qualifier>ins</dc-qualifier>
-          <label>INS Subject(s)</label>
+          <label>Medical and Health Thematic Areas associated with INS research lines</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -6461,8 +6468,7 @@
           <label>Sector Institutional (Mandatory only for main institutions)</label>
           <input-type value-pairs-name="ocde_sectorInstitucional">dropdown</input-type>
           <repeatable>false</repeatable>
-<!--          <required>You must enter Institutional Sector</required>-->
-          <required></required>
+          <required />
           <hint />
           <type-bind>Institución principal</type-bind>
         </field>
@@ -6573,8 +6579,7 @@
           <label>Juridical Nature</label>
           <input-type value-pairs-name="peru_ou_nature">dropdown</input-type>
           <repeatable>false</repeatable>
-<!--          <required>Mandatory for Main organizations</required>-->
-          <required></required>
+          <required />
           <hint>Mandatory for Main organizations</hint>
           <type-bind>Institución principal</type-bind>
         </field>
@@ -6780,9 +6785,9 @@
           <label>Is a Research Public Institution (IPI) ?</label>
           <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
-          <readonly>all</readonly>
           <required />
           <hint />
+          <readonly>all</readonly>
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -6791,9 +6796,9 @@
           <label>Is a funder entity ?</label>
           <input-type value-pairs-name="yesno">dropdown</input-type>
           <repeatable>false</repeatable>
-          <readonly>all</readonly>
           <required />
           <hint />
+          <readonly>all</readonly>
         </field>
       </row>
       <row>
@@ -6804,8 +6809,7 @@
           <label>Sector Institutional (Mandatory only for main institutions)</label>
           <input-type value-pairs-name="ocde_sectorInstitucional">dropdown</input-type>
           <repeatable>false</repeatable>
-<!--          <required>You must enter Institutional Sector</required>-->
-          <required/>
+          <required />
           <hint />
           <type-bind>Institución principal</type-bind>
         </field>
@@ -6916,8 +6920,7 @@
           <label>Juridical Nature</label>
           <input-type value-pairs-name="peru_ou_nature">dropdown</input-type>
           <repeatable>false</repeatable>
-<!--          <required>Mandatory for Main organizations</required>-->
-          <required></required>
+          <required />
           <hint>Mandatory for Main organizations</hint>
           <type-bind>Institución principal</type-bind>
         </field>
@@ -7313,7 +7316,7 @@
         <field>
           <dc-schema>crispj</dc-schema>
           <dc-element>organization</dc-element>
-          <label>Participant Organization(s)</label>
+          <label>Consortium Member(s)</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -7706,7 +7709,7 @@
         <field>
           <dc-schema>crispj</dc-schema>
           <dc-element>organization</dc-element>
-          <label>Participant Organization(s)</label>
+          <label>Consortium Member(s)</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -8099,7 +8102,7 @@
         <field>
           <dc-schema>crispj</dc-schema>
           <dc-element>organization</dc-element>
-          <label>Participant Organization(s)</label>
+          <label>Consortium Member(s)</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -8870,7 +8873,7 @@
           <dc-schema>dc</dc-schema>
           <dc-element>relation</dc-element>
           <dc-qualifier>funding</dc-qualifier>
-          <label>Funding(s)</label>
+          <label>Source Funding(s)</label>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -8936,7 +8939,7 @@
           <readonly>all</readonly>
         </field>
       </row>
-        <row>
+      <row>
         <field>
           <dc-schema>dc</dc-schema>
           <dc-element>title</dc-element>
@@ -9074,7 +9077,7 @@
           <dc-schema>dc</dc-schema>
           <dc-element>relation</dc-element>
           <dc-qualifier>funding</dc-qualifier>
-          <label>Funding(s)</label>
+          <label>Source Funding(s)</label>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -9355,7 +9358,7 @@
           <repeatable>false</repeatable>
           <required>Please enter an Ending Year</required>
           <hint />
-          <regex>^[0-9]{0,4}$</regex>
+          <validation>^[0-9]{0,4}$</validation>
         </field>
       </row>
       <row>
@@ -9676,7 +9679,7 @@
           <repeatable>false</repeatable>
           <required>Please enter Ending Year</required>
           <hint />
-          <regex>^[0-9]{0,4}$</regex>
+          <validation>^[0-9]{0,4}$</validation>
         </field>
       </row>
       <row>
@@ -9795,7 +9798,7 @@
           <repeatable>false</repeatable>
           <required>Please enter Evaluation Year</required>
           <hint />
-          <regex>^[0-9]{0,4}$</regex>
+          <validation>^[0-9]{0,4}$</validation>
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -10329,7 +10332,7 @@
           <repeatable>false</repeatable>
           <required>Please enter an year</required>
           <hint />
-          <regex>^[0-9]{0,4}$</regex>
+          <validation>^[0-9]{0,4}$</validation>
         </field>
       </row>
       <row>
@@ -10342,7 +10345,7 @@
           <repeatable>false</repeatable>
           <required>Please enter an Expected Value</required>
           <hint />
-          <regex>^[0-9]{8}$</regex>
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
       <row>
@@ -10355,7 +10358,7 @@
           <repeatable>false</repeatable>
           <required>Please enter an Obtained Value</required>
           <hint />
-          <regex>^[0-9]{8}$</regex>
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
     </form>
@@ -10557,7 +10560,7 @@
           <repeatable>false</repeatable>
           <required>Please enter a Base Line</required>
           <hint />
-          <regex>^[0-9]+$</regex>
+          <validation>^[0-9]+$</validation>
         </field>
       </row>
       <row>
@@ -10582,7 +10585,7 @@
           <repeatable>false</repeatable>
           <required>Please enter a Starting Year</required>
           <hint />
-          <regex>^[0-9]{0,4}$</regex>
+          <validation>^[0-9]{0,4}$</validation>
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -11417,7 +11420,7 @@
           <repeatable>false</repeatable>
           <required>Please enter Execution Year</required>
           <hint />
-          <regex>^[0-9]{0,4}$</regex>
+          <validation>^[0-9]{0,4}$</validation>
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -13798,10 +13801,6 @@
       </pair>
     </value-pairs>
     <value-pairs value-pairs-name="peru_oairecerif_access" dc-term="peru_oairecerif_access">
-      <pair>
-        <displayed-value>Unspecified</displayed-value>
-        <stored-value />
-      </pair>
       <pair>
         <displayed-value>open access</displayed-value>
         <stored-value>http://purl.org/coar/access_right/c_abf2</stored-value>

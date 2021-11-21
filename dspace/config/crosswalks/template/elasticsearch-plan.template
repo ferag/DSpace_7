@@ -1,0 +1,41 @@
+{
+    "resourceId" : "@virtual.id@",
+	"dc_title" : "@dc.title@",
+	"dc_description" : "@dc.description@",
+	"perucris_ppp_politicGoal" : "@perucris.ppp.politicGoal@",
+	"perucris_ppp_periodicity" : "@perucris.ppp.periodicity@",
+	"perucris_ppp_vision" : "@perucris.ppp.vision@",
+	"perucris_ppp_approvalDate" : "@perucris.ppp.approvalDate@",
+	"perucris_ppp_temporalHorizon" : "@perucris.ppp.temporalHorizon@",
+	"perucris_ppp_endingYear" : "@perucris.ppp.endingYear@",
+	"perucris_ppp_responsibleEntity" : "@perucris.ppp.responsibleEntity@",
+	"perucris_ppp_planType" : "@perucris.ppp.planType@",
+	"perucris_ppp.status" : "@perucris.ppp.status@",
+	"perucris_ppp_planImplMainMeasures" : "@perucris.ppp.planImplMainMeasures@",
+	"perucris_ppp_leadingEvents" : "@perucris.ppp.leadingEvents@",
+	"perucris_ppp_hinderingEvents" : "@perucris.ppp.hinderingEvents@",
+	"perucris_ppp_performanceSummary" : "@perucris.ppp.performanceSummary@",
+	"perucris_ppp_strategicalAction" : [
+	              "@perucris.ppp.strategicalAction@",
+	              ],
+	"perucris_ppp_evaluationYear" : "@perucris.ppp.evaluationYear@",
+	"perucris_ppp_evaluationPeriod" : "@perucris.ppp.evaluationPeriod@",
+	"perucris_ppp_evaluatingArea" : "@perucris.ppp.evaluatingArea@",
+	"perucris_ppp_planPresentation" : "@perucris.ppp.planPresentation@",
+	"perucris_ppp_planContext" : "@perucris.ppp.planContext@",
+	"perucris_ppp_evaluationObjectives" : "@perucris.ppp.evaluationObjectives@",
+	"perucris_ppp_evaluationMethodology" : "@perucris.ppp.evaluationMethodology@",
+	"perucris_ppp_fulfillmentResults" : "@perucris.ppp.fulfillmentResults@",
+	"perucris_ppp_meetingTargetResults" : "@perucris.ppp.meetingTargetResults@",
+	"perucris_ppp_conclusions" : "@perucris.ppp.conclusions@",
+	"perucris_ppp_recommendations" : "@perucris.ppp.recommendations@",
+	"perucris_ppp_lessonsLearnt" : "@perucris.ppp.lessonsLearnt@",
+	"perucris_ppp_strategicalGoal" : [
+           @group.perucris-ppp-strategicalGoal.start@
+           {
+              "strategicalGoal" : "@perucris.ppp.strategicalGoal@",
+              "strategy": "@perucris.ppp.strategy@"
+           },
+           @group.perucris-ppp-strategicalGoal.end@2
+           ]
+}

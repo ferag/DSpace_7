@@ -53,8 +53,8 @@
         </Publisher>
     </Publishers>
     <License>rights-uri</License>
-    <Subject scheme="http://purl.org/pe-repo/ocde/ford">keyword1</Subject>
-    <Subject scheme="http://purl.org/pe-repo/ocde/ford">keyword2</Subject>
+    <Subject scheme="http://purl.org/pe-repo/ocde/ford">https://purl.org/pe-repo/ocde/ford/#5.07.03</Subject>
+    <Subject scheme="http://purl.org/pe-repo/ocde/ford">https://purl.org/pe-repo/ocde/ford/#5.07.04</Subject>
     <Keyword>test</Keyword>
     <Keyword>export</Keyword>
     <OriginatesFrom>

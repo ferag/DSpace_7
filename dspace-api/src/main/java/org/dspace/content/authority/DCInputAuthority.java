@@ -211,7 +211,8 @@ public class DCInputAuthority extends SelfNamedPlugin implements ChoiceAuthority
         if (pos != -1) {
             return labelsLocale[pos];
         } else {
-            return "UNKNOWN KEY " + key;
+//            return "UNKNOWN KEY " + key;
+            return key;
         }
     }
 

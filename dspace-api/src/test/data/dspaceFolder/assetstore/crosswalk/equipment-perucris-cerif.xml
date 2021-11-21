@@ -6,9 +6,9 @@
     <Description>This is an equipment to test the export functionality</Description>
     <Owner> <OrgUnit> <Name>Test OrgUnit</Name> </OrgUnit> </Owner>
     <Owner> <Person displayName="Walter White" ></Person> </Owner>
-    <Funder> <As> <Funding> <Name>Funding</Name> </Funding> </As> </Funder> 
-    <Subject>First subject</Subject>
-    <Subject>Second subject</Subject>
+    <Funder> <As> <Funding> <Name>Funding</Name> </Funding> </As> </Funder>
+    <Subject scheme="http://purl.org/pe-repo/ocde/ford">https://purl.org/pe-repo/ocde/ford/#6.02.05</Subject>
+    <Subject scheme="http://purl.org/pe-repo/ocde/ford">https://purl.org/pe-repo/ocde/ford/#5.06.03</Subject>
     <ResearchLine>ResearchLine</ResearchLine>
     <ManufacturingCountry>IT</ManufacturingCountry>
     <ManufacturingDate>2020-01-01</ManufacturingDate>

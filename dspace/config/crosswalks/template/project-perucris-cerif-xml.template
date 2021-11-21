@@ -1,5 +1,5 @@
 <Project xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="@virtual.id@">
-    <Type>@perucris.project.typeOcde@</Type>
+    <Type xmlns="https://purl.org/pe-repo/ocde/tipoProyecto">@virtual.mapConverter.ocdeProjectTypes.perucris-project-typeOcde@</Type>
     <Type>@perucris.project.typeOther@</Type>
 	<Acronym>@oairecerif.acronym@</Acronym>
 	<Title>@dc.title@</Title>
@@ -72,7 +72,7 @@
 		</As>
 	</Funded>
 	@relation.grants.end@
-    <Subject scheme="http://purl.org/pe-repo/ocde/ford">@perucris.subject.ocde@</Subject>
+    <Subject scheme="http://purl.org/pe-repo/ocde/ford">@virtual.mapConverter.ocdeSubjects.perucris-subject-ocde@</Subject>
 	<Keyword>@dc.subject@</Keyword>
 	<Abstract>@dc.description.abstract@</Abstract>
     <Status>@oairecerif.project.status@</Status>

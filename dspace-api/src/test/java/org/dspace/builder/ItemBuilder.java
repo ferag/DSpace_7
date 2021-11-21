@@ -653,8 +653,9 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return withPerucrisSubjectOCDE(ocde);
     }
 
-    public ItemBuilder withSubjectOcde(String ocde) {
-        return addMetadataValue(item, "dc", "subject", "ocde", ocde);
+    public ItemBuilder withTypeOCDE(String type) {
+        return addMetadataValue(item, "perucris", "project", "typeOcde",
+            type);
     }
 
     public ItemBuilder withSubjectLoc(String loc) {
@@ -1259,5 +1260,6 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
             c.complete();
         }
     }
+
 
 }

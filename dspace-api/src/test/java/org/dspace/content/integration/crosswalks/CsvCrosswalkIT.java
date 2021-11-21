@@ -227,6 +227,8 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withVolume("V-02")
             .withCitationStartPage("1")
             .withCitationEndPage("20")
+            .withPerucrisSubjectOCDE("oecd::Ciencias sociales::Geografía social, " +
+                "Geografía económica::Planificación del transporte y aspectos sociales del transporte")
             .withAuthorAffiliation(CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE)
             .build();
 
@@ -235,6 +237,55 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withTitle("Another Publication")
             .withDoiIdentifier("doi:333.333/publication")
             .withType("Controlled Vocabulary for Resource Type Genres::clinical trial")
+            .withIssueDate("2010-02-01")
+            .withAuthor("Jessie Pinkman")
+            .withDescriptionAbstract("Description of publication")
+            .build();
+
+        context.restoreAuthSystemState();
+
+        csvCrosswalk = (CsvCrosswalk) crosswalkMapper.getByType("publication-csv");
+        assertThat(csvCrosswalk, notNullValue());
+        csvCrosswalk.setDCInputsReader(dcInputsReader);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        csvCrosswalk.disseminate(context, Arrays.asList(firstItem, secondItem, thirdItem).iterator(), out);
+
+        try (FileInputStream fis = getFileInputStream("publications.csv")) {
+            String expectedCsv = IOUtils.toString(fis, Charset.defaultCharset());
+            assertThat(out.toString(), equalTo(expectedCsv));
+        }
+    }
+
+    @Test
+    public void testDisseminatePublicationsWithSpanishCoarTypes() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item firstItem = createFullPublicationItem();
+
+        Item secondItem = ItemBuilder.createItem(context, collection)
+            .withEntityType("Publication")
+            .withTitle("Second Publication")
+            .withDoiIdentifier("doi:222.222/publication")
+            .withType("Controlled Vocabulary for Resource Type Genres::objeto de aprendizaje")
+            .withIssueDate("2019-12-31")
+            .withAuthor("Edward Smith")
+            .withAuthorAffiliation("Company")
+            .withAuthor("Walter White")
+            .withVolume("V-02")
+            .withCitationStartPage("1")
+            .withCitationEndPage("20")
+            .withAuthorAffiliation(CrisConstants.PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPerucrisSubjectOCDE("oecd::Ciencias sociales::Geografía social, " +
+                "Geografía económica::Planificación del transporte y aspectos sociales del transporte")
+            .build();
+
+        Item thirdItem = ItemBuilder.createItem(context, collection)
+            .withEntityType("Publication")
+            .withTitle("Another Publication")
+            .withDoiIdentifier("doi:333.333/publication")
+            .withType("Controlled Vocabulary for Resource Type Genres::conjunto de datos::ensayo clínico")
             .withIssueDate("2010-02-01")
             .withAuthor("Jessie Pinkman")
             .withDescriptionAbstract("Description of publication")
@@ -280,6 +331,7 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withResearchLine("Research line")
             .withGeoLocationPlace("location1")
             .withGeoLocationPlace("location2")
+            .withTypeOCDE("oecd_project_type::Innovación tecnológica::Innovación de producto")
             .build();
 
         Item thirdItem = ItemBuilder.createItem(context, collection)
@@ -367,6 +419,7 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withType("Private non-profit")
             .withOrgUnitIdentifier("ID-03")
             .withUrlIdentifier("www.orgUnit.test")
+            .withSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Estudios urbanos")
             .build();
 
         context.restoreAuthSystemState();
@@ -399,8 +452,8 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withEquipmentOwnerOrgUnit("Test OrgUnit")
             .withEquipmentOwnerPerson("Walter White")
             .withUsageType("Investigacion cientifica y desarrollo experimental")
-            .withSubjectOCDE("First subject")
-            .withSubjectOCDE("Second subject")
+            .withSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Estudios urbanos")
+            .withSubjectOCDE("oecd::Ciencias sociales::Geografía social, Geografía económica::Ciencias ambientales")
             .withResearchLine("ResearchLine")
             .withRelationFunding("Funding")
             .withManufacturingCountry("IT")
@@ -418,7 +471,8 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withInternalId("ID-02")
             .withDescription("This is another equipment to test the export functionality")
             .withEquipmentOwnerPerson("John Smith")
-            .withSubjectOCDE("Subject")
+            .withSubjectOCDE("oecd::Ciencias sociales::Geografía social, " +
+                "Geografía económica::Planificación del transporte y aspectos sociales del transporte")
             .withRelationFunding("First funding")
             .withRelationFunding("Second funding")
             .withAcquisitionDate("2021-02-01")
@@ -589,77 +643,6 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             assertThat(out.toString(), equalTo(expectedCsv));
         }
     }
-
-//    @Test
-//    public void testDisseminatePatents() throws Exception {
-//
-//        context.turnOffAuthorisationSystem();
-//
-//        Item firstItem = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Patent")
-//            .withTitle("First patent")
-//            .withDateAccepted("2020-01-01")
-//            .withIssueDate("2021-01-01")
-//            .withLanguage("en")
-//            .withType("patent")
-//            .withPublisher("First publisher")
-//            .withPublisher("Second publisher")
-//            .withPatentNo("12345-666")
-//            .withAuthor("Walter White", "b6ff8101-05ec-49c5-bd12-cba7894012b7")
-//            .withAuthorAffiliation("4Science")
-//            .withAuthor("Jesse Pinkman")
-//            .withAuthorAffiliation(PLACEHOLDER_PARENT_METADATA_VALUE)
-//            .withAuthor("John Smith", "will be referenced::ORCID::0000-0000-0012-3456")
-//            .withAuthorAffiliation("4Science")
-//            .withRightsHolder("Test Organization")
-//            .withDescriptionAbstract("This is a patent")
-//            .withRelationPatent("Another patent")
-//            .withSubject("patent")
-//            .withSubject("test")
-//            .withRelationFunding("Test funding")
-//            .withRelationProject("First project")
-//            .withRelationProject("Second project")
-//            .build();
-//
-//        Item secondItem = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Patent")
-//            .withTitle("second patent")
-//            .withType("patent")
-//            .withPatentNo("12345-777")
-//            .withAuthor("Bruce Wayne")
-//            .withRelationPatent("Another patent")
-//            .withSubject("second")
-//            .withRelationFunding("Funding")
-//            .build();
-//
-//        Item thirdItem = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Patent")
-//            .withTitle("Third patent")
-//            .withDateAccepted("2019-01-01")
-//            .withLanguage("ita")
-//            .withPublisher("Publisher")
-//            .withPatentNo("12345-888")
-//            .withRightsHolder("Organization")
-//            .withDescriptionAbstract("Patent description")
-//            .withRelationPatent("Another patent")
-//            .withRelationFunding("First funding")
-//            .withRelationFunding("Second funding")
-//            .build();
-//
-//        context.restoreAuthSystemState();
-//
-//        csvCrosswalk = (CsvCrosswalk) crosswalkMapper.getByType("patent-csv");
-//        assertThat(csvCrosswalk, notNullValue());
-//        csvCrosswalk.setDCInputsReader(dcInputsReader);
-//
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//        csvCrosswalk.disseminate(context, Arrays.asList(firstItem, secondItem, thirdItem).iterator(), out);
-//
-//        try (FileInputStream fis = getFileInputStream("patents.csv")) {
-//            String expectedCsv = IOUtils.toString(fis, Charset.defaultCharset());
-//            assertThat(out.toString(), equalTo(expectedCsv));
-//        }
-//    }
 
     private Item createFullPersonItem() {
         Item item = createItem(context, collection)

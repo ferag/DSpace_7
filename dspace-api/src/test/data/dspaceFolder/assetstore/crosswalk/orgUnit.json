@@ -40,7 +40,7 @@
         "CRF-01"
     ],
     "subjects": [
-        "Subject OCDE"
+        "https:\/\/purl.org\/pe-repo\/ocde\/ford\/#5.07.01"
     ],
     "keywords": [
         "Keyword1",

@@ -1,5 +1,5 @@
 {
-    "type-ocde": "@perucris.project.typeOcde@",
+    "type-ocde": "@virtual.mapConverter.ocdeProjectTypes.perucris-project-typeOcde@",
     "type-other": "@perucris.project.typeOther@",
 	"acronym":"@oairecerif.acronym@",
 	"title":"@dc.title@",
@@ -87,7 +87,7 @@
 		"@dc.subject@",
 	],
 	"subjects": [
-		"@perucris.subject.ocde@",
+		"@virtual.mapConverter.ocdeSubjects.perucris-subject-ocde@",
 	],
 	"abstract": "@dc.description.abstract@",
 	"OAMandate": {

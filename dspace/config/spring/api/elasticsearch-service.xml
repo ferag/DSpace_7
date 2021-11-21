@@ -44,10 +44,11 @@
 				<entry key="Publication" value= "publications-v1" />
 				<entry key="Person" value= "persons-{DATE.yyyy}" />
 				<entry key="OrgUnit" value= "orgunits-v1" />
-				<entry key="Politic" value= "politic-v1" />
-				<entry key="Plan" value= "plan-v1" />
-				<entry key="Program" value= "program-v1" />
-				<entry key="Indicator" value= "indicator-v1" />
+				<!-- FIXME: to be used when ppp dashboards are ready -->
+<!--				<entry key="Politic" value= "politic-v1" />-->
+<!--				<entry key="Plan" value= "plan-v1" />-->
+<!--				<entry key="Program" value= "program-v1" />-->
+<!--				<entry key="Indicator" value= "indicator-v1" />-->
 			</map>
 		</constructor-arg>
 		<constructor-arg>

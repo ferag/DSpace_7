@@ -30,7 +30,7 @@ public class BrowseIndexMatcher {
 
     public static Matcher<? super Object> subjectBrowseIndex(final String order, final String browseName) {
         return allOf(
-            hasJsonPath("$.metadata", contains("dc.subject.*")),
+            hasJsonPath("$.metadata", contains("dc.subject.*", "perucris.subject.*")),
             hasJsonPath("$.metadataBrowse", Matchers.is(true)),
             hasJsonPath("$.order", equalToIgnoringCase(order)),
             hasJsonPath("$.sortOptions[*].name", containsInAnyOrder("title", "dateissued", "dateaccessioned",
@@ -150,15 +150,16 @@ public class BrowseIndexMatcher {
         );
     }
 
-    public static Matcher<? super Object> eqtitleBrowseIndex(final String order) {
+    public static Matcher<? super Object> eqtitleBrowseIndex(final String order, String browseName) {
         return allOf(
             hasJsonPath("$.metadata", contains("dc.title")),
             hasJsonPath("$.metadataBrowse", Matchers.is(false)),
             hasJsonPath("$.order", equalToIgnoringCase(order)),
             hasJsonPath("$.sortOptions[*].name", containsInAnyOrder("title", "dateissued", "dateaccessioned",
                                                             "datemodified", "datecreated", "datestart", "dateend")),
-            hasJsonPath("$._links.self.href", is(REST_SERVER_URL + "discover/browses/eqtitle")),
-            hasJsonPath("$._links.items.href", is(REST_SERVER_URL + "discover/browses/eqtitle/items"))
+            hasJsonPath("$._links.self.href", is(REST_SERVER_URL + "discover/browses/" + browseName)),
+            hasJsonPath("$._links.items.href", is(REST_SERVER_URL + "discover/browses/" + browseName +
+                "/items"))
                     );
     }
 
@@ -258,87 +259,93 @@ public class BrowseIndexMatcher {
                     );
     }
 
-    public static Matcher<? super Object> pftitleBrowseIndex(final String order) {
+    public static Matcher<? super Object> pftitleBrowseIndex(final String order, String browseName) {
         return allOf(
             hasJsonPath("$.metadata", contains("dc.title")),
             hasJsonPath("$.metadataBrowse", Matchers.is(false)),
             hasJsonPath("$.order", equalToIgnoringCase(order)),
             hasJsonPath("$.sortOptions[*].name", containsInAnyOrder("title", "dateissued", "dateaccessioned",
                                                             "datemodified", "datecreated", "datestart", "dateend")),
-            hasJsonPath("$._links.self.href", is(REST_SERVER_URL + "discover/browses/pftitle")),
-            hasJsonPath("$._links.items.href", is(REST_SERVER_URL + "discover/browses/pftitle/items"))
+            hasJsonPath("$._links.self.href", is(REST_SERVER_URL + "discover/browses/" + browseName)),
+            hasJsonPath("$._links.items.href", is(REST_SERVER_URL + "discover/browses/" + browseName +"/items"))
                     );
     }
 
-    public static Matcher<? super Object> pfdatecreatedBrowseIndex(final String order) {
+    public static Matcher<? super Object> pfdatecreatedBrowseIndex(final String order, String browseName) {
         return allOf(
             hasJsonPath("$.metadata", contains("dc.date.created")),
             hasJsonPath("$.metadataBrowse", Matchers.is(false)),
             hasJsonPath("$.order", equalToIgnoringCase(order)),
             hasJsonPath("$.sortOptions[*].name", containsInAnyOrder("title", "dateissued", "dateaccessioned",
                                                             "datemodified", "datecreated", "datestart", "dateend")),
-            hasJsonPath("$._links.self.href", is(REST_SERVER_URL + "discover/browses/pfdatecreated")),
-            hasJsonPath("$._links.items.href", is(REST_SERVER_URL + "discover/browses/pfdatecreated/items"))
+            hasJsonPath("$._links.self.href", is(REST_SERVER_URL + "discover/browses/" + browseName)),
+            hasJsonPath("$._links.items.href", is(REST_SERVER_URL + "discover/browses/" + browseName +
+                "/items"))
                     );
     }
 
-    public static Matcher<? super Object> pfdatemodifiedBrowseIndex(final String order) {
+    public static Matcher<? super Object> pfdatemodifiedBrowseIndex(final String order, String browseName) {
         return allOf(
             hasJsonPath("$.metadata", contains("placeholder.placeholder.placeholder")),
             hasJsonPath("$.metadataBrowse", Matchers.is(false)),
             hasJsonPath("$.order", equalToIgnoringCase(order)),
             hasJsonPath("$.sortOptions[*].name", containsInAnyOrder("title", "dateissued", "dateaccessioned",
                                                             "datemodified", "datecreated", "datestart", "dateend")),
-            hasJsonPath("$._links.self.href", is(REST_SERVER_URL + "discover/browses/pfdatemodified")),
-            hasJsonPath("$._links.items.href", is(REST_SERVER_URL + "discover/browses/pfdatemodified/items"))
+            hasJsonPath("$._links.self.href", is(REST_SERVER_URL + "discover/browses/" + browseName)),
+            hasJsonPath("$._links.items.href", is(REST_SERVER_URL + "discover/browses/" +
+                browseName + "/items"))
                     );
     }
 
-    public static Matcher<? super Object> pfdatestartBrowseIndex(final String order) {
+    public static Matcher<? super Object> pfdatestartBrowseIndex(final String order, String browseName) {
         return allOf(
             hasJsonPath("$.metadata", contains("oairecerif.project.startDate")),
             hasJsonPath("$.metadataBrowse", Matchers.is(false)),
             hasJsonPath("$.order", equalToIgnoringCase(order)),
             hasJsonPath("$.sortOptions[*].name", containsInAnyOrder("title", "dateissued", "dateaccessioned",
                                                             "datemodified", "datecreated", "datestart", "dateend")),
-            hasJsonPath("$._links.self.href", is(REST_SERVER_URL + "discover/browses/pfdatestart")),
-            hasJsonPath("$._links.items.href", is(REST_SERVER_URL + "discover/browses/pfdatestart/items"))
+            hasJsonPath("$._links.self.href", is(REST_SERVER_URL + "discover/browses/" + browseName)),
+            hasJsonPath("$._links.items.href", is(REST_SERVER_URL + "discover/browses/" +
+                browseName + "/items"))
                     );
     }
 
-    public static Matcher<? super Object> pfdateendBrowseIndex(final String order) {
+    public static Matcher<? super Object> pfdateendBrowseIndex(final String order, String browseName) {
         return allOf(
             hasJsonPath("$.metadata", contains("oairecerif.project.endDate")),
             hasJsonPath("$.metadataBrowse", Matchers.is(false)),
             hasJsonPath("$.order", equalToIgnoringCase(order)),
             hasJsonPath("$.sortOptions[*].name", containsInAnyOrder("title", "dateissued", "dateaccessioned",
                                                             "datemodified", "datecreated", "datestart", "dateend")),
-            hasJsonPath("$._links.self.href", is(REST_SERVER_URL + "discover/browses/pfdateend")),
-            hasJsonPath("$._links.items.href", is(REST_SERVER_URL + "discover/browses/pfdateend/items"))
+            hasJsonPath("$._links.self.href", is(REST_SERVER_URL + "discover/browses/" + browseName)),
+            hasJsonPath("$._links.items.href", is(REST_SERVER_URL + "discover/browses/" + browseName +
+                "/items"))
                     );
     }
 
-    public static Matcher<? super Object> eqdatecreatedBrowseIndex(final String order) {
+    public static Matcher<? super Object> eqdatecreatedBrowseIndex(final String order, String browseName) {
         return allOf(
             hasJsonPath("$.metadata", contains("dc.date.created")),
             hasJsonPath("$.metadataBrowse", Matchers.is(false)),
             hasJsonPath("$.order", equalToIgnoringCase(order)),
             hasJsonPath("$.sortOptions[*].name", containsInAnyOrder("title", "dateissued", "dateaccessioned",
                                                             "datemodified", "datecreated", "datestart", "dateend")),
-            hasJsonPath("$._links.self.href", is(REST_SERVER_URL + "discover/browses/eqdatecreated")),
-            hasJsonPath("$._links.items.href", is(REST_SERVER_URL + "discover/browses/eqdatecreated/items"))
+            hasJsonPath("$._links.self.href", is(REST_SERVER_URL + "discover/browses/" + browseName)),
+            hasJsonPath("$._links.items.href", is(REST_SERVER_URL + "discover/browses/" +
+                browseName + "/items"))
                     );
     }
 
-    public static Matcher<? super Object> eqdatemodifiedBrowseIndex(final String order) {
+    public static Matcher<? super Object> eqdatemodifiedBrowseIndex(final String order, String browseName) {
         return allOf(
             hasJsonPath("$.metadata", contains("placeholder.placeholder.placeholder")),
             hasJsonPath("$.metadataBrowse", Matchers.is(false)),
             hasJsonPath("$.order", equalToIgnoringCase(order)),
             hasJsonPath("$.sortOptions[*].name", containsInAnyOrder("title", "dateissued", "dateaccessioned",
                                                             "datemodified", "datecreated", "datestart", "dateend")),
-            hasJsonPath("$._links.self.href", is(REST_SERVER_URL + "discover/browses/eqdatemodified")),
-            hasJsonPath("$._links.items.href", is(REST_SERVER_URL + "discover/browses/eqdatemodified/items"))
+            hasJsonPath("$._links.self.href", is(REST_SERVER_URL + "discover/browses/" + browseName)),
+            hasJsonPath("$._links.items.href", is(REST_SERVER_URL + "discover/browses/" +
+                browseName + "/items"))
                     );
     }
 }

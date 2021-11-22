@@ -68,12 +68,12 @@ public class BrowsesResourceControllerIT extends AbstractControllerIntegrationTe
                    //Our default Discovery config has 44 browse indexes so we expect this to be reflected in the page
                    // object
                    .andExpect(jsonPath("$.page.size", is(20)))
-                   .andExpect(jsonPath("$.page.totalElements", is(44)))
+                   .andExpect(jsonPath("$.page.totalElements", is(56)))
                    .andExpect(jsonPath("$.page.totalPages", is(3)))
                    .andExpect(jsonPath("$.page.number", is(0)))
 
-                   //The array of browse index should have a size 44
-                   .andExpect(jsonPath("$._embedded.browses", hasSize(44)))
+                   //The array of browse index should have a size 56
+                   .andExpect(jsonPath("$._embedded.browses", hasSize(56)))
 
                    //Check that all (and only) the default browse indexes are present
                    .andExpect(jsonPath("$._embedded.browses", containsInAnyOrder(
@@ -97,7 +97,8 @@ public class BrowsesResourceControllerIT extends AbstractControllerIntegrationTe
                        BrowseIndexMatcher.pjtitleBrowseIndex("asc", "instpjtitle"),
                        BrowseIndexMatcher.rpdeptBrowseIndex("asc", "rpdept"),
                        BrowseIndexMatcher.rpdeptBrowseIndex("asc", "instrpdept"),
-                       BrowseIndexMatcher.eqtitleBrowseIndex("asc"),
+                       BrowseIndexMatcher.eqtitleBrowseIndex("asc", "eqtitle"),
+                       BrowseIndexMatcher.eqtitleBrowseIndex("asc", "insteqtitle"),
                        BrowseIndexMatcher.rotitleBrowseIndex("asc"),
                        BrowseIndexMatcher.rodatecreatedBrowseIndex("asc"),
                        BrowseIndexMatcher.rodatemodifiedBrowseIndex("asc"),
@@ -106,21 +107,32 @@ public class BrowsesResourceControllerIT extends AbstractControllerIntegrationTe
                        BrowseIndexMatcher.rpdatemodifiedBrowseIndex("asc"),
                        BrowseIndexMatcher.oudatecreatedBrowseIndex("asc"),
                        BrowseIndexMatcher.oudatemodifiedBrowseIndex("asc"),
-                       BrowseIndexMatcher.pftitleBrowseIndex("asc"),
-                       BrowseIndexMatcher.pfdatecreatedBrowseIndex("asc"),
-                       BrowseIndexMatcher.pfdatemodifiedBrowseIndex("asc"),
-                       BrowseIndexMatcher.pfdatestartBrowseIndex("asc"),
-                       BrowseIndexMatcher.pfdateendBrowseIndex("asc"),
-                       BrowseIndexMatcher.eqdatecreatedBrowseIndex("asc"),
-                       BrowseIndexMatcher.eqdatemodifiedBrowseIndex("asc"),
+                       BrowseIndexMatcher.pftitleBrowseIndex("asc", "pftitle"),
+                       BrowseIndexMatcher.pftitleBrowseIndex("asc", "instpftitle"),
+                       BrowseIndexMatcher.pfdatecreatedBrowseIndex("asc", "pfdatecreated"),
+                       BrowseIndexMatcher.pfdatecreatedBrowseIndex("asc", "instpfdatecreated"),
+                       BrowseIndexMatcher.pfdatemodifiedBrowseIndex("asc", "pfdatemodified"),
+                       BrowseIndexMatcher.pfdatemodifiedBrowseIndex("asc", "instpfdatemodified"),
+                       BrowseIndexMatcher.pfdatestartBrowseIndex("asc", "pfdatestart"),
+                       BrowseIndexMatcher.pfdatestartBrowseIndex("asc", "instpfdatestart"),
+                       BrowseIndexMatcher.pfdateendBrowseIndex("asc", "pfdateend"),
+                       BrowseIndexMatcher.pfdateendBrowseIndex("asc", "instpfdateend"),
+                       BrowseIndexMatcher.eqdatecreatedBrowseIndex("asc", "eqdatecreated"),
+                       BrowseIndexMatcher.eqdatecreatedBrowseIndex("asc", "insteqdatecreated"),
+                       BrowseIndexMatcher.eqdatemodifiedBrowseIndex("asc", "eqdatemodified"),
+                       BrowseIndexMatcher.eqdatemodifiedBrowseIndex("asc", "insteqdatemodified"),
                        BrowseIndexMatcher.rpnameBrowseIndex("asc", "ctirpname"),
                        BrowseIndexMatcher.contributorBrowseIndex("asc", "ctiauthor"),
                        BrowseIndexMatcher.dateIssuedBrowseIndex("asc", "ctidateissued"),
                        BrowseIndexMatcher.dateIssuedBrowseIndex("asc", "ctiptdateissued"),
+                       BrowseIndexMatcher.dateIssuedBrowseIndex("asc", "ptdateissued"),
+                       BrowseIndexMatcher.dateIssuedBrowseIndex("asc", "instptdateissued"),
                        BrowseIndexMatcher.subjectBrowseIndex("asc", "ctisubject"),
                        BrowseIndexMatcher.titleBrowseIndex("asc", "ctititle"),
                        BrowseIndexMatcher.pjtitleBrowseIndex("asc", "ctipjtitle"),
-                       BrowseIndexMatcher.pjtitleBrowseIndex("asc", "ctipttitle")
+                       BrowseIndexMatcher.pjtitleBrowseIndex("asc", "ctipttitle"),
+                       BrowseIndexMatcher.pjtitleBrowseIndex("asc", "pttitle"),
+                       BrowseIndexMatcher.pjtitleBrowseIndex("asc", "instpttitle")
                    )))
         ;
     }

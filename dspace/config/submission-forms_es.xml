@@ -4980,8 +4980,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>DNI</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>Introduzca al menos DNI (8 dígitos) u ORCID (16 dígitos)</required>
-          <hint />
+          <required />
+          <hint>Introduzca al menos DNI (8 dígitos) u ORCID (16 dígitos)</hint>
           <validation>^[0-9]{8}$</validation>
         </field>
         <field>
@@ -4991,8 +4991,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>ORCID</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>Introduzca al menos DNI (8 dígitos) u ORCID (16 dígitos)</required>
-          <hint />
+          <required />
+          <hint>Introduzca al menos DNI (8 dígitos) u ORCID (16 dígitos)</hint>
           <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
@@ -5417,8 +5417,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>DNI</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>Introduzca al menos DNI (8 dígitos) u ORCID (16 dígitos)</required>
-          <hint />
+          <required />
+          <hint>Introduzca al menos DNI (8 dígitos) u ORCID (16 dígitos)</hint>
           <validation>^[0-9]{8}$</validation>
         </field>
         <field>
@@ -5428,8 +5428,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>ORCID</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>Introduzca al menos DNI (8 dígitos) u ORCID (16 dígitos)</required>
-          <hint />
+          <required />
+          <hint>Introduzca al menos DNI (8 dígitos) u ORCID (16 dígitos)</hint>
           <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>

@@ -5344,7 +5344,7 @@
         <field>
           <dc-schema>crisrp</dc-schema>
           <dc-element>qualification</dc-element>
-          <label>Qualification(s)</label>
+          <label>Renacyt Registry (Concytec)</label>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />

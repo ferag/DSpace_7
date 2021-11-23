@@ -2139,7 +2139,7 @@ o “Caja de geolocalización”</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>renacyt</dc-element>
           <dc-qualifier>registrationNumber</dc-qualifier>
-          <label>Renacyt Fecha de cualificación</label>
+          <label>Resolución</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -2151,7 +2151,7 @@ o “Caja de geolocalización”</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>renacyt</dc-element>
           <dc-qualifier>dateOfQualification</dc-qualifier>
-          <label>Número de registro de Renacyt</label>
+          <label>Vigencia</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -5356,7 +5356,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <field>
           <dc-schema>crisrp</dc-schema>
           <dc-element>qualification</dc-element>
-          <label>Cualificación(es)</label>
+          <label>Registro Renacyt (Concytec)</label>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />

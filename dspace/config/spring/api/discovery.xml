@@ -3872,7 +3872,7 @@
                         <ref bean="sortOrganizationLegalName"/>
                         <ref bean="sortOrganizationAddressCountry"/>
                         <ref bean="sortOrganizationAddressLocality"/>
-                        <ref bean="sortOrganizationFoundingDate"/>
+<!--                        <ref bean="sortOrganizationFoundingDate"/>-->
                         <ref bean="sortDateAccessioned"/>
                     </list>
                 </property>
@@ -3959,8 +3959,9 @@
                         <ref bean="sortOrganizationLegalName"/>
                         <ref bean="sortOrganizationAddressCountry"/>
                         <ref bean="sortOrganizationAddressLocality"/>
-                        <ref bean="sortOrganizationFoundingDate"/>
+<!--                        <ref bean="sortOrganizationFoundingDate"/>-->
                         <ref bean="sortDateAccessioned"/>
+                        <ref bean="sortLastModified"/>
                     </list>
                 </property>
             </bean>
@@ -4491,6 +4492,7 @@
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
                 <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+                <ref bean="searchFilterHiddenWithdrawn"/>
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -4550,6 +4552,7 @@
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
                 <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+                <ref bean="searchFilterHiddenWithdrawn"/>
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -4608,6 +4611,7 @@
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
                 <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+                <ref bean="searchFilterHiddenWithdrawn"/>
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -4667,6 +4671,7 @@
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
                 <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+                <ref bean="searchFilterHiddenWithdrawn"/>
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -4726,6 +4731,7 @@
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
                 <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+                <ref bean="searchFilterHiddenWithdrawn"/>
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -4785,6 +4791,7 @@
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
                 <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+                <ref bean="searchFilterHiddenWithdrawn"/>
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -4844,6 +4851,7 @@
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
                 <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+                <ref bean="searchFilterHiddenWithdrawn"/>
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -4904,6 +4912,7 @@
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
                 <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
+                <ref bean="searchFilterHiddenWithdrawn"/>
             </list>
         </property>
         <!--The sort filters for the discovery search-->

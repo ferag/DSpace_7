@@ -1,7 +1,7 @@
 {
     "resourceId" : "@virtual.id@",
 	"dc_title" : "@dc.title@",
-	"perucris.ppp_politicGoal" : "@perucris.ppp.politicGoal@",
+	"perucris_ppp_politicGoal" : "@perucris.ppp.politicGoal@",
 	"perucris_ppp_plan" : "@perucris.ppp.plan@",
 	"perucris_ppp_program" : "@perucris.ppp.program@",
 	"perucris_ppp_programGoal" : "@perucris.ppp.programGoal@",
@@ -22,14 +22,17 @@
 	"perucris_ppp_startingYear" : "@perucris.ppp.startingYear@",
 	"perucris_ppp_progress" : "@perucris.ppp.progress@",
 	"perucris_ppp_performanceSummary" : "@perucris.ppp.performanceSummary@",
-	"perucris_ppp_status" : "@perucris.ppp.status@",
-    "perucris_ppp_year" : [
-           @group.perucris-ppp-year.start@
-           {
-              "year" : "@perucris.ppp.year@",
-              "expectedValuey": "@perucris.ppp.expectedValuey@",
-              "obtainedValue": "@perucris.ppp.obtainedValue@"
-           },
-           @group.perucris-ppp-year.end@2
-           ]
+	@if.metadata.perucris-ppp-year.start@
+        "perucris_ppp_year" : [
+               @group.perucris-ppp-year.start@
+               {
+                  "year" : "@perucris.ppp.year@",
+                  "expectedValue": "@perucris.ppp.expectedValue@",
+                  "obtainedValue": "@perucris.ppp.obtainedValue@"
+               },
+               @group.perucris-ppp-year.end@
+               ],
+    @if.metadata.perucris-ppp-year.end@
+	"perucris_ppp_status" : "@perucris.ppp.status@"
+
 }

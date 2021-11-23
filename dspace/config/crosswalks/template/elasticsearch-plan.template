@@ -10,7 +10,7 @@
 	"perucris_ppp_endingYear" : "@perucris.ppp.endingYear@",
 	"perucris_ppp_responsibleEntity" : "@perucris.ppp.responsibleEntity@",
 	"perucris_ppp_planType" : "@perucris.ppp.planType@",
-	"perucris_ppp.status" : "@perucris.ppp.status@",
+	"perucris_ppp_status" : "@perucris.ppp.status@",
 	"perucris_ppp_planImplMainMeasures" : "@perucris.ppp.planImplMainMeasures@",
 	"perucris_ppp_leadingEvents" : "@perucris.ppp.leadingEvents@",
 	"perucris_ppp_hinderingEvents" : "@perucris.ppp.hinderingEvents@",
@@ -29,13 +29,15 @@
 	"perucris_ppp_meetingTargetResults" : "@perucris.ppp.meetingTargetResults@",
 	"perucris_ppp_conclusions" : "@perucris.ppp.conclusions@",
 	"perucris_ppp_recommendations" : "@perucris.ppp.recommendations@",
-	"perucris_ppp_lessonsLearnt" : "@perucris.ppp.lessonsLearnt@",
-	"perucris_ppp_strategicalGoal" : [
-           @group.perucris-ppp-strategicalGoal.start@
-           {
-              "strategicalGoal" : "@perucris.ppp.strategicalGoal@",
-              "strategy": "@perucris.ppp.strategy@"
-           },
-           @group.perucris-ppp-strategicalGoal.end@2
-           ]
+	 @if.metadata.perucris-ppp-strategicalGoal.start@
+    	"perucris_ppp_strategicalGoal" : [
+               @group.perucris-ppp-strategicalGoal.start@
+               {
+                  "strategicalGoal" : "@perucris.ppp.strategicalGoal@",
+                  "strategy": "@perucris.ppp.strategy@"
+               },
+               @group.perucris-ppp-strategicalGoal.end@2
+               ],
+     @if.metadata.perucris-ppp-strategicalGoal.end@
+	"perucris_ppp_lessonsLearnt" : "@perucris.ppp.lessonsLearnt@"
 }

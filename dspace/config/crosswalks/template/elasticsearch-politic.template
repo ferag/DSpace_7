@@ -1,5 +1,6 @@
 {
     "resourceId" : "@virtual.id@",
+    "dc_title" : "@dc.title@",
     "dc_description" : "@dc.description@",
     "perucris_ppp_approvalDate" : "@perucris.ppp.approvalDate@",
     "perucris_ppp_temporalHorizon" : "@perucris.ppp.temporalHorizon@",

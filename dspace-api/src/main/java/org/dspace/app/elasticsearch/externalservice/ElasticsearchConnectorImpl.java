@@ -17,6 +17,7 @@ import java.security.cert.X509Certificate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
@@ -114,13 +115,24 @@ public class ElasticsearchConnectorImpl implements ElasticsearchConnector {
     }
 
     @Override
-    public HttpResponse searchByFieldAndValue(String index, String field, String value) throws IOException {
+    public ElasticSearchResponse searchByFieldAndValue(String index, String field, String value) throws IOException {
         JSONObject json = new JSONObject();
         json.put("query", new JSONObject().put("match", new JSONObject().put(field,value)));
-        return httpPostRequest(this.url + index + "/_search", Collections.emptyMap(), json.toString());
+
+        ElasticSearchResponse elasticSearchResponse = new ElasticSearchResponse();
+        httpPostRequest(this.url + index + "/_search", Collections.emptyMap(), json.toString(),
+            Optional.of(elasticSearchResponse));
+
+        return elasticSearchResponse;
     }
 
     private HttpResponse httpPostRequest(String url, Map<String, String> headerConfig, String entity)
+        throws IOException {
+        return httpPostRequest(url, headerConfig, entity, Optional.empty());
+    }
+
+    private HttpResponse httpPostRequest(String url, Map<String, String> headerConfig, String entity,
+                                         Optional<ElasticSearchResponse> response)
             throws IOException {
         HttpPost httpPost = new HttpPost(url);
         try {
@@ -136,7 +148,11 @@ public class ElasticsearchConnectorImpl implements ElasticsearchConnector {
                 httpEntity.setContentType("application/json");
                 httpPost.setEntity(httpEntity);
             }
-            return httpClient.execute(httpPost);
+            HttpResponse httpResponse = httpClient.execute(httpPost);
+            if (response.isPresent()) {
+                response.get().setResponse(httpResponse);
+            }
+            return httpResponse;
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         } finally {

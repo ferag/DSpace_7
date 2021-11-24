@@ -110,7 +110,7 @@ public class EntityTypeRestRepository extends DSpaceRestRepository<EntityTypeRes
                             throw new RuntimeException(e.getMessage(), e);
                         }
                     })
-                    .filter(x -> Objects.nonNull(x))
+                    .filter(x -> Objects.nonNull(x) && !x.getLabel().startsWith("Cv"))
                     .collect(Collectors.toList());
             return converter.toRestPage(entityTypes, pageable, utils.obtainProjection());
         } catch (SQLException | SolrServerException | IOException e) {

@@ -5,51 +5,6 @@
 
     <bean class="org.dspace.external.service.impl.ExternalDataServiceImpl" primary="true"/>
 
-<!--    <bean class="org.dspace.external.provider.impl.SHERPAv2JournalISSNDataProvider" init-method="init">-->
-<!--        <property name="sherpaService">-->
-<!--            <bean class="org.dspace.app.sherpa.SHERPAService">-->
-<!--                <property name="maxNumberOfTries" value="3"/>-->
-<!--                <property name="sleepBetweenTimeouts" value="2000"/>-->
-<!--                <property name="timeout" value="5000"/>-->
-<!--            </bean>-->
-<!--        </property>-->
-<!--        <property name="sourceIdentifier" value="sherpaJournalIssn"/>-->
-<!--        <property name="supportedEntityTypes">-->
-<!--            <list>-->
-<!--                <value>Journal</value>-->
-<!--            </list>-->
-<!--        </property>-->
-<!--    </bean>-->
-<!--    <bean class="org.dspace.external.provider.impl.SHERPAv2JournalDataProvider" init-method="init">-->
-<!--        <property name="sourceIdentifier" value="sherpaJournal"/>-->
-<!--        <property name="sherpaService">-->
-<!--            <bean class="org.dspace.app.sherpa.SHERPAService">-->
-<!--                <property name="maxNumberOfTries" value="3"/>-->
-<!--                <property name="sleepBetweenTimeouts" value="2000"/>-->
-<!--                <property name="timeout" value="5000"/>-->
-<!--            </bean>-->
-<!--        </property>-->
-<!--        <property name="supportedEntityTypes">-->
-<!--            <list>-->
-<!--                <value>Journal</value>-->
-<!--            </list>-->
-<!--        </property>-->
-<!--    </bean>-->
-<!--    <bean class="org.dspace.external.provider.impl.SHERPAv2PublisherDataProvider" init-method="init">-->
-<!--        <property name="sourceIdentifier" value="sherpaPublisher"/>-->
-<!--        <property name="sherpaService">-->
-<!--            <bean class="org.dspace.app.sherpa.SHERPAService">-->
-<!--                <property name="maxNumberOfTries" value="3"/>-->
-<!--                <property name="sleepBetweenTimeouts" value="2000"/>-->
-<!--                <property name="timeout" value="5000"/>-->
-<!--            </bean>-->
-<!--        </property>-->
-<!--        <property name="supportedEntityTypes">-->
-<!--            <list>-->
-<!--                <value>OrgUnit</value>-->
-<!--            </list>-->
-<!--        </property>-->
-<!--    </bean>-->
     <bean class="org.dspace.external.provider.impl.OrcidV3AuthorDataProvider" init-method="init">
         <property name="sourceIdentifier" value="orcid"/>
         <property name="orcidUrl" value="${orcid.domain-url}" />
@@ -58,9 +13,7 @@
         <property name="OAUTHUrl" value="${orcid.token-url}" />
         <property name="orcidRestConnector" ref="orcidRestConnector"/>
         <property name="supportedEntityTypes">
-            <list>
-<!--                <value>Person</value>-->
-            </list>
+            <list/>
         </property>
     </bean>
 
@@ -171,9 +124,7 @@
         <property name="sourceIdentifier" value="orcidWorks"/>
         <property name="fieldMapping" ref="orcidPublicationDataProviderFieldMapping"/>
         <property name="supportedEntityTypes">
-            <list>
-                <value>Publication</value>
-            </list>
+            <list/>
         </property>
     </bean>
 
@@ -191,9 +142,7 @@
         <property name="sourceIdentifier" value="ads"/>
         <property name="recordIdMetadata" value="dc.identifier.adsbibcode"/>
         <property name="supportedEntityTypes">
-            <list>
-                <value>Publication</value>
-            </list>
+            <list/>
         </property>
     </bean>
 

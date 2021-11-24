@@ -137,87 +137,85 @@ public class EntityTypeRestRepositoryIT extends AbstractEntityIntegrationTest {
         //When we call this facets endpoint
         getClient().perform(get("/api/core/entitytypes"))
 
-                   //We expect a 200 OK status
-                   .andExpect(status().isOk())
-                   //The type has to be 'discover'
-                   .andExpect(jsonPath("$.page.totalElements", is(16)))
-                   //There needs to be a self link to this endpoint
-                   .andExpect(jsonPath("$._links.self.href", containsString("api/core/entitytypes")))
-                   //We have 4 facets in the default configuration, they need to all be present in the embedded section
-                   .andExpect(jsonPath("$._embedded.entitytypes", containsInAnyOrder(
-                       EntityTypeMatcher
-                           .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Publication")),
-                       EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "none")),
-                       EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Person")),
-                       EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Project")),
-                       EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "OrgUnit")),
-                       EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Journal")),
-                       EntityTypeMatcher
-                           .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "JournalVolume")),
-                       EntityTypeMatcher
-                           .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "JournalIssue")),
-                       EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvPerson")),
-                       EntityTypeMatcher
-                           .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvPersonClone")),
-                       EntityTypeMatcher
-                           .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvPublication")),
-                       EntityTypeMatcher
-                           .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvPublicationClone")),
-                       EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvProject")),
-                       EntityTypeMatcher
-                           .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvProjectClone")),
-                       EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvPatent")),
-                       EntityTypeMatcher
-                           .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvPatentClone"))
-                   )));
+            //We expect a 200 OK status
+            .andExpect(status().isOk())
+            //The type has to be 'discover'
+            .andExpect(jsonPath("$.page.totalElements", is(15)))
+            //There needs to be a self link to this endpoint
+            .andExpect(jsonPath("$._links.self.href", containsString("api/core/entitytypes")))
+            //We have 4 facets in the default configuration, they need to all be present in the embedded section
+            .andExpect(jsonPath("$._embedded.entitytypes", containsInAnyOrder(
+                EntityTypeMatcher
+                    .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Publication")),
+                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Person")),
+                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Project")),
+                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "OrgUnit")),
+                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Journal")),
+                EntityTypeMatcher
+                    .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "JournalVolume")),
+                EntityTypeMatcher
+                    .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "JournalIssue")),
+                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvPerson")),
+                EntityTypeMatcher
+                    .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvPersonClone")),
+                EntityTypeMatcher
+                    .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvPublication")),
+                EntityTypeMatcher
+                    .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvPublicationClone")),
+                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvProject")),
+                EntityTypeMatcher
+                    .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvProjectClone")),
+                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvPatent")),
+                EntityTypeMatcher
+                    .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvPatentClone"))
+            )));
     }
 
     @Test
     public void getAllEntityTypeEndpointWithPaging() throws Exception {
         getClient().perform(get("/api/core/entitytypes").param("size", "5"))
 
-                   //We expect a 200 OK status
-                   .andExpect(status().isOk())
-                   //The type has to be 'discover'
-                   .andExpect(jsonPath("$.page.size", is(5)))
-                   .andExpect(jsonPath("$.page.totalElements", is(16)))
-                   .andExpect(jsonPath("$.page.totalPages", is(4)))
-                   //There needs to be a self link to this endpoint
-                   .andExpect(jsonPath("$._links.self.href", containsString("api/core/entitytypes")))
-                   //We have 4 facets in the default configuration, they need to all be present in the embedded section
-                   .andExpect(jsonPath("$._embedded.entitytypes", containsInAnyOrder(
-                       EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "none")),
-                       EntityTypeMatcher
-                           .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Publication")),
-                       EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Person")),
-                       EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Project")),
-                       EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "OrgUnit"))
-                   )));
+            //We expect a 200 OK status
+            .andExpect(status().isOk())
+            //The type has to be 'discover'
+            .andExpect(jsonPath("$.page.size", is(5)))
+            .andExpect(jsonPath("$.page.totalElements", is(15)))
+            .andExpect(jsonPath("$.page.totalPages", is(3)))
+            //There needs to be a self link to this endpoint
+            .andExpect(jsonPath("$._links.self.href", containsString("api/core/entitytypes")))
+            //We have 4 facets in the default configuration, they need to all be present in the embedded section
+            .andExpect(jsonPath("$._embedded.entitytypes", containsInAnyOrder(
+                EntityTypeMatcher
+                    .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Publication")),
+                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Person")),
+                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Project")),
+                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "OrgUnit"))
+            )));
 
         getClient().perform(get("/api/core/entitytypes").param("size", "5").param("page", "1"))
 
-                   //We expect a 200 OK status
-                   .andExpect(status().isOk())
-                   //The type has to be 'discover'
-                   .andExpect(jsonPath("$.page.size", is(5)))
-                   .andExpect(jsonPath("$.page.totalElements", is(16)))
-                   .andExpect(jsonPath("$.page.totalPages", is(4)))
-                   .andExpect(jsonPath("$.page.number", is(1)))
-                   //There needs to be a self link to this endpoint
-                   .andExpect(jsonPath("$._links.self.href", containsString("api/core/entitytypes")))
-                   //We have 4 facets in the default configuration, they need to all be present in the embedded section
-                   .andExpect(jsonPath("$._embedded.entitytypes", containsInAnyOrder(
-                       EntityTypeMatcher
-                           .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Journal")),
-                       EntityTypeMatcher
-                           .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "JournalVolume")),
-                       EntityTypeMatcher
-                            .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "JournalIssue")),
-                       EntityTypeMatcher
-                                .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvPerson")),
-                       EntityTypeMatcher
-                           .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvPersonClone"))
-                   )));
+            //We expect a 200 OK status
+            .andExpect(status().isOk())
+            //The type has to be 'discover'
+            .andExpect(jsonPath("$.page.size", is(5)))
+            .andExpect(jsonPath("$.page.totalElements", is(15)))
+            .andExpect(jsonPath("$.page.totalPages", is(3)))
+            .andExpect(jsonPath("$.page.number", is(1)))
+            //There needs to be a self link to this endpoint
+            .andExpect(jsonPath("$._links.self.href", containsString("api/core/entitytypes")))
+            //We have 4 facets in the default configuration, they need to all be present in the embedded section
+            .andExpect(jsonPath("$._embedded.entitytypes", containsInAnyOrder(
+                EntityTypeMatcher
+                    .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "JournalVolume")),
+                EntityTypeMatcher
+                    .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "JournalIssue")),
+                EntityTypeMatcher
+                    .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvPerson")),
+                EntityTypeMatcher
+                    .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvPersonClone")),
+                EntityTypeMatcher
+                    .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvPublication"))
+            )));
     }
 
     @Test
@@ -288,87 +286,88 @@ public class EntityTypeRestRepositoryIT extends AbstractEntityIntegrationTest {
     @Test
     public void findAllPaginationTest() throws Exception {
         getClient().perform(get("/api/core/entitytypes")
-                   .param("page", "0")
-                   .param("size", "3"))
-                   .andExpect(status().isOk())
-                   .andExpect(jsonPath("$._embedded.entitytypes", containsInAnyOrder(
-                    EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Publication")),
-                    EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Person")),
-                    EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "none"))
-                    )))
-                   .andExpect(jsonPath("$._links.first.href", Matchers.allOf(
-                           Matchers.containsString("/api/core/entitytypes?"),
-                           Matchers.containsString("page=0"), Matchers.containsString("size=3"))))
-                   .andExpect(jsonPath("$._links.self.href", Matchers.allOf(
-                           Matchers.containsString("/api/core/entitytypes?"),
-                           Matchers.containsString("page=0"), Matchers.containsString("size=3"))))
-                   .andExpect(jsonPath("$._links.next.href", Matchers.allOf(
-                           Matchers.containsString("/api/core/entitytypes?"),
-                           Matchers.containsString("page=1"), Matchers.containsString("size=3"))))
-                   .andExpect(jsonPath("$._links.last.href", Matchers.allOf(
-                           Matchers.containsString("/api/core/entitytypes?"),
-                           Matchers.containsString("page=5"), Matchers.containsString("size=3"))))
-                   .andExpect(jsonPath("$.page.size", is(3)))
-                   .andExpect(jsonPath("$.page.totalElements", is(16)))
-                   .andExpect(jsonPath("$.page.totalPages", is(6)))
-                   .andExpect(jsonPath("$.page.number", is(0)));
+            .param("page", "0")
+            .param("size", "3"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.entitytypes", containsInAnyOrder(
+                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Publication")),
+                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Person")),
+                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Project"))
+            )))
+            .andExpect(jsonPath("$._links.first.href", Matchers.allOf(
+                Matchers.containsString("/api/core/entitytypes?"),
+                Matchers.containsString("page=0"), Matchers.containsString("size=3"))))
+            .andExpect(jsonPath("$._links.self.href", Matchers.allOf(
+                Matchers.containsString("/api/core/entitytypes?"),
+                Matchers.containsString("page=0"), Matchers.containsString("size=3"))))
+            .andExpect(jsonPath("$._links.next.href", Matchers.allOf(
+                Matchers.containsString("/api/core/entitytypes?"),
+                Matchers.containsString("page=1"), Matchers.containsString("size=3"))))
+            .andExpect(jsonPath("$._links.last.href", Matchers.allOf(
+                Matchers.containsString("/api/core/entitytypes?"),
+                Matchers.containsString("page=4"), Matchers.containsString("size=3"))))
+            .andExpect(jsonPath("$.page.size", is(3)))
+            .andExpect(jsonPath("$.page.totalElements", is(15)))
+            .andExpect(jsonPath("$.page.totalPages", is(5)))
+            .andExpect(jsonPath("$.page.number", is(0)));
 
         getClient().perform(get("/api/core/entitytypes")
-                   .param("page", "1")
-                   .param("size", "3"))
-                   .andExpect(status().isOk())
-                   .andExpect(jsonPath("$._embedded.entitytypes", containsInAnyOrder(
-                    EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "OrgUnit")),
-                    EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Journal")),
-                    EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Project"))
-                    )))
-                   .andExpect(jsonPath("$._links.first.href", Matchers.allOf(
-                           Matchers.containsString("/api/core/entitytypes?"),
-                           Matchers.containsString("page=0"), Matchers.containsString("size=3"))))
-                   .andExpect(jsonPath("$._links.prev.href", Matchers.allOf(
-                           Matchers.containsString("/api/core/entitytypes?"),
-                           Matchers.containsString("page=0"), Matchers.containsString("size=3"))))
-                   .andExpect(jsonPath("$._links.self.href", Matchers.allOf(
-                           Matchers.containsString("/api/core/entitytypes?"),
-                           Matchers.containsString("page=1"), Matchers.containsString("size=3"))))
-                   .andExpect(jsonPath("$._links.next.href", Matchers.allOf(
-                           Matchers.containsString("/api/core/entitytypes?"),
-                           Matchers.containsString("page=2"), Matchers.containsString("size=3"))))
-                   .andExpect(jsonPath("$._links.last.href", Matchers.allOf(
-                           Matchers.containsString("/api/core/entitytypes?"),
-                           Matchers.containsString("page=5"), Matchers.containsString("size=3"))))
-                   .andExpect(jsonPath("$.page.size", is(3)))
-                   .andExpect(jsonPath("$.page.totalElements", is(16)))
-                   .andExpect(jsonPath("$.page.totalPages", is(6)))
-                   .andExpect(jsonPath("$.page.number", is(1)));
+            .param("page", "1")
+            .param("size", "3"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.entitytypes", containsInAnyOrder(
+                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "OrgUnit")),
+                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Journal")),
+                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Project"))
+            )))
+            .andExpect(jsonPath("$._links.first.href", Matchers.allOf(
+                Matchers.containsString("/api/core/entitytypes?"),
+                Matchers.containsString("page=0"), Matchers.containsString("size=3"))))
+            .andExpect(jsonPath("$._links.prev.href", Matchers.allOf(
+                Matchers.containsString("/api/core/entitytypes?"),
+                Matchers.containsString("page=0"), Matchers.containsString("size=3"))))
+            .andExpect(jsonPath("$._links.self.href", Matchers.allOf(
+                Matchers.containsString("/api/core/entitytypes?"),
+                Matchers.containsString("page=1"), Matchers.containsString("size=3"))))
+            .andExpect(jsonPath("$._links.next.href", Matchers.allOf(
+                Matchers.containsString("/api/core/entitytypes?"),
+                Matchers.containsString("page=2"), Matchers.containsString("size=3"))))
+            .andExpect(jsonPath("$._links.last.href", Matchers.allOf(
+                Matchers.containsString("/api/core/entitytypes?"),
+                Matchers.containsString("page=4"), Matchers.containsString("size=3"))))
+            .andExpect(jsonPath("$.page.size", is(3)))
+            .andExpect(jsonPath("$.page.totalElements", is(15)))
+            .andExpect(jsonPath("$.page.totalPages", is(5)))
+            .andExpect(jsonPath("$.page.number", is(1)));
 
         getClient().perform(get("/api/core/entitytypes")
-                .param("page", "2")
-                .param("size", "3"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$._embedded.entitytypes", containsInAnyOrder(
-                 EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "JournalVolume")),
-                 EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "JournalIssue")),
-                 EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvPerson")))))
-                .andExpect(jsonPath("$._links.first.href", Matchers.allOf(
-                        Matchers.containsString("/api/core/entitytypes?"),
-                        Matchers.containsString("page=0"), Matchers.containsString("size=3"))))
-                .andExpect(jsonPath("$._links.prev.href", Matchers.allOf(
-                        Matchers.containsString("/api/core/entitytypes?"),
-                        Matchers.containsString("page=1"), Matchers.containsString("size=3"))))
-                .andExpect(jsonPath("$._links.self.href", Matchers.allOf(
-                        Matchers.containsString("/api/core/entitytypes?"),
-                        Matchers.containsString("page=2"), Matchers.containsString("size=3"))))
-                .andExpect(jsonPath("$._links.next.href", Matchers.allOf(
-                        Matchers.containsString("/api/core/entitytypes?"),
-                        Matchers.containsString("page=3"), Matchers.containsString("size=3"))))
-                .andExpect(jsonPath("$._links.last.href", Matchers.allOf(
-                        Matchers.containsString("/api/core/entitytypes?"),
-                        Matchers.containsString("page=5"), Matchers.containsString("size=3"))))
-                .andExpect(jsonPath("$.page.size", is(3)))
-                .andExpect(jsonPath("$.page.totalElements", is(16)))
-                .andExpect(jsonPath("$.page.totalPages", is(6)))
-                .andExpect(jsonPath("$.page.number", is(2)));
+            .param("page", "2")
+            .param("size", "3"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.entitytypes", containsInAnyOrder(
+                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "JournalIssue")),
+                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvPerson")),
+                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "CvPersonClone"))
+            )))
+            .andExpect(jsonPath("$._links.first.href", Matchers.allOf(
+                Matchers.containsString("/api/core/entitytypes?"),
+                Matchers.containsString("page=0"), Matchers.containsString("size=3"))))
+            .andExpect(jsonPath("$._links.prev.href", Matchers.allOf(
+                Matchers.containsString("/api/core/entitytypes?"),
+                Matchers.containsString("page=1"), Matchers.containsString("size=3"))))
+            .andExpect(jsonPath("$._links.self.href", Matchers.allOf(
+                Matchers.containsString("/api/core/entitytypes?"),
+                Matchers.containsString("page=2"), Matchers.containsString("size=3"))))
+            .andExpect(jsonPath("$._links.next.href", Matchers.allOf(
+                Matchers.containsString("/api/core/entitytypes?"),
+                Matchers.containsString("page=3"), Matchers.containsString("size=3"))))
+            .andExpect(jsonPath("$._links.last.href", Matchers.allOf(
+                Matchers.containsString("/api/core/entitytypes?"),
+                Matchers.containsString("page=4"), Matchers.containsString("size=3"))))
+            .andExpect(jsonPath("$.page.size", is(3)))
+            .andExpect(jsonPath("$.page.totalElements", is(15)))
+            .andExpect(jsonPath("$.page.totalPages", is(5)))
+            .andExpect(jsonPath("$.page.number", is(2)));
     }
 
     @Test

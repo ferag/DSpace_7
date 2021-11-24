@@ -14,7 +14,6 @@ import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadata;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadataDoesNotExist;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadataNotEmpty;
 import static org.dspace.app.rest.matcher.MetadataMatcher.matchMetadataStringEndsWith;
-import static org.dspace.builder.CollectionBuilder.createCollection;
 import static org.dspace.core.Constants.WRITE;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -35,14 +34,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -3494,16 +3491,16 @@ public class CollectionRestRepositoryIT extends AbstractControllerIntegrationTes
             .build();
     }
 
-    private Community createCommunity(String name, EPerson... admins) throws Exception {
-        return CommunityBuilder.createCommunity(context)
-            .withName(name)
-            .withAdminGroup(admins)
-            .build();
-    }
+//    private Community createCommunity(String name, EPerson... admins) throws Exception {
+//        return CommunityBuilder.createCommunity(context)
+//            .withName(name)
+//            .withAdminGroup(admins)
+//            .build();
+//    }
 
-    private Collection createCollection(Community community, String name, EPerson... admins) throws Exception {
-        return createCollection(community, name, null, admins);
-    }
+//    private Collection createCollection(Community community, String name, EPerson... admins) throws Exception {
+//        return createCollection(community, name, null, admins);
+//    }
 
     private Collection createCollection(Community community, String name, String entityType, EPerson... admins)
         throws SQLException, AuthorizeException {
@@ -4135,12 +4132,12 @@ public class CollectionRestRepositoryIT extends AbstractControllerIntegrationTes
                         .andExpect(status().isNotFound());
     }
 
-    private Community createCommunity(String name, Community parent, EPerson... admins) throws Exception {
-        return CommunityBuilder.createSubCommunity(context, parent)
-            .withName(name)
-            .withAdminGroup(admins)
-            .build();
-    }
+//    private Community createCommunity(String name, Community parent, EPerson... admins) throws Exception {
+//        return CommunityBuilder.createSubCommunity(context, parent)
+//            .withName(name)
+//            .withAdminGroup(admins)
+//            .build();
+//    }
 
     private Community createCommunity(String name, EPerson... admins) throws Exception {
         return CommunityBuilder.createCommunity(context)
@@ -4155,60 +4152,4 @@ public class CollectionRestRepositoryIT extends AbstractControllerIntegrationTes
             .withAdminGroup(admins)
             .build();
     }
-
-    private void setUpAuthorizedSearch() throws Exception {
-        super.setUp();
-
-        /**
-         * The common Community/Collection structure for the AuthorizedSearch tests:
-         *
-         * topLevelCommunityA
-         * └── subCommunityA
-         *     └── collectionA
-         */
-        context.turnOffAuthorisationSystem();
-
-        topLevelCommunityAAdmin = EPersonBuilder.createEPerson(context)
-            .withNameInMetadata("Jhon", "Brown")
-            .withEmail("topLevelCommunityAAdmin@my.edu")
-            .withPassword(password)
-            .build();
-        topLevelCommunityA = CommunityBuilder.createCommunity(context)
-            .withName("The name of this community is topLevelCommunityA")
-            .withAdminGroup(topLevelCommunityAAdmin)
-            .build();
-
-        subCommunityAAdmin = EPersonBuilder.createEPerson(context)
-            .withNameInMetadata("Jhon", "Brown")
-            .withEmail("subCommunityAAdmin@my.edu")
-            .withPassword(password)
-            .build();
-        subCommunityA = CommunityBuilder.createCommunity(context)
-            .withName("The name of this sub-community is subCommunityA")
-            .withAdminGroup(subCommunityAAdmin)
-            .addParentCommunity(context, topLevelCommunityA)
-            .build();
-
-        submitter = EPersonBuilder.createEPerson(context)
-            .withNameInMetadata("Jhon", "Brown")
-            .withEmail("submitter@my.edu")
-            .withPassword(password)
-            .build();
-        collectionAAdmin = EPersonBuilder.createEPerson(context)
-            .withNameInMetadata("Jhon", "Brown")
-            .withEmail("collectionAAdmin@my.edu")
-            .withPassword(password)
-            .build();
-        collectionA = CollectionBuilder.createCollection(context, subCommunityA)
-            .withName("The name of this collection is collectionA")
-            .withAdminGroup(collectionAAdmin)
-            .withSubmitterGroup(submitter)
-            .build();
-
-        context.restoreAuthSystemState();
-
-        configurationService.setProperty(
-            "org.dspace.app.rest.authorization.AlwaysThrowExceptionFeature.turnoff", "true");
-    }
-
 }

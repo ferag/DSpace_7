@@ -427,16 +427,23 @@ public class VocabularyRestRepositoryIT extends AbstractControllerIntegrationTes
                         .param("collection", collection.getID().toString()))
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$._embedded.entries", Matchers.containsInAnyOrder(
-                                VocabularyMatcher.matchVocabularyEntry("Italia", "IT", "vocabularyEntry"),
+                                VocabularyMatcher.matchVocabularyEntry("Guinea Ecuatorial", "GQ", "vocabularyEntry"),
                                 VocabularyMatcher.matchVocabularyEntry("Albania", "AL", "vocabularyEntry"),
                                 VocabularyMatcher.matchVocabularyEntry("Algeria", "DZ", "vocabularyEntry"),
-                                VocabularyMatcher.matchVocabularyEntry("Australia", "AU", "vocabularyEntry")
+                                VocabularyMatcher.matchVocabularyEntry("Australia", "AU", "vocabularyEntry"),
+                                VocabularyMatcher.matchVocabularyEntry("El Salvador", "SV", "vocabularyEntry"),
+                                VocabularyMatcher.matchVocabularyEntry("Islas Malvinas", "FK", "vocabularyEntry"),
+                                VocabularyMatcher.matchVocabularyEntry("Territorios Australes y Antárticas Franceses",
+                                    "TF", "vocabularyEntry"),
+                                VocabularyMatcher.matchVocabularyEntry("Alemania", "DE", "vocabularyEntry"),
+                                VocabularyMatcher.matchVocabularyEntry("Gibraltar", "GI", "vocabularyEntry"),
+                                VocabularyMatcher.matchVocabularyEntry("Guadalupe", "GP", "vocabularyEntry")
                         )))
                         .andExpect(jsonPath("$._embedded.entries", Matchers.not(Matchers.containsInAnyOrder(
                                 VocabularyMatcher.matchVocabularyEntry("Botswana", "BW", "vocabularyEntry")
                         ))))
-                        .andExpect(jsonPath("$.page.totalElements", Matchers.is(4)))
-                        .andExpect(jsonPath("$.page.totalPages", Matchers.is(1)))
+                        .andExpect(jsonPath("$.page.totalElements", Matchers.is(33)))
+                        .andExpect(jsonPath("$.page.totalPages", Matchers.is(4)))
                         .andExpect(jsonPath("$.page.size", Matchers.is(10)));
     }
 

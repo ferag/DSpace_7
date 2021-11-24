@@ -26,6 +26,7 @@ import org.dspace.content.authority.service.MetadataAuthorityService;
 import org.dspace.content.service.EntityTypeService;
 import org.dspace.discovery.configuration.DiscoveryConfigurationService;
 import org.dspace.services.ConfigurationService;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,6 +43,7 @@ public class LuckySearchIT  extends AbstractControllerIntegrationTest {
     private EntityTypeService entityTypeService;
 
     @Test
+    @Ignore("feature not configured")
     public void discoverOrcidSearchLuckySearchConfigurationOneResult() throws Exception {
         //Turn off the authorization system, otherwise we can't make the objects
         context.turnOffAuthorisationSystem();
@@ -175,7 +177,9 @@ public class LuckySearchIT  extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$._embedded.searchResult.page",
                         is(PageMatcher.pageEntry(0, 10))));
     }
+    
     @Test
+    @Ignore("feature not configured")
     public void discoverOrcidSearchLuckySearchConfigurationMultipleResults() throws Exception {
         //Turn off the authorization system, otherwise we can't make the objects
         context.turnOffAuthorisationSystem();
@@ -252,7 +256,9 @@ public class LuckySearchIT  extends AbstractControllerIntegrationTest {
 
 
     }
+    
     @Test
+    @Ignore("feature not configured")
     public void discoverDoiSearchLuckySearchConfigurationMultipleResults() throws Exception {
         //Turn off the authorization system, otherwise we can't make the objects
         context.turnOffAuthorisationSystem();
@@ -330,7 +336,9 @@ public class LuckySearchIT  extends AbstractControllerIntegrationTest {
 
 
     }
+    
     @Test
+    @Ignore("feature not configured")
     public void discoverDoiSearchLuckySearchConfigurationOneResult() throws Exception {
         //Turn off the authorization system, otherwise we can't make the objects
         context.turnOffAuthorisationSystem();
@@ -465,7 +473,9 @@ public class LuckySearchIT  extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$._embedded.searchResult.page",
                         is(PageMatcher.pageEntry(0, 10))));
     }
+    
     @Test
+    @Ignore("feature not configured")
     public void discoverDoiSearchLuckySearchConfigurationNoResult() throws Exception {
         //Turn off the authorization system, otherwise we can't make the objects
         context.turnOffAuthorisationSystem();
@@ -534,7 +544,9 @@ public class LuckySearchIT  extends AbstractControllerIntegrationTest {
                         is(PageMatcher.pageEntry(0, 10))));
 
     }
+    
     @Test
+    @Ignore("feature not configured")
     public void discoverOrcidSearchLuckySearchConfigurationNoResult() throws Exception {
         //Turn off the authorization system, otherwise we can't make the objects
         context.turnOffAuthorisationSystem();
@@ -602,7 +614,9 @@ public class LuckySearchIT  extends AbstractControllerIntegrationTest {
                         is(PageMatcher.pageEntry(0, 10))));
 
     }
+    
     @Test
+    @Ignore("feature not configured")
     public void discoverLuckySearchConfigurationNoSupportedFilter() throws Exception {
         //Turn off the authorization system, otherwise we can't make the objects
         context.turnOffAuthorisationSystem();
@@ -632,6 +646,7 @@ public class LuckySearchIT  extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    @Ignore("feature not configured")
     public void discoverLegacyIdSearchLuckySearchConfigurationOneResult() throws Exception {
         // Turn off the authorization system, otherwise we can't make the objects
         context.turnOffAuthorisationSystem();

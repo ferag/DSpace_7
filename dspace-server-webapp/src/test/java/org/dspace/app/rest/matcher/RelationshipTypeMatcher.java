@@ -12,6 +12,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.dspace.content.EntityType;
@@ -78,6 +79,14 @@ public class RelationshipTypeMatcher {
         String leftwardType, String rightwardType, Integer leftMinCardinality, Integer leftMaxCardinality,
         Integer rightMinCardinality, Integer rightMaxCardinality, Integer leftEntityTypeId, String leftEntityTypeLabel,
         Integer rightEntityTypeId, String rightEntityTypeLabel, boolean copyToLeft, boolean copyToRight) {
+
+        String leftTypeHref = Objects.nonNull(leftEntityTypeId) ?
+            "/api/core/entitytypes/" + leftEntityTypeId :
+            "http://localhost/api/core/relationshiptypes/" + id + "/leftType";
+        String rightTypeHref = Objects.nonNull(rightEntityTypeId) ?
+            "/api/core/entitytypes/" + rightEntityTypeId :
+            "http://localhost/api/core/relationshiptypes/" + id + "/rightType";
+
         return allOf(
             hasJsonPath("$.id", is(id)),
             hasJsonPath("$.leftwardType", is(leftwardType)),
@@ -90,8 +99,8 @@ public class RelationshipTypeMatcher {
             hasJsonPath("$.rightMaxCardinality", is(rightMaxCardinality)),
             hasJsonPath("$.type", is("relationshiptype")),
             hasJsonPath("$._links.self.href", containsString("/api/core/relationshiptypes/" + id)),
-            hasJsonPath("$._links.leftType.href", containsString("/api/core/entitytypes/" + leftEntityTypeId)),
-            hasJsonPath("$._links.rightType.href", containsString("/api/core/entitytypes/" + rightEntityTypeId))
+            hasJsonPath("$._links.leftType.href", containsString(leftTypeHref)),
+            hasJsonPath("$._links.rightType.href", containsString(rightTypeHref))
         );
     }
 

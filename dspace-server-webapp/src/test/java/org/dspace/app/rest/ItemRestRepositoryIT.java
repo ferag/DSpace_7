@@ -124,7 +124,8 @@ public class ItemRestRepositoryIT extends AbstractControllerIntegrationTest {
     @Autowired
     private OrcidHistoryService orcidHistoryService;
 
-   private ConfigurationService configurationService;
+    @Autowired
+    private ConfigurationService configurationService;
 
     @Autowired
     private GroupService groupService;

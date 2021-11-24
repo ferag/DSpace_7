@@ -1061,7 +1061,7 @@
             <dependency>
                 <groupId>org.dspace</groupId>
                 <artifactId>dspace-pgc-api</artifactId>
-                <version>cris-2021.01.02-SNAPSHOT</version>
+                <version>cris-2021.02.01</version>
             </dependency>
             <dependency>
                 <groupId>org.dspace</groupId>

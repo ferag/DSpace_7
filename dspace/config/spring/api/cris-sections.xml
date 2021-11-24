@@ -127,8 +127,8 @@
 		</constructor-arg>
 	</bean>
 
-	<bean class="org.dspace.layout.CrisLayoutSection" id="sectioninfrastructure">
-		<constructor-arg name="id" value="infrastructure"/>
+    <bean class="org.dspace.layout.CrisLayoutSection" id="sectionorgunits">
+        <constructor-arg name="id" value="orgunits"/>
 		<constructor-arg name="visible" value="true"/>
 		<constructor-arg name="sectionComponents">
 			<list>
@@ -248,9 +248,9 @@
 		</constructor-arg>
 	</bean>
 
-	<bean class="org.dspace.layout.CrisLayoutSection" id="sectionorgunits">
-		<constructor-arg name="id" value="orgunits"/>
-		<constructor-arg name="visible" value="true"/>
+    <bean class="org.dspace.layout.CrisLayoutSection" id="sectioninfrastructure">
+        <constructor-arg name="id" value="infrastructure"/>
+        <constructor-arg name="visible" value="true"/>
 		<constructor-arg name="sectionComponents">
 			<list>
 				<list>

@@ -190,6 +190,7 @@ public class CvEntitySynchronizationConsumerPatentIT extends AbstractIntegration
         collectionRoleService.deleteByCollection(context, patents);
         workflowItemService.deleteByCollection(context, cvCloneCollection);
         workflowItemService.deleteByCollection(context, patents);
+        context.commit();
         context.restoreAuthSystemState();
 
         super.destroy();

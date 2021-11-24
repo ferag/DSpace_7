@@ -25,8 +25,9 @@ import org.dspace.app.metrics.CrisMetrics;
 import org.dspace.core.Context;
 import org.dspace.core.Email;
 import org.dspace.eperson.EPerson;
+import org.dspace.services.ConfigurationService;
 import org.dspace.subscriptions.service.SubscriptionGenerator;
-
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
@@ -38,6 +39,10 @@ import org.dspace.subscriptions.service.SubscriptionGenerator;
  */
 public class StatisticsGenerator implements SubscriptionGenerator<CrisMetrics> {
     private static final Logger log = LogManager.getLogger(StatisticsGenerator.class);
+
+    @Autowired
+    private ConfigurationService configurationService;
+
     @Override
     public void notifyForSubscriptions(Context c, EPerson ePerson, List<CrisMetrics> crisMetricsList,
                                        List<CrisMetrics> crisMetricsList1,
@@ -50,8 +55,9 @@ public class StatisticsGenerator implements SubscriptionGenerator<CrisMetrics> {
                 Email email = new Email();
                 email.addAttachment(attachment, "subscriptions.xlsx");
                 email.addRecipient(ePerson.getEmail());
-                email.setContent("intro", "This email is sent from" +
-                        " DSpace-CRIS based on the chosen subscription preferences.");
+                String name = configurationService.getProperty("dspace.name");
+                email.setContent("intro", "This automatic email is sent by " +
+                    name + " based on the subscribed statistics updates.");
                 email.send();
             }
         } catch (Exception ex) {

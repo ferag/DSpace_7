@@ -489,7 +489,7 @@ public class OAIHarvester {
         }
 
         if (isItemValid) {
-            installOrStartWorkflow(context, workspaceItem, handle, options.isSubmissionEnabled());
+            installOrStartWorkflow(context, workspaceItem, handle, options.isInstallationEnabled());
         }
 
         harvestedItem.setHarvestDate(new Date());
@@ -504,10 +504,10 @@ public class OAIHarvester {
     }
 
     private void installOrStartWorkflow(Context context, WorkspaceItem workspaceItem, String handle,
-        boolean submissionEnabled) throws Exception {
+        boolean installationEnabled) throws Exception {
         try {
 
-            if (submissionEnabled) {
+            if (installationEnabled) {
                 installItemService.installItem(context, workspaceItem, handle);
             } else {
                 workflowService.start(context, workspaceItem);
@@ -600,7 +600,9 @@ public class OAIHarvester {
     }
 
     private Optional<String> calculateCrisSourceId(Element record, String repositoryId) {
-        return getMetadataIdentifier(record).map(identifier -> repositoryId + SPLIT + identifier);
+        return getMetadataIdentifier(record)
+            .map(identifier -> repositoryId + SPLIT + identifier)
+            .or(() -> Optional.ofNullable(getItemIdentifier(record)));
     }
 
     private Set<String> getMetadataFieldsToKeep() {
@@ -882,15 +884,11 @@ public class OAIHarvester {
      * @return null or the handle to be used.
      */
     private String extractHandle(Item item) {
-        String[] acceptedHandleServers = configurationService.getArrayProperty("oai.harvester.acceptedHandleServer");
-        if (acceptedHandleServers == null) {
-            acceptedHandleServers = new String[] {"hdl.handle.net"};
-        }
+        String[] acceptedHandleServers = configurationService.getArrayProperty("oai.harvester.acceptedHandleServer",
+            new String[] { "hdl.handle.net" });
 
-        String[] rejectedHandlePrefixes = configurationService.getArrayProperty("oai.harvester.rejectedHandlePrefix");
-        if (rejectedHandlePrefixes == null) {
-            rejectedHandlePrefixes = new String[] {"123456789"};
-        }
+        String[] rejectedHandlePrefixes = configurationService.getArrayProperty("oai.harvester.rejectedHandlePrefix",
+            new String[] { "123456789" });
 
         List<MetadataValue> values = itemService.getMetadata(item, "dc", "identifier", Item.ANY, Item.ANY);
 

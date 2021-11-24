@@ -64,7 +64,7 @@ public class AutoAssignAction extends UserSelectionAction {
         try {
             createTasks(c, wfi, step);
         } catch (SQLException | AuthorizeException | IOException e) {
-            log.error(LogManager.getHeader(c, "Error while executing auto assign action",
+            log.error(LogHelper.getHeader(c, "Error while executing auto assign action",
                 "Workflow item: " + wfi.getID() + " step :" + getParent().getStep().getId()), e);
             throw e;
         }
@@ -88,7 +88,7 @@ public class AutoAssignAction extends UserSelectionAction {
         }
 
         if (nextAction == null) {
-            log.warn(LogManager.getHeader(context, "Error while executing auto assign action",
+            log.warn(LogHelper.getHeader(context, "Error while executing auto assign action",
                 "No valid next action. Workflow item:" + workflowItem.getID()));
             return;
         }

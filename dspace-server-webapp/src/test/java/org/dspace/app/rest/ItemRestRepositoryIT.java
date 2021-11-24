@@ -98,7 +98,6 @@ import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
-import org.dspace.services.ConfigurationService;
 import org.dspace.eperson.service.GroupService;
 import org.dspace.services.ConfigurationService;
 import org.dspace.versioning.Version;

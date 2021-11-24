@@ -11,8 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Bitstream;

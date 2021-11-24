@@ -160,15 +160,6 @@ public class ItemSearcherByMetadata implements ItemSearcher, ItemReferenceResolv
         throws SQLException {
 
         String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
-    /**
-     * @return whether Title metadata needs to be updated
-     */
-    private boolean checkWhetherTitleNeedsToBeSet() {
-        return configurationService.getBooleanProperty("cris.item-reference-resolver.override-metadata-value");
-    }
-
-    private Iterator<ReloadableEntity<?>> findItemsToResolve(Context context, List<String> authorities,
-        String entityType) {
 
         String query = choiceAuthorityService.getAuthorityControlledFieldsByEntityType(entityType).stream()
             .map(field -> getFieldFilter(field, authorities))
@@ -189,6 +180,35 @@ public class ItemSearcherByMetadata implements ItemSearcher, ItemReferenceResolv
 
     }
 
+    /**
+     * @return whether Title metadata needs to be updated
+     */
+    private boolean checkWhetherTitleNeedsToBeSet() {
+        return configurationService.getBooleanProperty("cris.item-reference-resolver.override-metadata-value");
+    }
+
+//    private Iterator<ReloadableEntity<?>> findItemsToResolve(Context context, List<String> authorities,
+//        String entityType) {
+//
+//        String query = choiceAuthorityService.getAuthorityControlledFieldsByEntityType(entityType).stream()
+//            .map(field -> getFieldFilter(field, authorities))
+//            .collect(Collectors.joining(" OR "));
+//
+//        if (StringUtils.isEmpty(query)) {
+//            return Collections.emptyIterator();
+//        }
+//
+//        DiscoverQuery discoverQuery = new DiscoverQuery();
+//        discoverQuery.addDSpaceObjectFilter(IndexableItem.TYPE);
+//        discoverQuery.addDSpaceObjectFilter(IndexableWorkspaceItem.TYPE);
+//        discoverQuery.addDSpaceObjectFilter(IndexableWorkflowItem.TYPE);
+//        discoverQuery.addFilterQueries(query);
+//
+//        IndexableObject<?, ?> scopeObject = calculateScopeObject(context, item);
+//        return new DiscoverResultItemIterator(context, scopeObject, discoverQuery);
+//
+//    }
+//
     private void setAuthorityAndReferences(MetadataValue metadataValue, Item item, boolean isValueToUpdate) {
         metadataValue.setAuthority(item.getID().toString());
         metadataValue.setConfidence(Choices.CF_ACCEPTED);

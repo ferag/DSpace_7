@@ -131,16 +131,8 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
                                                           scriptConfigurations.get(19).getDescription()),
                                 ScriptMatcher.matchScript(scriptConfigurations.get(20).getName(),
                                                           scriptConfigurations.get(20).getDescription()),
-                            ScriptMatcher.matchScript(scriptConfigurations.get(21).getName(),
-                                                          scriptConfigurations.get(21).getDescription())
-                            scriptConfigurations
-                                .stream()
-                                .map(scriptConfiguration -> ScriptMatcher.matchScript(
-                                    scriptConfiguration.getName(),
-                                    scriptConfiguration.getDescription()
-                                ))
-                                .collect(Collectors.toList())
-                        )));
+                                ScriptMatcher.matchScript(scriptConfigurations.get(21).getName(),
+                                                          scriptConfigurations.get(21).getDescription()))));
     }
 
 
@@ -234,11 +226,6 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
         getClient(token).perform(get("/api/system/scripts/mock-script"))
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$", ScriptMatcher
-                                .matchMockScript(
-                                        scriptConfigurations.stream()
-                                                .filter(
-                                                    sc -> "mock-script"
-                                                              .equals(sc.getName())).findFirst().get().getOptions())));
                             .matchMockScript(
                                 scriptConfigurations
                                     .stream()

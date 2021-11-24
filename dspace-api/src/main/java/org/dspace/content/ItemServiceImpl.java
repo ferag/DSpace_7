@@ -61,13 +61,12 @@ import org.dspace.content.virtual.VirtualMetadataPopulator;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.core.I18nUtil;
-import org.dspace.core.LogManager;
+import org.dspace.core.LogHelper;
 import org.dspace.discovery.DiscoverQuery;
 import org.dspace.discovery.DiscoverResultItemIterator;
 import org.dspace.discovery.indexobject.IndexableItem;
 import org.dspace.discovery.indexobject.IndexableWorkflowItem;
 import org.dspace.discovery.indexobject.IndexableWorkspaceItem;
-import org.dspace.core.LogHelper;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.service.SubscribeService;
@@ -805,7 +804,7 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
         context.addEvent(new Event(Event.DELETE, Constants.ITEM, item.getID(),
                 item.getHandle(), getIdentifiers(context, item)));
 
-        log.info(LogManager.getHeader(context, "delete_item", "item_id="
+        log.info(LogHelper.getHeader(context, "delete_item", "item_id="
                 + item.getID()));
 
         Collection owningCollection = item.getOwningCollection();

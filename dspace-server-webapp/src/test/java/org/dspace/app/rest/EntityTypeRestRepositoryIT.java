@@ -13,9 +13,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Objects;
-
 import java.util.Arrays;
+import java.util.Objects;
 
 import org.dspace.app.rest.matcher.EntityTypeMatcher;
 import org.dspace.app.rest.matcher.RelationshipTypeMatcher;
@@ -28,7 +27,6 @@ import org.dspace.content.Community;
 import org.dspace.content.EntityType;
 import org.dspace.content.RelationshipType;
 import org.dspace.content.service.EntityTypeService;
-import org.dspace.core.Constants;
 import org.dspace.external.provider.AbstractExternalDataProvider;
 import org.dspace.external.service.ExternalDataService;
 import org.hamcrest.Matchers;

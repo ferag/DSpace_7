@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
 import org.dspace.app.profile.ResearcherProfile;
-import org.dspace.app.suggestion.SolrSuggestionStorageService;
 import org.dspace.app.suggestion.SuggestionProvider;
 import org.dspace.app.suggestion.SuggestionService;
 import org.dspace.authorize.AuthorizeException;

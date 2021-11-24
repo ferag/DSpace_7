@@ -177,7 +177,7 @@ public class LuckySearchIT  extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$._embedded.searchResult.page",
                         is(PageMatcher.pageEntry(0, 10))));
     }
-    
+
     @Test
     @Ignore("feature not configured")
     public void discoverOrcidSearchLuckySearchConfigurationMultipleResults() throws Exception {
@@ -256,7 +256,7 @@ public class LuckySearchIT  extends AbstractControllerIntegrationTest {
 
 
     }
-    
+
     @Test
     @Ignore("feature not configured")
     public void discoverDoiSearchLuckySearchConfigurationMultipleResults() throws Exception {
@@ -336,7 +336,7 @@ public class LuckySearchIT  extends AbstractControllerIntegrationTest {
 
 
     }
-    
+
     @Test
     @Ignore("feature not configured")
     public void discoverDoiSearchLuckySearchConfigurationOneResult() throws Exception {
@@ -473,7 +473,7 @@ public class LuckySearchIT  extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$._embedded.searchResult.page",
                         is(PageMatcher.pageEntry(0, 10))));
     }
-    
+
     @Test
     @Ignore("feature not configured")
     public void discoverDoiSearchLuckySearchConfigurationNoResult() throws Exception {
@@ -544,7 +544,7 @@ public class LuckySearchIT  extends AbstractControllerIntegrationTest {
                         is(PageMatcher.pageEntry(0, 10))));
 
     }
-    
+
     @Test
     @Ignore("feature not configured")
     public void discoverOrcidSearchLuckySearchConfigurationNoResult() throws Exception {
@@ -614,7 +614,7 @@ public class LuckySearchIT  extends AbstractControllerIntegrationTest {
                         is(PageMatcher.pageEntry(0, 10))));
 
     }
-    
+
     @Test
     @Ignore("feature not configured")
     public void discoverLuckySearchConfigurationNoSupportedFilter() throws Exception {

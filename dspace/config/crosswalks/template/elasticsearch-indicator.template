@@ -33,6 +33,9 @@
                @group.perucris-ppp-year.end@
                ],
     @if.metadata.perucris-ppp-year.end@
+    @if.not.metadata.perucris-ppp-year.start@
+            "perucris_ppp_year" : [{}],
+        @if.not.metadata.perucris-ppp-year.end@
 	"perucris_ppp_status" : "@perucris.ppp.status@"
 
 }

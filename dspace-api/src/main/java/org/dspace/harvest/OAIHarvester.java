@@ -187,13 +187,17 @@ public class OAIHarvester {
     @Autowired
     private OAIHarvesterEmailSender oaiHarvesterEmailSender;
 
+    public void runHarvest(Context context, HarvestedCollection harvestedCollection, OAIHarvesterOptions options) {
+        runHarvest(context, harvestedCollection, options, context.getCurrentUser());
+    }
+
     /**
      * Performs a harvest cycle on this collection. This will query the remote
      * OAI-PMH provider, check for updates since last harvest, and ingest the
      * returned items.
      */
     public void runHarvest(Context context, HarvestedCollection harvestRow, OAIHarvesterOptions options,
-        EPerson eperson) {
+                           EPerson eperson) {
 
         context.setMode(Context.Mode.BATCH_EDIT);
 
@@ -221,13 +225,13 @@ public class OAIHarvester {
 
                 if (report.hasErrors()) {
                     oaiHarvesterEmailSender.notifyCompletionWithErrors(getEmailRecipient(harvestRow),
-                         harvestRow, report);
+                        harvestRow, report);
                 }
             } else {
                 SqsService.enqueueCommand(configurationService.getProperty("dspace.serviceid"),
-                        new String[] { "harvest", "-r", "-c", harvestRow.getCollection().getID().toString(),
-                            "-e", eperson.getEmail() },
-                        "harvestingcollection_" + harvestRow.getCollection().getID().toString());
+                    new String[] { "harvest", "-r", "-c", harvestRow.getCollection().getID().toString(),
+                        "-e", eperson.getEmail() },
+                    "harvestingcollection_" + harvestRow.getCollection().getID().toString());
             }
         } catch (NoRecordsMatchException nrme) {
             setReadyStatus(context, harvestRow, nrme.getMessage(), toDate);
@@ -244,7 +248,7 @@ public class OAIHarvester {
     }
 
     private OAIHarvesterReport startHarvest(Context context, HarvestedCollection harvestRow, Date fromDate,
-        Date toDate, OAIHarvesterOptions options) {
+                                            Date toDate, OAIHarvesterOptions options) {
 
         String oaiSource = harvestRow.getOaiSource();
 
@@ -273,8 +277,9 @@ public class OAIHarvester {
     }
 
     private void processOAIHarvesterResponse(Context context, HarvestedCollection harvestRow,
-        OAIHarvesterResponseDTO responseDTO, Date toDate, String repositoryId, OAIHarvesterReport report,
-        OAIHarvesterOptions options) {
+                                             OAIHarvesterResponseDTO responseDTO, Date toDate,
+                                             String repositoryId, OAIHarvesterReport report,
+                                             OAIHarvesterOptions options) {
 
         while (responseDTO != null) {
 
@@ -297,7 +302,8 @@ public class OAIHarvester {
     }
 
     private HarvestedCollection processRecords(Context context, HarvestedCollection harvestRow, List<Element> records,
-        String repositoryId, OAIHarvesterReport report, OAIHarvesterOptions options) {
+                                               String repositoryId, OAIHarvesterReport report,
+                                               OAIHarvesterOptions options) {
 
         UUID collectionId = harvestRow.getCollection().getID();
         Date expirationDate = getExpirationDate();
@@ -347,7 +353,8 @@ public class OAIHarvester {
     }
 
     private void processRecord(Context context, HarvestedCollection harvestRow, Element record, String repositoryId,
-        OAIHarvesterOptions options, long startTime, OAIHarvesterReport report) throws Exception {
+                               OAIHarvesterOptions options, long startTime,
+                               OAIHarvesterReport report) throws Exception {
 
         Collection targetCollection = harvestRow.getCollection();
         String itemOaiID = getItemIdentifier(record);
@@ -399,7 +406,7 @@ public class OAIHarvester {
     }
 
     private void handleORE(Context context, HarvestedCollection harvestRow, String repositoryId, String itemOaiID,
-        Item item) throws Exception {
+                           Item item) throws Exception {
 
         String OREPrefix = getOREPrefix(harvestRow);
         List<Element> metadata = getMetadataRecord(harvestRow.getOaiSource(), itemOaiID, OREPrefix);
@@ -418,8 +425,10 @@ public class OAIHarvester {
     }
 
     private HarvestedItem updateItem(Context context, HarvestedItem harvestedItem,
-        HarvestedCollection harvestRow, Element record, String repositoryId, OAIHarvesterOptions options,
-        long startTimestamp, OAIHarvesterReport report) throws Exception {
+                                     HarvestedCollection harvestRow, Element record,
+                                     String repositoryId, OAIHarvesterOptions options,
+                                     long startTimestamp, OAIHarvesterReport report)
+        throws Exception {
 
         Item item = harvestedItem.getItem();
         Collection collection = harvestRow.getCollection();
@@ -449,7 +458,8 @@ public class OAIHarvester {
     }
 
     private HarvestedItem createItem(Context context, HarvestedCollection harvestRow, Element record,
-        String repositoryId, OAIHarvesterOptions options, long startTimestamp, OAIHarvesterReport report)
+                                     String repositoryId,
+                                     OAIHarvesterOptions options, long startTimestamp, OAIHarvesterReport report)
         throws Exception {
 
         Collection targetCollection = harvestRow.getCollection();
@@ -489,7 +499,8 @@ public class OAIHarvester {
         }
 
         if (isItemValid) {
-            installOrStartWorkflow(context, workspaceItem, handle, options.isInstallationEnabled());
+            installOrStartWorkflow(context, workspaceItem, handle,
+                options.isInstallationEnabled());
         }
 
         harvestedItem.setHarvestDate(new Date());
@@ -504,7 +515,7 @@ public class OAIHarvester {
     }
 
     private void installOrStartWorkflow(Context context, WorkspaceItem workspaceItem, String handle,
-        boolean installationEnabled) throws Exception {
+                                        boolean installationEnabled) throws Exception {
         try {
 
             if (installationEnabled) {
@@ -558,7 +569,7 @@ public class OAIHarvester {
     }
 
     private void fillItemWithMetadata(Context context, HarvestedCollection harvestRow, Element record, Item item,
-        String repositoryId) throws Exception {
+                                      String repositoryId) throws Exception {
 
         String metadataConfig = harvestRow.getHarvestMetadataConfig();
         IngestionCrosswalk metadataElementCrosswalk = getIngestionCrosswalk(metadataConfig, harvestRow, repositoryId);
@@ -592,7 +603,7 @@ public class OAIHarvester {
     }
 
     private void addProvenanceMetadata(Context context, HarvestedCollection harvestRow, Item item,
-        HarvestedItem harvestedItem) throws SQLException {
+                                       HarvestedItem harvestedItem) throws SQLException {
         String provenanceMsg = "Item created via OAI harvest from source: "
             + harvestRow.getOaiSource() + " on " + new DCDate(harvestedItem.getHarvestDate())
             + " (GMT).  Item's OAI Record identifier: " + harvestedItem.getOaiID();
@@ -623,7 +634,7 @@ public class OAIHarvester {
     }
 
     private void importBitstreams(Context context, HarvestedCollection harvestRow, String repositoryId, Item item,
-        Element oreREM) throws Exception {
+                                  Element oreREM) throws Exception {
 
         String ORESerialKey = NamespaceUtils.getORENamespace().getPrefix();
         IngestionCrosswalk oreCrosswalk = getIngestionCrosswalk(ORESerialKey, harvestRow, repositoryId);
@@ -748,7 +759,7 @@ public class OAIHarvester {
     }
 
     private HarvestedCollection setReadyStatus(Context context, HarvestedCollection harvestRow, String message,
-        Date lastDate) {
+                                               Date lastDate) {
         harvestRow = reloadEntity(context, harvestRow);
         harvestRow.setHarvestMessage(message);
         harvestRow.setHarvestStatus(STATUS_READY);
@@ -840,7 +851,7 @@ public class OAIHarvester {
     }
 
     private void initializeCERIFIngestionCrosswalk(CERIFIngestionCrosswalk crosswalk, HarvestedCollection harvestRow,
-        String repositoryId) {
+                                                   String repositoryId) {
 
         Collection coll = harvestRow.getCollection();
 
@@ -1041,8 +1052,8 @@ public class OAIHarvester {
     }
 
     private void logRecord(Context context, OAIHarvesterOptions options, HarvestedCollection harvestRow,
-        boolean isValid, Long startTimestamp, String itemIdentifier, OAIHarvesterAction action,
-        OAIHarvesterReport report) {
+                           boolean isValid, Long startTimestamp, String itemIdentifier, OAIHarvesterAction action,
+                           OAIHarvesterReport report) {
 
         Collection collection = harvestRow.getCollection();
         long duration = System.currentTimeMillis() - startTimestamp;
@@ -1126,7 +1137,7 @@ public class OAIHarvester {
         String metaString = "oai.harvester.metadataformats.";
         Enumeration<String> pe = Collections.enumeration(
             DSpaceServicesFactory.getInstance().getConfigurationService()
-                                 .getPropertyKeys("oai.harvester.metadataformats")
+                .getPropertyKeys("oai.harvester.metadataformats")
         );
         while (pe.hasMoreElements()) {
             String key = (String) pe.nextElement();

@@ -13,6 +13,7 @@
                 <ref bean="sectionorgunits" />
                 <ref bean="sectioninfrastructure" />
                 <ref bean="sectiondirectorios" />
+                <ref bean="sectionctivitae" />
             </list>
         </property>
     </bean>
@@ -137,7 +138,8 @@
 						<property name="order" value="1"/>
 						<property name="contentType" value="text-key"/>
 						<property name="content" value="orgunits.title"/>
-						<property name="style" value="col-md-12 h2 d-flex justify-content-center p-4"/>
+						<property name="style"
+								  value="col-md-12 h2 d-flex text-section-heading justify-content-center p-4"/>
 					</bean>
 				</list>
 				<list>
@@ -200,7 +202,6 @@
 				<list>
 					<bean class="org.dspace.layout.CrisLayoutSearchComponent">
 						<property name="discoveryConfigurationName" value="orgunit" />
-						<!--                                <property name="style" value="col-md-9 p-4"/>-->
 						<property name="style" value="col-md-9 p-5"/>
 						<property name="initialStatements" value="2"/>
 						<property name="displayTitle" value="true"/>
@@ -366,6 +367,46 @@
 						<property name="order" value="desc" />
 						<property name="style" value="col-md-6"/>
 						<property name="titleKey" value="lastPublications"/>
+					</bean>
+				</list>
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean class="org.dspace.layout.CrisLayoutSection" id="sectionctivitae">
+		<constructor-arg name="id" value="ctivitae"/>
+		<constructor-arg name="visible" value="false"/>
+		<constructor-arg name="sectionComponents">
+			<list>
+				<list>
+					<bean class="org.dspace.layout.CrisLayoutTextRowComponent">
+						<property name="order" value="1"/>
+						<property name="contentType" value="text-key"/>
+						<property name="content" value="ctivitae.title"/>
+						<property name="style"
+								  value="col-md-12 h2 d-flex justify-content-center text-section-heading py-3"/>
+					</bean>
+					<bean class="org.dspace.layout.CrisLayoutTextRowComponent">
+						<property name="order" value="2"/>
+						<property name="contentType" value="text-key"/>
+						<property name="content" value="ctivitae.description"/>
+						<property name="style" value="col-md-12 d-flex justify-content-center py-2"/>
+					</bean>
+				</list>
+				<list>
+					<bean class="org.dspace.layout.CrisLayoutSearchComponent">
+						<property name="discoveryConfigurationName" value="cvprofile" />
+						<property name="searchType" value="basic"/>
+						<property name="style" value="col-md-8"/>
+					</bean>
+				</list>
+				<list>
+					<bean class="org.dspace.layout.CrisLayoutTopComponent">
+						<property name="discoveryConfigurationName" value="cvprofile" />
+						<property name="sortField" value="dc.date.accessioned" />
+						<property name="order" value="desc" />
+						<property name="style" value="col-md-10 mt-5"/>
+						<property name="titleKey" value="lastCvProfiles"/>
 					</bean>
 				</list>
 			</list>

@@ -312,7 +312,7 @@ public abstract class TabularCrosswalk implements ItemExportCrosswalk {
     }
 
     private List<String> getMetadataValues(Context context, Item item, String metadata) {
-        return metadataSecurityService.getPermissionFilteredMetadataValues(context, item, metadata, false).stream()
+        return metadataSecurityService.getPermissionFilteredMetadataValues(context, item, metadata).stream()
             .map(MetadataValue::getValue)
             .collect(Collectors.toList());
     }

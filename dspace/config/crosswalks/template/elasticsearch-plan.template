@@ -36,8 +36,11 @@
                   "strategicalGoal" : "@perucris.ppp.strategicalGoal@",
                   "strategy": "@perucris.ppp.strategy@"
                },
-               @group.perucris-ppp-strategicalGoal.end@2
+               @group.perucris-ppp-strategicalGoal.end@
                ],
      @if.metadata.perucris-ppp-strategicalGoal.end@
+     @if.not.metadata.perucris-ppp-strategicalGoal.start@
+         	"perucris_ppp_strategicalGoal" : [{}],
+     @if.not.metadata.perucris-ppp-strategicalGoal.end@
 	"perucris_ppp_lessonsLearnt" : "@perucris.ppp.lessonsLearnt@"
 }

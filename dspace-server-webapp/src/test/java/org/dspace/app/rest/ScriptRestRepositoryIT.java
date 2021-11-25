@@ -12,6 +12,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -537,8 +538,6 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
             .withNameInMetadata("Test", "User")
             .build();
 
-        configurationService.setProperty("process.start.default-user", user.getID().toString());
-
         parentCommunity = CommunityBuilder.createCommunity(context)
             .withName("Parent Community")
             .build();
@@ -582,7 +581,7 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
                 .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(), "$.processId")));
 
             Process process = processService.find(context, idRef.get());
-            assertThat(process.getEPerson(), is(user));
+            assertNull(process.getEPerson());
 
         } finally {
             if (idRef.get() != null) {

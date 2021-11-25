@@ -96,13 +96,6 @@ public class ProcessRestRepositoryIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
-    public void getProcessAnonymousUnauthorizedException() throws Exception {
-
-        getClient().perform(get("/api/system/processes/" + process.getID()))
-                   .andExpect(status().isUnauthorized());
-    }
-
-    @Test
     public void getProcessForStartedUser() throws Exception {
         Process newProcess = ProcessBuilder.createProcess(context, eperson, "mock-script", new LinkedList<>()).build();
 
@@ -120,12 +113,22 @@ public class ProcessRestRepositoryIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
-    public void getProcessForDifferentUserForbiddenException() throws Exception {
+    public void getProcessForDifferentUsersTest() throws Exception {
         String token = getAuthToken(eperson.getEmail(), password);
-
         getClient(token).perform(get("/api/system/processes/" + process.getID()))
-                        .andExpect(status().isForbidden());
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$", Matchers.is(
+                                   ProcessMatcher.matchProcess(process.getName(),
+                                   String.valueOf(process.getEPerson().getID()),
+                                   process.getID(), parameters, ProcessStatus.SCHEDULED))));
 
+        // by anonymous
+        getClient().perform(get("/api/system/processes/" + process.getID()))
+                   .andExpect(status().isOk())
+                   .andExpect(jsonPath("$", Matchers.is(
+                              ProcessMatcher.matchProcess(process.getName(),
+                              String.valueOf(process.getEPerson().getID()),
+                              process.getID(), parameters, ProcessStatus.SCHEDULED))));
     }
 
     @Test

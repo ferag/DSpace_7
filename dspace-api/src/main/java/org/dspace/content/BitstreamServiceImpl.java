@@ -29,12 +29,10 @@ import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.core.LogHelper;
-import org.dspace.eperson.EPerson;
 import org.dspace.eperson.service.EPersonService;
 import org.dspace.event.Event;
 import org.dspace.services.ConfigurationService;
 import org.dspace.storage.bitstore.service.BitstreamStorageService;
-import org.dspace.util.UUIDUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -493,18 +491,18 @@ public class BitstreamServiceImpl extends DSpaceObjectServiceImpl<Bitstream> imp
     @Override
     public boolean isRelatedToAProcessStartedByDefaultUser(Context context, Bitstream bitstream) throws SQLException {
 
-        UUID defaultUserId = UUIDUtils.fromString(configurationService.getProperty("process.start.default-user"));
-        if (defaultUserId == null) {
-            return false;
-        }
+//        UUID defaultUserId = UUIDUtils.fromString(configurationService.getProperty("process.start.default-user"));
+//        if (defaultUserId == null) {
+//            return false;
+//        }
 
-        EPerson originalUser = context.getCurrentUser();
-
-        try {
-            context.setCurrentUser(ePersonService.find(context, defaultUserId));
-            return authorizeService.authorizeActionBoolean(context, bitstream, Constants.READ);
-        } finally {
-            context.setCurrentUser(originalUser);
-        }
+//        EPerson originalUser = context.getCurrentUser();
+//
+//        try {
+//            context.setCurrentUser(ePersonService.find(context, defaultUserId));
+        return authorizeService.authorizeActionBoolean(context, bitstream, Constants.READ);
+//        } finally {
+//            context.setCurrentUser(originalUser);
+//        }
     }
 }

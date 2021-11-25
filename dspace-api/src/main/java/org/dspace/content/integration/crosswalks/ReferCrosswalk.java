@@ -317,8 +317,7 @@ public class ReferCrosswalk implements ItemExportCrosswalk {
             return values != null ? Arrays.asList(values) : Collections.emptyList();
         }
 
-        return metadataSecurityService.getPermissionFilteredMetadataValues(context, item, line.getField(), false)
-            .stream()
+        return metadataSecurityService.getPermissionFilteredMetadataValues(context, item, line.getField()).stream()
             .map(MetadataValue::getValue)
             .collect(Collectors.toList());
 

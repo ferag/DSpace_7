@@ -26,6 +26,28 @@ public interface MetadataSecurityService {
      * Returns all the metadata values of the given item filtered by permission
      * evaluations.
      *
+     * @param  context the DSpace Context
+     * @param  item    the item
+     * @return         the metadata values
+     */
+    List<MetadataValue> getPermissionFilteredMetadataValues(Context context, Item item);
+
+    /**
+     * Returns all the metadata values of the given item related to the given
+     * metadataField filtered by permission evaluations.
+     *
+     * @param  context       the DSpace Context
+     * @param  item          the item
+     * @param  metadataField the metadata field
+     * @return               the metadata values
+     */
+    List<MetadataValue> getPermissionFilteredMetadataValues(Context context, Item item, String metadataField);
+
+    /**
+     * Returns all the metadata values of the given item filtered by permission
+     * evaluations. If the provided preventBoxSecurityCheck parameter is true then
+     * the security checks using boxes are not performed,
+     *
      * @param  context                 the DSpace Context
      * @param  item                    the item
      * @param  preventBoxSecurityCheck true if the box security check must be
@@ -60,6 +82,5 @@ public interface MetadataSecurityService {
      * @return                         true if the metadata field is visible, false
      *                                 otherwise
      */
-    boolean checkMetadataFieldVisibility(Context context, Item item, MetadataField metadataField,
-        boolean preventBoxSecurityCheck);
+    boolean checkMetadataFieldVisibility(Context context, Item item, MetadataField metadataField);
 }

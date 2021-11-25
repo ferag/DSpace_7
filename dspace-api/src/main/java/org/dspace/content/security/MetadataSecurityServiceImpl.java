@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -86,6 +85,16 @@ public class MetadataSecurityServiceImpl implements MetadataSecurityService {
     }
 
     @Override
+    public List<MetadataValue> getPermissionFilteredMetadataValues(Context context, Item item) {
+        return getPermissionFilteredMetadataValues(context, item, false);
+    }
+
+    @Override
+    public List<MetadataValue> getPermissionFilteredMetadataValues(Context context, Item item, String metadataField) {
+        return getPermissionFilteredMetadataValues(context, item, metadataField, false);
+    }
+
+    @Override
     public List<MetadataValue> getPermissionFilteredMetadataValues(Context context, Item item,
         boolean preventBoxSecurityCheck) {
         List<MetadataValue> values = itemService.getMetadata(item, Item.ANY, Item.ANY, Item.ANY, Item.ANY, true);
@@ -100,10 +109,9 @@ public class MetadataSecurityServiceImpl implements MetadataSecurityService {
     }
 
     @Override
-    public boolean checkMetadataFieldVisibility(Context context, Item item, MetadataField metadataField,
-        boolean preventBoxSecurityCheck) {
-        List<CrisLayoutBox> boxes = findBoxes(context, item, preventBoxSecurityCheck);
-        return isMetadataFieldVisible(context, boxes, item, metadataField, preventBoxSecurityCheck);
+    public boolean checkMetadataFieldVisibility(Context context, Item item, MetadataField metadataField) {
+        List<CrisLayoutBox> boxes = findBoxes(context, item, false);
+        return isMetadataFieldVisible(context, boxes, item, metadataField, false);
     }
 
     private List<MetadataValue> getPermissionFilteredMetadata(Context context, Item item,
@@ -115,9 +123,9 @@ public class MetadataSecurityServiceImpl implements MetadataSecurityService {
 
         List<CrisLayoutBox> boxes = findBoxes(context, item, preventBoxSecurityCheck);
 
-        Optional<List<DCInputSet>> submissionDefinitionInputs = submissionDefinitionInputs();
-        if (submissionDefinitionInputs.isPresent()) {
-            return fromSubmissionDefinition(context, boxes, item, submissionDefinitionInputs.get(), metadataValues);
+        Optional<List<DCInputSet>> inputs = submissionDefinitionInputs();
+        if (inputs.isPresent()) {
+            return getFromSubmission(context, boxes, item, inputs.get(), metadataValues, preventBoxSecurityCheck);
         }
 
         return metadataValues.stream()
@@ -149,7 +157,7 @@ public class MetadataSecurityServiceImpl implements MetadataSecurityService {
     private boolean isMetadataFieldVisible(Context context, List<CrisLayoutBox> boxes, Item item,
         MetadataField metadataField, boolean preventBoxSecurityCheck) {
         if (CollectionUtils.isNotEmpty(boxes)) {
-            return checkMetadataFieldVisibilityByBoxes(context, boxes, item, metadataField, preventBoxSecurityCheck);
+            return isMetadataFieldVisibleByBoxes(context, boxes, item, metadataField, preventBoxSecurityCheck);
         }
         return isNotAdmin(context) ? isNotHidden(context, metadataField) : true;
     }
@@ -168,7 +176,7 @@ public class MetadataSecurityServiceImpl implements MetadataSecurityService {
         }
     }
 
-    private boolean checkMetadataFieldVisibilityByBoxes(Context context, List<CrisLayoutBox> boxes, Item item,
+    private boolean isMetadataFieldVisibleByBoxes(Context context, List<CrisLayoutBox> boxes, Item item,
         MetadataField metadataField, boolean preventBoxSecurityCheck) {
 
         if (isPublicMetadataField(metadataField, boxes, preventBoxSecurityCheck)) {
@@ -274,15 +282,24 @@ public class MetadataSecurityServiceImpl implements MetadataSecurityService {
         }
     }
 
-    private List<MetadataValue> fromSubmissionDefinition(Context context, List<CrisLayoutBox> boxes, Item item,
-        final List<DCInputSet> dcInputSets, final List<MetadataValue> metadataValues) {
-        Predicate<MetadataValue> inDcInputs = mv -> dcInputSets.stream().anyMatch((dc) -> {
-            return dc.isFieldPresent(mv.getMetadataField().toString('.'))
-                || checkMetadataFieldVisibilityByBoxes(context, boxes, item, mv.getMetadataField(), false);
-        });
-        return metadataValues.stream()
-            .filter(inDcInputs)
-            .collect(Collectors.toList());
+    private List<MetadataValue> getFromSubmission(Context context, List<CrisLayoutBox> boxes, Item item,
+        final List<DCInputSet> dcInputSets, final List<MetadataValue> metadataValues, boolean preventBoxSecurityCheck) {
+
+        List<MetadataValue> filteredMetadataValues = new ArrayList<MetadataValue>();
+
+        for (MetadataValue metadataValue : metadataValues) {
+            MetadataField field = metadataValue.getMetadataField();
+            if (dcInputsContainsField(dcInputSets, field)
+                || isMetadataFieldVisibleByBoxes(context, boxes, item, field, preventBoxSecurityCheck)) {
+                filteredMetadataValues.add(metadataValue);
+            }
+        }
+
+        return filteredMetadataValues;
+    }
+
+    private boolean dcInputsContainsField(List<DCInputSet> dcInputSets, MetadataField metadataField) {
+        return dcInputSets.stream().anyMatch((input) -> input.isFieldPresent(metadataField.toString('.')));
     }
 
     private boolean isNotHidden(Context context, MetadataField metadataField) {

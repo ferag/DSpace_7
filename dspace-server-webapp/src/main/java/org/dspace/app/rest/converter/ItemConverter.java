@@ -67,7 +67,7 @@ public class ItemConverter
     }
 
     public boolean checkMetadataFieldVisibility(Context context, Item item, MetadataField metadataField) {
-        return metadataSecurityService.checkMetadataFieldVisibility(context, item, metadataField, false);
+        return metadataSecurityService.checkMetadataFieldVisibility(context, item, metadataField);
     }
 
     private boolean preventSecurityCheck(Projection projection) {

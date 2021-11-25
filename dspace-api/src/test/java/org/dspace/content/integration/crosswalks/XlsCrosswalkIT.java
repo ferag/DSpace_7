@@ -34,11 +34,19 @@ import org.dspace.AbstractIntegrationTestWithDatabase;
 import org.dspace.app.util.DCInputsReader;
 import org.dspace.app.util.DCInputsReaderException;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.builder.CrisLayoutBoxBuilder;
+import org.dspace.builder.CrisLayoutFieldBuilder;
+import org.dspace.builder.EPersonBuilder;
+import org.dspace.builder.EntityTypeBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
+import org.dspace.content.EntityType;
 import org.dspace.content.Item;
 import org.dspace.core.CrisConstants;
+import org.dspace.eperson.EPerson;
+import org.dspace.layout.CrisLayoutField;
+import org.dspace.layout.LayoutSecurity;
 import org.dspace.utils.DSpace;
 import org.junit.After;
 import org.junit.Before;
@@ -697,96 +705,6 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
                 "20.000,00", "EUR", "", "", "", "", "", "", "", "2010-01-01", "false", "www.mandate.com"));
     }
 
-    @Test
-    public void testDisseminatePatents() throws Exception {
-
-        context.turnOffAuthorisationSystem();
-
-        Item firstItem = ItemBuilder.createItem(context, collection)
-            .withEntityType("Patent")
-            .withTitle("First patent")
-            .withPatentCountry("Italy")
-            .withDateSubmitted("2020-01-01")
-            .withIssueDate("2021-01-01")
-            .withLanguage("en")
-            .withType("patent")
-            .withPublisher("First publisher")
-            .withPublisher("Second publisher")
-            .withPatentNo("12345-666")
-            .withAuthor("Walter White", "b6ff8101-05ec-49c5-bd12-cba7894012b7")
-            .withAuthorAffiliation("4Science")
-            .withAuthor("Jesse Pinkman")
-            .withAuthorAffiliation(PLACEHOLDER_PARENT_METADATA_VALUE)
-            .withAuthor("John Smith", "will be referenced::ORCID::0000-0000-0012-3456")
-            .withAuthorAffiliation("4Science")
-            .withRightsHolder("Test Organization")
-            .withDescriptionAbstract("This is a patent")
-            .withRelationPatent("Another patent")
-            .withSubject("patent")
-            .withSubject("test")
-            .withRelationFunding("Test funding")
-            .withRelationProject("First project")
-            .withRelationProject("Second project")
-            .build();
-
-        Item secondItem = ItemBuilder.createItem(context, collection)
-            .withEntityType("Patent")
-            .withTitle("Second patent")
-            .withType("patent")
-            .withPatentNo("12345-777")
-            .withAuthor("Bruce Wayne")
-            .withRelationPatent("Another patent")
-            .withSubject("second")
-            .withRelationFunding("Funding")
-            .build();
-
-        Item thirdItem = ItemBuilder.createItem(context, collection)
-            .withEntityType("Patent")
-            .withTitle("Third patent")
-            .withPatentCountry("England")
-            .withDateSubmitted("2019-01-01")
-            .withLanguage("ita")
-            .withPublisher("Publisher")
-            .withPatentNo("12345-888")
-            .withRightsHolder("Organization")
-            .withDescriptionAbstract("Patent description")
-            .withRelationPatent("Another patent")
-            .withRelationFunding("First funding")
-            .withRelationFunding("Second funding")
-            .build();
-
-        context.restoreAuthSystemState();
-
-        xlsCrosswalk = (XlsCrosswalk) crosswalkMapper.getByType("patent-xls");
-        assertThat(xlsCrosswalk, notNullValue());
-        xlsCrosswalk.setDCInputsReader(dcInputsReader);
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        xlsCrosswalk.disseminate(context, Arrays.asList(firstItem, secondItem, thirdItem).iterator(), baos);
-
-        Workbook workbook = WorkbookFactory.create(new ByteArrayInputStream(baos.toByteArray()));
-        assertThat(workbook.getNumberOfSheets(), equalTo(1));
-
-        Sheet sheet = workbook.getSheetAt(0);
-        assertThat(sheet.getPhysicalNumberOfRows(), equalTo(4));
-
-        assertThat(getRowValues(sheet.getRow(0)), contains("Title", "Approval date", "Registration date",
-            "Patent number", "Country", "Type", "Language", "Inventor(s)", "Holder(s)", "Issuer(s)", "Keyword(s)",
-            "Funding(s)", "Project(s)", "Predecessor(s)", "Reference(s)", "Abstract"));
-
-        assertThat(getRowValues(sheet.getRow(1)), contains("First patent", "2020-01-01", "2021-01-01", "12345-666",
-            "Italy", "patent", "en", "Walter White/4Science||Jesse Pinkman||John Smith/4Science", "Test Organization",
-            "First publisher||Second publisher", "patent||test", "Test funding", "First project||Second project",
-            "Another patent", "", "This is a patent"));
-
-        assertThat(getRowValues(sheet.getRow(2)), contains("Second patent", "", "", "12345-777", "", "patent", "",
-            "Bruce Wayne", "", "", "second", "Funding", "", "Another patent", "", ""));
-
-        assertThat(getRowValues(sheet.getRow(3)), contains("Third patent", "2019-01-01", "", "12345-888", "England",
-            "", "ita", "", "Organization", "Publisher", "", "First funding||Second funding", "", "Another patent", "",
-            "Patent description"));
-    }
-
 //    @Test
 //    public void testDisseminatePatents() throws Exception {
 //
@@ -874,6 +792,107 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 //            "", "Organization", "Publisher", "", "First funding||Second funding", "", "Another patent", "",
 //            "Patent description"));
 //    }
+
+    @Test
+    public void testDisseminateWithNotPublicMetadataFields() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EPerson owner = EPersonBuilder.createEPerson(context)
+            .withEmail("owner@email.com")
+            .withNameInMetadata("Walter", "White")
+            .build();
+
+        Item item = createItem(context, collection)
+            .withEntityType("Person")
+            .withTitle("Walter White")
+            .withCrisOwner(owner)
+            .withVariantName("Heisenberg")
+            .withVariantName("W.W.")
+            .withGivenName("Walter")
+            .withFamilyName("White")
+            .withBirthDate("1962-03-23")
+            .withGender("M")
+            .withJobTitle("Professor")
+            .withPersonMainAffiliation("High School")
+            .withPersonKnowsLanguages("English")
+            .withPersonEducation("School")
+            .withPersonEducationStartDate("1968-09-01")
+            .withPersonEducationEndDate("1973-06-10")
+            .withPersonEducationRole("Student")
+            .withPersonEducation("University")
+            .withPersonEducationStartDate("1980-09-01")
+            .withPersonEducationEndDate("1985-06-10")
+            .withPersonEducationRole("Student")
+            .withOrcidIdentifier("0000-0002-9079-5932")
+            .withPersonQualification("Qualification")
+            .withPersonQualificationStartDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPersonQualificationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        context.setCurrentUser(eperson);
+
+        xlsCrosswalk = (XlsCrosswalk) crosswalkMapper.getByType("person-xls");
+        assertThat(xlsCrosswalk, notNullValue());
+        xlsCrosswalk.setDCInputsReader(dcInputsReader);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        xlsCrosswalk.disseminate(context, item, out);
+
+        Workbook workbook = WorkbookFactory.create(new ByteArrayInputStream(out.toByteArray()));
+        assertThat(workbook.getNumberOfSheets(), equalTo(1));
+
+        Sheet sheet = workbook.getSheetAt(0);
+        assertThat(sheet.getPhysicalNumberOfRows(), equalTo(2));
+
+        assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "", "", "Heisenberg||W.W.",
+            "Walter", "White", "1962-03-23", "M", "Professor", "High School", "", "", "", "", "0000-0002-9079-5932",
+            "", "", "", "", "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
+            "Qualification", "English"));
+
+        context.turnOffAuthorisationSystem();
+        EntityType personType = EntityTypeBuilder.createEntityTypeBuilder(context, "Person").build();
+
+        CrisLayoutBoxBuilder.createBuilder(context, personType, false, false)
+            .addField(createCrisLayoutField("oairecerif.person.gender"))
+            .addField(createCrisLayoutField("person.birthDate"))
+            .withSecurity(LayoutSecurity.OWNER_ONLY)
+            .build();
+        context.restoreAuthSystemState();
+
+        out = new ByteArrayOutputStream();
+        xlsCrosswalk.disseminate(context, item, out);
+
+        workbook = WorkbookFactory.create(new ByteArrayInputStream(out.toByteArray()));
+        assertThat(workbook.getNumberOfSheets(), equalTo(1));
+
+        sheet = workbook.getSheetAt(0);
+        assertThat(sheet.getPhysicalNumberOfRows(), equalTo(2));
+
+        assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "", "", "Heisenberg||W.W.",
+            "Walter", "White", "", "", "Professor", "High School", "", "", "", "", "0000-0002-9079-5932",
+            "", "", "", "", "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
+            "Qualification", "English"));
+
+        context.setCurrentUser(owner);
+
+        out = new ByteArrayOutputStream();
+        xlsCrosswalk.disseminate(context, item, out);
+
+        workbook = WorkbookFactory.create(new ByteArrayInputStream(out.toByteArray()));
+        assertThat(workbook.getNumberOfSheets(), equalTo(1));
+
+        sheet = workbook.getSheetAt(0);
+        assertThat(sheet.getPhysicalNumberOfRows(), equalTo(2));
+
+        assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "", "", "Heisenberg||W.W.",
+            "Walter", "White", "1962-03-23", "M", "Professor", "High School", "", "", "", "", "0000-0002-9079-5932",
+            "", "", "", "", "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
+            "Qualification", "English"));
+
+    }
 
     private Item createFullPersonItem() {
         return createItem(context, collection)
@@ -1002,5 +1021,9 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         return StreamSupport.stream(row.spliterator(), false)
             .map(cell -> cell.getStringCellValue() == null ? "" : cell.getStringCellValue())
             .collect(Collectors.toList());
+    }
+
+    private CrisLayoutField createCrisLayoutField(String metadataField) throws SQLException, AuthorizeException {
+        return CrisLayoutFieldBuilder.createMetadataField(context, metadataField, 0, 0).build();
     }
 }

@@ -9,7 +9,7 @@ package org.dspace.externalregistration.provider;
 
 import java.sql.SQLException;
 
-import org.dspace.authenticate.model.OIDCProfileElementsResponse;
+import org.dspace.authenticate.model.CasProfileElementsResponse;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
@@ -26,7 +26,7 @@ public interface ExternalRegistrationProvider {
      * @param userData
      * @return
      */
-    boolean support(OIDCProfileElementsResponse userData);
+    boolean support(CasProfileElementsResponse userData);
 
     /**
      * Creates an instance of the ePerson together with relevant attributes and metadata
@@ -38,5 +38,5 @@ public interface ExternalRegistrationProvider {
      * @throws AuthorizeException
      */
     EPerson createEPerson(
-            Context context, OIDCProfileElementsResponse userData) throws SQLException, AuthorizeException;
+            Context context, CasProfileElementsResponse userData) throws SQLException, AuthorizeException;
 }

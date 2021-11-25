@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Pasquale Cavallo (pasquale.cavallo at 4science dot it)
  *
  */
-public class OIDCTokenResponse {
+public class CasTokenResponse {
 
     /** 
      * The access token release by the authorization server

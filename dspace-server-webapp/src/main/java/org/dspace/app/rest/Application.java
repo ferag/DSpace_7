@@ -15,7 +15,7 @@ import javax.servlet.Filter;
 import org.dspace.app.rest.filter.DSpaceRequestContextFilter;
 import org.dspace.app.rest.model.hateoas.DSpaceLinkRelationProvider;
 import org.dspace.app.rest.parameter.resolver.SearchFilterResolver;
-import org.dspace.app.rest.security.OidcLogoutSuccessHandler;
+import org.dspace.app.rest.security.CasLogoutSuccessHandler;
 import org.dspace.app.rest.utils.ApplicationConfig;
 import org.dspace.app.rest.utils.DSpaceAPIRequestLoggingFilter;
 import org.dspace.app.rest.utils.DSpaceConfigurationInitializer;
@@ -68,7 +68,7 @@ public class Application extends SpringBootServletInitializer {
     private ApplicationConfig configuration;
 
     @Autowired
-    private OidcLogoutSuccessHandler oidcLogoutSuccessHandler;
+    private CasLogoutSuccessHandler casLogoutSuccessHandler;
 
     @Scheduled(cron = "${sitemap.cron:-}")
     public void generateSitemap() throws IOException, SQLException {
@@ -188,7 +188,7 @@ public class Application extends SpringBootServletInitializer {
                                 "X-Requested-With", "X-XSRF-TOKEN", "X-CORRELATION-ID", "X-REFERRER")
                             // Allow list of response headers allowed to be sent by us (the server) to the client
                             .exposedHeaders("Authorization", "DSPACE-XSRF-TOKEN", "Location", "WWW-Authenticate",
-                                oidcLogoutSuccessHandler.getOidcLogoutHeader());
+                                casLogoutSuccessHandler.getOidcLogoutHeader());
                 }
                 if (iiifAllowedOrigins != null) {
                     registry.addMapping("/iiif/**").allowedMethods(CorsConfiguration.ALL)

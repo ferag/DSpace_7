@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.dspace.authenticate.model.OIDCProfileElementsResponse;
+import org.dspace.authenticate.model.CasProfileElementsResponse;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
@@ -24,12 +24,12 @@ import org.dspace.externalregistration.provider.AbstractExternalRegistrationProv
 public class RENIECRegistrationProvider extends AbstractExternalRegistrationProvider {
 
     @Override
-    public boolean support(OIDCProfileElementsResponse userData) {
+    public boolean support(CasProfileElementsResponse userData) {
         return StringUtils.isNotBlank(userData.getReniecDni());
     }
 
     @Override
-    public EPerson createEPerson(Context context, OIDCProfileElementsResponse userData)
+    public EPerson createEPerson(Context context, CasProfileElementsResponse userData)
             throws SQLException, AuthorizeException {
         EPerson eperson = getePersonService().create(context);
 

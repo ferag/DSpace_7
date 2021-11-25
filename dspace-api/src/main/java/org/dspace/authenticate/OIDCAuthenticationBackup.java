@@ -31,7 +31,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.dspace.authenticate.factory.AuthenticateServiceFactory;
-import org.dspace.authenticate.model.OIDCTokenResponse;
+import org.dspace.authenticate.model.CasTokenResponse;
 import org.dspace.authenticate.service.OidcSpecialGroupMapper;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.MetadataFieldService;
@@ -223,7 +223,7 @@ public class OIDCAuthenticationBackup implements AuthenticationMethod {
                 IOUtils.copy(response.getEntity().getContent(), writer, "UTF-8");
                 String body = writer.toString();
                 ObjectMapper om = new ObjectMapper();
-                OIDCTokenResponse tokens = om.readValue(body, OIDCTokenResponse.class);
+                CasTokenResponse tokens = om.readValue(body, CasTokenResponse.class);
                 if (tokens.getIdToken() != null && !tokens.getIdToken().isEmpty()) {
                     String introspectResponse = checkFieldAndExtractEperson(tokens);
                     String ePersonId = getEpersonByJsonPath(introspectResponse);
@@ -268,7 +268,7 @@ public class OIDCAuthenticationBackup implements AuthenticationMethod {
      * @return data get from the instrospect endpoint
      * 
      */
-    private String checkFieldAndExtractEperson(OIDCTokenResponse tokens) {
+    private String checkFieldAndExtractEperson(CasTokenResponse tokens) {
         try {
             String idpDomain = configurationService.getProperty("authentication-oidc.authserverdomain");
             String clientId = configurationService.getProperty("authentication-oidc.clientid");

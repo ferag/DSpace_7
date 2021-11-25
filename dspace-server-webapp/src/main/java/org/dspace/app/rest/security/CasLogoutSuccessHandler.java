@@ -16,11 +16,11 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.stereotype.Service;
 
 @Service
-public class OidcLogoutSuccessHandler implements LogoutSuccessHandler {
+public class CasLogoutSuccessHandler implements LogoutSuccessHandler {
 
     private final static String OIDC_LOGOUT_HEADER = "Oidc-Logout";
 
-    @Value("${authentication-oidc.logout-url}")
+    @Value("${authentication-cas.logout-url}")
     private String logoutUrl;
 
     @Override

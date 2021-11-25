@@ -6,7 +6,6 @@
  * http://www.dspace.org/license/
  */
 package org.dspace.app.rest.authorization.impl;
-
 import java.sql.SQLException;
 
 import org.dspace.app.rest.authorization.AuthorizationFeature;
@@ -16,9 +15,10 @@ import org.dspace.app.rest.model.BaseObjectRest;
 import org.dspace.app.rest.model.BitstreamRest;
 import org.dspace.app.rest.security.DSpaceRestPermission;
 import org.dspace.app.rest.utils.Utils;
+import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.Bitstream;
 import org.dspace.content.DSpaceObject;
-import org.dspace.content.service.BitstreamService;
+import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,12 +39,13 @@ public class DownloadFeature implements AuthorizationFeature {
     private AuthorizeServiceRestUtil authorizeServiceRestUtil;
 
     @Autowired
-    private BitstreamService bitstreamService;
+    private AuthorizeService authorizeService;
 
     @Autowired
     private Utils utils;
 
     @Override
+    @SuppressWarnings("rawtypes")
     public boolean isAuthorized(Context context, BaseObjectRest object) throws SQLException {
 
         if (!(object instanceof BitstreamRest)) {
@@ -64,7 +65,7 @@ public class DownloadFeature implements AuthorizationFeature {
             return false;
         }
 
-        return bitstreamService.isRelatedToAProcessStartedByDefaultUser(context, (Bitstream) dSpaceObject);
+        return authorizeService.authorizeActionBoolean(context, (Bitstream) dSpaceObject, Constants.READ);
     }
 
     @Override

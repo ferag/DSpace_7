@@ -488,21 +488,4 @@ public class BitstreamServiceImpl extends DSpaceObjectServiceImpl<Bitstream> imp
         return bitstreamStorageService.getLastModified(bitstream);
     }
 
-    @Override
-    public boolean isRelatedToAProcessStartedByDefaultUser(Context context, Bitstream bitstream) throws SQLException {
-
-//        UUID defaultUserId = UUIDUtils.fromString(configurationService.getProperty("process.start.default-user"));
-//        if (defaultUserId == null) {
-//            return false;
-//        }
-
-//        EPerson originalUser = context.getCurrentUser();
-//
-//        try {
-//            context.setCurrentUser(ePersonService.find(context, defaultUserId));
-        return authorizeService.authorizeActionBoolean(context, bitstream, Constants.READ);
-//        } finally {
-//            context.setCurrentUser(originalUser);
-//        }
-    }
 }

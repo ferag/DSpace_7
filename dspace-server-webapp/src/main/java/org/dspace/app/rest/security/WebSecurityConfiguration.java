@@ -64,7 +64,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private ConfigurationService configurationService;
 
     @Autowired
-    public OidcLogoutSuccessHandler oidcLogoutSuccessHandler;
+    public CasLogoutSuccessHandler oidcLogoutSuccessHandler;
 
 
     @Override
@@ -141,9 +141,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .addFilterBefore(new ShibbolethAuthenticationFilter("/api/authn/shibboleth", authenticationManager(),
                                                       restAuthenticationService),
                              LogoutFilter.class)
-            //Add a filter before our oidc endpoints to do the authentication based on the data in the
+            //Add a filter before our CAS endpoints to do the authentication based on the data in the
             // HTTP request
-            .addFilterBefore(new OidcAuthenticationFilter("/api/authn/oidc", authenticationManager(),
+            .addFilterBefore(new CasAuthenticationFilter("/api/authn/cas", authenticationManager(),
                                                       restAuthenticationService),
                              LogoutFilter.class)
             //Add a filter before our ORCID endpoints to do the authentication based on the data in the

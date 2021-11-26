@@ -14,19 +14,15 @@ import org.dspace.app.rest.authorization.AuthorizeServiceRestUtil;
 import org.dspace.app.rest.model.BaseObjectRest;
 import org.dspace.app.rest.model.BitstreamRest;
 import org.dspace.app.rest.security.DSpaceRestPermission;
-import org.dspace.app.rest.utils.Utils;
-import org.dspace.authorize.service.AuthorizeService;
-import org.dspace.content.Bitstream;
-import org.dspace.content.DSpaceObject;
-import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * The download bitstream feature. It can be used to verify if a bitstream can be downloaded.
- *
  * Authorization is granted if the current user has READ permissions on the given bitstream.
+ * 
+ * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
 @Component
 @AuthorizationFeatureDocumentation(name = DownloadFeature.NAME,
@@ -38,34 +34,14 @@ public class DownloadFeature implements AuthorizationFeature {
     @Autowired
     private AuthorizeServiceRestUtil authorizeServiceRestUtil;
 
-    @Autowired
-    private AuthorizeService authorizeService;
-
-    @Autowired
-    private Utils utils;
-
     @Override
     @SuppressWarnings("rawtypes")
     public boolean isAuthorized(Context context, BaseObjectRest object) throws SQLException {
 
-        if (!(object instanceof BitstreamRest)) {
-            return false;
+        if (object instanceof BitstreamRest) {
+            return authorizeServiceRestUtil.authorizeActionBoolean(context, object, DSpaceRestPermission.READ);
         }
-
-        if (authorizeServiceRestUtil.authorizeActionBoolean(context, object, DSpaceRestPermission.READ)) {
-            return true;
-        }
-
-        if (context.getCurrentUser() != null) {
-            return false;
-        }
-
-        DSpaceObject dSpaceObject = (DSpaceObject) utils.getDSpaceAPIObjectFromRest(context, object);
-        if (dSpaceObject == null) {
-            return false;
-        }
-
-        return authorizeService.authorizeActionBoolean(context, (Bitstream) dSpaceObject, Constants.READ);
+        return false;
     }
 
     @Override
@@ -74,4 +50,5 @@ public class DownloadFeature implements AuthorizationFeature {
             BitstreamRest.CATEGORY + "." + BitstreamRest.NAME,
         };
     }
+
 }

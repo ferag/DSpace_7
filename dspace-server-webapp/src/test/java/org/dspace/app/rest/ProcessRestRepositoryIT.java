@@ -113,22 +113,16 @@ public class ProcessRestRepositoryIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
-    public void getProcessForDifferentUsersTest() throws Exception {
+    public void getProcessForDifferentUserForbiddenException() throws Exception {
         String token = getAuthToken(eperson.getEmail(), password);
         getClient(token).perform(get("/api/system/processes/" + process.getID()))
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$", Matchers.is(
-                                   ProcessMatcher.matchProcess(process.getName(),
-                                   String.valueOf(process.getEPerson().getID()),
-                                   process.getID(), parameters, ProcessStatus.SCHEDULED))));
+                        .andExpect(status().isForbidden());
+    }
 
-        // by anonymous
+    @Test
+    public void getProcessAnonymousUnauthorizedException() throws Exception {
         getClient().perform(get("/api/system/processes/" + process.getID()))
-                   .andExpect(status().isOk())
-                   .andExpect(jsonPath("$", Matchers.is(
-                              ProcessMatcher.matchProcess(process.getName(),
-                              String.valueOf(process.getEPerson().getID()),
-                              process.getID(), parameters, ProcessStatus.SCHEDULED))));
+                   .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -147,6 +141,26 @@ public class ProcessRestRepositoryIT extends AbstractControllerIntegrationTest {
                    .andExpect(status().isUnauthorized());
     }
 
+    @Test
+    public void getProcessCreatedByAnonymousForDifferentUsersTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        Process processByAnonymous = ProcessBuilder.createProcess(context, null, "mock-script", parameters).build();
+        context.restoreAuthSystemState();
+
+        String token = getAuthToken(eperson.getEmail(), password);
+        getClient(token).perform(get("/api/system/processes/" + processByAnonymous.getID()))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$", Matchers.is(
+                                   ProcessMatcher.matchProcess(processByAnonymous.getName(),
+                                   null, processByAnonymous.getID(), parameters, ProcessStatus.SCHEDULED))));
+
+        // by anonymous
+        getClient().perform(get("/api/system/processes/" + processByAnonymous.getID()))
+                   .andExpect(status().isOk())
+                   .andExpect(jsonPath("$", Matchers.is(
+                              ProcessMatcher.matchProcess(processByAnonymous.getName(),
+                              null, processByAnonymous.getID(), parameters, ProcessStatus.SCHEDULED))));
+    }
 
     @Test
     public void getAllProcessesTestAdmin() throws Exception {

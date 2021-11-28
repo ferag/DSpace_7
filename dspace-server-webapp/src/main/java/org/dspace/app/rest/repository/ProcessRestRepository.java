@@ -60,7 +60,7 @@ public class ProcessRestRepository extends DSpaceRestRepository<ProcessRest, Int
     private EPersonService epersonService;
 
     @Override
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasPermission(#id, 'PROCESS', 'READ')")
     public ProcessRest findOne(Context context, Integer id) {
         try {
             Process process = processService.find(context, id);

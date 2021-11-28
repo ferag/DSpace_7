@@ -194,6 +194,7 @@ public class ProcessServiceImpl implements ProcessService {
             context.restoreAuthSystemState();
         } catch (SQLException | AuthorizeException e) {
             log.info(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
         process.addBitstream(bitstream);
         update(context, process);

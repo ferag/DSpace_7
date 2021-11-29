@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.InProgressSubmission;
 import org.dspace.content.Item;
+import org.dspace.content.MetadataValue;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.InProgressSubmissionService;
@@ -85,6 +86,18 @@ public class ItemUtils {
 
         return WORKFLOW;
 
+    }
+
+    public static boolean isCvEntity(Item item) {
+        for (MetadataValue metadataValue : item.getMetadata()) {
+            String value = metadataValue.getValue();
+            if ("dspace.entity.type".equals(metadataValue.getMetadataField().toString('.'))
+                && value != null
+                && value.startsWith("Cv") && !value.endsWith("Clone")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static WorkspaceItemService getWorkspaceItemService() {

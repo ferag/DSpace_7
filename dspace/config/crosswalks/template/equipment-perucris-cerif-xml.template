@@ -5,7 +5,6 @@
 	<Identifier type="Institution assigned unique equipment identifier">@oairecerif.internalid@</Identifier>
 	<Description>@dc.description@</Description>
 	<Owner> <OrgUnit> <Name>@crisequipment.ownerou@</Name> </OrgUnit> </Owner>
-	<Owner> <Person displayName="@crisequipment.ownerrp@" ></Person> </Owner>
     @relation.dc-relation-funding.start@
     <Funder> 
         <As> 

@@ -41,26 +41,6 @@
                         <xsl:with-param name="label" select="'Description'" />
                         <xsl:with-param name="value" select="Description" />
                     </xsl:call-template>
-
-                    <xsl:call-template name="print-value">
-                        <xsl:with-param name="label" select="'Director'" />
-                        <xsl:with-param name="value" select="Director" />
-                    </xsl:call-template>
-
-                    <xsl:call-template name="print-value">
-                        <xsl:with-param name="label" select="'Established'" />
-                        <xsl:with-param name="value" select="Established" />
-                    </xsl:call-template>
-
-                    <xsl:call-template name="print-values">
-                        <xsl:with-param name="label" select="'Scientifics boards:'" />
-                        <xsl:with-param name="values" select="ScientificBoard" />
-                    </xsl:call-template>
-
-					<xsl:call-template name="print-value">
-				    	<xsl:with-param name="label" select="'Parent Organization'" />
-				    	<xsl:with-param name="value" select="PartOf/OrgUnit/Name" />
-			    	</xsl:call-template>
 			    	
 					<xsl:call-template name="print-values">
 				    	<xsl:with-param name="label" select="'Identifier(s)'" />
@@ -118,28 +98,23 @@
                     </xsl:call-template>
 
                     <xsl:call-template name="print-value">
-                        <xsl:with-param name="label" select="'PostAddress/AddressCountry'" />
-                        <xsl:with-param name="value" select="Country" />
+                        <xsl:with-param name="label" select="'Country'" />
+                        <xsl:with-param name="value" select="PostAddress/AddressCountry" />
                     </xsl:call-template>
 
                     <xsl:call-template name="print-value">
-                        <xsl:with-param name="label" select="'PostAddress/AddressLocality'" />
-                        <xsl:with-param name="value" select="Locality" />
+                        <xsl:with-param name="label" select="'Locality'" />
+                        <xsl:with-param name="value" select="PostAddress/AddressLocality" />
                     </xsl:call-template>
 
                     <xsl:call-template name="print-value">
                         <xsl:with-param name="label" select="'Ubigeo'" />
-                        <xsl:with-param name="value" select="Ubigeo" />
+                        <xsl:with-param name="value" select="UbiGeo" />
                     </xsl:call-template>
 
 					<xsl:call-template name="print-values">
 				    	<xsl:with-param name="label" select="'URL(s)'" />
 				    	<xsl:with-param name="values" select="Identifier[@type = 'URL']" />
-			    	</xsl:call-template>
-
-					<xsl:call-template name="print-values">
-				    	<xsl:with-param name="label" select="'People'" />
-				    	<xsl:with-param name="values" select="People/Person/@displayName" />
 			    	</xsl:call-template>
 			    	
 				</fo:flow>

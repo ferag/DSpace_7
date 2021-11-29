@@ -523,18 +523,9 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withOrgUnitIdentifier("ID-02")
             .withUrlIdentifier("www.orgUnit.com")
             .withUrlIdentifier("www.orgUnit.it")
-            .build();
-
-        ItemBuilder.createItem(context, collection)
-            .withEntityType("Person")
-            .withTitle("Walter White")
-            .withPersonMainAffiliationName("Test OrgUnit", orgUnit.getID().toString())
-            .build();
-
-        ItemBuilder.createItem(context, collection)
-            .withEntityType("Person")
-            .withTitle("Jesse Pinkman")
-            .withPersonMainAffiliationName("Test OrgUnit", orgUnit.getID().toString())
+            .withUbigeo("UBIGEO")
+            .withOrgUnitAddressCountry("Italy")
+            .withOrgUnitAddressLocality("Via Roma")
             .build();
 
         context.restoreAuthSystemState();
@@ -842,7 +833,9 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(content, containsString("Organización padre: Parent OrgUnit"));
         assertThat(content, containsString("Identificador(es): ID-01, ID-02"));
         assertThat(content, containsString("URL(s): www.orgUnit.com, www.orgUnit.it"));
-        assertThat(content, containsString("Personas: Walter White, Jesse Pinkman"));
+        assertThat(content, containsString("Direccion Postal/País: Italy"));
+        assertThat(content, containsString("Dirección Postal/Localidad: Via Roma"));
+        assertThat(content, containsString("Ubigeo: UBIGEO"));
     }
 
     private void assertThatEquipmentDocumentHasContent(String content) {
@@ -854,7 +847,6 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(content, containsString("Tipo: Type"));
         assertThat(content, containsString("Identificador único de la institución: ID-01"));
         assertThat(content, containsString("Propietario (Organización): Test OrgUnit"));
-        assertThat(content, containsString("Propietario (Persona): Walter White"));
         assertThat(content, containsString("Financiador(es): Funding, Another Funding"));
         assertThat(content, containsString("Materia(s): First subject, Second subject"));
         assertThat(content, containsString("Linea de investigación: ResearchLine"));

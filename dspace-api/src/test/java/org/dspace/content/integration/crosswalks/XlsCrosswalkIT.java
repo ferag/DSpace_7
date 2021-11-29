@@ -498,7 +498,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(sheet.getPhysicalNumberOfRows(), equalTo(4));
 
         assertThat(getRowValues(sheet.getRow(0)),
-            contains("Nombre", "Nombre legal", "Acrónimo", "Tipo", "Director", "Establecido", "Consejo científico",
+            contains("Nombre", "Nombre legal", "Acrónimo", "Tipo",
                 "Institución padre", "ID(s) general", "URL(s)", "RUC ID(s)", "International Standard Name ID(s)",
                 "Research Organization Registry ID(s)", "Ringgold ID(s)", "ID Scopus de la afiliación",
                 "ID CrossRef del Fundandor", "Materia(s)", "Palabra(s) clave", "País de residencia",
@@ -506,18 +506,19 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         assertThat(getRowValues(sheet.getRow(1)),
             contains("Test OrgUnit", "Test OrgUnit LegalName", "TOU",
-                "https://w3id.org/cerif/vocab/OrganisationTypes#StrategicResearchInsitute", "OU Director", "1990-05-12",
-                "board1||board2", "Parent OrgUnit", "ID-01||ID-02", "www.orgUnit.com||www.orgUnit.it", "RUC-01", "",
-                "ROR-01", "RIN-01", "", "", "https://purl.org/pe-repo/ocde/ford/#5.07.03", "", "Italy", "via del canale", "", "010201"));
+                "https://w3id.org/cerif/vocab/OrganisationTypes#StrategicResearchInsitute",
+                "Parent OrgUnit", "ID-01||ID-02", "www.orgUnit.com||www.orgUnit.it", "RUC-01", "",
+                "ROR-01", "RIN-01", "SCOPUS-01", "CRF-01", "https://purl.org/pe-repo/ocde/ford/#5.07.03", "",
+                "Italy", "via del canale", "", "010201"));
 
         assertThat(getRowValues(sheet.getRow(2)),
             contains("Another Test OrgUnit", "", "ATOU",
-                "https://w3id.org/cerif/vocab/OrganisationTypes#Privatenonprofit", "", "", "", "Parent OrgUnit",
+                "https://w3id.org/cerif/vocab/OrganisationTypes#Privatenonprofit", "Parent OrgUnit",
                 "ID-03", "", "RUC-02", "", "ROR-02", "RIN-02", "", "", "", "", "", "", "", ""));
 
         assertThat(getRowValues(sheet.getRow(3)),
             contains("Third Test OrgUnit", "", "TTOU",
-                "https://w3id.org/cerif/vocab/OrganisationTypes#Privatenonprofit", "", "", "", "", "ID-03",
+                "https://w3id.org/cerif/vocab/OrganisationTypes#Privatenonprofit", "", "ID-03",
                 "www.orgUnit.test", "", "", "", "", "", "", "", "", "", "", "", ""));
     }
 

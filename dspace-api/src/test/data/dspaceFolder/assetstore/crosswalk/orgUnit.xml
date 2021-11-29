@@ -3,10 +3,6 @@
     <Acronym>TOU</Acronym>
     <Name>Test OrgUnit</Name>
     <Name>Test OrgUnit LegalName</Name>
-    <Director>OU Director</Director>
-    <Established>1990-05-12</Established>
-    <ScientificBoard>board1</ScientificBoard>
-    <ScientificBoard>board2</ScientificBoard>
     <Identifier>ID-01</Identifier>
     <Identifier>ID-02</Identifier>
     <Url>www.orgUnit.com</Url>
@@ -23,8 +19,4 @@
         <AddressCountry>Italy</AddressCountry>
     </PostAddress>
     <UbiGeo scheme="https://purl.org/pe-repo/inei/ubigeo">010201</UbiGeo>
-    <People>
-        <Person displayName="Walter White"/>
-        <Person displayName="Jesse Pinkman"/>
-    </People>
 </OrgUnit>

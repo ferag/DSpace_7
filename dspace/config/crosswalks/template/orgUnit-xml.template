@@ -3,9 +3,6 @@
     <Acronym>@oairecerif.acronym@</Acronym>
     <Name>@dc.title@</Name>
     <Name>@organization.legalName@</Name>
-    <Director>@crisou.director@</Director>
-    <Established>@organization.foundingDate@</Established>
-    <ScientificBoard>@crisou.boards@</ScientificBoard>
     <Identifier>@organization.identifier@</Identifier>
     <Url>@oairecerif.identifier.url@</Url>
     <Identifier type="RUC">@organization.identifier.ruc@</Identifier>
@@ -23,9 +20,4 @@
     </PostAddress>
     <UbiGeo scheme="https://purl.org/pe-repo/inei/ubigeo">@perucris.ubigeo@</UbiGeo>
     <Description>@dc.description.abstract@</Description>
-	<People>
-		@relation.people.start@
-		<Person displayName="@dc.title@"/>
-		@relation.people.end@
-	</People>
 </OrgUnit>

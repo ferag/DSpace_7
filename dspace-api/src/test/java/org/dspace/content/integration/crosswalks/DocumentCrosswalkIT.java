@@ -847,7 +847,6 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(content, containsString("Tipo: Type"));
         assertThat(content, containsString("Identificador único de la institución: ID-01"));
         assertThat(content, containsString("Propietario (Organización): Test OrgUnit"));
-        assertThat(content, containsString("Propietario (Persona): Walter White"));
         assertThat(content, containsString("Financiador(es): Funding, Another Funding"));
         assertThat(content, containsString("Materia(s): First subject, Second subject"));
         assertThat(content, containsString("Linea de investigación: ResearchLine"));

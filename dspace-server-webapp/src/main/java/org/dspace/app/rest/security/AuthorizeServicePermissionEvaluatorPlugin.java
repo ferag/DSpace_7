@@ -52,6 +52,9 @@ public class AuthorizeServicePermissionEvaluatorPlugin extends RestObjectPermiss
     @Autowired
     private ContentServiceFactory contentServiceFactory;
 
+    @Autowired
+    private ItemService itemService;
+
     @Override
     public boolean hasDSpacePermission(Authentication authentication, Serializable targetId, String targetType,
                                        DSpaceRestPermission permission) {

@@ -30,6 +30,9 @@ import org.dspace.app.util.DCInputsReaderException;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
+import org.dspace.content.authority.Choice;
+import org.dspace.content.authority.ChoiceAuthority;
+import org.dspace.content.authority.service.ChoiceAuthorityService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.core.I18nUtil;
@@ -60,6 +63,9 @@ public class SolrServiceValuePairsIndexPlugin implements SolrServiceIndexPlugin 
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private ChoiceAuthorityService cas;
 
     @Autowired
     private ConfigurationService configurationService;
@@ -105,8 +111,13 @@ public class SolrServiceValuePairsIndexPlugin implements SolrServiceIndexPlugin 
 
         for (MetadataValue metadataValue : metadataValues) {
 
-            String value = getDisplayValue(valueListInput, metadataValue);
+            String value = StringUtils.EMPTY;
             String authority = metadataValue.getAuthority();
+            if (StringUtils.isNotBlank(valueListInput.getVocabulary())) {
+                value = getControlledVocabularyValue(metadataValue, language);
+            } else {
+                value = getDisplayValue(valueListInput, metadataValue);
+            }
 
             for (DiscoverySearchFilter searchFilter : searchFilters) {
                 addDiscoveryFieldFields(language, document, value, authority, searchFilter);
@@ -115,6 +126,16 @@ public class SolrServiceValuePairsIndexPlugin implements SolrServiceIndexPlugin 
 
         }
 
+    }
+
+    private String getControlledVocabularyValue(MetadataValue metadataValue, String language) {
+        String [] authorityValue = metadataValue.getAuthority().split(":");
+        if (authorityValue.length == 2) {
+            ChoiceAuthority authority = cas.getChoiceAuthorityByAuthorityName(authorityValue[0]);
+            Choice choice = authority.getChoice(authorityValue[1], language);
+            return choice.label;
+        }
+        return StringUtils.EMPTY;
     }
 
     private void addDiscoveryFieldFields(String language, SolrInputDocument document, String value, String authority,
@@ -174,7 +195,9 @@ public class SolrServiceValuePairsIndexPlugin implements SolrServiceIndexPlugin 
     private List<DCInput> getAllValueListInputs(Context context, String language, Item item) {
         return getInputs(context, language, item).stream()
             .flatMap(this::getAllDCInput)
-            .filter(dcInput -> dcInput.isDropDown() || dcInput.isList())
+            .filter(dcInput -> dcInput.isDropDown()
+                            || dcInput.isList()
+                            || StringUtils.isNotBlank(dcInput.getVocabulary()))
             .collect(Collectors.toList());
     }
 

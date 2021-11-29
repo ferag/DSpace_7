@@ -25,6 +25,7 @@ import org.dspace.builder.CommunityBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
+import org.dspace.content.authority.service.MetadataAuthorityService;
 import org.dspace.discovery.SolrServiceValuePairsIndexPlugin;
 import org.dspace.services.ConfigurationService;
 import org.hamcrest.Matchers;
@@ -45,6 +46,9 @@ public class DiscoveryRestControllerMultiLanguageIT extends AbstractControllerIn
 
     @Autowired
     private ConfigurationService configurationService;
+
+    @Autowired
+    private MetadataAuthorityService metadataAuthorityService;
 
     @Test
     public void discoverSearchByKnowsLanguageTest() throws Exception {
@@ -306,4 +310,47 @@ public class DiscoveryRestControllerMultiLanguageIT extends AbstractControllerIn
                 FacetValueMatcher.entryLanguage("Ucraino"))));
 
     }
+
+    @Test
+    public void discoverFacetsTypesTest() throws Exception {
+        configurationService.setProperty("authority.controlled.dc.type", "true");
+        metadataAuthorityService.clearCache();
+        context.turnOffAuthorisationSystem();
+
+        String[] supportedLanguage = { "en","uk", "it" };
+        configurationService.setProperty("webui.supported.locales", supportedLanguage);
+        solrServiceValuePairsIndexPlugin.setup();
+
+        parentCommunity = CommunityBuilder.createCommunity(context)
+                                          .withName("Parent Community")
+                                          .build();
+
+        Collection col1 = CollectionBuilder.createCollection(context, parentCommunity, "123456789/language-test-1")
+                                           .withName("Collection 1")
+                                           .withEntityType("Publication")
+                                           .build();
+
+        ItemBuilder.createItem(context, col1)
+                   .withTitle("Test 1")
+                   .withIssueDate("2010-10-17")
+                   .withAuthor("Testing, Works")
+                   .withType("Research Subject Categories::MATEMATICA", "srsc:SCB14")
+                   .build();
+
+        context.restoreAuthSystemState();
+
+        getClient().perform(get("/api/discover/facets/types")
+                   .header("Accept-Language", Locale.ITALIAN.getLanguage())
+                   .param("prefix", "MATEM"))
+                   .andExpect(jsonPath("$.type", is("discover")))
+                   .andExpect(jsonPath("$.name", is("types")))
+                   .andExpect(jsonPath("$.facetType", is("text")))
+                   .andExpect(jsonPath("$._links.self.href", containsString("api/discover/facets/types")))
+                   .andExpect(jsonPath("$._embedded.values", containsInAnyOrder(
+                              FacetValueMatcher.entryLanguage("MATEMATICA"))));
+
+        configurationService.setProperty("authority.controlled.dc.type", "false");
+        metadataAuthorityService.clearCache();
+    }
+
 }

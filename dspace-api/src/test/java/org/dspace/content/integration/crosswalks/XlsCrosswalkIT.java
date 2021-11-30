@@ -83,31 +83,31 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         dcInputsReader = mock(DCInputsReader.class);
 
-        when(dcInputsReader.hasFormWithName("traditional-oairecerif-identifier-url")).thenReturn(true);
-        when(dcInputsReader.getAllFieldNamesByFormName("traditional-oairecerif-identifier-url"))
+        when(dcInputsReader.hasFormWithName("traditionalpageone-oairecerif-identifier-url")).thenReturn(true);
+        when(dcInputsReader.getAllFieldNamesByFormName("traditionalpageone-oairecerif-identifier-url"))
             .thenReturn(Arrays.asList("oairecerif.identifier.url", "crisrp.site.title"));
 
-        when(dcInputsReader.hasFormWithName("traditional-oairecerif-person-affiliation")).thenReturn(true);
-        when(dcInputsReader.getAllFieldNamesByFormName("traditional-oairecerif-person-affiliation"))
+        when(dcInputsReader.hasFormWithName("traditionalpageone-oairecerif-person-affiliation")).thenReturn(true);
+        when(dcInputsReader.getAllFieldNamesByFormName("traditionalpageone-oairecerif-person-affiliation"))
             .thenReturn(Arrays.asList("oairecerif.person.affiliation", "oairecerif.affiliation.startDate",
                 "oairecerif.affiliation.endDate", "oairecerif.affiliation.role"));
 
-        when(dcInputsReader.hasFormWithName("traditional-crisrp-education")).thenReturn(true);
-        when(dcInputsReader.getAllFieldNamesByFormName("traditional-crisrp-education"))
+        when(dcInputsReader.hasFormWithName("traditionalpageone-crisrp-education")).thenReturn(true);
+        when(dcInputsReader.getAllFieldNamesByFormName("traditionalpageone-crisrp-education"))
             .thenReturn(Arrays.asList("crisrp.education", "crisrp.education.start",
                 "crisrp.education.end", "crisrp.education.role"));
 
-        when(dcInputsReader.hasFormWithName("traditional-crisrp-qualification")).thenReturn(true);
-        when(dcInputsReader.getAllFieldNamesByFormName("traditional-crisrp-qualification"))
+        when(dcInputsReader.hasFormWithName("traditionalpagetwo-crisrp-qualification")).thenReturn(true);
+        when(dcInputsReader.getAllFieldNamesByFormName("traditionalpagetwo-crisrp-qualification"))
             .thenReturn(Arrays.asList("crisrp.qualification", "crisrp.qualification.start",
                 "crisrp.qualification.end"));
 
-        when(dcInputsReader.hasFormWithName("traditional-dc-contributor-author")).thenReturn(true);
-        when(dcInputsReader.getAllFieldNamesByFormName("traditional-dc-contributor-author"))
+        when(dcInputsReader.hasFormWithName("traditionalpageone-dc-contributor-author")).thenReturn(true);
+        when(dcInputsReader.getAllFieldNamesByFormName("traditionalpageone-dc-contributor-author"))
             .thenReturn(Arrays.asList("dc.contributor.author", "oairecerif.author.affiliation"));
 
-        when(dcInputsReader.hasFormWithName("traditional-dc-contributor-editor")).thenReturn(true);
-        when(dcInputsReader.getAllFieldNamesByFormName("traditional-dc-contributor-editor"))
+        when(dcInputsReader.hasFormWithName("traditionalpagetwo-dc-contributor-editor")).thenReturn(true);
+        when(dcInputsReader.getAllFieldNamesByFormName("traditionalpagetwo-dc-contributor-editor"))
             .thenReturn(Arrays.asList("dc.contributor.editor", "oairecerif.editor.affiliation"));
 
     }

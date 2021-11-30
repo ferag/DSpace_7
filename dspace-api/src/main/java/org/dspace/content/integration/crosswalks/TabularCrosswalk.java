@@ -34,6 +34,7 @@ import org.dspace.app.util.DCInputsReaderException;
 import org.dspace.app.util.SubmissionConfig;
 import org.dspace.app.util.SubmissionConfigReader;
 import org.dspace.app.util.SubmissionConfigReaderException;
+import org.dspace.app.util.SubmissionStepConfig;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.content.DSpaceObject;
@@ -291,19 +292,22 @@ public abstract class TabularCrosswalk implements ItemExportCrosswalk {
 
     private List<String> getMetadataGroup(Context context, Item item, String groupName) throws SQLException {
         try {
+
             Collection collection = collectionService.findByItem(context, item);
             if (collection == null) {
                 throw new IllegalArgumentException("No collection found for item " + item.getID());
             }
 
             SubmissionConfig submissionConfig = this.submissionConfigReader.getSubmissionConfigByCollection(collection);
-            String formName = submissionConfig.getSubmissionName() + "-" + groupName.replaceAll("\\.", "-");
 
-            if (!this.dcInputsReader.hasFormWithName(formName)) {
-                return new ArrayList<String>();
+            for (SubmissionStepConfig submissionStepConfiguration : submissionConfig) {
+                String formName = submissionStepConfiguration.getId() + "-" + groupName.replaceAll("\\.", "-");
+                if (this.dcInputsReader.hasFormWithName(formName)) {
+                    return this.dcInputsReader.getAllFieldNamesByFormName(formName);
+                }
             }
 
-            return this.dcInputsReader.getAllFieldNamesByFormName(formName);
+            return new ArrayList<String>();
 
         } catch (DCInputsReaderException e) {
             log.error("An error occurs reading the input configuration by group name " + groupName, e);

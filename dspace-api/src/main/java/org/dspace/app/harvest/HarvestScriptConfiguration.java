@@ -71,6 +71,18 @@ public class HarvestScriptConfiguration<T extends Harvest> extends ScriptConfigu
                           "the name of the desired metadata format for harvesting, resolved to namespace and " +
                                   "crosswalk in dspace.cfg");
 
+        options.addOption("f", "force synchronization", false, "force the synchronization");
+        options.getOption("f").setType(boolean.class);
+
+        options.addOption("iv", "item validation", false, "to enable the item validation");
+        options.getOption("iv").setType(boolean.class);
+
+        options.addOption("rv", "record validation", false, "to enable the record validation");
+        options.getOption("rv").setType(boolean.class);
+
+        options.addOption("w", "workflow", false, "to start the item workflow after its creation");
+        options.getOption("w").setType(boolean.class);
+
         options.addOption("h", "help", false, "help");
         options.getOption("h").setType(boolean.class);
 

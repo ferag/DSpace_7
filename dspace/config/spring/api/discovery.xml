@@ -78,7 +78,7 @@
                 <entry key="publication" value-ref="publication"/>
                 <entry key="researchoutputs" value-ref="researchoutputs"/>
                 <entry key="person" value-ref="person"/>
-                <entry key="orgunit" value-ref="orgUnit"/>
+                <entry key="orgunit" value-ref="orgunit"/>
                 <entry key="infrastructure" value-ref="infrastructure"/>
                 <entry key="funding" value-ref="funding"/>
                 <entry key="journalissue" value-ref="journalIssue"/>
@@ -170,18 +170,50 @@
 
 
                 <entry key="RESUME.rprofiles" value-ref="person"/>
-                <entry key="RESUME.orgunits" value-ref="orgUnit"/>
+                <entry key="RESUME.orgunits" value-ref="orgunit"/>
                 <entry key="RESUME.researchoutputs" value-ref="researchoutputs"/>
                 <entry key="RESUME.project_funding" value-ref="project_funding"/>
                 <entry key="RESUME.infrastructure" value-ref="infrastructure"/>
+
                 <entry key="RESUME.orgunit.universities" value-ref="resumeOrgunitUniversities"/>
                 <entry key="RESUME.orgunit.ipis" value-ref="resumeOrgunitIpis"/>
                 <entry key="RESUME.orgunit.investigation_innovation_unities" value-ref="resumeOrgunitInnovationUnities"/>
                 <entry key="RESUME.orgunit.investigation_groups" value-ref="resumeOrgunitInvestigationGroups"/>
-                <entry key="RESUME.orgunit.investigation_lines" value-ref="resumeOrgunitInvestigationLines"/>
                 <entry key="RESUME.orgunit.enterprises" value-ref="resumeOrgunitEnterprises"/>
                 <entry key="RESUME.orgunit.cti_funders" value-ref="resumeOrgunitCtiFunders"/>
                 <entry key="RESUME.orgunit.renacyt_centres" value-ref="resumeOrgunitRenacytCentres"/>
+
+                <entry key="resumeOrgunitUniversities" value-ref="resumeOrgunitUniversities"/>
+                <entry key="resumeOrgunitIpis" value-ref="resumeOrgunitIpis"/>
+                <entry key="resumeOrgunitInnovationUnities" value-ref="resumeOrgunitInnovationUnities"/>
+                <entry key="resumeOrgunitInvestigationGroups" value-ref="resumeOrgunitInvestigationGroups"/>
+                <entry key="resumeOrgunitInvestigationLines" value-ref="resumeOrgunitInvestigationLines"/>
+                <entry key="resumeOrgunitEnterprises" value-ref="resumeOrgunitEnterprises"/>
+                <entry key="resumeOrgunitCtiFunders" value-ref="resumeOrgunitCtiFunders"/>
+                <entry key="resumeOrgunitRenacytCentres" value-ref="resumeOrgunitRenacytCentres"/>
+
+
+                <entry key="RESUME.researcherprofiles.renacyt" value-ref="resumeResearcherProfileRenacyt"/>
+                <entry key="RESUME.researcherprofiles.doctor" value-ref="resumeResearcherProfileDoctor"/>
+                <entry key="resumeResearcherProfileRenacyt" value-ref="resumeResearcherProfileRenacyt"/>
+                <entry key="resumeResearcherProfileDoctor" value-ref="resumeResearcherProfileDoctor"/>
+
+                <entry key="RESUME.projects" value-ref="project"/>
+                <entry key="RESUME.fundings" value-ref="funding"/>
+
+                <entry key="RESUME.researchoutputs.articles" value-ref="resumeResearchOutputsArticles"/>
+                <entry key="RESUME.researchoutputs.books" value-ref="resumeResearchOutputsBooks"/>
+                <entry key="RESUME.researchoutputs.tesis" value-ref="resumeResearchOutputsTesis"/>
+                <entry key="RESUME.researchoutputs.conferencepapers" value-ref="resumeResearchOutputsConferencePapers"/>
+                <entry key="RESUME.researchoutputs.patents" value-ref="resumeResearchOutputsPatents"/>
+                <entry key="RESUME.researchoutputs.openaccess" value-ref="resumeResearchOutputsOpenAccess"/>
+
+                <entry key="resumeResearchOutputsArticles" value-ref="resumeResearchOutputsArticles"/>
+                <entry key="resumeResearchOutputsBooks" value-ref="resumeResearchOutputsBooks"/>
+                <entry key="resumeResearchOutputsTesis" value-ref="resumeResearchOutputsTesis"/>
+                <entry key="resumeResearchOutputsConferencePapers" value-ref="resumeResearchOutputsConferencePapers"/>
+                <entry key="resumeResearchOutputsPatents" value-ref="resumeResearchOutputsPatents"/>
+                <entry key="resumeResearchOutputsOpenAccess" value-ref="resumeResearchOutputsOpenAccess"/>
 
                 <!-- Notification Related items -->
                 <entry key="RELATION.CvPerson.notifications" value-ref="relationCvPersonToNotificationConfiguration"/>
@@ -190,6 +222,7 @@
                 <entry key="editCommunity" value-ref="editCommunityConfiguration"/>
                 <entry key="editCollection" value-ref="editCollectionConfiguration"/>
                 <entry key="importedCtiVitae" value-ref="importedCtiVitae"/>
+                <entry key="cvprofile" value-ref="cvprofile"/>
             </map>
         </property>
         <property name="toIgnoreMetadataFields">
@@ -372,8 +405,6 @@
         </property>
         <property name="moreLikeThisConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoveryMoreLikeThisConfiguration">
-                <!--When altering this list also alter the "xmlui.Discovery.RelatedItems.help" key as it describes
-                the metadata fields below-->
                 <property name="similarityMetadataFields">
                     <list>
                         <value>dc.title</value>
@@ -506,8 +537,6 @@
         </property>
         <property name="moreLikeThisConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoveryMoreLikeThisConfiguration">
-                <!--When altering this list also alter the "xmlui.Discovery.RelatedItems.help" key as it describes
-                the metadata fields below-->
                 <property name="similarityMetadataFields">
                     <list>
                         <value>dc.title</value>
@@ -550,7 +579,7 @@
         <property name="sidebarFacets">
             <list>
                 <ref bean="searchFilterType" />
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
@@ -566,7 +595,7 @@
         <property name="searchFilters">
             <list>
                 <ref bean="searchFilterType" />
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterTitle" />
                 <ref bean="searchFilterAuthor" />
@@ -879,18 +908,19 @@
         <!-- project of an researcher -->
     <bean id="relationInvestigatorProjectsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <!--Which sidebar facets are to be displayed-->
+        <property name="indexAlways" value="true"/>
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphItemByType" />
+                <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphItemByType" />
+                <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
                 <ref bean="searchFilterProjectInvestigator"/>
             </list>
@@ -934,16 +964,16 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphItemByType" />
+                <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphItemByType" />
+                <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
                 <ref bean="searchFilterProjectInvestigator"/>
             </list>
@@ -993,7 +1023,7 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
 <!--                <ref bean="searchFilterIssued" />-->
                 <ref bean="searchFilterAuthor" />
@@ -1011,7 +1041,7 @@
         <property name="searchFilters">
             <list>
                 <ref bean="searchFilterTitle" />
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
 <!--                <ref bean="searchFilterIssued" />-->
                 <ref bean="searchFilterAuthor" />
@@ -1075,7 +1105,7 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <!--                <ref bean="searchFilterIssued" />-->
                 <ref bean="searchFilterAuthor" />
@@ -1093,7 +1123,7 @@
         <property name="searchFilters">
             <list>
                 <ref bean="searchFilterTitle" />
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <!--                <ref bean="searchFilterIssued" />-->
                 <ref bean="searchFilterAuthor" />
@@ -1145,7 +1175,7 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1157,7 +1187,7 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1289,7 +1319,7 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1301,7 +1331,7 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1349,8 +1379,8 @@
     <bean id="relationOrgunitRPProjectConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
             <property name="sidebarFacets">
                 <list>
-                    <ref bean="graphPublicationByType" />
-                    <ref bean="graphPublicationByDate" />
+                    <ref bean="graphItemByType" />
+                    <ref bean="graphProjectByDate" />
                     <ref bean="searchFilterAuthor" />
                     <ref bean="searchFilterType"/>
                     <ref bean="searchFilterSubject" />
@@ -1359,8 +1389,8 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphItemByType" />
+                <ref bean="graphProjectByDate" />
 
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1396,7 +1426,7 @@
     <bean id="relationOrgunitPublicationsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1406,7 +1436,7 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1443,7 +1473,7 @@
     <bean id="relationOrgunitRPPublicationsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1453,7 +1483,7 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1488,7 +1518,7 @@
     <bean id="relationInstitutionOrgunitRPPublicationsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1498,7 +1528,7 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1558,8 +1588,8 @@
     <bean id="relationOrgunitProjectsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphItemByType" />
+                <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
                 <ref bean="searchFilterSubject" />
@@ -1568,8 +1598,8 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphItemByType" />
+                <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
                 <ref bean="searchFilterSubject" />
@@ -1602,8 +1632,8 @@
     <bean id="relationOrgunitInstitutionProjectsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphItemByType" />
+                <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
                 <ref bean="searchFilterSubject" />
@@ -1612,8 +1642,8 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphItemByType" />
+                <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
                 <ref bean="searchFilterSubject" />
@@ -1747,7 +1777,7 @@
     <bean id="relationProjectPublicationConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1757,7 +1787,7 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
 
                 <ref bean="searchFilterAuthor" />
@@ -1794,7 +1824,7 @@
     <bean id="relationInstitutionProjectPublicationConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1804,7 +1834,7 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
 
                 <ref bean="searchFilterAuthor" />
@@ -1839,7 +1869,7 @@
     <bean id="relationProjectPatentConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1849,7 +1879,7 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1947,7 +1977,7 @@
     <bean id="relationInstitutionProjectPatentConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1957,7 +1987,7 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1993,7 +2023,7 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
@@ -2007,7 +2037,7 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterTitle" />
                 <ref bean="searchFilterAuthor" />
@@ -2060,7 +2090,7 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterEditor" />
@@ -2077,7 +2107,7 @@
         <property name="searchFilters">
             <list>
                 <ref bean="searchFilterTitle" />
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterEditor" />
@@ -2131,7 +2161,7 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterEditor" />
@@ -2148,7 +2178,7 @@
         <property name="searchFilters">
             <list>
                 <ref bean="searchFilterTitle" />
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterEditor" />
@@ -2203,16 +2233,16 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphItemByType" />
+                <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphItemByType" />
+                <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
                 <ref bean="searchFilterProjectInvestigator"/>
             </list>
@@ -2259,16 +2289,16 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphItemByType" />
+                <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphItemByType" />
+                <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
                 <ref bean="searchFilterProjectInvestigator"/>
             </list>
@@ -2315,7 +2345,7 @@
     <bean id="relationCvPersonPatentsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -2325,7 +2355,7 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -2360,7 +2390,7 @@
     <bean id="relationCvPersonSelectedPatentsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -2370,7 +2400,7 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -2406,8 +2436,7 @@
     <bean id="relationCvPersonEquipmentsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphItemByType" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
                 <ref bean="searchFilterSubject" />
@@ -2416,8 +2445,7 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphItemByType" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
                 <ref bean="searchFilterSubject" />
@@ -2451,8 +2479,7 @@
     <bean id="relationCvPersonSelectedEquipmentsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphItemByType" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
                 <ref bean="searchFilterSubject" />
@@ -2461,8 +2488,7 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphItemByType" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
                 <ref bean="searchFilterSubject" />
@@ -3501,24 +3527,85 @@
         </property>
     </bean>
 
+    <!-- cvprofiles -->
+    <bean id="cvprofile" class="org.dspace.discovery.configuration.DiscoveryConfiguration" scope="prototype">
+        <property name="id" value="cvprofile"/>
+        <property name="indexAlways" value="true"/>
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list>
+                <ref bean="graphOcdeArea"/>
+                <ref bean="searchFilterJobtitle"/>
+                <ref bean="searchFilterKnowsLanguage"/>
+                <ref bean="searchFilterUbigeo"/>
+                <ref bean="searchFilterOcde"/>
+            </list>
+        </property>
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list>
+                <ref bean="graphOcdeArea"/>
+                <ref bean="searchFilterJobtitle"/>
+                <ref bean="searchFilterKnowsLanguage"/>
+                <ref bean="searchFilterUbigeo"/>
+                <ref bean="searchFilterOcde"/>
+            </list>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortScore" />
+                        <ref bean="sortFamilyName"/>
+                        <ref bean="sortGivenName"/>
+                        <ref bean="sortBirthDate"/>
+                        <ref bean="sortDateAccessioned"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find items of type Person-->
+                <value>search.resourcetype:Item AND entityType_keyword:CvPerson</value>
+            </list>
+        </property>
+        <!--Default result per page  -->
+        <property name="defaultRpp" value="10"/>
+                <property name="recentSubmissionConfiguration">
+                    <bean class="org.dspace.discovery.configuration.DiscoveryRecentSubmissionsConfiguration">
+                        <property name="metadataSortField" value="dc.date.accessioned"/>
+                        <property name="type" value="date"/>
+                        <property name="max" value="25"/>
+                        <property name="useAsHomePage" value="false"/>
+                    </bean>
+                </property>
+
+        <!-- When true a "did you mean" example will be displayed, value can be true or false -->
+        <property name="spellCheckEnabled" value="true"/>
+    </bean>
+
     <bean id="researchoutputs" class="org.dspace.discovery.configuration.DiscoveryConfiguration" scope="prototype">
         <property name="id" value="researchoutputs"/>
         <property name="indexAlways" value="true"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="graphOcdeArea"/>
 
-                <ref bean="searchFilterAuthor" />
-                <ref bean="searchFilterEditor" />
-                <ref bean="searchFilterOrgUnit" />
-                <ref bean="searchFilterSubject" />
-                <ref bean="searchFilterFunding" />
-                <ref bean="searchFilterContentInOriginalBundle"/>
-                <ref bean="searchFilterEntityType"/>
-                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterAccess"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterIssued"/>
+                <ref bean="searchFilterPublisher"/>
+                <ref bean="searchFilterSubject"/>
+                <ref bean="searchFilterLanguage"/>
+                <ref bean="searchFilterPublicationFunding"/>
+                <ref bean="searchFilterRightsHolder"/>
             </list>
         </property>
         <!-- Set TagCloud configuration per discovery configuration -->
@@ -3526,20 +3613,27 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="searchFilterPublicationTitle" />
+                <ref bean="searchFilterPublicationKeywords" />
+                <ref bean="searchFilterPublicationAuthors" />
+                <ref bean="searchFilterPublicationIdentifiers" />
+                <ref bean="searchFilterSubject"/>
+                <ref bean="searchFilterResearchOutputSubject"/>
+                <ref bean="searchFilterEditor"/>
+                <ref bean="searchFilterResearchOutputType"/>
+                <ref bean="searchFilterIssued"/>
+                <ref bean="searchFilterResearchOutputDate"/>
+
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="graphOcdeArea"/>
-                <ref bean="searchFilterTitle" />
-                <ref bean="searchFilterAuthor" />
-                <ref bean="searchFilterEditor" />
-                <ref bean="searchFilterOrgUnit" />
-                <ref bean="searchFilterSubject" />
-                <ref bean="searchFilterFunding" />
-                <ref bean="searchFilterContentInOriginalBundle"/>
-                <ref bean="searchFilterFileNameInOriginalBundle" />
-                <ref bean="searchFilterFileDescriptionInOriginalBundle" />
-                <ref bean="searchFilterEntityType"/>
-                <ref bean="searchFilterOcde"/>
+
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterAccess"/>
+                <ref bean="searchFilterPublisher"/>
+                <ref bean="searchFilterLanguage"/>
+                <ref bean="searchFilterPublicationFunding"/>
+                <ref bean="searchFilterRightsHolder"/>
                 <ref bean="searchFilterHiddenWithdrawn"/>
             </list>
         </property>
@@ -3548,10 +3642,10 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <ref bean="sortScore"/>
-                        <ref bean="sortTitle" />
                         <ref bean="sortDateIssued" />
+                        <ref bean="sortTitle" />
                         <ref bean="sortDateAccessioned"/>
+                        <ref bean="sortLastModified"/>
                     </list>
                 </property>
             </bean>
@@ -3584,28 +3678,49 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
+                <ref bean="graphPersonGender"/>
                 <ref bean="graphOcdeArea"/>
-                <ref bean="searchFilterJobtitle"/>
-                <ref bean="searchFilterKnowsLanguage"/>
-                <ref bean="searchFilterPersonOrgUnit"/>
-                <ref bean="searchFilterUbigeo"/>
+                <ref bean="graphCrisRpCountry"/>
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphCrisRpRole"/>
+
+                <ref bean="searchFilterPersonGender"/>
+                <ref bean="searchFilterPersonRenacytRole"/>
+                <ref bean="searchFilterRenacytClassification"/>
+                <ref bean="searchFilterCountry"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
                 <ref bean="searchFilterOcde"/>
-                <!--                <ref bean="searchFilterBirthdate"/>-->
+                <ref bean="searchFilterMinam"/>
+                <ref bean="searchFilterIns"/>
+                <ref bean="searchFilterSubject"/>
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
+                <ref bean="graphPersonGender"/>
                 <ref bean="graphOcdeArea"/>
-                <ref bean="searchFilterFamilyName"/>
-                <ref bean="searchFilterGivenName"/>
-                <ref bean="searchFilterJobtitle"/>
-                <ref bean="searchFilterKnowsLanguage"/>
-                <ref bean="searchFilterPersonOrgUnit"/>
-                <ref bean="searchFilterUbigeo"/>
+                <ref bean="graphCrisRpCountry"/>
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphCrisRpRole"/>
+
+                <ref bean="searchFilterRpName"/>
+                <ref bean="searchFilterRpAffiliations"/>
+                <ref bean="searchFilterRpKeywords"/>
+                <ref bean="searchFilterDescription"/>
+
+                <ref bean="searchFilterPersonGender"/>
+                <ref bean="searchFilterPersonRenacytRole"/>
+                <ref bean="searchFilterRenacytClassification"/>
+                <ref bean="searchFilterCountry"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
                 <ref bean="searchFilterOcde"/>
-                <ref bean="searchFilterHiddenWithdrawn"/>
-                <!--                <ref bean="searchFilterBirthdate"/>-->
+                <ref bean="searchFilterMinam"/>
+                <ref bean="searchFilterIns"/>
+                <ref bean="searchFilterSubject"/>
+                <ref bean="searchFilterHiddenWithdrawn" />
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -3613,11 +3728,12 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <ref bean="sortScore" />
-                        <ref bean="sortFamilyName"/>
-                        <ref bean="sortGivenName"/>
-                        <ref bean="sortBirthDate"/>
-                        <ref bean="sortDateAccessioned"/>
+                        <ref bean="sortRpName" />
+                        <ref bean="sortRpAffiliationName" />
+                        <ref bean="sortRpQualification" />
+                        <ref bean="sortRpQualificationOrgunit" />
+                        <ref bean="sortLastModified" />
+                        <ref bean="sortDateCreated" />
                     </list>
                 </property>
             </bean>
@@ -3631,15 +3747,15 @@
             </list>
         </property>
         <!--Default result per page  -->
-        <property name="defaultRpp" value="10"/>
-        <property name="recentSubmissionConfiguration">
-            <bean class="org.dspace.discovery.configuration.DiscoveryRecentSubmissionsConfiguration">
-                <property name="metadataSortField" value="dc.date.accessioned"/>
-                <property name="type" value="date"/>
-                <property name="max" value="5"/>
-                <property name="useAsHomePage" value="false"/>
-            </bean>
-        </property>
+        <property name="defaultRpp" value="50"/>
+<!--        <property name="recentSubmissionConfiguration">-->
+<!--            <bean class="org.dspace.discovery.configuration.DiscoveryRecentSubmissionsConfiguration">-->
+<!--                <property name="metadataSortField" value="dc.date.accessioned"/>-->
+<!--                <property name="type" value="date"/>-->
+<!--                <property name="max" value="5"/>-->
+<!--                <property name="useAsHomePage" value="false"/>-->
+<!--            </bean>-->
+<!--        </property>-->
 
         <!-- When true a "did you mean" example will be displayed, value can be true or false -->
         <property name="spellCheckEnabled" value="true"/>
@@ -3651,32 +3767,70 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-<!--                <ref bean="graphPublicationByType" />-->
-<!--                <ref bean="graphPublicationByDate" />-->
+                <ref bean="graphGeoLocation" />
+                <ref bean="graphOcdeArea"/>
+                <ref bean="graphOcdeProject"/>
+                <ref bean="graphProjectFundingEntity"/>
+
+                <ref bean="searchFilterOcdeProjectType" />
+                <ref bean="searchFilterCtiProjectType" />
+                <ref bean="searchFilterGeolocation" />
+                <ref bean="searchFilterOcde" />
+                <ref bean="searchFilterProjectCiiu" />
                 <ref bean="searchFilterSubject"/>
+                <ref bean="searchFilterPeruCrisResearchLine"/>
+                <ref bean="searchFilterProjectMainOrgUnit" />
+                <ref bean="searchFilterFunder" />
+                <ref bean="searchFilterStatus" />
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-<!--                <ref bean="graphPublicationByType" />-->
-<!--                <ref bean="graphPublicationByDate" />-->
+
+                <ref bean="searchFilterNameOrAcronym"/>
+                <ref bean="searchFilterInternalCode"/>
+                <ref bean="searchFilterCTIActivity"/>
+                <ref bean="searchFilterProjectKeywords"/>
+                <ref bean="searchFilterProjectStartDate"/>
+                <ref bean="searchFilterGeolocation" />
+                <ref bean="searchFilterGeolocationName" />
+                <ref bean="searchFilterDescription" />
+                <ref bean="searchFilterProjectInvestigators"/>
+                <ref bean="searchFilterProjectEntities"/>
+                <ref bean="searchFilterFunder" />
+
+                <ref bean="graphGeoLocation" />
+                <ref bean="graphOcdeArea"/>
+                <ref bean="graphOcdeProject"/>
+                <ref bean="graphProjectFundingEntity"/>
+
+                <ref bean="searchFilterOcdeProjectType" />
+                <ref bean="searchFilterCtiProjectType" />
+                <ref bean="searchFilterGeolocation" />
+                <ref bean="searchFilterOcde" />
+                <ref bean="searchFilterProjectCiiu" />
                 <ref bean="searchFilterSubject"/>
-                <ref bean="searchFilterIdentifier"/>
-<!--                <ref bean="searchFilterIsOrgUnitOfProjectRelation"/>-->
-<!--                <ref bean="searchFilterIsPersonOfProjectRelation"/>-->
-<!--                <ref bean="searchFilterIsPublicationOfProjectRelation"/>-->
-<!--                <ref bean="searchFilterProjectInvestigator"/>-->
-<!--                <ref bean="searchFilterProjectOrganisation"/>-->
+                <ref bean="searchFilterPeruCrisResearchLine"/>
+                <ref bean="searchFilterProjectMainOrgUnit" />
+                <ref bean="searchFilterStatus" />
+                <ref bean="searchFilterHiddenWithdrawn" />
             </list>
         </property>
         <!--The sort filters for the discovery search-->
         <property name="searchSortConfiguration">
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <!--<property name="defaultSort" ref="sortDateIssued"/>-->
                 <property name="sortFields">
                     <list>
-                        <ref bean="sortScore" />
+                        <ref bean="sortProjectStartDate"/>
                         <ref bean="sortTitle"/>
+                        <ref bean="sortProjectMainImplementingEntity"/>
+                        <ref bean="sortProjectFunder"/>
+                        <ref bean="sortEntityType"/>
+                        <ref bean="sortProjectStatus"/>
+                        <ref bean="sortDateAccessioned"/>
+                        <ref bean="sortLastModified"/>
                     </list>
                 </property>
             </bean>
@@ -3707,35 +3861,57 @@
     <bean id="project_funding" class="org.dspace.discovery.configuration.DiscoveryConfiguration" scope="prototype">
         <property name="id" value="project_funding"/>
         <property name="indexAlways" value="true"/>
-        <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
-<!--                <ref bean="graphPublicationByDate" />-->
+                <ref bean="graphGeoLocation" />
                 <ref bean="graphOcdeArea"/>
-                <ref bean="searchFilterSubject"/>
-                <ref bean="searchFilterEntityType"/>
-                <ref bean="searchFilterType"/>
-                <ref bean="searchFilterInvestigators"/>
-                <ref bean="searchFilterProjectOrgUnits" />
-                <ref bean="searchFilterOcde" />
+                <ref bean="graphOcdeProject"/>
+                <ref bean="graphProjectFundingEntity"/>
+
+                <ref bean="searchFilterFundingType"/>
+                <ref bean="searchFilterOcdeProjectType" />
+                <ref bean="searchFilterCtiProjectType" />
                 <ref bean="searchFilterGeolocation" />
+                <ref bean="searchFilterOcde" />
+                <ref bean="searchFilterProjectCiiu" />
+                <ref bean="searchFilterSubject"/>
+                <ref bean="searchFilterPeruCrisResearchLine"/>
+                <ref bean="searchFilterProjectMainOrgUnit" />
+                <ref bean="searchFilterFunder" />
+                <ref bean="searchFilterStatus" />
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-<!--                <ref bean="graphPublicationByDate" />-->
-                <ref bean="graphOcdeArea"/>
-                <ref bean="searchFilterSubject"/>
-                <ref bean="searchFilterEntityType"/>
-                <ref bean="searchFilterType"/>
-                <ref bean="searchFilterInvestigators"/>
-                <ref bean="searchFilterProjectOrgUnits"/>
-                <ref bean="searchFilterIdentifier"/>
-                <ref bean="searchFilterOcde" />
+
+                <ref bean="searchFilterNameOrAcronym"/>
+                <ref bean="searchFilterInternalCode"/>
+                <ref bean="searchFilterCTIActivity"/>
+                <ref bean="searchFilterProjectKeywords"/>
+                <ref bean="searchFilterProjectStartDate"/>
                 <ref bean="searchFilterGeolocation" />
+                <ref bean="searchFilterGeolocationName" />
+                <ref bean="searchFilterDescription" />
+                <ref bean="searchFilterProjectInvestigators"/>
+                <ref bean="searchFilterProjectEntities"/>
+                <ref bean="searchFilterFunder" />
+                <ref bean="searchFilterFunderOrgUnit" />
+
+                <ref bean="graphGeoLocation" />
+                <ref bean="graphOcdeArea"/>
+                <ref bean="graphOcdeProject"/>
+                <ref bean="graphProjectFundingEntity"/>
+
+                <ref bean="searchFilterFundingType"/>
+                <ref bean="searchFilterOcdeProjectType" />
+                <ref bean="searchFilterCtiProjectType" />
+                <ref bean="searchFilterOcde" />
+                <ref bean="searchFilterProjectCiiu" />
+                <ref bean="searchFilterSubject"/>
+                <ref bean="searchFilterPeruCrisResearchLine"/>
+                <ref bean="searchFilterProjectMainOrgUnit" />
+                <ref bean="searchFilterStatus" />
                 <ref bean="searchFilterHiddenWithdrawn" />
             </list>
         </property>
@@ -3745,9 +3921,14 @@
                 <!--<property name="defaultSort" ref="sortDateIssued"/>-->
                 <property name="sortFields">
                     <list>
-                        <ref bean="sortScore" />
+                        <ref bean="sortProjectStartDate"/>
                         <ref bean="sortTitle"/>
+                        <ref bean="sortProjectMainImplementingEntity"/>
+                        <ref bean="sortProjectFunder"/>
+                        <ref bean="sortEntityType"/>
+                        <ref bean="sortProjectStatus"/>
                         <ref bean="sortDateAccessioned"/>
+                        <ref bean="sortLastModified"/>
                     </list>
                 </property>
             </bean>
@@ -3824,12 +4005,12 @@
 
     <bean id="orgUnitWithSameFacetFilters" class="org.dspace.discovery.configuration.DiscoveryConfiguration"
           scope="prototype">
-        <property name="id" value="orgUnit"/>
+        <property name="id" value="orgUnitWithSameFacet"/>
         <property name="indexAlways" value="true"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
 
                 <ref bean="searchFilterOrganizationAddressCountry"/>
@@ -3847,7 +4028,7 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
+                <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
 
                 <ref bean="searchFilterOrganizationLegalName"/>
@@ -3902,21 +4083,21 @@
         <property name="spellCheckEnabled" value="true"/>
     </bean>
 
-    <bean id="orgUnit" class="org.dspace.discovery.configuration.DiscoveryConfiguration"
+    <bean id="orgunit" class="org.dspace.discovery.configuration.DiscoveryConfiguration"
           scope="prototype">
-        <property name="id" value="orgUnit"/>
+        <property name="id" value="orgunit"/>
         <property name="indexAlways" value="true"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphUbigeo"/>
+                <ref bean="graphUbigeoRegion"/>
                 <ref bean="graphOcdeInstitutionalSector"/>
                 <ref bean="graphOcdeArea"/>
 
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
-                <ref bean="searchFilterUbigeo"/>
-                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
                 <ref bean="searchFilterOrganizationAddressCountry"/>
                 <ref bean="searchFilterInstitutionalOcde"/>
                 <ref bean="searchFilterOcde"/>
@@ -3929,7 +4110,7 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphUbigeo"/>
+                <ref bean="graphUbigeoRegion"/>
                 <ref bean="graphOcdeInstitutionalSector"/>
                 <ref bean="graphOcdeArea"/>
                 <ref bean="searchFilterOrganizationNameOrAcronym"/>
@@ -3939,8 +4120,8 @@
                 <ref bean="searchFilterParentOrgUnit"/>
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
-                <ref bean="searchFilterUbigeo"/>
-                <ref bean="searchFilterOrganizationAddressLocality"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
                 <ref bean="searchFilterOrganizationAddressCountry"/>
                 <ref bean="searchFilterInstitutionalOcde"/>
                 <ref bean="searchFilterOcde"/>
@@ -3957,11 +4138,14 @@
                 <property name="sortFields">
                     <list>
                         <ref bean="sortOrganizationLegalName"/>
-                        <ref bean="sortOrganizationAddressCountry"/>
-                        <ref bean="sortOrganizationAddressLocality"/>
-<!--                        <ref bean="sortOrganizationFoundingDate"/>-->
-                        <ref bean="sortDateAccessioned"/>
+                        <ref bean="sortOrganizationUbigeoRegion"/>
+<!--                        <ref bean="sortOrganizationAddressCountry"/>-->
+<!--                        <ref bean="sortOrganizationAddressLocality"/>-->
+                        <ref bean="sortTitle"/>
                         <ref bean="sortLastModified"/>
+                        <ref bean="sortDateAccessioned"/>
+                        <ref bean="sortOrgUnitType"/>
+                        <!--                        <ref bean="sortOrgUnitType"/>-->
                     </list>
                 </property>
             </bean>
@@ -3995,28 +4179,63 @@
         <property name="id" value="funding"/>
         <property name="indexAlways" value="true"/>
         <!--The sort filters for the discovery search-->
-        <property name="searchSortConfiguration">
-            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
-                <property name="sortFields">
-                    <list>
-                        <ref bean="sortTitle" />
-                    </list>
-                </property>
-            </bean>
-        </property>
-                <property name="sidebarFacets">
+        <property name="sidebarFacets">
             <list>
-                <ref bean="searchFilterFunderName"/>
-                <ref bean="searchFilterFundingProgram"/>
+                <ref bean="graphGeoLocation" />
+                <ref bean="graphOcdeArea"/>
+                <ref bean="graphOcdeProject"/>
+                <ref bean="graphProjectFundingEntity"/>
+
+                <ref bean="searchFilterFundingType"/>
+                <ref bean="searchFilterOcdeProjectType" />
+                <ref bean="searchFilterCtiProjectType" />
+                <ref bean="searchFilterGeolocation" />
+                <ref bean="searchFilterOcde" />
+                <ref bean="searchFilterProjectCiiu" />
+                <ref bean="searchFilterSubject"/>
+                <ref bean="searchFilterPeruCrisResearchLine"/>
+                <ref bean="searchFilterProjectMainOrgUnit" />
+                <ref bean="searchFilterFunder" />
+                <ref bean="searchFilterStatus" />
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="searchFilterTitle"/>
-                <ref bean="searchFilterFunderName"/>
-                <ref bean="searchFilterFundingProgram"/>
+
+                <ref bean="graphGeoLocation" />
+                <ref bean="graphOcdeArea"/>
+                <ref bean="graphOcdeProject"/>
+                <ref bean="graphProjectFundingEntity"/>
+
+                <ref bean="searchFilterFundingType"/>
+                <ref bean="searchFilterOcdeProjectType" />
+                <ref bean="searchFilterCtiProjectType" />
+                <ref bean="searchFilterOcde" />
+                <ref bean="searchFilterProjectCiiu" />
+                <ref bean="searchFilterSubject"/>
+                <ref bean="searchFilterPeruCrisResearchLine"/>
+                <ref bean="searchFilterProjectMainOrgUnit" />
+                <ref bean="searchFilterStatus" />
+                <ref bean="searchFilterHiddenWithdrawn" />
+                <ref bean="searchFilterGeolocation" />
+                <ref bean="searchFilterFunder" />
             </list>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <!--<property name="defaultSort" ref="sortDateIssued"/>-->
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortTitle"/>
+                        <ref bean="sortProjectMainImplementingEntity"/>
+                        <ref bean="sortProjectFunder"/>
+                        <ref bean="sortDateAccessioned"/>
+                        <ref bean="sortLastModified"/>
+                    </list>
+                </property>
+            </bean>
         </property>
         <!--Any default filter queries, these filter queries will be used for all
             queries done by discovery for this configuration -->
@@ -4035,33 +4254,41 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
-                <ref bean="searchFilterEquipmentOwner"/>
-                <ref bean="searchFilterEquipmentOrgUnit"/>
-                <ref bean="searchFilterType"/>
+                <ref bean="graphItemByType" />
+                <ref bean="graphOcdeArea" />
+                <ref bean="graphEquipmentUsage" />
+
+                <ref bean="searchFilterEquipmentType"/>
                 <ref bean="searchFilterOcde"/>
-                <ref bean="searchFilterPeruCrisEquipmentUsage"/>
-                <ref bean="searchFilterPeruCrisEquipmentResearchLine"/>
+                <ref bean="searchFilterUsage"/>
+                <ref bean="searchFilterEquipmentOrgUnit"/>
+                <ref bean="searchFilterPeruCrisResearchLine"/>
                 <ref bean="searchFilterFunding"/>
-                <ref bean="searchFilterPeruCrisEquipmentManufacturingCountry"/>
+
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
-
+                <ref bean="searchFilterNameOrAcronym"/>
+                <ref bean="searchFilterEquipmentTypeName"/>
+                <ref bean="searchFilterEquipmentType"/>
+                <ref bean="searchFilterDescription"/>
                 <ref bean="searchFilterEquipmentOwner"/>
-                <ref bean="searchFilterEquipmentOrgUnit"/>
-                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterManufacturingCountry"/>
+
+                <ref bean="graphItemByType" />
+                <ref bean="graphOcdeArea" />
+                <ref bean="graphEquipmentUsage" />
+
+
                 <ref bean="searchFilterOcde"/>
-                <ref bean="searchFilterPeruCrisEquipmentUsage"/>
-                <ref bean="searchFilterPeruCrisEquipmentResearchLine"/>
+                <ref bean="searchFilterUsage"/>
+                <ref bean="searchFilterEquipmentOrgUnit"/>
+                <ref bean="searchFilterPeruCrisResearchLine"/>
                 <ref bean="searchFilterFunding"/>
-                <ref bean="searchFilterPeruCrisEquipmentManufacturingCountry"/>
                 <ref bean="searchFilterHiddenWithdrawn"/>
+
             </list>
         </property>
         <!--The sort filters for the discovery search-->
@@ -4069,9 +4296,12 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <ref bean="sortScore"/>
                         <ref bean="sortTitle"/>
-                        <ref bean="sortDateAccessioned"/>
+                        <ref bean="sortType"/>
+                        <ref bean="sortDateAcquisition"/>
+                        <ref bean="sortEquipmentOwner"/>
+                        <ref bean="sortDateCreated"/>
+                        <ref bean="sortLastModified"/>
                     </list>
                 </property>
             </bean>
@@ -4463,34 +4693,44 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphOcdeInstitutionalSector"/>
+                <ref bean="graphOcdeArea"/>
 
-                <ref bean="searchFilterOrganizationAddressCountry"/>
-                <ref bean="searchFilterOrganizationAddressLocality"/>
-                <ref bean="searchFilterOrganizationPeruCrisSector"/>
-                <ref bean="searchFilterType"/>
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterInstitutionalOcde"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterClassification"/>
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
-                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
-
-                <ref bean="searchFilterOrganizationAddressCountry"/>
-                <ref bean="searchFilterOrganizationAddressLocality"/>
-                <ref bean="searchFilterOrganizationPeruCrisSector"/>
-                <ref bean="searchFilterType"/>
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphOcdeInstitutionalSector"/>
+                <ref bean="graphOcdeArea"/>
+                <ref bean="searchFilterOrganizationNameOrAcronym"/>
+                <ref bean="searchFilterOrganizationKeywords"/>
+                <ref bean="searchFilterDescription"/>
+                <ref bean="searchFilterOrganizationIdentifier"/>
+                <ref bean="searchFilterParentOrgUnit"/>
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterInstitutionalOcde"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterClassification"/>
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
-                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
                 <ref bean="searchFilterHiddenWithdrawn"/>
             </list>
@@ -4500,7 +4740,14 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <ref bean="sortScore"/>
+                        <ref bean="sortOrganizationLegalName"/>
+                        <ref bean="sortOrganizationUbigeoRegion"/>
+                        <!--                        <ref bean="sortOrganizationAddressCountry"/>-->
+                        <!--                        <ref bean="sortOrganizationAddressLocality"/>-->
+                        <ref bean="sortTitle"/>
+                        <ref bean="sortLastModified"/>
+                        <ref bean="sortDateAccessioned"/>
+                        <!--                        <ref bean="sortOrgUnitType"/>-->
                     </list>
                 </property>
             </bean>
@@ -4509,7 +4756,7 @@
             queries done by discovery for this configuration -->
         <property name="defaultFilterQueries">
             <list>
-                <value>search.resourcetype:Item AND entityType_keyword:OrgUnit AND perucris.type.educacionSuperior:Institución universitaria e institución con rango universitario</value>
+                <value>search.resourcetype:Item AND entityType_keyword:OrgUnit AND perucris.type.educacionSuperior:("Institución universitaria e institución con rango universitario" OR "*#06)")</value>
             </list>
         </property>
         <property name="defaultRpp" value="10"/>
@@ -4523,34 +4770,44 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphOcdeInstitutionalSector"/>
+                <ref bean="graphOcdeArea"/>
 
-                <ref bean="searchFilterOrganizationAddressCountry"/>
-                <ref bean="searchFilterOrganizationAddressLocality"/>
-                <ref bean="searchFilterOrganizationPeruCrisSector"/>
-                <ref bean="searchFilterType"/>
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterInstitutionalOcde"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterClassification"/>
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
-                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
-
-                <ref bean="searchFilterOrganizationAddressCountry"/>
-                <ref bean="searchFilterOrganizationAddressLocality"/>
-                <ref bean="searchFilterOrganizationPeruCrisSector"/>
-                <ref bean="searchFilterType"/>
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphOcdeInstitutionalSector"/>
+                <ref bean="graphOcdeArea"/>
+                <ref bean="searchFilterOrganizationNameOrAcronym"/>
+                <ref bean="searchFilterOrganizationKeywords"/>
+                <ref bean="searchFilterDescription"/>
+                <ref bean="searchFilterOrganizationIdentifier"/>
+                <ref bean="searchFilterParentOrgUnit"/>
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterInstitutionalOcde"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterClassification"/>
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
-                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
                 <ref bean="searchFilterHiddenWithdrawn"/>
             </list>
@@ -4560,7 +4817,14 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <ref bean="sortScore"/>
+                        <ref bean="sortOrganizationLegalName"/>
+                        <ref bean="sortOrganizationUbigeoRegion"/>
+                        <!--                        <ref bean="sortOrganizationAddressCountry"/>-->
+                        <!--                        <ref bean="sortOrganizationAddressLocality"/>-->
+                        <ref bean="sortTitle"/>
+                        <ref bean="sortLastModified"/>
+                        <ref bean="sortDateAccessioned"/>
+                        <!--                        <ref bean="sortOrgUnitType"/>-->
                     </list>
                 </property>
             </bean>
@@ -4583,33 +4847,44 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
-                <ref bean="searchFilterOrganizationAddressCountry"/>
-                <ref bean="searchFilterOrganizationAddressLocality"/>
-                <ref bean="searchFilterOrganizationPeruCrisSector"/>
-                <ref bean="searchFilterType"/>
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphOcdeInstitutionalSector"/>
+                <ref bean="graphOcdeArea"/>
+
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterInstitutionalOcde"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterClassification"/>
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
-                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
-
-                <ref bean="searchFilterOrganizationAddressCountry"/>
-                <ref bean="searchFilterOrganizationAddressLocality"/>
-                <ref bean="searchFilterOrganizationPeruCrisSector"/>
-                <ref bean="searchFilterType"/>
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphOcdeInstitutionalSector"/>
+                <ref bean="graphOcdeArea"/>
+                <ref bean="searchFilterOrganizationNameOrAcronym"/>
+                <ref bean="searchFilterOrganizationKeywords"/>
+                <ref bean="searchFilterDescription"/>
+                <ref bean="searchFilterOrganizationIdentifier"/>
+                <ref bean="searchFilterParentOrgUnit"/>
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterInstitutionalOcde"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterClassification"/>
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
-                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
                 <ref bean="searchFilterHiddenWithdrawn"/>
             </list>
@@ -4619,7 +4894,14 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <ref bean="sortScore"/>
+                        <ref bean="sortOrganizationLegalName"/>
+                        <ref bean="sortOrganizationUbigeoRegion"/>
+                        <!--                        <ref bean="sortOrganizationAddressCountry"/>-->
+                        <!--                        <ref bean="sortOrganizationAddressLocality"/>-->
+                        <ref bean="sortTitle"/>
+                        <ref bean="sortLastModified"/>
+                        <ref bean="sortDateAccessioned"/>
+                        <!--                        <ref bean="sortOrgUnitType"/>-->
                     </list>
                 </property>
             </bean>
@@ -4628,7 +4910,7 @@
             queries done by discovery for this configuration -->
         <property name="defaultFilterQueries">
             <list>
-                    <value>search.resourcetype:Item AND entityType_keyword:OrgUnit AND (perucris.type.orgunit:("Research or innovation unit" OR "Unidad de investigación o innovación"))</value>
+                    <value>search.resourcetype:Item AND entityType_keyword:OrgUnit AND (perucris.type.orgunit:("Research or innovation unit" OR "Unidad de investigación o innovación" OR "*unidadDeInvestigacionOInnovacion"))</value>
             </list>
         </property>
         <property name="defaultRpp" value="10"/>
@@ -4642,34 +4924,44 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphOcdeInstitutionalSector"/>
+                <ref bean="graphOcdeArea"/>
 
-                <ref bean="searchFilterOrganizationAddressCountry"/>
-                <ref bean="searchFilterOrganizationAddressLocality"/>
-                <ref bean="searchFilterOrganizationPeruCrisSector"/>
-                <ref bean="searchFilterType"/>
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterInstitutionalOcde"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterClassification"/>
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
-                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
-
-                <ref bean="searchFilterOrganizationAddressCountry"/>
-                <ref bean="searchFilterOrganizationAddressLocality"/>
-                <ref bean="searchFilterOrganizationPeruCrisSector"/>
-                <ref bean="searchFilterType"/>
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphOcdeInstitutionalSector"/>
+                <ref bean="graphOcdeArea"/>
+                <ref bean="searchFilterOrganizationNameOrAcronym"/>
+                <ref bean="searchFilterOrganizationKeywords"/>
+                <ref bean="searchFilterDescription"/>
+                <ref bean="searchFilterOrganizationIdentifier"/>
+                <ref bean="searchFilterParentOrgUnit"/>
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterInstitutionalOcde"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterClassification"/>
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
-                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
                 <ref bean="searchFilterHiddenWithdrawn"/>
             </list>
@@ -4679,7 +4971,14 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <ref bean="sortScore"/>
+                        <ref bean="sortOrganizationLegalName"/>
+                        <ref bean="sortOrganizationUbigeoRegion"/>
+                        <!--                        <ref bean="sortOrganizationAddressCountry"/>-->
+                        <!--                        <ref bean="sortOrganizationAddressLocality"/>-->
+                        <ref bean="sortTitle"/>
+                        <ref bean="sortLastModified"/>
+                        <ref bean="sortDateAccessioned"/>
+                        <!--                        <ref bean="sortOrgUnitType"/>-->
                     </list>
                 </property>
             </bean>
@@ -4688,7 +4987,7 @@
             queries done by discovery for this configuration -->
         <property name="defaultFilterQueries">
             <list>
-                <value>search.resourcetype:Item AND entityType_keyword:OrgUnit AND perucris.type.orgunit:("Research group" OR "Grupo de investigación")</value>
+                <value>search.resourcetype:Item AND entityType_keyword:OrgUnit AND perucris.type.orgunit:("Research group" OR "Grupo de investigación" OR "*unidadDeInvestigacionOInnovacion")</value>
             </list>
         </property>
         <property name="defaultRpp" value="10"/>
@@ -4702,34 +5001,44 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphOcdeInstitutionalSector"/>
+                <ref bean="graphOcdeArea"/>
 
-                <ref bean="searchFilterOrganizationAddressCountry"/>
-                <ref bean="searchFilterOrganizationAddressLocality"/>
-                <ref bean="searchFilterOrganizationPeruCrisSector"/>
-                <ref bean="searchFilterType"/>
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterInstitutionalOcde"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterClassification"/>
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
-                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
-
-                <ref bean="searchFilterOrganizationAddressCountry"/>
-                <ref bean="searchFilterOrganizationAddressLocality"/>
-                <ref bean="searchFilterOrganizationPeruCrisSector"/>
-                <ref bean="searchFilterType"/>
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphOcdeInstitutionalSector"/>
+                <ref bean="graphOcdeArea"/>
+                <ref bean="searchFilterOrganizationNameOrAcronym"/>
+                <ref bean="searchFilterOrganizationKeywords"/>
+                <ref bean="searchFilterDescription"/>
+                <ref bean="searchFilterOrganizationIdentifier"/>
+                <ref bean="searchFilterParentOrgUnit"/>
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterInstitutionalOcde"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterClassification"/>
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
-                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
                 <ref bean="searchFilterHiddenWithdrawn"/>
             </list>
@@ -4739,7 +5048,14 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <ref bean="sortScore"/>
+                        <ref bean="sortOrganizationLegalName"/>
+                        <ref bean="sortOrganizationUbigeoRegion"/>
+                        <!--                        <ref bean="sortOrganizationAddressCountry"/>-->
+                        <!--                        <ref bean="sortOrganizationAddressLocality"/>-->
+                        <ref bean="sortTitle"/>
+                        <ref bean="sortLastModified"/>
+                        <ref bean="sortDateAccessioned"/>
+                        <!--                        <ref bean="sortOrgUnitType"/>-->
                     </list>
                 </property>
             </bean>
@@ -4762,34 +5078,44 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphOcdeInstitutionalSector"/>
+                <ref bean="graphOcdeArea"/>
 
-                <ref bean="searchFilterOrganizationAddressCountry"/>
-                <ref bean="searchFilterOrganizationAddressLocality"/>
-                <ref bean="searchFilterOrganizationPeruCrisSector"/>
-                <ref bean="searchFilterType"/>
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterInstitutionalOcde"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterClassification"/>
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
-                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
-
-                <ref bean="searchFilterOrganizationAddressCountry"/>
-                <ref bean="searchFilterOrganizationAddressLocality"/>
-                <ref bean="searchFilterOrganizationPeruCrisSector"/>
-                <ref bean="searchFilterType"/>
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphOcdeInstitutionalSector"/>
+                <ref bean="graphOcdeArea"/>
+                <ref bean="searchFilterOrganizationNameOrAcronym"/>
+                <ref bean="searchFilterOrganizationKeywords"/>
+                <ref bean="searchFilterDescription"/>
+                <ref bean="searchFilterOrganizationIdentifier"/>
+                <ref bean="searchFilterParentOrgUnit"/>
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterInstitutionalOcde"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterClassification"/>
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
-                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
                 <ref bean="searchFilterHiddenWithdrawn"/>
             </list>
@@ -4799,7 +5125,14 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <ref bean="sortScore"/>
+                        <ref bean="sortOrganizationLegalName"/>
+                        <ref bean="sortOrganizationUbigeoRegion"/>
+                        <!--                        <ref bean="sortOrganizationAddressCountry"/>-->
+                        <!--                        <ref bean="sortOrganizationAddressLocality"/>-->
+                        <ref bean="sortTitle"/>
+                        <ref bean="sortLastModified"/>
+                        <ref bean="sortDateAccessioned"/>
+                        <!--                        <ref bean="sortOrgUnitType"/>-->
                     </list>
                 </property>
             </bean>
@@ -4822,34 +5155,44 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphOcdeInstitutionalSector"/>
+                <ref bean="graphOcdeArea"/>
 
-                <ref bean="searchFilterOrganizationAddressCountry"/>
-                <ref bean="searchFilterOrganizationAddressLocality"/>
-                <ref bean="searchFilterOrganizationPeruCrisSector"/>
-                <ref bean="searchFilterType"/>
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterInstitutionalOcde"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterClassification"/>
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
-                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
-
-                <ref bean="searchFilterOrganizationAddressCountry"/>
-                <ref bean="searchFilterOrganizationAddressLocality"/>
-                <ref bean="searchFilterOrganizationPeruCrisSector"/>
-                <ref bean="searchFilterType"/>
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphOcdeInstitutionalSector"/>
+                <ref bean="graphOcdeArea"/>
+                <ref bean="searchFilterOrganizationNameOrAcronym"/>
+                <ref bean="searchFilterOrganizationKeywords"/>
+                <ref bean="searchFilterDescription"/>
+                <ref bean="searchFilterOrganizationIdentifier"/>
+                <ref bean="searchFilterParentOrgUnit"/>
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterInstitutionalOcde"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterClassification"/>
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
-                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
                 <ref bean="searchFilterHiddenWithdrawn"/>
             </list>
@@ -4859,7 +5202,14 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <ref bean="sortScore"/>
+                        <ref bean="sortOrganizationLegalName"/>
+                        <ref bean="sortOrganizationUbigeoRegion"/>
+                        <!--                        <ref bean="sortOrganizationAddressCountry"/>-->
+                        <!--                        <ref bean="sortOrganizationAddressLocality"/>-->
+                        <ref bean="sortTitle"/>
+                        <ref bean="sortLastModified"/>
+                        <ref bean="sortDateAccessioned"/>
+                        <!--                        <ref bean="sortOrgUnitType"/>-->
                     </list>
                 </property>
             </bean>
@@ -4882,35 +5232,44 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphOcdeInstitutionalSector"/>
+                <ref bean="graphOcdeArea"/>
 
-                <ref bean="searchFilterOrganizationAddressCountry"/>
-                <ref bean="searchFilterOrganizationAddressLocality"/>
-                <ref bean="searchFilterOrganizationPeruCrisSector"/>
-                <ref bean="searchFilterType"/>
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterInstitutionalOcde"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterClassification"/>
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
-                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
-                <!--                <ref bean="searchFilterOrganizationFoundingDate"/>-->
             </list>
         </property>
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphPublicationByType" />
-                <ref bean="graphPublicationByDate" />
-
-                <ref bean="searchFilterOrganizationAddressCountry"/>
-                <ref bean="searchFilterOrganizationAddressLocality"/>
-                <ref bean="searchFilterOrganizationPeruCrisSector"/>
-                <ref bean="searchFilterType"/>
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphOcdeInstitutionalSector"/>
+                <ref bean="graphOcdeArea"/>
+                <ref bean="searchFilterOrganizationNameOrAcronym"/>
+                <ref bean="searchFilterOrganizationKeywords"/>
+                <ref bean="searchFilterDescription"/>
+                <ref bean="searchFilterOrganizationIdentifier"/>
+                <ref bean="searchFilterParentOrgUnit"/>
                 <ref bean="searchFilterOrganizationPeruCrisClassification"/>
+                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
+                <ref bean="searchFilterOrganizationAddressCountry"/>
+                <ref bean="searchFilterInstitutionalOcde"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterClassification"/>
                 <ref bean="searchFilterOrganizationSuneduClassification"/>
                 <ref bean="searchFilterOrganizationPeruCrisCiiu"/>
-                <ref bean="searchFilterOrganizationPeruCrisJuridicalNature"/>
                 <ref bean="searchFilterOrganizationPeruCrisKeywords"/>
                 <ref bean="searchFilterHiddenWithdrawn"/>
             </list>
@@ -4920,7 +5279,14 @@
             <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
                 <property name="sortFields">
                     <list>
-                        <ref bean="sortScore"/>
+                        <ref bean="sortOrganizationLegalName"/>
+                        <ref bean="sortOrganizationUbigeoRegion"/>
+                        <!--                        <ref bean="sortOrganizationAddressCountry"/>-->
+                        <!--                        <ref bean="sortOrganizationAddressLocality"/>-->
+                        <ref bean="sortTitle"/>
+                        <ref bean="sortLastModified"/>
+                        <ref bean="sortDateAccessioned"/>
+                        <!--                        <ref bean="sortOrgUnitType"/>-->
                     </list>
                 </property>
             </bean>
@@ -4933,6 +5299,527 @@
             </list>
         </property>
         <property name="defaultRpp" value="10"/>
+        <!-- When true a "did you mean" example will be displayed, value can be true or false -->
+        <property name="spellCheckEnabled" value="false"/>
+    </bean>
+
+    <bean id="resumeResearcherProfileRenacyt" class="org.dspace.discovery.configuration.DiscoveryConfiguration"
+          scope="prototype">
+        <property name="id" value="resumeResearcherProfileRenacyt"/>
+        <property name="indexAlways" value="true"/>
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list>
+                <ref bean="graphPersonGender"/>
+                <ref bean="graphOcdeArea"/>
+                <ref bean="graphCrisRpCountry"/>
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphCrisRpRole"/>
+
+                <ref bean="searchFilterPersonGender"/>
+                <ref bean="searchFilterPersonRenacytRole"/>
+                <ref bean="searchFilterRenacytClassification"/>
+                <ref bean="searchFilterCountry"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterMinam"/>
+                <ref bean="searchFilterIns"/>
+                <ref bean="searchFilterSubject"/>
+            </list>
+        </property>
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list>
+                <ref bean="graphPersonGender"/>
+                <ref bean="graphOcdeArea"/>
+                <ref bean="graphCrisRpCountry"/>
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphCrisRpRole"/>
+
+                <ref bean="searchFilterPersonGender"/>
+                <ref bean="searchFilterPersonRenacytRole"/>
+                <ref bean="searchFilterRenacytClassification"/>
+                <ref bean="searchFilterCountry"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterMinam"/>
+                <ref bean="searchFilterIns"/>
+                <ref bean="searchFilterSubject"/>
+            </list>
+        </property>
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortRpName" />
+                        <ref bean="sortRpAffiliationName" />
+                        <ref bean="sortRpQualification" />
+                        <ref bean="sortRpQualificationOrgunit" />
+                        <ref bean="sortLastModified" />
+                        <ref bean="sortDateCreated" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <value>search.resourcetype:Item AND entityType_keyword:Person AND perucris.identifier.renacyt:*</value>
+            </list>
+        </property>
+        <property name="defaultRpp" value="0"/>
+        <!-- When true a "did you mean" example will be displayed, value can be true or false -->
+        <property name="spellCheckEnabled" value="false"/>
+    </bean>
+    <bean id="resumeResearcherProfileDoctor" class="org.dspace.discovery.configuration.DiscoveryConfiguration"
+          scope="prototype">
+        <property name="id" value="resumeResearcherProfileDoctor"/>
+        <property name="indexAlways" value="true"/>
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list>
+                <ref bean="graphPersonGender"/>
+                <ref bean="graphOcdeArea"/>
+                <ref bean="graphCrisRpCountry"/>
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphCrisRpRole"/>
+
+                <ref bean="searchFilterPersonGender"/>
+                <ref bean="searchFilterPersonRenacytRole"/>
+                <ref bean="searchFilterRenacytClassification"/>
+                <ref bean="searchFilterCountry"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterMinam"/>
+                <ref bean="searchFilterIns"/>
+                <ref bean="searchFilterSubject"/>
+            </list>
+        </property>
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list>
+                <ref bean="graphPersonGender"/>
+                <ref bean="graphOcdeArea"/>
+                <ref bean="graphCrisRpCountry"/>
+                <ref bean="graphUbigeoRegion"/>
+                <ref bean="graphCrisRpRole"/>
+
+                <ref bean="searchFilterPersonGender"/>
+                <ref bean="searchFilterPersonRenacytRole"/>
+                <ref bean="searchFilterRenacytClassification"/>
+                <ref bean="searchFilterCountry"/>
+                <ref bean="searchFilterUbigeoRegion"/>
+                <ref bean="searchFilterUbigeoCity"/>
+                <ref bean="searchFilterOcde"/>
+                <ref bean="searchFilterMinam"/>
+                <ref bean="searchFilterIns"/>
+                <ref bean="searchFilterSubject"/>
+            </list>
+        </property>
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortRpName" />
+                        <ref bean="sortRpAffiliationName" />
+                        <ref bean="sortRpQualification" />
+                        <ref bean="sortRpQualificationOrgunit" />
+                        <ref bean="sortLastModified" />
+                        <ref bean="sortDateCreated" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <value>search.resourcetype:Item AND entityType_keyword:Person AND crisrp.education.role:*doctor</value>
+            </list>
+        </property>
+        <property name="defaultRpp" value="0"/>
+        <!-- When true a "did you mean" example will be displayed, value can be true or false -->
+        <property name="spellCheckEnabled" value="false"/>
+    </bean>
+    <bean id="resumeResearchOutputsArticles" class="org.dspace.discovery.configuration.DiscoveryConfiguration"
+          scope="prototype">
+        <property name="id" value="resumeResearchOutputsArticles"/>
+        <property name="indexAlways" value="true"/>
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list>
+                <ref bean="graphItemByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="graphOcdeArea"/>
+
+                <ref bean="searchFilterAccess"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterIssued"/>
+                <ref bean="searchFilterPublisher"/>
+                <ref bean="searchFilterSubject"/>
+                <ref bean="searchFilterLanguage"/>
+                <ref bean="searchFilterPublicationFunding"/>
+                <ref bean="searchFilterRightsHolder"/>
+            </list>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list>
+                <ref bean="graphItemByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="graphOcdeArea"/>
+                <ref bean="searchFilterAccess"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterIssued"/>
+                <ref bean="searchFilterPublisher"/>
+                <ref bean="searchFilterSubject"/>
+                <ref bean="searchFilterLanguage"/>
+                <ref bean="searchFilterPublicationFunding"/>
+                <ref bean="searchFilterRightsHolder"/>
+                <ref bean="searchFilterHiddenWithdrawn"/>
+            </list>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortDateIssued" />
+                        <ref bean="sortTitle" />
+                        <ref bean="sortDateAccessioned"/>
+                        <ref bean="sortLastModified"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <value>search.resourcetype:Item AND entityType_keyword:Publication AND dc.type_authority:*c_6501</value>
+            </list>
+        </property>
+        <property name="defaultRpp" value="0"/>
+        <!-- When true a "did you mean" example will be displayed, value can be true or false -->
+        <property name="spellCheckEnabled" value="false"/>
+    </bean>
+    <bean id="resumeResearchOutputsBooks" class="org.dspace.discovery.configuration.DiscoveryConfiguration"
+          scope="prototype">
+        <property name="id" value="resumeResearchOutputsBooks"/>
+        <property name="indexAlways" value="true"/>
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list>
+                <ref bean="graphItemByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="graphOcdeArea"/>
+
+                <ref bean="searchFilterAccess"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterIssued"/>
+                <ref bean="searchFilterPublisher"/>
+                <ref bean="searchFilterSubject"/>
+                <ref bean="searchFilterLanguage"/>
+                <ref bean="searchFilterPublicationFunding"/>
+                <ref bean="searchFilterRightsHolder"/>
+            </list>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list>
+                <ref bean="graphItemByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="graphOcdeArea"/>
+                <ref bean="searchFilterAccess"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterIssued"/>
+                <ref bean="searchFilterPublisher"/>
+                <ref bean="searchFilterSubject"/>
+                <ref bean="searchFilterLanguage"/>
+                <ref bean="searchFilterPublicationFunding"/>
+                <ref bean="searchFilterRightsHolder"/>
+                <ref bean="searchFilterHiddenWithdrawn"/>
+            </list>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortDateIssued" />
+                        <ref bean="sortTitle" />
+                        <ref bean="sortDateAccessioned"/>
+                        <ref bean="sortLastModified"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <value>search.resourcetype:Item AND entityType_keyword:Publication AND dc.type_authority:(*c_2f33 OR *c_3248)</value>
+            </list>
+        </property>
+        <property name="defaultRpp" value="0"/>
+        <!-- When true a "did you mean" example will be displayed, value can be true or false -->
+        <property name="spellCheckEnabled" value="false"/>
+    </bean>
+    <bean id="resumeResearchOutputsTesis" class="org.dspace.discovery.configuration.DiscoveryConfiguration"
+          scope="prototype">
+        <property name="id" value="resumeResearchOutputsTesis"/>
+        <property name="indexAlways" value="true"/>
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list>
+                <ref bean="graphItemByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="graphOcdeArea"/>
+
+                <ref bean="searchFilterAccess"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterIssued"/>
+                <ref bean="searchFilterPublisher"/>
+                <ref bean="searchFilterSubject"/>
+                <ref bean="searchFilterLanguage"/>
+                <ref bean="searchFilterPublicationFunding"/>
+                <ref bean="searchFilterRightsHolder"/>
+            </list>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list>
+                <ref bean="graphItemByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="graphOcdeArea"/>
+                <ref bean="searchFilterAccess"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterIssued"/>
+                <ref bean="searchFilterPublisher"/>
+                <ref bean="searchFilterSubject"/>
+                <ref bean="searchFilterLanguage"/>
+                <ref bean="searchFilterPublicationFunding"/>
+                <ref bean="searchFilterRightsHolder"/>
+                <ref bean="searchFilterHiddenWithdrawn"/>
+            </list>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortDateIssued" />
+                        <ref bean="sortTitle" />
+                        <ref bean="sortDateAccessioned"/>
+                        <ref bean="sortLastModified"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <value>search.resourcetype:Item AND entityType_keyword:Publication AND renati.level:(*doctor OR *maestro)</value>
+            </list>
+        </property>
+        <property name="defaultRpp" value="0"/>
+        <!-- When true a "did you mean" example will be displayed, value can be true or false -->
+        <property name="spellCheckEnabled" value="false"/>
+    </bean>
+    <bean id="resumeResearchOutputsConferencePapers" class="org.dspace.discovery.configuration.DiscoveryConfiguration"
+          scope="prototype">
+        <property name="id" value="resumeResearchOutputsConferencePapers"/>
+        <property name="indexAlways" value="true"/>
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list>
+                <ref bean="graphItemByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="graphOcdeArea"/>
+
+                <ref bean="searchFilterAccess"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterIssued"/>
+                <ref bean="searchFilterPublisher"/>
+                <ref bean="searchFilterSubject"/>
+                <ref bean="searchFilterLanguage"/>
+                <ref bean="searchFilterPublicationFunding"/>
+                <ref bean="searchFilterRightsHolder"/>
+            </list>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list>
+                <ref bean="graphItemByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="graphOcdeArea"/>
+                <ref bean="searchFilterAccess"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterIssued"/>
+                <ref bean="searchFilterPublisher"/>
+                <ref bean="searchFilterSubject"/>
+                <ref bean="searchFilterLanguage"/>
+                <ref bean="searchFilterPublicationFunding"/>
+                <ref bean="searchFilterRightsHolder"/>
+                <ref bean="searchFilterHiddenWithdrawn"/>
+            </list>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortDateIssued" />
+                        <ref bean="sortTitle" />
+                        <ref bean="sortDateAccessioned"/>
+                        <ref bean="sortLastModified"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <value>search.resourcetype:Item AND entityType_keyword:Publication AND dc.type_authority:*c_5794</value>
+            </list>
+        </property>
+        <property name="defaultRpp" value="0"/>
+        <!-- When true a "did you mean" example will be displayed, value can be true or false -->
+        <property name="spellCheckEnabled" value="false"/>
+    </bean>
+    <bean id="resumeResearchOutputsPatents" class="org.dspace.discovery.configuration.DiscoveryConfiguration"
+          scope="prototype">
+        <property name="id" value="resumeResearchOutputsPatents"/>
+        <property name="indexAlways" value="true"/>
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list>
+                <ref bean="graphItemByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="graphOcdeArea"/>
+
+                <ref bean="searchFilterAccess"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterIssued"/>
+                <ref bean="searchFilterPublisher"/>
+                <ref bean="searchFilterSubject"/>
+                <ref bean="searchFilterLanguage"/>
+                <ref bean="searchFilterPublicationFunding"/>
+                <ref bean="searchFilterRightsHolder"/>
+            </list>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list>
+                <ref bean="graphItemByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="graphOcdeArea"/>
+                <ref bean="searchFilterAccess"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterIssued"/>
+                <ref bean="searchFilterPublisher"/>
+                <ref bean="searchFilterSubject"/>
+                <ref bean="searchFilterLanguage"/>
+                <ref bean="searchFilterPublicationFunding"/>
+                <ref bean="searchFilterRightsHolder"/>
+                <ref bean="searchFilterHiddenWithdrawn"/>
+            </list>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortDateIssued" />
+                        <ref bean="sortTitle" />
+                        <ref bean="sortDateAccessioned"/>
+                        <ref bean="sortLastModified"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <value>search.resourcetype:Item AND entityType_keyword:Patent</value>
+            </list>
+        </property>
+        <property name="defaultRpp" value="0"/>
+        <!-- When true a "did you mean" example will be displayed, value can be true or false -->
+        <property name="spellCheckEnabled" value="false"/>
+    </bean>
+    <bean id="resumeResearchOutputsOpenAccess" class="org.dspace.discovery.configuration.DiscoveryConfiguration"
+          scope="prototype">
+        <property name="id" value="resumeResearchOutputsOpenAccess"/>
+        <property name="indexAlways" value="true"/>
+        <!--Which sidebar facets are to be displayed-->
+        <property name="sidebarFacets">
+            <list>
+                <ref bean="graphItemByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="graphOcdeArea"/>
+
+                <ref bean="searchFilterAccess"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterIssued"/>
+                <ref bean="searchFilterPublisher"/>
+                <ref bean="searchFilterSubject"/>
+                <ref bean="searchFilterLanguage"/>
+                <ref bean="searchFilterPublicationFunding"/>
+                <ref bean="searchFilterRightsHolder"/>
+            </list>
+        </property>
+        <!-- Set TagCloud configuration per discovery configuration -->
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list>
+                <ref bean="graphItemByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="graphOcdeArea"/>
+                <ref bean="searchFilterAccess"/>
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterIssued"/>
+                <ref bean="searchFilterPublisher"/>
+                <ref bean="searchFilterSubject"/>
+                <ref bean="searchFilterLanguage"/>
+                <ref bean="searchFilterPublicationFunding"/>
+                <ref bean="searchFilterRightsHolder"/>
+                <ref bean="searchFilterHiddenWithdrawn"/>
+            </list>
+        </property>
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortDateIssued" />
+                        <ref bean="sortTitle" />
+                        <ref bean="sortDateAccessioned"/>
+                        <ref bean="sortLastModified"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+            queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <value>search.resourcetype:Item AND entityType_keyword:Publication AND oairecerif.access:"http://purl.org/coar/access_right/c_abf2"</value>
+            </list>
+        </property>
+        <property name="defaultRpp" value="0"/>
         <!-- When true a "did you mean" example will be displayed, value can be true or false -->
         <property name="spellCheckEnabled" value="false"/>
     </bean>
@@ -5222,7 +6109,6 @@
         <property name="sortOrderFilterPage" value="COUNT"/>
         <property name="isOpenByDefault" value="true"/>
         <property name="pageSize" value="10"/>
-        <property name="exposeMinAndMaxValue" value="true"/>
     </bean>
 
     <bean id="searchFilterEntityType" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
@@ -5244,7 +6130,11 @@
         <property name="metadataFields">
             <list>
                 <value>dc.subject</value>
-                <value>dc.subject.*</value>
+                <value>dc.subject.ddc</value>
+                <value>dc.subject.loc</value>
+                <value>dc.subject.mesh</value>
+                <value>dc.subject.cip</value>
+<!--                <value>dc.subject.*</value>-->
             </list>
         </property>
         <property name="facetLimit" value="5"/>
@@ -5259,11 +6149,9 @@
         <property name="metadataFields">
             <list>
                 <value>crisequipment.ownerrp</value>
+                <value>crisequipment.ownerou</value>
             </list>
         </property>
-        <property name="facetLimit" value="5"/>
-        <property name="sortOrderSidebar" value="COUNT"/>
-        <property name="sortOrderFilterPage" value="COUNT"/>
 <!--        <property name="splitter" value="::"/>-->
 
     </bean>
@@ -5423,6 +6311,72 @@
         <property name="indexFieldName" value="itemtype" />
         <property name="splitter" value="::" />
         <property name="onlyLastNodeRelevant" value="true" />
+        <property name="metadataFields">
+            <list>
+                <value>dc.type</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="searchFilterResearchOutputType" class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="rotype" />
+        <property name="type" value="standard"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.type</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="searchFilterResearchOutputDate" class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="rodate" />
+        <property name="type" value="standard"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.date.issued</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="searchFilterResearchOutputSubject" class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="rosubject" />
+        <property name="type" value="standard"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.subject</value>
+                <value>dc.subject.ddc</value>
+                <value>dc.subject.loc</value>
+                <value>dc.subject.mesh</value>
+                <value>dc.subject.cip</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="searchFilterFundingType"
+          class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
+        <property name="indexFieldName" value="fundingType"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.type</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+    </bean>
+
+    <bean id="searchFilterEquipmentType"
+          class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
+        <property name="indexFieldName" value="equipmentType"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.type</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="searchFilterEquipmentTypeName"
+          class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="equipmentTypeName"/>
+        <property name="type" value="standard"/>
         <property name="metadataFields">
             <list>
                 <value>dc.type</value>
@@ -5903,8 +6857,9 @@
     </bean>
 
     <!-- PeruCRIS  custom filters -->
-    <bean id="searchFilterOcde" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+    <bean id="searchFilterOcde" class="org.dspace.discovery.configuration.HierarchicalSidebarFacetConfiguration">
         <property name="indexFieldName" value="ocde"/>
+        <property name="splitter" value="::" />
         <property name="metadataFields">
             <list>
                 <value>perucris.subject.ocde</value>
@@ -5912,9 +6867,6 @@
                 <value>dc.subject.ocde</value>
             </list>
         </property>
-        <property name="facetLimit" value="5"/>
-        <property name="sortOrderSidebar" value="COUNT"/>
-        <property name="sortOrderFilterPage" value="COUNT"/>
 
     </bean>
 
@@ -6028,12 +6980,24 @@
         <property name="indexFieldName" value="geolocation"/>
         <property name="metadataFields">
             <list>
-                <value>datacite.geolocationPlace</value>
+                <value>datacite.geoLocationPlace</value>
             </list>
         </property>
         <property name="facetLimit" value="5"/>
         <property name="sortOrderSidebar" value="COUNT"/>
         <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+
+    <!-- to distinguish from facet -->
+    <bean id="searchFilterGeolocationName" class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="geolocationName"/>
+        <property name="type" value="standard"/>
+        <property name="metadataFields">
+            <list>
+                <value>datacite.geoLocationPlace</value>
+            </list>
+        </property>
 
     </bean>
 
@@ -6086,35 +7050,24 @@
     </bean>
 
     <bean id="searchFilterOrganizationPeruCrisCiiu"
-          class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+          class="org.dspace.discovery.configuration.HierarchicalSidebarFacetConfiguration">
         <property name="indexFieldName" value="peruCrisCiuu"/>
+        <property name="splitter" value="::" />
         <property name="metadataFields">
             <list>
                 <value>perucris.type.ciiu</value>
             </list>
         </property>
-        <property name="facetLimit" value="5"/>
-        <property name="sortOrderSidebar" value="COUNT"/>
-        <property name="sortOrderFilterPage" value="COUNT"/>
-        <property name="isOpenByDefault" value="true"/>
-        <property name="pageSize" value="10"/>
-        <property name="exposeMinAndMaxValue" value="true"/>
     </bean>
 
     <bean id="searchFilterOrganizationPeruCrisJuridicalNature"
-          class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+          class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
         <property name="indexFieldName" value="peruCrisJuridicalNature"/>
         <property name="metadataFields">
             <list>
                 <value>perucris.type.naturaleza</value>
             </list>
         </property>
-        <property name="facetLimit" value="5"/>
-        <property name="sortOrderSidebar" value="COUNT"/>
-        <property name="sortOrderFilterPage" value="COUNT"/>
-        <property name="isOpenByDefault" value="true"/>
-        <property name="pageSize" value="10"/>
-        <property name="exposeMinAndMaxValue" value="true"/>
     </bean>
 
     <bean id="searchFilterOrganizationPeruCrisKeywords"
@@ -6149,9 +7102,9 @@
         <property name="exposeMinAndMaxValue" value="true"/>
     </bean>
 
-    <bean id="searchFilterPeruCrisEquipmentResearchLine"
+    <bean id="searchFilterPeruCrisResearchLine"
           class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
-        <property name="indexFieldName" value="equipmentResearchLine"/>
+        <property name="indexFieldName" value="researchLine"/>
         <property name="metadataFields">
             <list>
                 <value>perucris.researchLine</value>
@@ -6212,7 +7165,29 @@
         <property name="exposeTotalElements" value="true" />
     </bean>
 
-    <bean id="graphPublicationByType" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
+    <bean id="graphProjectByDate" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
+        <property name="facetLimit" value="10"/>
+        <property name="sortOrderSidebar" value="VALUE"/>
+        <property name="indexFieldName" value="graphprjdate" />
+        <!-- isDate cannot be true if the splitter is set -->
+        <property name="isDate" value="true" />
+        <!-- force solr to reverse its order, as it is by value this mean descending
+            (by COUNT is descending by default so the inverse flag would make it ascending) -->
+        <property name="inverseDirection" value="true" />
+        <!-- force to return 0 count buckets for years between the range -->
+        <property name="fillDateGaps" value="true" />
+        <property name="metadataFields">
+            <list>
+                <value>oairecerif.project.startDate</value>
+            </list>
+        </property>
+        <property name="graphType" value="bar" />
+        <property name="exposeMissing" value="true" />
+        <property name="exposeMore" value="true" />
+        <property name="exposeTotalElements" value="true" />
+    </bean>
+
+    <bean id="graphItemByType" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
     	<property name="facetLimit" value="10"/>
         <property name="indexFieldName" value="graphitemtype" />
         <!-- the splitter needs to be a not empty string -->
@@ -6227,11 +7202,11 @@
         </property>
         <property name="graphType" value="pie" />
         <property name="exposeMissing" value="true" />
-        <property name="exposeMore" value="true" />
+        <property name="exposeMore" value="false" />
         <property name="exposeTotalElements" value="true" />
     </bean>
 
-    <!-- PeruCRIS Graphs -->
+    <!-- PeruCRIS custom Filters, Facets and Graphs -->
     <bean id="graphUbigeo" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
         <property name="facetLimit" value="10"/>
         <property name="indexFieldName" value="graphitemubigeo" />
@@ -6247,7 +7222,7 @@
         </property>
         <property name="graphType" value="bar" />
         <property name="exposeMissing" value="true" />
-        <property name="exposeMore" value="true" />
+        <property name="exposeMore" value="false" />
         <property name="exposeTotalElements" value="true" />
     </bean>
 
@@ -6266,7 +7241,7 @@
         </property>
         <property name="graphType" value="pie" />
         <property name="exposeMissing" value="true" />
-        <property name="exposeMore" value="true" />
+        <property name="exposeMore" value="false" />
         <property name="exposeTotalElements" value="true" />
     </bean>
 
@@ -6289,6 +7264,588 @@
         <property name="exposeMissing" value="true" />
         <property name="exposeMore" value="false" />
         <property name="exposeTotalElements" value="true" />
+    </bean>
+
+    <bean id="searchFilterPersonGender" class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
+        <property name="indexFieldName" value="personGender"/>
+        <property name="metadataFields">
+            <list>
+                <value>oairecerif.person.gender</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+
+    <bean id="searchFilterPersonRenacytRole" class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
+        <property name="indexFieldName" value="personEducationRole"/>
+        <property name="metadataFields">
+            <list>
+                <value>crisrp.education.role</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+
+    <bean id="searchFilterCountry" class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
+        <property name="indexFieldName" value="personCountry"/>
+        <property name="metadataFields">
+            <list>
+                <value>crisrp.country</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+
+    <bean id="searchFilterUbigeoRegion" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="ubigeoRegion"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.domicilio.ubigeoReniecRegion</value>
+                <value>perucris.ubigeoRegion</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+
+    <bean id="searchFilterUbigeoCity" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="ubigeoCity"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.domicilio.ubigeoReniecCity</value>
+                <value>perucris.ubigeoCity</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+
+    <bean id="searchFilterMinam" class="org.dspace.discovery.configuration.HierarchicalSidebarFacetConfiguration">
+        <property name="indexFieldName" value="minam"/>
+        <property name="splitter" value="::" />
+        <property name="metadataFields">
+            <list>
+                <value>perucris.subject.minam</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="searchFilterIns" class="org.dspace.discovery.configuration.HierarchicalSidebarFacetConfiguration">
+        <property name="indexFieldName" value="ins"/>
+        <property name="splitter" value="::" />
+        <property name="metadataFields">
+            <list>
+                <value>perucris.subject.ins</value>
+            </list>
+        </property>
+<!--        <property name="facetLimit" value="5"/>-->
+<!--        <property name="sortOrderSidebar" value="COUNT"/>-->
+<!--        <property name="sortOrderFilterPage" value="COUNT"/>-->
+
+    </bean>
+
+    <bean id="searchFilterRenacytClassification" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="personRenacytClassification"/>
+        <property name="metadataFields">
+            <list>
+                <value>crisrp.qualification.orgunit</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+
+    <bean id="graphPersonGender" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
+        <property name="facetLimit" value="10"/>
+        <property name="indexFieldName" value="graphPersonGender" />
+        <property name="isDate" value="false" />
+        <property name="metadataFields">
+            <list>
+                <value>oairecerif.person.gender</value>
+            </list>
+        </property>
+        <property name="graphType" value="pie" />
+        <property name="exposeMissing" value="true" />
+        <property name="exposeMore" value="false" />
+        <property name="exposeTotalElements" value="true" />
+    </bean>
+
+    <bean id="graphUbigeoRegion" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
+        <property name="facetLimit" value="10"/>
+        <property name="indexFieldName" value="graphitemubigeoregion" />
+        <!-- the splitter needs to be a not empty string -->
+<!--        <property name="splitter" value="::" />-->
+<!--        <property name="onlyLastNodeRelevant" value="true" />-->
+        <!-- isDate cannot be true if the splitter is set -->
+        <property name="isDate" value="false" />
+        <property name="metadataFields">
+            <list>
+                <value>perucris.domicilio.ubigeoReniecRegion</value>
+                <value>perucris.ubigeoRegion</value>
+            </list>
+        </property>
+        <property name="graphType" value="pie" />
+        <property name="exposeMissing" value="true" />
+        <property name="exposeMore" value="false" />
+        <property name="exposeTotalElements" value="true" />
+    </bean>
+
+    <bean id="graphCrisRpCountry" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
+        <property name="facetLimit" value="10"/>
+        <property name="indexFieldName" value="graphitemcrisrpcountry" />
+        <!-- the splitter needs to be a not empty string -->
+        <!-- isDate cannot be true if the splitter is set -->
+        <property name="isDate" value="false" />
+        <property name="metadataFields">
+            <list>
+                <value>crisrp.country</value>
+            </list>
+        </property>
+        <property name="graphType" value="pie" />
+        <property name="exposeMissing" value="true" />
+        <property name="exposeMore" value="false" />
+        <property name="exposeTotalElements" value="true" />
+    </bean>
+
+    <bean id="graphCrisRpRole" class="org.dspace.discovery.configuration.MultiLanguageGraphDiscoverSearchFilterFacet">
+        <property name="facetLimit" value="10"/>
+        <property name="indexFieldName" value="graphitemcrisrprole" />
+        <!-- the splitter needs to be a not empty string -->
+        <!-- isDate cannot be true if the splitter is set -->
+        <property name="isDate" value="false" />
+        <property name="metadataFields">
+            <list>
+                <value>crisrp.education.role</value>
+            </list>
+        </property>
+        <property name="graphType" value="pie" />
+        <property name="exposeMissing" value="true" />
+        <property name="exposeMore" value="false" />
+        <property name="exposeTotalElements" value="true" />
+    </bean>
+
+    <bean id="searchFilterRpName" class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="rpname"/>
+        <property name="type" value="standard"/>
+        <property name="metadataFields">
+            <list>
+                <value>crisrp.name</value>
+                <value>crisrp.name.translated</value>
+                <value>crisrp.name.variant</value>
+                <value>person.givenName</value>
+                <value>person.familyName</value>
+                <value>perucris.apellidoPaterno</value>
+                <value>perucris.apellidoMaterno</value>
+                <value>perucris.apellidoCasada</value>
+            </list>
+        </property>
+        <property name="isOpenByDefault" value="true"/>
+        <property name="pageSize" value="10"/>
+    </bean>
+
+    <bean id="searchFilterRpAffiliations" class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="rpaffiliations"/>
+        <property name="type" value="standard"/>
+        <property name="metadataFields">
+            <list>
+                <value>oairecerif.person.affiliation</value>
+                <value>person.affiliation.name</value>
+            </list>
+        </property>
+        <property name="isOpenByDefault" value="true"/>
+        <property name="pageSize" value="10"/>
+    </bean>
+
+    <bean id="searchFilterRpKeywords" class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="rpkeywords"/>
+        <property name="type" value="standard"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.subject</value>
+                <value>perucris.subject.minam</value>
+                <value>perucris.subject.ins</value>
+            </list>
+        </property>
+        <property name="isOpenByDefault" value="true"/>
+        <property name="pageSize" value="10"/>
+    </bean>
+
+    <bean id="graphGeoLocation" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
+        <property name="facetLimit" value="10"/>
+        <property name="indexFieldName" value="graphGeoLocation" />
+        <property name="isDate" value="false" />
+        <property name="metadataFields">
+            <list>
+                <value>datacite.geoLocationPlace</value>
+            </list>
+        </property>
+        <property name="graphType" value="pie" />
+        <property name="exposeMissing" value="true" />
+        <property name="exposeMore" value="false" />
+        <property name="exposeTotalElements" value="true" />
+    </bean>
+    <bean id="graphOcdeProject" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
+        <property name="facetLimit" value="10"/>
+        <property name="indexFieldName" value="graphOcdeProject" />
+        <property name="isDate" value="false" />
+        <property name="metadataFields">
+            <list>
+                <value>perucris.project.typeOcde</value>
+            </list>
+        </property>
+        <property name="graphType" value="pie" />
+        <property name="exposeMissing" value="true" />
+        <property name="exposeMore" value="false" />
+        <property name="exposeTotalElements" value="true" />
+    </bean>
+    <bean id="graphProjectFundingEntity" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
+        <property name="facetLimit" value="10"/>
+        <property name="indexFieldName" value="graphProjectFundingEntity" />
+        <property name="isDate" value="false" />
+        <property name="metadataFields">
+            <list>
+                <value>oairecerif.funder</value>
+            </list>
+        </property>
+        <property name="graphType" value="pie" />
+        <property name="exposeMissing" value="true" />
+        <property name="exposeMore" value="false" />
+        <property name="exposeTotalElements" value="true" />
+    </bean>
+    <bean id="searchFilterOcdeProjectType" class="org.dspace.discovery.configuration.HierarchicalSidebarFacetConfiguration">
+        <property name="indexFieldName" value="ocdeprojecttype"/>
+        <property name="splitter" value="::" />
+
+        <property name="metadataFields">
+            <list>
+                <value>perucris.project.typeOcde</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="searchFilterCtiProjectType" class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
+        <property name="indexFieldName" value="ctiprojecttype"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.project.typeOther</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+    </bean>
+    <bean id="searchFilterProjectCiiu" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="ciiuProject"/>
+        <property name="type" value="standard"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.type.ciiu</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+    </bean>
+    <bean id="searchFilterProjectMainOrgUnit" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="mainOrgUnit"/>
+        <property name="metadataFields">
+            <list>
+                <value>crispj.contractorou</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+    </bean>
+    <bean id="searchFilterFunder" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="funder"/>
+        <property name="metadataFields">
+            <list>
+                <value>oairecerif.funder</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+    </bean>
+
+    <bean id="searchFilterFunderOrgUnit" class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="funderOrgUnit"/>
+        <property name="type" value="standard"/>
+        <property name="metadataFields">
+            <list>
+                <value>oairecerif.funder</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="searchFilterStatus" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="status"/>
+        <property name="metadataFields">
+            <list>
+                <value>oairecerif.project.status</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+    </bean>
+    <bean id="searchFilterNameOrAcronym" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="nameOrAcronym"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.title</value>
+                <value>dc.title.alternative</value>
+                <value>oairecerif.acronym</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+    <bean id="searchFilterInternalCode" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="internalCode"/>
+        <property name="metadataFields">
+            <list>
+                <value>oairecerif.internalid</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+    <bean id="searchFilterCTIActivity" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="ctiActivity"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.project.typeOcde</value>
+                <value>perucris.project.typeOther</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+    <bean id="searchFilterProjectKeywords" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="projectKeywords"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.subject</value>
+                <value>dc.subject.ocder</value>
+                <value>perucris.subject.ocder</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+
+    <bean id="searchFilterProjectStartDate" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="projectStartDate"/>
+        <property name="metadataFields">
+            <list>
+                <value>oairecerif.project.startDate</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+
+    </bean>
+
+    <bean id="searchFilterProjectInvestigators" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="projectInvestigators"/>
+        <property name="metadataFields">
+            <list>
+                <value>crispj.investigator</value>
+                <value>crispj.coinvestigators</value>
+                <value>crispj.contact</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+        <!--        <property name="splitter" value="::"/>-->
+
+    </bean>
+    <bean id="searchFilterProjectEntities" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="projectEntities"/>
+        <property name="metadataFields">
+            <list>
+                <value>crispj.contractorou</value>
+                <value>crispj.contractorper</value>
+                <value>crispj.partnerou</value>
+                <value>crispj.partnerper</value>
+                <value>crispj.inKindContributorou</value>
+                <value>crispj.inKindContributorper</value>
+                <value>crispj.organization</value>
+                <value>crispj.organizationper</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+    </bean>
+
+    <bean id="graphEquipmentUsage" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
+        <property name="facetLimit" value="10"/>
+        <property name="indexFieldName" value="graphEquipmentUsage" />
+        <property name="isDate" value="false" />
+        <property name="metadataFields">
+            <list>
+                <value>perucris.type.usage</value>
+            </list>
+        </property>
+        <property name="graphType" value="pie" />
+        <property name="exposeMissing" value="true" />
+        <property name="exposeMore" value="false" />
+        <property name="exposeTotalElements" value="true" />
+    </bean>
+
+    <bean id="searchFilterUsage" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="usage"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.type.usage</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+    </bean>
+
+    <bean id="searchFilterManufacturingCountry" class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
+        <property name="indexFieldName" value="manufacturingCountry"/>
+        <property name="metadataFields">
+            <list>
+                <value>perucris.manufacturingCountry</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="searchFilterAccess" class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
+        <property name="indexFieldName" value="access"/>
+        <property name="metadataFields">
+            <list>
+                <value>oairecerif.access</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+    </bean>
+
+    <bean id="searchFilterPublisher" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="publisher"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.publisher</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+    </bean>
+
+    <bean id="searchFilterPublicationFunding" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="publicationFunding"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.relation.funding</value>
+                <value>dc.relation.project</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+    </bean>
+
+    <bean id="searchFilterRightsHolder" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+        <property name="indexFieldName" value="rightsHolder"/>
+        <property name="metadataFields">
+            <list>
+                <value>dcterms.rightsHolder</value>
+            </list>
+        </property>
+        <property name="facetLimit" value="5"/>
+        <property name="sortOrderSidebar" value="COUNT"/>
+        <property name="sortOrderFilterPage" value="COUNT"/>
+    </bean>
+
+    <bean id="searchFilterPublicationTitle" class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="publicationTitle"/>
+        <property name="type" value="standard"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.title</value>
+                <value>dc.title.alternative</value>
+                <value>dc.relation.ispartof</value>
+                <value>dc.relation.ispartofseries</value>
+            </list>
+        </property>
+        <property name="isOpenByDefault" value="true"/>
+        <property name="pageSize" value="10"/>
+    </bean>
+
+    <bean id="searchFilterPublicationKeywords" class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="publicationKeywords"/>
+        <property name="type" value="standard"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.description.abstract</value>
+                <value>dc.subject</value>
+            </list>
+        </property>
+        <property name="isOpenByDefault" value="true"/>
+        <property name="pageSize" value="10"/>
+    </bean>
+
+    <bean id="searchFilterPublicationAuthors" class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="publicationAuthors"/>
+        <property name="type" value="standard"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.contributor.author</value>
+                <value>dc.contributor.advisor</value>
+            </list>
+        </property>
+        <property name="isOpenByDefault" value="true"/>
+        <property name="pageSize" value="10"/>
+    </bean>
+
+    <bean id="searchFilterPublicationIdentifiers" class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+        <property name="indexFieldName" value="publicationIdentifiers"/>
+        <property name="type" value="standard"/>
+        <property name="metadataFields">
+            <list>
+                <value>dc.identifier.doi</value>
+                <value>dc.identifier.scopus</value>
+                <value>dc.identifier.pmid</value>
+                <value>dc.identifier.isi</value>
+                <value>dc.identifier.isbn</value>
+                <value>dc.identifier.url</value>
+                <value>dc.identifier.ark</value>
+            </list>
+        </property>
+        <property name="isOpenByDefault" value="true"/>
+        <property name="pageSize" value="10"/>
     </bean>
 
     <!--Sort properties-->
@@ -6509,6 +8066,63 @@
                 <value>{0}</value>
             </list>
         </property>
+    </bean>
+
+    <bean id="sortRpName" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="dc.title"/>
+        <property name="defaultSortOrder" value="asc"/>
+    </bean>
+    <bean id="sortRpAffiliationName" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="person.affiliation.name"/>
+        <property name="defaultSortOrder" value="asc"/>
+    </bean>
+    <bean id="sortRpQualification" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="crisrp.qualification"/>
+        <property name="defaultSortOrder" value="asc"/>
+    </bean>
+    <bean id="sortRpQualificationOrgunit" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="crisrp.qualification.orgunit"/>
+        <property name="defaultSortOrder" value="asc"/>
+    </bean>
+    <bean id="sortDateCreated" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="dc.date.created"/>
+        <property name="defaultSortOrder" value="asc"/>
+    </bean>
+    <bean id="sortProjectStartDate" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="oairecerif.project.startDate"/>
+        <property name="defaultSortOrder" value="desc"/>
+    </bean>
+    <bean id="sortProjectMainImplementingEntity" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="crispj.contractorou"/>
+        <property name="defaultSortOrder" value="asc"/>
+    </bean>
+    <bean id="sortProjectFunder" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="oairecerif.funder"/>
+        <property name="defaultSortOrder" value="asc"/>
+    </bean>
+    <bean id="sortProjectStatus" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="oairecerif.project.status"/>
+        <property name="defaultSortOrder" value="asc"/>
+    </bean>
+    <bean id="sortType" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="dc.type"/>
+        <property name="defaultSortOrder" value="asc"/>
+    </bean>
+    <bean id="sortDateAcquisition" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="perucris.date.acquisition"/>
+        <property name="defaultSortOrder" value="asc"/>
+    </bean>
+    <bean id="sortEquipmentOwner" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="crisequipment.ownerou"/>
+        <property name="defaultSortOrder" value="asc"/>
+    </bean>
+    <bean id="sortOrgUnitType" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="perucris.type.orgunit"/>
+        <property name="defaultSortOrder" value="asc"/>
+    </bean>
+    <bean id="sortOrganizationUbigeoRegion" class="org.dspace.discovery.configuration.DiscoverySortFieldConfiguration">
+        <property name="metadataField" value="perucris.ubigeoRegion"/>
+        <property name="defaultSortOrder" value="asc"/>
     </bean>
 
 </beans>

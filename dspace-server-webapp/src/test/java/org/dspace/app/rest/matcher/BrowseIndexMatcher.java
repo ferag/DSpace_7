@@ -267,7 +267,8 @@ public class BrowseIndexMatcher {
             hasJsonPath("$.sortOptions[*].name", containsInAnyOrder("title", "dateissued", "dateaccessioned",
                                                             "datemodified", "datecreated", "datestart", "dateend")),
             hasJsonPath("$._links.self.href", is(REST_SERVER_URL + "discover/browses/" + browseName)),
-            hasJsonPath("$._links.items.href", is(REST_SERVER_URL + "discover/browses/" + browseName +"/items"))
+            hasJsonPath("$._links.items.href", is(REST_SERVER_URL + "discover/browses/" + browseName +
+                "/items"))
                     );
     }
 

@@ -7,14 +7,11 @@
  */
 package org.dspace.app.elasticsearch.externalservice;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -54,7 +51,7 @@ public class ElasticsearchProvider {
      * 
      * @param context        DSpace context object
      * @param record         ElasticsearchIndexQueue object
-     * @param json           Json representation of item related to the record
+     * @param jsons           Json representations of item related to the record
      * @throws IOException   if IO error
      * @throws SQLException  If there's a database problem
      */

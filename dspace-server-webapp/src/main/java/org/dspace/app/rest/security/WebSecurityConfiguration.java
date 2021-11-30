@@ -28,7 +28,8 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
- * Spring Security configuration for DSpace Server Webapp
+ * Spring Security configuration for DSpace Server Webapp. The global method
+ * security is enabled by the {@link MethodSecurityConfig} class.
  *
  * @author Frederic Van Reet (frederic dot vanreet at atmire dot com)
  * @author Tom Desair (tom dot desair at atmire dot com)
@@ -64,7 +65,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private ConfigurationService configurationService;
 
     @Autowired
-    public OidcLogoutSuccessHandler oidcLogoutSuccessHandler;
+    public CasLogoutSuccessHandler oidcLogoutSuccessHandler;
 
 
     @Override
@@ -84,8 +85,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // Configure authentication requirements for ${dspace.server.url}/api/ URL only
-        // NOTE: REST API is hardcoded to respond on /api/. Other modules (OAI, SWORD, etc) use other root paths.
-        http.antMatcher("/api/**")
+        // NOTE: REST API is hardcoded to respond on /api/. Other modules (OAI, SWORD, IIIF, etc) use other root paths.
+        http.requestMatchers()
+            .antMatchers("/api/**", "/iiif/**")
+            .and()
             // Enable Spring Security authorization on these paths
             .authorizeRequests()
                 // Allow POST by anyone on the login endpoint
@@ -141,9 +144,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .addFilterBefore(new ShibbolethAuthenticationFilter("/api/authn/shibboleth", authenticationManager(),
                                                       restAuthenticationService),
                              LogoutFilter.class)
-            //Add a filter before our oidc endpoints to do the authentication based on the data in the
+            //Add a filter before our CAS endpoints to do the authentication based on the data in the
             // HTTP request
-            .addFilterBefore(new OidcAuthenticationFilter("/api/authn/oidc", authenticationManager(),
+            .addFilterBefore(new CasAuthenticationFilter("/api/authn/cas", authenticationManager(),
                                                       restAuthenticationService),
                              LogoutFilter.class)
             //Add a filter before our ORCID endpoints to do the authentication based on the data in the

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.dspace.authenticate.model.OIDCProfileElementsResponse;
+import org.dspace.authenticate.model.CasProfileElementsResponse;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
@@ -32,12 +32,12 @@ public class ORCIDRegistrationProvider extends AbstractExternalRegistrationProvi
     private OrcidV3AuthorDataProvider orcidV3AuthorDataProvider;
 
     @Override
-    public boolean support(OIDCProfileElementsResponse userData) {
+    public boolean support(CasProfileElementsResponse userData) {
         return StringUtils.isNotBlank(userData.getOrcid());
     }
 
     @Override
-    public EPerson createEPerson(Context context, OIDCProfileElementsResponse userData)
+    public EPerson createEPerson(Context context, CasProfileElementsResponse userData)
             throws SQLException, AuthorizeException {
         EPerson eperson = getePersonService().create(context);
         List<String> vals = new ArrayList<String>();

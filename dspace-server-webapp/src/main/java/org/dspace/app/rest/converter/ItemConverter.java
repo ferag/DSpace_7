@@ -187,7 +187,8 @@ public class ItemConverter
     // private method to catch checked exception that might occur during a lambda call
     private List<DCInputSet> dcInputsSet(final String sd) {
         try {
-            return dcInputsReader.getInputsBySubmissionName(sd);
+            return this.dcInputsReader.getInputsBySubmissionName(sd);
+
         } catch (DCInputsReaderException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

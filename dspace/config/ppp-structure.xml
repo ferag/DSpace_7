@@ -172,7 +172,7 @@
 			<provenance />
 		</collection>
 		<collection>
-			<name>Instrumentos Financieros de Proyectos</name>
+			<name>Proyectos de Instrumentos Financieros</name>
 			<entity-type>ProjectFinancialInstrument</entity-type>
 			<submission-type>project-financial-instrument</submission-type>
 			<description />

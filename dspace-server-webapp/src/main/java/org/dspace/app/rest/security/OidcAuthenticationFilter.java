@@ -7,8 +7,6 @@
  */
 package org.dspace.app.rest.security;
 
-import static org.dspace.authenticate.OidcAuthenticationBean.OIDC_AUTH_ATTRIBUTE;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.servlet.FilterChain;
@@ -22,7 +20,7 @@ import org.springframework.security.core.AuthenticationException;
 
 
 /**
- * This class will filter openID Connect requests and try and authenticate them.
+ * This class will filter CAS Connect requests and try and authenticate them.
  *
  * @author Pasquale Cavallo (pasquale.cavallo at 4science dot it)
  */
@@ -37,7 +35,6 @@ public class OidcAuthenticationFilter extends StatelessLoginFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res)
         throws AuthenticationException {
-        req.setAttribute(OIDC_AUTH_ATTRIBUTE, OIDC_AUTH_ATTRIBUTE);
         return authenticationManager.authenticate(new DSpaceAuthentication(null, null, new ArrayList<>()));
     }
 

@@ -5,8 +5,6 @@
 			"legalName": "Test OrgUnit LegalName",
 			"acronym": "TOU",
 			"type": "https:\/\/w3id.org\/cerif\/vocab\/OrganisationTypes#StrategicResearchInsitute",
-			"scientificBoards": [
-            ],
 			"parentOrganization": {
 				"name": "Parent OrgUnit"
 			},
@@ -35,16 +33,12 @@
             "keywords": [
             ],
             "postAddress": {
-            },
-			"People": [
-			]
+            }
 		},
 		{
 			"name": "Another Test OrgUnit",
 			"acronym": "ATOU",
 			"type": "https:\/\/w3id.org\/cerif\/vocab\/OrganisationTypes#Privatenonprofit",
-            "scientificBoards": [
-            ],
 			"parentOrganization": {
 				"name": "Parent OrgUnit"
 			},
@@ -70,9 +64,7 @@
             "keywords": [
             ],
             "postAddress": {
-            },
-			"People": [
-			]
+            }
 		}
 	]
 }

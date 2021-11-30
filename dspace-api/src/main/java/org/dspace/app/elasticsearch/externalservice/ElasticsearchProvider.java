@@ -7,14 +7,11 @@
  */
 package org.dspace.app.elasticsearch.externalservice;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -54,7 +51,7 @@ public class ElasticsearchProvider {
      * 
      * @param context        DSpace context object
      * @param record         ElasticsearchIndexQueue object
-     * @param json           Json representation of item related to the record
+     * @param jsons           Json representations of item related to the record
      * @throws IOException   if IO error
      * @throws SQLException  If there's a database problem
      */
@@ -127,19 +124,17 @@ public class ElasticsearchProvider {
     }
 
     private List<String> getDocIdByField(String index, String id) throws IOException {
-        HttpResponse response = elasticsearchConnector.searchByFieldAndValue(index, "resourceId", id);
-        int status = response.getStatusLine().getStatusCode();
-        InputStream is = response.getEntity().getContent();
-        if (status != HttpStatus.SC_OK || Objects.isNull(is)) {
+        ElasticSearchResponse response = elasticsearchConnector.searchByFieldAndValue(index, "resourceId", id);
+        int status = response.getStatusCode();
+        if (status != HttpStatus.SC_OK || response.getBody().isEmpty()) {
             throw new ElasticsearchException("It was not possible to retrieve document by field 'resourceId'"
                     + " and value: " + id + "  Elasticsearch returned status code : " + status);
         }
-        return getDocumentIdFromResponse(is);
+        return getDocumentIdFromResponse(response.getBody().get());
     }
 
-    private List<String> getDocumentIdFromResponse(InputStream is) throws IOException {
+    private List<String> getDocumentIdFromResponse(JSONObject json) throws IOException {
         List<String> ids = new LinkedList<String>();
-        JSONObject json = new JSONObject(IOUtils.toString(is, StandardCharsets.UTF_8));
         if (json.has("hits")) {
             json = new JSONObject(json.get("hits").toString());
             if (json.has("hits")) {

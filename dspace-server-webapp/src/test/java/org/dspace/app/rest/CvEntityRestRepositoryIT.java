@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -368,6 +369,126 @@ public class CvEntityRestRepositoryIT extends AbstractControllerIntegrationTest 
             .contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isNotFound());
 
+    }
+
+    @Test
+    public void deleteCvEntityAdminTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        Collection col = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withName("Test Collection").build();
+
+        Item cvPerson = ItemBuilder.createItem(context, col)
+                                   .withTitle("CvPerson title")
+                                   .withIssueDate("2021-03-21")
+                                   .withEntityType("CvPerson")
+                                   .build();
+
+        Item cvPatent = ItemBuilder.createItem(context, col)
+                .withTitle("CvPatent title")
+                .withIssueDate("2021-01-21")
+                .withEntityType("CvPatent")
+                .build();
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        getClient(authToken).perform(delete("/api/cris/cventities/" + cvPerson.getID())
+                            .contentType(MediaType.APPLICATION_JSON_VALUE))
+                            .andExpect(status().isNoContent());
+
+        getClient(authToken).perform(delete("/api/cris/cventities/" + cvPatent.getID())
+                            .contentType(MediaType.APPLICATION_JSON_VALUE))
+                            .andExpect(status().isNoContent());
+
+    }
+
+    @Test
+    public void deleteCvEntityForbiddenTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        Collection col = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withName("Test Collection").build();
+
+        Item cvPerson = ItemBuilder.createItem(context, col)
+                                   .withTitle("CvPerson title")
+                                   .withIssueDate("2021-03-21")
+                                   .withEntityType("CvPerson")
+                                   .build();
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(eperson.getEmail(), password);
+        getClient(authToken).perform(delete("/api/cris/cventities/" + cvPerson.getID())
+                            .contentType(MediaType.APPLICATION_JSON_VALUE))
+                            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void deleteCvEntityUnauthorizedTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        Collection col = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withName("Test Collection").build();
+
+        Item cvPerson = ItemBuilder.createItem(context, col)
+                                   .withTitle("CvPerson title")
+                                   .withIssueDate("2021-03-21")
+                                   .withEntityType("CvPerson")
+                                   .build();
+
+        context.restoreAuthSystemState();
+
+        getClient().perform(delete("/api/cris/cventities/" + cvPerson.getID())
+                   .contentType(MediaType.APPLICATION_JSON_VALUE))
+                   .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void deleteCvEntityNotFoundTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        Collection col = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withName("Test Collection").build();
+
+        ItemBuilder.createItem(context, col)
+                   .withTitle("CvPerson title")
+                   .withIssueDate("2021-03-21")
+                   .withEntityType("CvPerson")
+                   .build();
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        getClient(authToken).perform(delete("/api/cris/cventities/" + UUID.randomUUID())
+                            .contentType(MediaType.APPLICATION_JSON_VALUE))
+                            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void deleteNotCvEntityTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        Collection col = CollectionBuilder.createCollection(context, parentCommunity)
+                                          .withName("Test Collection").build();
+
+        Item publication = ItemBuilder.createItem(context, col)
+                                      .withTitle("Publication title")
+                                      .withIssueDate("2020-05-21")
+                                      .withEntityType("Publication")
+                                      .build();
+
+        Item cvPersonClone = ItemBuilder.createItem(context, col)
+                                        .withTitle("CvPersonClone title")
+                                        .withIssueDate("2021-01-13")
+                                        .withEntityType("CvPersonClone")
+                                        .build();
+
+        context.restoreAuthSystemState();
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        getClient(authToken).perform(delete("/api/cris/cventities/" + publication.getID())
+                            .contentType(MediaType.APPLICATION_JSON_VALUE))
+                            .andExpect(status().isBadRequest());
+
+        getClient(authToken).perform(delete("/api/cris/cventities/" + cvPersonClone.getID())
+                            .contentType(MediaType.APPLICATION_JSON_VALUE))
+                            .andExpect(status().isBadRequest());
     }
 
     private Collection createCollection(String entityType) throws SQLException, AuthorizeException {

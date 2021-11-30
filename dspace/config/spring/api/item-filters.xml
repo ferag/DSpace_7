@@ -173,6 +173,7 @@
             </map>
         </property>
     </bean>
+
     
     <!-- has dni identifier set -->
     <bean id="has-dni-set_condition"
@@ -257,7 +258,7 @@
     </bean>
 
     <!-- has oairecerif.oamandate set-->
-    <bean id="has-oa-mandate-condition-not-set"
+    <bean id="has-oa-mandate-condition-set"
           class="org.dspace.content.logic.condition.RequiredMetadataCondition">
         <property name="parameters">
             <map>
@@ -540,6 +541,36 @@
         </property>
     </bean>
 
+    <!-- has oairecerif.oamandate set -->
+    <bean id="has-oairecerif-oamandate-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="oairecerif.oamandate" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has oairecerif.oamandate set to 'yes' -->
+    <bean id="has-oairecerif-oamandate-set-to-yes_condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="oairecerif.oamandate" />
+                <entry key="pattern" value="true" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has oairecerif.oamandate.url set -->
+    <bean id="has-oairecerif-oamandate-url-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="oairecerif.oamandate.url" />
+            </map>
+        </property>
+    </bean>
 
 
 
@@ -825,6 +856,29 @@
                         </bean>
                         <ref bean="has-orcid-set_condition" />
                         <ref bean="has-dni-set_condition" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="funding-has-oa-condition-url_filter" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="relationship-type-equals-funding_condition"/>
+                            </property>
+                        </bean>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="has-oa-mandate-condition-set"/>
+                            </property>
+                        </bean>
+                        <ref bean="has-not-oa-mandate-condition"/>
+                        <ref bean="has-oa-policy-url-condition" />
                     </list>
                 </property>
             </bean>
@@ -1119,14 +1173,14 @@
             <bean class="org.dspace.content.logic.operator.Or">
                 <property name="statements">
                     <list>
-                        <bean class="org.dspace.content.logic.operator.And">
+                        <bean class="org.dspace.content.logic.operator.Not">
                             <property name="statements">
                                 <ref bean="relationship-type-equals-project_condition"/>
                             </property>
                         </bean>
                         <bean class="org.dspace.content.logic.operator.Not">
                             <property name="statements">
-                                <ref bean="has-oa-mandate-condition-not-set"/>
+                                <ref bean="has-oa-mandate-condition-set"/>
                             </property>
                         </bean>
                         <bean class="org.dspace.content.logic.operator.And">
@@ -1219,17 +1273,17 @@
     </bean>
     
     <!-- dspace.entity.type is exactly Funding -->
-    <bean id="relationship-type-equals-program-goal" class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+    <bean id="relationship-type-equals-funding_condition" class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
         <property name="parameters">
             <map>
                 <entry key="field" value="dspace.entity.type" />
-                <entry key="pattern" value="^Funding" />
+                <entry key="pattern" value="^Funding|InstitutionFunding$" />
             </map>
         </property>
     </bean>
 
     <!-- type is exactly ProgramGoal -->
-    <bean id="relationship-type-equals-funding_condition" class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+    <bean id="relationship-type-equals-program-goal" class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
         <property name="parameters">
             <map>
                 <entry key="field" value="dspace.entity.type" />

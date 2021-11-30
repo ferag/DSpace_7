@@ -64,6 +64,6 @@ public interface ElasticsearchConnector {
      * @return                HttpResponse
      * @throws IOException    if IO error
      */
-    public HttpResponse searchByFieldAndValue(String index, String field, String value) throws IOException;
+    public ElasticSearchResponse searchByFieldAndValue(String index, String field, String value) throws IOException;
 
 }

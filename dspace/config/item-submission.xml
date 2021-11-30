@@ -398,13 +398,38 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
+    <step-definition id="politic-evaluation" mandatory="true">
+      <heading>submit.progressbar.describe.politic-evaluation</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
     <step-definition id="plan" mandatory="true">
       <heading>submit.progressbar.describe.plan</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
+    <step-definition id="plan-evaluation" mandatory="true">
+      <heading>submit.progressbar.describe.plan-evaluation</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
     <step-definition id="program" mandatory="true">
       <heading>submit.progressbar.describe.program</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="program-final-report" mandatory="true">
+      <heading>submit.progressbar.describe.program-final-report</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="program-final-evaluation" mandatory="true">
+      <heading>submit.progressbar.describe.program-final-evaluation</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="program-note" mandatory="true">
+      <heading>submit.progressbar.describe.program-note</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
@@ -415,6 +440,26 @@
     </step-definition>
     <step-definition id="indicator" mandatory="true">
       <heading>submit.progressbar.describe.indicator</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="indicator-items" mandatory="true">
+      <heading>submit.progressbar.describe.indicator-items</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="indicator-activities" mandatory="true">
+      <heading>submit.progressbar.describe.indicator-activities</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="indicator-responsibles" mandatory="true">
+      <heading>submit.progressbar.describe.indicator-responsibles</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="indicator-note" mandatory="true">
+      <heading>submit.progressbar.describe.indicator-note</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
@@ -435,6 +480,11 @@
     </step-definition>
     <step-definition id="financial-scheme" mandatory="true">
       <heading>submit.progressbar.describe.financial-scheme</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="financial-scheme-evaluation" mandatory="true">
+      <heading>submit.progressbar.describe.financial-scheme-evaluation</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
@@ -468,8 +518,18 @@
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
+    <step-definition id="project-financial-instrument-evaluation" mandatory="true">
+      <heading>submit.progressbar.describe.project-financial-instrument-evaluation</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
     <step-definition id="component" mandatory="true">
       <heading>submit.progressbar.describe.component</heading>
+      <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
+      <type>submission-form</type>
+    </step-definition>
+    <step-definition id="component-note" mandatory="true">
+      <heading>submit.progressbar.describe.component-note</heading>
       <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
       <type>submission-form</type>
     </step-definition>
@@ -801,26 +861,36 @@
     </submission-process>
     <submission-process name="politic">
       <step id="politic" />
+      <step id="politic-evaluation" />
       <step id="upload" />
     </submission-process>
     <submission-process name="plan">
       <step id="plan" />
+      <step id="plan-evaluation" />
       <step id="upload" />
     </submission-process>
     <submission-process name="program">
       <step id="program" />
+      <step id="program-final-report" />
+      <step id="program-final-evaluation" />
+      <step id="program-note" />
       <step id="upload" />
     </submission-process>
     <submission-process name="politic-edit">
       <step id="politic" />
+      <step id="politic-evaluation" />
       <step id="upload" />
     </submission-process>
     <submission-process name="plan-edit">
       <step id="plan" />
+      <step id="plan-evaluation" />
       <step id="upload" />
     </submission-process>
     <submission-process name="program-edit">
       <step id="program" />
+      <step id="program-final-report" />
+      <step id="program-final-evaluation" />
+      <step id="program-note" />
       <step id="upload" />
     </submission-process>
     <submission-process name="politic-goal">
@@ -833,10 +903,18 @@
     </submission-process>
     <submission-process name="indicator">
       <step id="indicator" />
+      <step id="indicator-items" />
+      <step id="indicator-activities" />
+      <step id="indicator-responsibles" />
+      <step id="indicator-note" />
       <step id="upload" />
     </submission-process>
     <submission-process name="indicator-edit">
       <step id="indicator" />
+      <step id="indicator-items" />
+      <step id="indicator-activities" />
+      <step id="indicator-responsibles" />
+      <step id="indicator-note" />
       <step id="upload" />
     </submission-process>
     <submission-process name="program-goal">
@@ -865,10 +943,12 @@
     </submission-process>
     <submission-process name="financial-scheme">
       <step id="financial-scheme" />
+      <step id="financial-scheme-evaluation" />
       <step id="upload" />
     </submission-process>
     <submission-process name="financial-scheme-edit">
       <step id="financial-scheme" />
+      <step id="financial-scheme-evaluation" />
       <step id="upload" />
     </submission-process>
     <submission-process name="service">
@@ -913,18 +993,22 @@
     </submission-process>
     <submission-process name="project-financial-instrument">
       <step id="project-financial-instrument" />
+      <step id="project-financial-instrument-evaluation" />
       <step id="upload" />
     </submission-process>
     <submission-process name="project-financial-instrument-edit">
       <step id="project-financial-instrument" />
+      <step id="project-financial-instrument-evaluation" />
       <step id="upload" />
     </submission-process>
     <submission-process name="component">
       <step id="component" />
+      <step id="component-note" />
       <step id="upload" />
     </submission-process>
     <submission-process name="component-edit">
       <step id="component" />
+      <step id="component-note" />
       <step id="upload" />
     </submission-process>
   </submission-definitions>

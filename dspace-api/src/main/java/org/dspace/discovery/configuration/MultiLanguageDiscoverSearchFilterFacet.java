@@ -13,6 +13,7 @@ package org.dspace.discovery.configuration;
  * @author Luca Giamminonni (luca.giamminonni at 4science.it)
  *
  */
-public class MultiLanguageDiscoverSearchFilterFacet extends DiscoverySearchFilterFacet {
+public class MultiLanguageDiscoverSearchFilterFacet extends DiscoverySearchFilterFacet
+    implements MultiLanguageDiscoverySearchFilter {
 
 }

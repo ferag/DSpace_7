@@ -42,7 +42,7 @@ import org.dspace.discovery.configuration.DiscoverySearchFilterFacet;
 import org.dspace.discovery.configuration.DiscoverySortConfiguration;
 import org.dspace.discovery.configuration.DiscoverySortFieldConfiguration;
 import org.dspace.discovery.configuration.DiscoverySortFunctionConfiguration;
-import org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet;
+import org.dspace.discovery.configuration.MultiLanguageDiscoverySearchFilter;
 import org.dspace.discovery.indexobject.factory.IndexFactory;
 import org.dspace.services.ConfigurationService;
 import org.springframework.beans.factory.InitializingBean;
@@ -257,7 +257,7 @@ public class DiscoverQueryBuilder implements InitializingBean {
             int facetLimit = pageSize + 1;
             //This should take care of the sorting for us
             String indexFieldName = facet.getIndexFieldName();
-            if (facet instanceof MultiLanguageDiscoverSearchFilterFacet) {
+            if (facet instanceof MultiLanguageDiscoverySearchFilter) {
                 indexFieldName = context.getCurrentLocale().getLanguage() + "_" + indexFieldName;
             }
             queryArgs.addFacetField(new DiscoverFacetField(indexFieldName, facet.getType(), facetLimit,
@@ -417,7 +417,7 @@ public class DiscoverQueryBuilder implements InitializingBean {
                 }
 
                 String field = filter.getIndexFieldName();
-                if (filter instanceof MultiLanguageDiscoverSearchFilterFacet) {
+                if (filter instanceof MultiLanguageDiscoverySearchFilter) {
                     field = context.getCurrentLocale().getLanguage() + "_" + field;
                 }
 

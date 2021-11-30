@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node id="ResourceTypeGenres" label="Controlled Vocabulary for Resource Type Genres">
+    <isComposedBy>
+        <node id="c_15cd" label="patent">
+            <isComposedBy>
+                <node id="SB3Y-W4EH" label="Solicitud PCT">
+                </node>
+                <node id="C53B-JCY5" label="patente de diseño">
+                </node>
+                <node id="Z907-YMBB" label="patente de plantas">
+                </node>
+                <node id="GPQ7-G5VE" label="obtención de variedades vegetales">
+                </node>
+                <node id="MW8G-3CR8" label="patente de software">
+                </node>
+                <node id="9DKX-KSAF" label="modelo de utilidad">
+                </node>
+            </isComposedBy>
+        </node>
+    </isComposedBy>
+</node>

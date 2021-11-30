@@ -293,9 +293,12 @@ public class EntityTypeRestRepositoryIT extends AbstractEntityIntegrationTest {
             .param("size", "3"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$._embedded.entitytypes", containsInAnyOrder(
-                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "none")),
-                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Publication")),
-                EntityTypeMatcher.matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Person"))            )))
+                EntityTypeMatcher
+                    .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "none")),
+                EntityTypeMatcher
+                    .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Publication")),
+                EntityTypeMatcher
+                    .matchEntityTypeEntry(entityTypeService.findByEntityType(context, "Person")))))
             .andExpect(jsonPath("$._links.first.href", Matchers.allOf(
                 Matchers.containsString("/api/core/entitytypes?"),
                 Matchers.containsString("page=0"), Matchers.containsString("size=3"))))

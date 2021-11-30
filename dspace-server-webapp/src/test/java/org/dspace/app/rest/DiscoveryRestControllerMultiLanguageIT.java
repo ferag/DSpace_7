@@ -341,13 +341,23 @@ public class DiscoveryRestControllerMultiLanguageIT extends AbstractControllerIn
 
         getClient().perform(get("/api/discover/facets/types")
                    .header("Accept-Language", Locale.ITALIAN.getLanguage())
-                   .param("prefix", "MATEM"))
+                   .param("prefix", "matem"))
                    .andExpect(jsonPath("$.type", is("discover")))
                    .andExpect(jsonPath("$.name", is("types")))
                    .andExpect(jsonPath("$.facetType", is("text")))
                    .andExpect(jsonPath("$._links.self.href", containsString("api/discover/facets/types")))
                    .andExpect(jsonPath("$._embedded.values", containsInAnyOrder(
-                              FacetValueMatcher.entryLanguage("MATEMATICA"))));
+                              FacetValueMatcher.entryTypes("MATEMATICA","srsc:SCB14"))));
+
+        getClient().perform(get("/api/discover/facets/types")
+                   .header("Accept-Language", "uk")
+                   .param("prefix", "мат"))
+                   .andExpect(jsonPath("$.type", is("discover")))
+                   .andExpect(jsonPath("$.name", is("types")))
+                   .andExpect(jsonPath("$.facetType", is("text")))
+                   .andExpect(jsonPath("$._links.self.href", containsString("api/discover/facets/types")))
+                   .andExpect(jsonPath("$._embedded.values", containsInAnyOrder(
+                              FacetValueMatcher.entryTypes("МАТЕМАТИКА","srsc:SCB14"))));
 
         configurationService.setProperty("authority.controlled.dc.type", "false");
         metadataAuthorityService.clearCache();

@@ -587,6 +587,7 @@
                 <ref bean="searchFilterContentInOriginalBundle"/>
                 <ref bean="searchFilterEntityType"/>
                 <ref bean="searchFilterLanguage" />
+                <ref bean="searchFilterTypes" />
             </list>
         </property>
         <!-- Set TagCloud configuration per discovery configuration -->
@@ -608,6 +609,7 @@
                 <ref bean="searchFilterEntityType"/>
                 <ref bean="searchFilterHiddenWithdrawn"/>
                 <ref bean="searchFilterLanguage" />
+                <ref bean="searchFilterTypes" />
             </list>
         </property>
         <!--The sort filters for the discovery search (same as defaultConfiguration above)-->
@@ -6391,6 +6393,15 @@
             <list>
                 <value>dc.language.iso</value>
                 <value>person.knowsLanguage</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="searchFilterTypes" class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
+        <property name="indexFieldName" value="types" />
+        <property name="metadataFields">
+            <list>
+                <value>dc.type</value>
             </list>
         </property>
     </bean>

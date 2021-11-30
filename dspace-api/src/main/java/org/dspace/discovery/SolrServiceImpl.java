@@ -14,6 +14,8 @@ import static org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet.
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -1241,7 +1243,10 @@ public class SolrServiceImpl implements SearchService, IndexingService {
             if ("equals".equals(operator) || "notequals".equals(operator)) {
                 //DO NOT ESCAPE RANGE QUERIES !
                 if (!value.matches("\\[.*TO.*\\]")) {
-                    value = ClientUtils.escapeQueryChars(value);
+//                    value = ClientUtils.escapeQueryChars(value);
+                    value = URLDecoder.decode(
+                        ClientUtils.escapeQueryChars(value),
+                        Charset.defaultCharset());
                     filterQuery.append(value);
                 } else {
                     if (value.matches("\\[\\d{1,4} TO \\d{1,4}\\]")) {

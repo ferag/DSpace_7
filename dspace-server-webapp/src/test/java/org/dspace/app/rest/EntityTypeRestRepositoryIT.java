@@ -129,8 +129,8 @@ public class EntityTypeRestRepositoryIT extends AbstractEntityIntegrationTest {
             CvPatentCloneType = EntityTypeBuilder.createEntityTypeBuilder(context, "CvPatentClone").build();
         }
 
-        context.restoreAuthSystemState();
         entityTypeService.initDefaultEntityTypeNames(context);
+        context.restoreAuthSystemState();
     }
 
     @Test

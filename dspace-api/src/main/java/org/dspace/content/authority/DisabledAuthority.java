@@ -32,8 +32,6 @@ public class DisabledAuthority implements ChoiceAuthority {
     @Override
     public Choices getBestMatch(String text, String locale) {
         return new Choices(Choices.CF_UNSET);
-//        throw new UnsupportedOperationException(
-//            "DisabledAuthority should not be used to lookup over authority settings");
     }
 
     @Override

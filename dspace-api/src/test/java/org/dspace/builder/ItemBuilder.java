@@ -1113,6 +1113,26 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, "perucris", "renacyt", "classification", classification);
     }
 
+    public ItemBuilder withContractorou(final String contractorou, final String authority) {
+        return addMetadataValue(item, "crispj", "contractorou", null, null, contractorou, authority, 600);
+    }
+
+    public ItemBuilder withPartnerou(final String partnerou, final String authority) {
+        return addMetadataValue(item, "crispj", "partnerou", null, null, partnerou, authority, 600);
+    }
+
+    public ItemBuilder withInKindContributorou(final String inKindContributorou, final String authority) {
+        return addMetadataValue(item, "crispj", "inKindContributorou", null, null, inKindContributorou, authority, 600);
+    }
+
+    public ItemBuilder withOrganization(final String organization, final String authority) {
+        return addMetadataValue(item, "crispj", "organization", null, null, organization, authority, 600);
+    }
+
+    public ItemBuilder withOwnerou(final String ownerou, final String authority) {
+        return addMetadataValue(item, "crisequipment", "ownerou", null, null, ownerou, authority, 600);
+    }
+
     /**
      * Withdrawn the item under build. Please note that an user need to be loggedin the context to avoid NPE during the
      * creation of the provenance metadata

@@ -10933,8 +10933,9 @@
           <label>Expected Value</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
+          <validation>^[0-9]{8}$</validation>
           <required />
-          <hint />
+          <hint>Expected Value: 8 digits</hint>
         </field>
       </row>
       <row>
@@ -10945,8 +10946,9 @@
           <label>Obtained Value</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
+          <validation>^[0-9]{8}$</validation>
           <required />
-          <hint />
+          <hint>Obtained Value: 8 digits</hint>
         </field>
       </row>
     </form>

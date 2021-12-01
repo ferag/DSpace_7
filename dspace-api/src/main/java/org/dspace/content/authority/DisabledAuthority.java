@@ -26,20 +26,19 @@ public class DisabledAuthority implements ChoiceAuthority {
 
     @Override
     public Choices getMatches(String text, int start, int limit, String locale) {
-        throw new UnsupportedOperationException(
-            "DisabledAuthority should not be used to lookup over authority settings");
+        return new Choices(Choices.CF_UNSET);
     }
 
     @Override
     public Choices getBestMatch(String text, String locale) {
-        throw new UnsupportedOperationException(
-            "DisabledAuthority should not be used to lookup over authority settings");
+        return new Choices(Choices.CF_UNSET);
+//        throw new UnsupportedOperationException(
+//            "DisabledAuthority should not be used to lookup over authority settings");
     }
 
     @Override
     public String getLabel(String key, String locale) {
-        throw new UnsupportedOperationException(
-            "DisabledAuthority should not be used to lookup over authority settings");
+        return "";
     }
 
     @Override

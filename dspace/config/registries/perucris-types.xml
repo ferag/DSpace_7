@@ -2812,4 +2812,112 @@
         <scope_note />
     </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>contractorou</element>
+		<qualifier>titleAlternative</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>contractorou</element>
+		<qualifier>legalName</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>contractorou</element>
+		<qualifier>acronym</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>partnerou</element>
+		<qualifier>titleAlternative</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>partnerou</element>
+		<qualifier>legalName</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>partnerou</element>
+		<qualifier>acronym</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>inKindContributorou</element>
+		<qualifier>titleAlternative</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>inKindContributorou</element>
+		<qualifier>legalName</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>inKindContributorou</element>
+		<qualifier>acronym</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>organization</element>
+		<qualifier>titleAlternative</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>organization</element>
+		<qualifier>legalName</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>organization</element>
+		<qualifier>acronym</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>funder</element>
+		<qualifier>titleAlternative</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>funder</element>
+		<qualifier>legalName</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>perucris</schema>
+        <element>funder</element>
+		<qualifier>acronym</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>crisequipment</schema>
+        <element>ownerou</element>
+		<qualifier>titleAlternative</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>crisequipment</schema>
+        <element>ownerou</element>
+		<qualifier>legalName</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>crisequipment</schema>
+        <element>ownerou</element>
+		<qualifier>acronym</qualifier>
+    </dc-type>
+
 </dspace-dc-types>

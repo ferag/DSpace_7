@@ -7,17 +7,10 @@
  */
 package org.dspace.app.rest;
 
-import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withBrowseComponent;
-import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withFacetComponent;
-import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withIdAndBrowseComponent;
 import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withIdAndCountersComponent;
-import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withIdAndFacetComponent;
-import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withIdAndMultiColumnTopComponent;
 import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withIdAndSearchComponent;
 import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withIdAndTextRowComponent;
 import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withIdAndTopComponent;
-import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withSearchComponent;
-import static org.dspace.app.rest.matcher.CrisLayoutSectionMatcher.withTopComponent;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -50,8 +43,6 @@ public class CrisLayoutSectionRestRepositoryIT extends AbstractControllerIntegra
 
     @Test
     public void testFindAll() throws Exception {
-
-        String[] expectedBrowseNames = new String[] { "rotitle", "rodatecreated", "rodatemodified", "rodateissued"};
 
         getClient().perform(get("/api/layout/sections"))
             .andExpect(status().isOk())

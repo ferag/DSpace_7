@@ -463,6 +463,7 @@ public class CERIFIngestionCrosswalkIT extends AbstractIntegrationTestWithDataba
         assertThat(values, hasItems(with("oairecerif.internalid", "ID-01")));
         assertThat(values, hasItems(with("dc.description", "This is an equipment to test the export functionality")));
         assertThat(values, hasItems(with("crisequipment.ownerou", "Test OrgUnit")));
+    }
 
     @Test
     @SuppressWarnings("unchecked")

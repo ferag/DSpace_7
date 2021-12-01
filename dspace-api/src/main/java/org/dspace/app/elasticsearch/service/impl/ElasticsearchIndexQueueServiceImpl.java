@@ -57,9 +57,6 @@ public class ElasticsearchIndexQueueServiceImpl implements ElasticsearchIndexQue
     @Override
     public void update(Context context, ElasticsearchIndexQueue elasticsearchIndexQueue)
             throws SQLException, AuthorizeException {
-        if (!authorizeService.isAdmin(context)) {
-            throw new AuthorizeException("You must be an admin to update a ElasticsearchIndexQueue");
-        }
         if (Objects.nonNull(elasticsearchIndexQueue)) {
             elasticsearchIndexQueueDAO.save(context, elasticsearchIndexQueue);
         }

@@ -457,14 +457,12 @@ public class CERIFIngestionCrosswalkIT extends AbstractIntegrationTestWithDataba
         crosswalk.ingest(context, item, document.getRootElement(), false);
 
         List<MetadataValue> values = item.getMetadata();
-        assertThat(values, hasSize(11));
+        assertThat(values, hasSize(10));
         assertThat(values, hasItems(with("dc.title", "Test Equipment")));
         assertThat(values, hasItems(with("oairecerif.acronym", "T-EQ")));
         assertThat(values, hasItems(with("oairecerif.internalid", "ID-01")));
         assertThat(values, hasItems(with("dc.description", "This is an equipment to test the export functionality")));
         assertThat(values, hasItems(with("crisequipment.ownerou", "Test OrgUnit")));
-        assertThat(values, hasItems(with("crisequipment.ownerrp", "Walter White")));
-    }
 
     @Test
     @SuppressWarnings("unchecked")

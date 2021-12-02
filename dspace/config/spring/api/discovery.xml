@@ -3913,6 +3913,7 @@
                 <ref bean="searchFilterProjectMainOrgUnit" />
                 <ref bean="searchFilterStatus" />
                 <ref bean="searchFilterHiddenWithdrawn" />
+                <ref bean="searchFilterInvestigators"/>
             </list>
         </property>
         <!--The sort filters for the discovery search-->

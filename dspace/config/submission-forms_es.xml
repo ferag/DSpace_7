@@ -97,7 +97,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
-          <validation>^[0-9]{8}$</validation>
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
       <row>
@@ -110,7 +110,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
-          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
     </form>
@@ -149,7 +149,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
-          <validation>^[0-9]{8}$</validation>
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
       <row>
@@ -162,7 +162,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
-          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
     </form>
@@ -201,7 +201,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
-          <validation>^[0-9]{8}$</validation>
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
       <row>
@@ -214,7 +214,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
-          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
     </form>
@@ -10946,7 +10946,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <validation>^[0-9]{8}$</validation>
+          <hint>Valor Esperado: 8 dígitos</hint>
         </field>
       </row>
       <row>
@@ -10958,7 +10959,8 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <validation>^[0-9]{8}$</validation>
+          <hint>Valor Obtenido: 8 dígitos</hint>
         </field>
       </row>
     </form>

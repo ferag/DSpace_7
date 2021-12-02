@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
 import org.springframework.hateoas.server.LinkRelationProvider;
@@ -58,6 +59,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @SpringBootApplication
 @EnableScheduling
+@EnableCaching
 public class Application extends SpringBootServletInitializer {
 
     private static final Logger log = LoggerFactory.getLogger(Application.class);
@@ -167,22 +169,37 @@ public class Application extends SpringBootServletInitializer {
              */
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
-                String[] corsAllowedOrigins = configuration.getCorsAllowedOrigins();
+                // Get allowed origins for api and iiif endpoints.
+                String[] corsAllowedOrigins = configuration
+                    .getCorsAllowedOrigins(configuration.getCorsAllowedOriginsConfig());
+                String[] iiifAllowedOrigins = configuration
+                    .getCorsAllowedOrigins(configuration.getIiifAllowedOriginsConfig());
+
                 boolean corsAllowCredentials = configuration.getCorsAllowCredentials();
+                boolean iiifAllowCredentials = configuration.getIiifAllowCredentials();
                 if (corsAllowedOrigins != null) {
                     registry.addMapping("/api/**").allowedMethods(CorsConfiguration.ALL)
                             // Set Access-Control-Allow-Credentials to "true" and specify which origins are valid
                             // for our Access-Control-Allow-Origin header
+                            // for our Access-Control-Allow-Origin header
                             .allowCredentials(corsAllowCredentials).allowedOrigins(corsAllowedOrigins)
                             // Allow list of request preflight headers allowed to be sent to us from the client
-                            .allowedHeaders("Accept", "Authorization", "Content-Type", "X-Requested-With", "accept",
-                                "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers",
-                                "X-On-Behalf-Of", "X-XSRF-TOKEN", "X-CORRELATION-ID", "X-REFERRER")
-                            // Allow list of response headers allowed to be sent by us (the server)
-                            .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials",
-                                "Authorization", "DSPACE-XSRF-TOKEN", "expires", "Location", "Content-Disposition",
-                                "WWW-Authenticate", "Set-Cookie", "X-Requested-With",
+                            .allowedHeaders("Accept", "Authorization", "Content-Type", "Origin", "X-On-Behalf-Of",
+                                "X-Requested-With", "X-XSRF-TOKEN", "X-CORRELATION-ID", "X-REFERRER")
+                            // Allow list of response headers allowed to be sent by us (the server) to the client
+                            .exposedHeaders("Authorization", "DSPACE-XSRF-TOKEN", "Location", "WWW-Authenticate",
                                 casLogoutSuccessHandler.getOidcLogoutHeader());
+                }
+                if (iiifAllowedOrigins != null) {
+                    registry.addMapping("/iiif/**").allowedMethods(CorsConfiguration.ALL)
+                            // Set Access-Control-Allow-Credentials to "true" and specify which origins are valid
+                            // for our Access-Control-Allow-Origin header
+                            .allowCredentials(iiifAllowCredentials).allowedOrigins(iiifAllowedOrigins)
+                            // Allow list of request preflight headers allowed to be sent to us from the client
+                            .allowedHeaders("Accept", "Authorization", "Content-Type", "Origin", "X-On-Behalf-Of",
+                                "X-Requested-With", "X-XSRF-TOKEN", "X-CORRELATION-ID", "X-REFERRER")
+                            // Allow list of response headers allowed to be sent by us (the server) to the client
+                            .exposedHeaders("Authorization", "DSPACE-XSRF-TOKEN", "Location", "WWW-Authenticate");
                 }
             }
 

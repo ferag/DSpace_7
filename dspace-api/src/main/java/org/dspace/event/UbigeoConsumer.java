@@ -61,6 +61,11 @@ public class UbigeoConsumer implements Consumer {
             updateRegion(context, item, domicilioReniec, "perucris", "domicilio", "ubigeoReniecRegion");
             updateRegion(context, item, nacimientoReniec, "perucris", "nacimiento", "ubigeoReniecRegion");
 
+            updateCity(context, item, ubigeo, "perucris", "ubigeoCity", null);
+            updateCity(context, item, ubigeoSunat, "perucris", "ubigeo", "ubigeoSunatCity");
+            updateCity(context, item, domicilioReniec, "perucris", "domicilio", "ubigeoReniecCity");
+            updateCity(context, item, nacimientoReniec, "perucris", "nacimiento", "ubigeoReniecCity");
+
             itemsAlreadyProcessed.add(item);
         }
     }
@@ -83,21 +88,33 @@ public class UbigeoConsumer implements Consumer {
 
     private void updateRegion(Context context, Item item, String value, String schema, String element,
             String qualifier) {
-        if (StringUtils.isBlank(value) || (value.length() < 2)) {
+        updateMetadata(context, item, value, schema, element, qualifier, 2);
+    }
+
+    private void updateCity(Context context, Item item, String value, String schema, String element,
+                              String qualifier) {
+        updateMetadata(context, item, value, schema, element, qualifier, 4);
+    }
+
+    private void updateMetadata(Context context, Item item, String value, String schema, String element,
+                                String qualifier, int substringIndex) {
+        if (StringUtils.isBlank(value) || (value.length() < substringIndex)) {
             return;
         }
         final String[] split = value.split(":");
-        String vocabularyId = split[1].substring(0, 2);
+        String vocabularyId = split[1].substring(0, substringIndex);
         ChoiceAuthority source = choiceAuthorityService.getChoiceAuthorityByAuthorityName(split[0]);
         Choice choice = source.getChoice(vocabularyId, context.getCurrentLocale().toString());
         if (StringUtils.isNotBlank(choice.label)) {
+            String authority = split[0] + ":" + vocabularyId;
             try {
-                if (StringUtils.isNoneBlank(itemService.getMetadataFirstValue(item, schema, element, qualifier,null))) {
+                if (StringUtils
+                    .isNoneBlank(itemService.getMetadataFirstValue(item, schema, element, qualifier, null))) {
                     itemService.replaceMetadata(context, item, schema, element, qualifier,
-                                                null, choice.label, vocabularyId, Choices.CF_ACCEPTED, 0);
+                        null, choice.label, authority, Choices.CF_ACCEPTED, 0);
                 } else {
-                    itemService.addMetadata(context, item, schema, element, qualifier, null, choice.label, vocabularyId,
-                            Choices.CF_ACCEPTED);
+                    itemService.addMetadata(context, item, schema, element, qualifier, null, choice.label, authority,
+                        Choices.CF_ACCEPTED);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

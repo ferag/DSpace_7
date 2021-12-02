@@ -189,6 +189,7 @@ public class CvEntitySynchronizationConsumerPublicationIT extends AbstractIntegr
         collectionRoleService.deleteByCollection(context, publications);
         workflowItemService.deleteByCollection(context, cvCloneCollection);
         workflowItemService.deleteByCollection(context, publications);
+        context.commit();
         context.restoreAuthSystemState();
 
         super.destroy();
@@ -385,7 +386,8 @@ public class CvEntitySynchronizationConsumerPublicationIT extends AbstractIntegr
         assertThat(publication.getMetadata(), hasItem(with("dc.date.issued", "2021-01-01")));
         assertThat(publication.getMetadata(), hasItem(with("dc.contributor.author", "White, Walter",
                                                            0, Choices.CF_UNSET)));
-        assertThat(publication.getMetadata(), hasItem(with("oairecerif.author.affiliation", PLACEHOLDER, 0, 400)));
+        assertThat(publication.getMetadata(), hasItem(with("oairecerif.author.affiliation",
+            PLACEHOLDER, 0, 400)));
 
         List<Relationship> shadowCopyRelations = findRelations(cvPublicationClone, shadowCopy);
         assertThat(shadowCopyRelations, hasSize(1));

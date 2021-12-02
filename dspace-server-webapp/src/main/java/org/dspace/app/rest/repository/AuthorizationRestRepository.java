@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -180,6 +181,10 @@ public class AuthorizationRestRepository extends DSpaceRestRepository<Authorizat
             @Parameter(value = "eperson") UUID epersonUuid, @Parameter(value = "feature") List<String> featureNames,
             Pageable pageable) throws AuthorizeException, SQLException {
 
+        if (Objects.isNull(uriList) || uriList.isEmpty()) {
+            throw new IllegalArgumentException("Uri list cannot be empty");
+        }
+
         Context context = obtainContext();
 
         EPerson currUser = context.getCurrentUser();
@@ -214,13 +219,15 @@ public class AuthorizationRestRepository extends DSpaceRestRepository<Authorizat
         }
 
         List<Authorization> authorizations = new ArrayList<Authorization>();
+
         for (String uri : uriList) {
             for (String featureName : featureNames) {
                 try {
                     authorizations.addAll(findAuthorizationsImpl(context, user, uri, epersonUuid, featureName));
                 } catch (Exception ex) {
-                    ex.printStackTrace();
-                    log.warn("Can't evaulate authorizations for item=" + uri + " feature=" + featureName);
+                    log.error("Can't evaulate authorizations for item=" + uri + " feature=" + featureName + ": " +
+                        ex.getMessage());
+                    throw ex;
                 }
             }
         }

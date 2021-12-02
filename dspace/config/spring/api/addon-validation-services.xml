@@ -145,15 +145,15 @@
         <property name="filter" ref="peruvian-cv-person-has-ubigeo_filter"/>
     </bean>
 
-    <bean name="projectWithOaPolicyUrl" class="org.dspace.validation.LogicalStatementValidator">
-    <property name="errorKey" value="error.validation.mandateUrlRequired"/>
-    <property name="metadataFields">
-        <list>
-            <value>oairecerif.oamandate.url</value>
-        </list>
-    </property>
-    <property name="filter" ref="project-without-oa-mandate-requires-policy-url"/>
-</bean>
+<!--    <bean name="projectWithOaPolicyUrl" class="org.dspace.validation.LogicalStatementValidator">-->
+<!--    <property name="errorKey" value="error.validation.mandateUrlRequired"/>-->
+<!--    <property name="metadataFields">-->
+<!--        <list>-->
+<!--            <value>oairecerif.oamandate.url</value>-->
+<!--        </list>-->
+<!--    </property>-->
+<!--    <property name="filter" ref="project-without-oa-mandate-requires-policy-url"/>-->
+<!--</bean>-->
 
     <bean name="institutionalSectorSet" class="org.dspace.validation.LogicalStatementValidator">
         <property name="errorKey" value="error.validation.institutionalSectorMandatory"/>
@@ -173,6 +173,16 @@
             </list>
         </property>
         <property name="filter" ref="juridical-nature_filter"/>
+    </bean>
+
+    <bean name="oaMandateUrlSet" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.oaMandateUrlRequired"/>
+        <property name="metadataFields">
+            <list>
+                <value>oairecerif.oamandate.url</value>
+            </list>
+        </property>
+        <property name="filter" ref="funding-has-oa-condition-url_filter"/>
     </bean>
 
 </beans>

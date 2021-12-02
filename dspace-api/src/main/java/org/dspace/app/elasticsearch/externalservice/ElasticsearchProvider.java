@@ -51,7 +51,7 @@ public class ElasticsearchProvider {
      * 
      * @param context        DSpace context object
      * @param record         ElasticsearchIndexQueue object
-     * @param json           Json representation of item related to the record
+     * @param jsons           Json representations of item related to the record
      * @throws IOException   if IO error
      * @throws SQLException  If there's a database problem
      */

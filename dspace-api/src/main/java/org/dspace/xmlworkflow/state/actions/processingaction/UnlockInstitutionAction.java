@@ -37,7 +37,7 @@ import org.dspace.content.service.InstallItemService;
 import org.dspace.core.Context;
 import org.dspace.core.Email;
 import org.dspace.core.I18nUtil;
-import org.dspace.core.LogManager;
+import org.dspace.core.LogHelper;
 import org.dspace.discovery.SearchServiceException;
 import org.dspace.eperson.EPerson;
 import org.dspace.services.ConfigurationService;
@@ -302,7 +302,7 @@ public class UnlockInstitutionAction extends ProcessingAction {
                 email.send();
             }
         } catch (MessagingException e) {
-            log.warn(LogManager.getHeader(context, "finalizeItemCreation", "cannot email user" + " item_id="
+            log.warn(LogHelper.getHeader(context, "finalizeItemCreation", "cannot email user" + " item_id="
                      + item.getID()));
         }
     }

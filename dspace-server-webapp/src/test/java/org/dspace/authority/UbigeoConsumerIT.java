@@ -96,18 +96,26 @@ public class UbigeoConsumerIT extends AbstractControllerIntegrationTest {
                                       is("UbiGeo::Amazonas::Chachapoyas")))
                      .andExpect(jsonPath("$._embedded.item.metadata['perucris.ubigeoRegion'][0].value",
                                       is("Amazonas")))
+                     .andExpect(jsonPath("$._embedded.item.metadata['perucris.ubigeoCity'][0].value",
+                                      is("Chachapoyas")))
                      .andExpect(jsonPath("$._embedded.item.metadata['perucris.ubigeo.ubigeoSunat'][0].value",
                                       is("UbiGeo::Arequipa::Arequipa::Cayma")))
                      .andExpect(jsonPath("$._embedded.item.metadata['perucris.ubigeo.ubigeoSunatRegion'][0].value",
+                                      is("Arequipa")))
+                     .andExpect(jsonPath("$._embedded.item.metadata['perucris.ubigeo.ubigeoSunatCity'][0].value",
                                       is("Arequipa")))
                      .andExpect(jsonPath("$._embedded.item.metadata['perucris.domicilio.ubigeoReniec'][0].value",
                                       is("UbiGeo::Ayacucho::Huamanga::Socos")))
                      .andExpect(jsonPath("$._embedded.item.metadata['perucris.domicilio.ubigeoReniecRegion'][0].value",
                                       is("Ayacucho")))
+                     .andExpect(jsonPath("$._embedded.item.metadata['perucris.domicilio.ubigeoReniecCity'][0].value",
+                                      is("Huamanga")))
                      .andExpect(jsonPath("$._embedded.item.metadata['perucris.nacimiento.ubigeoReniec'][0].value",
                                       is("UbiGeo::Junín::Huancayo::Colca")))
                      .andExpect(jsonPath("$._embedded.item.metadata['perucris.nacimiento.ubigeoReniecRegion'][0].value",
-                                       is("Junín")));
+                                       is("Junín")))
+                     .andExpect(jsonPath("$._embedded.item.metadata['perucris.nacimiento.ubigeoReniecCity'][0].value",
+                                       is("Huancayo")));
 
         } finally {
             WorkspaceItemBuilder.deleteWorkspaceItem(idRef.get());
@@ -157,7 +165,8 @@ public class UbigeoConsumerIT extends AbstractControllerIntegrationTest {
                      .andExpect(jsonPath("$._embedded.item.metadata['dc.title'][0].value", is("Test Title")))
                      .andExpect(jsonPath("$._embedded.item.metadata['perucris.ubigeo'][0].value",
                                       is("UbiGeo::Ayacucho::Huamanga::Socos")))
-                     .andExpect(jsonPath("$._embedded.item.metadata['perucris.ubigeoRegion']").doesNotExist());
+                     .andExpect(jsonPath("$._embedded.item.metadata['perucris.ubigeoRegion']").doesNotExist())
+                     .andExpect(jsonPath("$._embedded.item.metadata['perucris.ubigeoCity']").doesNotExist());
 
         } finally {
             WorkspaceItemBuilder.deleteWorkspaceItem(idRef.get());

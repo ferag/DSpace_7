@@ -181,7 +181,10 @@ public class SolrServiceValuePairsIndexPlugin implements SolrServiceIndexPlugin 
     private List<DCInputSet> getInputs(Context context, String language, Item item) {
         try {
             Collection collection = (Collection) itemService.getParentObject(context, item);
-            return dcInputsReaders.get(language).getInputsByCollection(collection);
+            return Stream.concat(
+                dcInputsReaders.get(language).getInputsByCollection(collection).stream(),
+                dcInputsReaders.get(language).getInputsGroupByCollection(collection).stream())
+                .collect(Collectors.toList());
         } catch (DCInputsReaderException | SQLException e) {
             throw new RuntimeException(e);
         }

@@ -93,6 +93,7 @@ public abstract class TabularCrosswalk implements ItemExportCrosswalk {
 
     private CrosswalkMode crosswalkMode;
 
+    private boolean securityCheckEnabled;
 
     protected List<TabularTemplateLine> templateLines;
 
@@ -312,9 +313,13 @@ public abstract class TabularCrosswalk implements ItemExportCrosswalk {
     }
 
     private List<String> getMetadataValues(Context context, Item item, String metadata) {
-        return metadataSecurityService.getPermissionFilteredMetadataValues(context, item, metadata).stream()
-            .map(MetadataValue::getValue)
-            .collect(Collectors.toList());
+        List<MetadataValue> metadataValues;
+        if (securityCheckEnabled) {
+            metadataValues = metadataSecurityService.getPermissionFilteredMetadataValues(context, item, metadata);
+        } else {
+            metadataValues = itemService.getMetadataByMetadataString(item, metadata);
+        }
+        return metadataValues.stream().map(MetadataValue::getValue).collect(Collectors.toList());
     }
 
     private int getMetadataGroupSize(Item item, String metadataGroupFieldName) {
@@ -348,5 +353,19 @@ public abstract class TabularCrosswalk implements ItemExportCrosswalk {
 
     public CrosswalkMode getCrosswalkMode() {
         return Optional.ofNullable(this.crosswalkMode).orElse(ItemExportCrosswalk.super.getCrosswalkMode());
+    }
+
+    /**
+     * @return the securityCheckEnabled
+     */
+    public boolean isSecurityCheckEnabled() {
+        return securityCheckEnabled;
+    }
+
+    /**
+     * @param securityCheckEnabled the securityCheckEnabled to set
+     */
+    public void setSecurityCheckEnabled(boolean securityCheckEnabled) {
+        this.securityCheckEnabled = securityCheckEnabled;
     }
 }

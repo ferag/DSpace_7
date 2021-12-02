@@ -847,10 +847,11 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Sheet sheet = workbook.getSheetAt(0);
         assertThat(sheet.getPhysicalNumberOfRows(), equalTo(2));
 
-        assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "", "", "Heisenberg||W.W.",
-            "Walter", "White", "1962-03-23", "M", "Professor", "High School", "", "", "", "", "0000-0002-9079-5932",
-            "", "", "", "", "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
-            "Qualification", "English"));
+        assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "Walter", "White", "", "", "",
+            "1962-03-23", "M", "Professor", "High School", "", "", "", "", "", "", "0000-0002-9079-5932",
+            "", "", "", "", "", "", "", "", "",
+            "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
+            "Qualification", "English", "", "", "", "", ""));
 
         context.turnOffAuthorisationSystem();
         EntityType personType = EntityTypeBuilder.createEntityTypeBuilder(context, "Person").build();
@@ -871,10 +872,98 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         sheet = workbook.getSheetAt(0);
         assertThat(sheet.getPhysicalNumberOfRows(), equalTo(2));
 
-        assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "", "", "Heisenberg||W.W.",
-            "Walter", "White", "", "", "Professor", "High School", "", "", "", "", "0000-0002-9079-5932",
-            "", "", "", "", "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
-            "Qualification", "English"));
+        assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "Walter", "White", "", "", "",
+            "1962-03-23", "M", "Professor", "High School", "", "", "", "", "", "", "0000-0002-9079-5932",
+            "", "", "", "", "", "", "", "", "",
+            "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
+            "Qualification", "English", "", "", "", "", ""));
+
+    }
+
+    @Test
+    public void testCvPersonDisseminateWithNotPublicMetadataFields() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EPerson owner = EPersonBuilder.createEPerson(context)
+            .withEmail("owner@email.com")
+            .withNameInMetadata("Walter", "White")
+            .build();
+
+        Item item = createItem(context, collection)
+            .withEntityType("CvPerson")
+            .withTitle("Walter White")
+            .withCrisOwner(owner)
+            .withVariantName("Heisenberg")
+            .withVariantName("W.W.")
+            .withGivenName("Walter")
+            .withFamilyName("White")
+            .withBirthDate("1962-03-23")
+            .withGender("M")
+            .withJobTitle("Professor")
+            .withPersonMainAffiliation("High School")
+            .withPersonKnowsLanguages("English")
+            .withPersonEducation("School")
+            .withPersonEducationStartDate("1968-09-01")
+            .withPersonEducationEndDate("1973-06-10")
+            .withPersonEducationRole("Student")
+            .withPersonEducation("University")
+            .withPersonEducationStartDate("1980-09-01")
+            .withPersonEducationEndDate("1985-06-10")
+            .withPersonEducationRole("Student")
+            .withOrcidIdentifier("0000-0002-9079-5932")
+            .withPersonQualification("Qualification")
+            .withPersonQualificationStartDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPersonQualificationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        context.setCurrentUser(eperson);
+
+        xlsCrosswalk = (XlsCrosswalk) crosswalkMapper.getByType("ctivitae-profile-xls");
+        assertThat(xlsCrosswalk, notNullValue());
+        xlsCrosswalk.setDCInputsReader(dcInputsReader);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        xlsCrosswalk.disseminate(context, item, out);
+
+        Workbook workbook = WorkbookFactory.create(new ByteArrayInputStream(out.toByteArray()));
+        assertThat(workbook.getNumberOfSheets(), equalTo(1));
+
+        Sheet sheet = workbook.getSheetAt(0);
+        assertThat(sheet.getPhysicalNumberOfRows(), equalTo(2));
+
+        assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "Walter", "White", "", "", "",
+            "1962-03-23", "M", "Professor", "High School", "", "", "", "", "", "", "0000-0002-9079-5932",
+            "", "", "", "", "", "", "", "", "",
+            "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
+            "Qualification", "English", "", "", "", "", ""));
+
+        context.turnOffAuthorisationSystem();
+        EntityType personType = EntityTypeBuilder.createEntityTypeBuilder(context, "CvPerson").build();
+
+        CrisLayoutBoxBuilder.createBuilder(context, personType, false, false)
+            .addField(createCrisLayoutField("oairecerif.person.gender"))
+            .addField(createCrisLayoutField("person.birthDate"))
+            .withSecurity(LayoutSecurity.OWNER_ONLY)
+            .build();
+        context.restoreAuthSystemState();
+
+        out = new ByteArrayOutputStream();
+        xlsCrosswalk.disseminate(context, item, out);
+
+        workbook = WorkbookFactory.create(new ByteArrayInputStream(out.toByteArray()));
+        assertThat(workbook.getNumberOfSheets(), equalTo(1));
+
+        sheet = workbook.getSheetAt(0);
+        assertThat(sheet.getPhysicalNumberOfRows(), equalTo(2));
+
+        assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "Walter", "White", "", "", "",
+            "", "", "Professor", "High School", "", "", "", "", "", "", "0000-0002-9079-5932",
+            "", "", "", "", "", "", "", "", "",
+            "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
+            "Qualification", "English", "", "", "", "", ""));
 
         context.setCurrentUser(owner);
 
@@ -887,10 +976,11 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         sheet = workbook.getSheetAt(0);
         assertThat(sheet.getPhysicalNumberOfRows(), equalTo(2));
 
-        assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "", "", "Heisenberg||W.W.",
-            "Walter", "White", "1962-03-23", "M", "Professor", "High School", "", "", "", "", "0000-0002-9079-5932",
-            "", "", "", "", "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
-            "Qualification", "English"));
+        assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "Walter", "White", "", "", "",
+            "1962-03-23", "M", "Professor", "High School", "", "", "", "", "", "", "0000-0002-9079-5932",
+            "", "", "", "", "", "", "", "", "",
+            "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
+            "Qualification", "English", "", "", "", "", ""));
 
     }
 

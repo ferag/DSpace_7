@@ -279,6 +279,7 @@
 		<property name="entityType" value="CvPerson"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-xml.template"/>
+		<property name="securityCheckEnabled" value="true" />
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
 
@@ -289,6 +290,7 @@
 		<property name="entityType" value="CvPerson"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-cerif-xml.template"/>
+        <property name="securityCheckEnabled" value="true" />
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
 
@@ -299,6 +301,7 @@
         <property name="entityType" value="CvPerson"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-cerif-xml.template"/>
+        <property name="securityCheckEnabled" value="true" />
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
@@ -310,6 +313,7 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-json.template"/>
 		<property name="converter" ref="jsonValueConverter" />
+        <property name="securityCheckEnabled" value="true" />
 		<property name="linesPostProcessor" ref="jsonPostProcessor" />
 	</bean>
 
@@ -804,6 +808,7 @@
 		<property name="fileName" value="profiles.csv"/>
 		<property name="entityType" value="CvPerson"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+        <property name="securityCheckEnabled" value="true"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.XlsCrosswalk" id="xlsCrosswalkCvPerson">
@@ -812,6 +817,7 @@
 		<property name="sheetName" value="Profiles"/>
 		<property name="entityType" value="CvPerson"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+        <property name="securityCheckEnabled" value="true"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkPublication">

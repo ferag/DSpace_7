@@ -30,11 +30,19 @@ import org.dspace.AbstractIntegrationTestWithDatabase;
 import org.dspace.app.util.DCInputsReader;
 import org.dspace.app.util.DCInputsReaderException;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.builder.CrisLayoutBoxBuilder;
+import org.dspace.builder.CrisLayoutFieldBuilder;
+import org.dspace.builder.EPersonBuilder;
+import org.dspace.builder.EntityTypeBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
+import org.dspace.content.EntityType;
 import org.dspace.content.Item;
 import org.dspace.core.CrisConstants;
+import org.dspace.eperson.EPerson;
+import org.dspace.layout.CrisLayoutField;
+import org.dspace.layout.LayoutSecurity;
 import org.dspace.utils.DSpace;
 import org.junit.After;
 import org.junit.Before;
@@ -644,6 +652,89 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         }
     }
 
+    @Test
+    public void testDisseminateWithNotPublicMetadataFields() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EPerson owner = EPersonBuilder.createEPerson(context)
+            .withEmail("owner@email.com")
+            .withNameInMetadata("Walter", "White")
+            .build();
+
+        Item item = createItem(context, collection)
+            .withEntityType("Person")
+            .withTitle("Walter White")
+            .withCrisOwner(owner)
+            .withVariantName("Heisenberg")
+            .withVariantName("W.W.")
+            .withGivenName("Walter")
+            .withFamilyName("White")
+            .withBirthDate("1962-03-23")
+            .withGender("M")
+            .withJobTitle("Professor")
+            .withPersonMainAffiliation("High School")
+            .withPersonKnowsLanguages("English")
+            .withPersonEducation("School")
+            .withPersonEducationStartDate("1968-09-01")
+            .withPersonEducationEndDate("1973-06-10")
+            .withPersonEducationRole("Student")
+            .withPersonEducation("University")
+            .withPersonEducationStartDate("1980-09-01")
+            .withPersonEducationEndDate("1985-06-10")
+            .withPersonEducationRole("Student")
+            .withOrcidIdentifier("0000-0002-9079-5932")
+            .withPersonQualification("Qualification")
+            .withPersonQualificationStartDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPersonQualificationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        context.setCurrentUser(eperson);
+
+        csvCrosswalk = (CsvCrosswalk) crosswalkMapper.getByType("person-csv");
+        assertThat(csvCrosswalk, notNullValue());
+        csvCrosswalk.setDCInputsReader(dcInputsReader);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        csvCrosswalk.disseminate(context, item, out);
+
+        try (FileInputStream fis = getFileInputStream("person.csv")) {
+            String expectedCsv = IOUtils.toString(fis, Charset.defaultCharset());
+            assertThat(out.toString(), equalTo(expectedCsv));
+        }
+
+        context.turnOffAuthorisationSystem();
+        EntityType personType = EntityTypeBuilder.createEntityTypeBuilder(context, "Person").build();
+
+        CrisLayoutBoxBuilder.createBuilder(context, personType, false, false)
+            .addField(createCrisLayoutField("oairecerif.person.gender"))
+            .addField(createCrisLayoutField("person.birthDate"))
+            .withSecurity(LayoutSecurity.OWNER_ONLY)
+            .build();
+        context.restoreAuthSystemState();
+
+        out = new ByteArrayOutputStream();
+        csvCrosswalk.disseminate(context, item, out);
+
+        try (FileInputStream fis = getFileInputStream("person-with-not-public-fields.csv")) {
+            String expectedCsv = IOUtils.toString(fis, Charset.defaultCharset());
+            assertThat(out.toString(), equalTo(expectedCsv));
+        }
+
+        context.setCurrentUser(owner);
+
+        out = new ByteArrayOutputStream();
+        csvCrosswalk.disseminate(context, item, out);
+
+        try (FileInputStream fis = getFileInputStream("person.csv")) {
+            String expectedCsv = IOUtils.toString(fis, Charset.defaultCharset());
+            assertThat(out.toString(), equalTo(expectedCsv));
+        }
+
+    }
+
     private Item createFullPersonItem() {
         Item item = createItem(context, collection)
             .withTitle("John Smith")
@@ -766,6 +857,10 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withOAMandate("true")
             .withOAMandateURL("oamandate-url")
             .build();
+    }
+
+    private CrisLayoutField createCrisLayoutField(String metadataField) throws SQLException, AuthorizeException {
+        return CrisLayoutFieldBuilder.createMetadataField(context, metadataField, 0, 0).build();
     }
 
     private FileInputStream getFileInputStream(String name) throws FileNotFoundException {

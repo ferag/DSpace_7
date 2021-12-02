@@ -2,8 +2,6 @@
     <PersonName>
         <FamilyNames>Smith</FamilyNames>
         <FirstNames>John</FirstNames>
-        <OtherNames>J.S.</OtherNames>
-        <OtherNames>Smith John</OtherNames>
     </PersonName>
     <ResearcherID>R-01</ResearcherID>
     <ResearcherID>R-02</ResearcherID>

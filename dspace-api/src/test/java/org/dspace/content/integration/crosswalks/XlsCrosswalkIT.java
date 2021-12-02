@@ -174,31 +174,31 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(getRowValues(sheet.getRow(0)),
             contains("Nombre preferido", "Nombre de pila",
                 "Apellido", "Apellido paterno", "Apellido materno", "Apellido casada", "Fecha de nacimiento", "Sexo",
-                "Puesto de trabajo", "Afiliación principal", "Grupos de trabajo", "Web personal", "Email", "Teléfono",
+                "Puesto de trabajo", "Afiliación principal", "Web personal", "Email", "Teléfono",
                 "Teléfono móvil", "Intereses", "ORCID", "Dina", "Dni", "Pasaporte", "Tarjeta de inmigración", "Renacyt",
                 "ID Scopus del autor", "IDs Investigador", "Afiliaciones", "Biografía", "Educación", "País",
-                "Cualificaciones", "Idiomas", "Ubigeo reniec", "Ubigeo", "Calle de residencia", "Código postal",
+                "Cualificaciones", "Idiomas", "Ubigeo reniec", "Calle de residencia", "Código postal",
                 "País de residencia"));
 
         assertThat(getRowValues(sheet.getRow(1)),
             contains("John Smith", "John", "Smith", "", "", "",
-                "1992-06-26", "M", "Researcher", "University", "First work group||Second work group",
+                "1992-06-26", "M", "Researcher", "University",
                 "www.test.com/Test||www.john-smith.com||www.site.com/Site", "test@test.com", "0744112233", "3201122333",
-                "Science", "0000-0002-9079-5932", "", "DNI-01", "PASS-01", "", "", "111", "r1||r2",
+                "Science", "0000-0002-9079-5932", "DINA-01", "DNI-01", "PASS-01", "", "", "111", "r1||r2",
                 "Company/2018-01-01//Developer", "Biography: \n\"This is my biography\"",
                 "School/2000-01-01/2005-01-01/Student", "England",
                 "First Qualification/2015-01-01/2016-01-01||Second Qualification/2016-01-02", "English||Italian", "",
-                "12345", "Via 1 maggio", "05100", "IT"));
+                "Via 1 maggio", "05100", "IT"));
 
         assertThat(getRowValues(sheet.getRow(2)),
-            contains("Edward Red", "Edward", "Red", "", "", "", "1982-05-21", "M", "", "", "", "", "", "",
+            contains("Edward Red", "Edward", "Red", "", "", "", "1982-05-21", "M", "", "", "", "", "",
                 "", "", "", "", "", "", "", "", "", "", "OrgUnit/2015-01-01//Developer", "", "", "", "", "", "", "", "",
-                "", ""));
+                ""));
 
         assertThat(getRowValues(sheet.getRow(3)),
             contains("Adam White", "Adam", "White", "", "", "", "1962-03-23", "M", "Researcher",
-                "University of Rome", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                "School/2000-01-01/2005-01-01/Student", "", "", "English||Italian", "", "", "", "", ""));
+                "University of Rome", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+                "School/2000-01-01/2005-01-01/Student", "", "", "English||Italian", "", "", "", ""));
 
     }
 
@@ -251,17 +251,17 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(getRowValues(sheet.getRow(0)),
             contains("Nombre preferido", "Nombre de pila",
                 "Apellido", "Apellido paterno", "Apellido materno", "Apellido casada", "Fecha de nacimiento", "Sexo",
-                "Puesto de trabajo", "Afiliación principal", "Grupos de trabajo", "Web personal", "Email", "Teléfono",
+                "Puesto de trabajo", "Afiliación principal", "Web personal", "Email", "Teléfono",
                 "Teléfono móvil", "Intereses", "ORCID", "Dina", "Dni", "Pasaporte", "Tarjeta de inmigración", "Renacyt",
                 "ID Scopus del autor", "IDs Investigador", "Afiliaciones", "Biografía", "Educación", "País",
-                "Cualificaciones", "Idiomas", "Ubigeo reniec", "Ubigeo", "Calle de residencia", "Código postal",
+                "Cualificaciones", "Idiomas", "Ubigeo reniec", "Calle de residencia", "Código postal",
                 "País de residencia"));
 
         assertThat(getRowValues(sheet.getRow(1)),
             contains("Walter White", "Walter", "White", "", "", "", "1962-03-23", "M",
-                "Professor", "High School", "", "", "", "", "", "", "0000-0002-9079-5932", "", "", "", "", "", "", "",
+                "Professor", "High School", "", "", "", "", "", "0000-0002-9079-5932", "", "", "", "", "", "", "",
                 "", "", "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
-                "Qualification", "English", "", "", "", "", ""));
+                "Qualification", "English", "", "", "", ""));
 
     }
 
@@ -848,10 +848,10 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(sheet.getPhysicalNumberOfRows(), equalTo(2));
 
         assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "Walter", "White", "", "", "",
-            "1962-03-23", "M", "Professor", "High School", "", "", "", "", "", "", "0000-0002-9079-5932",
+            "1962-03-23", "M", "Professor", "High School", "", "", "", "", "", "0000-0002-9079-5932",
             "", "", "", "", "", "", "", "", "",
             "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
-            "Qualification", "English", "", "", "", "", ""));
+            "Qualification", "English", "", "", "", ""));
 
         context.turnOffAuthorisationSystem();
         EntityType personType = EntityTypeBuilder.createEntityTypeBuilder(context, "Person").build();
@@ -873,10 +873,10 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(sheet.getPhysicalNumberOfRows(), equalTo(2));
 
         assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "Walter", "White", "", "", "",
-            "1962-03-23", "M", "Professor", "High School", "", "", "", "", "", "", "0000-0002-9079-5932",
+            "1962-03-23", "M", "Professor", "High School", "", "", "", "", "", "0000-0002-9079-5932",
             "", "", "", "", "", "", "", "", "",
             "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
-            "Qualification", "English", "", "", "", "", ""));
+            "Qualification", "English", "", "", "", ""));
 
     }
 
@@ -935,10 +935,10 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(sheet.getPhysicalNumberOfRows(), equalTo(2));
 
         assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "Walter", "White", "", "", "",
-            "1962-03-23", "M", "Professor", "High School", "", "", "", "", "", "", "0000-0002-9079-5932",
+            "1962-03-23", "M", "Professor", "High School", "", "", "", "", "", "0000-0002-9079-5932",
             "", "", "", "", "", "", "", "", "",
             "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
-            "Qualification", "English", "", "", "", "", ""));
+            "Qualification", "English", "", "", "", ""));
 
         context.turnOffAuthorisationSystem();
         EntityType personType = EntityTypeBuilder.createEntityTypeBuilder(context, "CvPerson").build();
@@ -960,10 +960,10 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(sheet.getPhysicalNumberOfRows(), equalTo(2));
 
         assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "Walter", "White", "", "", "",
-            "", "", "Professor", "High School", "", "", "", "", "", "", "0000-0002-9079-5932",
+            "", "", "Professor", "High School", "", "", "", "", "", "0000-0002-9079-5932",
             "", "", "", "", "", "", "", "", "",
             "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
-            "Qualification", "English", "", "", "", "", ""));
+            "Qualification", "English", "", "", "", ""));
 
         context.setCurrentUser(owner);
 
@@ -977,10 +977,10 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(sheet.getPhysicalNumberOfRows(), equalTo(2));
 
         assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "Walter", "White", "", "", "",
-            "1962-03-23", "M", "Professor", "High School", "", "", "", "", "", "", "0000-0002-9079-5932",
+            "1962-03-23", "M", "Professor", "High School", "", "", "", "", "", "0000-0002-9079-5932",
             "", "", "", "", "", "", "", "", "",
             "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
-            "Qualification", "English", "", "", "", "", ""));
+            "Qualification", "English", "", "", "", ""));
 
     }
 

@@ -730,7 +730,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
     private void assertThatPersonDocumentHasContent(String content) {
         assertThat(content, containsString("John Smith"));
-        assertThat(content, containsString("Researcher at University"));
+        assertThat(content, containsString("Researcher en University"));
 
         assertThat(content, containsString("Fecha de nacimiento: 1992-06-26"));
         assertThat(content, containsString("Sexo: M"));
@@ -741,22 +741,21 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(content, containsString("Lorem ipsum dolor sit amet"));
 
         assertThat(content, containsString("Afiliaciones"));
-        assertThat(content, containsString("Researcher at University from 2020-01-02"));
-        assertThat(content, containsString("Developer at Company from 2015-01-01 to 2020-01-01"));
+        assertThat(content, containsString("Researcher en University desde 2020-01-02"));
+        assertThat(content, containsString("Developer en Company desde 2015-01-01 hasta 2020-01-01"));
 
         assertThat(content, containsString("Educación"));
-        assertThat(content, containsString("Student at School from 2000-01-01 to 2005-01-01"));
+        assertThat(content, containsString("Student en School desde 2000-01-01 hasta 2005-01-01"));
 
         assertThat(content, containsString("Cualificaciones"));
-        assertThat(content, containsString("First Qualification from 2015-01-01 to 2016-01-01"));
-        assertThat(content, containsString("Second Qualification from 2016-01-02"));
+        assertThat(content, containsString("First Qualification desde 2015-01-01 hasta 2016-01-01"));
+        assertThat(content, containsString("Second Qualification desde 2016-01-02"));
 
         assertThat(content, containsString("Publicaciones"));
-        assertThat(content, containsString("John Smith and Walter White (2020-01-01). First Publication"));
+        assertThat(content, containsString("John Smith y Walter White (2020-01-01). First Publication"));
         assertThat(content, containsString("John Smith (2020-04-01). Second Publication"));
 
         assertThat(content, containsString("Otra información"));
-        assertThat(content, containsString("Grupos de trabajo: First work group, Second work group"));
         assertThat(content, containsString("Intereses: Science"));
         assertThat(content, containsString("Idiomas: English, Italian"));
         assertThat(content, containsString("Personal sites: www.test.com ( Test ) , www.john-smith.com , "

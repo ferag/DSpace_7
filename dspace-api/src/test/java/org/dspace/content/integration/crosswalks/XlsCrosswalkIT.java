@@ -164,7 +164,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(sheet.getPhysicalNumberOfRows(), equalTo(4));
 
         assertThat(getRowValues(sheet.getRow(0)),
-            contains("Nombre preferido", "Nombre completo", "Nombre vernacular", "Variantes", "Nombre de pila",
+            contains("Nombre preferido", "Nombre de pila",
                 "Apellido", "Apellido paterno", "Apellido materno", "Apellido casada", "Fecha de nacimiento", "Sexo",
                 "Puesto de trabajo", "Afiliación principal", "Grupos de trabajo", "Web personal", "Email", "Teléfono",
                 "Teléfono móvil", "Intereses", "ORCID", "Dina", "Dni", "Pasaporte", "Tarjeta de inmigración", "Renacyt",
@@ -173,7 +173,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
                 "País de residencia"));
 
         assertThat(getRowValues(sheet.getRow(1)),
-            contains("John Smith", "John Smith", "JOHN SMITH", "J.S.||Smith John", "John", "Smith", "", "", "",
+            contains("John Smith", "John", "Smith", "", "", "",
                 "1992-06-26", "M", "Researcher", "University", "First work group||Second work group",
                 "www.test.com/Test||www.john-smith.com||www.site.com/Site", "test@test.com", "0744112233", "3201122333",
                 "Science", "0000-0002-9079-5932", "", "DNI-01", "PASS-01", "", "", "111", "r1||r2",
@@ -183,12 +183,12 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
                 "12345", "Via 1 maggio", "05100", "IT"));
 
         assertThat(getRowValues(sheet.getRow(2)),
-            contains("Edward Red", "", "", "", "Edward", "Red", "", "", "", "1982-05-21", "M", "", "", "", "", "", "",
+            contains("Edward Red", "Edward", "Red", "", "", "", "1982-05-21", "M", "", "", "", "", "", "",
                 "", "", "", "", "", "", "", "", "", "", "OrgUnit/2015-01-01//Developer", "", "", "", "", "", "", "", "",
                 "", ""));
 
         assertThat(getRowValues(sheet.getRow(3)),
-            contains("Adam White", "", "", "", "Adam", "White", "", "", "", "1962-03-23", "M", "Researcher",
+            contains("Adam White", "Adam", "White", "", "", "", "1962-03-23", "M", "Researcher",
                 "University of Rome", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
                 "School/2000-01-01/2005-01-01/Student", "", "", "English||Italian", "", "", "", "", ""));
 
@@ -241,7 +241,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(sheet.getPhysicalNumberOfRows(), equalTo(2));
 
         assertThat(getRowValues(sheet.getRow(0)),
-            contains("Nombre preferido", "Nombre completo", "Nombre vernacular", "Variantes", "Nombre de pila",
+            contains("Nombre preferido", "Nombre de pila",
                 "Apellido", "Apellido paterno", "Apellido materno", "Apellido casada", "Fecha de nacimiento", "Sexo",
                 "Puesto de trabajo", "Afiliación principal", "Grupos de trabajo", "Web personal", "Email", "Teléfono",
                 "Teléfono móvil", "Intereses", "ORCID", "Dina", "Dni", "Pasaporte", "Tarjeta de inmigración", "Renacyt",
@@ -250,7 +250,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
                 "País de residencia"));
 
         assertThat(getRowValues(sheet.getRow(1)),
-            contains("Walter White", "", "", "Heisenberg||W.W.", "Walter", "White", "", "", "", "1962-03-23", "M",
+            contains("Walter White", "Walter", "White", "", "", "", "1962-03-23", "M",
                 "Professor", "High School", "", "", "", "", "", "", "0000-0002-9079-5932", "", "", "", "", "", "", "",
                 "", "", "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
                 "Qualification", "English", "", "", "", "", ""));

@@ -1,7 +1,4 @@
 Preferred name = dc.title
-Full name = crisrp.name
-Vernacular name = crisrp.name.translated
-Variants = crisrp.name.variant
 Given name = person.givenName
 Family name = person.familyName
 Apellido paterno = perucris.apellidoPaterno

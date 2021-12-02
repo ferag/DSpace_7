@@ -1,7 +1,4 @@
 Nombre preferido = dc.title
-Nombre completo = crisrp.name
-Nombre vernacular = crisrp.name.translated
-Variantes = crisrp.name.variant
 Nombre de pila = person.givenName
 Apellido = person.familyName
 Apellido paterno = perucris.apellidoPaterno

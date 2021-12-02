@@ -107,6 +107,8 @@ public class ReferCrosswalk implements ItemExportCrosswalk {
 
     private String entityType;
 
+    private boolean securityCheckEnabled;
+
 
     private List<TemplateLine> templateLines;
 
@@ -317,9 +319,16 @@ public class ReferCrosswalk implements ItemExportCrosswalk {
             return values != null ? Arrays.asList(values) : Collections.emptyList();
         }
 
-        return metadataSecurityService.getPermissionFilteredMetadataValues(context, item, line.getField()).stream()
-            .map(MetadataValue::getValue)
-            .collect(Collectors.toList());
+        List<MetadataValue> metadataValues;
+        String metadataField = line.getField();
+
+        if (securityCheckEnabled) {
+            metadataValues = metadataSecurityService.getPermissionFilteredMetadataValues(context, item, metadataField);
+        } else {
+            metadataValues = itemService.getMetadataByMetadataString(item, metadataField);
+        }
+
+        return metadataValues.stream().map(MetadataValue::getValue).collect(Collectors.toList());
 
     }
 
@@ -510,6 +519,14 @@ public class ReferCrosswalk implements ItemExportCrosswalk {
 
     public CrosswalkMode getCrosswalkMode() {
         return Optional.ofNullable(this.crosswalkMode).orElse(ItemExportCrosswalk.super.getCrosswalkMode());
+    }
+
+    public boolean isSecurityCheckEnabled() {
+        return securityCheckEnabled;
+    }
+
+    public void setSecurityCheckEnabled(boolean securityCheckEnabled) {
+        this.securityCheckEnabled = securityCheckEnabled;
     }
 
 }

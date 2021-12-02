@@ -1,12 +1,6 @@
 {
 	"names" : {
 		"preferred-name": "John Smith",
-		"full-name": "John Smith",
-		"vernacular-name": "JOHN SMITH",
-		"variants": [
-			"J.S.",
-			"Smith John"
-		],
 		"given-name": "John",
 		"family-name": "Smith"
 	},
@@ -14,10 +8,6 @@
 	"gender": "M",
 	"job-title": "Researcher",
 	"main-affiliation": "University",
-	"working-groups": [
-		"First work group",
-		"Second work group"
-	],
 	"personal-sites": [
 		{
 			"site-url": "www.test.com",

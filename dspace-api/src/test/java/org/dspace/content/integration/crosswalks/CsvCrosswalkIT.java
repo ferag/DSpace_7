@@ -653,7 +653,7 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
-    public void testDisseminateWithNotPublicMetadataFields() throws Exception {
+    public void testPersonDisseminateWithNotPublicMetadataFields() throws Exception {
 
         context.turnOffAuthorisationSystem();
 
@@ -707,6 +707,79 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         context.turnOffAuthorisationSystem();
         EntityType personType = EntityTypeBuilder.createEntityTypeBuilder(context, "Person").build();
+
+        CrisLayoutBoxBuilder.createBuilder(context, personType, false, false)
+            .addField(createCrisLayoutField("oairecerif.person.gender"))
+            .addField(createCrisLayoutField("person.birthDate"))
+            .withSecurity(LayoutSecurity.OWNER_ONLY)
+            .build();
+        context.restoreAuthSystemState();
+
+        out = new ByteArrayOutputStream();
+        csvCrosswalk.disseminate(context, item, out);
+
+        try (FileInputStream fis = getFileInputStream("person.csv")) {
+            String expectedCsv = IOUtils.toString(fis, Charset.defaultCharset());
+            assertThat(out.toString(), equalTo(expectedCsv));
+        }
+
+    }
+
+    @Test
+    public void testCvPersonDisseminateWithNotPublicMetadataFields() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EPerson owner = EPersonBuilder.createEPerson(context)
+            .withEmail("owner@email.com")
+            .withNameInMetadata("Walter", "White")
+            .build();
+
+        Item item = createItem(context, collection)
+            .withEntityType("CvPerson")
+            .withTitle("Walter White")
+            .withCrisOwner(owner)
+            .withVariantName("Heisenberg")
+            .withVariantName("W.W.")
+            .withGivenName("Walter")
+            .withFamilyName("White")
+            .withBirthDate("1962-03-23")
+            .withGender("M")
+            .withJobTitle("Professor")
+            .withPersonMainAffiliation("High School")
+            .withPersonKnowsLanguages("English")
+            .withPersonEducation("School")
+            .withPersonEducationStartDate("1968-09-01")
+            .withPersonEducationEndDate("1973-06-10")
+            .withPersonEducationRole("Student")
+            .withPersonEducation("University")
+            .withPersonEducationStartDate("1980-09-01")
+            .withPersonEducationEndDate("1985-06-10")
+            .withPersonEducationRole("Student")
+            .withOrcidIdentifier("0000-0002-9079-5932")
+            .withPersonQualification("Qualification")
+            .withPersonQualificationStartDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPersonQualificationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        context.setCurrentUser(eperson);
+
+        csvCrosswalk = (CsvCrosswalk) crosswalkMapper.getByType("ctivitae-profile-csv");
+        assertThat(csvCrosswalk, notNullValue());
+        csvCrosswalk.setDCInputsReader(dcInputsReader);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        csvCrosswalk.disseminate(context, item, out);
+
+        try (FileInputStream fis = getFileInputStream("person.csv")) {
+            String expectedCsv = IOUtils.toString(fis, Charset.defaultCharset());
+            assertThat(out.toString(), equalTo(expectedCsv));
+        }
+
+        context.turnOffAuthorisationSystem();
+        EntityType personType = EntityTypeBuilder.createEntityTypeBuilder(context, "CvPerson").build();
 
         CrisLayoutBoxBuilder.createBuilder(context, personType, false, false)
             .addField(createCrisLayoutField("oairecerif.person.gender"))

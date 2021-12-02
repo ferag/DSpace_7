@@ -45,12 +45,16 @@ public class BulkImportURIControlledVocabularyValueTransformer implements BulkIm
     }
 
     private String getKey(MetadataValueVO metadataValue) {
-        Pattern pattern = Pattern.compile(PATTERN);
+        Pattern pattern = Pattern.compile(keyPattern());
         Matcher matcher = pattern.matcher(metadataValue.getValue());
         if (matcher.matches()) {
             return matcher.group(1).trim();
         }
         return StringUtils.EMPTY;
+    }
+
+    protected String keyPattern() {
+        return PATTERN;
     }
 
     public String getAuthorityName() {

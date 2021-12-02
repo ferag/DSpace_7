@@ -1652,6 +1652,86 @@ public class BulkImportIT extends AbstractIntegrationTestWithDatabase {
 
     @Test
     @SuppressWarnings("unchecked")
+    public void createOrgUnitInWorkspaceWithVocabularyDataTest() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Collection orgunits = createCollection(context, community)
+            .withAdminGroup(eperson)
+            .withSubmissionDefinition("orgunit")
+            .withWorkflowGroup(1, eperson)
+            .build();
+
+        context.commit();
+        context.restoreAuthSystemState();
+
+        String fileLocation = getXlsFilePath("test-orgunit.xls");
+        String[] args = new String[] { "bulk-import", "-c", orgunits.getID().toString(), "-f", fileLocation, "-e" };
+        TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
+
+        handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, eperson);
+        assertThat("Expected no errors", handler.getErrorMessages(), empty());
+        assertThat("Expected no warnings", handler.getWarningMessages(), empty());
+
+        List<String> infoMessages = handler.getInfoMessages();
+        assertThat("Expected 4 info messages", infoMessages, hasSize(5));
+
+        assertThat(infoMessages.get(0), containsString("Start reading all the metadata group rows"));
+        assertThat(infoMessages.get(1), containsString("Found 0 metadata groups to process"));
+        assertThat(infoMessages.get(2), containsString("Found 2 items to process"));
+        assertThat(infoMessages.get(3), containsString("Row 2 - Item archived successfully"));
+        assertThat(infoMessages.get(4), containsString("Row 3 - Item archived successfully"));
+
+        // verify created item (ROW 2)
+        String createdItemId = getItemUuidFromMessage(infoMessages.get(3));
+
+        Item createdItem = itemService.findByIdOrLegacyId(context, createdItemId);
+        assertThat("Item expected to be created", createdItem, notNullValue());
+        assertThat(createdItem.isArchived(), is(true));
+        assertThat(findWorkspaceItem(createdItem), nullValue());
+
+        List<MetadataValue> metadata = createdItem.getMetadata();
+        assertThat(metadata, hasItems(with("dc.title", "Farvet Spf")));
+        assertThat(metadata, hasItems(with("perucris.subject.ocde",
+            "oecd::Ciencias agrícolas::Ciencia veterinaria",
+            null, "ocde_subjects:4.03.00", 0, 600)));
+        assertThat(metadata, hasItems(with("perucris.subject.ocde",
+            "oecd::Ciencias médicas, Ciencias de la salud::Medicina básica::Farmacología, Farmacia",
+            null, "ocde_subjects:3.01.05", 1, 600)));
+        assertThat(metadata, hasItems(with("perucris.ubigeo",
+            "UbiGeo::Lima::Lima::Lurin")));
+        assertThat(metadata, hasItems(with("perucris.type.sectorInstitucional",
+            "https://purl.org/pe-repo/ocde/sectorInstitucional#empresa")));
+        assertThat(metadata, hasItems(with("perucris.type.ciiu",
+            "Ciiu::Agricultura, ganadería, silvicultura y pesca::" +
+                "Agricultura, ganadería, caza y actividades de servicios conexas.")));
+
+        createdItemId = getItemUuidFromMessage(infoMessages.get(4));
+        Item secondItem = itemService.findByIdOrLegacyId(context, createdItemId);
+        assertThat("Item expected to be created", secondItem, notNullValue());
+        assertThat(secondItem.isArchived(), is(true));
+        assertThat(findWorkspaceItem(secondItem), nullValue());
+
+        metadata = secondItem.getMetadata();
+        assertThat(metadata, hasItems(with("dc.title", "Universidad San Pedro")));
+        assertThat(metadata, hasItems(with("perucris.subject.ocde",
+            "oecd::Ingeniería, Tecnología::Ingeniería médica",
+            null, "ocde_subjects:2.06.00", 0, 600)));
+        assertThat(metadata, hasItems(with("perucris.ubigeo",
+            "UbiGeo::Áncash::Santa",
+            null, "peru_ubigeo:0218", 0, 600)));
+        assertThat(metadata, hasItems(with("perucris.type.ciiu",
+            "Ciiu::Enseñanza::Enseñanza::Enseñanza superior::Enseñanza superior",
+            null, "peru_ciiu:P8530", 0, 600)));
+        assertThat(metadata, hasItems(with("perucris.type.naturaleza",
+            "https://purl.org/pe-repo/ocde/naturalezaInstitucion#privada")));
+        assertThat(metadata, hasItems(with("perucris.type.educacionSuperior",
+            "https://purl.org/pe-repo/sunedu/tipoInstitucion#06")));
+
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
     public void createCvPersonInWorkspaceWithInvalidIdentifierURITest() throws Exception {
 
         context.turnOffAuthorisationSystem();

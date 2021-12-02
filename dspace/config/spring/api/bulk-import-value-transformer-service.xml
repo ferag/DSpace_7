@@ -19,8 +19,9 @@
 			 <entry  key="perucris.subject.minam" value-ref= "minamTransformer"> </entry>
 			 <entry  key="perucris.subject.ins" value-ref= "insTransformer"> </entry>
 			 <entry  key="perucris.project.typeOcde" value-ref= "ocdeProjectTypeTransformer"> </entry>
-			 <entry  key="perucris.project.typeOcde" value-ref= "ocdeProjectTypeTransformer"> </entry>
-			 <entry  key="dc.type" value-ref= "publicationTypeTransformer"> </entry>
+			 <entry  key="dc.type" value-ref= "researchOutputTypeTransformer"> </entry>
+			 <entry  key="perucris.type.ciiu" value-ref= "ciiuTransformer"> </entry>
+			 <entry  key="perucris.ubigeo" value-ref= "ubigeoTransformer"> </entry>
 			</map>
 		</constructor-arg>
 	</bean>
@@ -44,6 +45,27 @@
 
     <bean id="publicationTypeTransformer" class="org.dspace.app.bulkedit.BulkImportURIControlledVocabularyValueTransformer">
         <property name="authorityName" value="peru_publication_types"/>
+    </bean>
+
+    <bean id="patentTypeTransformer" class="org.dspace.app.bulkedit.BulkImportURIControlledVocabularyValueTransformer">
+        <property name="authorityName" value="peru_patent_types"/>
+    </bean>
+
+    <bean id="researchOutputTypeTransformer" class="org.dspace.app.bulkedit.CascadeBulkImportValueTransformer">
+        <constructor-arg name="transformerList">
+            <list>
+                <ref bean="publicationTypeTransformer"/>
+                <ref bean="patentTypeTransformer"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="ciiuTransformer" class="org.dspace.app.bulkedit.BulkImportCiiuValueTransformer">
+        <property name="authorityName" value="peru_ciiu"/>
+    </bean>
+
+    <bean id="ubigeoTransformer" class="org.dspace.app.bulkedit.BulkImportURIControlledVocabularyValueTransformer">
+        <property name="authorityName" value="peru_ubigeo"/>
     </bean>
 
 

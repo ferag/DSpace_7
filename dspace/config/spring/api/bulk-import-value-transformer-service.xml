@@ -40,7 +40,7 @@
     </bean>
 
     <bean id="ocdeProjectTypeTransformer" class="org.dspace.app.bulkedit.BulkImportURIControlledVocabularyValueTransformer">
-        <property name="authorityName" value="ocde_project_type" />
+        <property name="authorityName" value="ocde_project_types" />
     </bean>
 
     <bean id="publicationTypeTransformer" class="org.dspace.app.bulkedit.BulkImportURIControlledVocabularyValueTransformer">

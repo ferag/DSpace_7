@@ -8793,6 +8793,8 @@
           <required>Please select Equipment Type</required>
           <hint />
         </field>
+      </row>
+      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>type</dc-element>
@@ -8997,6 +8999,8 @@
           <required>Please select Equipment Type</required>
           <hint />
         </field>
+      </row>
+      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>type</dc-element>

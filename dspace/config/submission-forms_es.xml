@@ -8802,6 +8802,8 @@ ejemplo: el volumen de una revista.</hint>
           <required>Debe seleccionar un tipo de equipamiento</required>
           <hint />
         </field>
+      </row>
+      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>type</dc-element>
@@ -9006,6 +9008,8 @@ ejemplo: el volumen de una revista.</hint>
           <required>Debe seleccionar un tipo de equipamiento</required>
           <hint />
         </field>
+      </row>
+      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>type</dc-element>

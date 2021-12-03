@@ -551,11 +551,10 @@
 
 
     <bean id="has-juridical-nature-set_condition"
-          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
         <property name="parameters">
             <map>
                 <entry key="field" value="perucris.type.naturaleza" />
-                <entry key="pattern" value="^Pública|Privada$" />
             </map>
         </property>
     </bean>

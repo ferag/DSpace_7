@@ -267,6 +267,25 @@
         </property>
     </bean>
 
+    <!-- has contractorou set -->
+    <bean id="has-contractorou-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="crispj.contractorou" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has contractorou set -->
+    <bean id="has-contractorper-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="crispj.contractorper" />
+            </map>
+        </property>
+    </bean>
 
     <!-- has perucris.subject.ocde set-->
     <bean id="has-perucris-subject-ocde-set"
@@ -856,6 +875,24 @@
                         </bean>
                         <ref bean="has-orcid-set_condition" />
                         <ref bean="has-dni-set_condition" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="project-has-at-least-one-executor_filter" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="relationship-type-equals-project_condition"/>
+                            </property>
+                        </bean>
+                        <ref bean="has-contractorou-set_condition" />
+                        <ref bean="has-contractorper-set_condition" />
                     </list>
                 </property>
             </bean>

@@ -502,31 +502,31 @@
 						<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 							<property name="discoveryConfigurationName" value="RESUME.rprofiles"/>
 							<property name="label" value="rprofiles"/>
-							<property name="icon" value="perucris-icon perucris-icon-talento-humano fa-3x"/>
+							<property name="icon" value="perucris-icon perucris-icon-talento-humano fa-5x"/>
 							<property name="link" value="/explore/researcherprofiles"/>
 						</bean>
 						<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 							<property name="discoveryConfigurationName" value="RESUME.orgunits"/>
 							<property name="label" value="orgunits"/>
-							<property name="icon" value="perucris-icon perucris-icon-instituciones fa-3x"/>
+							<property name="icon" value="perucris-icon perucris-icon-instituciones fa-5x"/>
 							<property name="link" value="/explore/orgunits"/>
 						</bean>
 						<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 							<property name="discoveryConfigurationName" value="RESUME.researchoutputs"/>
 							<property name="label" value="publications"/>
-							<property name="icon" value="perucris-icon perucris-icon-produccion-cientifica fa-3x"/>
+							<property name="icon" value="perucris-icon perucris-icon-produccion-cientifica fa-5x"/>
 							<property name="link" value="/explore/researchoutputs"/>
 						</bean>
 						<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 							<property name="discoveryConfigurationName" value="RESUME.project_funding"/>
 							<property name="label" value="project_funding"/>
-							<property name="icon" value="perucris-icon perucris-icon-proyectos fa-3x"/>
+							<property name="icon" value="perucris-icon perucris-icon-proyectos fa-5x"/>
 							<property name="link" value="/explore/fundings_and_projects"/>
 						</bean>
 						<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 							<property name="discoveryConfigurationName" value="RESUME.infrastructure"/>
 							<property name="label" value="infrastructure"/>
-							<property name="icon" value="perucris-icon perucris-icon-infraestructura-home fa-3x"/>
+							<property name="icon" value="perucris-icon perucris-icon-infraestructura-home fa-5x"/>
 							<property name="link" value="/explore/infrastructure"/>
 						</bean>
 					</list>

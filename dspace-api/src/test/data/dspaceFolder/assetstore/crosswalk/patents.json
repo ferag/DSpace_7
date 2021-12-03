@@ -8,9 +8,6 @@
 			],
 			"holders": [
 			],
-			"issuers": [
-				"Publisher"
-			],
 			"keywords": [
 				"subject"
 			],
@@ -20,8 +17,6 @@
 				"Project"
 			],
 			"predecessors": [
-			],
-			"references": [
 			]
 		},
 		{
@@ -36,10 +31,6 @@
 			],
 			"holders": [
 			],
-			"issuers": [
-				"First publisher",
-				"Second publisher"
-			],
 			"keywords": [
 			],
 			"fundings": [
@@ -48,8 +39,6 @@
 			],
 			"predecessors": [
 				"Another patent"
-			],
-			"references": [
 			]
 		}
 	]

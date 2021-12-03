@@ -177,12 +177,12 @@ public class DecoratingConsumerIT extends AbstractControllerIntegrationTest {
                                             "LegalName of orgUnit 1"),
                                        matchMetadata("perucris.contractorou.acronym",
                                             "Acronym of orgUnit 1"),
-                                       matchMetadata("perucris.contractorou.titleAlternative",
-                                            "AlternativeTitle of orgUnit 1"),
-                                       matchMetadata("perucris.contractorou.legalName",
-                                            "LegalName of orgUnit 1"),
-                                       matchMetadata("perucris.contractorou.acronym",
-                                            "Acronym of orgUnit 1")
+                                       matchMetadata("perucris.ownerou.titleAlternative",
+                                            "AlternativeTitle of orgUnit 2"),
+                                       matchMetadata("perucris.ownerou.legalName",
+                                            "LegalName of orgUnit 2"),
+                                       matchMetadata("perucris.ownerou.acronym",
+                                            "Acronym of orgUnit 2")
                                        )))));
     }
 

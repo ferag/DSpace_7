@@ -25,8 +25,8 @@ import org.dspace.event.Consumer;
 import org.dspace.event.Event;
 
 /**
- * This consumer is used to decorating Item with Project or Equipment entity types
- * with metadata derived from linked OrgUnits items.
+ * This consumer is used to decorating Projects and Equipments entity types
+ * with metadata derived from their linked OrgUnits items.
  * 
  * @author Mykhaylo Boychuk (mykhaylo.boychuk at 4science.it)
  */
@@ -35,7 +35,7 @@ public class DecoratingConsumer implements Consumer {
     /**
      * This list of metadata is used to retrieve OrgUnits from which getting the decorative metadata
      */
-    private List<String> metadata2check = Arrays.asList("crispj.contractorou", "crispj.partnerou",
+    private static final List<String> METADATA_2_CHECK = Arrays.asList("crispj.contractorou", "crispj.partnerou",
                                                         "crispj.inKindContributorou", "crispj.organization",
                                                         "oairecerif.funder", "crisequipment.ownerou");
 
@@ -62,7 +62,7 @@ public class DecoratingConsumer implements Consumer {
             itemsAlreadyProcessed.add(item);
             String entityType = itemService.getMetadataFirstValue(item, "dspace", "entity", "type", Item.ANY);
             if (StringUtils.equalsAny(entityType, "Project", "Equipment")) {
-                for (String metadata : metadata2check) {
+                for (String metadata : METADATA_2_CHECK) {
                     List<MetadataValue> metadataValues = itemService.getMetadataByMetadataString(item, metadata);
                     for (MetadataValue mv : metadataValues) {
                         String authority = mv.getAuthority();
@@ -79,19 +79,16 @@ public class DecoratingConsumer implements Consumer {
 
     private void updateItem(Context context, Item originItem, Item orgUnit, MetadataValue originMetadataValue)
             throws SQLException {
-        String schema = StringUtils.equals(originMetadataValue.getSchema(), "crisequipment") ?
-                                                             originMetadataValue.getSchema() :
-                                                             "perucris";
         List<MetadataValue> title = itemService.getMetadata(orgUnit, "dc","title","alternative", Item.ANY);
         List<MetadataValue> legalName = itemService.getMetadata(orgUnit, "organization", "legalName",null, Item.ANY);
         List<MetadataValue> acronym = itemService.getMetadata(orgUnit, "oairecerif", "acronym", null, Item.ANY);
-        addMetadata(context, originItem, schema, originMetadataValue.getElement(), "titleAlternative", title);
-        addMetadata(context, originItem, schema, originMetadataValue.getElement(), "legalName", legalName);
-        addMetadata(context, originItem, schema, originMetadataValue.getElement(), "acronym", acronym);
+        addMetadata(context, originItem, originMetadataValue.getElement(), "titleAlternative", title);
+        addMetadata(context, originItem, originMetadataValue.getElement(), "legalName", legalName);
+        addMetadata(context, originItem, originMetadataValue.getElement(), "acronym", acronym);
     }
 
-    private void addMetadata(Context context, Item item, String schema, String element, String qualifier,
-            List<MetadataValue> values) throws SQLException {
+    private void addMetadata(Context context, Item item, String element, String qualifier,
+                             List<MetadataValue> values) throws SQLException {
         if (CollectionUtils.isNotEmpty(values)) {
             for (MetadataValue value : values) {
                 itemService.addMetadata(context, item, "perucris", element, qualifier, null, value.getValue());

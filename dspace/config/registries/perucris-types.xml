@@ -3224,19 +3224,19 @@
     </dc-type>
 
     <dc-type>
-        <schema>crisequipment</schema>
+        <schema>perucris</schema>
         <element>ownerou</element>
 		<qualifier>titleAlternative</qualifier>
     </dc-type>
 
     <dc-type>
-        <schema>crisequipment</schema>
+        <schema>perucris</schema>
         <element>ownerou</element>
 		<qualifier>legalName</qualifier>
     </dc-type>
 
     <dc-type>
-        <schema>crisequipment</schema>
+        <schema>perucris</schema>
         <element>ownerou</element>
 		<qualifier>acronym</qualifier>
     </dc-type>

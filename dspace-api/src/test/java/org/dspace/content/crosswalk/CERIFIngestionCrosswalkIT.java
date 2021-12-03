@@ -286,12 +286,10 @@ public class CERIFIngestionCrosswalkIT extends AbstractIntegrationTestWithDataba
 
         List<MetadataValue> values = item.getMetadata();
 
-        assertThat(values, hasSize(25));
+        assertThat(values, hasSize(23));
         assertThat(values, hasItems(with("dc.title", "Smith, John")));
         assertThat(values, hasItems(with("person.givenName", "John")));
         assertThat(values, hasItems(with("person.familyName", "Smith")));
-        assertThat(values, hasItems(with("crisrp.name.variant", "J.S.")));
-        assertThat(values, hasItems(with("crisrp.name.variant", "Smith John", 1)));
         assertThat(values, hasItems(with("oairecerif.person.gender", "M")));
         assertThat(values, hasItems(with("person.identifier.orcid", "0000-0002-9079-5932")));
         assertThat(values, hasItems(with("person.identifier.rid", "R-01")));

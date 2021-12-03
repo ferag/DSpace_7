@@ -52,9 +52,11 @@
         "@organization.identifier.crossrefid@",
     ],
     @if.metadata.organization-identifier-crossrefid.end@
+    @if.metadata.perucris-subject-ocde.start@
     "subjects": [
         "@virtual.mapConverter.ocdeSubjects.perucris-subject-ocde@",
     ],
+    @if.metadata.perucris-subject-ocde.end@
     @if.metadata.dc-subject.start@
     "keywords": [
         "@dc.subject@",

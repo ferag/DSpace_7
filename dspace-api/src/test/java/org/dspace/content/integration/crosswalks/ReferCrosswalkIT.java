@@ -1620,6 +1620,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withOrgUnitIdentifier("ID-02")
             .withUrlIdentifier("www.orgUnit.com")
             .withUrlIdentifier("www.orgUnit.it")
+            .withPerucrisSubjectOCDE("ocde::subject")
             .build();
 
         Item secondOrgUnit = ItemBuilder.createItem(context, collection)

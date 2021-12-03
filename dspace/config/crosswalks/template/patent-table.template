@@ -11,5 +11,4 @@ Keyword(s) = dc.subject
 Funding(s) = dc.relation.funding
 Project(s) = dc.relation.project
 Predecessor(s) = dc.relation.patent
-Reference(s) = dc.relation.reference
 Abstract = dc.description.abstract

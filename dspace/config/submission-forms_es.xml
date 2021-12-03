@@ -1569,7 +1569,7 @@ o “Caja de geolocalización”</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Registrar la persona de contacto para asuntos relacionados con la participación de su organización en las actividades del proyecto</hint>
         </field>
       </row>
       <row>
@@ -1744,7 +1744,7 @@ o “Caja de geolocalización”</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Registrar la persona de contacto para asuntos relacionados con la participación de su organización en las actividades del proyecto</hint>
         </field>
       </row>
       <row>
@@ -4188,7 +4188,7 @@ ejemplo: el volumen de una revista.</hint>
           <label>Otro título de la patente</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <required>Debe especificar un título para la patente</required>
+          <required />
           <hint>Repetir el campo tantas veces como sea necesario en los siguientes casos: (1) si la patente tiene más de un título oficial, (2) si la patente incluye un título oficial en otro idioma distinto al español, (3) si el título se encuentra en alfabeto no latino, usar para aclarar el nombre en idioma español. No se admiten traducciones al título que no sean oficiales.</hint>
         </field>
       </row>
@@ -4270,8 +4270,7 @@ ejemplo: el volumen de una revista.</hint>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Fecha de puesta a disposición del público mediante impresión o procedimiento similar de un documento de patente cuya concesión haya tenido lugar en dicha fecha o antes.
-You can leave out the day and/or month if they aren't applicable.</hint>
+          <hint>Fecha de puesta a disposición del público mediante impresión o procedimiento similar de un documento de patente concedido en esa fecha o antes. Puede omitir el día y/o el mes si no son aplicables.</hint>
         </field>
       </row>
       <row>
@@ -4449,7 +4448,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Otro título de la patente</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <required>Debe especificar un título para la patente</required>
+          <required />
           <hint>Repetir el campo tantas veces como sea necesario en los siguientes casos: (1) si la patente tiene más de un título oficial, (2) si la patente incluye un título oficial en otro idioma distinto al español, (3) si el título se encuentra en alfabeto no latino, usar para aclarar el nombre en idioma español. No se admiten traducciones al título que no sean oficiales.</hint>
         </field>
       </row>
@@ -4531,8 +4530,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Fecha de puesta a disposición del público mediante impresión o procedimiento similar de un documento de patente cuya concesión haya tenido lugar en dicha fecha o antes.
-You can leave out the day and/or month if they aren't applicable.</hint>
+          <hint>Fecha de puesta a disposición del público mediante impresión o procedimiento similar de un documento de patente concedido en esa fecha o antes. Puede omitir el día y/o el mes si no son aplicables.</hint>
         </field>
       </row>
       <row>
@@ -4710,7 +4708,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Otro título de la patente</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <required>Debe especificar un título para la patente</required>
+          <required />
           <hint>Repetir el campo tantas veces como sea necesario en los siguientes casos: (1) si la patente tiene más de un título oficial, (2) si la patente incluye un título oficial en otro idioma distinto al español, (3) si el título se encuentra en alfabeto no latino, usar para aclarar el nombre en idioma español. No se admiten traducciones al título que no sean oficiales.</hint>
         </field>
       </row>
@@ -4792,8 +4790,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Fecha de puesta a disposición del público mediante impresión o procedimiento similar de un documento de patente cuya concesión haya tenido lugar en dicha fecha o antes.
-You can leave out the day and/or month if they aren't applicable.</hint>
+          <hint>Fecha de puesta a disposición del público mediante impresión o procedimiento similar de un documento de patente concedido en esa fecha o antes. Puede omitir el día y/o el mes si no son aplicables.</hint>
         </field>
       </row>
       <row>
@@ -5155,7 +5152,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Podrá ser actualizado por Reniec</hint>
+          <hint>Se actualizará automáticamente desde RENIEC</hint>
         </field>
         <field>
           <dc-schema>person</dc-schema>
@@ -5164,7 +5161,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Podrá ser actualizado por Reniec</hint>
+          <hint>Se actualizará automáticamente desde RENIEC</hint>
         </field>
       </row>
       <row>
@@ -5175,7 +5172,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Podrá ser actualizado por Reniec</hint>
+          <hint>Se actualizará automáticamente desde RENIEC</hint>
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -5184,7 +5181,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Podrá ser actualizado por Reniec</hint>
+          <hint>Se actualizará automáticamente desde RENIEC</hint>
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -5193,7 +5190,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Podrá ser actualizado por Reniec</hint>
+          <hint>Se actualizará automáticamente desde RENIEC</hint>
         </field>
       </row>
       <row>
@@ -5205,7 +5202,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Se actualizará automáticamente desde RENIEC</hint>
           <vocabulary closed="true">peru_ubigeo</vocabulary>
         </field>
       </row>
@@ -5592,7 +5589,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Podrá ser actualizado por Reniec</hint>
+          <hint />
         </field>
         <field>
           <dc-schema>person</dc-schema>
@@ -5601,7 +5598,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Podrá ser actualizado por Reniec</hint>
+          <hint />
         </field>
       </row>
       <row>
@@ -5612,7 +5609,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Podrá ser actualizado por Reniec</hint>
+          <hint />
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -5621,7 +5618,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Podrá ser actualizado por Reniec</hint>
+          <hint />
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -5630,7 +5627,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Podrá ser actualizado por Reniec</hint>
+          <hint />
         </field>
       </row>
       <row>
@@ -6033,7 +6030,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Podrá ser actualizado por Reniec</hint>
+          <hint />
         </field>
         <field>
           <dc-schema>person</dc-schema>
@@ -6042,7 +6039,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Podrá ser actualizado por Reniec</hint>
+          <hint />
         </field>
       </row>
       <row>
@@ -6053,7 +6050,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Podrá ser actualizado por Reniec</hint>
+          <hint />
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -6062,7 +6059,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Podrá ser actualizado por Reniec</hint>
+          <hint />
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -6071,7 +6068,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Podrá ser actualizado por Reniec</hint>
+          <hint />
         </field>
       </row>
       <row>
@@ -7037,7 +7034,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Registrar la persona de contacto para asuntos relacionados con la participación de su organización en las actividades del proyecto</hint>
         </field>
       </row>
       <row>
@@ -7175,7 +7172,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Código o identificador público del proyecto</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Código o identificador público del proyecto</required>
           <hint>Código con el cual se hace referencia a éste en publicaciones y otros documentos. Ejemplo: 048-2020-FONDECYT-BM-AC</hint>
         </field>
       </row>
@@ -7257,7 +7254,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Organización ejecutora principal (Contractor)</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <required>Debe especificar la Organización ejecutora principal</required>
+          <required />
           <hint>Institución, consorcio directamente responsable del proyecto, según el contrato o documento correspondiente del mismo.</hint>
         </field>
       </row>
@@ -7335,7 +7332,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint />
+          <hint>En caso de consorcio, consignar aquí las organizaciones que son miembros de dicho consorcio</hint>
         </field>
       </row>
       <row>
@@ -7370,7 +7367,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint>La persona o personas que coordinan la administración del proyecto.</hint>
+          <hint>Registrar la persona de contacto para asuntos relacionados con la participación de su organización en las actividades del proyecto</hint>
         </field>
       </row>
       <row>
@@ -7568,7 +7565,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Código o identificador público del proyecto</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Código o identificador público del proyecto</required>
           <hint>Código con el cual se hace referencia a éste en publicaciones y otros documentos. Ejemplo: 048-2020-FONDECYT-BM-AC</hint>
         </field>
       </row>
@@ -7650,7 +7647,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Organización ejecutora principal (Contractor)</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <required>Debe especificar la Organización ejecutora principal</required>
+          <required />
           <hint>Institución, consorcio directamente responsable del proyecto, según el contrato o documento correspondiente del mismo.</hint>
         </field>
       </row>
@@ -7728,7 +7725,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint />
+          <hint>En caso de consorcio, consignar aquí las organizaciones que son miembros de dicho consorcio</hint>
         </field>
       </row>
       <row>
@@ -7763,7 +7760,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint>La persona o personas que coordinan la administración del proyecto.</hint>
+          <hint>Registrar la persona de contacto para asuntos relacionados con la participación de su organización en las actividades del proyecto</hint>
         </field>
       </row>
       <row>
@@ -7961,7 +7958,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Código o identificador público del proyecto</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Ingresar Código o identificador público del proyecto</required>
           <hint>Código con el cual se hace referencia a éste en publicaciones y otros documentos. Ejemplo: 048-2020-FONDECYT-BM-AC</hint>
         </field>
       </row>
@@ -8043,7 +8040,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <label>Organización ejecutora principal (Contractor)</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <required>Debe especificar la Organización ejecutora principal</required>
+          <required />
           <hint>Institución, consorcio directamente responsable del proyecto, según el contrato o documento correspondiente del mismo.</hint>
         </field>
       </row>
@@ -8121,7 +8118,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint />
+          <hint>En caso de consorcio, consignar aquí las organizaciones que son miembros de dicho consorcio</hint>
         </field>
       </row>
       <row>
@@ -8156,7 +8153,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint>La persona o personas que coordinan la administración del proyecto.</hint>
+          <hint>Registrar la persona de contacto para asuntos relacionados con la participación de su organización en las actividades del proyecto</hint>
         </field>
       </row>
       <row>
@@ -8811,7 +8808,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-qualifier>usage</dc-qualifier>
           <label>Uso del equipamiento</label>
           <input-type value-pairs-name="peru_type_usages">dropdown</input-type>
-          <repeatable>false</repeatable>
+          <repeatable>true</repeatable>
           <required />
           <hint />
         </field>
@@ -9015,7 +9012,7 @@ You can leave out the day and/or month if they aren't applicable.</hint>
           <dc-qualifier>usage</dc-qualifier>
           <label>Uso del equipamiento</label>
           <input-type value-pairs-name="peru_type_usages">dropdown</input-type>
-          <repeatable>false</repeatable>
+          <repeatable>true</repeatable>
           <required />
           <hint />
         </field>
@@ -13091,35 +13088,35 @@ Orden de Servicio 84 - Servicio de traduccion simultanea - Coloquio Agua</hint>
     <value-pairs value-pairs-name="project_types_other" dc-term="project_types_other">
       <pair>
         <displayed-value>Desarrollo tecnológico</displayed-value>
-        <stored-value>Technological development</stored-value>
+        <stored-value>http://purl.org/pe-repo/concytec/terminos#desarrolloTecnologico</stored-value>
       </pair>
       <pair>
         <displayed-value>Transferencia de tecnología</displayed-value>
-        <stored-value>Technology transfer</stored-value>
+        <stored-value>http://purl.org/pe-repo/concytec/terminos#transferenciaTecnologica</stored-value>
       </pair>
       <pair>
         <displayed-value>Investigación adaptativa</displayed-value>
-        <stored-value>Adaptive research</stored-value>
+        <stored-value>http://purl.org/pe-repo/concytec/terminos#investigacionAdaptativa</stored-value>
       </pair>
       <pair>
         <displayed-value>Investigación económica</displayed-value>
-        <stored-value>Economic research</stored-value>
+        <stored-value>http://purl.org/pe-repo/concytec/terminos#investigacionEconomica</stored-value>
       </pair>
       <pair>
         <displayed-value>Servicios de extensión</displayed-value>
-        <stored-value>Extension services</stored-value>
+        <stored-value>http://purl.org/pe-repo/concytec/terminos#serviciosDeExtension</stored-value>
       </pair>
       <pair>
         <displayed-value>Creación de capacidades</displayed-value>
-        <stored-value>Capacity building</stored-value>
+        <stored-value>http://purl.org/pe-repo/concytec/terminos#fortalecimientoDeCapacidades</stored-value>
       </pair>
       <pair>
         <displayed-value>Incubación y desarrollo de empresas</displayed-value>
-        <stored-value>Business incubation and development</stored-value>
+        <stored-value>http://purl.org/pe-repo/concytec/terminos#incubacionYDesarrolloDeEmpresas</stored-value>
       </pair>
       <pair>
         <displayed-value>Equipamiento científico</displayed-value>
-        <stored-value>Scientific equipment</stored-value>
+        <stored-value>http://purl.org/pe-repo/concytec/terminos#equipamientoCientifico</stored-value>
       </pair>
     </value-pairs>
     <value-pairs value-pairs-name="funding_types" dc-term="funding_types">
@@ -14385,15 +14382,15 @@ Orden de Servicio 84 - Servicio de traduccion simultanea - Coloquio Agua</hint>
     <value-pairs value-pairs-name="project_status" dc-term="project_status">
       <pair>
         <displayed-value>Activo</displayed-value>
-        <stored-value>Active</stored-value>
+        <stored-value>https://purl.org/pe-repo/concytec/estadoProyecto#activo</stored-value>
       </pair>
       <pair>
         <displayed-value>Suspendido</displayed-value>
-        <stored-value>Suspended</stored-value>
+        <stored-value>https://purl.org/pe-repo/concytec/estadoProyecto#suspendido</stored-value>
       </pair>
       <pair>
         <displayed-value>Concluido</displayed-value>
-        <stored-value>Finished</stored-value>
+        <stored-value>https://purl.org/pe-repo/concytec/estadoProyecto#concluido</stored-value>
       </pair>
     </value-pairs>
     <value-pairs value-pairs-name="peru_type_usages" dc-term="peru_type_usages">
@@ -14422,16 +14419,16 @@ Orden de Servicio 84 - Servicio de traduccion simultanea - Coloquio Agua</hint>
     </value-pairs>
     <value-pairs value-pairs-name="peru_personprofile_type" dc-term="peru_personprofile_type">
       <pair>
-        <displayed-value>Investigador</displayed-value>
-        <stored-value>Investigator</stored-value>
+        <displayed-value>Investigador o innovador miembro</displayed-value>
+        <stored-value>https://purl.org/pe-repo/ocde/tipoOcupacion#investigadorOInnovadorMiembro</stored-value>
       </pair>
       <pair>
-        <displayed-value>Técnico o personal asimilado</displayed-value>
-        <stored-value>Technician or assimilated</stored-value>
+        <displayed-value>Técnicos y personal equivalente</displayed-value>
+        <stored-value>https://purl.org/pe-repo/ocde/tipoOcupacion#tecnicosYPersonalEquivalente</stored-value>
       </pair>
       <pair>
-        <displayed-value>Otro personal de apoyo</displayed-value>
-        <stored-value>Other support staff</stored-value>
+        <displayed-value>Personal auxiliar o de apoyo</displayed-value>
+        <stored-value>https://purl.org/pe-repo/ocde/tipoOcupacion#personalAuxiliarODeApoyo</stored-value>
       </pair>
     </value-pairs>
     <value-pairs value-pairs-name="yesno" dc-term="yesno">

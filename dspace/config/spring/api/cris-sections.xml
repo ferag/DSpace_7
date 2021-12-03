@@ -71,13 +71,13 @@
 							<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 								<property name="discoveryConfigurationName" value="RESUME.researcherprofiles.renacyt"/>
 								<property name="label" value="researcherprofiles.renacyt"/>
-								<property name="icon" value="perucris-icon perucris-icon-talento-humano fa-3x"/>
+								<property name="icon" value="perucris-icon perucris-icon-talento-humano fa-5x"/>
 								<property name="link" value="/search?configuration=RESUME.researcherprofiles.renacyt"/>
 							</bean>
 							<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 								<property name="discoveryConfigurationName" value="RESUME.researcherprofiles.doctor"/>
 								<property name="label" value="researcherprofiles.doctor"/>
-								<property name="icon" value="perucris-icon perucris-icon-talento-humano fa-3x"/>
+								<property name="icon" value="perucris-icon perucris-icon-talento-humano fa-5x"/>
 								<property name="link" value="/search?configuration=RESUME.researcherprofiles.doctor"/>
 							</bean>
 						</list>
@@ -149,37 +149,37 @@
 						<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 							<property name="discoveryConfigurationName" value="RESUME.orgunit.universities"/>
 							<property name="label" value="orgunit.universities"/>
-							<property name="icon" value="perucris-icon perucris-icon-instituciones fa-3x"/>
+							<property name="icon" value="perucris-icon perucris-icon-instituciones fa-5x"/>
 							<property name="link" value="/search?configuration=RESUME.orgunit.universities"/>
 						</bean>
 						<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 							<property name="discoveryConfigurationName" value="RESUME.orgunit.investigation_innovation_unities"/>
 							<property name="label" value="orgunit.investigation_innovation_unities"/>
-							<property name="icon" value="perucris-icon perucris-icon-instituciones fa-3x"/>
+							<property name="icon" value="perucris-icon perucris-icon-instituciones fa-5x"/>
 							<property name="link" value="/search?configuration=RESUME.orgunit.investigation_innovation_unities"/>
 						</bean>
 						<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 							<property name="discoveryConfigurationName" value="RESUME.orgunit.investigation_groups"/>
 							<property name="label" value="orgunit.investigation_groups"/>
-							<property name="icon" value="perucris-icon perucris-icon-instituciones fa-3x"/>
+							<property name="icon" value="perucris-icon perucris-icon-instituciones fa-5x"/>
 							<property name="link" value="/search?configuration=RESUME.orgunit.investigation_groups"/>
 						</bean>
 						<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 							<property name="discoveryConfigurationName" value="RESUME.orgunit.ipis"/>
 							<property name="label" value="orgunit.ipis"/>
-							<property name="icon" value="perucris-icon perucris-icon-instituciones fa-3x"/>
+							<property name="icon" value="perucris-icon perucris-icon-instituciones fa-5x"/>
 							<property name="link" value="/search?configuration=RESUME.orgunit.ipis"/>
 						</bean>
 						<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 							<property name="discoveryConfigurationName" value="RESUME.orgunit.renacyt_centres"/>
 							<property name="label" value="orgunit.renacyt_centres"/>
-							<property name="icon" value="perucris-icon perucris-icon-instituciones fa-3x"/>
+							<property name="icon" value="perucris-icon perucris-icon-instituciones fa-5x"/>
 							<property name="link" value="/search?configuration=RESUME.orgunit.renacyt_centres"/>
 						</bean>
 						<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 							<property name="discoveryConfigurationName" value="RESUME.orgunit.cti_funders"/>
 							<property name="label" value="orgunit.cti_funders"/>
-							<property name="icon" value="perucris-icon perucris-icon-instituciones fa-3x"/>
+							<property name="icon" value="perucris-icon perucris-icon-instituciones fa-5x"/>
 							<property name="link" value="/search?configuration=RESUME.orgunit.cti_funders"/>
 						</bean>
 					</list>
@@ -251,13 +251,13 @@
 						<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 							<property name="discoveryConfigurationName" value="RESUME.fundings"/>
 							<property name="label" value="fundings"/>
-							<property name="icon" value="perucris-icon perucris-icon-proyectos fa-3x"/>
+							<property name="icon" value="perucris-icon perucris-icon-proyectos fa-5x"/>
 							<property name="link" value="/search?configuration=RESUME.fundings"/>
 						</bean>
 						<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 							<property name="discoveryConfigurationName" value="RESUME.projects"/>
 							<property name="label" value="projects"/>
-							<property name="icon" value="perucris-icon perucris-icon-proyectos fa-3x"/>
+							<property name="icon" value="perucris-icon perucris-icon-proyectos fa-5x"/>
 							<property name="link" value="/search?configuration=RESUME.projects"/>
 						</bean>
 					</list>
@@ -406,37 +406,37 @@
 						<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 							<property name="discoveryConfigurationName" value="RESUME.researchoutputs.articles"/>
 							<property name="label" value="researchoutputs.articles"/>
-							<property name="icon" value="perucris-icon perucris-icon-produccion-cientifica fa-3x"/>
+							<property name="icon" value="perucris-icon perucris-icon-produccion-cientifica fa-5x"/>
 							<property name="link" value="/search?configuration=RESUME.researchoutputs.articles"/>
 						</bean>
 						<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 							<property name="discoveryConfigurationName" value="RESUME.researchoutputs.books"/>
 							<property name="label" value="researchoutputs.books"/>
-							<property name="icon" value="perucris-icon perucris-icon-produccion-cientifica fa-3x"/>
+							<property name="icon" value="perucris-icon perucris-icon-produccion-cientifica fa-5x"/>
 							<property name="link" value="/search?configuration=RESUME.researchoutputs.books"/>
 						</bean>
 						<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 							<property name="discoveryConfigurationName" value="RESUME.researchoutputs.tesis"/>
 							<property name="label" value="researchoutputs.tesis"/>
-							<property name="icon" value="perucris-icon perucris-icon-produccion-cientifica fa-3x"/>
+							<property name="icon" value="perucris-icon perucris-icon-produccion-cientifica fa-5x"/>
 							<property name="link" value="/search?configuration=RESUME.researchoutputs.tesis"/>
 						</bean>
 						<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 							<property name="discoveryConfigurationName" value="RESUME.researchoutputs.conferencepapers"/>
 							<property name="label" value="researchoutputs.conferencepapers"/>
-							<property name="icon" value="perucris-icon perucris-icon-produccion-cientifica fa-3x"/>
+							<property name="icon" value="perucris-icon perucris-icon-produccion-cientifica fa-5x"/>
 							<property name="link" value="/search?configuration=RESUME.researchoutputs.conferencepapers"/>
 						</bean>
 						<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 							<property name="discoveryConfigurationName" value="RESUME.researchoutputs.patents"/>
 							<property name="label" value="researchoutputs.patents"/>
-							<property name="icon" value="perucris-icon perucris-icon-produccion-cientifica fa-3x"/>
+							<property name="icon" value="perucris-icon perucris-icon-produccion-cientifica fa-5x"/>
 							<property name="link" value="/search?configuration=RESUME.researchoutputs.patents"/>
 						</bean>
 						<bean class="org.dspace.layout.CrisLayoutCountersComponent.CounterSettings">
 							<property name="discoveryConfigurationName" value="RESUME.researchoutputs.openaccess"/>
 							<property name="label" value="researchoutputs.openaccess"/>
-							<property name="icon" value="perucris-icon perucris-icon-produccion-cientifica fa-3x"/>
+							<property name="icon" value="perucris-icon perucris-icon-produccion-cientifica fa-5x"/>
 							<property name="link" value="/search?configuration=RESUME.researchoutputs.openaccess"/>
 						</bean>
 					</list>

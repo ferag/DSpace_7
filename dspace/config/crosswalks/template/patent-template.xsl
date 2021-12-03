@@ -48,11 +48,6 @@
 				    	<xsl:with-param name="value" select="cerif:PatentNumber" />
 			    	</xsl:call-template>
 			    	
-					<xsl:call-template name="print-values">
-				    	<xsl:with-param name="label" select="'Issuer(s)'" />
-				    	<xsl:with-param name="values" select="cerif:Issuer/cerif:OrgUnit/cerif:Name" />
-			    	</xsl:call-template>
-			    	
 					<xsl:if test="cerif:Inventors/cerif:Inventor">
 				    	<fo:block font-size="10pt" margin-top="2mm">
 							<fo:inline font-weight="bold" text-align="right"  >

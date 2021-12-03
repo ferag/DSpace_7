@@ -1489,6 +1489,7 @@
 			<map>
 				<entry key="coarTypes" value-ref="mapConverterCoarTypes" />
 				<entry key="fundingTypes" value-ref="mapConverterFundingTypes" />
+                <entry key="patentTypes" value-ref="mapConverterPatentTypes" />
 				<entry key="eventTypes" value-ref="mapConverterEventTypes" />
 				<entry key="orgUnitTypes" value-ref="mapConverterOrgUnitTypes" />
 				<entry key="accessRight" value-ref="mapConverterAccessRight" />
@@ -1527,6 +1528,12 @@
 		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
 		<property name="defaultValue" value="https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types"/>
 	</bean>
+    
+    <bean name="mapConverterPatentTypes" class="org.dspace.util.SimpleMapConverter" init-method="init">
+        <property name="converterNameFile" value="mapConverter-patentTypes.properties" />
+        <property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+        <property name="defaultValue" value="http://purl.org/coar/resource_type/c_15cd"/>
+    </bean>
 
 	<bean name="mapConverterOrgUnitTypes" class="org.dspace.util.SimpleMapConverter" init-method="init">
 		<property name="converterNameFile" value="mapConverter-orgUnitTypes.properties" />

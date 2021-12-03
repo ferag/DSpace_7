@@ -17,9 +17,6 @@
 	"holders": [
 		"@dcterms.rightsHolder@",
 	],
-	"issuers": [
-		"@dc.publisher@",
-	],
 	"keywords": [
 		"@dc.subject@",
 	],
@@ -31,9 +28,6 @@
 	],
 	"predecessors": [
 		"@dc.relation.patent@",
-	],
-	"references": [
-		"@dc.relation.reference@",
 	],
 	"abstract": "@dc.description.abstract@"
 }

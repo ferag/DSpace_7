@@ -586,7 +586,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item patent = ItemBuilder.createItem(context, collection)
             .withEntityType("Patent")
             .withTitle("Test patent")
-            .withDateAccepted("2020-01-01")
+            .withDateSubmitted("2020-01-01")
             .withIssueDate("2021-01-01")
             .withPublisher("First publisher")
             .withPublisher("Second publisher")
@@ -881,7 +881,6 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(text, containsString("Registration date: 2021-01-01"));
         assertThat(text, containsString("Approval date: 2020-01-01"));
         assertThat(text, containsString("Patent number: 12345-666"));
-        assertThat(text, containsString("Issuer(s): First publisher, Second publisher"));
         assertThat(text, containsString("Inventor(s): Walter White (4Science), Jesse Pinkman, John Smith (4Science)"));
         assertThat(text, containsString("Holder(s): Test Organization"));
         assertThat(text, containsString("Keyword(s): patent, test"));

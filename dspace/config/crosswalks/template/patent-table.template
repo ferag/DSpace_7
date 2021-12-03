@@ -7,7 +7,6 @@ Type = dc.type
 Language = dc.language.iso
 Inventor(s) = group.dc-contributor-author
 Holder(s) = dcterms.rightsHolder
-Issuer(s) = dc.publisher
 Keyword(s) = dc.subject
 Funding(s) = dc.relation.funding
 Project(s) = dc.relation.project

@@ -686,22 +686,22 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(sheet.getPhysicalNumberOfRows(), equalTo(4));
 
         assertThat(getRowValues(sheet.getRow(0)),
-            contains("Nombre", "Acrónimo", "Tipo", "Código de financiamiento", "Número de beca", "Cantidad", "Moneda",
+            contains("Nombre", "Acrónimo", "Tipo", "Código de financiamiento", "Cantidad", "Moneda",
                 "Cantidad ejecutada", "Moneda de la cantidad ejecutada", "Descripción", "Palabra(s) clave",
                 "Financiador", "Parte de", "Fecha de inicio", "Fecha de fin", "Mandato OA", "URL de políticas OA"));
 
         assertThat(getRowValues(sheet.getRow(1)),
             contains("Test Funding", "T-FU", "https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types#Gift",
-                "ID-01", "0001", "30.000,00", "EUR", "15.000,00", "", "Funding to test export", "", "OrgUnit Funder",
+                "ID-01", "30.000,00", "EUR", "15.000,00", "", "Funding to test export", "", "OrgUnit Funder",
                 "Parent Funding", "2015-01-01", "2020-01-01", "true", "www.mandate.url"));
 
         assertThat(getRowValues(sheet.getRow(2)), contains("Another Test Funding", "AT-FU",
-            "https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types#Grant", "ID-02", "0002", "10.000,00",
+            "https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types#Grant", "ID-02", "10.000,00",
             "", "25.000,00", "€", "", "", "Test Funder", "", "2020-01-01", "", "true", "www.mandate.url"));
 
         assertThat(getRowValues(sheet.getRow(3)),
             contains("Third Test Funding", "TT-FU",
-                "https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types#Grant", "ID-03", "0003",
+                "https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types#Grant", "ID-03",
                 "20.000,00", "EUR", "", "", "", "", "", "", "", "2010-01-01", "false", "www.mandate.com"));
     }
 

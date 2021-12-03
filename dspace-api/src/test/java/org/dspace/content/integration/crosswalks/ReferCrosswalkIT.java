@@ -1897,7 +1897,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withEntityType("Funding")
             .withAcronym("T-FU")
             .withTitle("Test Funding")
-            .withType("Gift")
+            .withType("Tender")
             .withInternalId("ID-01")
             .withFundingIdentifier("0001")
             .withDescription("Funding to test export")

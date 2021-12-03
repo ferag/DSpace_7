@@ -557,7 +557,10 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withDescription("Funding to test export")
             .withAmount("30.000,00")
             .withAmountCurrency("EUR")
+            .withExecutedAmount("15.000,00")
+            .withExecutedAmountCurrency("EUR")
             .withFunder("OrgUnit Funder")
+            .withFunder("OrgUnit Funder 2")
             .withFundingStartDate("2015-01-01")
             .withFundingEndDate("2020-01-01")
             .withOAMandate("true")
@@ -866,10 +869,10 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(content, containsString("Tipo: https://www.openaire.eu/cerif-profile/vocab/"
             + "OpenAIRE_Funding_Types#Gift"));
         assertThat(content, containsString("Código de financiamiento: ID-01"));
-        assertThat(content, containsString("Número de beca: 0001"));
         assertThat(content, containsString("Cantidad: 30.000,00 (EUR)"));
-        assertThat(content, containsString("Financiador: OrgUnit Funder"));
-        assertThat(content, containsString("Duration: from 2015-01-01 to 2020-01-01"));
+        assertThat(content, containsString("Monto ejecutado: 15.000,00 (EUR)"));
+        assertThat(content, containsString("Financiador: OrgUnit Funder, OrgUnit Funder 2"));
+        assertThat(content, containsString("Duración: desde 2015-01-01 hasta 2020-01-01"));
         assertThat(content, containsString("Mandato OA: true"));
         assertThat(content, containsString("URL de políticas OA: www.mandate.url"));
     }

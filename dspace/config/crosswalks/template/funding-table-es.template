@@ -2,7 +2,6 @@ Nombre = dc.title
 Acrónimo = oairecerif.acronym
 Tipo = virtual.mapConverter.fundingTypes.dc-type
 Código de financiamiento = oairecerif.internalid
-Número de beca = oairecerif.funding.identifier
 Cantidad = oairecerif.amount
 Moneda = oairecerif.amount.currency
 Cantidad ejecutada = perucris.executedAmount

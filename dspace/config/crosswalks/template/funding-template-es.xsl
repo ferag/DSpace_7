@@ -48,11 +48,6 @@
 				    	<xsl:with-param name="values" select="cerif:Identifier[@type = 'https://w3id.org/cerif/vocab/IdentifierTypes#FinanceID']" />
 			    	</xsl:call-template>
 			    	
-					<xsl:call-template name="print-values">
-				    	<xsl:with-param name="label" select="'Número de beca'" />
-				    	<xsl:with-param name="values" select="cerif:Identifier[@type = 'https://w3id.org/cerif/vocab/IdentifierTypes#AwardNumber']" />
-			    	</xsl:call-template>
-			    	
 					<xsl:if test="cerif:Amount">
 					  	<fo:block font-size="10pt" margin-top="2mm">
 							<fo:inline font-weight="bold" text-align="right" >
@@ -72,7 +67,7 @@
                     <xsl:if test="cerif:ExecutedAmount">
                         <fo:block font-size="10pt" margin-top="2mm">
                             <fo:inline font-weight="bold" text-align="right" >
-                                <xsl:text>Executed Amount:</xsl:text>
+                                <xsl:text>Monto ejecutado:</xsl:text>
                             </fo:inline>
                             <fo:inline>
                                 <xsl:value-of select="cerif:ExecutedAmount"/>
@@ -85,9 +80,9 @@
                         </fo:block>
                     </xsl:if>
 			    	
-					<xsl:call-template name="print-value">
+					<xsl:call-template name="print-values">
 				    	<xsl:with-param name="label" select="'Financiador'" />
-				    	<xsl:with-param name="value" select="cerif:Funder/cerif:OrgUnit/cerif:Name" />
+				    	<xsl:with-param name="values" select="cerif:Funder/cerif:OrgUnit/cerif:Name" />
 			    	</xsl:call-template>
                     
                     <xsl:call-template name="print-value">
@@ -98,16 +93,16 @@
 					<xsl:if test="cerif:Duration/@startDate or cerif:Duration/@endDate">
 					  	<fo:block font-size="10pt" margin-top="2mm">
 							<fo:inline font-weight="bold" text-align="right" >
-								<xsl:text>Duration: </xsl:text>
+								<xsl:text>Duración: </xsl:text>
 							</fo:inline >
 							<fo:inline>
 								<xsl:if test="cerif:Duration/@startDate">
-									<xsl:text>from </xsl:text>
+									<xsl:text>desde </xsl:text>
 									 <xsl:value-of select="cerif:Duration/@startDate" />
 									<xsl:text> </xsl:text>
 								</xsl:if>
 								<xsl:if test="cerif:Duration/@endDate">
-									<xsl:text>to </xsl:text>
+									<xsl:text>hasta </xsl:text>
 									 <xsl:value-of select="cerif:Duration/@endDate" />
 								</xsl:if>
 							</fo:inline >

@@ -3,7 +3,6 @@
 	"name": "@dc.title@",
 	"acronym": "@oairecerif.acronym@",
 	"fundingCode": "@oairecerif.internalid@",
-	"grantNumber": "@oairecerif.funding.identifier@",
 	"amount": {
 		"currency": "@oairecerif.amount.currency@",
 		"value": "@oairecerif.amount@"

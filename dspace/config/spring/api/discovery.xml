@@ -103,11 +103,16 @@
                 <entry key="RELATION.OrgUnit.people" value-ref="relationOrgunitPersonsConfiguration"/>
                 <entry key="RELATION.OrgUnit.projects" value-ref="relationOrgunitProjectsConfiguration"/>
                 <entry key="RELATION.OrgUnit.organizations" value-ref="relationOrgunitOrgunitsConfiguration"/>
+                <entry key="RELATION.OrgUnit.patents" value-ref="relationOrgunitPatentssConfiguration"/>
                 <!-- Project Related items -->
                 <entry key="RELATION.Project.projects" value-ref="relationProjectProjectsConfiguration"/>
                 <entry key="RELATION.Project.grants" value-ref="relationProjectFundingsConfiguration"/>
                 <entry key="RELATION.Project.researchoutputs" value-ref="relationProjectPublicationConfiguration"/>
                 <entry key="RELATION.Project.patents" value-ref="relationProjectPatentConfiguration"/>
+                <!-- Funding Related items -->
+                <entry key="RELATION.Funding.subfundings" value-ref="relationFundingFundingsConfiguration"/>
+                <entry key="RELATION.Funding.projects" value-ref="relationFundingProjectsConfiguration"/>
+
                 <!-- Patent Related items -->
                 <entry key="RELATION.Patent.patents" value-ref="relationPatentPatentConfiguration"/>
                 <!-- InstitutionPerson Related items -->
@@ -123,10 +128,16 @@
                 <entry key="RELATION.InstitutionOrgUnit.ioupeople" value-ref="relationOrgunitPersonsConfiguration"/>
                 <entry key="RELATION.InstitutionOrgUnit.iouprojects" value-ref="relationOrgunitInstitutionProjectsConfiguration"/>
                 <entry key="RELATION.InstitutionOrgUnit.iouorganizations" value-ref="relationOrgunitOrgunitsConfiguration"/>
+                <entry key="RELATION.InstitutionOrgUnit.ioupatents" value-ref="relationOrgunitPatentssConfiguration"/>
                 <!-- InstitutionProject Related items -->
                 <entry key="RELATION.InstitutionProject.ipgrants" value-ref="relationInstitutionProjectFundingsConfiguration"/>
                 <entry key="RELATION.InstitutionProject.ipresearchoutputs" value-ref="relationInstitutionProjectPublicationConfiguration"/>
                 <entry key="RELATION.InstitutionProject.ippatents" value-ref="relationInstitutionProjectPatentConfiguration"/>
+                <!-- InstitutionFunding Related items -->
+                <entry key="RELATION.InstitutionFunding.ifsubfundings" value-ref="relationFundingFundingsConfiguration"/>
+                <entry key="RELATION.InstitutionFunding.ifprojects" value-ref="relationFundingProjectsConfiguration"/>
+
+
                 <!-- CvPerson Related items -->
                 <entry key="RELATION.CvPerson.researchoutputs" value-ref="relationCvPersonResearchOutputsConfiguration"/>
                 <entry key="RELATION.CvPerson.selectedresearchoutputs" value-ref="relationCvPersonSelectedResearchOutputsConfiguration"/>
@@ -1516,6 +1527,52 @@
         </property>
     </bean>
 
+    <!-- patents of orgunit -->
+    <bean id="relationOrgunitPatentssConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <property name="sidebarFacets">
+            <list>
+                <ref bean="graphItemByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="searchFilterAuthor" />
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterSubject" />
+            </list>
+        </property>
+        <!--The search filters which can be used on the discovery search page-->
+        <property name="searchFilters">
+            <list>
+                <ref bean="graphItemByType" />
+                <ref bean="graphPublicationByDate" />
+                <ref bean="searchFilterAuthor" />
+                <ref bean="searchFilterType"/>
+                <ref bean="searchFilterSubject" />
+            </list>
+        </property>
+
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <!--<property name="defaultSort" ref="sortDateIssued"/>-->
+                <!--DefaultSortOrder can either be desc or asc (desc is default)-->
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortByPublicationsSelection" />
+                        <ref bean="sortTitle" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+                queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>dcterms.rightsHolder_authority:{0}</value>
+                <value>search.resourcetype:Item</value>
+            </list>
+        </property>
+    </bean>
+
     <!-- institution publication authored by people affiliated to an orgunit -->
     <bean id="relationInstitutionOrgunitRPPublicationsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <property name="sidebarFacets">
@@ -1720,6 +1777,58 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
                 <value>dc.relation.project_authority:{0} AND entityType_keyword:Project</value>
+                <value>search.resourcetype:Item</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- fundings -->
+    <bean id="relationFundingFundingsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <!--<property name="defaultSort" ref="sortDateIssued"/>-->
+                <!--DefaultSortOrder can either be desc or asc (desc is default)-->
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortByFundingsSelection" />
+                        <ref bean="sortTitle" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+                queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>oairecerif.fundingParent_authority:{0} AND entityType_keyword:(Funding OR InstitutionFunding)</value>
+                <value>search.resourcetype:Item</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- projects related to a funding-->
+    <bean id="relationFundingProjectsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <!--The sort filters for the discovery search-->
+        <property name="searchSortConfiguration">
+            <bean class="org.dspace.discovery.configuration.DiscoverySortConfiguration">
+                <!--<property name="defaultSort" ref="sortDateIssued"/>-->
+                <!--DefaultSortOrder can either be desc or asc (desc is default)-->
+                <property name="sortFields">
+                    <list>
+                        <ref bean="sortByFundingsSelection" />
+                        <ref bean="sortTitle" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <!--Any default filter queries, these filter queries will be used for all
+                queries done by discovery for this configuration -->
+        <property name="defaultFilterQueries">
+            <list>
+                <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
+                <value>oairecerif.fundingProgram_authority:{0} AND entityType_keyword:(Project OR InstitutionProject)</value>
                 <value>search.resourcetype:Item</value>
             </list>
         </property>
@@ -2029,7 +2138,6 @@
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterSubject" />
-                <!--                <ref bean="searchFilterIssued" />-->
                 <ref bean="searchFilterContentInOriginalBundle"/>
                 <ref bean="searchFilterType"/>
             </list>
@@ -3602,6 +3710,7 @@
 
                 <ref bean="searchFilterAccess"/>
                 <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOcde"/>
                 <ref bean="searchFilterIssued"/>
                 <ref bean="searchFilterPublisher"/>
                 <ref bean="searchFilterSubject"/>
@@ -3631,6 +3740,7 @@
                 <ref bean="graphOcdeArea"/>
 
                 <ref bean="searchFilterType"/>
+                <ref bean="searchFilterOcde"/>
                 <ref bean="searchFilterAccess"/>
                 <ref bean="searchFilterPublisher"/>
                 <ref bean="searchFilterLanguage"/>
@@ -3750,14 +3860,6 @@
         </property>
         <!--Default result per page  -->
         <property name="defaultRpp" value="50"/>
-<!--        <property name="recentSubmissionConfiguration">-->
-<!--            <bean class="org.dspace.discovery.configuration.DiscoveryRecentSubmissionsConfiguration">-->
-<!--                <property name="metadataSortField" value="dc.date.accessioned"/>-->
-<!--                <property name="type" value="date"/>-->
-<!--                <property name="max" value="5"/>-->
-<!--                <property name="useAsHomePage" value="false"/>-->
-<!--            </bean>-->
-<!--        </property>-->
 
         <!-- When true a "did you mean" example will be displayed, value can be true or false -->
         <property name="spellCheckEnabled" value="true"/>
@@ -3993,15 +4095,6 @@
         </property>
         <!--Default result per page  -->
         <property name="defaultRpp" value="100"/>
-<!--        <property name="recentSubmissionConfiguration">-->
-<!--            <bean class="org.dspace.discovery.configuration.DiscoveryRecentSubmissionsConfiguration">-->
-<!--                <property name="metadataSortField" value="dc.date.accessioned"/>-->
-<!--                <property name="type" value="date"/>-->
-<!--                <property name="max" value="5"/>-->
-<!--                <property name="useAsHomePage" value="false"/>-->
-<!--            </bean>-->
-<!--        </property>-->
-
         <!-- When true a "did you mean" example will be displayed, value can be true or false -->
         <property name="spellCheckEnabled" value="false"/>
     </bean>
@@ -4142,13 +4235,10 @@
                     <list>
                         <ref bean="sortOrganizationLegalName"/>
                         <ref bean="sortOrganizationUbigeoRegion"/>
-<!--                        <ref bean="sortOrganizationAddressCountry"/>-->
-<!--                        <ref bean="sortOrganizationAddressLocality"/>-->
                         <ref bean="sortTitle"/>
                         <ref bean="sortLastModified"/>
                         <ref bean="sortDateAccessioned"/>
                         <ref bean="sortOrgUnitType"/>
-                        <!--                        <ref bean="sortOrgUnitType"/>-->
                     </list>
                 </property>
             </bean>
@@ -4283,7 +4373,6 @@
                 <ref bean="graphItemByType" />
                 <ref bean="graphOcdeArea" />
                 <ref bean="graphEquipmentUsage" />
-
 
                 <ref bean="searchFilterOcde"/>
                 <ref bean="searchFilterUsage"/>
@@ -4822,12 +4911,9 @@
                     <list>
                         <ref bean="sortOrganizationLegalName"/>
                         <ref bean="sortOrganizationUbigeoRegion"/>
-                        <!--                        <ref bean="sortOrganizationAddressCountry"/>-->
-                        <!--                        <ref bean="sortOrganizationAddressLocality"/>-->
                         <ref bean="sortTitle"/>
                         <ref bean="sortLastModified"/>
                         <ref bean="sortDateAccessioned"/>
-                        <!--                        <ref bean="sortOrgUnitType"/>-->
                     </list>
                 </property>
             </bean>
@@ -4899,12 +4985,9 @@
                     <list>
                         <ref bean="sortOrganizationLegalName"/>
                         <ref bean="sortOrganizationUbigeoRegion"/>
-                        <!--                        <ref bean="sortOrganizationAddressCountry"/>-->
-                        <!--                        <ref bean="sortOrganizationAddressLocality"/>-->
                         <ref bean="sortTitle"/>
                         <ref bean="sortLastModified"/>
                         <ref bean="sortDateAccessioned"/>
-                        <!--                        <ref bean="sortOrgUnitType"/>-->
                     </list>
                 </property>
             </bean>
@@ -4976,12 +5059,9 @@
                     <list>
                         <ref bean="sortOrganizationLegalName"/>
                         <ref bean="sortOrganizationUbigeoRegion"/>
-                        <!--                        <ref bean="sortOrganizationAddressCountry"/>-->
-                        <!--                        <ref bean="sortOrganizationAddressLocality"/>-->
                         <ref bean="sortTitle"/>
                         <ref bean="sortLastModified"/>
                         <ref bean="sortDateAccessioned"/>
-                        <!--                        <ref bean="sortOrgUnitType"/>-->
                     </list>
                 </property>
             </bean>
@@ -5053,12 +5133,9 @@
                     <list>
                         <ref bean="sortOrganizationLegalName"/>
                         <ref bean="sortOrganizationUbigeoRegion"/>
-                        <!--                        <ref bean="sortOrganizationAddressCountry"/>-->
-                        <!--                        <ref bean="sortOrganizationAddressLocality"/>-->
                         <ref bean="sortTitle"/>
                         <ref bean="sortLastModified"/>
                         <ref bean="sortDateAccessioned"/>
-                        <!--                        <ref bean="sortOrgUnitType"/>-->
                     </list>
                 </property>
             </bean>
@@ -5130,8 +5207,6 @@
                     <list>
                         <ref bean="sortOrganizationLegalName"/>
                         <ref bean="sortOrganizationUbigeoRegion"/>
-                        <!--                        <ref bean="sortOrganizationAddressCountry"/>-->
-                        <!--                        <ref bean="sortOrganizationAddressLocality"/>-->
                         <ref bean="sortTitle"/>
                         <ref bean="sortLastModified"/>
                         <ref bean="sortDateAccessioned"/>
@@ -5207,12 +5282,9 @@
                     <list>
                         <ref bean="sortOrganizationLegalName"/>
                         <ref bean="sortOrganizationUbigeoRegion"/>
-                        <!--                        <ref bean="sortOrganizationAddressCountry"/>-->
-                        <!--                        <ref bean="sortOrganizationAddressLocality"/>-->
                         <ref bean="sortTitle"/>
                         <ref bean="sortLastModified"/>
                         <ref bean="sortDateAccessioned"/>
-                        <!--                        <ref bean="sortOrgUnitType"/>-->
                     </list>
                 </property>
             </bean>
@@ -5284,12 +5356,9 @@
                     <list>
                         <ref bean="sortOrganizationLegalName"/>
                         <ref bean="sortOrganizationUbigeoRegion"/>
-                        <!--                        <ref bean="sortOrganizationAddressCountry"/>-->
-                        <!--                        <ref bean="sortOrganizationAddressLocality"/>-->
                         <ref bean="sortTitle"/>
                         <ref bean="sortLastModified"/>
                         <ref bean="sortDateAccessioned"/>
-                        <!--                        <ref bean="sortOrgUnitType"/>-->
                     </list>
                 </property>
             </bean>
@@ -6137,7 +6206,6 @@
                 <value>dc.subject.loc</value>
                 <value>dc.subject.mesh</value>
                 <value>dc.subject.cip</value>
-<!--                <value>dc.subject.*</value>-->
             </list>
         </property>
         <property name="facetLimit" value="5"/>
@@ -6153,9 +6221,11 @@
             <list>
                 <value>crisequipment.ownerrp</value>
                 <value>crisequipment.ownerou</value>
+                <value>perucris.ownerou.titleAlternative</value>
+                <value>perucris.ownerou.legalName</value>
+                <value>perucris.ownerou.acronym</value>
             </list>
         </property>
-<!--        <property name="splitter" value="::"/>-->
 
     </bean>
 
@@ -6169,7 +6239,6 @@
         <property name="facetLimit" value="5"/>
         <property name="sortOrderSidebar" value="COUNT"/>
         <property name="sortOrderFilterPage" value="COUNT"/>
-<!--        <property name="splitter" value="::"/>-->
 
     </bean>
 
@@ -6189,7 +6258,6 @@
         <property name="facetLimit" value="5"/>
         <property name="sortOrderSidebar" value="COUNT"/>
         <property name="sortOrderFilterPage" value="COUNT"/>
-<!--        <property name="splitter" value="::"/>-->
 
     </bean>
 
@@ -6209,7 +6277,6 @@
         <property name="facetLimit" value="5"/>
         <property name="sortOrderSidebar" value="COUNT"/>
         <property name="sortOrderFilterPage" value="COUNT"/>
-<!--        <property name="splitter" value="::"/>-->
 
     </bean>
 
@@ -6310,7 +6377,7 @@
         </property>
     </bean>
 
-    <bean id="searchFilterType" class="org.dspace.discovery.configuration.HierarchicalSidebarFacetConfiguration">
+    <bean id="searchFilterType" class="org.dspace.discovery.configuration.MultiLanguageHierarchicalSidebarFacetConfiguration">
         <property name="indexFieldName" value="itemtype" />
         <property name="splitter" value="::" />
         <property name="onlyLastNodeRelevant" value="true" />
@@ -6377,7 +6444,7 @@
     </bean>
 
     <bean id="searchFilterEquipmentTypeName"
-          class="org.dspace.discovery.configuration.DiscoverySearchFilter">
+          class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
         <property name="indexFieldName" value="equipmentTypeName"/>
         <property name="type" value="standard"/>
         <property name="metadataFields">
@@ -6553,7 +6620,7 @@
 
 
     <bean id="searchFilterOrganizationAddressCountry"
-          class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+          class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
         <property name="indexFieldName" value="organizationAddressCountry"/>
         <property name="metadataFields">
             <list>
@@ -6882,7 +6949,8 @@
 
     </bean>
 
-    <bean id="searchFilterInstitutionalOcde" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+    <bean id="searchFilterInstitutionalOcde"
+          class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
         <property name="indexFieldName" value="institutionalOcde"/>
         <property name="metadataFields">
             <list>
@@ -6895,7 +6963,8 @@
 
     </bean>
 
-    <bean id="searchFilterClassification" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+    <bean id="searchFilterClassification"
+          class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
         <property name="indexFieldName" value="renacytClassification"/>
         <property name="metadataFields">
             <list>
@@ -6927,6 +6996,7 @@
         <property name="metadataFields">
             <list>
                 <value>dc.description.abstract</value>
+                <value>dc.description</value>
             </list>
         </property>
 
@@ -7030,7 +7100,7 @@
     </bean>
 
     <bean id="searchFilterOrganizationPeruCrisClassification"
-          class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+          class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
         <property name="indexFieldName" value="peruCrisClassification"/>
         <property name="metadataFields">
             <list>
@@ -7046,7 +7116,7 @@
     </bean>
 
     <bean id="searchFilterOrganizationSuneduClassification"
-          class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+          class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
         <property name="indexFieldName" value="suneduClassification"/>
         <property name="metadataFields">
             <list>
@@ -7199,7 +7269,7 @@
         <property name="exposeTotalElements" value="true" />
     </bean>
 
-    <bean id="graphItemByType" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
+    <bean id="graphItemByType" class="org.dspace.discovery.configuration.MultiLanguageGraphDiscoverSearchFilterFacet">
     	<property name="facetLimit" value="10"/>
         <property name="indexFieldName" value="graphitemtype" />
         <!-- the splitter needs to be a not empty string -->
@@ -7238,14 +7308,10 @@
         <property name="exposeTotalElements" value="true" />
     </bean>
 
-    <bean id="graphOcdeInstitutionalSector" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
+    <bean id="graphOcdeInstitutionalSector" class="org.dspace.discovery.configuration.MultiLanguageGraphDiscoverSearchFilterFacet">
         <property name="facetLimit" value="10"/>
         <property name="indexFieldName" value="graphiteminstitutionalSector" />
-        <!-- the splitter needs to be a not empty string -->
-<!--        <property name="splitter" value="::" />-->
-<!--        <property name="onlyLastNodeRelevant" value="true" />-->
-        <!-- isDate cannot be true if the splitter is set -->
-        <property name="isDate" value="false" />
+         <property name="isDate" value="false" />
         <property name="metadataFields">
             <list>
                 <value>perucris.type.sectorInstitucional</value>
@@ -7382,7 +7448,7 @@
 
     </bean>
 
-    <bean id="graphPersonGender" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
+    <bean id="graphPersonGender" class="org.dspace.discovery.configuration.MultiLanguageGraphDiscoverSearchFilterFacet">
         <property name="facetLimit" value="10"/>
         <property name="indexFieldName" value="graphPersonGender" />
         <property name="isDate" value="false" />
@@ -7400,10 +7466,6 @@
     <bean id="graphUbigeoRegion" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
         <property name="facetLimit" value="10"/>
         <property name="indexFieldName" value="graphitemubigeoregion" />
-        <!-- the splitter needs to be a not empty string -->
-<!--        <property name="splitter" value="::" />-->
-<!--        <property name="onlyLastNodeRelevant" value="true" />-->
-        <!-- isDate cannot be true if the splitter is set -->
         <property name="isDate" value="false" />
         <property name="metadataFields">
             <list>
@@ -7417,7 +7479,7 @@
         <property name="exposeTotalElements" value="true" />
     </bean>
 
-    <bean id="graphCrisRpCountry" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
+    <bean id="graphCrisRpCountry" class="org.dspace.discovery.configuration.MultiLanguageGraphDiscoverSearchFilterFacet">
         <property name="facetLimit" value="10"/>
         <property name="indexFieldName" value="graphitemcrisrpcountry" />
         <!-- the splitter needs to be a not empty string -->
@@ -7601,10 +7663,13 @@
         <property name="metadataFields">
             <list>
                 <value>oairecerif.funder</value>
+                <value>perucris.funder.titleAlternative</value>
+                <value>perucris.funder.legalName</value>
+                <value>perucris.funder.acronym</value>
             </list>
         </property>
     </bean>
-    <bean id="searchFilterStatus" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+    <bean id="searchFilterStatus" class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
         <property name="indexFieldName" value="status"/>
         <property name="metadataFields">
             <list>
@@ -7702,12 +7767,24 @@
         <property name="metadataFields">
             <list>
                 <value>crispj.contractorou</value>
+                <value>perucris.contractorou.titleAlternative</value>
+                <value>perucris.contractorou.legalName</value>
+                <value>perucris.contractorou.acronym</value>
                 <value>crispj.contractorper</value>
                 <value>crispj.partnerou</value>
+                <value>perucris.partnerou.titleAlternative</value>
+                <value>perucris.partnerou.legalName</value>
+                <value>perucris.partnerou.acronym</value>
                 <value>crispj.partnerper</value>
                 <value>crispj.inKindContributorou</value>
+                <value>perucris.inKindContributorou.titleAlternative</value>
+                <value>perucris.inKindContributorou.legalName</value>
+                <value>perucris.inKindContributorou.acronym</value>
                 <value>crispj.inKindContributorper</value>
                 <value>crispj.organization</value>
+                <value>perucris.organization.titleAlternative</value>
+                <value>perucris.organization.legalName</value>
+                <value>perucris.organization.acronym</value>
                 <value>crispj.organizationper</value>
             </list>
         </property>
@@ -7716,7 +7793,8 @@
         <property name="sortOrderFilterPage" value="COUNT"/>
     </bean>
 
-    <bean id="graphEquipmentUsage" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
+    <bean id="graphEquipmentUsage"
+          class="org.dspace.discovery.configuration.MultiLanguageGraphDiscoverSearchFilterFacet">
         <property name="facetLimit" value="10"/>
         <property name="indexFieldName" value="graphEquipmentUsage" />
         <property name="isDate" value="false" />
@@ -7731,7 +7809,8 @@
         <property name="exposeTotalElements" value="true" />
     </bean>
 
-    <bean id="searchFilterUsage" class="org.dspace.discovery.configuration.DiscoverySearchFilterFacet">
+    <bean id="searchFilterUsage"
+          class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
         <property name="indexFieldName" value="usage"/>
         <property name="metadataFields">
             <list>
@@ -7743,7 +7822,8 @@
         <property name="sortOrderFilterPage" value="COUNT"/>
     </bean>
 
-    <bean id="searchFilterManufacturingCountry" class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
+    <bean id="searchFilterManufacturingCountry"
+          class="org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet">
         <property name="indexFieldName" value="manufacturingCountry"/>
         <property name="metadataFields">
             <list>

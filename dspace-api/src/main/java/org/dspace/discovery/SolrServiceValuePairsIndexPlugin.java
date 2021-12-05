@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
@@ -113,14 +114,19 @@ public class SolrServiceValuePairsIndexPlugin implements SolrServiceIndexPlugin 
 
             String value = StringUtils.EMPTY;
             String authority = metadataValue.getAuthority();
+            boolean isHierarchical = false;
             if (StringUtils.isNotBlank(valueListInput.getVocabulary())) {
                 value = getControlledVocabularyValue(metadataValue, language);
+                isHierarchical = true;
             } else {
                 value = getDisplayValue(valueListInput, metadataValue);
             }
+            if (StringUtils.isBlank(value)) {
+                continue;
+            }
 
             for (DiscoverySearchFilter searchFilter : searchFilters) {
-                addDiscoveryFieldFields(language, document, value, authority, searchFilter);
+                addDiscoveryFieldFields(language, document, value, authority, searchFilter, isHierarchical);
                 document.addField(searchFilter.getIndexFieldName(), value.toLowerCase());
             }
 
@@ -129,6 +135,9 @@ public class SolrServiceValuePairsIndexPlugin implements SolrServiceIndexPlugin 
     }
 
     private String getControlledVocabularyValue(MetadataValue metadataValue, String language) {
+        if (Objects.isNull(metadataValue.getAuthority())) {
+            return StringUtils.EMPTY;
+        }
         String [] authorityValue = metadataValue.getAuthority().split(":");
         if (authorityValue.length == 2) {
             ChoiceAuthority authority = cas.getChoiceAuthorityByAuthorityName(authorityValue[0]);
@@ -139,21 +148,25 @@ public class SolrServiceValuePairsIndexPlugin implements SolrServiceIndexPlugin 
     }
 
     private void addDiscoveryFieldFields(String language, SolrInputDocument document, String value, String authority,
-        DiscoverySearchFilter searchFilter) {
+                                         DiscoverySearchFilter searchFilter, boolean isHierarchical) {
 
         String fieldNameWithLanguage = language + "_" + searchFilter.getIndexFieldName();
         String valueLowerCase = value.toLowerCase();
 
-        String keywordField = appendAuthorityIfNotBlank(value, authority);
         String acidField = appendAuthorityIfNotBlank(valueLowerCase + separator + value, authority);
         String filterField = appendAuthorityIfNotBlank(valueLowerCase + separator + value, authority);
 
-        document.addField(fieldNameWithLanguage + "_keyword", keywordField);
+        Stream.of(appendAuthorityIfNotBlank(value, authority), value)
+            .forEach(keywordField -> document.addField(fieldNameWithLanguage + "_keyword", keywordField));
         document.addField(fieldNameWithLanguage + "_acid", acidField);
         document.addField(fieldNameWithLanguage + "_filter", filterField);
         document.addField(fieldNameWithLanguage + "_ac", valueLowerCase + separator + value);
-        if (document.containsKey(searchFilter.getIndexFieldName() + "_authority")) {
+        if (document.containsKey(searchFilter.getIndexFieldName() + "_authority") ||
+            StringUtils.isNotBlank(authority)) {
             document.addField(fieldNameWithLanguage + "_authority", authority);
+        }
+        if (isHierarchical) {
+            document.addField(fieldNameWithLanguage + "_tax_0_filter", filterField);
         }
 
     }

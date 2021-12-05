@@ -34,7 +34,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Foto personal, logotipo, artículo principal, etc.</hint>
+          <hint>Personal picture, logo, main article, etc.</hint>
         </field>
       </row>
       <row>

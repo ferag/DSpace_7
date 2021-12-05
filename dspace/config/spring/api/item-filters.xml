@@ -1203,7 +1203,6 @@
     </bean>
 
 
-
     <bean id="project-without-oa-mandate-requires-policy-url" class="org.dspace.content.logic.DefaultFilter">
         <property name="statement">
             <bean class="org.dspace.content.logic.operator.Or">
@@ -1219,20 +1218,12 @@
                                 <ref bean="has-oa-mandate-condition-set"/>
                             </property>
                         </bean>
-                        <bean class="org.dspace.content.logic.operator.And">
-                            <property name="statements">
-                                <list>
-                                    <ref bean="has-not-oa-mandate-condition" />
-                                    <ref bean="has-oa-policy-url-condition" />
-                                </list>
-                            </property>
-                        </bean>
-                        <ref bean="has-oa-mandate-condition" />
+                        <ref bean="has-not-oa-mandate-condition"/>
+                        <ref bean="has-oa-policy-url-condition" />
                     </list>
                 </property>
             </bean>
         </property>
-
     </bean>
 
     <bean id="peruvian-cv-person-has-ubigeo_filter" class="org.dspace.content.logic.DefaultFilter">

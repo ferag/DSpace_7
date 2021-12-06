@@ -15,7 +15,6 @@ import org.dspace.app.rest.model.BitstreamRest;
 import org.dspace.app.rest.model.ProcessRest;
 import org.dspace.app.rest.projection.Projection;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.Bitstream;
 import org.dspace.core.Context;
 import org.dspace.scripts.Process;
@@ -35,9 +34,6 @@ public class ProcessOutputLinkRepository extends AbstractDSpaceRestRepository im
     @Autowired
     private ProcessService processService;
 
-    @Autowired
-    private AuthorizeService authorizeService;
-
     /**
      * This method will retrieve the output for the {@link Process} as defined through the
      * given ID in the rest call. This output is a {@link Bitstream} object that will be turned into a
@@ -50,7 +46,7 @@ public class ProcessOutputLinkRepository extends AbstractDSpaceRestRepository im
      * @throws SQLException         If something goes wrong
      * @throws AuthorizeException   If something goes wrong
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN') || hasPermission(#processId, 'PROCESS', 'READ')")
     public BitstreamRest getOutputFromProcess(@Nullable HttpServletRequest request,
                                               Integer processId,
                                               @Nullable Pageable optionalPageable,
@@ -58,10 +54,6 @@ public class ProcessOutputLinkRepository extends AbstractDSpaceRestRepository im
 
         Context context = obtainContext();
         Process process = processService.find(context, processId);
-        if ((context.getCurrentUser() == null) || (!context.getCurrentUser().equals(process.getEPerson())
-                && !authorizeService.isAdmin(context))) {
-            throw new AuthorizeException("The current user is not eligible to view the process with id: " + processId);
-        }
         Bitstream bitstream = processService.getBitstream(context, process, Process.OUTPUT_TYPE);
         if (bitstream == null) {
             return null;

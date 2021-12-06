@@ -97,7 +97,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
-          <validation>^[0-9]{8}$</validation>
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
       <row>
@@ -110,7 +110,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
-          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
     </form>
@@ -149,7 +149,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
-          <validation>^[0-9]{8}$</validation>
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
       <row>
@@ -162,7 +162,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
-          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
     </form>
@@ -201,7 +201,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
-          <validation>^[0-9]{8}$</validation>
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
         </field>
       </row>
       <row>
@@ -214,7 +214,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
-          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
     </form>
@@ -1565,7 +1565,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Register the contact person for matters related to your organisation's participation in project activities</hint>
         </field>
       </row>
       <row>
@@ -1739,7 +1739,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Register the contact person for matters related to your organisation's participation in project activities.</hint>
         </field>
       </row>
       <row>
@@ -4261,7 +4261,7 @@
           <input-type>date</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Date of making available to the public by printing or similar process of a patent document granted on or before that date. You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
       <row>
@@ -4521,7 +4521,7 @@
           <input-type>date</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Date of making available to the public by printing or similar process of a patent document granted on or before that date. You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
       <row>
@@ -4781,7 +4781,7 @@
           <input-type>date</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Date of making available to the public by printing or similar process of a patent document granted on or before that date. You can leave out the day and/or month if they aren't applicable.</hint>
         </field>
       </row>
       <row>
@@ -5143,7 +5143,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Might be updated by Reniec</hint>
+          <hint>It will be automatically updated from RENIEC</hint>
         </field>
         <field>
           <dc-schema>person</dc-schema>
@@ -5152,7 +5152,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Might be updated by Reniec</hint>
+          <hint>It will be automatically updated from RENIEC</hint>
         </field>
       </row>
       <row>
@@ -5163,7 +5163,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Might be updated by Reniec</hint>
+          <hint>It will be automatically updated from RENIEC</hint>
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -5172,7 +5172,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Might be updated by Reniec</hint>
+          <hint>It will be automatically updated from RENIEC</hint>
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -5181,7 +5181,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Might be updated by Reniec</hint>
+          <hint>It will be automatically updated from RENIEC</hint>
         </field>
       </row>
       <row>
@@ -5193,7 +5193,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>It will be automatically updated from RENIEC</hint>
           <vocabulary closed="true">peru_ubigeo</vocabulary>
         </field>
       </row>
@@ -5580,7 +5580,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Might be updated by Reniec</hint>
+          <hint />
         </field>
         <field>
           <dc-schema>person</dc-schema>
@@ -5589,7 +5589,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Might be updated by Reniec</hint>
+          <hint />
         </field>
       </row>
       <row>
@@ -5600,7 +5600,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Might be updated by Reniec</hint>
+          <hint />
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -5609,7 +5609,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Might be updated by Reniec</hint>
+          <hint />
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -5618,7 +5618,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Might be updated by Reniec</hint>
+          <hint />
         </field>
       </row>
       <row>
@@ -6021,7 +6021,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Might be updated by Reniec</hint>
+          <hint />
         </field>
         <field>
           <dc-schema>person</dc-schema>
@@ -6030,7 +6030,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Might be updated by Reniec</hint>
+          <hint />
         </field>
       </row>
       <row>
@@ -6041,7 +6041,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Might be updated by Reniec</hint>
+          <hint />
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -6050,7 +6050,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Might be updated by Reniec</hint>
+          <hint />
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -6059,7 +6059,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Might be updated by Reniec</hint>
+          <hint />
         </field>
       </row>
       <row>
@@ -7025,7 +7025,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint />
+          <hint>Register the contact person for matters related to your organisation's participation in project activities</hint>
         </field>
       </row>
       <row>
@@ -7163,7 +7163,7 @@
           <label>Internal project ID</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter an Internal project ID</required>
           <hint>Code with which it is referred to in publications and other documents. Example: 048-2020-FONDECYT-BM-AC</hint>
         </field>
       </row>
@@ -7245,7 +7245,7 @@
           <label>Main Executing Organization (Contractor)</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <required>You must enter the Main Executing Organization</required>
+          <required />
           <hint>Institution, consortium directly responsible for the project, according to the contract or corresponding project document.</hint>
         </field>
       </row>
@@ -7323,7 +7323,7 @@
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint />
+          <hint>In case of consortium, enter here the organisations that are members of the consortium</hint>
         </field>
       </row>
       <row>
@@ -7358,7 +7358,7 @@
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint>Person(s) coordinating project’s administration</hint>
+          <hint>Register the contact person for matters related to your organisation's participation in project activities</hint>
         </field>
       </row>
       <row>
@@ -7556,7 +7556,7 @@
           <label>Internal project ID</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter an Internal project ID</required>
           <hint>Code with which it is referred to in publications and other documents. Example: 048-2020-FONDECYT-BM-AC</hint>
         </field>
       </row>
@@ -7638,7 +7638,7 @@
           <label>Main Executing Organization (Contractor)</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <required>You must enter the Main Executing Organization</required>
+          <required />
           <hint>Institution, consortium directly responsible for the project, according to the contract or corresponding project document.</hint>
         </field>
       </row>
@@ -7716,7 +7716,7 @@
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint />
+          <hint>In case of consortium, enter here the organisations that are members of the consortium</hint>
         </field>
       </row>
       <row>
@@ -7751,7 +7751,7 @@
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint>Person(s) coordinating project’s administration</hint>
+          <hint>Register the contact person for matters related to your organisation's participation in project activities</hint>
         </field>
       </row>
       <row>
@@ -7949,7 +7949,7 @@
           <label>Internal project ID</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required />
+          <required>Please enter an Internal project ID</required>
           <hint>Code with which it is referred to in publications and other documents. Example: 048-2020-FONDECYT-BM-AC</hint>
         </field>
       </row>
@@ -8031,7 +8031,7 @@
           <label>Main Executing Organization (Contractor)</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <required>You must enter the Main Executing Organization</required>
+          <required />
           <hint>Institution, consortium directly responsible for the project, according to the contract or corresponding project document.</hint>
         </field>
       </row>
@@ -8109,7 +8109,7 @@
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint />
+          <hint>In case of consortium, enter here the organisations that are members of the consortium</hint>
         </field>
       </row>
       <row>
@@ -8144,7 +8144,7 @@
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint>Person(s) coordinating project’s administration</hint>
+          <hint>Register the contact person for matters related to your organisation's participation in project activities</hint>
         </field>
       </row>
       <row>
@@ -8793,13 +8793,15 @@
           <required>Please select Equipment Type</required>
           <hint />
         </field>
+      </row>
+      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>type</dc-element>
           <dc-qualifier>usage</dc-qualifier>
           <label>Equipment Usage</label>
           <input-type value-pairs-name="peru_type_usages">dropdown</input-type>
-          <repeatable>false</repeatable>
+          <repeatable>true</repeatable>
           <required />
           <hint />
         </field>
@@ -8997,13 +8999,15 @@
           <required>Please select Equipment Type</required>
           <hint />
         </field>
+      </row>
+      <row>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>type</dc-element>
           <dc-qualifier>usage</dc-qualifier>
           <label>Equipment Usage</label>
           <input-type value-pairs-name="peru_type_usages">dropdown</input-type>
-          <repeatable>false</repeatable>
+          <repeatable>true</repeatable>
           <required />
           <hint />
         </field>
@@ -10933,8 +10937,9 @@
           <label>Expected Value</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
+          <validation>^[0-9]{8}$</validation>
           <required />
-          <hint />
+          <hint>Expected Value: 8 digits</hint>
         </field>
       </row>
       <row>
@@ -10945,8 +10950,9 @@
           <label>Obtained Value</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
+          <validation>^[0-9]{8}$</validation>
           <required />
-          <hint />
+          <hint>Obtained Value: 8 digits</hint>
         </field>
       </row>
     </form>
@@ -13080,36 +13086,36 @@ Colloquium Service Order 84 - Simultaneous Translation Service - Water Colloquiu
     </value-pairs>
     <value-pairs value-pairs-name="project_types_other" dc-term="project_types_other">
       <pair>
-        <displayed-value>Desarrollo tecnológico</displayed-value>
-        <stored-value>Technological development</stored-value>
+        <displayed-value>Technological development</displayed-value>
+        <stored-value>http://purl.org/pe-repo/concytec/terminos#desarrolloTecnologico</stored-value>
       </pair>
       <pair>
-        <displayed-value>Transferencia tecnológica</displayed-value>
-        <stored-value>Technology transfer</stored-value>
+        <displayed-value>Technology transfer</displayed-value>
+        <stored-value>http://purl.org/pe-repo/concytec/terminos#transferenciaTecnologica</stored-value>
       </pair>
       <pair>
-        <displayed-value>Investigación adaptativa</displayed-value>
-        <stored-value>Adaptive research</stored-value>
+        <displayed-value>Adaptive research</displayed-value>
+        <stored-value>http://purl.org/pe-repo/concytec/terminos#investigacionAdaptativa</stored-value>
       </pair>
       <pair>
-        <displayed-value>Investigación económica</displayed-value>
-        <stored-value>Economic research</stored-value>
+        <displayed-value>Economic research</displayed-value>
+        <stored-value>http://purl.org/pe-repo/concytec/terminos#investigacionEconomica</stored-value>
       </pair>
       <pair>
-        <displayed-value>Servicios de extensión</displayed-value>
-        <stored-value>Extension services</stored-value>
+        <displayed-value>Extension services</displayed-value>
+        <stored-value>http://purl.org/pe-repo/concytec/terminos#serviciosDeExtension</stored-value>
       </pair>
       <pair>
-        <displayed-value>Fortalecimiento de capacidades</displayed-value>
-        <stored-value>Capacity building</stored-value>
+        <displayed-value>Capacity building</displayed-value>
+        <stored-value>http://purl.org/pe-repo/concytec/terminos#fortalecimientoDeCapacidades</stored-value>
       </pair>
       <pair>
-        <displayed-value>Incubación y desarrollo de empresas</displayed-value>
-        <stored-value>Business incubation and development</stored-value>
+        <displayed-value>Business incubation and development</displayed-value>
+        <stored-value>http://purl.org/pe-repo/concytec/terminos#incubacionYDesarrolloDeEmpresas</stored-value>
       </pair>
       <pair>
-        <displayed-value>Equipamiento científico</displayed-value>
-        <stored-value>Scientific equipment</stored-value>
+        <displayed-value>Scientific equipment</displayed-value>
+        <stored-value>http://purl.org/pe-repo/concytec/terminos#equipamientoCientifico</stored-value>
       </pair>
     </value-pairs>
     <value-pairs value-pairs-name="funding_types" dc-term="funding_types">
@@ -14374,16 +14380,16 @@ Colloquium Service Order 84 - Simultaneous Translation Service - Water Colloquiu
     </value-pairs>
     <value-pairs value-pairs-name="project_status" dc-term="project_status">
       <pair>
-        <displayed-value>Activo</displayed-value>
-        <stored-value>Active</stored-value>
+        <displayed-value>Active</displayed-value>
+        <stored-value>https://purl.org/pe-repo/concytec/estadoProyecto#activo</stored-value>
       </pair>
       <pair>
-        <displayed-value>Suspendido</displayed-value>
-        <stored-value>Suspended</stored-value>
+        <displayed-value>Suspended</displayed-value>
+        <stored-value>https://purl.org/pe-repo/concytec/estadoProyecto#suspendido</stored-value>
       </pair>
       <pair>
-        <displayed-value>Concluido</displayed-value>
-        <stored-value>Finished</stored-value>
+        <displayed-value>Finished</displayed-value>
+        <stored-value>https://purl.org/pe-repo/concytec/estadoProyecto#concluido</stored-value>
       </pair>
     </value-pairs>
     <value-pairs value-pairs-name="peru_type_usages" dc-term="peru_type_usages">
@@ -14412,16 +14418,16 @@ Colloquium Service Order 84 - Simultaneous Translation Service - Water Colloquiu
     </value-pairs>
     <value-pairs value-pairs-name="peru_personprofile_type" dc-term="peru_personprofile_type">
       <pair>
-        <displayed-value>Investigator</displayed-value>
-        <stored-value>Investigator</stored-value>
+        <displayed-value>Researcher or innovator member</displayed-value>
+        <stored-value>https://purl.org/pe-repo/ocde/tipoOcupacion#investigadorOInnovadorMiembro</stored-value>
       </pair>
       <pair>
-        <displayed-value>Technician or assimilated</displayed-value>
-        <stored-value>Technician or assimilated</stored-value>
+        <displayed-value>Technicians and equivalent personnel</displayed-value>
+        <stored-value>https://purl.org/pe-repo/ocde/tipoOcupacion#tecnicosYPersonalEquivalente</stored-value>
       </pair>
       <pair>
-        <displayed-value>Other support staff</displayed-value>
-        <stored-value>Other support staff</stored-value>
+        <displayed-value>Auxiliary or support staff</displayed-value>
+        <stored-value>https://purl.org/pe-repo/ocde/tipoOcupacion#personalAuxiliarODeApoyo</stored-value>
       </pair>
     </value-pairs>
     <value-pairs value-pairs-name="yesno" dc-term="yesno">

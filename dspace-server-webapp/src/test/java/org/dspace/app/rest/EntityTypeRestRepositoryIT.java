@@ -22,7 +22,6 @@ import org.dspace.app.rest.test.AbstractEntityIntegrationTest;
 import org.dspace.builder.CollectionBuilder;
 import org.dspace.builder.CommunityBuilder;
 import org.dspace.builder.EntityTypeBuilder;
-import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.EntityType;
 import org.dspace.content.RelationshipType;
@@ -49,7 +48,6 @@ public class EntityTypeRestRepositoryIT extends AbstractEntityIntegrationTest {
     private EntityType journalType;
     private EntityType journalIssueType;
     private EntityType orgUnitType;
-    private EntityType dataPackageType;
     private EntityType personType;
     private EntityType journalVolumeType;
     private EntityType projectType;
@@ -245,27 +243,26 @@ public class EntityTypeRestRepositoryIT extends AbstractEntityIntegrationTest {
             parentCommunity = CommunityBuilder.createCommunity(context)
                 .withName("Parent Community")
                 .build();
-            Collection col1 =
-                CollectionBuilder.createCollection(context, parentCommunity)
+            CollectionBuilder.createCollection(context, parentCommunity)
                         .withEntityType("JournalIssue")
                         .withSubmitterGroup(eperson)
                         .withName("Collection 1")
                         .build();
-            Collection col2 = CollectionBuilder.createCollection(context, parentCommunity)
-                    .withEntityType("Publication")
-                    .withSubmitterGroup(eperson)
-                     .withName("Collection 2")
-                    .build();
-            Collection col3 = CollectionBuilder.createCollection(context, parentCommunity)
-                    .withEntityType("Project")
-                    .withSubmitterGroup(eperson)
-                    .withName("Collection 3")
-                    .build();
-            Collection col4 = CollectionBuilder.createCollection(context, parentCommunity)
-                    .withEntityType("Journal")
-                    .withSubmitterGroup(eperson)
-                    .withName("Collection 4")
-                    .build();
+            CollectionBuilder.createCollection(context, parentCommunity)
+                        .withEntityType("Publication")
+                        .withSubmitterGroup(eperson)
+                        .withName("Collection 2")
+                        .build();
+            CollectionBuilder.createCollection(context, parentCommunity)
+                       .withEntityType("Project")
+                       .withSubmitterGroup(eperson)
+                       .withName("Collection 3")
+                       .build();
+            CollectionBuilder.createCollection(context, parentCommunity)
+                       .withEntityType("Journal")
+                       .withSubmitterGroup(eperson)
+                       .withName("Collection 4")
+                       .build();
 
             context.restoreAuthSystemState();
 

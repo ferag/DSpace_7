@@ -1,12 +1,11 @@
 <Funding xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="mock-id">
-    <Type xmlns="https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types">https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types#Gift</Type> 
+    <Type xmlns="https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types">https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types#Tender</Type> 
     <Acronym>T-FU</Acronym>
     <Name>Test Funding</Name>
     <Amount currency="EUR">
         30.000,00
     </Amount>
     <Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#FinanceID">ID-01</Identifier>
-    <Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#AwardNumber">0001</Identifier>
     <Description>Funding to test export</Description>
     <Funder>
         <OrgUnit>

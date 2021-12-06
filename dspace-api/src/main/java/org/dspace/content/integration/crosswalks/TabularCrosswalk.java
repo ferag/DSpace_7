@@ -34,6 +34,7 @@ import org.dspace.app.util.DCInputsReaderException;
 import org.dspace.app.util.SubmissionConfig;
 import org.dspace.app.util.SubmissionConfigReader;
 import org.dspace.app.util.SubmissionConfigReaderException;
+import org.dspace.app.util.SubmissionStepConfig;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.content.DSpaceObject;
@@ -45,6 +46,7 @@ import org.dspace.content.crosswalk.CrosswalkObjectNotSupported;
 import org.dspace.content.integration.crosswalks.model.TabularTemplateLine;
 import org.dspace.content.integration.crosswalks.virtualfields.VirtualField;
 import org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldMapper;
+import org.dspace.content.security.service.MetadataSecurityService;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
@@ -76,6 +78,8 @@ public abstract class TabularCrosswalk implements ItemExportCrosswalk {
     @Autowired
     protected VirtualFieldMapper virtualFieldMapper;
 
+    @Autowired
+    private MetadataSecurityService metadataSecurityService;
 
     protected DCInputsReader dcInputsReader;
 
@@ -90,6 +94,7 @@ public abstract class TabularCrosswalk implements ItemExportCrosswalk {
 
     private CrosswalkMode crosswalkMode;
 
+    private boolean securityCheckEnabled;
 
     protected List<TabularTemplateLine> templateLines;
 
@@ -223,7 +228,7 @@ public abstract class TabularCrosswalk implements ItemExportCrosswalk {
         } else if (line.isMetadataGroupField()) {
             return getMetadataGroupValues(context, line, item);
         } else {
-            return getMetadataValues(item, line.getField());
+            return getMetadataValues(context, item, line.getField());
         }
     }
 
@@ -257,7 +262,7 @@ public abstract class TabularCrosswalk implements ItemExportCrosswalk {
                 if (metadataValues.containsKey(metadataGroupEntry)) {
                     metadata = metadataValues.get(metadataGroupEntry);
                 } else {
-                    metadata = getMetadataValues(item, metadataGroupEntry);
+                    metadata = getMetadataValues(context, item, metadataGroupEntry);
                     metadataValues.put(metadataGroupEntry, metadata);
                 }
 
@@ -288,19 +293,22 @@ public abstract class TabularCrosswalk implements ItemExportCrosswalk {
 
     private List<String> getMetadataGroup(Context context, Item item, String groupName) throws SQLException {
         try {
+
             Collection collection = collectionService.findByItem(context, item);
             if (collection == null) {
                 throw new IllegalArgumentException("No collection found for item " + item.getID());
             }
 
             SubmissionConfig submissionConfig = this.submissionConfigReader.getSubmissionConfigByCollection(collection);
-            String formName = submissionConfig.getSubmissionName() + "-" + groupName.replaceAll("\\.", "-");
 
-            if (!this.dcInputsReader.hasFormWithName(formName)) {
-                return new ArrayList<String>();
+            for (SubmissionStepConfig submissionStepConfiguration : submissionConfig) {
+                String formName = submissionStepConfiguration.getId() + "-" + groupName.replaceAll("\\.", "-");
+                if (this.dcInputsReader.hasFormWithName(formName)) {
+                    return this.dcInputsReader.getAllFieldNamesByFormName(formName);
+                }
             }
 
-            return this.dcInputsReader.getAllFieldNamesByFormName(formName);
+            return new ArrayList<String>();
 
         } catch (DCInputsReaderException e) {
             log.error("An error occurs reading the input configuration by group name " + groupName, e);
@@ -308,10 +316,14 @@ public abstract class TabularCrosswalk implements ItemExportCrosswalk {
         }
     }
 
-    private List<String> getMetadataValues(Item item, String metadata) {
-        return itemService.getMetadataByMetadataString(item, metadata).stream()
-            .map(MetadataValue::getValue)
-            .collect(Collectors.toList());
+    private List<String> getMetadataValues(Context context, Item item, String metadata) {
+        List<MetadataValue> metadataValues;
+        if (securityCheckEnabled) {
+            metadataValues = metadataSecurityService.getPermissionFilteredMetadataValues(context, item, metadata);
+        } else {
+            metadataValues = itemService.getMetadataByMetadataString(item, metadata);
+        }
+        return metadataValues.stream().map(MetadataValue::getValue).collect(Collectors.toList());
     }
 
     private int getMetadataGroupSize(Item item, String metadataGroupFieldName) {
@@ -345,5 +357,19 @@ public abstract class TabularCrosswalk implements ItemExportCrosswalk {
 
     public CrosswalkMode getCrosswalkMode() {
         return Optional.ofNullable(this.crosswalkMode).orElse(ItemExportCrosswalk.super.getCrosswalkMode());
+    }
+
+    /**
+     * @return the securityCheckEnabled
+     */
+    public boolean isSecurityCheckEnabled() {
+        return securityCheckEnabled;
+    }
+
+    /**
+     * @param securityCheckEnabled the securityCheckEnabled to set
+     */
+    public void setSecurityCheckEnabled(boolean securityCheckEnabled) {
+        this.securityCheckEnabled = securityCheckEnabled;
     }
 }

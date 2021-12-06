@@ -1,11 +1,6 @@
 {
 	"names" : {
 		"preferred-name": "@dc.title@",
-		"full-name": "@crisrp.name@",
-		"vernacular-name": "@crisrp.name.translated@",
-		"variants": [
-			"@crisrp.name.variant@",
-		],
 		"given-name": "@person.givenName@",
 		"family-name": "@person.familyName@",
 		"apellido-paterno": "@perucris.apellidoPaterno@",
@@ -16,9 +11,6 @@
 	"gender": "@oairecerif.person.gender@",
 	"job-title": "@person.jobTitle@",
 	"main-affiliation": "@person.affiliation.name@",
-	"working-groups": [
-		"@crisrp.workgroup@",
-	],
 	"personal-sites": [
 		@group.oairecerif-identifier-url.start@
 		{
@@ -82,7 +74,6 @@
 		"@person.knowsLanguage@",
 	],
 	"ubigeo-reniec": "@perucris.domicilio.ubigeoReniec@",
-    "ubigeo": "@perucris.ubigeo@",
     "address": {
         "street": "@perucris.address.streetAddress@",
         "postal-code": "@perucris.address.postalCode@",

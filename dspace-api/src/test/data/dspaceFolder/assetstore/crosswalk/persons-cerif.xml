@@ -3,8 +3,6 @@
 		<PersonName>
 			<FamilyNames>Smith</FamilyNames>
 			<FirstNames>John</FirstNames>
-			<OtherNames>J.S.</OtherNames>
-			<OtherNames>Smith John</OtherNames>
 		</PersonName>
 		<Gender>M</Gender>
 		<ORCID>0000-0002-9079-5932</ORCID>

@@ -4494,6 +4494,442 @@ You can leave out the day and/or month if they aren't applicable.</hint>
 			</field>
      	</row>
 	</form>
+   <form name="orgunit">
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>title</dc-element>
+         <label>Organization name</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required>You must enter the organization name.</required>
+         <hint>It applies to parent Organizational Units and their dependencies (faculties, departments, units, areas, among others that carry out R + D  and activities within the institution), as well as research groups and institutional research lines.</hint>
+       </field>
+       <field>
+         <dc-schema>cris</dc-schema>
+         <dc-element>sourceId</dc-element>
+         <label>Organization Id in source system</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>Internal code of the organization in the source system</hint>
+         <readonly>all</readonly>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>title</dc-element>
+         <dc-qualifier>alternative</dc-qualifier>
+         <label>Alternative organization name(s) if any</label>
+         <input-type>onebox</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint>Repeat the field as many times as necessary</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>organization</dc-schema>
+         <dc-element>legalName</dc-element>
+         <label>Legal name</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>Might be updated with SUNAT data</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>oairecerif</dc-schema>
+         <dc-element>acronym</dc-element>
+         <label>Acronym or short form of title</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>Acronym, acronym or abbreviated form of the name. Example: UNMSM.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>type</dc-element>
+         <label>Type of Organization</label>
+         <input-type value-pairs-name="peru_orgunit_type">dropdown</input-type>
+         <repeatable>false</repeatable>
+         <required>You must enter the organization type.</required>
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>organization</dc-schema>
+         <dc-element>parentOrganization</dc-element>
+         <label>Parent Organisation</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>The name of the immediately superior organizational unit that encompasses this agency, subunit, research group, or institutional research line.</hint>
+         <type-bind>Dependencia</type-bind>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>type</dc-element>
+         <dc-qualifier>orgunit</dc-qualifier>
+         <label>Dependency type</label>
+         <input-type value-pairs-name="peru_ou_types">dropdown</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+         <type-bind>Dependencia</type-bind>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>organization</dc-schema>
+         <dc-element>identifier</dc-element>
+         <label>Identifiers</label>
+         <input-type value-pairs-name="orgunit_identifiers">qualdrop_value</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+   </form>
+   <form name="orgunit-sinacyt">
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>orgunit</dc-element>
+         <dc-qualifier>ipi</dc-qualifier>
+         <label>Is a Research Public Institution (IPI) ?</label>
+         <input-type value-pairs-name="yesno">dropdown</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>orgunit</dc-element>
+         <dc-qualifier>funder</dc-qualifier>
+         <label>Is a funder entity ?</label>
+         <input-type value-pairs-name="yesno">dropdown</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>type</dc-element>
+         <dc-qualifier>sectorInstitucional</dc-qualifier>
+         <label>Sector Institutional (Mandatory only for main institutions)</label>
+         <input-type value-pairs-name="ocde_sectorInstitucional">dropdown</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+         <type-bind>Institución principal</type-bind>
+       </field>
+     </row>
+   </form>
+   <form name="orgunit-other-data">
+     <row>
+       <field>
+         <dc-schema>oairecerif</dc-schema>
+         <dc-element>identifier</dc-element>
+         <dc-qualifier>url</dc-qualifier>
+         <label>Website(s)</label>
+         <input-type>onebox</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>orgunit</dc-schema>
+         <dc-element>email</dc-element>
+         <label>Email</label>
+         <input-type>onebox</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint>Email associated with the organizational unit or its dependencies. Institutional email must be registered.</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>organization</dc-schema>
+         <dc-element>address</dc-element>
+         <dc-qualifier>addressCountry</dc-qualifier>
+         <label>Country</label>
+         <input-type value-pairs-name="common_iso_countries">dropdown</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>Might be updated with SUNAT data</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>organization</dc-schema>
+         <dc-element>address</dc-element>
+         <dc-qualifier>addressLocality</dc-qualifier>
+         <label>Address</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>Might be updated with SUNAT data</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>ubigeo</dc-element>
+         <label>Address UbiGeo INEI</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>Might be updated with SUNAT data</hint>
+         <vocabulary closed="true">peru_ubigeo</vocabulary>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>description</dc-element>
+         <dc-qualifier>abstract</dc-qualifier>
+         <label>Description</label>
+         <input-type>textarea</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>It is recommended for research groups and institutional research lines.</hint>
+       </field>
+     </row>
+   </form>
+   <form name="orgunit-classifications">
+     <row>
+       <field>
+         <dc-schema>dc</dc-schema>
+         <dc-element>subject</dc-element>
+         <label>Keyword(s)</label>
+         <input-type>tag</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>type</dc-element>
+         <dc-qualifier>educacionSuperior</dc-qualifier>
+         <label>Sunedu Classification</label>
+         <input-type value-pairs-name="sunedu_tipoInstitucion">dropdown</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>Only for “Higher education”. Might be updated from SUNEDU</hint>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>type</dc-element>
+         <dc-qualifier>naturaleza</dc-qualifier>
+         <label>Juridical Nature</label>
+         <input-type value-pairs-name="peru_ou_nature">dropdown</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint>Mandatory for Main organizations</hint>
+         <type-bind>Institución principal</type-bind>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>subject</dc-element>
+         <dc-qualifier>ocde</dc-qualifier>
+         <label>OCDE Subject(s)</label>
+         <input-type>onebox</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint />
+         <vocabulary closed="true">ocde_subjects</vocabulary>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>type</dc-element>
+         <dc-qualifier>ciiu</dc-qualifier>
+         <label>Industrial Uniform Classification – CIIU</label>
+         <input-type>onebox</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint>Applies on Main organizations</hint>
+         <type-bind>Institución principal</type-bind>
+         <vocabulary closed="true">peru_ciiu</vocabulary>
+       </field>
+     </row>
+   </form>
+   <form name="orgunit-concytec">
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>renacyt</dc-element>
+         <dc-qualifier>registration</dc-qualifier>
+         <label>Concytec Records</label>
+         <input-type>group</input-type>
+         <repeatable>true</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+   </form>
+   <form name="orgunit-indicators">
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>sti</dc-element>
+         <dc-qualifier>actions</dc-qualifier>
+         <label>Technological Surveillance Actions</label>
+         <input-type value-pairs-name="yesno">dropdown</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>sti</dc-element>
+         <dc-qualifier>formalUnit</dc-qualifier>
+         <label>Has formal technological surveillance unit</label>
+         <input-type value-pairs-name="yesno">dropdown</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>sti</dc-element>
+         <dc-qualifier>qualityCertified</dc-qualifier>
+         <label>166006 or equivalent certified</label>
+         <input-type value-pairs-name="yesno">dropdown</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>description</dc-element>
+         <dc-qualifier>internalNote</dc-qualifier>
+         <label>Internal Note</label>
+         <input-type>textarea</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+   </form>
+   <form name="orgunit-concytec-perucris-renacyt-registration">
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>renacyt</dc-element>
+         <dc-qualifier>registration</dc-qualifier>
+         <label>Renacyt Institution Name</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>renacyt</dc-element>
+         <dc-qualifier>registrationNumber</dc-qualifier>
+         <label>Resolution</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>renacyt</dc-element>
+         <dc-qualifier>dateOfQualification</dc-qualifier>
+         <label>Validity</label>
+         <input-type>date</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>renacyt</dc-element>
+         <dc-qualifier>validityOfRegistration</dc-qualifier>
+         <label>End of Validity</label>
+         <input-type>date</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>renacyt</dc-element>
+         <dc-qualifier>classification</dc-qualifier>
+         <label>Category</label>
+         <input-type value-pairs-name="peru_renacyt_classification">dropdown</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>renacyt</dc-element>
+         <dc-qualifier>ocde</dc-qualifier>
+         <label>Authorized Discipline</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+         <vocabulary closed="true">ocde_subjects</vocabulary>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>renacyt</dc-element>
+         <dc-qualifier>strength</dc-qualifier>
+         <label>Strengths</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>renacyt</dc-element>
+         <dc-qualifier>contact</dc-qualifier>
+         <label>Contact data</label>
+         <input-type>textarea</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+   </form>
 
 
  </form-definitions>
@@ -6142,6 +6578,163 @@ You can leave out the day and/or month if they aren't applicable.</hint>
         <stored-value>Certificate of plant breeder's right</stored-value>
       </pair>
     </value-pairs>
+     <value-pairs value-pairs-name="yesno" dc-term="yesno">
+     <pair>
+       <displayed-value>Yes</displayed-value>
+       <stored-value>yes</stored-value>
+     </pair>
+     <pair>
+       <displayed-value>No</displayed-value>
+       <stored-value>no</stored-value>
+     </pair>
+     </value-pairs>
+     <value-pairs value-pairs-name="ocde_sectorInstitucional" dc-term="ocde_sectorInstitucional">
+         <pair>
+             <displayed-value>Unspecified</displayed-value>
+             <stored-value />
+         </pair>
+         <pair>
+             <displayed-value>Company</displayed-value>
+             <stored-value>https://purl.org/pe-repo/ocde/sectorInstitucional#empresa</stored-value>
+         </pair>
+         <pair>
+             <displayed-value>Higher education</displayed-value>
+             <stored-value>https://purl.org/pe-repo/ocde/sectorInstitucional#ensenanzaSuperior</stored-value>
+         </pair>
+         <pair>
+             <displayed-value>Public administration</displayed-value>
+             <stored-value>https://purl.org/pe-repo/ocde/sectorInstitucional#administracionPublica</stored-value>
+         </pair>
+         <pair>
+             <displayed-value>Private non-profit institutions</displayed-value>
+             <stored-value>https://purl.org/pe-repo/ocde/sectorInstitucional#institucionesPrivadasSinFinesDeLucro</stored-value>
+         </pair>
+         <pair>
+             <displayed-value>Rest of the world</displayed-value>
+             <stored-value>https://purl.org/pe-repo/ocde/sectorInstitucional#restoDelMundo</stored-value>
+         </pair>
+     </value-pairs>
+     <value-pairs value-pairs-name="peru_ou_nature" dc-term="peru_ou_nature">
+         <pair>
+             <displayed-value>Unspecified</displayed-value>
+             <stored-value />
+         </pair>
+         <pair>
+             <displayed-value>Public</displayed-value>
+             <stored-value>https://purl.org/pe-repo/ocde/naturalezaInstitucion#publica</stored-value>
+         </pair>
+         <pair>
+             <displayed-value>Private</displayed-value>
+             <stored-value>https://purl.org/pe-repo/ocde/naturalezaInstitucion#privada</stored-value>
+         </pair>
+     </value-pairs>
+     <value-pairs value-pairs-name="peru_ou_types" dc-term="peru_ou_types">
+         <pair>
+             <displayed-value>Unspecified</displayed-value>
+             <stored-value />
+         </pair>
+         <pair>
+             <displayed-value>Research or innovation unit</displayed-value>
+             <stored-value>https://purl.org/pe-repo/concytec/tipoSubunidad#unidadDeInvestigacionOInnovacion</stored-value>
+         </pair>
+         <pair>
+             <displayed-value>Research group</displayed-value>
+             <stored-value>https://purl.org/pe-repo/concytec/tipoSubunidad#grupoDeInvestigacion</stored-value>
+         </pair>
+         <pair>
+             <displayed-value>Research line</displayed-value>
+             <stored-value>https://purl.org/pe-repo/concytec/tipoSubunidad#lineaDeInvestigacion</stored-value>
+         </pair>
+     </value-pairs>
+     <value-pairs value-pairs-name="sunedu_tipoInstitucion" dc-term="sunedu_tipoInstitucion">
+         <pair>
+             <displayed-value>Unspecified</displayed-value>
+             <stored-value />
+         </pair>
+         <pair>
+             <displayed-value>Centro de Educación Técnico Productiva (CETPRO)</displayed-value>
+             <stored-value>https://purl.org/pe-repo/sunedu/tipoInstitucion#03</stored-value>
+         </pair>
+         <pair>
+             <displayed-value>Instituto de Educación Superior Tecnológica (IEST)</displayed-value>
+             <stored-value>https://purl.org/pe-repo/sunedu/tipoInstitucion#04</stored-value>
+         </pair>
+         <pair>
+             <displayed-value>Instituto Superior Pedagógico</displayed-value>
+             <stored-value>https://purl.org/pe-repo/sunedu/tipoInstitucion#05</stored-value>
+         </pair>
+         <pair>
+             <displayed-value>Institución universitaria e institución con rango universitario</displayed-value>
+             <stored-value>https://purl.org/pe-repo/sunedu/tipoInstitucion#06</stored-value>
+         </pair>
+         <pair>
+             <displayed-value>Educación Superior de Formación Artística</displayed-value>
+             <stored-value>https://purl.org/pe-repo/sunedu/tipoInstitucion#07</stored-value>
+         </pair>
+         <pair>
+             <displayed-value>Escuela o Instituto de Educación Superior Tecnológico de las Fuerzas Armadas o Policiales</displayed-value>
+             <stored-value>https://purl.org/pe-repo/sunedu/tipoInstitucion#08</stored-value>
+         </pair>
+     </value-pairs>
+     <value-pairs value-pairs-name="peru_orgunit_type" dc-term="peru_orgunit_type">
+         <pair>
+             <displayed-value>Main Institution</displayed-value>
+             <stored-value>Institución principal</stored-value>
+         </pair>
+         <pair>
+             <displayed-value>Dependency</displayed-value>
+             <stored-value>Dependencia</stored-value>
+         </pair>
+     </value-pairs>
+     <value-pairs value-pairs-name="orgunit_identifiers" dc-term="orgunit_identifiers">
+         <pair>
+             <displayed-value>Generic ID</displayed-value>
+             <stored-value />
+         </pair>
+         <pair>
+             <displayed-value>CrossRef Funder ID</displayed-value>
+             <stored-value>crossrefid</stored-value>
+         </pair>
+         <pair>
+             <displayed-value>ROR - Research Organization Registry</displayed-value>
+             <stored-value>ror</stored-value>
+         </pair>
+         <pair>
+             <displayed-value>ISNI - International Standard Name Identifier</displayed-value>
+             <stored-value>isni</stored-value>
+         </pair>
+         <pair>
+             <displayed-value>Ringgold identifier</displayed-value>
+             <stored-value>rin</stored-value>
+         </pair>
+         <pair>
+             <displayed-value>RUC</displayed-value>
+             <stored-value>ruc</stored-value>
+         </pair>
+         <pair>
+             <displayed-value>Scopus AffId</displayed-value>
+             <stored-value>scopusaffid</stored-value>
+         </pair>
+     </value-pairs>
+     <value-pairs value-pairs-name="peru_renacyt_classification" dc-term="peru_renacyt_classification">
+     <pair>
+       <displayed-value>Unspecified</displayed-value>
+       <stored-value />
+     </pair>
+     <pair>
+       <displayed-value>Investigación científica</displayed-value>
+       <stored-value>Investigación científica</stored-value>
+     </pair>
+     <pair>
+       <displayed-value>Desarrollo tecnológico</displayed-value>
+       <stored-value>Desarrollo tecnológico</stored-value>
+     </pair>
+     <pair>
+       <displayed-value>Innovación tecnológica</displayed-value>
+       <stored-value>Innovación tecnológica</stored-value>
+     </pair>
+   </value-pairs>
+
 
  </form-value-pairs>
 

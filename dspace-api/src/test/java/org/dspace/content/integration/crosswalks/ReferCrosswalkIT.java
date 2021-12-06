@@ -1620,6 +1620,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withOrgUnitIdentifier("ID-02")
             .withUrlIdentifier("www.orgUnit.com")
             .withUrlIdentifier("www.orgUnit.it")
+            .withPerucrisSubjectOCDE("ocde::subject")
             .build();
 
         Item secondOrgUnit = ItemBuilder.createItem(context, collection)
@@ -1896,7 +1897,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withEntityType("Funding")
             .withAcronym("T-FU")
             .withTitle("Test Funding")
-            .withType("Gift")
+            .withType("Tender")
             .withInternalId("ID-01")
             .withFundingIdentifier("0001")
             .withDescription("Funding to test export")
@@ -2513,6 +2514,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item patent = ItemBuilder.createItem(context, collection)
             .withEntityType("InstitutionPatent")
             .withTitle("Test patent")
+            .withType("Controlled Vocabulary for Resource Type Genres::patent::PCT application")
             .withDateSubmitted("2021-01-01")
             .withPublisher("First publisher")
             .withPublisher("Second publisher")
@@ -2548,6 +2550,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item patent = ItemBuilder.createItem(context, collection)
             .withEntityType("Patent")
             .withTitle("Test patent")
+            .withType("Controlled Vocabulary for Resource Type Genres::patent::patente de diseño")
             .withIssueDate("2021-01-01")
             .withPublisher("First publisher")
             .withPublisher("Second publisher")
@@ -2582,6 +2585,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item firstPatent = ItemBuilder.createItem(context, collection)
             .withEntityType("Patent")
             .withTitle("Test patent")
+            .withType("Controlled Vocabulary for Resource Type Genres::patent::design patent")
             .withIssueDate("2021-01-01")
             .withPublisher("Publisher")
             .withPatentNo("12345-666")
@@ -2590,6 +2594,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item secondPatent = ItemBuilder.createItem(context, collection)
             .withEntityType("Patent")
             .withTitle("Second patent")
+            .withType("Controlled Vocabulary for Resource Type Genres::patent::Solicitud PCT")
             .withIssueDate("2011-01-01")
             .withPublisher("First publisher")
             .withPublisher("Second publisher")
@@ -2618,6 +2623,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item patent = ItemBuilder.createItem(context, collection)
             .withEntityType("Patent")
             .withTitle("Test patent")
+            .withType("Controlled Vocabulary for Resource Type Genres::patent::Solicitud PCT")
             .withDateSubmitted("2021-01-01")
             .withPublisher("First publisher")
             .withPublisher("Second publisher")
@@ -2652,6 +2658,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item firstPatent = ItemBuilder.createItem(context, collection)
             .withEntityType("Patent")
             .withTitle("Test patent")
+            .withType("Controlled Vocabulary for Resource Type Genres::patent::patente de plantas")
             .withDateSubmitted("2021-01-01")
             .withPublisher("Publisher")
             .withPatentNo("12345-666")
@@ -2660,6 +2667,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item secondPatent = ItemBuilder.createItem(context, collection)
             .withEntityType("Patent")
             .withTitle("Second patent")
+            .withType("Controlled Vocabulary for Resource Type Genres::patent::obtención de variedades vegetales")
             .withDateSubmitted("2011-01-01")
             .withPublisher("First publisher")
             .withPublisher("Second publisher")
@@ -2926,7 +2934,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
-    public void xmlDisseminateMetadataSecurityFirstLevelTest() throws Exception {
+    public void xmlDisseminateMetadataSecurityFirstLevelNotOccursOnPublicationTest() throws Exception {
         context.turnOffAuthorisationSystem();
         parentCommunity = CommunityBuilder.createCommunity(context).build();
         Collection col = CollectionBuilder.createCollection(context, parentCommunity)
@@ -2984,6 +2992,83 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         referCrossWalk.disseminate(context, Arrays.asList(item).iterator(), out);
 
         try (FileInputStream fis = getFileInputStream("publications2.xml")) {
+            String expectedXml = IOUtils.toString(fis, Charset.defaultCharset());
+            compareEachLine(out.toString(), expectedXml);
+        }
+    }
+
+    @Test
+    public void xmlDisseminateMetadataSecurityFirstLevelTest() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        Item personItem = createItem(context, collection)
+            .withEntityType("CvPerson")
+            .withTitle("Smith, John")
+            .withVariantName("J.S.")
+            .withVariantName("Smith John")
+            .withPersonMainAffiliation("University")
+            .withScopusAuthorIdentifier("SA-01")
+            .withPersonEmail("test@test.com")
+            .withResearcherIdentifier("R-01")
+            .withResearcherIdentifier("R-02")
+            .withPersonAffiliation("Company")
+            .withPersonAffiliationStartDate("2018-01-01")
+            .withPersonAffiliationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPersonAffiliationRole("Developer")
+            .withPersonAffiliation("Another Company")
+            .withPersonAffiliationStartDate("2017-01-01")
+            .withPersonAffiliationEndDate("2017-12-31")
+            .withPersonAffiliationRole("Developer")
+            .build();
+
+        itemService.addSecuredMetadata(context, personItem, "dc", "title", null, null, "Title test", null, 0, 0);
+        itemService.addSecuredMetadata(context, personItem, "oairecerif", "person", "gender", null, "M", null, 0, 1);
+        itemService.addSecuredMetadata(context, personItem, "person", "identifier", "orcid", null,
+            "0000-0002-9079-5932", null, 0, 2);
+
+        MetadataField title = mfss.findByElement(context, "dc", "title", null);
+        MetadataField gender = mfss.findByElement(context, "oairecerif", "person", "gender");
+        MetadataField orcid = mfss.findByElement(context, "person", "identifier", "orcid");
+
+        EntityType eType = EntityTypeBuilder.createEntityTypeBuilder(context, "Publication").build();
+        CrisLayoutBox box1 = CrisLayoutBoxBuilder.createBuilder(context, eType, true, true)
+            .withShortname("box-shortname-one")
+            .withSecurity(LayoutSecurity.PUBLIC)
+            .build();
+
+        CrisLayoutFieldBuilder.createMetadataField(context, title, 0, 0)
+            .withLabel("LABEL TITLE")
+            .withRendering("RENDERIGN TITLE")
+            .withStyle("STYLE")
+            .withBox(box1)
+            .build();
+
+        CrisLayoutFieldBuilder.createMetadataField(context, gender, 1, 0)
+            .withLabel("LABEL GENDER")
+            .withRendering("RENDERIGN GENDER")
+            .withStyle("STYLE")
+            .withBox(box1)
+            .build();
+
+        CrisLayoutFieldBuilder.createMetadataField(context, orcid, 2, 0)
+            .withLabel("LABEL ORCID")
+            .withRendering("RENDERIGN ORCID")
+            .withStyle("STYLE")
+            .withBox(box1)
+            .build();
+
+        context.restoreAuthSystemState();
+        context.commit();
+        context.setCurrentUser(null);
+
+        ReferCrosswalk crosswalk = (ReferCrosswalk) crosswalkMapper.getByType("ctivitae-profile-perucris-cerif-xml");
+        assertThat(crosswalk, notNullValue());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        crosswalk.disseminate(context, personItem, out);
+
+        try (FileInputStream fis = getFileInputStream("profileWithoutSecuredMetadata.xml")) {
             String expectedXml = IOUtils.toString(fis, Charset.defaultCharset());
             compareEachLine(out.toString(), expectedXml);
         }
@@ -3061,7 +3146,7 @@ public class ReferCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         referCrossWalk.disseminate(context, Arrays.asList(item).iterator(), out);
 
-        try (FileInputStream fis = getFileInputStream("publications3.xml")) {
+        try (FileInputStream fis = getFileInputStream("publications2.xml")) {
             compareEachLine(out.toString(), IOUtils.toString(fis, Charset.defaultCharset()));
         }
 

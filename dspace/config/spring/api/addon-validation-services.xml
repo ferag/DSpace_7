@@ -39,6 +39,19 @@
         <property name="filter" ref="person-has-at-least-one-id_filter"/>
     </bean>
 
+    <bean name="projectHasAtLeastOneExecutor" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.executorRequired"/>
+        <property name="metadataFields">
+           <list>
+               <value>crispj.contractorou</value>
+               <value>crispj.contractorper</value>
+           </list>
+        </property>
+        <property name="filter" ref="project-has-at-least-one-executor_filter"/>
+    </bean>
+
+
+
     <bean name="itemHasOcdeFromControlledVocabulary" class="org.dspace.validation.LogicalStatementValidator">
         <property name="errorKey" value="error.validation.invalidOcde"/>
         <property name="metadataFields">
@@ -145,15 +158,15 @@
         <property name="filter" ref="peruvian-cv-person-has-ubigeo_filter"/>
     </bean>
 
-<!--    <bean name="projectWithOaPolicyUrl" class="org.dspace.validation.LogicalStatementValidator">-->
-<!--    <property name="errorKey" value="error.validation.mandateUrlRequired"/>-->
-<!--    <property name="metadataFields">-->
-<!--        <list>-->
-<!--            <value>oairecerif.oamandate.url</value>-->
-<!--        </list>-->
-<!--    </property>-->
-<!--    <property name="filter" ref="project-without-oa-mandate-requires-policy-url"/>-->
-<!--</bean>-->
+    <bean name="projectWithOaPolicyUrl" class="org.dspace.validation.LogicalStatementValidator">
+    <property name="errorKey" value="error.validation.mandateUrlRequired"/>
+    <property name="metadataFields">
+        <list>
+            <value>oairecerif.oamandate.url</value>
+        </list>
+    </property>
+    <property name="filter" ref="project-without-oa-mandate-requires-policy-url"/>
+</bean>
 
     <bean name="institutionalSectorSet" class="org.dspace.validation.LogicalStatementValidator">
         <property name="errorKey" value="error.validation.institutionalSectorMandatory"/>

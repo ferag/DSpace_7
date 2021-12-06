@@ -267,6 +267,25 @@
         </property>
     </bean>
 
+    <!-- has contractorou set -->
+    <bean id="has-contractorou-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="crispj.contractorou" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has contractorou set -->
+    <bean id="has-contractorper-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="crispj.contractorper" />
+            </map>
+        </property>
+    </bean>
 
     <!-- has perucris.subject.ocde set-->
     <bean id="has-perucris-subject-ocde-set"
@@ -532,11 +551,10 @@
 
 
     <bean id="has-juridical-nature-set_condition"
-          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
         <property name="parameters">
             <map>
                 <entry key="field" value="perucris.type.naturaleza" />
-                <entry key="pattern" value="^Pública|Privada$" />
             </map>
         </property>
     </bean>
@@ -862,6 +880,24 @@
         </property>
     </bean>
 
+    <bean id="project-has-at-least-one-executor_filter" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="relationship-type-equals-project_condition"/>
+                            </property>
+                        </bean>
+                        <ref bean="has-contractorou-set_condition" />
+                        <ref bean="has-contractorper-set_condition" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
     <bean id="funding-has-oa-condition-url_filter" class="org.dspace.content.logic.DefaultFilter">
         <property name="statement">
             <bean class="org.dspace.content.logic.operator.Or">
@@ -1167,7 +1203,6 @@
     </bean>
 
 
-
     <bean id="project-without-oa-mandate-requires-policy-url" class="org.dspace.content.logic.DefaultFilter">
         <property name="statement">
             <bean class="org.dspace.content.logic.operator.Or">
@@ -1183,20 +1218,12 @@
                                 <ref bean="has-oa-mandate-condition-set"/>
                             </property>
                         </bean>
-                        <bean class="org.dspace.content.logic.operator.And">
-                            <property name="statements">
-                                <list>
-                                    <ref bean="has-not-oa-mandate-condition" />
-                                    <ref bean="has-oa-policy-url-condition" />
-                                </list>
-                            </property>
-                        </bean>
-                        <ref bean="has-oa-mandate-condition" />
+                        <ref bean="has-not-oa-mandate-condition"/>
+                        <ref bean="has-oa-policy-url-condition" />
                     </list>
                 </property>
             </bean>
         </property>
-
     </bean>
 
     <bean id="peruvian-cv-person-has-ubigeo_filter" class="org.dspace.content.logic.DefaultFilter">

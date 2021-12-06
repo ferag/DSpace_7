@@ -557,7 +557,10 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
             .withDescription("Funding to test export")
             .withAmount("30.000,00")
             .withAmountCurrency("EUR")
+            .withExecutedAmount("15.000,00")
+            .withExecutedAmountCurrency("EUR")
             .withFunder("OrgUnit Funder")
+            .withFunder("OrgUnit Funder 2")
             .withFundingStartDate("2015-01-01")
             .withFundingEndDate("2020-01-01")
             .withOAMandate("true")
@@ -586,7 +589,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         Item patent = ItemBuilder.createItem(context, collection)
             .withEntityType("Patent")
             .withTitle("Test patent")
-            .withDateAccepted("2020-01-01")
+            .withDateSubmitted("2020-01-01")
             .withIssueDate("2021-01-01")
             .withPublisher("First publisher")
             .withPublisher("Second publisher")
@@ -730,7 +733,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
     private void assertThatPersonDocumentHasContent(String content) {
         assertThat(content, containsString("John Smith"));
-        assertThat(content, containsString("Researcher at University"));
+        assertThat(content, containsString("Researcher en University"));
 
         assertThat(content, containsString("Fecha de nacimiento: 1992-06-26"));
         assertThat(content, containsString("Sexo: M"));
@@ -741,22 +744,21 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(content, containsString("Lorem ipsum dolor sit amet"));
 
         assertThat(content, containsString("Afiliaciones"));
-        assertThat(content, containsString("Researcher at University from 2020-01-02"));
-        assertThat(content, containsString("Developer at Company from 2015-01-01 to 2020-01-01"));
+        assertThat(content, containsString("Researcher en University desde 2020-01-02"));
+        assertThat(content, containsString("Developer en Company desde 2015-01-01 hasta 2020-01-01"));
 
         assertThat(content, containsString("Educación"));
-        assertThat(content, containsString("Student at School from 2000-01-01 to 2005-01-01"));
+        assertThat(content, containsString("Student en School desde 2000-01-01 hasta 2005-01-01"));
 
         assertThat(content, containsString("Cualificaciones"));
-        assertThat(content, containsString("First Qualification from 2015-01-01 to 2016-01-01"));
-        assertThat(content, containsString("Second Qualification from 2016-01-02"));
+        assertThat(content, containsString("First Qualification desde 2015-01-01 hasta 2016-01-01"));
+        assertThat(content, containsString("Second Qualification desde 2016-01-02"));
 
         assertThat(content, containsString("Publicaciones"));
-        assertThat(content, containsString("John Smith and Walter White (2020-01-01). First Publication"));
+        assertThat(content, containsString("John Smith y Walter White (2020-01-01). First Publication"));
         assertThat(content, containsString("John Smith (2020-04-01). Second Publication"));
 
         assertThat(content, containsString("Otra información"));
-        assertThat(content, containsString("Grupos de trabajo: First work group, Second work group"));
         assertThat(content, containsString("Intereses: Science"));
         assertThat(content, containsString("Idiomas: English, Italian"));
         assertThat(content, containsString("Personal sites: www.test.com ( Test ) , www.john-smith.com , "
@@ -867,10 +869,10 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(content, containsString("Tipo: https://www.openaire.eu/cerif-profile/vocab/"
             + "OpenAIRE_Funding_Types#Gift"));
         assertThat(content, containsString("Código de financiamiento: ID-01"));
-        assertThat(content, containsString("Número de beca: 0001"));
         assertThat(content, containsString("Cantidad: 30.000,00 (EUR)"));
-        assertThat(content, containsString("Financiador: OrgUnit Funder"));
-        assertThat(content, containsString("Duration: from 2015-01-01 to 2020-01-01"));
+        assertThat(content, containsString("Monto ejecutado: 15.000,00 (EUR)"));
+        assertThat(content, containsString("Financiador: OrgUnit Funder, OrgUnit Funder 2"));
+        assertThat(content, containsString("Duración: desde 2015-01-01 hasta 2020-01-01"));
         assertThat(content, containsString("Mandato OA: true"));
         assertThat(content, containsString("URL de políticas OA: www.mandate.url"));
     }
@@ -882,7 +884,6 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(text, containsString("Registration date: 2021-01-01"));
         assertThat(text, containsString("Approval date: 2020-01-01"));
         assertThat(text, containsString("Patent number: 12345-666"));
-        assertThat(text, containsString("Issuer(s): First publisher, Second publisher"));
         assertThat(text, containsString("Inventor(s): Walter White (4Science), Jesse Pinkman, John Smith (4Science)"));
         assertThat(text, containsString("Holder(s): Test Organization"));
         assertThat(text, containsString("Keyword(s): patent, test"));

@@ -1,0 +1,32 @@
+<Person xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="mock-id">
+    <PersonName>
+        <FamilyNames>Smith</FamilyNames>
+        <FirstNames>John</FirstNames>
+    </PersonName>
+    <ResearcherID>R-01</ResearcherID>
+    <ResearcherID>R-02</ResearcherID>
+    <ScopusAuthorID>SA-01</ScopusAuthorID>
+    <ElectronicAddress>test@test.com</ElectronicAddress>
+    <Affiliation
+        startDate="2018-01-01"
+        role="Developer"
+    >
+        <OrgUnit> 
+            <Name>Company</Name> 
+        </OrgUnit>
+    </Affiliation>
+    <Affiliation
+        startDate="2017-01-01"
+        endDate="2017-12-31"
+        role="Developer"
+    >
+        <OrgUnit> 
+            <Name>Another Company</Name> 
+        </OrgUnit>
+    </Affiliation>
+    <Affiliation> 
+        <OrgUnit> 
+            <Acronym>University</Acronym> 
+        </OrgUnit> 
+    </Affiliation>
+</Person>

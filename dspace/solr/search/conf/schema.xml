@@ -386,6 +386,6 @@
  <copyField source="title" dest="itemauthoritylookupexactmatch"/>
  <copyField source="lastModified" dest="bi_sort_4_sort"/>
  <copyField source="dspace.entity.type" dest="search.entitytype"/>
- <copyField source="withdrawn" dest="hidden.withdrawn"/>
+    <copyField source="withdrawn" dest="hidden.withdrawn"/>
 
 </schema>

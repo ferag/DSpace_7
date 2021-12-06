@@ -51,8 +51,8 @@ public class SubmissionFormsControllerIT extends AbstractControllerIntegrationTe
     @Autowired
     private ChoiceAuthorityService cas;
 
-    private final static int PAGE_TOTAL_ELEMENTS = 54;
-    private final static int PAGE_TOTAL_PAGES = 27;
+    private final static int PAGE_TOTAL_ELEMENTS = 61;
+    private final static int PAGE_TOTAL_PAGES = 31;
 
     @Test
     public void findAll() throws Exception {
@@ -73,7 +73,7 @@ public class SubmissionFormsControllerIT extends AbstractControllerIntegrationTe
                    //The configuration file for the test env includes PAGE_TOTAL_ELEMENTS forms
                    .andExpect(jsonPath("$.page.size", is(20)))
                    .andExpect(jsonPath("$.page.totalElements", equalTo(PAGE_TOTAL_ELEMENTS)))
-                   .andExpect(jsonPath("$.page.totalPages", equalTo(3)))
+                   .andExpect(jsonPath("$.page.totalPages", equalTo(4)))
                    .andExpect(jsonPath("$.page.number", is(0)))
                    .andExpect(
                        jsonPath("$._links.self.href", Matchers.startsWith(REST_SERVER_URL + "config/submissionforms")))
@@ -90,7 +90,7 @@ public class SubmissionFormsControllerIT extends AbstractControllerIntegrationTe
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$.page.size", is(20)))
                 .andExpect(jsonPath("$.page.totalElements", equalTo(PAGE_TOTAL_ELEMENTS)))
-                .andExpect(jsonPath("$.page.totalPages", equalTo(3)))
+                .andExpect(jsonPath("$.page.totalPages", equalTo(4)))
                 .andExpect(jsonPath("$.page.number", is(0)))
                 .andExpect(jsonPath("$._links.self.href", Matchers.startsWith(REST_SERVER_URL
                            + "config/submissionforms")))

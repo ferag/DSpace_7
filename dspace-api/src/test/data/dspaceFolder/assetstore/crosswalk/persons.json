@@ -3,15 +3,11 @@
 		{
 			"names" : {
 				"preferred-name": "John Smith",
-				"variants": [
-				],
 				"given-name": "John",
 				"family-name": "Smith"
 			},
 			"birth-date": "1992-06-26",
 			"gender": "M",
-			"working-groups": [
-			],
 			"personal-sites": [
 			],
 			"interests": [
@@ -43,8 +39,6 @@
 		{
 			"names" : {
 				"preferred-name": "Adam White",
-				"variants": [
-				],
 				"given-name": "Adam",
 				"family-name": "White"
 			},
@@ -52,8 +46,6 @@
 			"gender": "M",
 			"job-title": "Researcher",
 			"main-affiliation": "University",
-			"working-groups": [
-			],
 			"personal-sites": [
 			],
 			"interests": [

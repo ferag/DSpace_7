@@ -3,7 +3,6 @@
 	"name": "Test Funding",
 	"acronym": "T-FU",
 	"fundingCode": "ID-01",
-	"grantNumber": "0001",
 	"amount": {
 		"currency": "EUR",
 		"value": "30.000,00"

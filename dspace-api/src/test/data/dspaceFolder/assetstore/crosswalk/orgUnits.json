@@ -16,21 +16,8 @@
 				"www.orgUnit.com",
 				"www.orgUnit.it"
 			],
-            "ruc-identifiers": [
-            ],
-            "rin-identifiers": [
-            ],
-            "ror-identifiers": [
-            ],
-            "isni-identifiers": [
-            ],
-            "scopusaff-identifiers": [
-            ],
-            "crossref-identifiers": [
-            ],
             "subjects": [
-            ],
-            "keywords": [
+              "ocde::subject"
             ],
             "postAddress": {
             }
@@ -45,24 +32,6 @@
 			"identifiers": [
 				"ID-03"
 			],
-			"url-identifiers": [
-			],
-            "ruc-identifiers": [
-            ],
-            "rin-identifiers": [
-            ],
-            "ror-identifiers": [
-            ],
-            "isni-identifiers": [
-            ],
-            "scopusaff-identifiers": [
-            ],
-            "crossref-identifiers": [
-            ],
-            "subjects": [
-            ],
-            "keywords": [
-            ],
             "postAddress": {
             }
 		}

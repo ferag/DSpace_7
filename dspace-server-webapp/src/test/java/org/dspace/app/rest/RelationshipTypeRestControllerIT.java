@@ -8,13 +8,13 @@
 package org.dspace.app.rest;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.dspace.app.rest.matcher.EntityTypeMatcher;
-import org.dspace.app.rest.matcher.PageMatcher;
 import org.dspace.app.rest.matcher.RelationshipMatcher;
 import org.dspace.app.rest.matcher.RelationshipTypeMatcher;
 import org.dspace.app.rest.test.AbstractEntityIntegrationTest;
@@ -46,20 +46,15 @@ public class RelationshipTypeRestControllerIT extends AbstractEntityIntegrationT
     public void findAllEntityTypes() throws Exception {
 
         getClient().perform(get("/api/core/entitytypes"))
-
                    .andExpect(status().isOk())
-                   .andExpect(jsonPath("$.page",
-                                       is(PageMatcher.pageEntryWithTotalPagesAndElements(0, 20, 1, 8))))
-                   .andExpect(jsonPath("$._embedded.entitytypes", containsInAnyOrder(
+                   .andExpect(jsonPath("$._embedded.entitytypes", hasItems(
                        EntityTypeMatcher.matchEntityTypeEntryForLabel("Publication"),
                        EntityTypeMatcher.matchEntityTypeEntryForLabel("Person"),
                        EntityTypeMatcher.matchEntityTypeEntryForLabel("Project"),
                        EntityTypeMatcher.matchEntityTypeEntryForLabel("OrgUnit"),
                        EntityTypeMatcher.matchEntityTypeEntryForLabel("Journal"),
                        EntityTypeMatcher.matchEntityTypeEntryForLabel("JournalVolume"),
-                       EntityTypeMatcher.matchEntityTypeEntryForLabel("JournalIssue"),
-                       EntityTypeMatcher.matchEntityTypeEntryForLabel("none")
-
+                       EntityTypeMatcher.matchEntityTypeEntryForLabel("JournalIssue")
                    )))
         ;
     }

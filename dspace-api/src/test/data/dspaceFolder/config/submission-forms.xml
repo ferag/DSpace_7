@@ -4833,6 +4833,103 @@ You can leave out the day and/or month if they aren't applicable.</hint>
        </field>
      </row>
    </form>
+   <form name="orgunit-concytec-perucris-renacyt-registration">
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>renacyt</dc-element>
+         <dc-qualifier>registration</dc-qualifier>
+         <label>Renacyt Institution Name</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>renacyt</dc-element>
+         <dc-qualifier>registrationNumber</dc-qualifier>
+         <label>Resolution</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>renacyt</dc-element>
+         <dc-qualifier>dateOfQualification</dc-qualifier>
+         <label>Validity</label>
+         <input-type>date</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>renacyt</dc-element>
+         <dc-qualifier>validityOfRegistration</dc-qualifier>
+         <label>End of Validity</label>
+         <input-type>date</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>renacyt</dc-element>
+         <dc-qualifier>classification</dc-qualifier>
+         <label>Category</label>
+         <input-type value-pairs-name="peru_renacyt_classification">dropdown</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>renacyt</dc-element>
+         <dc-qualifier>ocde</dc-qualifier>
+         <label>Authorized Discipline</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+         <vocabulary closed="true">ocde_subjects</vocabulary>
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>renacyt</dc-element>
+         <dc-qualifier>strength</dc-qualifier>
+         <label>Strengths</label>
+         <input-type>onebox</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+     <row>
+       <field>
+         <dc-schema>perucris</dc-schema>
+         <dc-element>renacyt</dc-element>
+         <dc-qualifier>contact</dc-qualifier>
+         <label>Contact data</label>
+         <input-type>textarea</input-type>
+         <repeatable>false</repeatable>
+         <required />
+         <hint />
+       </field>
+     </row>
+   </form>
 
 
  </form-definitions>
@@ -6619,6 +6716,24 @@ You can leave out the day and/or month if they aren't applicable.</hint>
              <stored-value>scopusaffid</stored-value>
          </pair>
      </value-pairs>
+     <value-pairs value-pairs-name="peru_renacyt_classification" dc-term="peru_renacyt_classification">
+     <pair>
+       <displayed-value>Unspecified</displayed-value>
+       <stored-value />
+     </pair>
+     <pair>
+       <displayed-value>Investigación científica</displayed-value>
+       <stored-value>Investigación científica</stored-value>
+     </pair>
+     <pair>
+       <displayed-value>Desarrollo tecnológico</displayed-value>
+       <stored-value>Desarrollo tecnológico</stored-value>
+     </pair>
+     <pair>
+       <displayed-value>Innovación tecnológica</displayed-value>
+       <stored-value>Innovación tecnológica</stored-value>
+     </pair>
+   </value-pairs>
 
 
  </form-value-pairs>

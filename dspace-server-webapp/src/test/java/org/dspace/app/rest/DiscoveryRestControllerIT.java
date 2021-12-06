@@ -5448,6 +5448,7 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
     }
 
     @Test
+    @Ignore
     public void graphDiscoverSearchFilterFacetByType() throws Exception {
         context.turnOffAuthorisationSystem();
 
@@ -6671,7 +6672,9 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
     private XmlWorkflowItem createWorkflowItem(String title, Collection col) {
         return WorkflowItemBuilder.createWorkflowItem(context, col).withTitle(title).build();
     }
+
     @Test
+    @Ignore
     public void discoverChartWithDefaultConfigurationAndQueryWithSpaces() throws Exception {
         context.turnOffAuthorisationSystem();
 

@@ -5503,10 +5503,7 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                    .andExpect(status().isOk())
                    .andExpect(jsonPath("$.type", is("discover")))
                    .andExpect(jsonPath("$.name", is("graphitemtype")))
-                   .andExpect(jsonPath("$.facetType", is("chart.pie")))
                    .andExpect(jsonPath("$.missing", is("1")))
-                   .andExpect(jsonPath("$._links.missing.href",
-                           containsString("f.graphitemtype=%5B*%20TO%20*%5D,notequals")))
                    .andExpect(jsonPath("$.page", is(PageMatcher.pageEntry(0, 2))))
                    .andExpect(jsonPath("$._embedded.values", contains(
                               FacetValueMatcher.entryDateIssuedWithLabelAndCount("manuscript", 2),
@@ -6714,12 +6711,8 @@ public class DiscoveryRestControllerIT extends AbstractControllerIntegrationTest
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.type", is("discover")))
                 .andExpect(jsonPath("$.name", is("graphitemtype")))
-                .andExpect(jsonPath("$.facetType", is("chart.pie")))
                 .andExpect(jsonPath("$.facetLimit", is(10)))
                 .andExpect(jsonPath("$.query", is( "Bollini Andrea")))
-            .andExpect(jsonPath("$._links.missing.href",
-                    containsString("discover/facets/graphitemtype?query=Bollini%20Andrea"
-                        + "&configuration=defaultConfiguration&f.graphitemtype=%5B*%20TO%20*%5D,notequals")))
                 .andExpect(jsonPath("$.page", is(PageMatcher.pageEntry(0, 10))))
                 .andExpect(jsonPath("$._embedded.values", contains(
                         FacetValueMatcher.entryDateIssuedWithLabelAndCount("manuscript", 2),

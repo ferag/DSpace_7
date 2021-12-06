@@ -10112,7 +10112,7 @@ ejemplo: el volumen de una revista.</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
           <dc-qualifier>executionYear</dc-qualifier>
-          <label>Execution Year</label>
+          <label>Año de ejecución</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />

@@ -67,9 +67,11 @@
 	<bean id="org.dspace.submit.listener.DefaultGeneratorExternalId" class="org.dspace.submit.listener.DefaultGeneratorExternalId">
 	    <property name="metadata2regex">
             <map>
+                <entry key="dc.identifier.scopus" value="[1-9]\d{0,11}" />
                 <entry key="dc.identifier.pmid" value="^[0-9]*$" />
+                <entry key="dc.identifier.isi" value="^[0-9]*$" />
                 <entry key="dc.identifier.doi" value="10.\d{4,9}/[-._;()/:A-Z0-9]+|10.1002/[^\s]+|10.\d{4}/\d+-\d+X?(\d+)\d+[\d\w]+:[\d\w]*>\d+.\d+.\w+;\d|10.1021/\w\w\d++|10.1207/[\w\d]+\d+_\d+" />
-            </map>           
+            </map>
         </property>
 	</bean>
  </beans>

@@ -2449,10 +2449,10 @@ o “Caja de geolocalización”</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>date</dc-element>
           <dc-qualifier>issued</dc-qualifier>
-          <label>Fecha de emisión</label>
+          <label>Fecha de publicación</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
-          <required>Debe introducir al menos el año.</required>
+          <required />
           <hint>Indique la fecha de publicación o distribución pública anterior.
                         Puede omitir el día y/o el mes si no son
                         aplicables.</hint>
@@ -2620,10 +2620,10 @@ o “Caja de geolocalización”</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>date</dc-element>
           <dc-qualifier>issued</dc-qualifier>
-          <label>Fecha de emisión</label>
+          <label>Fecha de publicación</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
-          <required>Debe introducir al menos el año.</required>
+          <required />
           <hint>Indique la fecha de publicación o distribución pública anterior.
                         Puede omitir el día y/o el mes si no son
                         aplicables.</hint>
@@ -2791,10 +2791,10 @@ o “Caja de geolocalización”</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>date</dc-element>
           <dc-qualifier>issued</dc-qualifier>
-          <label>Fecha de emisión</label>
+          <label>Fecha de publicación</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
-          <required>Debe introducir al menos el año.</required>
+          <required />
           <hint>Indique la fecha de publicación o distribución pública anterior.
                         Puede omitir el día y/o el mes si no son
                         aplicables.</hint>
@@ -3890,7 +3890,7 @@ ejemplo: el volumen de una revista.</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>relation</dc-element>
           <dc-qualifier>funding</dc-qualifier>
-          <label>Financiación</label>
+          <label>Financiado por</label>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -4008,7 +4008,7 @@ ejemplo: el volumen de una revista.</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>relation</dc-element>
           <dc-qualifier>funding</dc-qualifier>
-          <label>Financiación</label>
+          <label>Financiado por</label>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -4126,7 +4126,7 @@ ejemplo: el volumen de una revista.</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>relation</dc-element>
           <dc-qualifier>funding</dc-qualifier>
-          <label>Financiación</label>
+          <label>Financiado por</label>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />

@@ -11,13 +11,7 @@
     "crisrp_education_start" : [
 	   "@crisrp.education.start@",
 	],
-	"dc_subject" : [
-	   "@dc.subject@",
-	],
     "perucris_ubigeo" : "@virtual.vocabulary.perucris-ubigeo.1@",
-    "perucris_identifier_immigrationCard" : [
-           "@perucris.identifier.immigrationCard@",
-        ],
     "perucris_address_streetAddress" : "@perucris.address.streetAddress@",
     "crisrp_education_role" : [
            "@crisrp.education.role@",
@@ -28,7 +22,11 @@
     "person_identifier_rid" : [
            "@person.identifier.rid@",
         ],
-    "crisrp_site_title" : "@crisrp.site.title@",
+    @if.metadata.crisrp-site-title.start@
+    "crisrp_site_title" : [
+        "@crisrp.site.title@",
+    ],
+    @if.metadata.crisrp-site-title.end@
     "person_jobTitle" : "@person.jobTitle@",
     "person_givenName" : "@person.givenName@",
     "perucris_identifier_dina" : "@perucris.identifier.dina@",
@@ -37,7 +35,9 @@
     "person_knowsLanguage" : [
           "@person.knowsLanguage@",
         ],
-    "perucris_mobilePhone" : "@perucris.mobilePhone@",
+    "perucris_mobilePhone" : [
+        "@perucris.mobilePhone@",
+    ],
     "perucris_type_educacionSuperior" : "@perucris.type.educacionSuperior@",
     "crisrp_country" : [
            "@crisrp.country@",
@@ -100,11 +100,10 @@
     "person_familyName" : "@person_familyName@",
     "perucris_domicilio_ubigeoReniec" : "@perucris.domicilio.ubigeoReniec@",
     "perucris_description_internalNote" : "@perucris.description.internalNote@",
-    "crisrp_workgroup" : "@crisrp.workgroup@",
     "perucris_apellidoMaterno" : "@perucris.apellidoMaterno@",
     "person_identifier_scopus-author-id" : [
             "@person.identifier.scopus-author-id@",
-        ],     
+        ],
     "perucris_phone" : [
             "@perucris_phone@",
         ],

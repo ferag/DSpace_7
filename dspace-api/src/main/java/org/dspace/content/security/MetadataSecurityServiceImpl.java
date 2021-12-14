@@ -190,12 +190,9 @@ public class MetadataSecurityServiceImpl implements MetadataSecurityService {
         EPerson currentUser = context.getCurrentUser();
         List<CrisLayoutBox> notPublicBoxes = getNotPublicBoxes(metadataField, boxes);
 
-        if (Objects.nonNull(currentUser)) {
-
-            for (CrisLayoutBox box : notPublicBoxes) {
-                if (hasAccess(context, item, currentUser, box)) {
-                    return true;
-                }
+        for (CrisLayoutBox box : notPublicBoxes) {
+            if (hasAccess(context, item, currentUser, box)) {
+                return true;
             }
         }
 

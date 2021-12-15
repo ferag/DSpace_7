@@ -86,10 +86,6 @@ public class CrisLayoutSectionRestRepositoryIT extends AbstractControllerIntegra
                     "col-md-12 h2 d-flex text-section-heading justify-content-center p-4",
                     "text-key"))))
             .andExpect(jsonPath("$._embedded.sections",
-                hasItem(withIdAndTextRowComponent("directorios", 0, 0,
-                    "col-md-12 py-5 w-50 center",
-                    "image"))))
-            .andExpect(jsonPath("$._embedded.sections",
                 hasItem(withIdAndTextRowComponent("ctivitae", 0, 0,
                     "col-md-12 h2 d-flex justify-content-center text-section-heading py-3",
                     "text-key"))));

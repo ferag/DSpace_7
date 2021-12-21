@@ -284,7 +284,7 @@
     <field name="submitting" type="string" indexed="true" stored="true" omitNorms="true" multiValued="true" docValues="true" />
     <field name="submitting_keyword" type="string" indexed="true" stored="true" omitNorms="true" multiValued="true" docValues="true" />
     <field name="submitting_filter" type="string" indexed="true" stored="true" omitNorms="true" multiValued="true" docValues="true" />
-   
+
     <!-- Community and collection hierarchy of the Item of interest (candidate for hierarchical facetting ) -->
     <field name="location" type="lowerCaseSort" indexed="true" stored="true" multiValued="true" required="false" omitNorms="true" />
     <field name="location.comm" type="lowerCaseSort" indexed="true" stored="true" multiValued="true" required="false" omitNorms="true" />
@@ -386,6 +386,6 @@
  <copyField source="title" dest="itemauthoritylookupexactmatch"/>
  <copyField source="lastModified" dest="bi_sort_4_sort"/>
  <copyField source="dspace.entity.type" dest="search.entitytype"/>
- <copyField source="withdrawn" dest="hidden.withdrawn"/>
+    <copyField source="withdrawn" dest="hidden.withdrawn"/>
 
 </schema>

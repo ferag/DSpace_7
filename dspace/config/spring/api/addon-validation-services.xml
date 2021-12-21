@@ -39,6 +39,19 @@
         <property name="filter" ref="person-has-at-least-one-id_filter"/>
     </bean>
 
+    <bean name="projectHasAtLeastOneExecutor" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.executorRequired"/>
+        <property name="metadataFields">
+           <list>
+               <value>crispj.contractorou</value>
+               <value>crispj.contractorper</value>
+           </list>
+        </property>
+        <property name="filter" ref="project-has-at-least-one-executor_filter"/>
+    </bean>
+
+
+
     <bean name="itemHasOcdeFromControlledVocabulary" class="org.dspace.validation.LogicalStatementValidator">
         <property name="errorKey" value="error.validation.invalidOcde"/>
         <property name="metadataFields">
@@ -173,6 +186,16 @@
             </list>
         </property>
         <property name="filter" ref="juridical-nature_filter"/>
+    </bean>
+
+    <bean name="oaMandateUrlSet" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.oaMandateUrlRequired"/>
+        <property name="metadataFields">
+            <list>
+                <value>oairecerif.oamandate.url</value>
+            </list>
+        </property>
+        <property name="filter" ref="funding-has-oa-condition-url_filter"/>
     </bean>
 
 </beans>

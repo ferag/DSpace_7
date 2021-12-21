@@ -56,7 +56,15 @@ public class ElasticsearchQueueConsumer implements Consumer {
                     || !elasticsearchIndexManager.isSupportedEntityType(item)) {
                 return;
             }
-            elasticsearchIndexQueueService.create(context, item.getID(), event.getEventType());
+            ElasticsearchIndexQueue elasticIndex = elasticsearchIndexQueueService.find(context, event.getSubjectID());
+            if (Objects.nonNull(elasticIndex)) {
+                elasticIndex.setOperationType(eventType);
+                elasticIndex.setInsertionDate(new Date());
+                elasticsearchIndexQueueService.update(context, elasticIndex);
+            } else {
+                elasticsearchIndexQueueService.create(context, item.getID(),
+                    eventType);
+            }
             itemsAlreadyProcessed.add(item);
             return;
         }

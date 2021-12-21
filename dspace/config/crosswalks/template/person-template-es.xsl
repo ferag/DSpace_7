@@ -50,7 +50,7 @@
 									<fo:block font-size="12pt" text-align="center">
 										<xsl:value-of select="job-title"  />
 										<xsl:if test="job-title and main-affiliation">
-											<xsl:text> at </xsl:text>
+											<xsl:text> en </xsl:text>
 										</xsl:if>
 										<xsl:value-of select="main-affiliation"  />
 									</fo:block>
@@ -68,9 +68,9 @@
 							    	<xsl:with-param name="label" select="'País'" />
 							    	<xsl:with-param name="value" select="country" />
 							    </xsl:call-template>
-								<xsl:call-template name="print-value">
+								<xsl:call-template name="print-values">
 							    	<xsl:with-param name="label" select="'Correo electrónico'" />
-							    	<xsl:with-param name="value" select="email" />
+							    	<xsl:with-param name="values" select="email" />
 							    </xsl:call-template>
                                 <xsl:call-template name="print-value">
                                     <xsl:with-param name="label" select="'Teléfono'" />
@@ -126,10 +126,10 @@
 				    	</xsl:call-template>        
 						<xsl:for-each select="affiliations/affiliation">
 							<fo:block font-size="10pt">
-								<xsl:value-of select="role" /> at <xsl:value-of select="name" />
-								from <xsl:value-of select="start-date" />
+								<xsl:value-of select="role" /> en <xsl:value-of select="name" />
+								desde <xsl:value-of select="start-date" />
 								<xsl:if test="end-date/text()">
-								 to <xsl:value-of select="end-date" />
+								 hasta <xsl:value-of select="end-date" />
 								</xsl:if>
 							</fo:block>
 						</xsl:for-each>
@@ -143,10 +143,10 @@
 				    	</xsl:call-template>    
 						<xsl:for-each select="educations/education">
 							<fo:block font-size="10pt">
-								<xsl:value-of select="role" /> at <xsl:value-of select="name" />
-								from <xsl:value-of select="start-date" />
+								<xsl:value-of select="role" /> en <xsl:value-of select="name" />
+								desde <xsl:value-of select="start-date" />
 								<xsl:if test="end-date/text()">
-								 to <xsl:value-of select="end-date" />
+								 hasta <xsl:value-of select="end-date" />
 								</xsl:if>
 							</fo:block>
 						</xsl:for-each>
@@ -160,9 +160,9 @@
 				    	</xsl:call-template>
 						<xsl:for-each select="qualifications/qualification">
 							<fo:block font-size="10pt">
-								<xsl:value-of select="name" /> from <xsl:value-of select="start-date" />
+								<xsl:value-of select="name" /> desde <xsl:value-of select="start-date" />
 								<xsl:if test="end-date/text()">
-								 to <xsl:value-of select="end-date" />
+								 hasta <xsl:value-of select="end-date" />
 								</xsl:if>
 							</fo:block>
 						</xsl:for-each>
@@ -178,7 +178,7 @@
 							<fo:block font-size="10pt">
 								<xsl:for-each select="authors/author">
 									<xsl:value-of select="current()" />
-								    <xsl:if test="position() != last()"> and </xsl:if>
+								    <xsl:if test="position() != last()"> y </xsl:if>
 								</xsl:for-each>
 								<xsl:text> </xsl:text>
 								<xsl:if test="date-issued">
@@ -217,10 +217,6 @@
 	                    <xsl:call-template name="print-value">
 	                        <xsl:with-param name="label" select="'País de residencia'" />
 	                        <xsl:with-param name="value" select="address/country" />
-	                    </xsl:call-template>
-	                    <xsl:call-template name="print-values">
-	                        <xsl:with-param name="label" select="'Grupos de trabajo'" />
-	                        <xsl:with-param name="values" select="working-groups/working-group" />
 	                    </xsl:call-template>
 	                    <xsl:call-template name="print-values">
 	                        <xsl:with-param name="label" select="'Intereses'" />

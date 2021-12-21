@@ -34,11 +34,19 @@ import org.dspace.AbstractIntegrationTestWithDatabase;
 import org.dspace.app.util.DCInputsReader;
 import org.dspace.app.util.DCInputsReaderException;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.builder.CrisLayoutBoxBuilder;
+import org.dspace.builder.CrisLayoutFieldBuilder;
+import org.dspace.builder.EPersonBuilder;
+import org.dspace.builder.EntityTypeBuilder;
 import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
+import org.dspace.content.EntityType;
 import org.dspace.content.Item;
 import org.dspace.core.CrisConstants;
+import org.dspace.eperson.EPerson;
+import org.dspace.layout.CrisLayoutField;
+import org.dspace.layout.LayoutSecurity;
 import org.dspace.utils.DSpace;
 import org.junit.After;
 import org.junit.Before;
@@ -75,31 +83,31 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         dcInputsReader = mock(DCInputsReader.class);
 
-        when(dcInputsReader.hasFormWithName("traditional-oairecerif-identifier-url")).thenReturn(true);
-        when(dcInputsReader.getAllFieldNamesByFormName("traditional-oairecerif-identifier-url"))
+        when(dcInputsReader.hasFormWithName("traditionalpageone-oairecerif-identifier-url")).thenReturn(true);
+        when(dcInputsReader.getAllFieldNamesByFormName("traditionalpageone-oairecerif-identifier-url"))
             .thenReturn(Arrays.asList("oairecerif.identifier.url", "crisrp.site.title"));
 
-        when(dcInputsReader.hasFormWithName("traditional-oairecerif-person-affiliation")).thenReturn(true);
-        when(dcInputsReader.getAllFieldNamesByFormName("traditional-oairecerif-person-affiliation"))
+        when(dcInputsReader.hasFormWithName("traditionalpageone-oairecerif-person-affiliation")).thenReturn(true);
+        when(dcInputsReader.getAllFieldNamesByFormName("traditionalpageone-oairecerif-person-affiliation"))
             .thenReturn(Arrays.asList("oairecerif.person.affiliation", "oairecerif.affiliation.startDate",
                 "oairecerif.affiliation.endDate", "oairecerif.affiliation.role"));
 
-        when(dcInputsReader.hasFormWithName("traditional-crisrp-education")).thenReturn(true);
-        when(dcInputsReader.getAllFieldNamesByFormName("traditional-crisrp-education"))
+        when(dcInputsReader.hasFormWithName("traditionalpageone-crisrp-education")).thenReturn(true);
+        when(dcInputsReader.getAllFieldNamesByFormName("traditionalpageone-crisrp-education"))
             .thenReturn(Arrays.asList("crisrp.education", "crisrp.education.start",
                 "crisrp.education.end", "crisrp.education.role"));
 
-        when(dcInputsReader.hasFormWithName("traditional-crisrp-qualification")).thenReturn(true);
-        when(dcInputsReader.getAllFieldNamesByFormName("traditional-crisrp-qualification"))
+        when(dcInputsReader.hasFormWithName("traditionalpagetwo-crisrp-qualification")).thenReturn(true);
+        when(dcInputsReader.getAllFieldNamesByFormName("traditionalpagetwo-crisrp-qualification"))
             .thenReturn(Arrays.asList("crisrp.qualification", "crisrp.qualification.start",
                 "crisrp.qualification.end"));
 
-        when(dcInputsReader.hasFormWithName("traditional-dc-contributor-author")).thenReturn(true);
-        when(dcInputsReader.getAllFieldNamesByFormName("traditional-dc-contributor-author"))
+        when(dcInputsReader.hasFormWithName("traditionalpageone-dc-contributor-author")).thenReturn(true);
+        when(dcInputsReader.getAllFieldNamesByFormName("traditionalpageone-dc-contributor-author"))
             .thenReturn(Arrays.asList("dc.contributor.author", "oairecerif.author.affiliation"));
 
-        when(dcInputsReader.hasFormWithName("traditional-dc-contributor-editor")).thenReturn(true);
-        when(dcInputsReader.getAllFieldNamesByFormName("traditional-dc-contributor-editor"))
+        when(dcInputsReader.hasFormWithName("traditionalpagetwo-dc-contributor-editor")).thenReturn(true);
+        when(dcInputsReader.getAllFieldNamesByFormName("traditionalpagetwo-dc-contributor-editor"))
             .thenReturn(Arrays.asList("dc.contributor.editor", "oairecerif.editor.affiliation"));
 
     }
@@ -164,33 +172,33 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(sheet.getPhysicalNumberOfRows(), equalTo(4));
 
         assertThat(getRowValues(sheet.getRow(0)),
-            contains("Nombre preferido", "Nombre completo", "Nombre vernacular", "Variantes", "Nombre de pila",
+            contains("Nombre preferido", "Nombre de pila",
                 "Apellido", "Apellido paterno", "Apellido materno", "Apellido casada", "Fecha de nacimiento", "Sexo",
-                "Puesto de trabajo", "Afiliación principal", "Grupos de trabajo", "Web personal", "Email", "Teléfono",
+                "Puesto de trabajo", "Afiliación principal", "Web personal", "Email", "Teléfono",
                 "Teléfono móvil", "Intereses", "ORCID", "Dina", "Dni", "Pasaporte", "Tarjeta de inmigración", "Renacyt",
                 "ID Scopus del autor", "IDs Investigador", "Afiliaciones", "Biografía", "Educación", "País",
-                "Cualificaciones", "Idiomas", "Ubigeo reniec", "Ubigeo", "Calle de residencia", "Código postal",
+                "Cualificaciones", "Idiomas", "Ubigeo reniec", "Calle de residencia", "Código postal",
                 "País de residencia"));
 
         assertThat(getRowValues(sheet.getRow(1)),
-            contains("John Smith", "John Smith", "JOHN SMITH", "J.S.||Smith John", "John", "Smith", "", "", "",
-                "1992-06-26", "M", "Researcher", "University", "First work group||Second work group",
+            contains("John Smith", "John", "Smith", "", "", "",
+                "1992-06-26", "M", "Researcher", "University",
                 "www.test.com/Test||www.john-smith.com||www.site.com/Site", "test@test.com", "0744112233", "3201122333",
-                "Science", "0000-0002-9079-5932", "", "DNI-01", "PASS-01", "", "", "111", "r1||r2",
+                "Science", "0000-0002-9079-5932", "DINA-01", "DNI-01", "PASS-01", "", "", "111", "r1||r2",
                 "Company/2018-01-01//Developer", "Biography: \n\"This is my biography\"",
                 "School/2000-01-01/2005-01-01/Student", "England",
                 "First Qualification/2015-01-01/2016-01-01||Second Qualification/2016-01-02", "English||Italian", "",
-                "12345", "Via 1 maggio", "05100", "IT"));
+                "Via 1 maggio", "05100", "IT"));
 
         assertThat(getRowValues(sheet.getRow(2)),
-            contains("Edward Red", "", "", "", "Edward", "Red", "", "", "", "1982-05-21", "M", "", "", "", "", "", "",
+            contains("Edward Red", "Edward", "Red", "", "", "", "1982-05-21", "M", "", "", "", "", "",
                 "", "", "", "", "", "", "", "", "", "", "OrgUnit/2015-01-01//Developer", "", "", "", "", "", "", "", "",
-                "", ""));
+                ""));
 
         assertThat(getRowValues(sheet.getRow(3)),
-            contains("Adam White", "", "", "", "Adam", "White", "", "", "", "1962-03-23", "M", "Researcher",
-                "University of Rome", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                "School/2000-01-01/2005-01-01/Student", "", "", "English||Italian", "", "", "", "", ""));
+            contains("Adam White", "Adam", "White", "", "", "", "1962-03-23", "M", "Researcher",
+                "University of Rome", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+                "School/2000-01-01/2005-01-01/Student", "", "", "English||Italian", "", "", "", ""));
 
     }
 
@@ -241,19 +249,19 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(sheet.getPhysicalNumberOfRows(), equalTo(2));
 
         assertThat(getRowValues(sheet.getRow(0)),
-            contains("Nombre preferido", "Nombre completo", "Nombre vernacular", "Variantes", "Nombre de pila",
+            contains("Nombre preferido", "Nombre de pila",
                 "Apellido", "Apellido paterno", "Apellido materno", "Apellido casada", "Fecha de nacimiento", "Sexo",
-                "Puesto de trabajo", "Afiliación principal", "Grupos de trabajo", "Web personal", "Email", "Teléfono",
+                "Puesto de trabajo", "Afiliación principal", "Web personal", "Email", "Teléfono",
                 "Teléfono móvil", "Intereses", "ORCID", "Dina", "Dni", "Pasaporte", "Tarjeta de inmigración", "Renacyt",
                 "ID Scopus del autor", "IDs Investigador", "Afiliaciones", "Biografía", "Educación", "País",
-                "Cualificaciones", "Idiomas", "Ubigeo reniec", "Ubigeo", "Calle de residencia", "Código postal",
+                "Cualificaciones", "Idiomas", "Ubigeo reniec", "Calle de residencia", "Código postal",
                 "País de residencia"));
 
         assertThat(getRowValues(sheet.getRow(1)),
-            contains("Walter White", "", "", "Heisenberg||W.W.", "Walter", "White", "", "", "", "1962-03-23", "M",
-                "Professor", "High School", "", "", "", "", "", "", "0000-0002-9079-5932", "", "", "", "", "", "", "",
+            contains("Walter White", "Walter", "White", "", "", "", "1962-03-23", "M",
+                "Professor", "High School", "", "", "", "", "", "0000-0002-9079-5932", "", "", "", "", "", "", "",
                 "", "", "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
-                "Qualification", "English", "", "", "", "", ""));
+                "Qualification", "English", "", "", "", ""));
 
     }
 
@@ -498,7 +506,7 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(sheet.getPhysicalNumberOfRows(), equalTo(4));
 
         assertThat(getRowValues(sheet.getRow(0)),
-            contains("Nombre", "Nombre legal", "Acrónimo", "Tipo", "Director", "Establecido", "Consejo científico",
+            contains("Nombre", "Nombre legal", "Acrónimo", "Tipo",
                 "Institución padre", "ID(s) general", "URL(s)", "RUC ID(s)", "International Standard Name ID(s)",
                 "Research Organization Registry ID(s)", "Ringgold ID(s)", "ID Scopus de la afiliación",
                 "ID CrossRef del Fundandor", "Materia(s)", "Palabra(s) clave", "País de residencia",
@@ -506,18 +514,19 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         assertThat(getRowValues(sheet.getRow(1)),
             contains("Test OrgUnit", "Test OrgUnit LegalName", "TOU",
-                "https://w3id.org/cerif/vocab/OrganisationTypes#StrategicResearchInsitute", "OU Director", "1990-05-12",
-                "board1||board2", "Parent OrgUnit", "ID-01||ID-02", "www.orgUnit.com||www.orgUnit.it", "RUC-01", "",
-                "ROR-01", "RIN-01", "", "", "https://purl.org/pe-repo/ocde/ford/#5.07.03", "", "Italy", "via del canale", "", "010201"));
+                "https://w3id.org/cerif/vocab/OrganisationTypes#StrategicResearchInsitute",
+                "Parent OrgUnit", "ID-01||ID-02", "www.orgUnit.com||www.orgUnit.it", "RUC-01", "",
+                "ROR-01", "RIN-01", "SCOPUS-01", "CRF-01", "https://purl.org/pe-repo/ocde/ford/#5.07.03", "",
+                "Italy", "via del canale", "", "010201"));
 
         assertThat(getRowValues(sheet.getRow(2)),
             contains("Another Test OrgUnit", "", "ATOU",
-                "https://w3id.org/cerif/vocab/OrganisationTypes#Privatenonprofit", "", "", "", "Parent OrgUnit",
+                "https://w3id.org/cerif/vocab/OrganisationTypes#Privatenonprofit", "Parent OrgUnit",
                 "ID-03", "", "RUC-02", "", "ROR-02", "RIN-02", "", "", "", "", "", "", "", ""));
 
         assertThat(getRowValues(sheet.getRow(3)),
             contains("Third Test OrgUnit", "", "TTOU",
-                "https://w3id.org/cerif/vocab/OrganisationTypes#Privatenonprofit", "", "", "", "", "ID-03",
+                "https://w3id.org/cerif/vocab/OrganisationTypes#Privatenonprofit", "", "ID-03",
                 "www.orgUnit.test", "", "", "", "", "", "", "", "", "", "", "", ""));
     }
 
@@ -677,22 +686,22 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(sheet.getPhysicalNumberOfRows(), equalTo(4));
 
         assertThat(getRowValues(sheet.getRow(0)),
-            contains("Nombre", "Acrónimo", "Tipo", "Código de financiamiento", "Número de beca", "Cantidad", "Moneda",
+            contains("Nombre", "Acrónimo", "Tipo", "Código de financiamiento", "Cantidad", "Moneda",
                 "Cantidad ejecutada", "Moneda de la cantidad ejecutada", "Descripción", "Palabra(s) clave",
                 "Financiador", "Parte de", "Fecha de inicio", "Fecha de fin", "Mandato OA", "URL de políticas OA"));
 
         assertThat(getRowValues(sheet.getRow(1)),
             contains("Test Funding", "T-FU", "https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types#Gift",
-                "ID-01", "0001", "30.000,00", "EUR", "15.000,00", "", "Funding to test export", "", "OrgUnit Funder",
+                "ID-01", "30.000,00", "EUR", "15.000,00", "", "Funding to test export", "", "OrgUnit Funder",
                 "Parent Funding", "2015-01-01", "2020-01-01", "true", "www.mandate.url"));
 
         assertThat(getRowValues(sheet.getRow(2)), contains("Another Test Funding", "AT-FU",
-            "https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types#Grant", "ID-02", "0002", "10.000,00",
+            "https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types#Grant", "ID-02", "10.000,00",
             "", "25.000,00", "€", "", "", "Test Funder", "", "2020-01-01", "", "true", "www.mandate.url"));
 
         assertThat(getRowValues(sheet.getRow(3)),
             contains("Third Test Funding", "TT-FU",
-                "https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types#Grant", "ID-03", "0003",
+                "https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types#Grant", "ID-03",
                 "20.000,00", "EUR", "", "", "", "", "", "", "", "2010-01-01", "false", "www.mandate.com"));
     }
 
@@ -770,109 +779,212 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(sheet.getPhysicalNumberOfRows(), equalTo(4));
 
         assertThat(getRowValues(sheet.getRow(0)), contains("Title", "Approval date", "Registration date",
-            "Patent number", "Country", "Type", "Language", "Inventor(s)", "Holder(s)", "Issuer(s)", "Keyword(s)",
-            "Funding(s)", "Project(s)", "Predecessor(s)", "Reference(s)", "Abstract"));
+            "Patent number", "Country", "Type", "Language", "Inventor(s)", "Holder(s)", "Keyword(s)",
+            "Funding(s)", "Project(s)", "Predecessor(s)", "Abstract"));
 
         assertThat(getRowValues(sheet.getRow(1)), contains("First patent", "2020-01-01", "2021-01-01", "12345-666",
             "Italy", "patent", "en", "Walter White/4Science||Jesse Pinkman||John Smith/4Science", "Test Organization",
-            "First publisher||Second publisher", "patent||test", "Test funding", "First project||Second project",
-            "Another patent", "", "This is a patent"));
+            "patent||test", "Test funding", "First project||Second project",
+            "Another patent", "This is a patent"));
 
         assertThat(getRowValues(sheet.getRow(2)), contains("Second patent", "", "", "12345-777", "", "patent", "",
-            "Bruce Wayne", "", "", "second", "Funding", "", "Another patent", "", ""));
+            "Bruce Wayne", "", "second", "Funding", "", "Another patent", ""));
 
         assertThat(getRowValues(sheet.getRow(3)), contains("Third patent", "2019-01-01", "", "12345-888", "England",
-            "", "ita", "", "Organization", "Publisher", "", "First funding||Second funding", "", "Another patent", "",
+            "", "ita", "", "Organization", "", "First funding||Second funding", "", "Another patent",
             "Patent description"));
     }
 
-//    @Test
-//    public void testDisseminatePatents() throws Exception {
-//
-//        context.turnOffAuthorisationSystem();
-//
-//        Item firstItem = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Patent")
-//            .withTitle("First patent")
-//            .withDateAccepted("2020-01-01")
-//            .withIssueDate("2021-01-01")
-//            .withLanguage("en")
-//            .withType("patent")
-//            .withPublisher("First publisher")
-//            .withPublisher("Second publisher")
-//            .withPatentNo("12345-666")
-//            .withAuthor("Walter White", "b6ff8101-05ec-49c5-bd12-cba7894012b7")
-//            .withAuthorAffiliation("4Science")
-//            .withAuthor("Jesse Pinkman")
-//            .withAuthorAffiliation(PLACEHOLDER_PARENT_METADATA_VALUE)
-//            .withAuthor("John Smith", "will be referenced::ORCID::0000-0000-0012-3456")
-//            .withAuthorAffiliation("4Science")
-//            .withRightsHolder("Test Organization")
-//            .withDescriptionAbstract("This is a patent")
-//            .withRelationPatent("Another patent")
-//            .withSubject("patent")
-//            .withSubject("test")
-//            .withRelationFunding("Test funding")
-//            .withRelationProject("First project")
-//            .withRelationProject("Second project")
-//            .build();
-//
-//        Item secondItem = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Patent")
-//            .withTitle("Second patent")
-//            .withType("patent")
-//            .withPatentNo("12345-777")
-//            .withAuthor("Bruce Wayne")
-//            .withRelationPatent("Another patent")
-//            .withSubject("second")
-//            .withRelationFunding("Funding")
-//            .build();
-//
-//        Item thirdItem = ItemBuilder.createItem(context, collection)
-//            .withEntityType("Patent")
-//            .withTitle("Third patent")
-//            .withDateAccepted("2019-01-01")
-//            .withLanguage("ita")
-//            .withPublisher("Publisher")
-//            .withPatentNo("12345-888")
-//            .withRightsHolder("Organization")
-//            .withDescriptionAbstract("Patent description")
-//            .withRelationPatent("Another patent")
-//            .withRelationFunding("First funding")
-//            .withRelationFunding("Second funding")
-//            .build();
-//
-//        context.restoreAuthSystemState();
-//
-//        xlsCrosswalk = (XlsCrosswalk) crosswalkMapper.getByType("patent-xls");
-//        assertThat(xlsCrosswalk, notNullValue());
-//        xlsCrosswalk.setDCInputsReader(dcInputsReader);
-//
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        xlsCrosswalk.disseminate(context, Arrays.asList(firstItem, secondItem, thirdItem).iterator(), baos);
-//
-//        Workbook workbook = WorkbookFactory.create(new ByteArrayInputStream(baos.toByteArray()));
-//        assertThat(workbook.getNumberOfSheets(), equalTo(1));
-//
-//        Sheet sheet = workbook.getSheetAt(0);
-//        assertThat(sheet.getPhysicalNumberOfRows(), equalTo(4));
-//
-//        assertThat(getRowValues(sheet.getRow(0)), contains("Title", "Approval date", "Registration date",
-//            "Patent number", "Type", "Language", "Inventor(s)", "Holder(s)", "Issuer(s)", "Keyword(s)", "Funding(s)",
-//            "Project(s)", "Predecessor(s)", "Reference(s)", "Abstract"));
-//
-//        assertThat(getRowValues(sheet.getRow(1)), contains("First patent", "2020-01-01", "2021-01-01", "12345-666",
-//            "patent", "en", "Walter White/4Science||Jesse Pinkman||John Smith/4Science", "Test Organization",
-//            "First publisher||Second publisher", "patent||test", "Test funding", "First project||Second project",
-//            "Another patent", "", "This is a patent"));
-//
-//        assertThat(getRowValues(sheet.getRow(2)), contains("Second patent", "", "", "12345-777", "patent", "",
-//            "Bruce Wayne", "", "", "second", "Funding", "", "Another patent", "", ""));
-//
-//        assertThat(getRowValues(sheet.getRow(3)), contains("Third patent", "2019-01-01", "", "12345-888", "", "ita",
-//            "", "Organization", "Publisher", "", "First funding||Second funding", "", "Another patent", "",
-//            "Patent description"));
-//    }
+    @Test
+    public void testDisseminateWithNotPublicMetadataFields() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EPerson owner = EPersonBuilder.createEPerson(context)
+            .withEmail("owner@email.com")
+            .withNameInMetadata("Walter", "White")
+            .build();
+
+        Item item = createItem(context, collection)
+            .withEntityType("Person")
+            .withTitle("Walter White")
+            .withCrisOwner(owner)
+            .withVariantName("Heisenberg")
+            .withVariantName("W.W.")
+            .withGivenName("Walter")
+            .withFamilyName("White")
+            .withBirthDate("1962-03-23")
+            .withGender("M")
+            .withJobTitle("Professor")
+            .withPersonMainAffiliation("High School")
+            .withPersonKnowsLanguages("English")
+            .withPersonEducation("School")
+            .withPersonEducationStartDate("1968-09-01")
+            .withPersonEducationEndDate("1973-06-10")
+            .withPersonEducationRole("Student")
+            .withPersonEducation("University")
+            .withPersonEducationStartDate("1980-09-01")
+            .withPersonEducationEndDate("1985-06-10")
+            .withPersonEducationRole("Student")
+            .withOrcidIdentifier("0000-0002-9079-5932")
+            .withPersonQualification("Qualification")
+            .withPersonQualificationStartDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPersonQualificationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        context.setCurrentUser(eperson);
+
+        xlsCrosswalk = (XlsCrosswalk) crosswalkMapper.getByType("person-xls");
+        assertThat(xlsCrosswalk, notNullValue());
+        xlsCrosswalk.setDCInputsReader(dcInputsReader);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        xlsCrosswalk.disseminate(context, item, out);
+
+        Workbook workbook = WorkbookFactory.create(new ByteArrayInputStream(out.toByteArray()));
+        assertThat(workbook.getNumberOfSheets(), equalTo(1));
+
+        Sheet sheet = workbook.getSheetAt(0);
+        assertThat(sheet.getPhysicalNumberOfRows(), equalTo(2));
+
+        assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "Walter", "White", "", "", "",
+            "1962-03-23", "M", "Professor", "High School", "", "", "", "", "", "0000-0002-9079-5932",
+            "", "", "", "", "", "", "", "", "",
+            "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
+            "Qualification", "English", "", "", "", ""));
+
+        context.turnOffAuthorisationSystem();
+        EntityType personType = EntityTypeBuilder.createEntityTypeBuilder(context, "Person").build();
+
+        CrisLayoutBoxBuilder.createBuilder(context, personType, false, false)
+            .addField(createCrisLayoutField("oairecerif.person.gender"))
+            .addField(createCrisLayoutField("person.birthDate"))
+            .withSecurity(LayoutSecurity.OWNER_ONLY)
+            .build();
+        context.restoreAuthSystemState();
+
+        out = new ByteArrayOutputStream();
+        xlsCrosswalk.disseminate(context, item, out);
+
+        workbook = WorkbookFactory.create(new ByteArrayInputStream(out.toByteArray()));
+        assertThat(workbook.getNumberOfSheets(), equalTo(1));
+
+        sheet = workbook.getSheetAt(0);
+        assertThat(sheet.getPhysicalNumberOfRows(), equalTo(2));
+
+        assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "Walter", "White", "", "", "",
+            "1962-03-23", "M", "Professor", "High School", "", "", "", "", "", "0000-0002-9079-5932",
+            "", "", "", "", "", "", "", "", "",
+            "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
+            "Qualification", "English", "", "", "", ""));
+
+    }
+
+    @Test
+    public void testCvPersonDisseminateWithNotPublicMetadataFields() throws Exception {
+
+        context.turnOffAuthorisationSystem();
+
+        EPerson owner = EPersonBuilder.createEPerson(context)
+            .withEmail("owner@email.com")
+            .withNameInMetadata("Walter", "White")
+            .build();
+
+        Item item = createItem(context, collection)
+            .withEntityType("CvPerson")
+            .withTitle("Walter White")
+            .withCrisOwner(owner)
+            .withVariantName("Heisenberg")
+            .withVariantName("W.W.")
+            .withGivenName("Walter")
+            .withFamilyName("White")
+            .withBirthDate("1962-03-23")
+            .withGender("M")
+            .withJobTitle("Professor")
+            .withPersonMainAffiliation("High School")
+            .withPersonKnowsLanguages("English")
+            .withPersonEducation("School")
+            .withPersonEducationStartDate("1968-09-01")
+            .withPersonEducationEndDate("1973-06-10")
+            .withPersonEducationRole("Student")
+            .withPersonEducation("University")
+            .withPersonEducationStartDate("1980-09-01")
+            .withPersonEducationEndDate("1985-06-10")
+            .withPersonEducationRole("Student")
+            .withOrcidIdentifier("0000-0002-9079-5932")
+            .withPersonQualification("Qualification")
+            .withPersonQualificationStartDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .withPersonQualificationEndDate(PLACEHOLDER_PARENT_METADATA_VALUE)
+            .build();
+
+        context.restoreAuthSystemState();
+
+        context.setCurrentUser(eperson);
+
+        xlsCrosswalk = (XlsCrosswalk) crosswalkMapper.getByType("ctivitae-profile-xls");
+        assertThat(xlsCrosswalk, notNullValue());
+        xlsCrosswalk.setDCInputsReader(dcInputsReader);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        xlsCrosswalk.disseminate(context, item, out);
+
+        Workbook workbook = WorkbookFactory.create(new ByteArrayInputStream(out.toByteArray()));
+        assertThat(workbook.getNumberOfSheets(), equalTo(1));
+
+        Sheet sheet = workbook.getSheetAt(0);
+        assertThat(sheet.getPhysicalNumberOfRows(), equalTo(2));
+
+        assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "Walter", "White", "", "", "",
+            "1962-03-23", "M", "Professor", "High School", "", "", "", "", "", "0000-0002-9079-5932",
+            "", "", "", "", "", "", "", "", "",
+            "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
+            "Qualification", "English", "", "", "", ""));
+
+        context.turnOffAuthorisationSystem();
+        EntityType personType = EntityTypeBuilder.createEntityTypeBuilder(context, "CvPerson").build();
+
+        CrisLayoutBoxBuilder.createBuilder(context, personType, false, false)
+            .addField(createCrisLayoutField("oairecerif.person.gender"))
+            .addField(createCrisLayoutField("person.birthDate"))
+            .withSecurity(LayoutSecurity.OWNER_ONLY)
+            .build();
+        context.restoreAuthSystemState();
+
+        out = new ByteArrayOutputStream();
+        xlsCrosswalk.disseminate(context, item, out);
+
+        workbook = WorkbookFactory.create(new ByteArrayInputStream(out.toByteArray()));
+        assertThat(workbook.getNumberOfSheets(), equalTo(1));
+
+        sheet = workbook.getSheetAt(0);
+        assertThat(sheet.getPhysicalNumberOfRows(), equalTo(2));
+
+        assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "Walter", "White", "", "", "",
+            "", "", "Professor", "High School", "", "", "", "", "", "0000-0002-9079-5932",
+            "", "", "", "", "", "", "", "", "",
+            "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
+            "Qualification", "English", "", "", "", ""));
+
+        context.setCurrentUser(owner);
+
+        out = new ByteArrayOutputStream();
+        xlsCrosswalk.disseminate(context, item, out);
+
+        workbook = WorkbookFactory.create(new ByteArrayInputStream(out.toByteArray()));
+        assertThat(workbook.getNumberOfSheets(), equalTo(1));
+
+        sheet = workbook.getSheetAt(0);
+        assertThat(sheet.getPhysicalNumberOfRows(), equalTo(2));
+
+        assertThat(getRowValues(sheet.getRow(1)), contains("Walter White", "Walter", "White", "", "", "",
+            "1962-03-23", "M", "Professor", "High School", "", "", "", "", "", "0000-0002-9079-5932",
+            "", "", "", "", "", "", "", "", "",
+            "School/1968-09-01/1973-06-10/Student||University/1980-09-01/1985-06-10/Student", "",
+            "Qualification", "English", "", "", "", ""));
+
+    }
 
     private Item createFullPersonItem() {
         return createItem(context, collection)
@@ -1001,5 +1113,9 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         return StreamSupport.stream(row.spliterator(), false)
             .map(cell -> cell.getStringCellValue() == null ? "" : cell.getStringCellValue())
             .collect(Collectors.toList());
+    }
+
+    private CrisLayoutField createCrisLayoutField(String metadataField) throws SQLException, AuthorizeException {
+        return CrisLayoutFieldBuilder.createMetadataField(context, metadataField, 0, 0).build();
     }
 }

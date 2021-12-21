@@ -32,8 +32,12 @@ import org.dspace.app.rest.matcher.ProcessFileTypesMatcher;
 import org.dspace.app.rest.matcher.ProcessMatcher;
 import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
 import org.dspace.builder.ProcessBuilder;
+import org.dspace.builder.ResourcePolicyBuilder;
 import org.dspace.content.Bitstream;
 import org.dspace.content.ProcessStatus;
+import org.dspace.core.Constants;
+import org.dspace.eperson.Group;
+import org.dspace.eperson.service.GroupService;
 import org.dspace.scripts.DSpaceCommandLineParameter;
 import org.dspace.scripts.Process;
 import org.dspace.scripts.ProcessLogLevel;
@@ -48,6 +52,8 @@ public class ProcessRestRepositoryIT extends AbstractControllerIntegrationTest {
 
     @Autowired
     private ProcessService processService;
+    @Autowired
+    private GroupService groupService;
 
     Process process;
 
@@ -96,13 +102,6 @@ public class ProcessRestRepositoryIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
-    public void getProcessAnonymousUnauthorizedException() throws Exception {
-
-        getClient().perform(get("/api/system/processes/" + process.getID()))
-                   .andExpect(status().isUnauthorized());
-    }
-
-    @Test
     public void getProcessForStartedUser() throws Exception {
         Process newProcess = ProcessBuilder.createProcess(context, eperson, "mock-script", new LinkedList<>()).build();
 
@@ -122,10 +121,14 @@ public class ProcessRestRepositoryIT extends AbstractControllerIntegrationTest {
     @Test
     public void getProcessForDifferentUserForbiddenException() throws Exception {
         String token = getAuthToken(eperson.getEmail(), password);
-
         getClient(token).perform(get("/api/system/processes/" + process.getID()))
                         .andExpect(status().isForbidden());
+    }
 
+    @Test
+    public void getProcessAnonymousUnauthorizedException() throws Exception {
+        getClient().perform(get("/api/system/processes/" + process.getID()))
+                   .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -144,6 +147,26 @@ public class ProcessRestRepositoryIT extends AbstractControllerIntegrationTest {
                    .andExpect(status().isUnauthorized());
     }
 
+    @Test
+    public void getProcessCreatedByAnonymousForDifferentUsersTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        Process processByAnonymous = ProcessBuilder.createProcess(context, null, "mock-script", parameters).build();
+        context.restoreAuthSystemState();
+
+        String token = getAuthToken(eperson.getEmail(), password);
+        getClient(token).perform(get("/api/system/processes/" + processByAnonymous.getID()))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$", Matchers.is(
+                                   ProcessMatcher.matchProcess(processByAnonymous.getName(),
+                                   null, processByAnonymous.getID(), parameters, ProcessStatus.SCHEDULED))));
+
+        // by anonymous
+        getClient().perform(get("/api/system/processes/" + processByAnonymous.getID()))
+                   .andExpect(status().isOk())
+                   .andExpect(jsonPath("$", Matchers.is(
+                              ProcessMatcher.matchProcess(processByAnonymous.getName(),
+                              null, processByAnonymous.getID(), parameters, ProcessStatus.SCHEDULED))));
+    }
 
     @Test
     public void getAllProcessesTestAdmin() throws Exception {
@@ -812,6 +835,88 @@ public class ProcessRestRepositoryIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    public void getProcessOutputForbiddenTets() throws Exception {
+        try (InputStream is = IOUtils.toInputStream("Test File For Process", CharEncoding.UTF_8)) {
+            processService.appendLog(process.getID(), process.getName(), "testlog", ProcessLogLevel.INFO);
+        }
+        processService.createLogBitstream(context, process);
+        List<String> fileTypesToCheck = new LinkedList<>();
+        fileTypesToCheck.add("inputfile");
+
+        String tokenEperson = getAuthToken(eperson.getEmail(), password);
+        getClient(tokenEperson).perform(get("/api/system/processes/" + process.getID() + "/output"))
+                               .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void getProcessOutputUnauthorizedTets() throws Exception {
+        try (InputStream is = IOUtils.toInputStream("Test File For Process", CharEncoding.UTF_8)) {
+            processService.appendLog(process.getID(), process.getName(), "testlog", ProcessLogLevel.INFO);
+        }
+        processService.createLogBitstream(context, process);
+        List<String> fileTypesToCheck = new LinkedList<>();
+        fileTypesToCheck.add("inputfile");
+
+        getClient().perform(get("/api/system/processes/" + process.getID() + "/output"))
+                   .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void getProcessOutputCreatedByAnonymousForDifferentUsersTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        Process processByAnonymous = ProcessBuilder.createProcess(context, null, "mock-script", parameters).build();
+
+        try (InputStream is = IOUtils.toInputStream("Test File For Process", CharEncoding.UTF_8)) {
+            processService.appendLog(processByAnonymous.getID(), processByAnonymous.getName(), "testlog",
+                    ProcessLogLevel.INFO);
+        }
+        processService.createLogBitstream(context, processByAnonymous);
+        List<String> fileTypesToCheck = new LinkedList<>();
+        fileTypesToCheck.add("inputfile");
+
+        Group group = groupService.findByName(context, Group.ANONYMOUS);
+        ResourcePolicyBuilder.createResourcePolicy(context)
+                             .withAction(Constants.READ)
+                             .withDspaceObject(context.reloadEntity(processByAnonymous.getBitstreams().get(0)))
+                             .withGroup(group)
+                             .build();
+
+        context.restoreAuthSystemState();
+        String tokenAdmin = getAuthToken(admin.getEmail(), password);
+        String tokenEPerson = getAuthToken(eperson.getEmail(), password);
+
+        getClient(tokenAdmin).perform(get("/api/system/processes/" + processByAnonymous.getID() + "/output"))
+                             .andExpect(status().isOk())
+                             .andExpect(jsonPath("$.name",
+                                              is(processByAnonymous.getName() + processByAnonymous.getID() + ".log")))
+                             .andExpect(jsonPath("$.type", is("bitstream")))
+                             .andExpect(jsonPath("$.metadata['dc.title'][0].value",
+                                              is(processByAnonymous.getName() + processByAnonymous.getID() + ".log")))
+                            .andExpect(jsonPath("$.metadata['dspace.process.filetype'][0].value",
+                                                is("script_output")));
+
+        getClient(tokenEPerson).perform(get("/api/system/processes/" + processByAnonymous.getID() + "/output"))
+                               .andExpect(status().isOk())
+                               .andExpect(jsonPath("$.name",
+                                                is(processByAnonymous.getName() + processByAnonymous.getID() + ".log")))
+                               .andExpect(jsonPath("$.type", is("bitstream")))
+                               .andExpect(jsonPath("$.metadata['dc.title'][0].value",
+                                                is(processByAnonymous.getName() + processByAnonymous.getID() + ".log")))
+                               .andExpect(jsonPath("$.metadata['dspace.process.filetype'][0].value",
+                                                is("script_output")));
+
+        getClient().perform(get("/api/system/processes/" + processByAnonymous.getID() + "/output"))
+                   .andExpect(status().isOk())
+                   .andExpect(jsonPath("$.name",
+                                    is(processByAnonymous.getName() + processByAnonymous.getID() + ".log")))
+                   .andExpect(jsonPath("$.type", is("bitstream")))
+                   .andExpect(jsonPath("$.metadata['dc.title'][0].value",
+                                    is(processByAnonymous.getName() + processByAnonymous.getID() + ".log")))
+                   .andExpect(jsonPath("$.metadata['dspace.process.filetype'][0].value",
+                                    is("script_output")));
+    }
+
+    @Test
     public void testFindByCurrentUser() throws Exception {
 
         Process process1 = ProcessBuilder.createProcess(context, eperson, "mock-script", parameters)
@@ -840,4 +945,5 @@ public class ProcessRestRepositoryIT extends AbstractControllerIntegrationTest {
     public void destroy() throws Exception {
         super.destroy();
     }
+
 }

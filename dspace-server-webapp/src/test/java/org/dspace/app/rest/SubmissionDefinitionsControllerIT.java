@@ -310,10 +310,10 @@ public class SubmissionDefinitionsControllerIT extends AbstractControllerIntegra
                         Matchers.containsString("page=1"), Matchers.containsString("size=1"))))
                 .andExpect(jsonPath("$._links.last.href", Matchers.allOf(
                         Matchers.containsString("/api/config/submissiondefinitions?"),
-                        Matchers.containsString("page=17"), Matchers.containsString("size=1"))))
+                        Matchers.containsString("page=18"), Matchers.containsString("size=1"))))
                 .andExpect(jsonPath("$.page.size", is(1)))
-                .andExpect(jsonPath("$.page.totalElements", is(18)))
-                .andExpect(jsonPath("$.page.totalPages", is(18)))
+                .andExpect(jsonPath("$.page.totalElements", is(19)))
+                .andExpect(jsonPath("$.page.totalPages", is(19)))
                 .andExpect(jsonPath("$.page.number", is(0)));
 
         getClient(tokenAdmin).perform(get("/api/config/submissiondefinitions")
@@ -336,10 +336,10 @@ public class SubmissionDefinitionsControllerIT extends AbstractControllerIntegra
                         Matchers.containsString("page=1"), Matchers.containsString("size=1"))))
                 .andExpect(jsonPath("$._links.last.href", Matchers.allOf(
                         Matchers.containsString("/api/config/submissiondefinitions?"),
-                        Matchers.containsString("page=17"), Matchers.containsString("size=1"))))
+                        Matchers.containsString("page=18"), Matchers.containsString("size=1"))))
                 .andExpect(jsonPath("$.page.size", is(1)))
-                .andExpect(jsonPath("$.page.totalElements", is(18)))
-                .andExpect(jsonPath("$.page.totalPages", is(18)))
+                .andExpect(jsonPath("$.page.totalElements", is(19)))
+                .andExpect(jsonPath("$.page.totalPages", is(19)))
                 .andExpect(jsonPath("$.page.number", is(1)));
     }
 }

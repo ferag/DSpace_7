@@ -68,9 +68,9 @@
 							    	<xsl:with-param name="label" select="'Country'" />
 							    	<xsl:with-param name="value" select="country" />
 							    </xsl:call-template>
-								<xsl:call-template name="print-value">
+								<xsl:call-template name="print-values">
 							    	<xsl:with-param name="label" select="'Email'" />
-							    	<xsl:with-param name="value" select="email" />
+							    	<xsl:with-param name="values" select="email" />
 							    </xsl:call-template>
                                 <xsl:call-template name="print-value">
                                     <xsl:with-param name="label" select="'Phone'" />
@@ -202,7 +202,6 @@
                     <xsl:if test="( count(address/street) &gt; 0 ) or 
                                   ( count(address/postal-code) &gt; 0 ) or 
                                   ( count(address/country) &gt; 0 ) or 
-                                  ( count(working-groups/working-group) &gt; 0 ) or 
                                   ( count(interests/interest) &gt; 0 ) or 
                                   ( count(knows-languages/language) &gt; 0 )">
 					
@@ -221,10 +220,6 @@
 	                    <xsl:call-template name="print-value">
 	                        <xsl:with-param name="label" select="'Country address'" />
 	                        <xsl:with-param name="value" select="address/country" />
-	                    </xsl:call-template>
-	                    <xsl:call-template name="print-values">
-	                        <xsl:with-param name="label" select="'Working groups'" />
-	                        <xsl:with-param name="values" select="working-groups/working-group" />
 	                    </xsl:call-template>
 	                    <xsl:call-template name="print-values">
 	                        <xsl:with-param name="label" select="'Interests'" />

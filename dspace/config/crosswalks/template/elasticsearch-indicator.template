@@ -5,37 +5,31 @@
 	"perucris_ppp_plan" : "@perucris.ppp.plan@",
 	"perucris_ppp_program" : "@perucris.ppp.program@",
 	"perucris_ppp_programGoal" : "@perucris.ppp.programGoal@",
-	"perucris_ppp_programSpecificGoal" : "@perucris.ppp.programSpecificGoal@",
 	"perucris_ppp_activity" : "@perucris.ppp.activity@",
-	"perucris_ppp_standard" : "@perucris.ppp.standard@",
 	"perucris_ppp_financialInstrument" : "@perucris.ppp.financialInstrument@",
 	"perucris_ppp_financialScheme" : "@perucris.ppp.financialScheme@",
 	"perucris_ppp_responsiblePerson" : "@perucris.ppp.responsiblePerson@",
 	"perucris_ppp_responsibleEntity" : "@perucris.ppp.responsibleEntity@",
 	"perucris_ppp_indicatorType" : "@perucris.ppp.indicatorType@",
-	"perucris_ppp_measurementFrequency" : "@perucris.ppp.measurementFrequency@",
-	"perucris_ppp_measurementLimitations" : "@perucris.ppp.measurementLimitations@",
 	"perucris_ppp_measurementTechnicalSpecifications" : "@perucris.ppp.measurementTechnicalSpecifications@",
 	"perucris_ppp_source" : "@perucris.ppp.source@",
 	"perucris_ppp_baseLine" : "@perucris.ppp.baseLine@",
 	"perucris_ppp_unitOfMeasure" : "@perucris.ppp.unitOfMeasure@",
 	"perucris_ppp_startingYear" : "@perucris.ppp.startingYear@",
-	"perucris_ppp_progress" : "@perucris.ppp.progress@",
-	"perucris_ppp_performanceSummary" : "@perucris.ppp.performanceSummary@",
-	@if.metadata.perucris-ppp-year.start@
+	@if.metadata.perucris-ppp-progress.start@
         "perucris_ppp_year" : [
-               @group.perucris-ppp-year.start@
+               @group.perucris-ppp-progress.start@
                {
                   "year" : "@perucris.ppp.year@",
                   "expectedValue": "@perucris.ppp.expectedValue@",
                   "obtainedValue": "@perucris.ppp.obtainedValue@"
                },
-               @group.perucris-ppp-year.end@
+               @group.perucris-ppp-progress.end@
                ],
-    @if.metadata.perucris-ppp-year.end@
-    @if.not.metadata.perucris-ppp-year.start@
+    @if.metadata.perucris-ppp-progress.end@
+    @if.not.metadata.perucris-ppp-progress.start@
             "perucris_ppp_year" : [{}],
-        @if.not.metadata.perucris-ppp-year.end@
+        @if.not.metadata.perucris-ppp-progress.end@
 	"perucris_ppp_status" : "@perucris.ppp.status@"
 
 }

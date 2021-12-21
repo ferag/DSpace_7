@@ -173,6 +173,34 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
         return addMetadataValue(item, MetadataSchemaEnum.DC.getName(), "description", "provenance", provenanceData);
     }
 
+    public ItemBuilder enableIIIF() {
+        return addMetadataValue(item, "dspace", "iiif", "enabled", "true");
+    }
+
+    public ItemBuilder disableIIIF() {
+        return addMetadataValue(item, "dspace", "iiif", "enabled", "false");
+    }
+
+    public ItemBuilder enableIIIFSearch() {
+        return addMetadataValue(item, "iiif", "search", "enabled", "true");
+    }
+
+    public ItemBuilder withIIIFViewingHint(String hint) {
+        return addMetadataValue(item, "iiif", "viewing", "hint", hint);
+    }
+
+    public ItemBuilder withIIIFCanvasNaming(String naming) {
+        return addMetadataValue(item, "iiif", "canvas", "naming", naming);
+    }
+
+    public ItemBuilder withIIIFCanvasWidth(int i) {
+        return addMetadataValue(item, "iiif", "image", "width", String.valueOf(i));
+    }
+
+    public ItemBuilder withIIIFCanvasHeight(int i) {
+        return addMetadataValue(item, "iiif", "image", "height", String.valueOf(i));
+    }
+
     public ItemBuilder withMetadata(final String schema, final String element, final String qualifier,
                                     final String value) {
         return addMetadataValue(item, schema, element, qualifier, value);
@@ -235,6 +263,12 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withOrcidIdentifier(String orcid) {
         return addMetadataValue(item, "person", "identifier", "orcid", orcid);
+    }
+
+    public ItemBuilder withLegacyId(String legacyId) {
+
+        return addMetadataValue(item, "cris", "legacyId", null, legacyId);
+
     }
 
     public ItemBuilder withOrcidAccessToken(String accessToken) {
@@ -507,6 +541,10 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withType(String type) {
         return addMetadataValue(item, "dc", "type", null, type);
+    }
+
+    public ItemBuilder withType(String type, String authority) {
+        return addMetadataValue(item, "dc", "type", null, null, type, authority, 600);
     }
 
     public ItemBuilder withLanguage(String language) {
@@ -1111,6 +1149,26 @@ public class ItemBuilder extends AbstractDSpaceObjectBuilder<Item> {
 
     public ItemBuilder withRenacytClassification(String classification) {
         return addMetadataValue(item, "perucris", "renacyt", "classification", classification);
+    }
+
+    public ItemBuilder withContractorou(final String contractorou, final String authority) {
+        return addMetadataValue(item, "crispj", "contractorou", null, null, contractorou, authority, 600);
+    }
+
+    public ItemBuilder withPartnerou(final String partnerou, final String authority) {
+        return addMetadataValue(item, "crispj", "partnerou", null, null, partnerou, authority, 600);
+    }
+
+    public ItemBuilder withInKindContributorou(final String inKindContributorou, final String authority) {
+        return addMetadataValue(item, "crispj", "inKindContributorou", null, null, inKindContributorou, authority, 600);
+    }
+
+    public ItemBuilder withOrganization(final String organization, final String authority) {
+        return addMetadataValue(item, "crispj", "organization", null, null, organization, authority, 600);
+    }
+
+    public ItemBuilder withOwnerou(final String ownerou, final String authority) {
+        return addMetadataValue(item, "crisequipment", "ownerou", null, null, ownerou, authority, 600);
     }
 
     /**

@@ -5,8 +5,6 @@
 			"legalName": "Test OrgUnit LegalName",
 			"acronym": "TOU",
 			"type": "https:\/\/w3id.org\/cerif\/vocab\/OrganisationTypes#StrategicResearchInsitute",
-			"scientificBoards": [
-            ],
 			"parentOrganization": {
 				"name": "Parent OrgUnit"
 			},
@@ -18,61 +16,24 @@
 				"www.orgUnit.com",
 				"www.orgUnit.it"
 			],
-            "ruc-identifiers": [
-            ],
-            "rin-identifiers": [
-            ],
-            "ror-identifiers": [
-            ],
-            "isni-identifiers": [
-            ],
-            "scopusaff-identifiers": [
-            ],
-            "crossref-identifiers": [
-            ],
             "subjects": [
-            ],
-            "keywords": [
+              "ocde::subject"
             ],
             "postAddress": {
-            },
-			"People": [
-			]
+            }
 		},
 		{
 			"name": "Another Test OrgUnit",
 			"acronym": "ATOU",
 			"type": "https:\/\/w3id.org\/cerif\/vocab\/OrganisationTypes#Privatenonprofit",
-            "scientificBoards": [
-            ],
 			"parentOrganization": {
 				"name": "Parent OrgUnit"
 			},
 			"identifiers": [
 				"ID-03"
 			],
-			"url-identifiers": [
-			],
-            "ruc-identifiers": [
-            ],
-            "rin-identifiers": [
-            ],
-            "ror-identifiers": [
-            ],
-            "isni-identifiers": [
-            ],
-            "scopusaff-identifiers": [
-            ],
-            "crossref-identifiers": [
-            ],
-            "subjects": [
-            ],
-            "keywords": [
-            ],
             "postAddress": {
-            },
-			"People": [
-			]
+            }
 		}
 	]
 }

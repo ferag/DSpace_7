@@ -5,5 +5,4 @@
 	<Identifier type="Institution assigned unique equipment identifier">ID-01</Identifier>
 	<Description>This is an equipment to test the export functionality</Description>
 	<Owner> <OrgUnit> <Name>Test OrgUnit</Name> </OrgUnit> </Owner>
-	<Owner> <Person displayName="Walter White" ></Person> </Owner>
 </Equipment>

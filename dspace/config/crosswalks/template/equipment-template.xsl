@@ -51,11 +51,6 @@
 				    	<xsl:with-param name="label" select="'Owner (Organization)'" />
 				    	<xsl:with-param name="value" select="cerif:Owner/cerif:OrgUnit/cerif:Name" />
 			    	</xsl:call-template>
-			    	
-					<xsl:call-template name="print-value">
-				    	<xsl:with-param name="label" select="'Owner (Person)'" />
-				    	<xsl:with-param name="value" select="cerif:Owner/cerif:Person/@displayName" />
-			    	</xsl:call-template>
                     
                     <xsl:call-template name="print-values">
                         <xsl:with-param name="label" select="'Funding(s)'" />

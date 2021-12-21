@@ -286,12 +286,10 @@ public class CERIFIngestionCrosswalkIT extends AbstractIntegrationTestWithDataba
 
         List<MetadataValue> values = item.getMetadata();
 
-        assertThat(values, hasSize(25));
+        assertThat(values, hasSize(23));
         assertThat(values, hasItems(with("dc.title", "Smith, John")));
         assertThat(values, hasItems(with("person.givenName", "John")));
         assertThat(values, hasItems(with("person.familyName", "Smith")));
-        assertThat(values, hasItems(with("crisrp.name.variant", "J.S.")));
-        assertThat(values, hasItems(with("crisrp.name.variant", "Smith John", 1)));
         assertThat(values, hasItems(with("oairecerif.person.gender", "M")));
         assertThat(values, hasItems(with("person.identifier.orcid", "0000-0002-9079-5932")));
         assertThat(values, hasItems(with("person.identifier.rid", "R-01")));
@@ -457,13 +455,12 @@ public class CERIFIngestionCrosswalkIT extends AbstractIntegrationTestWithDataba
         crosswalk.ingest(context, item, document.getRootElement(), false);
 
         List<MetadataValue> values = item.getMetadata();
-        assertThat(values, hasSize(11));
+        assertThat(values, hasSize(10));
         assertThat(values, hasItems(with("dc.title", "Test Equipment")));
         assertThat(values, hasItems(with("oairecerif.acronym", "T-EQ")));
         assertThat(values, hasItems(with("oairecerif.internalid", "ID-01")));
         assertThat(values, hasItems(with("dc.description", "This is an equipment to test the export functionality")));
         assertThat(values, hasItems(with("crisequipment.ownerou", "Test OrgUnit")));
-        assertThat(values, hasItems(with("crisequipment.ownerrp", "Walter White")));
     }
 
     @Test
@@ -477,12 +474,11 @@ public class CERIFIngestionCrosswalkIT extends AbstractIntegrationTestWithDataba
         crosswalk.ingest(context, item, document.getRootElement(), false);
 
         List<MetadataValue> values = item.getMetadata();
-        assertThat(values, hasSize(18));
+        assertThat(values, hasSize(17));
         assertThat(values, hasItems(with("dc.type", "Gift")));
         assertThat(values, hasItems(with("dc.title", "Test Funding")));
         assertThat(values, hasItems(with("oairecerif.acronym", "T-FU")));
         assertThat(values, hasItems(with("oairecerif.internalid", "ID-01")));
-        assertThat(values, hasItems(with("oairecerif.funding.identifier", "0001")));
         assertThat(values, hasItems(with("oairecerif.amount", "30.000,00")));
         assertThat(values, hasItems(with("oairecerif.amount.currency", "EUR")));
         assertThat(values, hasItems(with("dc.description", "Funding to test export")));

@@ -108,7 +108,7 @@ public class OidcAuthenticationRestControllerIT extends AbstractControllerIntegr
         when(oidcClientMock.getAccessToken(CODE)).thenReturn(buildOidcTokenResponse(ACCESS_TOKEN));
         when(oidcClientMock.getUserInfo(ACCESS_TOKEN)).thenReturn(buildUserInfo("test@email.it", "Test", "User"));
 
-        MvcResult mvcResult = getClient().perform(get("/api/" + AuthnRest.CATEGORY + "/oidc")
+        MvcResult mvcResult = getClient().perform(get("/api/" + AuthnRest.CATEGORY + "/cas")
             .param("code", CODE))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl(configurationService.getProperty("dspace.ui.url")))
@@ -136,7 +136,7 @@ public class OidcAuthenticationRestControllerIT extends AbstractControllerIntegr
         when(oidcClientMock.getAccessToken(CODE)).thenReturn(buildOidcTokenResponse(ACCESS_TOKEN));
         when(oidcClientMock.getUserInfo(ACCESS_TOKEN)).thenReturn(buildUserInfo("test@email.it"));
 
-        MvcResult mvcResult = getClient().perform(get("/api/" + AuthnRest.CATEGORY + "/oidc")
+        MvcResult mvcResult = getClient().perform(get("/api/" + AuthnRest.CATEGORY + "/cas")
             .param("code", CODE))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl(configurationService.getProperty("dspace.ui.url")))
@@ -160,7 +160,7 @@ public class OidcAuthenticationRestControllerIT extends AbstractControllerIntegr
         when(oidcClientMock.getAccessToken(CODE)).thenReturn(buildOidcTokenResponse(ACCESS_TOKEN));
         when(oidcClientMock.getUserInfo(ACCESS_TOKEN)).thenReturn(buildUserInfo("test@email.it"));
 
-        MvcResult mvcResult = getClient().perform(get("/api/" + AuthnRest.CATEGORY + "/oidc")
+        MvcResult mvcResult = getClient().perform(get("/api/" + AuthnRest.CATEGORY + "/cas")
             .param("code", CODE))
             .andExpect(status().isUnauthorized())
             .andExpect(cookie().doesNotExist("Authorization-cookie"))
@@ -179,7 +179,7 @@ public class OidcAuthenticationRestControllerIT extends AbstractControllerIntegr
     @Test
     public void testWithoutAuthorizationCode() throws Exception {
 
-        getClient().perform(get("/api/" + AuthnRest.CATEGORY + "/oidc"))
+        getClient().perform(get("/api/" + AuthnRest.CATEGORY + "/cas"))
             .andExpect(status().isUnauthorized())
             .andExpect(cookie().doesNotExist("Authorization-cookie"))
             .andExpect(header().exists("WWW-Authenticate"));
@@ -204,7 +204,7 @@ public class OidcAuthenticationRestControllerIT extends AbstractControllerIntegr
 
         context.restoreAuthSystemState();
 
-        MvcResult mvcResult = getClient().perform(get("/api/" + AuthnRest.CATEGORY + "/oidc")
+        MvcResult mvcResult = getClient().perform(get("/api/" + AuthnRest.CATEGORY + "/cas")
             .param("code", CODE))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl(configurationService.getProperty("dspace.ui.url")))
@@ -237,7 +237,7 @@ public class OidcAuthenticationRestControllerIT extends AbstractControllerIntegr
 
         context.restoreAuthSystemState();
 
-        getClient().perform(get("/api/" + AuthnRest.CATEGORY + "/oidc")
+        getClient().perform(get("/api/" + AuthnRest.CATEGORY + "/cas")
             .param("code", CODE))
             .andExpect(status().isUnauthorized())
             .andExpect(cookie().doesNotExist("Authorization-cookie"))
@@ -264,7 +264,7 @@ public class OidcAuthenticationRestControllerIT extends AbstractControllerIntegr
 
         context.restoreAuthSystemState();
 
-        getClient().perform(get("/api/" + AuthnRest.CATEGORY + "/oidc")
+        getClient().perform(get("/api/" + AuthnRest.CATEGORY + "/cas")
             .param("code", CODE))
             .andExpect(status().isUnauthorized())
             .andExpect(cookie().doesNotExist("Authorization-cookie"))
@@ -291,7 +291,7 @@ public class OidcAuthenticationRestControllerIT extends AbstractControllerIntegr
 
         context.restoreAuthSystemState();
 
-        getClient().perform(get("/api/" + AuthnRest.CATEGORY + "/oidc")
+        getClient().perform(get("/api/" + AuthnRest.CATEGORY + "/cas")
             .param("code", CODE))
             .andExpect(status().isUnauthorized())
             .andExpect(cookie().doesNotExist("Authorization-cookie"))

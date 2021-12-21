@@ -1,11 +1,6 @@
 <person id="@virtual.id@">
 	<names>
 		<preferred-name>@dc.title@</preferred-name>
-		<full-name>@crisrp.name@</full-name>
-		<vernacular-name>@crisrp.name.translated@</vernacular-name>
-		<variants>
-			<variant>@crisrp.name.variant@</variant>
-		</variants>
 		<given-name>@person.givenName@</given-name>
 		<family-name>@person.familyName@</family-name>
 		<apellido-paterno>@perucris.apellidoPaterno@</apellido-paterno>
@@ -16,9 +11,6 @@
 	<gender>@oairecerif.person.gender@</gender>
 	<job-title>@person.jobTitle@</job-title>
 	<main-affiliation>@person.affiliation.name@</main-affiliation>
-	<working-groups>
-		<working-group>@crisrp.workgroup@</working-group>
-	</working-groups>
 	<personal-sites>
 		@group.oairecerif-identifier-url.start@
 		<personal-site>
@@ -83,7 +75,6 @@
 	</knows-languages>
 	<personal-picture>@virtual.bitstream.original.picture@</personal-picture>
 	<ubigeo-reniec>@perucris.domicilio.ubigeoReniec@</ubigeo-reniec>
-    <ubigeo>@perucris.ubigeo@</ubigeo>
     <address>
         <street>@perucris.address.streetAddress@</street>
         <postal-code>@perucris.address.postalCode@</postal-code>

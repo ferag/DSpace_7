@@ -186,6 +186,7 @@ public class CvEntitySynchronizationConsumerProjectIT extends AbstractIntegratio
         collectionRoleService.deleteByCollection(context, projects);
         workflowItemService.deleteByCollection(context, cvCloneCollection);
         workflowItemService.deleteByCollection(context, projects);
+        context.commit();
         context.restoreAuthSystemState();
 
         super.destroy();

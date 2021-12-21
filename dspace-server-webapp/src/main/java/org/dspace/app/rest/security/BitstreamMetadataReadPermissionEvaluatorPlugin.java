@@ -57,7 +57,7 @@ public class BitstreamMetadataReadPermissionEvaluatorPlugin extends RestObjectPe
                                  Object permission) {
         if (permission.toString().equalsIgnoreCase(METADATA_READ_PERMISSION) && targetId != null) {
             Request request = requestService.getCurrentRequest();
-            Context context = ContextUtil.obtainContext(request.getServletRequest());
+            Context context = ContextUtil.obtainContext(request.getHttpServletRequest());
 
             try {
                 UUID dsoUuid = UUID.fromString(targetId.toString());
@@ -69,11 +69,6 @@ public class BitstreamMetadataReadPermissionEvaluatorPlugin extends RestObjectPe
                     }
                     if (authorizeService.authorizeActionBoolean(context, dso, Constants.READ)) {
                         // Has READ rights on bitstream
-                        return true;
-                    }
-
-                    if (context.getCurrentUser() == null
-                        && bitstreamService.isRelatedToAProcessStartedByDefaultUser(context, (Bitstream) dso)) {
                         return true;
                     }
 
@@ -102,11 +97,6 @@ public class BitstreamMetadataReadPermissionEvaluatorPlugin extends RestObjectPe
         }
         if (authorizeService.authorizeActionBoolean(context, bitstream, Constants.READ)) {
             // Has READ rights on bitstream
-            return true;
-        }
-
-        if (context.getCurrentUser() == null
-            && bitstreamService.isRelatedToAProcessStartedByDefaultUser(context, bitstream)) {
             return true;
         }
 

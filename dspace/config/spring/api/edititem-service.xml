@@ -448,7 +448,7 @@
                                     ITEM_ADMIN
                                 </value>
                             </property>
-                            <property name="submissionDefinition" value="financial-resources-edit" />
+                            <property name="submissionDefinition" value="financial-resource-edit" />
                         </bean>
                     </list>
                 </entry>
@@ -475,6 +475,19 @@
                                 </value>
                             </property>
                             <property name="submissionDefinition" value="project-financial-instrument-edit" />
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="component">
+                    <list>
+                        <bean class="org.dspace.content.edit.EditItemMode">
+                            <property name="name" value="FULL" />
+                            <property name="security">
+                                <value type="org.dspace.content.security.CrisSecurity">
+                                    ITEM_ADMIN
+                                </value>
+                            </property>
+                            <property name="submissionDefinition" value="component-edit" />
                         </bean>
                     </list>
                 </entry>

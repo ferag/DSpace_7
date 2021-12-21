@@ -2,7 +2,6 @@
 	<PersonName>
 		<FamilyNames>@virtual.personName.lastName@</FamilyNames>
 		<FirstNames>@virtual.personName.firstName@</FirstNames>
-		<OtherNames>@crisrp.name.variant@</OtherNames>
 	</PersonName>
 	<Gender>@oairecerif.person.gender@</Gender>
 	<ORCID>@person.identifier.orcid@</ORCID>

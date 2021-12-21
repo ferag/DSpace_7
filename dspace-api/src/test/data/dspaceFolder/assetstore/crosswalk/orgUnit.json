@@ -3,12 +3,6 @@
     "legalName": "Test OrgUnit LegalName",
     "acronym": "TOU",
     "type": "https:\/\/w3id.org\/cerif\/vocab\/OrganisationTypes#StrategicResearchInsitute",
-    "director": "OU Director",
-    "established": "1990-05-12",
-    "scientificBoards": [
-       "board1",
-       "board2"
-    ],
     "parentOrganization": {
         "name": "Parent OrgUnit",
         "acronym": "POU"
@@ -25,10 +19,10 @@
         "RUC-01"
     ],
     "rin-identifiers": [
-        "RUC-01"
+        "RIN-01"
     ],
     "ror-identifiers": [
-        "RUC-01"
+        "ROR-01"
     ],
     "isni-identifiers": [
         "ISNI-01"
@@ -50,9 +44,5 @@
         "locality": "via del canale",
         "country": "Italy"
     },
-    "ubiGeo": "010201",
-    "People": [
-        "Walter White",
-        "Jesse Pinkman"
-    ]
+    "ubiGeo": "010201"
 }

@@ -143,9 +143,14 @@ public class VocabularyRestRepositoryIT extends AbstractControllerIntegrationTes
                      VocabularyMatcher.matchProperties("common_iso_countries", "common_iso_countries", true , false),
                      VocabularyMatcher.matchProperties("SolrAuthorAuthority", "SolrAuthorAuthority", false , false),
                      VocabularyMatcher.matchProperties("patent_types", "patent_types", true , false),
+//                     VocabularyMatcher.matchProperties("peru_patent_types", "peru_patent_types", true , false),
+                     VocabularyMatcher.matchProperties("peru_orgunit_type", "peru_orgunit_type", true , false),
+                     VocabularyMatcher.matchProperties("peru_ou_types", "peru_ou_types", true , false),
+                     VocabularyMatcher.matchProperties("peru_ou_nature", "peru_ou_nature", true , false),
                      VocabularyMatcher.matchProperties("types", "types", false , true),
                      VocabularyMatcher.matchProperties("gender", "gender", true , false),
                      VocabularyMatcher.matchProperties("truefalse", "truefalse", true , false),
+                     VocabularyMatcher.matchProperties("yesno", "yesno", true , false),
                      VocabularyMatcher.matchProperties("peru_ciiu", "peru_ciiu", false , true),
                      VocabularyMatcher.matchProperties("peru_ubigeo", "peru_ubigeo", false , true),
                      VocabularyMatcher.matchProperties("renati_types", "renati_types", true , false),
@@ -158,11 +163,14 @@ public class VocabularyRestRepositoryIT extends AbstractControllerIntegrationTes
                      VocabularyMatcher.matchProperties("project_types", "project_types", true , false),
                      VocabularyMatcher.matchProperties("project_types_other", "project_types_other", true , false),
                      VocabularyMatcher.matchProperties("SRPublisher", "SRPublisher", false , false),
+                     VocabularyMatcher.matchProperties("sunedu_tipoInstitucion", "sunedu_tipoInstitucion", true, false),
+                     VocabularyMatcher.matchProperties("ocde_sectorInstitucional", "ocde_sectorInstitucional", true,
+                         false),
                      VocabularyMatcher.matchProperties("SRJournalTitle", "SRJournalTitle", false , false)
                  )))
         .andExpect(jsonPath("$._links.self.href",
             Matchers.containsString("api/submission/vocabularies")))
-            .andExpect(jsonPath("$.page.totalElements", is(22)));
+            .andExpect(jsonPath("$.page.totalElements", is(28)));
     }
 
     @Test
@@ -410,6 +418,41 @@ public class VocabularyRestRepositoryIT extends AbstractControllerIntegrationTes
                         .andExpect(jsonPath("$", is(
                             VocabularyMatcher.matchProperties("common_types", "common_types", true, false)
                         )));
+    }
+
+    @Test
+    public void findByLabelAndValueTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+        Collection collection = CollectionBuilder.createCollection(context, parentCommunity)
+                                                 .withName("Test collection")
+                                                 .build();
+        context.restoreAuthSystemState();
+        String token = getAuthToken(admin.getEmail(), password);
+        getClient(token).perform(get("/api/submission/vocabularies/common_iso_countries/entries")
+                        .param("size", "10")
+                        .param("filter", "al")
+                        .param("metadata", "dc.language.iso")
+                        .param("collection", collection.getID().toString()))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$._embedded.entries", Matchers.containsInAnyOrder(
+                                VocabularyMatcher.matchVocabularyEntry("Guinea Ecuatorial", "GQ", "vocabularyEntry"),
+                                VocabularyMatcher.matchVocabularyEntry("Albania", "AL", "vocabularyEntry"),
+                                VocabularyMatcher.matchVocabularyEntry("Algeria", "DZ", "vocabularyEntry"),
+                                VocabularyMatcher.matchVocabularyEntry("Australia", "AU", "vocabularyEntry"),
+                                VocabularyMatcher.matchVocabularyEntry("El Salvador", "SV", "vocabularyEntry"),
+                                VocabularyMatcher.matchVocabularyEntry("Islas Malvinas", "FK", "vocabularyEntry"),
+                                VocabularyMatcher.matchVocabularyEntry("Territorios Australes y Antárticas Franceses",
+                                    "TF", "vocabularyEntry"),
+                                VocabularyMatcher.matchVocabularyEntry("Alemania", "DE", "vocabularyEntry"),
+                                VocabularyMatcher.matchVocabularyEntry("Gibraltar", "GI", "vocabularyEntry"),
+                                VocabularyMatcher.matchVocabularyEntry("Guadalupe", "GP", "vocabularyEntry")
+                        )))
+                        .andExpect(jsonPath("$._embedded.entries", Matchers.not(Matchers.containsInAnyOrder(
+                                VocabularyMatcher.matchVocabularyEntry("Botswana", "BW", "vocabularyEntry")
+                        ))))
+                        .andExpect(jsonPath("$.page.totalElements", Matchers.is(33)))
+                        .andExpect(jsonPath("$.page.totalPages", Matchers.is(4)))
+                        .andExpect(jsonPath("$.page.size", Matchers.is(10)));
     }
 
     @Test

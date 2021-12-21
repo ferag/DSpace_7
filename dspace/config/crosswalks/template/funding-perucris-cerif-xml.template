@@ -11,7 +11,6 @@
         @oairecerif.amount@
     </Amount>
     <Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#FinanceID">@oairecerif.internalid@</Identifier>
-    <Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#AwardNumber">@oairecerif.funding.identifier@</Identifier>
     <Description>@dc.description@</Description>
     <Keyword>@dc.subject@</Keyword>
 	<Funder>

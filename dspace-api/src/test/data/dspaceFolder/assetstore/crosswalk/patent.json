@@ -21,10 +21,6 @@
 	"holders": [
 		"Test Organization"
 	],
-	"issuers": [
-		"First publisher",
-		"Second publisher"
-	],
 	"keywords": [
 		"patent",
 		"test"
@@ -38,8 +34,6 @@
 	],
 	"predecessors": [
 		"Another patent"
-	],
-	"references": [
 	],
 	"abstract": "This is a patent"
 }

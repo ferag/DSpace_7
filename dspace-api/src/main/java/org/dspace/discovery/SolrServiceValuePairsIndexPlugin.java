@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
@@ -30,6 +31,9 @@ import org.dspace.app.util.DCInputsReaderException;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;
+import org.dspace.content.authority.Choice;
+import org.dspace.content.authority.ChoiceAuthority;
+import org.dspace.content.authority.service.ChoiceAuthorityService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.core.I18nUtil;
@@ -60,6 +64,9 @@ public class SolrServiceValuePairsIndexPlugin implements SolrServiceIndexPlugin 
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private ChoiceAuthorityService cas;
 
     @Autowired
     private ConfigurationService configurationService;
@@ -105,11 +112,21 @@ public class SolrServiceValuePairsIndexPlugin implements SolrServiceIndexPlugin 
 
         for (MetadataValue metadataValue : metadataValues) {
 
-            String value = getDisplayValue(valueListInput, metadataValue);
+            String value = StringUtils.EMPTY;
             String authority = metadataValue.getAuthority();
+            boolean isHierarchical = false;
+            if (StringUtils.isNotBlank(valueListInput.getVocabulary())) {
+                value = getControlledVocabularyValue(metadataValue, language);
+                isHierarchical = true;
+            } else {
+                value = getDisplayValue(valueListInput, metadataValue);
+            }
+            if (StringUtils.isBlank(value)) {
+                continue;
+            }
 
             for (DiscoverySearchFilter searchFilter : searchFilters) {
-                addDiscoveryFieldFields(language, document, value, authority, searchFilter);
+                addDiscoveryFieldFields(language, document, value, authority, searchFilter, isHierarchical);
                 document.addField(searchFilter.getIndexFieldName(), value.toLowerCase());
             }
 
@@ -117,22 +134,39 @@ public class SolrServiceValuePairsIndexPlugin implements SolrServiceIndexPlugin 
 
     }
 
+    private String getControlledVocabularyValue(MetadataValue metadataValue, String language) {
+        if (Objects.isNull(metadataValue.getAuthority())) {
+            return StringUtils.EMPTY;
+        }
+        String [] authorityValue = metadataValue.getAuthority().split(":");
+        if (authorityValue.length == 2) {
+            ChoiceAuthority authority = cas.getChoiceAuthorityByAuthorityName(authorityValue[0]);
+            Choice choice = authority.getChoice(authorityValue[1], language);
+            return choice.label;
+        }
+        return StringUtils.EMPTY;
+    }
+
     private void addDiscoveryFieldFields(String language, SolrInputDocument document, String value, String authority,
-        DiscoverySearchFilter searchFilter) {
+                                         DiscoverySearchFilter searchFilter, boolean isHierarchical) {
 
         String fieldNameWithLanguage = language + "_" + searchFilter.getIndexFieldName();
         String valueLowerCase = value.toLowerCase();
 
-        String keywordField = appendAuthorityIfNotBlank(value, authority);
         String acidField = appendAuthorityIfNotBlank(valueLowerCase + separator + value, authority);
         String filterField = appendAuthorityIfNotBlank(valueLowerCase + separator + value, authority);
 
-        document.addField(fieldNameWithLanguage + "_keyword", keywordField);
+        Stream.of(appendAuthorityIfNotBlank(value, authority), value)
+            .forEach(keywordField -> document.addField(fieldNameWithLanguage + "_keyword", keywordField));
         document.addField(fieldNameWithLanguage + "_acid", acidField);
         document.addField(fieldNameWithLanguage + "_filter", filterField);
         document.addField(fieldNameWithLanguage + "_ac", valueLowerCase + separator + value);
-        if (document.containsKey(searchFilter.getIndexFieldName() + "_authority")) {
+        if (document.containsKey(searchFilter.getIndexFieldName() + "_authority") ||
+            StringUtils.isNotBlank(authority)) {
             document.addField(fieldNameWithLanguage + "_authority", authority);
+        }
+        if (isHierarchical) {
+            document.addField(fieldNameWithLanguage + "_tax_0_filter", filterField);
         }
 
     }
@@ -174,14 +208,19 @@ public class SolrServiceValuePairsIndexPlugin implements SolrServiceIndexPlugin 
     private List<DCInput> getAllValueListInputs(Context context, String language, Item item) {
         return getInputs(context, language, item).stream()
             .flatMap(this::getAllDCInput)
-            .filter(dcInput -> dcInput.isDropDown() || dcInput.isList())
+            .filter(dcInput -> dcInput.isDropDown()
+                            || dcInput.isList()
+                            || StringUtils.isNotBlank(dcInput.getVocabulary()))
             .collect(Collectors.toList());
     }
 
     private List<DCInputSet> getInputs(Context context, String language, Item item) {
         try {
             Collection collection = (Collection) itemService.getParentObject(context, item);
-            return dcInputsReaders.get(language).getInputsByCollection(collection);
+            return Stream.concat(
+                dcInputsReaders.get(language).getInputsByCollection(collection).stream(),
+                dcInputsReaders.get(language).getInputsGroupByCollection(collection).stream())
+                .collect(Collectors.toList());
         } catch (DCInputsReaderException | SQLException e) {
             throw new RuntimeException(e);
         }

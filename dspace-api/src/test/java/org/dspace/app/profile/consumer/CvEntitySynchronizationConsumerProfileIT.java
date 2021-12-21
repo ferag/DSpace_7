@@ -414,7 +414,7 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         assertThat(profile.getMetadata(), hasItem(with("crisrp.education.role", "Role", 1)));
         assertThat(profile.getMetadata(), hasItem(with("perucris.education.grantor", PLACEHOLDER, 1)));
         assertThat(profile.getMetadata(), hasItem(with("perucris.education.country", "England", 1)));
-        assertThat(profile.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0, Choices.CF_AMBIGUOUS)));
+        assertThat(profile.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0)));
 
         profileClone = reloadItem(profileClone);
         assertThat(getMetadata(profileClone, "crisrp", "education", null), empty());
@@ -705,7 +705,7 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         assertThat(profile.getMetadata(), hasItem(with("crisrp.qualification.end", "2018-01-01", 0)));
         assertThat(profile.getMetadata(), hasItem(with("crisrp.qualification.orgunit", "Group", 0)));
 
-        assertThat(profile.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0, Choices.CF_AMBIGUOUS)));
+        assertThat(profile.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0)));
         assertThat(profile.getMetadata(), hasItem(with("perucris.address.streetAddress", "My street", 0)));
 
         profileClone = reloadItem(profileClone);
@@ -734,8 +734,7 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         assertThat(getMetadata(cloneCorrection, "crisrp", "qualification", "start"), empty());
         assertThat(getMetadata(cloneCorrection, "crisrp", "qualification", "end"), empty());
         assertThat(getMetadata(cloneCorrection, "crisrp", "qualification", "orgunit"), empty());
-        assertThat(cloneCorrection.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0,
-            Choices.CF_AMBIGUOUS)));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0)));
         assertThat(cloneCorrection.getMetadata(), hasItem(with("perucris.address.streetAddress", "My street", 0)));
 
         List<Relationship> personCorrectionRelations = findRelations(person, isCorrectionOf);
@@ -747,7 +746,7 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         assertThat(getMetadata(personCorrection, "crisrp", "qualification", "end"), empty());
         assertThat(getMetadata(personCorrection, "crisrp", "qualification", "orgunit"), empty());
         assertThat(personCorrection.getMetadata(),
-                   hasItem(with("perucris.subject.ocde", "OCDE", 0, Choices.CF_AMBIGUOUS)));
+                   hasItem(with("perucris.subject.ocde", "OCDE", 0)));
         assertThat(personCorrection.getMetadata(), hasItem(with("perucris.address.streetAddress", "My street", 0)));
 
     }
@@ -1059,7 +1058,7 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         addMetadata(profile, "perucris", "cvPerson", "syncBasicInfo", "true");
 
         profile = updateItem(profile);
-        assertThat(profile.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0, Choices.CF_AMBIGUOUS)));
+        assertThat(profile.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0)));
 
         profileClone = reloadItem(profileClone);
         assertThat(getMetadata(profileClone, "perucris", "subject", "ocde"), empty());
@@ -1072,14 +1071,14 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
 
         Item cloneCorrection = cloneCorrectionRelations.get(0).getLeftItem();
         assertThat(cloneCorrection.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE",
-            0, Choices.CF_AMBIGUOUS)));
+            0)));
 
         List<Relationship> personCorrectionRelations = findRelations(person, isCorrectionOf);
         assertThat(personCorrectionRelations, hasSize(1));
 
         Item personCorrection = personCorrectionRelations.get(0).getLeftItem();
         assertThat(personCorrection.getMetadata(),
-                   hasItem(with("perucris.subject.ocde", "OCDE", 0, Choices.CF_AMBIGUOUS)));
+                   hasItem(with("perucris.subject.ocde", "OCDE", 0)));
 
         removeMetadata(profile, "perucris", "subject", "ocde");
 
@@ -1263,8 +1262,7 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         assertThat(getMetadata(newProfileClone, "oairecerif", "affiliation", "role"), empty());
         assertThat(newProfileClone.getMetadata(), hasItem(with("dc.title", "Test profile")));
         assertThat(newProfileClone.getMetadata(), hasItem(with("person.birthDate", "1992-06-26")));
-        assertThat(newProfileClone.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0,
-            Choices.CF_AMBIGUOUS)));
+        assertThat(newProfileClone.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0)));
 
         cloneShadowCopyRelations = findRelations(newProfileClone, cloneHasShadowCopy);
         assertThat(cloneShadowCopyRelations, hasSize(1));
@@ -1277,7 +1275,7 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         assertThat(getMetadata(newPerson, "oairecerif", "affiliation", "role"), empty());
         assertThat(newPerson.getMetadata(), hasItem(with("dc.title", "Test profile")));
         assertThat(newPerson.getMetadata(), hasItem(with("person.birthDate", "1992-06-26")));
-        assertThat(newPerson.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0, Choices.CF_AMBIGUOUS)));
+        assertThat(newPerson.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0)));
 
     }
 
@@ -1383,8 +1381,7 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         assertThat(cloneCorrection.isArchived(), is(false));
         assertThat(cloneCorrection.getMetadata(), hasItem(with("dc.title", "Test profile")));
         assertThat(cloneCorrection.getMetadata(), hasItem(with("person.birthDate", "1992-06-26")));
-        assertThat(cloneCorrection.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE",
-            0, Choices.CF_AMBIGUOUS)));
+        assertThat(cloneCorrection.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0)));
 
         List<Relationship> personCorrectionRelations = findRelations(person, isCorrectionOf);
         assertThat(personCorrectionRelations, hasSize(1));
@@ -1393,7 +1390,7 @@ public class CvEntitySynchronizationConsumerProfileIT extends AbstractIntegratio
         assertThat(correction.isArchived(), is(false));
         assertThat(correction.getMetadata(), hasItem(with("dc.title", "Test profile")));
         assertThat(correction.getMetadata(), hasItem(with("person.birthDate", "1992-06-26")));
-        assertThat(correction.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0, Choices.CF_AMBIGUOUS)));
+        assertThat(correction.getMetadata(), hasItem(with("perucris.subject.ocde", "OCDE", 0)));
 
     }
 

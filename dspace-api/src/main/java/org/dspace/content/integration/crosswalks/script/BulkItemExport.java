@@ -46,7 +46,7 @@ import org.dspace.discovery.configuration.DiscoverySearchFilter;
 import org.dspace.discovery.configuration.DiscoverySortConfiguration;
 import org.dspace.discovery.configuration.DiscoverySortFieldConfiguration;
 import org.dspace.discovery.configuration.DiscoverySortFunctionConfiguration;
-import org.dspace.discovery.configuration.MultiLanguageDiscoverSearchFilterFacet;
+import org.dspace.discovery.configuration.MultiLanguageDiscoverySearchFilter;
 import org.dspace.discovery.indexobject.IndexableCollection;
 import org.dspace.discovery.indexobject.IndexableCommunity;
 import org.dspace.discovery.indexobject.IndexableItem;
@@ -274,7 +274,7 @@ public class BulkItemExport extends DSpaceRunnable<BulkItemExportScriptConfigura
             String filterOperator = StringUtils.substringAfterLast(value, FILTER_OPERATOR_SEPARATOR);
 
             String name = searchFilter.getIndexFieldName();
-            if (searchFilter instanceof MultiLanguageDiscoverSearchFilterFacet) {
+            if (searchFilter instanceof MultiLanguageDiscoverySearchFilter) {
                 name = context.getCurrentLocale().getLanguage() + "_" + name;
             }
 

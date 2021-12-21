@@ -12,12 +12,12 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.dspace.content.EntityType;
 import org.dspace.content.RelationshipType;
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 
 public class RelationshipTypeMatcher {
 
@@ -79,6 +79,14 @@ public class RelationshipTypeMatcher {
         String leftwardType, String rightwardType, Integer leftMinCardinality, Integer leftMaxCardinality,
         Integer rightMinCardinality, Integer rightMaxCardinality, Integer leftEntityTypeId, String leftEntityTypeLabel,
         Integer rightEntityTypeId, String rightEntityTypeLabel, boolean copyToLeft, boolean copyToRight) {
+
+        String leftTypeHref = Objects.nonNull(leftEntityTypeId) ?
+            "/api/core/entitytypes/" + leftEntityTypeId :
+            "http://localhost/api/core/relationshiptypes/" + id + "/leftType";
+        String rightTypeHref = Objects.nonNull(rightEntityTypeId) ?
+            "/api/core/entitytypes/" + rightEntityTypeId :
+            "http://localhost/api/core/relationshiptypes/" + id + "/rightType";
+
         return allOf(
             hasJsonPath("$.id", is(id)),
             hasJsonPath("$.leftwardType", is(leftwardType)),
@@ -91,12 +99,17 @@ public class RelationshipTypeMatcher {
             hasJsonPath("$.rightMaxCardinality", is(rightMaxCardinality)),
             hasJsonPath("$.type", is("relationshiptype")),
             hasJsonPath("$._links.self.href", containsString("/api/core/relationshiptypes/" + id)),
-            hasJsonPath("$._embedded.leftType", leftEntityTypeId == null ? Matchers.nullValue() : Matchers.allOf(
-                EntityTypeMatcher.matchEntityTypeExplicitValuesEntry(leftEntityTypeId, leftEntityTypeLabel)
-            )),
-            hasJsonPath("$._embedded.rightType", rightEntityTypeId == null ? Matchers.nullValue() : Matchers.is(
-                EntityTypeMatcher.matchEntityTypeExplicitValuesEntry(rightEntityTypeId, rightEntityTypeLabel)
-            ))
+            hasJsonPath("$._links.leftType.href", containsString(leftTypeHref)),
+            hasJsonPath("$._links.rightType.href", containsString(rightTypeHref))
         );
     }
+
+    public static Matcher<? super Object> matchExplicitRestrictedRelationshipTypeValues(
+                                              String leftwardType, String rightwardType) {
+        return allOf(
+                     hasJsonPath("$.leftwardType", is(leftwardType)),
+                     hasJsonPath("$.rightwardType", is(rightwardType))
+                     );
+    }
+
 }

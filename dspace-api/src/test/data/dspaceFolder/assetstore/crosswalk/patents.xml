@@ -1,9 +1,8 @@
 <Patents>
 	<Patent xmlns="https://www.openaire.eu/cerif-profile/1.1/" id="mock-id">
-	   <Type xmlns="https://www.openaire.eu/cerif-profile/vocab/COAR_Patent_Types">http://purl.org/coar/resource_type/c_15cd</Type>
+	   <Type xmlns="https://www.openaire.eu/cerif-profile/vocab/COAR_Patent_Types">http://purl.org/coar/resource_type/C53B-JCY5</Type>
 	   <Title>Test patent</Title>
 	   <RegistrationDate>2021-01-01</RegistrationDate>
-	   <Issuer> <OrgUnit> <Name>Publisher</Name> </OrgUnit> </Issuer>
 	   <PatentNumber>12345-666</PatentNumber>
 	   <Inventors>
 	   </Inventors>
@@ -11,11 +10,9 @@
 	   </Holders>
 	</Patent>
 	<Patent xmlns="https://www.openaire.eu/cerif-profile/1.1/" id="mock-id">
-	   <Type xmlns="https://www.openaire.eu/cerif-profile/vocab/COAR_Patent_Types">http://purl.org/coar/resource_type/c_15cd</Type>
+	   <Type xmlns="https://www.openaire.eu/cerif-profile/vocab/COAR_Patent_Types">http://purl.org/coar/resource_type/SB3Y-W4EH</Type>
 	   <Title>Second patent</Title>
 	   <RegistrationDate>2011-01-01</RegistrationDate>
-	   <Issuer> <OrgUnit> <Name>First publisher</Name> </OrgUnit> </Issuer>
-	   <Issuer> <OrgUnit> <Name>Second publisher</Name> </OrgUnit> </Issuer>
 	   <PatentNumber>12345-777</PatentNumber>
 	   <Inventors>
 		  <Inventor>

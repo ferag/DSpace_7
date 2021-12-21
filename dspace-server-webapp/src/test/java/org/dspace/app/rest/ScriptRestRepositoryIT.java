@@ -12,6 +12,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -24,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -130,10 +132,8 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
                                                           scriptConfigurations.get(19).getDescription()),
                                 ScriptMatcher.matchScript(scriptConfigurations.get(20).getName(),
                                                           scriptConfigurations.get(20).getDescription()),
-                            ScriptMatcher.matchScript(scriptConfigurations.get(21).getName(),
-                                                          scriptConfigurations.get(21).getDescription())
-                        )));
-
+                                ScriptMatcher.matchScript(scriptConfigurations.get(21).getName(),
+                                                          scriptConfigurations.get(21).getDescription()))));
     }
 
 
@@ -150,9 +150,17 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
 
     @Test
     public void findAllScriptsPaginationTest() throws Exception {
+        List<ScriptConfiguration> alphabeticScripts =
+            scriptConfigurations.stream()
+                                .sorted(Comparator.comparing(s -> s.getClass().getName()))
+                                .collect(Collectors.toList());
+
+        int totalPages = scriptConfigurations.size();
+        int lastPage = totalPages - 1;
 
         String token = getAuthToken(admin.getEmail(), password);
 
+        // NOTE: the scripts are always returned in alphabetical order by fully qualified class name.
         getClient(token).perform(get("/api/system/scripts").param("size", "1"))
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$._embedded.scripts", Matchers.not(Matchers.hasItem(
@@ -164,14 +172,14 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
                                                           scriptConfigurations.get(20).getDescription())
                         )))
                         .andExpect(jsonPath("$._links.first.href", Matchers.allOf(
-                                Matchers.containsString("/api/system/scripts?"),
-                                Matchers.containsString("page=0"), Matchers.containsString("size=1"))))
+                            Matchers.containsString("/api/system/scripts?"),
+                            Matchers.containsString("page=0"), Matchers.containsString("size=1"))))
                         .andExpect(jsonPath("$._links.self.href", Matchers.allOf(
-                                Matchers.containsString("/api/system/scripts?"),
-                                Matchers.containsString("size=1"))))
+                            Matchers.containsString("/api/system/scripts?"),
+                            Matchers.containsString("size=1"))))
                         .andExpect(jsonPath("$._links.next.href", Matchers.allOf(
-                                Matchers.containsString("/api/system/scripts?"),
-                                Matchers.containsString("page=1"), Matchers.containsString("size=1"))))
+                            Matchers.containsString("/api/system/scripts?"),
+                            Matchers.containsString("page=1"), Matchers.containsString("size=1"))))
                         .andExpect(jsonPath("$._links.last.href", Matchers.allOf(
                                 Matchers.containsString("/api/system/scripts?"),
                                 Matchers.containsString("page=21"), Matchers.containsString("size=1"))))
@@ -192,17 +200,17 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
                                                           scriptConfigurations.get(20).getDescription())
                         ))))
                         .andExpect(jsonPath("$._links.first.href", Matchers.allOf(
-                                Matchers.containsString("/api/system/scripts?"),
-                                Matchers.containsString("page=0"), Matchers.containsString("size=1"))))
+                            Matchers.containsString("/api/system/scripts?"),
+                            Matchers.containsString("page=0"), Matchers.containsString("size=1"))))
                         .andExpect(jsonPath("$._links.prev.href", Matchers.allOf(
-                                Matchers.containsString("/api/system/scripts?"),
-                                Matchers.containsString("page=0"), Matchers.containsString("size=1"))))
+                            Matchers.containsString("/api/system/scripts?"),
+                            Matchers.containsString("page=0"), Matchers.containsString("size=1"))))
                         .andExpect(jsonPath("$._links.self.href", Matchers.allOf(
-                                Matchers.containsString("/api/system/scripts?"),
-                                Matchers.containsString("page=1"), Matchers.containsString("size=1"))))
+                            Matchers.containsString("/api/system/scripts?"),
+                            Matchers.containsString("page=1"), Matchers.containsString("size=1"))))
                         .andExpect(jsonPath("$._links.next.href", Matchers.allOf(
-                                Matchers.containsString("/api/system/scripts?"),
-                                Matchers.containsString("page=2"), Matchers.containsString("size=1"))))
+                            Matchers.containsString("/api/system/scripts?"),
+                            Matchers.containsString("page=2"), Matchers.containsString("size=1"))))
                         .andExpect(jsonPath("$._links.last.href", Matchers.allOf(
                                 Matchers.containsString("/api/system/scripts?"),
                                 Matchers.containsString("page=21"), Matchers.containsString("size=1"))))
@@ -219,11 +227,16 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
         getClient(token).perform(get("/api/system/scripts/mock-script"))
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$", ScriptMatcher
-                                .matchMockScript(
-                                        scriptConfigurations.stream()
-                                                .filter(
-                                                    sc -> "mock-script"
-                                                              .equals(sc.getName())).findFirst().get().getOptions())));
+                            .matchMockScript(
+                                scriptConfigurations
+                                    .stream()
+                                    .filter(scriptConfiguration
+                                                -> scriptConfiguration.getName().equals("mock-script"))
+                                    .findAny()
+                                    .orElseThrow()
+                                    .getOptions()
+                            )
+                        ));
     }
 
     @Test
@@ -525,14 +538,13 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
             .withNameInMetadata("Test", "User")
             .build();
 
-        configurationService.setProperty("process.start.default-user", user.getID().toString());
-
         parentCommunity = CommunityBuilder.createCommunity(context)
             .withName("Parent Community")
             .build();
 
         Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
             .withName("Collection 1")
+            .withEntityType("Publication")
             .build();
 
         Item item = ItemBuilder.createItem(context, col1)
@@ -551,7 +563,7 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
 
         parameters.add(new DSpaceCommandLineParameter("-n", xml.getAbsolutePath()));
         parameters.add(new DSpaceCommandLineParameter("-i", item.getID().toString()));
-        parameters.add(new DSpaceCommandLineParameter("-f", "person-xml"));
+        parameters.add(new DSpaceCommandLineParameter("-f", "publication-cerif-xml"));
 
         List<ParameterValueRest> list = parameters.stream()
             .map(dSpaceCommandLineParameter -> dSpaceRunnableParameterConverter
@@ -569,7 +581,7 @@ public class ScriptRestRepositoryIT extends AbstractControllerIntegrationTest {
                 .andDo(result -> idRef.set(read(result.getResponse().getContentAsString(), "$.processId")));
 
             Process process = processService.find(context, idRef.get());
-            assertThat(process.getEPerson(), is(user));
+            assertNull(process.getEPerson());
 
         } finally {
             if (idRef.get() != null) {

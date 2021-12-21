@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.dspace</groupId>
         <artifactId>dspace-parent</artifactId>
-        <version>cris-2021.01.02-SNAPSHOT</version>
+        <version>cris-2021.02.01</version>
         <relativePath>..</relativePath>
     </parent>
 
@@ -520,6 +520,10 @@
             <artifactId>poi-scratchpad</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml-schemas</artifactId>
+        </dependency>
+        <dependency>
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
         </dependency>
@@ -728,13 +732,6 @@
             <artifactId>guava</artifactId>
         </dependency>
 
-<!--        &lt;!&ndash; To extract metadata from Json response, e.g. SimpleJsonPathMetadataContributor &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.jayway.jsonpath</groupId>-->
-<!--            <artifactId>json-path</artifactId>-->
-<!--            <version>${json-path.version}</version>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -757,7 +754,7 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>6.5.5</version>
+            <version>6.5.7</version>
         </dependency>
 
         <!-- Google Analytics -->
@@ -926,8 +923,8 @@
 	            <artifactId>aws-crt-client</artifactId>
 	            <version>2.15.42-PREVIEW</version>
 	      </dependency>
-	
-		
+
+
         <dependency>
             <groupId>org.orcid</groupId>
             <artifactId>orcid-model</artifactId>
@@ -1046,6 +1043,21 @@
 	      <artifactId>styles</artifactId>
 	      <version>1.0</version>
       </dependency>
+
+        <!-- required for openaire api integration -->
+        <dependency>
+            <groupId>eu.openaire</groupId>
+            <artifactId>funders-model</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.stefanbirkner</groupId>
+            <artifactId>system-rules</artifactId>
+            <version>1.19.0</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 </project>

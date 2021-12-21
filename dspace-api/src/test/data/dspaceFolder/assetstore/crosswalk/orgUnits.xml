@@ -11,8 +11,6 @@
 		<ParentOrganization>Parent OrgUnit</ParentOrganization>
 		<PostAddress>
 		</PostAddress>
-		<People>
-		</People>
 	</OrgUnit>
 	<OrgUnit id="mock-id">
 		<Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">https://w3id.org/cerif/vocab/OrganisationTypes#Privatenonprofit</Type>
@@ -22,7 +20,5 @@
 		<ParentOrganization>Parent OrgUnit</ParentOrganization>
 		<PostAddress>
 		</PostAddress>
-		<People>
-		</People>
 	</OrgUnit>
 </OrgUnits>

@@ -3,11 +3,6 @@
 	"legalName": "@organization.legalName@",
 	"acronym": "@oairecerif.acronym@",
 	"type": "@virtual.mapConverter.orgUnitTypes.dc-type@",
-	"director": "@crisou.director@",
-	"established": "@organization.foundingDate@",
-	"scientificBoards": [
-	   "@crisou.boards@",
-	],
 	"parentOrganization": {
 		@relation.organization-parentOrganization.start@
 		"name": "@dc.title@",
@@ -17,45 +12,60 @@
 		"name": "@organization.parentOrganization@"
 		@if.not.authority.organization-parentOrganization.end@
 	},
+	@if.metadata.organization-identifier.start@
 	"identifiers": [
 		"@organization.identifier@",
 	],
+	@if.metadata.organization-identifier.end@
+	@if.metadata.oairecerif-identifier-url.start@
 	"url-identifiers": [
 		"@oairecerif.identifier.url@",
 	],
+	@if.metadata.oairecerif-identifier-url.end@
+	@if.metadata.organization-identifier-ruc.start@
     "ruc-identifiers": [
         "@organization.identifier.ruc@",
     ],
+    @if.metadata.organization-identifier-ruc.end@
+    @if.metadata.organization-identifier-rin.start@
     "rin-identifiers": [
-        "@organization.identifier.ruc@",
+        "@organization.identifier.rin@",
     ],
+    @if.metadata.organization-identifier-rin.end@
+    @if.metadata.organization-identifier-ror.start@
     "ror-identifiers": [
-        "@organization.identifier.ruc@",
+        "@organization.identifier.ror@",
     ],
+    @if.metadata.organization-identifier-ror.end@
+    @if.metadata.organization-identifier-isni.start@
     "isni-identifiers": [
         "@organization.identifier.isni@",
     ],
+    @if.metadata.organization-identifier-isni.end@
+    @if.metadata.organization-identifier-scopusaffid.start@
     "scopusaff-identifiers": [
         "@organization.identifier.scopusaffid@",
     ],
+    @if.metadata.organization-identifier-scopusaffid.end@
+    @if.metadata.organization-identifier-crossrefid.start@
     "crossref-identifiers": [
         "@organization.identifier.crossrefid@",
     ],
+    @if.metadata.organization-identifier-crossrefid.end@
+    @if.metadata.perucris-subject-ocde.start@
     "subjects": [
         "@virtual.mapConverter.ocdeSubjects.perucris-subject-ocde@",
     ],
+    @if.metadata.perucris-subject-ocde.end@
+    @if.metadata.dc-subject.start@
     "keywords": [
         "@dc.subject@",
     ],
+    @if.metadata.dc-subject.end@
     "postAddress": {
         "locality": "@organization.address.addressLocality@",
         "country": "@organization.address.addressCountry@"
     },
     "ubiGeo": "@perucris.ubigeo@",
-    "description": "@dc.description.abstract@",
-	"People": [
-		@relation.people.start@
-		"@dc.title@",
-		@relation.people.end@
-	]
+    "description": "@dc.description.abstract@"
 }

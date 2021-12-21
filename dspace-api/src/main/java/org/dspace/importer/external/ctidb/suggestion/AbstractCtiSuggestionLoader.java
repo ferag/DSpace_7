@@ -96,19 +96,19 @@ public abstract class AbstractCtiSuggestionLoader extends SolrSuggestionProvider
 
     protected List<MetadataValueDTO> buildMetadataValues(String metadataField, ExternalDataObject externalDataObject) {
         MetadataFieldName field = new MetadataFieldName(metadataField);
-        return getAllEntriesByMetadatum(externalDataObject, field.SCHEMA, field.ELEMENT, field.QUALIFIER).stream()
-            .map(value -> new MetadataValueDTO(field.SCHEMA, field.ELEMENT, field.QUALIFIER, null, value))
+        return getAllEntriesByMetadatum(externalDataObject, field.schema, field.element, field.qualifier).stream()
+            .map(value -> new MetadataValueDTO(field.schema, field.element, field.qualifier, null, value))
             .collect(Collectors.toList());
     }
 
     protected Optional<MetadataValueDTO> buildMetadataValue(String metadataField,
             ExternalDataObject externalDataObject) {
         MetadataFieldName field = new MetadataFieldName(metadataField);
-        String value = getFirstEntryByMetadatum(externalDataObject, field.SCHEMA, field.ELEMENT, field.QUALIFIER);
+        String value = getFirstEntryByMetadatum(externalDataObject, field.schema, field.element, field.qualifier);
         if (value == null) {
             return Optional.empty();
         }
-        return Optional.of(new MetadataValueDTO(field.SCHEMA, field.ELEMENT, field.QUALIFIER, null, value));
+        return Optional.of(new MetadataValueDTO(field.schema, field.element, field.qualifier, null, value));
     }
 
     protected String getExternalSourceUri(String recordId) {

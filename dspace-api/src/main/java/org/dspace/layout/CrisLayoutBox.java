@@ -189,6 +189,14 @@ public class CrisLayoutBox implements ReloadableEntity<Integer> {
         this.security = security.getValue();
     }
 
+    public boolean isPublic() {
+        return getSecurity() == LayoutSecurity.PUBLIC.getValue();
+    }
+
+    public boolean isNotPublic() {
+        return !isPublic();
+    }
+
     public String getStyle() {
         return style;
     }

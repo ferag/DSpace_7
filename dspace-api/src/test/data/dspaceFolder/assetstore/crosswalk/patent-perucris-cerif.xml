@@ -1,9 +1,7 @@
 <Patent xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="mock-id">
-   <Type xmlns="https://www.openaire.eu/cerif-profile/vocab/COAR_Patent_Types">http://purl.org/coar/resource_type/c_15cd</Type>
+   <Type xmlns="https://www.openaire.eu/cerif-profile/vocab/COAR_Patent_Types">http://purl.org/coar/resource_type/SB3Y-W4EH</Type>
    <Title>Test patent</Title>
    <ApprovalDate>2021-01-01</ApprovalDate>
-   <Issuer> <OrgUnit> <Name>First publisher</Name> </OrgUnit> </Issuer>
-   <Issuer> <OrgUnit> <Name>Second publisher</Name> </OrgUnit> </Issuer>
    <PatentNumber>12345-666</PatentNumber>
    <Inventors>
 	  <Inventor>

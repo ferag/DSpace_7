@@ -7,7 +7,6 @@
 	        30.000,00
 	    </Amount>
 		<Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#FinanceID">ID-01</Identifier>
-		<Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#AwardNumber">0001</Identifier>
 		<Description>Funding to test export</Description>
 		<Funder>
 			<OrgUnit>
@@ -35,7 +34,6 @@
 	        10.000,00
 	    </Amount>
 		<Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#FinanceID">ID-02</Identifier>
-		<Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#AwardNumber">0002</Identifier>
 		<Funder>
 			<OrgUnit>
 				<Name>Test Funder</Name>

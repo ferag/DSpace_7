@@ -13,7 +13,7 @@ import java.util.List;
 import org.dspace.app.rest.authorization.AuthorizationFeature;
 import org.dspace.app.rest.authorization.AuthorizationFeatureDocumentation;
 import org.dspace.app.rest.model.BaseObjectRest;
-import org.dspace.app.rest.model.ItemRest;
+import org.dspace.app.rest.model.SiteRest;
 import org.dspace.core.Context;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.GroupType;
@@ -24,12 +24,12 @@ import org.springframework.stereotype.Component;
 /**
  * Checks if the given user can claim the given item.
  *
- * @author Luca Giamminonni (luca.giamminonni at 4science.it)
+ * @author Davide Negretti (davide.negretti at 4science.it)
  *
  */
 @Component
 @AuthorizationFeatureDocumentation(name = CanAccessSubsistema.NAME,
-    description = "Used to verify if TODO TODO TODO")
+    description = "Used to verify if current user can access Subsistema")
 public class CanAccessSubsistema implements AuthorizationFeature {
 
     public static final String NAME = "canAccessSubsistema";
@@ -48,7 +48,7 @@ public class CanAccessSubsistema implements AuthorizationFeature {
 
     @Override
     public String[] getSupportedTypes() {
-        return new String[] { ItemRest.CATEGORY + "." + ItemRest.NAME };
+        return new String[] { SiteRest.CATEGORY + "." + SiteRest.NAME };
     }
 
 }

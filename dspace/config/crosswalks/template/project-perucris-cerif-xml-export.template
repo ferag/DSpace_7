@@ -73,6 +73,8 @@
 	</Funded>
 	@relation.grants.end@
     <Subject scheme="http://purl.org/pe-repo/ocde/ford">@virtual.mapConverter.ocdeSubjects.perucris-subject-ocde@</Subject>
+	<Activity>@virtual.mapConverter.ocdeProjectTypesLeaf.perucris-project-typeOcde@</Activity>
+	<Ciiu>@perucris.type.ciiu@</Ciiu>
 	<Keyword>@dc.subject@</Keyword>
 	<Abstract>@dc.description.abstract@</Abstract>
     <Status>@oairecerif.project.status@</Status>

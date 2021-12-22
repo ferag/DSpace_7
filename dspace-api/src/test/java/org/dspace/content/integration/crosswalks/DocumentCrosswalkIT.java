@@ -778,14 +778,14 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(content, containsString("Authors: John Smith and Walter White ( Company )"));
         assertThat(content, containsString("Editors: Editor ( Editor Affiliation )"));
         assertThat(content, containsString("Palabras clave: test, export"));
-        assertThat(content, containsString("Tipo: http://purl.org/coar/resource_type/c_efa0"));
+        assertThat(content, containsString("Tipo: Controlled Vocabulary for Resource Type Genres::text::review"));
         assertThat(content, containsString("Materia(s) OCDE: OCDE"));
 
         assertThat(content, containsString("Detalles bibliográficos de la publicación"));
         assertThat(content, containsString("Publicado en: Published in publication"));
         assertThat(content, containsString("ISSN: 2049-3630"));
         assertThat(content, containsString("Volumen: V.01"));
-        assertThat(content, containsString("Edición: Issue"));
+        assertThat(content, containsString("Fascículo: Issue"));
 
         assertThat(content, containsString("Proyectos"));
         assertThat(content, containsString("Test Project ( TP ) - from 2020-01-01 to 2020-04-01"));

@@ -55,7 +55,8 @@ import org.junit.Test;
  */
 public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
-    private static final String BASE_OUTPUT_DIR_PATH = "./target/testing/dspace/assetstore/crosswalk/";
+//    private static final String BASE_OUTPUT_DIR_PATH = "./target/testing/dspace/assetstore/crosswalk/";
+    private static final String BASE_OUTPUT_DIR_PATH = "/home/corrado/data/testing/dspace/assetstore/crosswalk/";
 
     private Community community;
 
@@ -817,7 +818,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(content, containsString("Co-investigador(es): First coinvestigator, Second coinvestigator"));
 
         assertThat(content, containsString("Otra información"));
-        assertThat(content, containsString("Materia(s) OCDE: First OCDE Subject, Second OCDE Subject"));
+        assertThat(content, containsString("Campo del conocimiento OCDE: First OCDE Subject, Second OCDE Subject"));
         assertThat(content, containsString("Usa equipmiento(s): Test equipment"));
         assertThat(content, containsString("Palabra(s) clave: project, test"));
         assertThat(content, containsString("Mandato OA: true"));

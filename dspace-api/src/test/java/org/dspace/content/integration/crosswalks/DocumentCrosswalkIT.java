@@ -55,8 +55,7 @@ import org.junit.Test;
  */
 public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
-//    private static final String BASE_OUTPUT_DIR_PATH = "./target/testing/dspace/assetstore/crosswalk/";
-    private static final String BASE_OUTPUT_DIR_PATH = "/home/corrado/data/testing/dspace/assetstore/crosswalk/";
+    private static final String BASE_OUTPUT_DIR_PATH = "./target/testing/dspace/assetstore/crosswalk/";
 
     private Community community;
 

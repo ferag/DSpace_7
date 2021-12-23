@@ -3903,7 +3903,7 @@ ejemplo: el volumen de una revista.</hint>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint>Agradecer la financiación recibida para esta publicación.</hint>
+          <hint>El financiamiento que origina esta publicación.</hint>
         </field>
       </row>
       <row>
@@ -4021,7 +4021,7 @@ ejemplo: el volumen de una revista.</hint>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint>Agradecer la financiación recibida para esta publicación.</hint>
+          <hint>El financiamiento que origina esta publicación.</hint>
         </field>
       </row>
       <row>
@@ -4139,7 +4139,7 @@ ejemplo: el volumen de una revista.</hint>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint>Agradecer la financiación recibida para esta publicación.</hint>
+          <hint>El financiamiento que origina esta publicación.</hint>
         </field>
       </row>
       <row>

@@ -514,19 +514,19 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         assertThat(getRowValues(sheet.getRow(1)),
             contains("Test OrgUnit", "Test OrgUnit LegalName", "TOU",
-                "https://w3id.org/cerif/vocab/OrganisationTypes#StrategicResearchInsitute",
+                "Instituto de Investigación Estratégica",
                 "Parent OrgUnit", "ID-01||ID-02", "www.orgUnit.com||www.orgUnit.it", "RUC-01", "",
-                "ROR-01", "RIN-01", "SCOPUS-01", "CRF-01", "https://purl.org/pe-repo/ocde/ford/#5.07.03", "",
+                "ROR-01", "RIN-01", "SCOPUS-01", "CRF-01", "Estudios urbanos", "",
                 "Italy", "via del canale", "", "010201"));
 
         assertThat(getRowValues(sheet.getRow(2)),
             contains("Another Test OrgUnit", "", "ATOU",
-                "https://w3id.org/cerif/vocab/OrganisationTypes#Privatenonprofit", "Parent OrgUnit",
+                "Privado sin ánimo de lucro", "Parent OrgUnit",
                 "ID-03", "", "RUC-02", "", "ROR-02", "RIN-02", "", "", "", "", "", "", "", ""));
 
         assertThat(getRowValues(sheet.getRow(3)),
             contains("Third Test OrgUnit", "", "TTOU",
-                "https://w3id.org/cerif/vocab/OrganisationTypes#Privatenonprofit", "", "ID-03",
+                "Privado sin ánimo de lucro", "", "ID-03",
                 "www.orgUnit.test", "", "", "", "", "", "", "", "", "", "", "", ""));
     }
 
@@ -604,12 +604,12 @@ public class XlsCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(getRowValues(sheet.getRow(1)), contains("First Test Equipment", "FT-EQ", "Type", "ID-01",
             "This is an equipment to test the export functionality", "Test OrgUnit", "Walter White",
             "Investigacion cientifica y desarrollo experimental",
-            "https://purl.org/pe-repo/ocde/ford/#5.07.04||https://purl.org/pe-repo/ocde/ford/#5.07.03",
+            "Planificación del transporte y aspectos sociales del transporte||Estudios urbanos",
             "ResearchLine", "Funding", "IT", "2020-01-01", "2021-01-01", "4000", "€", "Note"));
 
         assertThat(getRowValues(sheet.getRow(2)), contains("Second Test Equipment", "ST-EQ", "", "ID-02",
             "This is another equipment to test the export functionality", "", "John Smith", "",
-            "https://purl.org/pe-repo/ocde/ford/#5.07.03", "",
+            "Estudios urbanos", "",
             "First funding||Second funding", "", "", "2021-02-01", "5000", "€", ""));
 
         assertThat(getRowValues(sheet.getRow(3)), contains("Third Test Equipment", "TT-EQ", "", "ID-03", "", "", "", "",

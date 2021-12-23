@@ -102,9 +102,17 @@
 			    	</xsl:call-template>
 
                     <xsl:call-template name="print-values">
-                        <xsl:with-param name="label" select="'Materia(s) OCDE'" />
+                        <xsl:with-param name="label" select="'Campo del conocimiento OCDE'" />
                         <xsl:with-param name="values" select="cerif:Subject" />
                     </xsl:call-template>
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'Tipo de actividad y proyectos según la OCDE'" />
+						<xsl:with-param name="values" select="cerif:Activity" />
+					</xsl:call-template>
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'CIIU Clasificación Industrial Uniforme'" />
+						<xsl:with-param name="values" select="cerif:Ciiu" />
+					</xsl:call-template>
 					<xsl:call-template name="print-values">
 				    	<xsl:with-param name="label" select="'Usa equipmiento(s)'" />
 				    	<xsl:with-param name="values" select="cerif:Uses/cerif:Equipment/cerif:Name" />

@@ -40,8 +40,8 @@
             </Funding>
         </As>
     </Funded>
-    <Subject scheme="http://purl.org/pe-repo/ocde/ford">https://purl.org/pe-repo/ocde/ford/#5.07.01</Subject>
-    <Subject scheme="http://purl.org/pe-repo/ocde/ford">https://purl.org/pe-repo/ocde/ford/#5.07.03</Subject>
+    <Subject scheme="http://purl.org/pe-repo/ocde/ford">Ciencias ambientales</Subject>
+    <Subject scheme="http://purl.org/pe-repo/ocde/ford">Estudios urbanos</Subject>
     <Keyword>project</Keyword>
     <Keyword>test</Keyword>
     <Abstract>This is a project to test the export</Abstract>

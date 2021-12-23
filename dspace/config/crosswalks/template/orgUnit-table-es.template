@@ -1,7 +1,7 @@
 Nombre = dc.title
 Nombre legal = organization.legalName
 Acrónimo = oairecerif.acronym
-Tipo = virtual.mapConverter.orgUnitTypes.dc-type
+Tipo = virtual.mapConverter.orgUnitTypesTranslation.dc-type
 Institución padre = organization.parentOrganization
 ID(s) general = organization.identifier
 URL(s) = oairecerif.identifier.url

@@ -253,6 +253,20 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>editor</dc-element>
+          <dc-qualifier>dni</dc-qualifier>
+          <label>DNI</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
     </form>
@@ -291,6 +305,20 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>editor</dc-element>
+          <dc-qualifier>dni</dc-qualifier>
+          <label>DNI</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
     </form>
@@ -329,6 +357,20 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>editor</dc-element>
+          <dc-qualifier>dni</dc-qualifier>
+          <label>DNI</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
     </form>
@@ -2443,10 +2485,10 @@
           <dc-schema>dc</dc-schema>
           <dc-element>date</dc-element>
           <dc-qualifier>issued</dc-qualifier>
-          <label>Date of Issue</label>
+          <label>Date of publication</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
-          <required>You must enter at least the year.</required>
+          <required />
           <hint>Please give the date of previous publication or public distribution.
                         You can leave out the day and/or month if they aren't
                         applicable.</hint>
@@ -2614,10 +2656,10 @@
           <dc-schema>dc</dc-schema>
           <dc-element>date</dc-element>
           <dc-qualifier>issued</dc-qualifier>
-          <label>Date of Issue</label>
+          <label>Date of publication</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
-          <required>You must enter at least the year.</required>
+          <required />
           <hint>Please give the date of previous publication or public distribution.
                         You can leave out the day and/or month if they aren't
                         applicable.</hint>
@@ -2785,10 +2827,10 @@
           <dc-schema>dc</dc-schema>
           <dc-element>date</dc-element>
           <dc-qualifier>issued</dc-qualifier>
-          <label>Date of Issue</label>
+          <label>Date of publication</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
-          <required>You must enter at least the year.</required>
+          <required />
           <hint>Please give the date of previous publication or public distribution.
                         You can leave out the day and/or month if they aren't
                         applicable.</hint>
@@ -3565,22 +3607,11 @@
           <dc-schema>thesis</dc-schema>
           <dc-element>degree</dc-element>
           <dc-qualifier>discipline</dc-qualifier>
-          <label>Name of the higher education programme leading to the academic degree and/or professional title assigned by SUNEDU</label>
+          <label>Program Code</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>According to the National Classifier of University, pedagogical, technological and productive technical higher education programmes and institutions, 2018: https://www.inei.gob.pe/media/Clasificador_Nacional_de_Programas_e_Instituciones_CIDE_agosto_editado.pdf Example: Informática biomédica en salud global con mención en informática en salud.</hint>
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>renati</dc-schema>
-          <dc-element>discipline</dc-element>
-          <label>Code of the higher education programme leading to the academic degree and/or professional title assigned by SUNEDU</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint>According to the National Classifier of university, pedagogical, technological and technical-productive higher education programmes and institutions, 2018: https://www.inei.gob.pe/media/Clasificador_Nacional_de_Programas_e_Instituciones_CIDE_agosto_editado.pdf Example: 919267</hint>
+          <hint>Enter the programme code assigned by SUNEDU according to the National Classifier of University, Pedagogical, Technological and Technical-Productive Higher Education Programmes and Institutions, 2018: https://www.inei.gob.pe/media/Clasificador_Nacional_de_Programas_e_Instituciones_CIDE_agosto_editado.pdf</hint>
         </field>
       </row>
       <row>
@@ -3659,22 +3690,11 @@
           <dc-schema>thesis</dc-schema>
           <dc-element>degree</dc-element>
           <dc-qualifier>discipline</dc-qualifier>
-          <label>Name of the higher education programme leading to the academic degree and/or professional title assigned by SUNEDU</label>
+          <label>Program Code</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>According to the National Classifier of University, pedagogical, technological and productive technical higher education programmes and institutions, 2018: https://www.inei.gob.pe/media/Clasificador_Nacional_de_Programas_e_Instituciones_CIDE_agosto_editado.pdf Example: Informática biomédica en salud global con mención en informática en salud.</hint>
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>renati</dc-schema>
-          <dc-element>discipline</dc-element>
-          <label>Code of the higher education programme leading to the academic degree and/or professional title assigned by SUNEDU</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint>According to the National Classifier of university, pedagogical, technological and technical-productive higher education programmes and institutions, 2018: https://www.inei.gob.pe/media/Clasificador_Nacional_de_Programas_e_Instituciones_CIDE_agosto_editado.pdf Example: 919267</hint>
+          <hint>Enter the programme code assigned by SUNEDU according to the National Classifier of University, Pedagogical, Technological and Technical-Productive Higher Education Programmes and Institutions, 2018: https://www.inei.gob.pe/media/Clasificador_Nacional_de_Programas_e_Instituciones_CIDE_agosto_editado.pdf</hint>
         </field>
       </row>
       <row>
@@ -3753,22 +3773,11 @@
           <dc-schema>thesis</dc-schema>
           <dc-element>degree</dc-element>
           <dc-qualifier>discipline</dc-qualifier>
-          <label>Name of the higher education programme leading to the academic degree and/or professional title assigned by SUNEDU</label>
+          <label>Program Code</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>According to the National Classifier of University, pedagogical, technological and productive technical higher education programmes and institutions, 2018: https://www.inei.gob.pe/media/Clasificador_Nacional_de_Programas_e_Instituciones_CIDE_agosto_editado.pdf Example: Informática biomédica en salud global con mención en informática en salud.</hint>
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>renati</dc-schema>
-          <dc-element>discipline</dc-element>
-          <label>Code of the higher education programme leading to the academic degree and/or professional title assigned by SUNEDU</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint>According to the National Classifier of university, pedagogical, technological and technical-productive higher education programmes and institutions, 2018: https://www.inei.gob.pe/media/Clasificador_Nacional_de_Programas_e_Instituciones_CIDE_agosto_editado.pdf Example: 919267</hint>
+          <hint>Enter the programme code assigned by SUNEDU according to the National Classifier of University, Pedagogical, Technological and Technical-Productive Higher Education Programmes and Institutions, 2018: https://www.inei.gob.pe/media/Clasificador_Nacional_de_Programas_e_Instituciones_CIDE_agosto_editado.pdf</hint>
         </field>
       </row>
       <row>
@@ -3881,7 +3890,7 @@
           <dc-schema>dc</dc-schema>
           <dc-element>relation</dc-element>
           <dc-qualifier>funding</dc-qualifier>
-          <label>Funding</label>
+          <label>Funded by</label>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -3999,7 +4008,7 @@
           <dc-schema>dc</dc-schema>
           <dc-element>relation</dc-element>
           <dc-qualifier>funding</dc-qualifier>
-          <label>Funding</label>
+          <label>Funded by</label>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -4117,7 +4126,7 @@
           <dc-schema>dc</dc-schema>
           <dc-element>relation</dc-element>
           <dc-qualifier>funding</dc-qualifier>
-          <label>Funding</label>
+          <label>Funded by</label>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -5051,6 +5060,7 @@
           <label>Telephone Number</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
+          <validation>^[0-9 ]+$</validation>
           <required />
           <hint />
         </field>
@@ -5062,6 +5072,7 @@
           <label>Cellphone Number</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
+          <validation>^[0-9 ]+$</validation>
           <required />
           <hint />
         </field>
@@ -5099,6 +5110,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Enter a summary of a professional and academic profile, related to CTI. (Maximum 2000 characters)</hint>
+          <validation>^(.|\s){0,2000}$</validation>
         </field>
       </row>
       <row>
@@ -5488,6 +5500,7 @@
           <label>Telephone Number</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
+          <validation>^[0-9 ]+$</validation>
           <required />
           <hint />
         </field>
@@ -5499,6 +5512,7 @@
           <label>Cellphone Number</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
+          <validation>^[0-9 ]+$</validation>
           <required />
           <hint />
         </field>
@@ -5535,6 +5549,7 @@
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
+          <validation>^(.|\s){0,2000}$</validation>
           <hint>Enter a summary of a professional and academic profile, related to CTI. (Maximum 2000 characters)</hint>
         </field>
       </row>
@@ -5881,6 +5896,7 @@
           <label>Telephone Number</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
+          <validation>^[0-9 ]+$</validation>
           <required />
           <hint />
         </field>
@@ -5892,6 +5908,7 @@
           <label>Cellphone Number</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
+          <validation>^[0-9 ]+$</validation>
           <required />
           <hint />
         </field>
@@ -5927,6 +5944,7 @@
           <label>Biography</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
+          <validation>^(.|\s){0,2000}$</validation>
           <required />
           <hint>Enter a summary of a professional and academic profile, related to CTI. (Maximum 2000 characters)</hint>
         </field>

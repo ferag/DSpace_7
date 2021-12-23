@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -190,12 +189,9 @@ public class MetadataSecurityServiceImpl implements MetadataSecurityService {
         EPerson currentUser = context.getCurrentUser();
         List<CrisLayoutBox> notPublicBoxes = getNotPublicBoxes(metadataField, boxes);
 
-        if (Objects.nonNull(currentUser)) {
-
-            for (CrisLayoutBox box : notPublicBoxes) {
-                if (hasAccess(context, item, currentUser, box)) {
-                    return true;
-                }
+        for (CrisLayoutBox box : notPublicBoxes) {
+            if (hasAccess(context, item, currentUser, box)) {
+                return true;
             }
         }
 

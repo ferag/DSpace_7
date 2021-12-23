@@ -347,6 +347,16 @@
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPublicationPerucrisCerifXmlExport">
+		<property name="templateFileName" value="crosswalks/template/publication-perucris-cerif-xml-export.template"/>
+		<property name="mimeType" value="application/xml; charset=UTF-8"/>
+		<property name="fileName" value="publication.xml"/>
+		<property name="entityType" value="Publication"/>
+		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="multipleItemsTemplateFileName" value="crosswalks/template/publications-xml.template"/>
+		<property name="converter" ref="xmlValueConverter" />
+	</bean>
+
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkCtivitaePublicationPerucrisCerifXml">
         <property name="templateFileName" value="crosswalks/template/publication-perucris-cerif-xml.template"/>
@@ -416,6 +426,16 @@
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
         <property name="converter" ref="xmlValueConverter" />
     </bean>
+
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkProjectPerucrisCerifXmlExport">
+		<property name="templateFileName" value="crosswalks/template/project-perucris-cerif-xml-export.template"/>
+		<property name="mimeType" value="application/xml; charset=UTF-8"/>
+		<property name="fileName" value="project.xml"/>
+		<property name="entityType" value="Project"/>
+		<property name="multipleItemsTemplateFileName" value="crosswalks/template/projects-xml.template"/>
+		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="converter" ref="xmlValueConverter" />
+	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkCtivitaeProjectPerucrisCerifXml">
         <property name="templateFileName" value="crosswalks/template/project-perucris-cerif-xml.template"/>
@@ -713,7 +733,7 @@
 		<property name="fileName" value="publication.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="Publication"/>
-		<property name="referCrosswalk" ref="referCrosswalkPublicationPerucrisCerifXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkPublicationPerucrisCerifXmlExport"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="pdfCrosswalkCtivitaePublication">
@@ -721,7 +741,7 @@
 		<property name="fileName" value="publication.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="CvPublication"/>
-		<property name="referCrosswalk" ref="referCrosswalkPublicationPerucrisCerifXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkPublicationPerucrisCerifXmlExport"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="pdfCrosswalkProject">
@@ -729,7 +749,7 @@
 		<property name="fileName" value="project.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="Project"/>
-		<property name="referCrosswalk" ref="referCrosswalkProjectPerucrisCerifXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkProjectPerucrisCerifXmlExport"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="pdfCrosswalkCtivitaeProject">
@@ -737,7 +757,7 @@
 		<property name="fileName" value="project.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="CvProject"/>
-		<property name="referCrosswalk" ref="referCrosswalkProjectPerucrisCerifXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkProjectPerucrisCerifXmlExport"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="pdfCrosswalkEquipment">
@@ -1041,6 +1061,16 @@
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionPublicationPerucrisCerifXmlExport">
+		<property name="templateFileName" value="crosswalks/template/publication-perucris-cerif-xml-export.template"/>
+		<property name="mimeType" value="application/xml; charset=UTF-8"/>
+		<property name="fileName" value="publication.xml"/>
+		<property name="entityType" value="InstitutionPublication"/>
+		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="multipleItemsTemplateFileName" value="crosswalks/template/publications-xml.template"/>
+		<property name="converter" ref="xmlValueConverter" />
+	</bean>
+
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkInstitutionPerson">
 		<property name="templateFileName" value="crosswalks/template/person-table-es.template"/>
 		<property name="fileName" value="persons.csv"/>
@@ -1061,7 +1091,7 @@
 		<property name="fileName" value="publication.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="InstitutionPublication"/>
-		<property name="referCrosswalk" ref="referCrosswalkInstitutionPublicationPerucrisCerifXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkInstitutionPublicationPerucrisCerifXmlExport"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkInstitutionPublication">
@@ -1164,6 +1194,16 @@
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionProjectPerucrisCerifXmlExport">
+		<property name="templateFileName" value="crosswalks/template/project-perucris-cerif-xml-export.template"/>
+		<property name="mimeType" value="application/xml; charset=UTF-8"/>
+		<property name="fileName" value="project.xml"/>
+		<property name="entityType" value="InstitutionProject"/>
+		<property name="multipleItemsTemplateFileName" value="crosswalks/template/projects-xml.template"/>
+		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="converter" ref="xmlValueConverter" />
+	</bean>
+
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionProjectJson">
 		<property name="templateFileName" value="crosswalks/template/project-json.template"/>
 		<property name="mimeType" value="application/json; charset=UTF-8"/>
@@ -1241,7 +1281,7 @@
 		<property name="fileName" value="project.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="InstitutionProject"/>
-		<property name="referCrosswalk" ref="referCrosswalkInstitutionProjectPerucrisCerifXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkInstitutionProjectPerucrisCerifXmlExport"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkInstitutionProject">
@@ -1492,7 +1532,9 @@
                 <entry key="patentTypes" value-ref="mapConverterPatentTypes" />
 				<entry key="eventTypes" value-ref="mapConverterEventTypes" />
 				<entry key="orgUnitTypes" value-ref="mapConverterOrgUnitTypes" />
+				<entry key="orgUnitTypesTranslation" value-ref="mapConverterOrgUnitTypesTranslation" />
 				<entry key="accessRight" value-ref="mapConverterAccessRight" />
+				<entry key="accessRightUri" value-ref="mapConverterAccessRightUri" />
 				<entry key="coarToPublicationTypes" value-ref="mapConverterCoarToPublicationTypes" />
 				<entry key="cerifToOrgUnitTypes" value-ref="mapConverterCerifToOrgUnitTypes" />
 				<entry key="cerifToFundingTypes" value-ref="mapConverterCerifToFundingTypes" />
@@ -1502,6 +1544,8 @@
 				<entry key="insTypes" value-ref="mapConverterInsTypes" />
 				<entry key="ocdeSubjects" value-ref="mapConverterOcdeSubjects" />
 				<entry key="ocdeProjectTypes" value-ref="mapConverterOcdeProjectTypes" />
+				<entry key="ocdeProjectTypesLeaf" value-ref="mapConverterOcdeProjectTypesLeaf" />
+				<entry key="ocdeProjectTypesOther" value-ref="mapConverterOcdeProjectTypesOther" />
 			</map>
 		</constructor-arg>
 	</bean>
@@ -1541,6 +1585,13 @@
 		<property name="defaultValue" value="https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_OrgUnit_Types"/>
 	</bean>
 
+	<bean name="mapConverterOrgUnitTypesTranslation" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
+		<property name="converterNameFile" value="mapConverter-orgUnitTypesTranslation.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+		<property name="charset" value="UTF-8" />
+		<property name="defaultValue" value=""/>
+	</bean>
+
 	<bean name="mapConverterEventTypes" class="org.dspace.util.SimpleMapConverter" init-method="init">
 		<property name="converterNameFile" value="mapConverter-eventTypes.properties" />
 		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
@@ -1549,6 +1600,12 @@
 
 	<bean name="mapConverterAccessRight" class="org.dspace.util.SimpleMapConverter" init-method="init">
 	    <property name="converterNameFile" value="mapConverter-accessRight.properties" />
+	    <property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+	    <property name="defaultValue" value=""/>
+	</bean>
+
+	<bean name="mapConverterAccessRightUri" class="org.dspace.util.SimpleMapConverter" init-method="init">
+	    <property name="converterNameFile" value="mapConverter-accessRightUri.properties" />
 	    <property name="configurationService" ref="org.dspace.services.ConfigurationService" />
 	    <property name="defaultValue" value=""/>
 	</bean>
@@ -1600,6 +1657,20 @@
 
 	<bean name="mapConverterOcdeProjectTypes" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
 		<property name="converterNameFile" value="mapConverter-ocdeProjectTypes.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+		<property name="defaultValue" value=""/>
+		<property name="charset" value="UTF-8"/>
+	</bean>
+
+	<bean name="mapConverterOcdeProjectTypesLeaf" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
+		<property name="converterNameFile" value="mapConverter-ocdeProjectTypesLeaf.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+		<property name="defaultValue" value=""/>
+		<property name="charset" value="UTF-8"/>
+	</bean>
+
+	<bean name="mapConverterOcdeProjectTypesOther" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
+		<property name="converterNameFile" value="mapConverter-ocdeProjectTypesOther.properties" />
 		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
 		<property name="defaultValue" value=""/>
 		<property name="charset" value="UTF-8"/>

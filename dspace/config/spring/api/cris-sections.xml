@@ -467,34 +467,6 @@
 	</util:list>
 	<util:list id="directorioslayout">
 		<list>
-			<bean class="org.dspace.layout.CrisLayoutTextRowComponent">
-				<property name="order" value="0"/>
-				<property name="contentType" value="image"/>
-				<property name="content" value="https://perucris.dev.4science.cloud/assets/images/perucris-home.png"/>
-				<property name="style" value="col-md-12 py-5 w-50 center"/>
-			</bean>
-			<bean class="org.dspace.layout.CrisLayoutTextRowComponent">
-				<property name="order" value="1"/>
-				<property name="contentType" value="text-key"/>
-				<property name="content" value="directorios.title"/>
-				<property name="style" value="col-md-12 h2 d-flex justify-content-center py-3"/>
-			</bean>
-			<bean class="org.dspace.layout.CrisLayoutTextRowComponent">
-				<property name="order" value="2"/>
-				<property name="contentType" value="text-key"/>
-				<property name="content" value="directorios.description"/>
-				<property name="style" value="col-md-12 d-flex justify-content-center py-2"/>
-			</bean>
-		</list>
-		<list>
-			<bean class="org.dspace.layout.CrisLayoutSearchComponent">
-				<property name="discoveryConfigurationName" value="site" />
-				<property name="style" value="col-md-12"/>
-				<property name="searchType" value="basic"/>
-				<property name="displayTitle" value="false"/>
-			</bean>
-		</list>
-		<list>
 			<bean class="org.dspace.layout.CrisLayoutCountersComponent">
 				<property name="style" value="col-md-12 py-4"/>
 				<property name="counterSettingsList">
@@ -533,22 +505,6 @@
 				</property>
 			</bean>
 
-		</list>
-		<list>
-			<bean class="org.dspace.layout.CrisLayoutTopComponent">
-				<property name="discoveryConfigurationName" value="project_funding" />
-				<property name="sortField" value="dc.date.accessioned" />
-				<property name="order" value="desc" />
-				<property name="style" value="col-md-6"/>
-				<property name="titleKey" value="lastProjects"/>
-			</bean>
-			<bean class="org.dspace.layout.CrisLayoutTopComponent">
-				<property name="discoveryConfigurationName" value="researchoutputs" />
-				<property name="sortField" value="dc.date.accessioned" />
-				<property name="order" value="desc" />
-				<property name="style" value="col-md-6"/>
-				<property name="titleKey" value="lastPublications"/>
-			</bean>
 		</list>
 	</util:list>
 	<util:list id="ctivitaelayout">

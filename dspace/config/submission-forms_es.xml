@@ -253,6 +253,20 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>editor</dc-element>
+          <dc-qualifier>dni</dc-qualifier>
+          <label>DNI</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
     </form>
@@ -291,6 +305,20 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>editor</dc-element>
+          <dc-qualifier>dni</dc-qualifier>
+          <label>DNI</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
     </form>
@@ -329,6 +357,20 @@
           <repeatable>false</repeatable>
           <required />
           <hint />
+          <validation>0000-000(1-[5-9]|2-[0-9]|3-[0-4])\d{3}-\d{3}[\dX]</validation>
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>editor</dc-element>
+          <dc-qualifier>dni</dc-qualifier>
+          <label>DNI</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
     </form>
@@ -2449,10 +2491,10 @@ o “Caja de geolocalización”</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>date</dc-element>
           <dc-qualifier>issued</dc-qualifier>
-          <label>Fecha de emisión</label>
+          <label>Fecha de publicación</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
-          <required>Debe introducir al menos el año.</required>
+          <required />
           <hint>Indique la fecha de publicación o distribución pública anterior.
                         Puede omitir el día y/o el mes si no son
                         aplicables.</hint>
@@ -2620,10 +2662,10 @@ o “Caja de geolocalización”</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>date</dc-element>
           <dc-qualifier>issued</dc-qualifier>
-          <label>Fecha de emisión</label>
+          <label>Fecha de publicación</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
-          <required>Debe introducir al menos el año.</required>
+          <required />
           <hint>Indique la fecha de publicación o distribución pública anterior.
                         Puede omitir el día y/o el mes si no son
                         aplicables.</hint>
@@ -2791,10 +2833,10 @@ o “Caja de geolocalización”</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>date</dc-element>
           <dc-qualifier>issued</dc-qualifier>
-          <label>Fecha de emisión</label>
+          <label>Fecha de publicación</label>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
-          <required>Debe introducir al menos el año.</required>
+          <required />
           <hint>Indique la fecha de publicación o distribución pública anterior.
                         Puede omitir el día y/o el mes si no son
                         aplicables.</hint>
@@ -3574,22 +3616,11 @@ ejemplo: el volumen de una revista.</hint>
           <dc-schema>thesis</dc-schema>
           <dc-element>degree</dc-element>
           <dc-qualifier>discipline</dc-qualifier>
-          <label>Nombre del programa de educación superior conducente al grado académico y/o título profesional asignado por SUNEDU</label>
+          <label>Código del programa</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Según el Clasificador Nacional de Programas e instituciones de educación superior universitaria, pedagógica, tecnológica y técnico productiva, 2018: https://www.inei.gob.pe/media/Clasificador_Nacional_de_Programas_e_Instituciones_CIDE_agosto_editado.pdf Ejemplo: Informática biomédica en salud global con mención en informática en salud</hint>
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>renati</dc-schema>
-          <dc-element>discipline</dc-element>
-          <label>Código del programa de educación superior conducente al grado académico y/o título profesional asignado por SUNEDU</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint>Según el Clasificador Nacional de Programas e instituciones de educación superior universitaria, pedagógica, tecnológica y técnico productiva, 2018: https://www.inei.gob.pe/media/Clasificador_Nacional_de_Programas_e_Instituciones_CIDE_agosto_editado.pdf Ejemplo: 919267</hint>
+          <hint>Consignar el código del programa asignado por SUNEDU según el Clasificador Nacional de Programas e instituciones de educación superior universitaria, pedagógica, tecnológica y técnico productiva, 2018: https://www.inei.gob.pe/media/Clasificador_Nacional_de_Programas_e_Instituciones_CIDE_agosto_editado.pdf</hint>
         </field>
       </row>
       <row>
@@ -3668,22 +3699,11 @@ ejemplo: el volumen de una revista.</hint>
           <dc-schema>thesis</dc-schema>
           <dc-element>degree</dc-element>
           <dc-qualifier>discipline</dc-qualifier>
-          <label>Nombre del programa de educación superior conducente al grado académico y/o título profesional asignado por SUNEDU</label>
+          <label>Código del programa</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Según el Clasificador Nacional de Programas e instituciones de educación superior universitaria, pedagógica, tecnológica y técnico productiva, 2018: https://www.inei.gob.pe/media/Clasificador_Nacional_de_Programas_e_Instituciones_CIDE_agosto_editado.pdf Ejemplo: Informática biomédica en salud global con mención en informática en salud</hint>
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>renati</dc-schema>
-          <dc-element>discipline</dc-element>
-          <label>Código del programa de educación superior conducente al grado académico y/o título profesional asignado por SUNEDU</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint>Según el Clasificador Nacional de Programas e instituciones de educación superior universitaria, pedagógica, tecnológica y técnico productiva, 2018: https://www.inei.gob.pe/media/Clasificador_Nacional_de_Programas_e_Instituciones_CIDE_agosto_editado.pdf Ejemplo: 919267</hint>
+          <hint>Consignar el código del programa asignado por SUNEDU según el Clasificador Nacional de Programas e instituciones de educación superior universitaria, pedagógica, tecnológica y técnico productiva, 2018: https://www.inei.gob.pe/media/Clasificador_Nacional_de_Programas_e_Instituciones_CIDE_agosto_editado.pdf</hint>
         </field>
       </row>
       <row>
@@ -3762,22 +3782,11 @@ ejemplo: el volumen de una revista.</hint>
           <dc-schema>thesis</dc-schema>
           <dc-element>degree</dc-element>
           <dc-qualifier>discipline</dc-qualifier>
-          <label>Nombre del programa de educación superior conducente al grado académico y/o título profesional asignado por SUNEDU</label>
+          <label>Código del programa</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Según el Clasificador Nacional de Programas e instituciones de educación superior universitaria, pedagógica, tecnológica y técnico productiva, 2018: https://www.inei.gob.pe/media/Clasificador_Nacional_de_Programas_e_Instituciones_CIDE_agosto_editado.pdf Ejemplo: Informática biomédica en salud global con mención en informática en salud</hint>
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>renati</dc-schema>
-          <dc-element>discipline</dc-element>
-          <label>Código del programa de educación superior conducente al grado académico y/o título profesional asignado por SUNEDU</label>
-          <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint>Según el Clasificador Nacional de Programas e instituciones de educación superior universitaria, pedagógica, tecnológica y técnico productiva, 2018: https://www.inei.gob.pe/media/Clasificador_Nacional_de_Programas_e_Instituciones_CIDE_agosto_editado.pdf Ejemplo: 919267</hint>
+          <hint>Consignar el código del programa asignado por SUNEDU según el Clasificador Nacional de Programas e instituciones de educación superior universitaria, pedagógica, tecnológica y técnico productiva, 2018: https://www.inei.gob.pe/media/Clasificador_Nacional_de_Programas_e_Instituciones_CIDE_agosto_editado.pdf</hint>
         </field>
       </row>
       <row>
@@ -3890,11 +3899,11 @@ ejemplo: el volumen de una revista.</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>relation</dc-element>
           <dc-qualifier>funding</dc-qualifier>
-          <label>Financiación</label>
+          <label>Financiado por</label>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint>Agradecer la financiación recibida para esta publicación.</hint>
+          <hint>El financiamiento que origina esta publicación.</hint>
         </field>
       </row>
       <row>
@@ -4008,11 +4017,11 @@ ejemplo: el volumen de una revista.</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>relation</dc-element>
           <dc-qualifier>funding</dc-qualifier>
-          <label>Financiación</label>
+          <label>Financiado por</label>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint>Agradecer la financiación recibida para esta publicación.</hint>
+          <hint>El financiamiento que origina esta publicación.</hint>
         </field>
       </row>
       <row>
@@ -4126,11 +4135,11 @@ ejemplo: el volumen de una revista.</hint>
           <dc-schema>dc</dc-schema>
           <dc-element>relation</dc-element>
           <dc-qualifier>funding</dc-qualifier>
-          <label>Financiación</label>
+          <label>Financiado por</label>
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint>Agradecer la financiación recibida para esta publicación.</hint>
+          <hint>El financiamiento que origina esta publicación.</hint>
         </field>
       </row>
       <row>
@@ -5060,6 +5069,7 @@ ejemplo: el volumen de una revista.</hint>
           <label>Número de teléfono</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
+          <validation>^[0-9 ]+$</validation>
           <required />
           <hint />
         </field>
@@ -5071,6 +5081,7 @@ ejemplo: el volumen de una revista.</hint>
           <label>Número de teléfono móvil</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
+          <validation>^[0-9 ]+$</validation>
           <required />
           <hint />
         </field>
@@ -5106,6 +5117,7 @@ ejemplo: el volumen de una revista.</hint>
           <label>Resumen de biografía</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
+          <validation>^(.|\s){0,2000}$</validation>
           <required />
           <hint>Ingrese un resumen de un perfil profesional y académico, relacionado con la CTI. (Máximo 2000 caracteres)</hint>
         </field>
@@ -5496,6 +5508,7 @@ ejemplo: el volumen de una revista.</hint>
           <dc-element>phone</dc-element>
           <label>Número de teléfono</label>
           <input-type>onebox</input-type>
+          <validation>^[0-9 ]+$</validation>
           <repeatable>true</repeatable>
           <required />
           <hint />
@@ -5507,6 +5520,7 @@ ejemplo: el volumen de una revista.</hint>
           <dc-element>mobilePhone</dc-element>
           <label>Número de teléfono móvil</label>
           <input-type>onebox</input-type>
+          <validation>^[0-9 ]+$</validation>
           <repeatable>true</repeatable>
           <required />
           <hint />
@@ -5544,6 +5558,7 @@ ejemplo: el volumen de una revista.</hint>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
+          <validation>^(.|\s){0,2000}$</validation>
           <hint>Ingrese un resumen de un perfil profesional y académico, relacionado con la CTI. (Máximo 2000 caracteres)</hint>
         </field>
       </row>
@@ -5890,6 +5905,7 @@ ejemplo: el volumen de una revista.</hint>
           <label>Número de teléfono</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
+          <validation>^[0-9 ]+$</validation>
           <required />
           <hint />
         </field>
@@ -5901,6 +5917,7 @@ ejemplo: el volumen de una revista.</hint>
           <label>Número de teléfono móvil</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
+          <validation>^[0-9 ]+$</validation>
           <required />
           <hint />
         </field>
@@ -5936,6 +5953,7 @@ ejemplo: el volumen de una revista.</hint>
           <label>Resumen de biografía</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
+          <validation>^(.|\s){0,2000}$</validation>
           <required />
           <hint>Ingrese un resumen de un perfil profesional y académico, relacionado con la CTI. (Máximo 2000 caracteres)</hint>
         </field>

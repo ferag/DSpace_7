@@ -4,6 +4,7 @@
 	xmlns:fo="http://www.w3.org/1999/XSL/Format"
 	xmlns:pt="https://www.openaire.eu/cerif-profile/vocab/COAR_Publication_Types"
 	xmlns:cerif="https://purl.org/pe-repo/cerif-profile/1.0/"
+	xmlns:ar="http://purl.org/coar/access_right"
 	exclude-result-prefixes="fo">
 	
 	<xsl:param name="imageDir" />
@@ -119,11 +120,11 @@
                     </xsl:call-template>
                     <xsl:call-template name="print-value">
                         <xsl:with-param name="label" select="'Condición de acceso'" />
-                        <xsl:with-param name="value" select="cerif:Access" />
+                        <xsl:with-param name="value" select="ar:Access" />
                     </xsl:call-template>
                     <xsl:call-template name="print-value">
                         <xsl:with-param name="label" select="'Fecha de Fin del Embargo'" />
-                        <xsl:with-param name="value" select="cerif:Access/@endDate" />
+                        <xsl:with-param name="value" select="ar:Access/@endDate" />
                     </xsl:call-template>
                     
                     
@@ -145,7 +146,7 @@
 				    	<xsl:with-param name="value" select="cerif:Volume" />
 				    </xsl:call-template>
 					<xsl:call-template name="print-value">
-				    	<xsl:with-param name="label" select="'Edición'" />
+				    	<xsl:with-param name="label" select="'Fascículo'" />
 				    	<xsl:with-param name="value" select="cerif:Issue" />
 				    </xsl:call-template>
 					<xsl:call-template name="print-value">

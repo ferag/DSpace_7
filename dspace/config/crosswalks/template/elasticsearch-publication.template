@@ -47,8 +47,12 @@
     "dc_type" : [
          "@dc.type@",
         ],
-    "dc_relation_isbn" : "@dc.relation.isbn@",
-    "dc_relation_dataset" : "@dc.relation.dataset@",
+    "dc_relation_isbn" : [
+        "@dc.relation.isbn@",
+    ],
+    "dc_relation_dataset" : [
+          "@dc.relation.dataset@",
+    ],
     "dc_identifier_isbn" : [
           "@dc.identifier.isbn@",
      ],
@@ -70,7 +74,9 @@
     "dc_identifier_citation" : "@dc.identifier.citation@",
     "dc_title" : "@dc.title@",
     "metric_scopusCitation" : "@virtual.metric.scopusCitation@",
-    "perucris_advisor_dni" : "@perucris.advisor.dni@",
+    "perucris_advisor_dni" : [
+            "@perucris.advisor.dni@",
+     ],
     "dc_subject_ocde_macrosector" : [
             "@virtual.vocabulary.perucris-subject-ocde.1@",
         ],

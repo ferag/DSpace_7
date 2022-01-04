@@ -11838,7 +11838,7 @@ ejemplo: el volumen de una revista.</hint>
           <dc-qualifier>politicGuideline</dc-qualifier>
           <label>Lineamientos Politica</label>
           <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
+          <repeatable>true</repeatable>
           <required />
           <hint />
         </field>

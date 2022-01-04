@@ -11829,8 +11829,8 @@
           <dc-qualifier>politicGuideline</dc-qualifier>
           <label>Politic Guidelines</label>
           <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
-          <required>Please enter Politic Guidelines</required>
+          <repeatable>true</repeatable>
+          <required />
           <hint />
         </field>
       </row>
@@ -11866,7 +11866,7 @@
           <label>Coverage</label>
           <input-type value-pairs-name="peru_ppp_coverage">dropdown</input-type>
           <repeatable>false</repeatable>
-          <required>Please enter Coverage</required>
+          <required />
           <hint />
         </field>
       </row>

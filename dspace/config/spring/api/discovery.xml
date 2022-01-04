@@ -924,7 +924,8 @@
         <property name="indexAlways" value="true"/>
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphItemByType" />
+                <ref bean="graphOcdeProject" />
+                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
             </list>
@@ -932,7 +933,8 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphItemByType" />
+                <ref bean="graphOcdeProject" />
+                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
                 <ref bean="searchFilterProjectInvestigator"/>
@@ -977,7 +979,8 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphItemByType" />
+                <ref bean="graphOcdeProject" />
+                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
             </list>
@@ -985,7 +988,8 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphItemByType" />
+                <ref bean="graphOcdeProject" />
+                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
                 <ref bean="searchFilterProjectInvestigator"/>
@@ -1392,7 +1396,8 @@
     <bean id="relationOrgunitRPProjectConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
             <property name="sidebarFacets">
                 <list>
-                    <ref bean="graphItemByType" />
+                    <ref bean="graphOcdeProject" />
+                    <ref bean="graphOtherTypeProject" />
                     <ref bean="graphProjectByDate" />
                     <ref bean="searchFilterAuthor" />
                     <ref bean="searchFilterType"/>
@@ -1402,7 +1407,8 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphItemByType" />
+                <ref bean="graphOcdeProject" />
+                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
 
                 <ref bean="searchFilterAuthor" />
@@ -1647,7 +1653,8 @@
     <bean id="relationOrgunitProjectsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphItemByType" />
+                <ref bean="graphOcdeProject" />
+                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1657,7 +1664,8 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphItemByType" />
+                <ref bean="graphOcdeProject" />
+                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1691,7 +1699,8 @@
     <bean id="relationOrgunitInstitutionProjectsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphItemByType" />
+                <ref bean="graphOcdeProject" />
+                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1701,7 +1710,8 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphItemByType" />
+                <ref bean="graphOcdeProject" />
+                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -2343,7 +2353,8 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphItemByType" />
+                <ref bean="graphOcdeProject" />
+                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
             </list>
@@ -2351,7 +2362,8 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphItemByType" />
+                <ref bean="graphOcdeProject" />
+                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
                 <ref bean="searchFilterProjectInvestigator"/>
@@ -2399,7 +2411,8 @@
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="graphItemByType" />
+                <ref bean="graphOcdeProject" />
+                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
             </list>
@@ -2407,7 +2420,8 @@
         <!--The search filters which can be used on the discovery search page-->
         <property name="searchFilters">
             <list>
-                <ref bean="graphItemByType" />
+                <ref bean="graphOcdeProject" />
+                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
                 <ref bean="searchFilterProjectInvestigator"/>
@@ -7580,6 +7594,20 @@
         <property name="metadataFields">
             <list>
                 <value>perucris.project.typeOcde</value>
+            </list>
+        </property>
+        <property name="graphType" value="pie" />
+        <property name="exposeMissing" value="true" />
+        <property name="exposeMore" value="false" />
+        <property name="exposeTotalElements" value="true" />
+    </bean>
+    <bean id="graphOtherTypeProject" class="org.dspace.discovery.configuration.GraphDiscoverSearchFilterFacet">
+        <property name="facetLimit" value="10"/>
+        <property name="indexFieldName" value="graphOtherTypeProject" />
+        <property name="isDate" value="false" />
+        <property name="metadataFields">
+            <list>
+                <value>perucris.project.typeOther</value>
             </list>
         </property>
         <property name="graphType" value="pie" />

@@ -925,7 +925,6 @@
         <property name="sidebarFacets">
             <list>
                 <ref bean="graphOcdeProject" />
-                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
             </list>
@@ -934,7 +933,6 @@
         <property name="searchFilters">
             <list>
                 <ref bean="graphOcdeProject" />
-                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
                 <ref bean="searchFilterProjectInvestigator"/>
@@ -980,7 +978,6 @@
         <property name="sidebarFacets">
             <list>
                 <ref bean="graphOcdeProject" />
-                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
             </list>
@@ -989,7 +986,6 @@
         <property name="searchFilters">
             <list>
                 <ref bean="graphOcdeProject" />
-                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
                 <ref bean="searchFilterProjectInvestigator"/>
@@ -1397,7 +1393,6 @@
             <property name="sidebarFacets">
                 <list>
                     <ref bean="graphOcdeProject" />
-                    <ref bean="graphOtherTypeProject" />
                     <ref bean="graphProjectByDate" />
                     <ref bean="searchFilterAuthor" />
                     <ref bean="searchFilterType"/>
@@ -1408,7 +1403,6 @@
         <property name="searchFilters">
             <list>
                 <ref bean="graphOcdeProject" />
-                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
 
                 <ref bean="searchFilterAuthor" />
@@ -1654,7 +1648,6 @@
         <property name="sidebarFacets">
             <list>
                 <ref bean="graphOcdeProject" />
-                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1665,7 +1658,6 @@
         <property name="searchFilters">
             <list>
                 <ref bean="graphOcdeProject" />
-                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1700,7 +1692,6 @@
         <property name="sidebarFacets">
             <list>
                 <ref bean="graphOcdeProject" />
-                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -1711,7 +1702,6 @@
         <property name="searchFilters">
             <list>
                 <ref bean="graphOcdeProject" />
-                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterAuthor" />
                 <ref bean="searchFilterType"/>
@@ -2354,7 +2344,6 @@
         <property name="sidebarFacets">
             <list>
                 <ref bean="graphOcdeProject" />
-                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
             </list>
@@ -2363,7 +2352,6 @@
         <property name="searchFilters">
             <list>
                 <ref bean="graphOcdeProject" />
-                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
                 <ref bean="searchFilterProjectInvestigator"/>
@@ -2412,7 +2400,6 @@
         <property name="sidebarFacets">
             <list>
                 <ref bean="graphOcdeProject" />
-                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
             </list>
@@ -2421,7 +2408,6 @@
         <property name="searchFilters">
             <list>
                 <ref bean="graphOcdeProject" />
-                <ref bean="graphOtherTypeProject" />
                 <ref bean="graphProjectByDate" />
                 <ref bean="searchFilterType" />
                 <ref bean="searchFilterProjectInvestigator"/>

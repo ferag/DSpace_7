@@ -1607,7 +1607,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Register the contact person for matters related to your organisation's participation in project activities</hint>
+          <hint>Register the contact person for matters related to your organisation's participation in project activities.</hint>
         </field>
       </row>
       <row>
@@ -5060,9 +5060,9 @@
           <label>Telephone Number</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <validation>^[0-9 ]+$</validation>
           <required />
           <hint />
+          <validation>^[0-9 ]+$</validation>
         </field>
       </row>
       <row>
@@ -5072,9 +5072,9 @@
           <label>Cellphone Number</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <validation>^[0-9 ]+$</validation>
           <required />
           <hint />
+          <validation>^[0-9 ]+$</validation>
         </field>
       </row>
       <row>
@@ -5500,9 +5500,9 @@
           <label>Telephone Number</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <validation>^[0-9 ]+$</validation>
           <required />
           <hint />
+          <validation>^[0-9 ]+$</validation>
         </field>
       </row>
       <row>
@@ -5512,9 +5512,9 @@
           <label>Cellphone Number</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <validation>^[0-9 ]+$</validation>
           <required />
           <hint />
+          <validation>^[0-9 ]+$</validation>
         </field>
       </row>
       <row>
@@ -5549,8 +5549,8 @@
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
-          <validation>^(.|\s){0,2000}$</validation>
           <hint>Enter a summary of a professional and academic profile, related to CTI. (Maximum 2000 characters)</hint>
+          <validation>^(.|\s){0,2000}$</validation>
         </field>
       </row>
       <row>
@@ -5896,9 +5896,9 @@
           <label>Telephone Number</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <validation>^[0-9 ]+$</validation>
           <required />
           <hint />
+          <validation>^[0-9 ]+$</validation>
         </field>
       </row>
       <row>
@@ -5908,9 +5908,9 @@
           <label>Cellphone Number</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <validation>^[0-9 ]+$</validation>
           <required />
           <hint />
+          <validation>^[0-9 ]+$</validation>
         </field>
       </row>
       <row>
@@ -5944,9 +5944,9 @@
           <label>Biography</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <validation>^(.|\s){0,2000}$</validation>
           <required />
           <hint>Enter a summary of a professional and academic profile, related to CTI. (Maximum 2000 characters)</hint>
+          <validation>^(.|\s){0,2000}$</validation>
         </field>
       </row>
       <row>
@@ -7043,7 +7043,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Register the contact person for matters related to your organisation's participation in project activities</hint>
+          <hint>Register the contact person for matters related to your organisation's participation in project activities.</hint>
         </field>
       </row>
       <row>
@@ -7376,7 +7376,7 @@
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint>Register the contact person for matters related to your organisation's participation in project activities</hint>
+          <hint>Register the contact person for matters related to your organisation's participation in project activities.</hint>
         </field>
       </row>
       <row>
@@ -7769,7 +7769,7 @@
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint>Register the contact person for matters related to your organisation's participation in project activities</hint>
+          <hint>Register the contact person for matters related to your organisation's participation in project activities.</hint>
         </field>
       </row>
       <row>
@@ -8162,7 +8162,7 @@
           <input-type>group</input-type>
           <repeatable>true</repeatable>
           <required />
-          <hint>Register the contact person for matters related to your organisation's participation in project activities</hint>
+          <hint>Register the contact person for matters related to your organisation's participation in project activities.</hint>
         </field>
       </row>
       <row>
@@ -8459,6 +8459,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Use integer number, without decimals or separators, example: 150000</hint>
+          <validation>[0-9]+</validation>
         </field>
         <field>
           <dc-schema>oairecerif</dc-schema>
@@ -8666,6 +8667,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Use integer number, without decimals or separators, example: 150000</hint>
+          <validation>^[0-9 ]+$</validation>
         </field>
         <field>
           <dc-schema>oairecerif</dc-schema>
@@ -8866,6 +8868,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Consider integer numbers without decimals or separators. Example: 150000</hint>
+          <validation>^[0-9 ]+$</validation>
         </field>
         <field>
           <dc-schema>oairecerif</dc-schema>
@@ -9072,6 +9075,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Consider integer numbers without decimals or separators. Example: 150000</hint>
+          <validation>^[0-9 ]+$</validation>
         </field>
         <field>
           <dc-schema>oairecerif</dc-schema>
@@ -9346,7 +9350,7 @@
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
           <dc-qualifier>monitoringYear</dc-qualifier>
-          <label>Evaluation Year</label>
+          <label>Year of monitoring</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -10072,7 +10076,7 @@
           <label>Plan Type</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>Please enter a Plan Type</required>
+          <required />
           <hint />
         </field>
       </row>
@@ -10955,9 +10959,9 @@
           <label>Expected Value</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <validation>^[0-9]{8}$</validation>
           <required />
           <hint>Expected Value: 8 digits</hint>
+          <validation>^[0-9]+$</validation>
         </field>
       </row>
       <row>
@@ -10968,9 +10972,9 @@
           <label>Obtained Value</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <validation>^[0-9]{8}$</validation>
           <required />
           <hint>Obtained Value: 8 digits</hint>
+          <validation>^[0-9]+$</validation>
         </field>
       </row>
     </form>
@@ -11008,6 +11012,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Example: Number</hint>
+          <validation>^\D+$</validation>
         </field>
       </row>
       <row>
@@ -11015,7 +11020,7 @@
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
           <dc-qualifier>indicatorResponsible</dc-qualifier>
-          <label>Responsible for measuring and reporting the indicator</label>
+          <label>Responsible for reporting the progress of the indicator</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -11056,7 +11061,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Example: 1500</hint>
-          <validation>^[0-9]+$</validation>
+          <validation>^[0-9]+(.)?([0-9]+)?(%)?$</validation>
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -11526,7 +11531,7 @@
           <dc-element>ppp</dc-element>
           <dc-qualifier>targetPopulation</dc-qualifier>
           <label>Target Audience</label>
-          <input-type>onebox</input-type>
+          <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -11571,7 +11576,7 @@
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
           <dc-qualifier>expectedFundedAmount</dc-qualifier>
-          <label>Total expected amount</label>
+          <label>Total expected subsidy (Peruvian soles)</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -11654,8 +11659,8 @@
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
-          <dc-qualifier>scientificProductionResult</dc-qualifier>
-          <label>Main results obtained in terms of scientific production</label>
+          <dc-qualifier>expostresults</dc-qualifier>
+          <label>Main ex post results in CTI of the contest</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -11666,8 +11671,8 @@
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
-          <dc-qualifier>humanCapitalResult</dc-qualifier>
-          <label>Main results achieved in terms of human capital formation for CTI.</label>
+          <dc-qualifier>relevanceresults</dc-qualifier>
+          <label>Main results regarding the relevance of the contest</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -11678,8 +11683,8 @@
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
-          <dc-qualifier>technologicalProductionResult</dc-qualifier>
-          <label>Main results in terms of technological production</label>
+          <dc-qualifier>effectivenessresults</dc-qualifier>
+          <label>Main results regarding the effectiveness of the contest</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -11690,20 +11695,8 @@
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
-          <dc-qualifier>innovationResult</dc-qualifier>
-          <label>Main results in terms of innovation</label>
-          <input-type>textarea</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>ppp</dc-element>
-          <dc-qualifier>achievement</dc-qualifier>
-          <label>Main results in other aspects</label>
+          <dc-qualifier>efficiencyresults</dc-qualifier>
+          <label>Main results regarding the efficiency of the contest</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -11958,18 +11951,6 @@
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
-          <dc-qualifier>responsibleEntity</dc-qualifier>
-          <label>Responsible Institution</label>
-          <input-type>onebox</input-type>
-          <repeatable>true</repeatable>
-          <required />
-          <hint>Example: Regional Government of Amazonas, DRE AMAZONAS</hint>
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>ppp</dc-element>
           <dc-qualifier>executionResponsible</dc-qualifier>
           <label>Execution responsible institution</label>
           <input-type>onebox</input-type>
@@ -12114,7 +12095,7 @@ Colloquium Service Order 84 - Simultaneous Translation Service - Water Colloquiu
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
           <dc-qualifier>fundingCode</dc-qualifier>
-          <label>Funding Code</label>
+          <label>Financing source</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -12188,10 +12169,10 @@ Colloquium Service Order 84 - Simultaneous Translation Service - Water Colloquiu
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
           <dc-qualifier>teamMember</dc-qualifier>
-          <label>Researcher</label>
+          <label>Member's name</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>Please enter Researcher</required>
+          <required>Please enter Member's name</required>
           <hint />
         </field>
       </row>
@@ -12203,7 +12184,7 @@ Colloquium Service Order 84 - Simultaneous Translation Service - Water Colloquiu
           <label>Role</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>Please enter Role</required>
+          <required />
           <hint />
         </field>
       </row>
@@ -12229,6 +12210,41 @@ Colloquium Service Order 84 - Simultaneous Translation Service - Water Colloquiu
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required>Please enter a name</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>internalid</dc-element>
+          <label>Code</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>abstract</dc-qualifier>
+          <label>Description</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>relation</dc-element>
+          <dc-qualifier>funding</dc-qualifier>
+          <label>Source funding</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
           <hint />
         </field>
       </row>
@@ -12287,7 +12303,7 @@ Colloquium Service Order 84 - Simultaneous Translation Service - Water Colloquiu
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
           <dc-qualifier>projectAmount</dc-qualifier>
-          <label>Amount of the grant (implemented)</label>
+          <label>Amount of the subsidy (executed in Peruvian soles)</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -14573,6 +14589,10 @@ Colloquium Service Order 84 - Simultaneous Translation Service - Water Colloquiu
       </pair>
     </value-pairs>
     <value-pairs value-pairs-name="peru_ppp_indicatortypes" dc-term="peru_ppp_indicatortypes">
+      <pair>
+        <displayed-value>Baseline Indicator</displayed-value>
+        <stored-value>Indicador de Linea de Base</stored-value>
+      </pair>
       <pair>
         <displayed-value>Monitoring Indicator</displayed-value>
         <stored-value>Indicador de Seguimiento</stored-value>

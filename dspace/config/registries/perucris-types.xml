@@ -3241,4 +3241,26 @@
 		<qualifier>acronym</qualifier>
     </dc-type>
 
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+		<qualifier>expostresults</qualifier>
+    </dc-type>
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+		<qualifier>relevanceresults</qualifier>
+    </dc-type>
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+		<qualifier>effectivenessresults</qualifier>
+    </dc-type>
+    <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+		<qualifier>efficiencyresults</qualifier>
+    </dc-type>
+
+
 </dspace-dc-types>

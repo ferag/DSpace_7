@@ -34,7 +34,7 @@
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Personal picture, logo, main article, etc.</hint>
+          <hint>Foto personal, logotipo, artículo principal, etc.</hint>
         </field>
       </row>
       <row>
@@ -4799,7 +4799,8 @@ ejemplo: el volumen de una revista.</hint>
           <input-type>date</input-type>
           <repeatable>false</repeatable>
           <required />
-          <hint>Fecha de puesta a disposición del público mediante impresión o procedimiento similar de un documento de patente concedido en esa fecha o antes. Puede omitir el día y/o el mes si no son aplicables.</hint>
+          <hint>Fecha de puesta a disposición del público mediante impresión o procedimiento similar de un documento de patente concedido en esa fecha o antes.
+Puede omitir el día y/o el mes si no son aplicables.</hint>
         </field>
       </row>
       <row>
@@ -5069,9 +5070,9 @@ ejemplo: el volumen de una revista.</hint>
           <label>Número de teléfono</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <validation>^[0-9 ]+$</validation>
           <required />
           <hint />
+          <validation>^[0-9 ]+$</validation>
         </field>
       </row>
       <row>
@@ -5081,9 +5082,9 @@ ejemplo: el volumen de una revista.</hint>
           <label>Número de teléfono móvil</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <validation>^[0-9 ]+$</validation>
           <required />
           <hint />
+          <validation>^[0-9 ]+$</validation>
         </field>
       </row>
       <row>
@@ -5117,9 +5118,9 @@ ejemplo: el volumen de una revista.</hint>
           <label>Resumen de biografía</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <validation>^(.|\s){0,2000}$</validation>
           <required />
           <hint>Ingrese un resumen de un perfil profesional y académico, relacionado con la CTI. (Máximo 2000 caracteres)</hint>
+          <validation>^(.|\s){0,2000}$</validation>
         </field>
       </row>
       <row>
@@ -5508,10 +5509,10 @@ ejemplo: el volumen de una revista.</hint>
           <dc-element>phone</dc-element>
           <label>Número de teléfono</label>
           <input-type>onebox</input-type>
-          <validation>^[0-9 ]+$</validation>
           <repeatable>true</repeatable>
           <required />
           <hint />
+          <validation>^[0-9 ]+$</validation>
         </field>
       </row>
       <row>
@@ -5520,10 +5521,10 @@ ejemplo: el volumen de una revista.</hint>
           <dc-element>mobilePhone</dc-element>
           <label>Número de teléfono móvil</label>
           <input-type>onebox</input-type>
-          <validation>^[0-9 ]+$</validation>
           <repeatable>true</repeatable>
           <required />
           <hint />
+          <validation>^[0-9 ]+$</validation>
         </field>
       </row>
       <row>
@@ -5558,8 +5559,8 @@ ejemplo: el volumen de una revista.</hint>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
-          <validation>^(.|\s){0,2000}$</validation>
           <hint>Ingrese un resumen de un perfil profesional y académico, relacionado con la CTI. (Máximo 2000 caracteres)</hint>
+          <validation>^(.|\s){0,2000}$</validation>
         </field>
       </row>
       <row>
@@ -5905,9 +5906,9 @@ ejemplo: el volumen de una revista.</hint>
           <label>Número de teléfono</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <validation>^[0-9 ]+$</validation>
           <required />
           <hint />
+          <validation>^[0-9 ]+$</validation>
         </field>
       </row>
       <row>
@@ -5917,9 +5918,9 @@ ejemplo: el volumen de una revista.</hint>
           <label>Número de teléfono móvil</label>
           <input-type>onebox</input-type>
           <repeatable>true</repeatable>
-          <validation>^[0-9 ]+$</validation>
           <required />
           <hint />
+          <validation>^[0-9 ]+$</validation>
         </field>
       </row>
       <row>
@@ -5953,9 +5954,9 @@ ejemplo: el volumen de una revista.</hint>
           <label>Resumen de biografía</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
-          <validation>^(.|\s){0,2000}$</validation>
           <required />
           <hint>Ingrese un resumen de un perfil profesional y académico, relacionado con la CTI. (Máximo 2000 caracteres)</hint>
+          <validation>^(.|\s){0,2000}$</validation>
         </field>
       </row>
       <row>
@@ -8468,6 +8469,7 @@ ejemplo: el volumen de una revista.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Considerar números enteros sin decimales, ni separaciones. Ejemplo: 150000</hint>
+          <validation>^[0-9 ]+$</validation>
         </field>
         <field>
           <dc-schema>oairecerif</dc-schema>
@@ -8675,6 +8677,7 @@ ejemplo: el volumen de una revista.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Considerar números enteros sin decimales, ni separaciones. Ejemplo: 150000</hint>
+          <validation>^[0-9 ]+$</validation>
         </field>
         <field>
           <dc-schema>oairecerif</dc-schema>
@@ -8875,6 +8878,7 @@ ejemplo: el volumen de una revista.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Considerar números enteros sin decimales, ni separaciones. Ejemplo: 150000</hint>
+          <validation>^[0-9 ]+$</validation>
         </field>
         <field>
           <dc-schema>oairecerif</dc-schema>
@@ -9081,6 +9085,7 @@ ejemplo: el volumen de una revista.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Considerar números enteros sin decimales, ni separaciones. Ejemplo: 150000</hint>
+          <validation>^[0-9 ]+$</validation>
         </field>
         <field>
           <dc-schema>oairecerif</dc-schema>
@@ -9355,7 +9360,7 @@ ejemplo: el volumen de una revista.</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
           <dc-qualifier>monitoringYear</dc-qualifier>
-          <label>Año de evaluación</label>
+          <label>Año de seguimiento</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -10081,7 +10086,7 @@ ejemplo: el volumen de una revista.</hint>
           <label>Tipo Plan</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>Ingresar un Tipo plan</required>
+          <required />
           <hint />
         </field>
       </row>
@@ -10965,8 +10970,8 @@ ejemplo: el volumen de una revista.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <validation>^[0-9]{8}$</validation>
           <hint>Valor Esperado: 8 dígitos</hint>
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
       <row>
@@ -10978,8 +10983,8 @@ ejemplo: el volumen de una revista.</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
-          <validation>^[0-9]{8}$</validation>
           <hint>Valor Obtenido: 8 dígitos</hint>
+          <validation>^[0-9]{8}$</validation>
         </field>
       </row>
     </form>
@@ -11017,6 +11022,7 @@ ejemplo: el volumen de una revista.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Ejemplo: Número</hint>
+          <validation>^\D+$</validation>
         </field>
       </row>
       <row>
@@ -11024,7 +11030,7 @@ ejemplo: el volumen de una revista.</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
           <dc-qualifier>indicatorResponsible</dc-qualifier>
-          <label>Responsable de medir y reportar el indicador</label>
+          <label>Responsable de reportar el avance del indicador</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -11065,7 +11071,7 @@ ejemplo: el volumen de una revista.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Ejemplo: 1500</hint>
-          <validation>^[0-9]+$</validation>
+          <validation>^[0-9]+(.)?([0-9]+)?(%)?$</validation>
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -11535,7 +11541,7 @@ ejemplo: el volumen de una revista.</hint>
           <dc-element>ppp</dc-element>
           <dc-qualifier>targetPopulation</dc-qualifier>
           <label>Público Objetivo</label>
-          <input-type>onebox</input-type>
+          <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
           <hint />
@@ -11580,7 +11586,7 @@ ejemplo: el volumen de una revista.</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
           <dc-qualifier>expectedFundedAmount</dc-qualifier>
-          <label>Subvención total prevista</label>
+          <label>Subvención total prevista (PEN)</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -11663,8 +11669,8 @@ ejemplo: el volumen de una revista.</hint>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
-          <dc-qualifier>scientificProductionResult</dc-qualifier>
-          <label>Principales resultados obtenidos en cuanto a producción científica</label>
+          <dc-qualifier>expostresults</dc-qualifier>
+          <label>Principales resultados ex post en CTI del concurso</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -11675,8 +11681,8 @@ ejemplo: el volumen de una revista.</hint>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
-          <dc-qualifier>humanCapitalResult</dc-qualifier>
-          <label>Principales resultados en cuanto a formación de capital humano para la CTI</label>
+          <dc-qualifier>relevanceresults</dc-qualifier>
+          <label>Principales resultados en cuanto a la pertinencia del concurso</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -11687,8 +11693,8 @@ ejemplo: el volumen de una revista.</hint>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
-          <dc-qualifier>technologicalProductionResult</dc-qualifier>
-          <label>Principales resultados en cuanto a producción tecnológica</label>
+          <dc-qualifier>effectivenessresults</dc-qualifier>
+          <label>Principales resultados en cuanto a la eficacia concurso</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -11699,20 +11705,8 @@ ejemplo: el volumen de una revista.</hint>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
-          <dc-qualifier>innovationResult</dc-qualifier>
-          <label>Principales resultados en cuanto a innovación</label>
-          <input-type>textarea</input-type>
-          <repeatable>false</repeatable>
-          <required />
-          <hint />
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>ppp</dc-element>
-          <dc-qualifier>achievement</dc-qualifier>
-          <label>Principales resultados en otros aspectos</label>
+          <dc-qualifier>efficiencyresults</dc-qualifier>
+          <label>Principales resultados en cuanto a la eficiencia del concurso</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -11967,18 +11961,6 @@ ejemplo: el volumen de una revista.</hint>
         <field>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
-          <dc-qualifier>responsibleEntity</dc-qualifier>
-          <label>Institución Responsable</label>
-          <input-type>onebox</input-type>
-          <repeatable>true</repeatable>
-          <required />
-          <hint>Ejemplo: Gobierno Regional de Amazonas, DRE AMAZONAS</hint>
-        </field>
-      </row>
-      <row>
-        <field>
-          <dc-schema>perucris</dc-schema>
-          <dc-element>ppp</dc-element>
           <dc-qualifier>executionResponsible</dc-qualifier>
           <label>Institución responsable de la ejecución</label>
           <input-type>onebox</input-type>
@@ -12123,7 +12105,7 @@ Orden de Servicio 84 - Servicio de traduccion simultanea - Coloquio Agua</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
           <dc-qualifier>fundingCode</dc-qualifier>
-          <label>Codigo Financiamento</label>
+          <label>Fuente de financiamiento</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -12197,10 +12179,10 @@ Orden de Servicio 84 - Servicio de traduccion simultanea - Coloquio Agua</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
           <dc-qualifier>teamMember</dc-qualifier>
-          <label>Gestor de Proyecto o Investigador</label>
+          <label>Nombre del integrante</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>Ingresar Gestor de Proyecto o Investigador</required>
+          <required>Ingresar Nombre del integrante</required>
           <hint />
         </field>
       </row>
@@ -12212,7 +12194,7 @@ Orden de Servicio 84 - Servicio de traduccion simultanea - Coloquio Agua</hint>
           <label>Tipo de Integrante</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>Ingresar Tipo de Integrante</required>
+          <required />
           <hint />
         </field>
       </row>
@@ -12238,6 +12220,41 @@ Orden de Servicio 84 - Servicio de traduccion simultanea - Coloquio Agua</hint>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required>Ingresar un nombre</required>
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>oairecerif</dc-schema>
+          <dc-element>internalid</dc-element>
+          <label>Código</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>description</dc-element>
+          <dc-qualifier>abstract</dc-qualifier>
+          <label>Descripción</label>
+          <input-type>textarea</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>dc</dc-schema>
+          <dc-element>relation</dc-element>
+          <dc-qualifier>funding</dc-qualifier>
+          <label>Financiamiento de origen</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
           <hint />
         </field>
       </row>
@@ -12296,7 +12313,7 @@ Orden de Servicio 84 - Servicio de traduccion simultanea - Coloquio Agua</hint>
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
           <dc-qualifier>projectAmount</dc-qualifier>
-          <label>Monto de la subvención (ejecutado)</label>
+          <label>Monto de la subvención (ejecutado en PEN)</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -13277,7 +13294,7 @@ Orden de Servicio 84 - Servicio de traduccion simultanea - Coloquio Agua</hint>
         <stored-value>https://purl.org/pe-repo/sunedu/tipoInstitucion#08</stored-value>
       </pair>
     </value-pairs>
-      <value-pairs value-pairs-name="coar_versions" dc-term="coar_versions">
+    <value-pairs value-pairs-name="coar_versions" dc-term="coar_versions">
       <pair>
         <displayed-value>Sin especificar</displayed-value>
         <stored-value />
@@ -14578,6 +14595,10 @@ Orden de Servicio 84 - Servicio de traduccion simultanea - Coloquio Agua</hint>
       </pair>
     </value-pairs>
     <value-pairs value-pairs-name="peru_ppp_indicatortypes" dc-term="peru_ppp_indicatortypes">
+      <pair>
+        <displayed-value>Indicador de Linea de Base</displayed-value>
+        <stored-value>Indicador de Linea de Base</stored-value>
+      </pair>
       <pair>
         <displayed-value>Indicador de Seguimiento</displayed-value>
         <stored-value>Indicador de Seguimiento</stored-value>

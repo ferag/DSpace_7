@@ -10963,7 +10963,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Expected Value: 8 digits</hint>
-          <validation>^[0-9]+$</validation>
+          <validation>^[0-9 ]+$</validation>
         </field>
       </row>
       <row>
@@ -10976,7 +10976,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Obtained Value: 8 digits</hint>
-          <validation>^[0-9]+$</validation>
+          <validation>^[0-9 ]+$</validation>
         </field>
       </row>
     </form>

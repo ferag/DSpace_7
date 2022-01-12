@@ -10973,7 +10973,7 @@ Puede omitir el día y/o el mes si no son aplicables.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Valor Esperado: 8 dígitos</hint>
-          <validation>^[0-9]{8}$</validation>
+          <validation>^[0-9 ]+$</validation>
         </field>
       </row>
       <row>
@@ -10986,7 +10986,7 @@ Puede omitir el día y/o el mes si no son aplicables.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Valor Obtenido: 8 dígitos</hint>
-          <validation>^[0-9]{8}$</validation>
+          <validation>^[0-9 ]+$</validation>
         </field>
       </row>
     </form>

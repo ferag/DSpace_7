@@ -28,7 +28,6 @@
     "perucris_editor_orcid" : [
             "@perucris.editor.orcid@",
         ],
-    "oaire_citation_volume" : "@oaire.citation.volume@",
     "dc_identifier_doi" : "@dc.identifier.doi@",
     "dc_subject_ocde_innersector" : [
             "@virtual.vocabulary.perucris-subject-ocde.2@",
@@ -96,7 +95,9 @@
     "perucris_editor_dni" : [
             "@perucris.editor.dni@",
         ],
-    "dc_relation_grantno" : "@dc.relation.grantno@",
+    "dc_relation_grantno" : [
+            "@dc.relation.grantno@",
+        ],
     "dc_identifier_isi" : "@dc.identifier.isi@",
     "dc_coverage_publication" : "@dc.coverage.publication@",
     "dc_contributor_advisor" : [

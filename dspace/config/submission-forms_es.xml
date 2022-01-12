@@ -8491,6 +8491,7 @@ Puede omitir el día y/o el mes si no son aplicables.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Considerar números enteros sin decimales, ni separaciones. Ejemplo: 125200</hint>
+          <validation>^[0-9 ]+$</validation>
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -8699,6 +8700,7 @@ Puede omitir el día y/o el mes si no son aplicables.</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Considerar números enteros sin decimales, ni separaciones. Ejemplo: 125200</hint>
+          <validation>^[0-9 ]+$</validation>
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -12088,6 +12090,7 @@ Orden de Servicio 84 - Servicio de traduccion simultanea - Coloquio Agua</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Ejemplo: 15000</hint>
+          <validation>^[0-9 ]+$</validation>
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -12098,6 +12101,7 @@ Orden de Servicio 84 - Servicio de traduccion simultanea - Coloquio Agua</hint>
           <repeatable>false</repeatable>
           <required />
           <hint>Ejemplo: 10000</hint>
+          <validation>^[0-9 ]+$</validation>
         </field>
       </row>
       <row>

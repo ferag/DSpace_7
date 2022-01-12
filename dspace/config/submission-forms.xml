@@ -8459,7 +8459,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Use integer number, without decimals or separators, example: 150000</hint>
-          <validation>[0-9]+</validation>
+          <validation>^[0-9 ]+$</validation>
         </field>
         <field>
           <dc-schema>oairecerif</dc-schema>
@@ -8481,6 +8481,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Use integer number, without decimals or separators, example: 125200</hint>
+          <validation>^[0-9 ]+$</validation>
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -8689,6 +8690,7 @@
           <repeatable>false</repeatable>
           <required />
           <hint>Use integer number, without decimals or separators, example: 125200</hint>
+          <validation>^[0-9 ]+$</validation>
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -12078,6 +12080,7 @@ Colloquium Service Order 84 - Simultaneous Translation Service - Water Colloquiu
           <repeatable>false</repeatable>
           <required />
           <hint>Example: 15000</hint>
+          <validation>^[0-9 ]+$</validation>
         </field>
         <field>
           <dc-schema>perucris</dc-schema>
@@ -12088,6 +12091,7 @@ Colloquium Service Order 84 - Simultaneous Translation Service - Water Colloquiu
           <repeatable>false</repeatable>
           <required />
           <hint>Example: 10000</hint>
+          <validation>^[0-9 ]+$</validation>
         </field>
       </row>
       <row>

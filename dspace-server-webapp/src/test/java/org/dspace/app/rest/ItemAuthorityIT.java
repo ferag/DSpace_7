@@ -131,18 +131,21 @@ public class ItemAuthorityIT extends AbstractControllerIntegrationTest {
             .param("filter", "author"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$._embedded.entries", Matchers.containsInAnyOrder(
-                ItemAuthorityMatcher.matchItemAuthorityWithOtherInformations(author_1.getID().toString(),
+                ItemAuthorityMatcher.matchItemAuthorityWithThreeMetadataOtherInformations(author_1.getID().toString(),
                     "Author 1", "Author 1", "vocabularyEntry",
                     "data-oairecerif_author_affiliation", "OrgUnit_1::"
-                        + orgUnit_1.getID()),
-                ItemAuthorityMatcher.matchItemAuthorityWithOtherInformations(author_2.getID().toString(),
+                        + orgUnit_1.getID(), "data-perucris_author_dni", "",
+                    "data-perucris_author_orcid", ""),
+                ItemAuthorityMatcher.matchItemAuthorityWithThreeMetadataOtherInformations(author_2.getID().toString(),
                     "Author 2", "Author 2", "vocabularyEntry",
                     "data-oairecerif_author_affiliation", "OrgUnit_1::"
-                        + orgUnit_1.getID()),
-                ItemAuthorityMatcher.matchItemAuthorityWithOtherInformations(author_3.getID().toString(),
+                        + orgUnit_1.getID(), "data-perucris_author_dni", "",
+                    "data-perucris_author_orcid", ""),
+                ItemAuthorityMatcher.matchItemAuthorityWithThreeMetadataOtherInformations(author_3.getID().toString(),
                     "Author 3", "Author 3", "vocabularyEntry",
                     "data-oairecerif_author_affiliation", "OrgUnit_2::"
-                        + orgUnit_2.getID()))))
+                        + orgUnit_2.getID(), "data-perucris_author_dni", "",
+                    "data-perucris_author_orcid", ""))))
             .andExpect(jsonPath("$.page.totalElements", Matchers.is(3)));
     }
 
@@ -214,14 +217,16 @@ public class ItemAuthorityIT extends AbstractControllerIntegrationTest {
             .param("filter", "author"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$._embedded.entries", Matchers.containsInAnyOrder(
-                ItemAuthorityMatcher.matchItemAuthorityWithOtherInformations(author_1.getID().toString(),
+                ItemAuthorityMatcher.matchItemAuthorityWithThreeMetadataOtherInformations(author_1.getID().toString(),
                     "Author 1", "Author 1", "vocabularyEntry",
                     "data-oairecerif_author_affiliation", "OrgUnit_1::"
-                        + orgUnit_1.getID()),
-                ItemAuthorityMatcher.matchItemAuthorityWithOtherInformations(author_2.getID().toString(),
+                        + orgUnit_1.getID(), "data-perucris_author_dni", "",
+                    "data-perucris_author_orcid", ""),
+                ItemAuthorityMatcher.matchItemAuthorityWithThreeMetadataOtherInformations(author_2.getID().toString(),
                     "Author 2", "Author 2", "vocabularyEntry",
                     "data-oairecerif_author_affiliation", "OrgUnit_1::"
-                        + orgUnit_1.getID()))))
+                        + orgUnit_1.getID(), "data-perucris_author_dni", "",
+                    "data-perucris_author_orcid", ""))))
             .andExpect(jsonPath("$.page.totalElements", Matchers.is(2)));
     }
 
@@ -291,17 +296,29 @@ public class ItemAuthorityIT extends AbstractControllerIntegrationTest {
                     "Author 1(OrgUnit_1)", "Author 1", "vocabularyEntry",
                     "data-oairecerif_author_affiliation", "OrgUnit_1::" + orgUnit_1.getID()),
                 ItemAuthorityMatcher.matchItemAuthorityWithOtherInformations(author_1.getID().toString(),
+                    "Author 1", "Author 1", "vocabularyEntry",
+                    "data-perucris_author_orcid", ""),
+                ItemAuthorityMatcher.matchItemAuthorityWithOtherInformations(author_1.getID().toString(),
+                    "Author 1", "Author 1", "vocabularyEntry",
+                    "data-perucris_author_dni", ""),
+                ItemAuthorityMatcher.matchItemAuthorityWithOtherInformations(author_1.getID().toString(),
                     "Author 1(OrgUnit_2)", "Author 1", "vocabularyEntry",
                     "data-oairecerif_author_affiliation", "OrgUnit_2::" + orgUnit_2.getID()),
                 ItemAuthorityMatcher.matchItemAuthorityWithOtherInformations(author_2.getID().toString(),
                     "Author 2(OrgUnit_2)", "Author 2", "vocabularyEntry",
                     "data-oairecerif_author_affiliation", "OrgUnit_2::" + orgUnit_2.getID()),
+                ItemAuthorityMatcher.matchItemAuthorityWithOtherInformations(author_2.getID().toString(),
+                    "Author 2", "Author 2", "vocabularyEntry",
+                    "data-perucris_author_orcid", ""),
+                ItemAuthorityMatcher.matchItemAuthorityWithOtherInformations(author_2.getID().toString(),
+                    "Author 2", "Author 2", "vocabularyEntry",
+                    "data-perucris_author_dni", ""),
                 // filled with EditorAuthority extra metadata generator
                 ItemAuthorityMatcher.matchItemAuthorityProperties(author_1.getID().toString(),
                     "Author 1", "Author 1", "vocabularyEntry"),
                 ItemAuthorityMatcher.matchItemAuthorityProperties(author_2.getID().toString(),
                     "Author 2", "Author 2", "vocabularyEntry"))))
-            .andExpect(jsonPath("$.page.totalElements", Matchers.is(5)));
+            .andExpect(jsonPath("$.page.totalElements", Matchers.is(9)));
     }
 
     @Test
@@ -328,9 +345,11 @@ public class ItemAuthorityIT extends AbstractControllerIntegrationTest {
             .param("collection", col1.getID().toString())
             .param("filter", "author"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$._embedded.entries", Matchers.contains(
-                ItemAuthorityMatcher.matchItemAuthorityWithOtherInformations(author_1.getID().toString(),
-                    "Author 1", "Author 1", "vocabularyEntry", "data-oairecerif_author_affiliation", ""))))
+            .andExpect(jsonPath("$._embedded.entries", Matchers.hasItems(
+                ItemAuthorityMatcher.matchItemAuthorityWithThreeMetadataOtherInformations(author_1.getID().toString(),
+                    "Author 1", "Author 1", "vocabularyEntry", "data-oairecerif_author_affiliation", "",
+                    "data-perucris_author_dni", "",
+                    "data-perucris_author_orcid", ""))))
             .andExpect(jsonPath("$.page.totalElements", Matchers.is(1)));
     }
 

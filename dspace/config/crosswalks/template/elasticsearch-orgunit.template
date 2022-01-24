@@ -7,15 +7,23 @@
       "organization_parentOrganization" : "@organization.parentOrganization@",
       "organization_address_addressCountry" : "@organization.address.addressCountry@",
       "organization_address_addressLocality" : "@organization.address.addressLocality@",
-      "organization_identifier_scopusaffid" : "@organization.identifier.scopusaffid@",
-      "organization_identifier_ruc" : "@organization.identifier.ruc@",
+      "organization_identifier_scopusaffid" : [
+                "@organization.identifier.scopusaffid@",
+             ],
+      "organization_identifier_ruc" : [
+                "@organization.identifier.ruc@",
+             ],
       "perucris_sti_actions" : "@perucris.sti.actions@",
       "organization_legalName" : "@organization.legalName@",
-      "organization_identifier_rin" : "@organization.identifier.rin@",
+      "organization_identifier_rin" : [
+                "@organization.identifier.rin@",
+             ],
       "perucris_sti_formalUnit" : "@perucris.sti.formalUnit@",
       "perucris_sti_qualityCertified" : "@perucris.sti.qualityCertified@",
       "perucris_type_sectorInstitucional" : "@perucris.type.sectorInstitucional@",
-      "organization_identifier_ror" : "@organization.identifier.ror@",
+      "organization_identifier_ror" : [
+                    "@organization.identifier.ror@",
+               ],
       "dc_description_abstract" : "@dc.description.abstract@",
       "perucris_type_educacionSuperior" : "@perucris.type.educacionSuperior@",
       "dc_subject_ocde" : [
@@ -30,8 +38,12 @@
         ],
       "perucris_type_naturaleza" : "@perucris.type.naturaleza@",
       "dc_title" : "@dc.title@",
-      "organization_identifier_crossrefid" : "@organization.identifier.crossrefid@",
-      "organization_identifier_isni" : "@organization.identifier.isni@",
+      "organization_identifier_crossrefid" : [
+              "@organization.identifier.crossrefid@",
+         ],
+      "organization_identifier_isni" : [
+              "@organization.identifier.isni@",
+          ],
       "oairecerif_identifier_url" : [
               "@oairecerif.identifier.url@",
           ],

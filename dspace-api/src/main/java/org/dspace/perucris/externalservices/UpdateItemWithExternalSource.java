@@ -112,6 +112,10 @@ public class UpdateItemWithExternalSource
         if (externalService == null) {
             throw new IllegalArgumentException("The name of service must be provided");
         }
+        if (invalidSingleUuid()) {
+            throw new IllegalArgumentException("The itemUuid specified is not valid");
+        }
+
         if (Objects.nonNull(this.singleUuid)) {
             this.limit = 0;
             this.lastCompleted = false;
@@ -127,6 +131,13 @@ public class UpdateItemWithExternalSource
         } finally {
             context.restoreAuthSystemState();
         }
+    }
+
+    private boolean invalidSingleUuid() {
+        if (StringUtils.isBlank(commandLine.getOptionValue("u"))) {
+            return false;
+        }
+        return Objects.isNull(this.singleUuid);
     }
 
     private void performUpdate(Context context, PeruExternalService externalService, String service) {

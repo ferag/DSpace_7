@@ -67,7 +67,7 @@ public class UpdateItemWithExternalSourceScriptConfiguration<T extends UpdateIte
             options.getOption("l").setRequired(false);
 
             options.addOption("u", "itemUuid", true, "update only the item passed on this param");
-            options.getOption("u").setType(UUID.class);
+            options.getOption("u").setType(String.class);
             options.getOption("u").setRequired(false);
 
             super.options = options;

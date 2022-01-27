@@ -136,6 +136,36 @@
         <property name="filter" ref="equipment-has-valid-usage-type_filter"/>
     </bean>
 
+    <bean name="organizationHasValidRuc" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.invalidRuc"/>
+        <property name="metadataFields">
+            <list>
+                <value>organization.identifier.ruc</value>
+            </list>
+        </property>
+        <property name="filter" ref="organization-has-valid-ruc_filter"/>
+    </bean>
+
+    <bean name="organizationHasValidScopusAffiliationId" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.invalidScopusAffid"/>
+        <property name="metadataFields">
+            <list>
+                <value>organization.identifier.scopusaffid</value>
+            </list>
+        </property>
+        <property name="filter" ref="organization-has-valid-scopus-aff-id_filter"/>
+    </bean>
+
+    <bean name="organizationHasValidRinggold" class="org.dspace.validation.LogicalStatementValidator">
+        <property name="errorKey" value="error.validation.invalidRin"/>
+        <property name="metadataFields">
+            <list>
+                <value>organization.identifier.rin</value>
+            </list>
+        </property>
+        <property name="filter" ref="organization-has-valid-rin_filter"/>
+    </bean>
+
     <!-- FIXME: CHECK SUBMISSION FORM BEHAVIOUR CSTPER-874 -->
 <!--    <bean name="higherEducationTypeFilterSet" class="org.dspace.validation.LogicalStatementValidator">-->
 <!--        <property name="errorKey" value="error.validation.HigherEducationNotSet"/>-->

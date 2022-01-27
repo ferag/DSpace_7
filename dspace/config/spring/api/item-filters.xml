@@ -516,6 +516,69 @@
         </property>
     </bean>
 
+    <!-- has organization.identifier.ruc set-->
+    <bean id="has-organization-identifier-ruc-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="organization.identifier.ruc" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has organization.identifier.ruc composed by 11 digits-->
+    <bean id="organization-identifier-ruc-numeric_condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="organization.identifier.ruc" />
+                <entry key="pattern" value="^\d{11}$" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has organization.identifier.scopusaffid set-->
+    <bean id="has-organization-identifier-scopusaffid-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="organization.identifier.scopusaffid" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has organization.identifier.scopusaffid composed by digits-->
+    <bean id="organization-identifier-scopusaffid-numeric_condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="organization.identifier.scopusaffid" />
+                <entry key="pattern" value="^\d+$" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has organization.identifier.rin set-->
+    <bean id="has-organization-identifier-rin-set_condition"
+          class="org.dspace.content.logic.condition.RequiredMetadataCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="organization.identifier.rin" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- has organization.identifier.rin composed by digits-->
+    <bean id="organization-identifier-rin-numeric_condition"
+          class="org.dspace.content.logic.condition.MetadataValueMatchCondition">
+        <property name="parameters">
+            <map>
+                <entry key="field" value="organization.identifier.rin" />
+                <entry key="pattern" value="^\d+$" />
+            </map>
+        </property>
+    </bean>
+
     <!-- dc.type from peru_equipment_type value-pair condition-->
     <bean id="equipment-dc-type-from-controlled-list_condition"
           class="org.dspace.content.logic.condition.ValueInControlledListCondition">
@@ -1197,6 +1260,72 @@
                         <ref bean="knows-language-from-controlled-list_condition"/>
                     </list>
 
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="organization-has-valid-ruc_filter" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="relationship-type-equals-orgunit_condition"/>
+                            </property>
+                        </bean>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="has-organization-identifier-ruc-set_condition"/>
+                            </property>
+                        </bean>
+                        <ref bean="organization-identifier-ruc-numeric_condition"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="organization-has-valid-scopus-aff-id_filter" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="relationship-type-equals-orgunit_condition"/>
+                            </property>
+                        </bean>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="has-organization-identifier-scopusaffid-set_condition"/>
+                            </property>
+                        </bean>
+                        <ref bean="organization-identifier-scopusaffid-numeric_condition"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="organization-has-valid-rin_filter" class="org.dspace.content.logic.DefaultFilter">
+        <property name="statement">
+            <bean class="org.dspace.content.logic.operator.Or">
+                <property name="statements">
+                    <list>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="relationship-type-equals-orgunit_condition"/>
+                            </property>
+                        </bean>
+                        <bean class="org.dspace.content.logic.operator.Not">
+                            <property name="statements">
+                                <ref bean="has-organization-identifier-rin-set_condition"/>
+                            </property>
+                        </bean>
+                        <ref bean="organization-identifier-rin-numeric_condition"/>
+                    </list>
                 </property>
             </bean>
         </property>

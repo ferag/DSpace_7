@@ -12315,6 +12315,16 @@ Orden de Servicio 84 - Servicio de traduccion simultanea - Coloquio Agua</hint>
           <required />
           <hint />
         </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>incidenceArea</dc-qualifier>
+          <label>Área de incidencia (departamento)</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Ejemplo: Arequipa</hint>
+        </field>
       </row>
       <row>
         <field>

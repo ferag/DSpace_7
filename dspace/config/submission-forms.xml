@@ -12305,6 +12305,16 @@ Colloquium Service Order 84 - Simultaneous Translation Service - Water Colloquiu
           <required />
           <hint />
         </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>incidenceArea</dc-qualifier>
+          <label>Area of incidence (department)</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Example: Arequipa</hint>
+        </field>
       </row>
       <row>
         <field>

@@ -3127,6 +3127,13 @@
     </dc-type>
 
     <dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>incidenceArea</qualifier>
+        <scope_note />
+    </dc-type>
+
+    <dc-type>
         <schema>oaire</schema>
         <element>citation</element>
         <qualifier>number</qualifier>

@@ -8,7 +8,6 @@
 package org.dspace.perucris.externalservices;
 
 import java.sql.SQLException;
-import java.util.UUID;
 
 import org.apache.commons.cli.Options;
 import org.dspace.authorize.service.AuthorizeService;

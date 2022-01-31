@@ -156,6 +156,10 @@ public class UpdateItemWithExternalSource
                 context.uncacheEntity(itemToUpdate);
                 if (updated) {
                     countUpdatedItems++;
+                    handler.logInfo("Item " + item.getID() + " updated");
+                }
+                else {
+                    handler.logInfo("Item " + item.getID() + " not updated");
                 }
                 count++;
                 if (this.limit == count) {

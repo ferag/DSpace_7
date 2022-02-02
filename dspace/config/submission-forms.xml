@@ -12177,7 +12177,7 @@ Colloquium Service Order 84 - Simultaneous Translation Service - Water Colloquiu
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
           <dc-qualifier>fundingCode</dc-qualifier>
-          <label>Financing source</label>
+          <label>Funding Code</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />

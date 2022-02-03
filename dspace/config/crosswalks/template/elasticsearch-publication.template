@@ -1,6 +1,8 @@
 {
     "resourceId" : "@virtual.id@",
-    "dc_relation_ispartof" : "@dc.relation.ispartof@",
+    "dc_relation_ispartof" : [
+                "@dc.relation.ispartof@",
+           ],
     "dc_relation_funding" : [
                 "@dc.relation.funding@",
             ],
@@ -87,7 +89,6 @@
         ],
     "oaire_version" : "@oaire.version@",
     "dc_coverage_isbn" : "@dc.coverage.isbn@",
-    "oaire_citation_issue" : "@oaire.citation.issue@",
     "dc_description" : "@dc.description@",
     "dc_identifier_pmid" : "@dc.identifier.pmid@",
     "dc_relation_doi" : "@dc.relation.doi@",

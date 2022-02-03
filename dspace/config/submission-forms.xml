@@ -6450,7 +6450,46 @@
         <field>
           <dc-schema>organization</dc-schema>
           <dc-element>identifier</dc-element>
-          <label>Identifiers</label>
+          <dc-qualifier>ruc</dc-qualifier>
+          <label>Ruc</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <validation>^\d{11}$</validation>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>organization</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>scopusaffid</dc-qualifier>
+          <label>Scopus AffId</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <validation>^\d+$</validation>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>organization</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>rin</dc-qualifier>
+          <label>Ringgold identifier</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <validation>^\d+$</validation>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>organization</dc-schema>
+          <dc-element>identifier</dc-element>
+          <label>Other Identifiers</label>
           <input-type value-pairs-name="orgunit_identifiers">qualdrop_value</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -6789,7 +6828,46 @@
         <field>
           <dc-schema>organization</dc-schema>
           <dc-element>identifier</dc-element>
-          <label>Identifiers</label>
+          <dc-qualifier>ruc</dc-qualifier>
+          <label>Ruc</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <validation>^\d{11}$</validation>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>organization</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>scopusaffid</dc-qualifier>
+          <label>Scopus AffId</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <validation>^\d+$</validation>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>organization</dc-schema>
+          <dc-element>identifier</dc-element>
+          <dc-qualifier>rin</dc-qualifier>
+          <label>Ringgold identifier</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <validation>^\d+$</validation>
+          <required />
+          <hint />
+        </field>
+      </row>
+      <row>
+        <field>
+          <dc-schema>organization</dc-schema>
+          <dc-element>identifier</dc-element>
+          <label>Other Identifiers</label>
           <input-type value-pairs-name="orgunit_identifiers">qualdrop_value</input-type>
           <repeatable>true</repeatable>
           <required />
@@ -12099,7 +12177,7 @@ Colloquium Service Order 84 - Simultaneous Translation Service - Water Colloquiu
           <dc-schema>perucris</dc-schema>
           <dc-element>ppp</dc-element>
           <dc-qualifier>fundingCode</dc-qualifier>
-          <label>Financing source</label>
+          <label>Funding Code</label>
           <input-type>textarea</input-type>
           <repeatable>false</repeatable>
           <required />
@@ -12226,6 +12304,16 @@ Colloquium Service Order 84 - Simultaneous Translation Service - Water Colloquiu
           <repeatable>false</repeatable>
           <required />
           <hint />
+        </field>
+        <field>
+          <dc-schema>perucris</dc-schema>
+          <dc-element>ppp</dc-element>
+          <dc-qualifier>incidenceArea</dc-qualifier>
+          <label>Area of incidence (department)</label>
+          <input-type>onebox</input-type>
+          <repeatable>false</repeatable>
+          <required />
+          <hint>Example: Arequipa</hint>
         </field>
       </row>
       <row>
@@ -13022,18 +13110,6 @@ Colloquium Service Order 84 - Simultaneous Translation Service - Water Colloquiu
       <pair>
         <displayed-value>ISNI - International Standard Name Identifier</displayed-value>
         <stored-value>isni</stored-value>
-      </pair>
-      <pair>
-        <displayed-value>Ringgold identifier</displayed-value>
-        <stored-value>rin</stored-value>
-      </pair>
-      <pair>
-        <displayed-value>RUC</displayed-value>
-        <stored-value>ruc</stored-value>
-      </pair>
-      <pair>
-        <displayed-value>Scopus AffId</displayed-value>
-        <stored-value>scopusaffid</stored-value>
       </pair>
     </value-pairs>
     <value-pairs value-pairs-name="truefalse" dc-term="truefalse">
@@ -14298,11 +14374,11 @@ Colloquium Service Order 84 - Simultaneous Translation Service - Water Colloquiu
         <stored-value>GB</stored-value>
       </pair>
       <pair>
-        <displayed-value>United States</displayed-value>
+        <displayed-value>United States Minor Outlying Islands</displayed-value>
         <stored-value>UM</stored-value>
       </pair>
       <pair>
-        <displayed-value>United States Minor Outlying Islands</displayed-value>
+        <displayed-value>United States</displayed-value>
         <stored-value>US</stored-value>
       </pair>
       <pair>

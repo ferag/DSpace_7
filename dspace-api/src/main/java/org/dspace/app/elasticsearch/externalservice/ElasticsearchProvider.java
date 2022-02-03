@@ -83,6 +83,7 @@ public class ElasticsearchProvider {
             if (status != HttpStatus.SC_CREATED) {
                 logger.warn("It was not possible to CREATE document with uuid: " + record.getId()
                         + "  Elasticsearch returned status code : " + status);
+                logger.warn("document: " + json);
             }
         }
     }

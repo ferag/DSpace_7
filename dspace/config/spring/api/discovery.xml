@@ -589,7 +589,7 @@
         <!--Which sidebar facets are to be displayed (same as defaultConfiguration above)-->
         <property name="sidebarFacets">
             <list>
-                <ref bean="searchFilterType" />
+                <ref bean="searchFilterTypes" />
                 <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterAuthor" />
@@ -598,7 +598,6 @@
                 <ref bean="searchFilterContentInOriginalBundle"/>
                 <ref bean="searchFilterEntityType"/>
                 <ref bean="searchFilterLanguage" />
-                <ref bean="searchFilterTypes" />
             </list>
         </property>
         <!-- Set TagCloud configuration per discovery configuration -->
@@ -606,7 +605,7 @@
         <!--The search filters which can be used on the discovery search page (same as defaultConfiguration above)-->
         <property name="searchFilters">
             <list>
-                <ref bean="searchFilterType" />
+                <ref bean="searchFilterTypes" />
                 <ref bean="graphItemByType" />
                 <ref bean="graphPublicationByDate" />
                 <ref bean="searchFilterTitle" />
@@ -620,7 +619,6 @@
                 <ref bean="searchFilterEntityType"/>
                 <ref bean="searchFilterHiddenWithdrawn"/>
                 <ref bean="searchFilterLanguage" />
-                <ref bean="searchFilterTypes" />
             </list>
         </property>
         <!--The sort filters for the discovery search (same as defaultConfiguration above)-->

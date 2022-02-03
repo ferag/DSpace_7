@@ -66,13 +66,21 @@ public class RenacytProvider {
             dto.setGroup(group);
         }
         if (StringUtils.isNotBlank(startDate)) {
-            LocalDate sd = LocalDate.parse(startDate);
+            LocalDate sd = parse(startDate);
             dto.setStartDate(sd);
         }
         if (StringUtils.isNotBlank(endDate)) {
-            LocalDate ed = LocalDate.parse(endDate);
+            LocalDate ed = parse(endDate);
             dto.setEndDate(ed);
         }
         return dto;
+    }
+
+    private LocalDate parse(String date) {
+        int split = date.indexOf(" ");
+        if (split < 0) {
+            return LocalDate.parse(date);
+        }
+        return LocalDate.parse(date.substring(0, split).trim());
     }
 }

@@ -480,7 +480,7 @@ public class BulkImport extends DSpaceRunnable<BulkImportScriptConfiguration<Bul
     private Item addItem(EntityRow entityRow)
         throws AuthorizeException, SQLException, IOException, WorkflowException {
 
-        WorkspaceItem workspaceItem = workspaceItemService.create(context, getCollection(), false);
+        WorkspaceItem workspaceItem = workspaceItemService.create(context, getCollection(), true);
 
         Item item = workspaceItem.getItem();
         addMetadata(item, entityRow, false);

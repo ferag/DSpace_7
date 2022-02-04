@@ -118,6 +118,63 @@ public class SunatUpdateIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    public void updateItemWithInformationFromSunatByItemTest() throws Exception {
+        context.turnOffAuthorisationSystem();
+
+        parentCommunity = CommunityBuilder.createCommunity(context)
+            .withName("Parent Community").build();
+
+        Collection col1 = CollectionBuilder.createCollection(context, parentCommunity)
+            .withEntityType("OrgUnit")
+            .withName("Collection 1").build();
+
+        Item orgUnitA = ItemBuilder.createItem(context, col1)
+            .withTitle("Universidad Ricardo Palma")
+            .withOrganizationRuc("20147883952").build();
+
+        Item orgUnitB = ItemBuilder.createItem(context, col1)
+            .withTitle("Title item C")
+            .withOrgUnitCountry("Peru")
+            .withOrganizationRuc("20102982372").build();
+
+        context.restoreAuthSystemState();
+
+        String[] args = new String[] {"update-from-supplier", "-u", orgUnitA.getID().toString(), "-s", "sunat"};
+        TestDSpaceRunnableHandler handler = new TestDSpaceRunnableHandler();
+
+        int status = handleScript(args, ScriptLauncher.getConfig(kernelImpl), handler, kernelImpl, admin);
+
+        assertEquals(0, status);
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        // verify that the changes have been persisted
+        getClient(authToken).perform(get("/api/core/items/" + orgUnitA.getID()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.uuid", Matchers.is(orgUnitA.getID().toString())))
+            .andExpect(jsonPath("$.metadata['dc.title'].[0].value", is("Universidad Ricardo Palma")))
+            .andExpect(jsonPath("$.metadata['dspace.entity.type'].[0].value", is("OrgUnit")))
+            .andExpect(jsonPath("$.metadata['organization.identifier.ruc'].[0].value", is("20147883952")))
+            .andExpect(jsonPath("$.metadata['organization.legalName'].[0].value", is("UNIVERSIDAD RICARDO PALMA")))
+            .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].value", is("SANTIAGO DE SURCO")))
+            .andExpect(jsonPath("$.metadata['perucris.ubigeo.ubigeoSunat'].[0].authority", is("150140")))
+            .andExpect(jsonPath("$.metadata['perucris.type.ciiu'].[0].value", is("80309")))
+            .andExpect(jsonPath("$.metadata['organization.address.addressLocality'].[0].value",
+                is("BENAVIDES,LAS GARDENIAS,5440,-,-,LIMA,LIMA,SANTIAGO DE SURCO")));
+
+
+        // verify that Item B have not been changed
+        getClient(authToken).perform(get("/api/core/items/" + orgUnitB.getID())).andExpect(status().isOk())
+            .andExpect(jsonPath("$.uuid", Matchers.is(orgUnitB.getID().toString())))
+            .andExpect(jsonPath("$.metadata['dc.title'].[0].value", is("Title item C")))
+            .andExpect(jsonPath("$.metadata['organization.address.addressCountry'].[0].value", is("Peru")))
+            .andExpect(jsonPath("$.metadata['dspace.entity.type'].[0].value", is("OrgUnit")))
+            .andExpect(jsonPath("$.metadata['organization.identifier.ruc'].[0].value", is("20102982372")))
+            .andExpect(jsonPath("$.metadata['organization.address.addressLocality']").doesNotExist())
+            .andExpect(jsonPath("$.metadata['perucris.type.ciiu']").doesNotExist())
+            .andExpect(jsonPath("$.metadata['organization.legalName']").doesNotExist());
+    }
+
+    @Test
     public void updateAllItemsWithInformationFromSunatTest() throws Exception {
         context.turnOffAuthorisationSystem();
 

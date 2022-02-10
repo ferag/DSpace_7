@@ -157,8 +157,7 @@ public class UpdateItemWithExternalSource
                 if (updated) {
                     countUpdatedItems++;
                     handler.logInfo("Item " + item.getID() + " updated");
-                }
-                else {
+                } else {
                     handler.logInfo("Item " + item.getID() + " not updated");
                 }
                 count++;

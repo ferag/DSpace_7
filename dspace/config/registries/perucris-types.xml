@@ -1854,6 +1854,13 @@
         <scope_note />
     </dc-type>
 
+<dc-type>
+        <schema>perucris</schema>
+        <element>ppp</element>
+        <qualifier>baseLineType</qualifier>
+        <scope_note />
+    </dc-type>
+
     <dc-type>
         <schema>perucris</schema>
         <element>ppp</element>

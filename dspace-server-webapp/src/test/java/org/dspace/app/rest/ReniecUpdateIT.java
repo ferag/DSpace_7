@@ -264,7 +264,6 @@ public class ReniecUpdateIT extends AbstractControllerIntegrationTest {
     }
 
     @Test
-    @Ignore("external services temporarily not available")
     public void updateItemsWithInformationFromReniecByWrongIDColTest() throws Exception {
         context.turnOffAuthorisationSystem();
 

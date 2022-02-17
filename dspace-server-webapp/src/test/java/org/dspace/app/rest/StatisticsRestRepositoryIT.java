@@ -76,6 +76,7 @@ import org.dspace.core.Constants;
 import org.dspace.eperson.EPerson;
 import org.dspace.services.ConfigurationService;
 import org.dspace.statistics.factory.StatisticsServiceFactory;
+import org.dspace.util.UUIDUtils;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -162,11 +163,13 @@ public class StatisticsRestRepositoryIT extends AbstractControllerIntegrationTes
         publicationVisited1 = ItemBuilder.createItem(context, collectionVisited)
                                          .withEntityType("Publication")
                                          .withAuthor(person.getName(), person.getID().toString())
+                                         .withAuthorAffiliation(orgUnit.getName(), UUIDUtils.toString(orgUnit.getID()))
                                          .build();
         //second publication for person item
         publicationVisited2 = ItemBuilder.createItem(context, collectionVisited)
                                          .withEntityType("Publication")
                                          .withAuthor(person.getName(), person.getID().toString())
+                                         .withAuthorAffiliation(orgUnit.getName(), UUIDUtils.toString(orgUnit.getID()))
                                          .build();
         //bitstream for first publication of person
         bitstreampublication_first = BitstreamBuilder

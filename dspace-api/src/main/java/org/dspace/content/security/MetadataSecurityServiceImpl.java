@@ -13,9 +13,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
@@ -34,6 +36,9 @@ import org.dspace.content.service.MetadataSecurityEvaluation;
 import org.dspace.core.Context;
 import org.dspace.core.exception.SQLRuntimeException;
 import org.dspace.eperson.EPerson;
+import org.dspace.eperson.Group;
+import org.dspace.eperson.GroupType;
+import org.dspace.eperson.service.GroupService;
 import org.dspace.layout.CrisLayoutBox;
 import org.dspace.layout.CrisLayoutField;
 import org.dspace.layout.CrisLayoutFieldMetadata;
@@ -78,6 +83,9 @@ public class MetadataSecurityServiceImpl implements MetadataSecurityService {
 
     private DCInputsReader dcInputsReader;
 
+    @Autowired
+    private GroupService groupService;
+
     @PostConstruct
     private void setup() throws DCInputsReaderException {
         this.dcInputsReader = new DCInputsReader();
@@ -116,7 +124,7 @@ public class MetadataSecurityServiceImpl implements MetadataSecurityService {
     private List<MetadataValue> getPermissionFilteredMetadata(Context context, Item item,
         List<MetadataValue> metadataValues, boolean preventBoxSecurityCheck) {
 
-        if (item.isWithdrawn() && isNotAdmin(context)) {
+        if (item.isWithdrawn() && isNotAdmin(context) && isNotAnInstitutionalRole(context)) {
             return new ArrayList<MetadataValue>();
         }
 
@@ -132,6 +140,23 @@ public class MetadataSecurityServiceImpl implements MetadataSecurityService {
             .filter(value -> isMetadataValueReturnAllowed(context, item, value))
             .collect(Collectors.toList());
 
+    }
+
+    private boolean isNotAnInstitutionalRole(Context context) {
+        try {
+            if (Objects.isNull(context) || Objects.isNull(context.getSpecialGroups())) {
+                return true;
+            }
+            return context.getSpecialGroups().stream()
+                .noneMatch(this::institutional);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean institutional(Group g) {
+        return Stream.of(GroupType.INSTITUTIONAL, GroupType.SCOPED)
+            .anyMatch(t -> t.equals(groupService.getGroupType(g)));
     }
 
     private List<CrisLayoutBox> findBoxes(Context context, Item item, boolean preventBoxSecurityCheck) {

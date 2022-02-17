@@ -11145,13 +11145,23 @@
           <field>
             <dc-schema>perucris</dc-schema>
             <dc-element>ppp</dc-element>
+            <dc-qualifier>baseLineType</dc-qualifier>
+            <label>Tipo Linea de Base</label>
+            <repeatable>false</repeatable>
+            <input-type value-pairs-name="peru_ppp_baselinetype">dropdown</input-type>
+            <required />
+            <hint />
+          </field>
+          <field>
+            <dc-schema>perucris</dc-schema>
+            <dc-element>ppp</dc-element>
             <dc-qualifier>baseLine</dc-qualifier>
             <label>Linea de Base</label>
             <input-type>onebox</input-type>
             <repeatable>false</repeatable>
             <required />
             <hint>Ejemplo: 1500</hint>
-            <validation>^[0-9]+(.)?([0-9]+)?(%)?$</validation>
+            <validation>^[0-9]+(\.|,)?([0-9]{0,2})?$</validation>
           </field>
           <field>
             <dc-schema>perucris</dc-schema>
@@ -14720,6 +14730,16 @@
         <pair>
           <displayed-value>Objetivo específico</displayed-value>
           <stored-value>Objetivo específico</stored-value>
+        </pair>
+      </value-pairs>
+      <value-pairs value-pairs-name="peru_ppp_baselinetype" dc-term="peru_ppp_baselinetype">
+        <pair>
+          <displayed-value>#</displayed-value>
+          <stored-value>Número</stored-value>
+        </pair>
+        <pair>
+          <displayed-value>%</displayed-value>
+          <stored-value>Porcentaje</stored-value>
         </pair>
       </value-pairs>
     </form-value-pairs>

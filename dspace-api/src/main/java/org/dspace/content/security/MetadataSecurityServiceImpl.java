@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -143,6 +144,9 @@ public class MetadataSecurityServiceImpl implements MetadataSecurityService {
 
     private boolean isNotAnInstitutionalRole(Context context) {
         try {
+            if (Objects.isNull(context) || Objects.isNull(context.getSpecialGroups())) {
+                return true;
+            }
             return context.getSpecialGroups().stream()
                 .noneMatch(this::institutional);
         } catch (SQLException e) {

@@ -972,6 +972,7 @@
         </property>
     </bean>
     <bean id="relationInvestigatorInstitutionProjectsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <property name="indexAlways" value="true"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
@@ -1113,6 +1114,7 @@
 
     <!-- publications of an institution author -->
     <bean id="relationInstitutionAuthorResearchOutputsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <property name="indexAlways" value="true"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
@@ -1327,6 +1329,7 @@
     </bean>
 
     <bean id="relationInstitutionAuthorPatentsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <property name="indexAlways" value="true"/>
         <!--Which sidebar facets are to be displayed-->
         <property name="sidebarFacets">
             <list>
@@ -1638,6 +1641,7 @@
 
     <!-- project participated by an orgunit -->
     <bean id="relationOrgunitProjectsConfiguration" class="org.dspace.discovery.configuration.DiscoveryRelatedItemConfiguration">
+        <property name="indexAlways" value="true"/>
         <property name="sidebarFacets">
             <list>
                 <ref bean="graphOcdeProject" />

@@ -77,7 +77,7 @@
 	<Ciiu>@perucris.type.ciiu@</Ciiu>
 	<Keyword>@dc.subject@</Keyword>
 	<Abstract>@dc.description.abstract@</Abstract>
-    <Status>@oairecerif.project.status@</Status>
+    <Status>@virtual.mapConverter.projectStatus.oairecerif-project-status@</Status>
     <Uses>
         <Equipment>
             <Name>@dc.relation.equipment@</Name>

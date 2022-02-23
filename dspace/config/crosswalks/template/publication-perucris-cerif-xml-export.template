@@ -114,7 +114,7 @@
     >
         @virtual.mapConverter.accessRightUri.oairecerif-access@
     </Access>
-    <Version>@oaire.version@</Version>
+    <Version>@virtual.mapConverter.publicationOaireVersions.oaire-version@</Version>
     <Advisors>
         <Advisor> <Person> <Name>@dc.contributor.advisor@</Name> </Person> </Advisor>
     </Advisors>

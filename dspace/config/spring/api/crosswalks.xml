@@ -239,6 +239,7 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-xml.template"/>
 		<property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPersonCerifXml">
@@ -249,6 +250,7 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-cerif-xml.template"/>
 		<property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
     <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPersonPerucrisCerifXml">
@@ -259,6 +261,7 @@
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-cerif-xml.template"/>
         <property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
     </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkPersonJson">
@@ -270,6 +273,7 @@
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-json.template"/>
 		<property name="converter" ref="jsonValueConverter" />
 		<property name="linesPostProcessor" ref="jsonPostProcessor" />
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkCvPersonXml">
@@ -324,6 +328,7 @@
 		<property name="entityType" value="Publication"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/publications-xml.template"/>
+		<property name="securityCheckEnabled" value="true" />
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
 
@@ -334,6 +339,7 @@
 		<property name="entityType" value="CvPublication"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/publications-xml.template"/>
+		<property name="securityCheckEnabled" value="true" />
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
 
@@ -344,6 +350,7 @@
         <property name="entityType" value="Publication"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/publications-xml.template"/>
+		<property name="securityCheckEnabled" value="true" />
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
@@ -354,6 +361,7 @@
 		<property name="entityType" value="Publication"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/publications-xml.template"/>
+		<property name="securityCheckEnabled" value="true" />
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
 
@@ -365,6 +373,7 @@
         <property name="entityType" value="CvPublication"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/publications-xml.template"/>
+		<property name="securityCheckEnabled" value="true" />
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
@@ -376,6 +385,7 @@
 		<property name="entityType" value="CvPublication"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/publications-xml.template"/>
+		<property name="securityCheckEnabled" value="true" />
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
 
@@ -385,6 +395,7 @@
 		<property name="fileName" value="publication"/>
 		<property name="entityType" value="Publication"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkCtivitaePublicationEndnote">
@@ -393,6 +404,7 @@
 		<property name="fileName" value="publication"/>
 		<property name="entityType" value="CvPublication"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkProjectCerifXml">
@@ -402,6 +414,7 @@
 		<property name="entityType" value="Project"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/projects-xml.template"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
 
@@ -413,6 +426,7 @@
 		<property name="entityType" value="CvProject"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/projects-xml.template"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
 
@@ -424,6 +438,7 @@
         <property name="entityType" value="Project"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/projects-xml.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
@@ -434,6 +449,7 @@
 		<property name="entityType" value="Project"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/projects-xml.template"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
 
@@ -444,6 +460,7 @@
         <property name="entityType" value="CvProject"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/projects-xml.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
@@ -454,6 +471,7 @@
         <property name="entityType" value="CvProject"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/projects-xml.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
@@ -465,6 +483,7 @@
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/projects-json.template"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="jsonValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
 		<property name="linesPostProcessor" ref="jsonPostProcessor" />
 	</bean>
 
@@ -476,6 +495,7 @@
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/projects-json.template"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="jsonValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
 		<property name="linesPostProcessor" ref="jsonPostProcessor" />
 	</bean>
 
@@ -486,6 +506,7 @@
 		<property name="entityType" value="Equipment"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/equipments-xml.template"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
 
@@ -496,6 +517,18 @@
         <property name="entityType" value="Equipment"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/equipments-xml.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
+        <property name="converter" ref="xmlValueConverter" />
+    </bean>
+
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkEquipmentPerucrisCerifXmlExport">
+        <property name="templateFileName" value="crosswalks/template/equipment-perucris-cerif-xml-export.template"/>
+        <property name="mimeType" value="application/xml; charset=UTF-8"/>
+        <property name="fileName" value="equipment.xml"/>
+        <property name="entityType" value="Equipment"/>
+        <property name="multipleItemsTemplateFileName" value="crosswalks/template/equipments-xml.template"/>
+        <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
@@ -507,6 +540,7 @@
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/equipments-json.template"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="jsonValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
 		<property name="linesPostProcessor" ref="jsonPostProcessor" />
 	</bean>
 
@@ -517,6 +551,7 @@
 		<property name="entityType" value="OrgUnit"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/orgUnits-xml.template"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
 
@@ -527,6 +562,7 @@
         <property name="entityType" value="OrgUnit"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/orgUnits-xml.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
@@ -537,6 +573,7 @@
         <property name="entityType" value="OrgUnit"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/orgUnits-xml.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
@@ -548,6 +585,7 @@
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/orgUnits-json.template"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="jsonValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
 		<property name="linesPostProcessor" ref="jsonPostProcessor" />
 	</bean>
 
@@ -558,6 +596,18 @@
 		<property name="entityType" value="Funding"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/fundings-xml.template"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
+		<property name="converter" ref="xmlValueConverter" />
+	</bean>
+
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkFundingCerifXmlExport">
+		<property name="templateFileName" value="crosswalks/template/funding-perucris-cerif-xml-export.template"/>
+		<property name="mimeType" value="application/xml; charset=UTF-8"/>
+		<property name="fileName" value="funding.xml"/>
+		<property name="entityType" value="Funding"/>
+		<property name="multipleItemsTemplateFileName" value="crosswalks/template/fundings-xml.template"/>
+		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 		<property name="converter" ref="xmlValueConverter" />
 	</bean>
 
@@ -568,8 +618,20 @@
         <property name="entityType" value="Funding"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/fundings-xml.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
         <property name="converter" ref="xmlValueConverter" />
     </bean>
+
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkFundingPerucrisCerifXmlExport">
+		<property name="templateFileName" value="crosswalks/template/funding-perucris-cerif-xml-export.template"/>
+		<property name="mimeType" value="application/xml; charset=UTF-8"/>
+		<property name="fileName" value="funding.xml"/>
+		<property name="entityType" value="Funding"/>
+		<property name="multipleItemsTemplateFileName" value="crosswalks/template/fundings-xml.template"/>
+		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
+		<property name="converter" ref="xmlValueConverter" />
+	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkFundingJson">
 		<property name="templateFileName" value="crosswalks/template/funding-json.template"/>
@@ -579,6 +641,7 @@
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/fundings-json.template"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="jsonValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
 		<property name="linesPostProcessor" ref="jsonPostProcessor" />
 	</bean>
 
@@ -589,6 +652,7 @@
         <property name="entityType" value="Patent"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/patents-xml.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
@@ -599,6 +663,7 @@
         <property name="entityType" value="CvPatent"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/patents-xml.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
@@ -609,6 +674,7 @@
         <property name="entityType" value="InstitutionPatent"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/patents-xml.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
@@ -619,6 +685,7 @@
         <property name="entityType" value="Patent"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/patents-xml.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
@@ -629,6 +696,7 @@
         <property name="entityType" value="CvPatent"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/patents-xml.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
@@ -639,6 +707,7 @@
         <property name="entityType" value="CvPatent"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/patents-xml.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
@@ -649,6 +718,7 @@
         <property name="entityType" value="InstitutionPatent"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/patents-xml.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
@@ -660,6 +730,7 @@
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/patents-json.template"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="jsonValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
 		<property name="linesPostProcessor" ref="jsonPostProcessor" />
 	</bean>
 
@@ -672,6 +743,7 @@
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/patents-json.template"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="jsonValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
 		<property name="linesPostProcessor" ref="jsonPostProcessor" />
 	</bean>
 
@@ -683,6 +755,7 @@
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/patents-json.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
         <property name="converter" ref="jsonValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
         <property name="linesPostProcessor" ref="jsonPostProcessor" />
     </bean>
 
@@ -693,6 +766,7 @@
         <property name="entityType" value="Dataset"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/products-xml.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
         <property name="converter" ref="xmlValueConverter" />
     </bean>
 
@@ -765,7 +839,7 @@
 		<property name="fileName" value="equipment.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="Equipment"/>
-		<property name="referCrosswalk" ref="referCrosswalkEquipmentPerucrisCerifXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkEquipmentPerucrisCerifXmlExport"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="pdfCrosswalkOrgUnit">
@@ -781,7 +855,7 @@
 		<property name="fileName" value="funding.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="Funding"/>
-		<property name="referCrosswalk" ref="referCrosswalkFundingPerucrisCerifXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkFundingPerucrisCerifXmlExport"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="pdfCrosswalkPatent">
@@ -813,6 +887,7 @@
 		<property name="fileName" value="persons.csv"/>
 		<property name="entityType" value="Person"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 	
 	<bean class="org.dspace.content.integration.crosswalks.XlsCrosswalk" id="xlsCrosswalkPerson">
@@ -821,6 +896,7 @@
 		<property name="sheetName" value="Persons"/>
 		<property name="entityType" value="Person"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkCvPerson">
@@ -845,6 +921,7 @@
 		<property name="fileName" value="publications.csv"/>
 		<property name="entityType" value="Publication"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkCtivitaePublication">
@@ -852,6 +929,7 @@
 		<property name="fileName" value="publications.csv"/>
 		<property name="entityType" value="CvPublication"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.XlsCrosswalk" id="xlsCrosswalkPublication">
@@ -860,6 +938,7 @@
 		<property name="sheetName" value="Publications"/>
 		<property name="entityType" value="Publication"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.XlsCrosswalk" id="xlsCrosswalkCtivitaePublication">
@@ -868,6 +947,7 @@
 		<property name="sheetName" value="Publications"/>
 		<property name="entityType" value="CvPublication"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkProject">
@@ -875,6 +955,7 @@
 		<property name="fileName" value="projects.csv"/>
 		<property name="entityType" value="Project"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkCtivitaeProject">
@@ -882,6 +963,7 @@
 		<property name="fileName" value="projects.csv"/>
 		<property name="entityType" value="CvProject"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.XlsCrosswalk" id="xlsCrosswalkProject">
@@ -890,6 +972,7 @@
 		<property name="sheetName" value="Projects"/>
 		<property name="entityType" value="Project"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.XlsCrosswalk" id="xlsCrosswalkCtivitaeProject">
@@ -898,6 +981,7 @@
 		<property name="sheetName" value="Projects"/>
 		<property name="entityType" value="CvProject"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkOrgUnit">
@@ -905,6 +989,7 @@
 		<property name="fileName" value="orgUnits.csv"/>
 		<property name="entityType" value="OrgUnit"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.XlsCrosswalk" id="xlsCrosswalkOrgUnit">
@@ -913,6 +998,7 @@
 		<property name="sheetName" value="OrgUnits"/>
 		<property name="entityType" value="OrgUnit"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkEquipment">
@@ -920,6 +1006,7 @@
 		<property name="fileName" value="equipments.csv"/>
 		<property name="entityType" value="Equipment"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.XlsCrosswalk" id="xlsCrosswalkEquipment">
@@ -928,6 +1015,7 @@
 		<property name="sheetName" value="Equipments"/>
 		<property name="entityType" value="Equipment"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkFunding">
@@ -935,6 +1023,7 @@
 		<property name="fileName" value="fundings.csv"/>
 		<property name="entityType" value="Funding"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.XlsCrosswalk" id="xlsCrosswalkFunding">
@@ -943,6 +1032,7 @@
 		<property name="sheetName" value="Fundings"/>
 		<property name="entityType" value="Funding"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkPatent">
@@ -950,6 +1040,7 @@
 		<property name="fileName" value="patents.csv"/>
 		<property name="entityType" value="Patent"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkCtivitaePatent">
@@ -957,6 +1048,7 @@
 		<property name="fileName" value="patents.csv"/>
 		<property name="entityType" value="CvPatent"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.XlsCrosswalk" id="xlsCrosswalkPatent">
@@ -965,6 +1057,7 @@
 		<property name="sheetName" value="Patents"/>
 		<property name="entityType" value="Patent"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
     <bean class="org.dspace.content.integration.crosswalks.XlsCrosswalk" id="xlsCrosswalkCtivitaePatent">
@@ -973,6 +1066,7 @@
 		<property name="sheetName" value="Patents"/>
 		<property name="entityType" value="CvPatent"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
     <bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkInstitutionPatent">
@@ -980,6 +1074,7 @@
         <property name="fileName" value="patents.csv"/>
         <property name="entityType" value="InstitutionPatent"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
     </bean>
 
     <bean class="org.dspace.content.integration.crosswalks.XlsCrosswalk" id="xlsCrosswalkInstitutionPatent">
@@ -988,6 +1083,7 @@
         <property name="sheetName" value="InstitutionPatents"/>
         <property name="entityType" value="InstitutionPatent"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
     </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CSLItemDataCrosswalk" id="referCrosswalkPublicationIeeeHtml">
@@ -1049,6 +1145,7 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/publications-xml.template"/>
 		<property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
     <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionPublicationPerucrisCerifXml">
@@ -1059,6 +1156,7 @@
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/publications-xml.template"/>
         <property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
     </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionPublicationPerucrisCerifXmlExport">
@@ -1069,6 +1167,7 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/publications-xml.template"/>
 		<property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkInstitutionPerson">
@@ -1076,6 +1175,7 @@
 		<property name="fileName" value="persons.csv"/>
 		<property name="entityType" value="InstitutionPerson"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.XlsCrosswalk" id="xlsCrosswalkInstitutionPerson">
@@ -1084,6 +1184,7 @@
 		<property name="sheetName" value="Persons"/>
 		<property name="entityType" value="InstitutionPerson"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="pdfCrosswalkInstitutionPublication">
@@ -1099,6 +1200,7 @@
 		<property name="fileName" value="publications.csv"/>
 		<property name="entityType" value="InstitutionPublication"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.XlsCrosswalk" id="xlsCrosswalkInstitutionPublication">
@@ -1107,6 +1209,7 @@
 		<property name="sheetName" value="Publications"/>
 		<property name="entityType" value="InstitutionPublication"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
     <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionPublicationEndnote">
@@ -1115,6 +1218,7 @@
         <property name="fileName" value="publication"/>
         <property name="entityType" value="InstitutionPublication"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE}"/>
+		<property name="securityCheckEnabled" value="true" />
     </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionPersonXml">
@@ -1125,6 +1229,7 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-xml.template"/>
 		<property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionPersonCerifXml">
@@ -1135,6 +1240,7 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-cerif-xml.template"/>
 		<property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
     <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionPersonPerucrisCerifXml">
@@ -1145,6 +1251,7 @@
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-cerif-xml.template"/>
         <property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
     </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionPersonJson">
@@ -1156,6 +1263,7 @@
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/persons-json.template"/>
 		<property name="converter" ref="jsonValueConverter" />
 		<property name="linesPostProcessor" ref="jsonPostProcessor" />
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="pdfCrosswalkInstitutionPerson">
@@ -1182,6 +1290,7 @@
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/projects-xml.template"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
     <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionProjectPerucrisCerifXml">
@@ -1192,6 +1301,7 @@
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/projects-xml.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
         <property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
     </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionProjectPerucrisCerifXmlExport">
@@ -1202,6 +1312,7 @@
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/projects-xml.template"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionProjectJson">
@@ -1213,6 +1324,7 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="jsonValueConverter" />
 		<property name="linesPostProcessor" ref="jsonPostProcessor" />
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionEquipmentCerifXml">
@@ -1223,6 +1335,7 @@
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/equipments-xml.template"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
     <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionEquipmentPerucrisCerifXml">
@@ -1233,6 +1346,18 @@
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/equipments-xml.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
         <property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
+    </bean>
+
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionEquipmentPerucrisCerifXmlExport">
+        <property name="templateFileName" value="crosswalks/template/equipment-perucris-cerif-xml-export.template"/>
+        <property name="mimeType" value="application/xml; charset=UTF-8"/>
+        <property name="fileName" value="equipment.xml"/>
+        <property name="entityType" value="InstitutionEquipment"/>
+        <property name="multipleItemsTemplateFileName" value="crosswalks/template/equipments-xml.template"/>
+        <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+        <property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
     </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionEquipmentJson">
@@ -1244,6 +1369,7 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="jsonValueConverter" />
 		<property name="linesPostProcessor" ref="jsonPostProcessor" />
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionOrgUnitXml">
@@ -1254,6 +1380,7 @@
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/orgUnits-xml.template"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
     <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionOrgUnitCerifXml">
@@ -1264,6 +1391,7 @@
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/orgUnits-xml.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
         <property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
     </bean>
 
     <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionOrgUnitPerucrisCerifXml">
@@ -1274,6 +1402,7 @@
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/orgUnits-xml.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
         <property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
     </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="pdfCrosswalkInstitutionProject">
@@ -1289,6 +1418,7 @@
 		<property name="fileName" value="projects.csv"/>
 		<property name="entityType" value="InstitutionProject"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.XlsCrosswalk" id="xlsCrosswalkInstitutionProject">
@@ -1297,6 +1427,7 @@
 		<property name="sheetName" value="Projects"/>
 		<property name="entityType" value="InstitutionProject"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionOrgUnitJson">
@@ -1308,6 +1439,7 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="jsonValueConverter" />
 		<property name="linesPostProcessor" ref="jsonPostProcessor" />
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="pdfCrosswalkInstitutionOrgUnit">
@@ -1323,6 +1455,7 @@
 		<property name="fileName" value="orgUnits.csv"/>
 		<property name="entityType" value="InstitutionOrgUnit"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.XlsCrosswalk" id="xlsCrosswalkInstitutionOrgUnit">
@@ -1331,6 +1464,7 @@
 		<property name="sheetName" value="OrgUnits"/>
 		<property name="entityType" value="InstitutionOrgUnit"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="pdfCrosswalkInstitutionEquipment">
@@ -1338,7 +1472,7 @@
 		<property name="fileName" value="equipment.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="InstitutionEquipment"/>
-		<property name="referCrosswalk" ref="referCrosswalkInstitutionEquipmentPerucrisCerifXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkInstitutionEquipmentPerucrisCerifXmlExport"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkInstitutionEquipment">
@@ -1346,6 +1480,7 @@
 		<property name="fileName" value="equipments.csv"/>
 		<property name="entityType" value="InstitutionEquipment"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.XlsCrosswalk" id="xlsCrosswalkInstitutionEquipment">
@@ -1354,6 +1489,7 @@
 		<property name="sheetName" value="Equipments"/>
 		<property name="entityType" value="InstitutionEquipment"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionFundingCerifXml">
@@ -1364,6 +1500,7 @@
 		<property name="multipleItemsTemplateFileName" value="crosswalks/template/fundings-xml.template"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
     <bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionFundingPerucrisCerifXml">
@@ -1374,6 +1511,18 @@
         <property name="multipleItemsTemplateFileName" value="crosswalks/template/fundings-xml.template"/>
         <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
         <property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
+    </bean>
+
+	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionFundingPerucrisCerifXmlExport">
+        <property name="templateFileName" value="crosswalks/template/funding-perucris-cerif-xml-export.template"/>
+        <property name="mimeType" value="application/xml; charset=UTF-8"/>
+        <property name="fileName" value="funding.xml"/>
+        <property name="entityType" value="InstitutionFunding"/>
+        <property name="multipleItemsTemplateFileName" value="crosswalks/template/fundings-xml.template"/>
+        <property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
+        <property name="converter" ref="xmlValueConverter" />
+		<property name="securityCheckEnabled" value="true" />
     </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionFundingJson">
@@ -1385,6 +1534,7 @@
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).SINGLE_AND_MULTIPLE}"/>
 		<property name="converter" ref="jsonValueConverter" />
 		<property name="linesPostProcessor" ref="jsonPostProcessor" />
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.DocumentCrosswalk" id="pdfCrosswalkInstitutionFunding">
@@ -1392,7 +1542,7 @@
 		<property name="fileName" value="funding.pdf"/>
 		<property name="mimeType" value="application/pdf"/>
 		<property name="entityType" value="InstitutionFunding"/>
-		<property name="referCrosswalk" ref="referCrosswalkInstitutionFundingPerucrisCerifXml"/>
+		<property name="referCrosswalk" ref="referCrosswalkInstitutionFundingPerucrisCerifXmlExport"/>
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkInstitutionFunding">
@@ -1400,6 +1550,7 @@
 		<property name="fileName" value="fundings.csv"/>
 		<property name="entityType" value="InstitutionFunding"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.XlsCrosswalk" id="xlsCrosswalkInstitutionFunding">
@@ -1408,6 +1559,7 @@
 		<property name="sheetName" value="Fundings"/>
 		<property name="entityType" value="InstitutionFunding"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
+		<property name="securityCheckEnabled" value="true" />
 	</bean>
 
     <!-- Elasticsearch ENTITY TYPES -->
@@ -1529,6 +1681,7 @@
 			<map>
 				<entry key="coarTypes" value-ref="mapConverterCoarTypes" />
 				<entry key="fundingTypes" value-ref="mapConverterFundingTypes" />
+				<entry key="fundingTypeUrls" value-ref="mapConverterFundingTypeUrls" />
                 <entry key="patentTypes" value-ref="mapConverterPatentTypes" />
 				<entry key="eventTypes" value-ref="mapConverterEventTypes" />
 				<entry key="orgUnitTypes" value-ref="mapConverterOrgUnitTypes" />
@@ -1540,12 +1693,19 @@
 				<entry key="cerifToFundingTypes" value-ref="mapConverterCerifToFundingTypes" />
 				<entry key="elasticsearchGender" value-ref="mapConverterGenderTypes" />
 				<entry key="elasticsearchUbigeoRegion" value-ref="mapConverterUbigeoRegion" />
+				<entry key="equipmentType" value-ref="mapConverterEquipmentType" />
+				<entry key="equipmentUsage" value-ref="mapConverterEquipmentUsage" />
 				<entry key="minamTypes" value-ref="mapConverterMinamTypes" />
 				<entry key="insTypes" value-ref="mapConverterInsTypes" />
 				<entry key="ocdeSubjects" value-ref="mapConverterOcdeSubjects" />
 				<entry key="ocdeProjectTypes" value-ref="mapConverterOcdeProjectTypes" />
 				<entry key="ocdeProjectTypesLeaf" value-ref="mapConverterOcdeProjectTypesLeaf" />
 				<entry key="ocdeProjectTypesOther" value-ref="mapConverterOcdeProjectTypesOther" />
+				<entry key="projectStatus" value-ref="mapConverterProjectStatus" />
+				<entry key="publicationAccess" value-ref="mapConverterPublicationAccess" />
+				<entry key="publicationOaireVersions" value-ref="mapConverterPublicationOaireVersions" />
+				<entry key="publicationRenatiLevels" value-ref="mapConverterRenatiLevels" />
+				<entry key="publicationRenatiTypes" value-ref="mapConverterRenatiTypes" />
 			</map>
 		</constructor-arg>
 	</bean>
@@ -1664,6 +1824,62 @@
 
 	<bean name="mapConverterOcdeProjectTypesLeaf" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
 		<property name="converterNameFile" value="mapConverter-ocdeProjectTypesLeaf.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+		<property name="defaultValue" value=""/>
+		<property name="charset" value="UTF-8"/>
+	</bean>
+
+	<bean name="mapConverterProjectStatus" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
+		<property name="converterNameFile" value="mapConverter-projectStatus.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+		<property name="defaultValue" value=""/>
+		<property name="charset" value="UTF-8"/>
+	</bean>
+
+	<bean name="mapConverterPublicationAccess" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
+		<property name="converterNameFile" value="mapConverter-publicationAccess.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+		<property name="defaultValue" value=""/>
+		<property name="charset" value="UTF-8"/>
+	</bean>
+
+	<bean name="mapConverterPublicationOaireVersions" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
+		<property name="converterNameFile" value="mapConverter-publicationOaireVersions.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+		<property name="defaultValue" value=""/>
+		<property name="charset" value="UTF-8"/>
+	</bean>
+
+	<bean name="mapConverterRenatiLevels" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
+		<property name="converterNameFile" value="mapConverter-publicationRenatiLevels.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+		<property name="defaultValue" value=""/>
+		<property name="charset" value="UTF-8"/>
+	</bean>
+
+	<bean name="mapConverterRenatiTypes" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
+		<property name="converterNameFile" value="mapConverter-publicationRenatiTypes.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+		<property name="defaultValue" value=""/>
+		<property name="charset" value="UTF-8"/>
+	</bean>
+
+	<bean name="mapConverterEquipmentUsage" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
+		<property name="converterNameFile" value="mapConverter-equipmentUsage.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+		<property name="defaultValue" value=""/>
+		<property name="charset" value="UTF-8"/>
+	</bean>
+
+	<bean name="mapConverterEquipmentType" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
+		<property name="converterNameFile" value="mapConverter-equipmentType.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+		<property name="defaultValue" value=""/>
+		<property name="charset" value="UTF-8"/>
+	</bean>
+
+	<bean name="mapConverterFundingTypeUrls" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
+		<property name="converterNameFile" value="mapConverter-fundingTypeUrls.properties" />
 		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
 		<property name="defaultValue" value=""/>
 		<property name="charset" value="UTF-8"/>

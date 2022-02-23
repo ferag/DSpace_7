@@ -1,12 +1,12 @@
 Tipo OCDE = virtual.mapConverter.ocdeProjectTypes.perucris-project-typeOcde
-Otro tipo = perucris.project.typeOther
+Otro tipo = virtual.mapConverter.ocdeProjectTypesOther.perucris-project-typeOther
 Título = dc.title
 Acrónimo = oairecerif.acronym
 OpenAIRE id(s) = crispj.openaireid
 URL(s) = oairecerif.identifier.url
 Fecha de inicio = oairecerif.project.startDate
 Fecha de fin = oairecerif.project.endDate
-Estado = oairecerif.project.status
+Estado = virtual.mapConverter.ocdeProjectStatus.oairecerif-project-status
 Coordinador(es) = crispj.coordinator
 Organizacion(es) socias = crispj.partnerou
 Organizacion(es) participantes= crispj.organization

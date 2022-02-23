@@ -1,0 +1,33 @@
+<Equipment xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="@virtual.id@">
+    <Type>@virtual.mapConverter.equipmentType.dc-type@</Type>
+    <Acronym>@oairecerif.acronym@</Acronym>
+	<Name>@dc.title@</Name>
+	<Identifier type="Institution assigned unique equipment identifier">@oairecerif.internalid@</Identifier>
+	<Description>@dc.description@</Description>
+	<Owner> <OrgUnit> <Name>@crisequipment.ownerou@</Name> </OrgUnit> </Owner>
+    @relation.dc-relation-funding.start@
+    <Funder> 
+        <As> 
+            <Funding id="@virtual.id@">  
+                <Acronym>@oairecerif.acronym@</Acronym>
+                <Name>@dc.title@</Name>
+            </Funding>
+        </As> 
+    </Funder>
+    @relation.dc-relation-funding.end@  
+    @if.not.authority.dc-relation-funding.start@
+    <Funder> <As> <Funding> <Name>@dc.relation.funding@</Name> </Funding> </As> </Funder> 
+    @if.not.authority.dc-relation-funding.end@
+    <Subject scheme="http://purl.org/pe-repo/ocde/ford">@virtual.mapConverter.ocdeSubjects.perucris-subject-ocde@</Subject>
+    <ResearchLine>@perucris.researchLine@</ResearchLine>
+    <ManufacturingCountry>@perucris.manufacturingCountry@</ManufacturingCountry>
+    <ManufacturingDate>@perucris.date.manufacturing@</ManufacturingDate>
+    <AcquisitionDate>@perucris.date.acquisition@</AcquisitionDate>
+    @if.metadata.oairecerif-amount.start@
+    <AcquisitionAmount 
+        @if.metadata.oairecerif-amount-currency.start@
+        currency="@oairecerif.amount.currency@"
+        @if.metadata.oairecerif-amount-currency.end@
+    >@oairecerif.amount@</AcquisitionAmount>
+    @if.metadata.oairecerif-amount.end@
+</Equipment>

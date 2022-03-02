@@ -238,6 +238,11 @@ public class CasAuthentication implements AuthenticationMethod {
                 final MetadataField field = metadataFieldService.findByString(context, "perucris.eperson.orcid", '.');
                 eperson = ePersonService.findByEid(context, field, userData.getOrcid());
             }
+
+            if (eperson == null && StringUtils.isNotBlank(userData.getEmail())) {
+                eperson = ePersonService.findByEmail(context, userData.getEmail());
+            }
+
             if (eperson != null) {
                 return eperson;
             }

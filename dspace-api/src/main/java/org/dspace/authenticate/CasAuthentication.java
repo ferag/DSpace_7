@@ -16,7 +16,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -49,10 +52,14 @@ import org.dspace.eperson.Group;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
 import org.dspace.eperson.service.GroupService;
+import org.dspace.external.provider.impl.OrcidV3AuthorDataProvider;
 import org.dspace.externalregistration.factory.ExternalRegistrationServiceFactory;
 import org.dspace.externalregistration.service.ExternalRegistrationService;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
+import org.dspace.utils.DSpace;
+import org.orcid.jaxb.model.v3.release.record.Email;
+import org.orcid.jaxb.model.v3.release.record.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,6 +92,8 @@ public class CasAuthentication implements AuthenticationMethod {
             .getAuthenticationService();
     protected ExternalRegistrationService externalRegistrationService = ExternalRegistrationServiceFactory.getInstance()
             .getExternalRegistrationService();
+    protected OrcidV3AuthorDataProvider orcidV3AuthorDataProvider = new DSpace()
+        .getSingletonService(OrcidV3AuthorDataProvider.class);
 
     private static final Logger log = LoggerFactory.getLogger(CasAuthentication.class);
 
@@ -390,6 +399,16 @@ public class CasAuthentication implements AuthenticationMethod {
             } catch (Exception e) {
                 log.debug("Cannot find birthDate in userInfo response");
             }
+
+            if (StringUtils.isNotBlank(data.getOrcid()) && StringUtils.isBlank(data.getEmail())) {
+                try {
+                    Person orcidPerson = orcidV3AuthorDataProvider.getBio(data.getOrcid());
+                    getEmail(orcidPerson).ifPresent(email -> data.setEmail(email));
+                } catch (Exception e) {
+                    log.debug("Cannot find email from orcid", e);
+                }
+            }
+
             return data;
         } catch (IOException e) {
             log.error("Exception throwing trying to load data from userInfo, URL: "
@@ -434,7 +453,13 @@ public class CasAuthentication implements AuthenticationMethod {
         return "cas";
     }
 
-
+    private Optional<String> getEmail(Person person) {
+        List<Email> emails = person.getEmails() != null ? person.getEmails().getEmails() : Collections.emptyList();
+        if (CollectionUtils.isEmpty(emails)) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(emails.get(0).getEmail());
+    }
 
 
 

@@ -1422,7 +1422,7 @@
     </bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkInstitutionPublicationPerucrisCerifXmlExport">
-		<property name="templateFileName" value="crosswalks/template/publication-perucris-cerif-xml-export.template"/>
+		<property name="templateFileName" value="crosswalks/template/publication-xml-export.template"/>
 		<property name="mimeType" value="application/xml; charset=UTF-8"/>
 		<property name="fileName" value="publication.xml"/>
 		<property name="entityType" value="InstitutionPublication"/>

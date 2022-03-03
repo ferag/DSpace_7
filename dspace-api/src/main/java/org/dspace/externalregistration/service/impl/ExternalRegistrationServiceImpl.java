@@ -104,7 +104,7 @@ public class ExternalRegistrationServiceImpl implements ExternalRegistrationServ
         clientModel.setExpireAt(tokens.getRelationshipExpireAt());
         ObjectMapper mapper = new ObjectMapper();
         String client = mapper.writeValueAsString(clientModel);
-        ePersonService.addMetadata(context, eperson, "perucris", "oidc", "granted", null, client);
+        ePersonService.setMetadataSingleValue(context, eperson, "perucris", "oidc", "granted", null, client);
     }
 
     private Optional<ExternalRegistrationProvider> getProvider(CasProfileElementsResponse userData) {

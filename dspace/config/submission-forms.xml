@@ -12285,23 +12285,23 @@ Colloquium Service Order 84 - Simultaneous Translation Service - Water Colloquiu
       <row>
         <field>
           <dc-schema>dc</dc-schema>
-          <dc-element>relation</dc-element>
-          <dc-qualifier>project</dc-qualifier>
-          <label>Project Title</label>
+          <dc-element>title</dc-element>
+          <label>Project Name</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>Please enter Project Title</required>
+          <required>Please enter a name</required>
           <hint />
         </field>
       </row>
       <row>
         <field>
           <dc-schema>dc</dc-schema>
-          <dc-element>title</dc-element>
-          <label>Name</label>
+          <dc-element>relation</dc-element>
+          <dc-qualifier>project</dc-qualifier>
+          <label>Project Title In Projects Directory</label>
           <input-type>onebox</input-type>
           <repeatable>false</repeatable>
-          <required>Please enter a name</required>
+          <required>Please enter Project Title</required>
           <hint />
         </field>
       </row>

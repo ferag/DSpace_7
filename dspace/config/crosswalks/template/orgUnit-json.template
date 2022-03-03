@@ -54,7 +54,7 @@
     @if.metadata.organization-identifier-crossrefid.end@
     @if.metadata.perucris-subject-ocde.start@
     "subjects": [
-        "@virtual.mapConverter.ocdeSubjects.perucris-subject-ocde@",
+        "@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@",
     ],
     @if.metadata.perucris-subject-ocde.end@
     @if.metadata.dc-subject.start@
@@ -66,6 +66,24 @@
         "locality": "@organization.address.addressLocality@",
         "country": "@organization.address.addressCountry@"
     },
-    "ubiGeo": "@perucris.ubigeo@",
-    "description": "@dc.description.abstract@"
+    "email": [
+         "@orgunit.email@",
+         ],
+    "ubiGeo": "@virtual.mapConverter.ubigeoUris.perucris-ubigeo@",
+    "description": "@dc.description.abstract@",
+    "institutional-sector": "@perucris.type.sectorInstitucional@",
+    "dependency-type" : "@perucris.type.orgunit@",
+    "sunedu-classification": "@perucris.type.educacionSuperior@",
+    "juridical-nature": "@perucris.type.naturaleza@",
+    "ciiu-classification": "@perucris.type.ciiu@",
+    "renacyt" : {
+        "registration": "@perucris.renacyt.registration@",
+        "registration-number": "@perucris.renacyt.registrationNumber@",
+        "classification": "@perucris.renacyt.classification@",
+        "ocde": "@virtual.mapConverter.ocdeSubjectUris.perucris-renacyt-ocde@",
+        "strength": "@perucris.renacyt.strength@",
+        "date-of-qualification": "@perucris.renacyt.dateOfQualification@",
+        "validity": "@perucris.renacyt.validityOfRegistration@",
+        "contact": "@perucris.renacyt.contact@",
+    }
 }

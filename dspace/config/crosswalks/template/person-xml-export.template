@@ -8,7 +8,7 @@
         <appelido-casada>@perucris.apellidoCasada@</appelido-casada>
 	</names>
 	<birth-date>@person.birthDate@</birth-date>
-	<gender>@oairecerif.person.gender@</gender>
+	<gender>@virtual.mapConverter.gender.oairecerif-person-gender@</gender>
 	<job-title>@person.jobTitle@</job-title>
 	<main-affiliation>@person.affiliation.name@</main-affiliation>
 	<personal-sites>
@@ -26,7 +26,7 @@
 		<interest>@dc.subject@</interest>
 	</interests>
 	<ocde-subjects>
-    		<ocde-subject>@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@</ocde-subject>
+    		<ocde-subject>@virtual.mapConverter.ocdeSubjects.perucris-subject-ocde@</ocde-subject>
     </ocde-subjects>
 	<identifiers>
 		<orcid>@person.identifier.orcid@</orcid>
@@ -58,13 +58,13 @@
 			<name>@crisrp.education@</name>
 			<start-date>@crisrp.education.start@</start-date>
 			<end-date>@crisrp.education.end@</end-date>
-			<role>@crisrp.education.role@</role>
+			<role>@virtual.mapConverter.publicationRenatiLevels.crisrp-education-role@</role>
 			<grantor>@perucris.education.grantor@</grantor>
-			<country>@perucris.education.country@</country>
+			<country>@virtual.mapConverter.countries.perucris-education-country@</country>
 		</education>
 		@group.crisrp-education.end@
 	</educations>
-	<country>@crisrp.country@</country>
+	<country>@virtual.mapConverter.countries.crisrp-country@</country>
 	<qualifications>
 		@group.crisrp-qualification.start@
 		<qualification>
@@ -80,11 +80,11 @@
 		<language>@person.knowsLanguage@</language>
 	</knows-languages>
 	<personal-picture>@virtual.bitstream.original.picture@</personal-picture>
-	<ubigeo-reniec>@virtual.mapConverter.ubigeoUris.perucris-domicilio-ubigeoReniec@</ubigeo-reniec>
+	<ubigeo-reniec>@perucris.domicilio.ubigeoReniec@</ubigeo-reniec>
     <address>
         <street>@perucris.address.streetAddress@</street>
         <postal-code>@perucris.address.postalCode@</postal-code>
-        <country>@perucris.address.addressCountry@</country>
+        <country>@virtual.mapConverter.countries.perucris-address-addressCountry@</country>
     </address>
 	<publications>
 		@relation.researchoutputs.start@

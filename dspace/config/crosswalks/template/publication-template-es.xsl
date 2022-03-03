@@ -62,9 +62,17 @@
 				    	<xsl:with-param name="label" select="'Número SCP'" />
 				    	<xsl:with-param name="value" select="cerif:SCP-Number" />
 			    	</xsl:call-template>
+					<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'ARK'" />
+						<xsl:with-param name="value" select="cerif:ARK" />
+					</xsl:call-template>
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'Handle o URL'" />
+						<xsl:with-param name="values" select="cerif:Url" />
+					</xsl:call-template>
 					<fo:block font-size="10pt" margin-top="2mm">
 						<fo:inline font-weight="bold" text-align="right"  >
-							<xsl:text>Authors: </xsl:text>
+							<xsl:text>Autor(es): </xsl:text>
 						</fo:inline >
 						<fo:inline>
 						<xsl:for-each select="cerif:Authors/cerif:Author">
@@ -78,7 +86,7 @@
 					</fo:block>
 					<fo:block font-size="10pt" margin-top="2mm">
 						<fo:inline font-weight="bold" text-align="right"  >
-							<xsl:text>Editors: </xsl:text>
+							<xsl:text>Editor(es): </xsl:text>
 						</fo:inline >
 						<fo:inline>
 						<xsl:for-each select="cerif:Editors/cerif:Editor">
@@ -88,6 +96,20 @@
 							</xsl:if>
 						    <xsl:if test="position() != last()"> and </xsl:if>
 						</xsl:for-each>
+						</fo:inline >
+					</fo:block>
+					<fo:block font-size="10pt" margin-top="2mm">
+						<fo:inline font-weight="bold" text-align="right"  >
+							<xsl:text>Editorial(es): </xsl:text>
+						</fo:inline >
+						<fo:inline>
+							<xsl:for-each select="cerif:Publishers/cerif:Publisher">
+								<xsl:value-of select="cerif:DisplayName" />
+								<xsl:if test="cerif:Affiliation/cerif:OrgUnit/cerif:Name">
+									( <xsl:value-of select="cerif:Affiliation/cerif:OrgUnit/cerif:Name"/> )
+								</xsl:if>
+								<xsl:if test="position() != last()"> and </xsl:if>
+							</xsl:for-each>
 						</fo:inline >
 					</fo:block>
 					<xsl:call-template name="print-values">
@@ -102,6 +124,10 @@
                         <xsl:with-param name="label" select="'Materia(s) OCDE'" />
                         <xsl:with-param name="value" select="cerif:Subject" />
                     </xsl:call-template>
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'Idioma'" />
+						<xsl:with-param name="values" select="cerif:Language" />
+					</xsl:call-template>
                     <xsl:call-template name="print-value">
                         <xsl:with-param name="label" select="'Licencia'" />
                         <xsl:with-param name="value" select="cerif:License" />
@@ -110,6 +136,10 @@
                         <xsl:with-param name="label" select="'Versión'" />
                         <xsl:with-param name="value" select="cerif:Version" />
                     </xsl:call-template>
+					<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'Versión del producto'" />
+						<xsl:with-param name="value" select="cerif:ProductVersion" />
+					</xsl:call-template>
                     <xsl:call-template name="print-value">
                         <xsl:with-param name="label" select="'Disciplina'" />
                         <xsl:with-param name="value" select="cerif:Discipline" />
@@ -126,17 +156,17 @@
                         <xsl:with-param name="label" select="'Fecha de Fin del Embargo'" />
                         <xsl:with-param name="value" select="ar:Access/@endDate" />
                     </xsl:call-template>
+					<xsl:call-template name="print-value">
+                        <xsl:with-param name="label" select="'Versión de la publicación'" />
+                        <xsl:with-param name="value" select="cerif:PublicationVersion" />
+                    </xsl:call-template>
                     
                     
 					<xsl:call-template name="section-title">
 				    	<xsl:with-param name="label" select="'Detalles bibliográficos de la publicación'" />
 			    	</xsl:call-template>
 			    	
-			    	
-					<xsl:call-template name="print-value">
-				    	<xsl:with-param name="label" select="'Publicado en'" />
-				    	<xsl:with-param name="value" select="cerif:PublishedIn/cerif:Publication/cerif:Title" />
-				    </xsl:call-template>
+
 					<xsl:call-template name="print-value">
 				    	<xsl:with-param name="label" select="'ISSN'" />
 				    	<xsl:with-param name="value" select="cerif:ISSN" />
@@ -157,8 +187,90 @@
 				    	<xsl:with-param name="label" select="'Página de fin'" />
 				    	<xsl:with-param name="value" select="cerif:EndPage" />
 				    </xsl:call-template>
-			    	
-			    	
+					<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'Edición'" />
+						<xsl:with-param name="value" select="cerif:Edition" />
+					</xsl:call-template>
+					<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'Número'" />
+						<xsl:with-param name="value" select="cerif:CitationNumber" />
+					</xsl:call-template>
+
+					<xsl:call-template name="section-title">
+						<xsl:with-param name="label" select="'Recursos relacionados'" />
+					</xsl:call-template>
+
+					<fo:block font-size="10pt" margin-top="2mm">
+						<fo:inline font-weight="bold" text-align="right"  >
+							<xsl:text>Publicado en </xsl:text>
+						</fo:inline >
+						<fo:inline>
+							<xsl:value-of select="cerif:PublishedIn/cerif:Publication/cerif:Title" />
+							<xsl:if test="cerif:PublishedIn/cerif:Publication/cerif:Serie">
+								( Serie <xsl:value-of select="cerif:PublishedIn/cerif:Publication/cerif:Serie"/> )
+							</xsl:if>
+							<xsl:if test="cerif:PublishedIn/cerif:Publication/cerif:ISSN">
+								- ISSN: <xsl:value-of select="cerif:PublishedIn/cerif:Publication/cerif:ISSN"/>
+							</xsl:if>
+							<xsl:if test="cerif:PublishedIn/cerif:Publication/cerif:ISBN">
+								- ISBN: <xsl:value-of select="cerif:PublishedIn/cerif:Publication/cerif:ISBN"/>
+							</xsl:if>
+							<xsl:if test="cerif:PublishedIn/cerif:Publication/cerif:DOI">
+								- DOI: <xsl:value-of select="cerif:PublishedIn/cerif:Publication/cerif:DOI"/>
+							</xsl:if>
+						</fo:inline >
+					</fo:block>
+					<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'Conferencia'" />
+						<xsl:with-param name="value" select="cerif:PresentedAt/cerif:Event/cerif:Name" />
+					</xsl:call-template>
+					<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'Dataset'" />
+						<xsl:with-param name="value" select="cerif:Dataset" />
+					</xsl:call-template>
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'Patrocinador(es)'" />
+						<xsl:with-param name="values" select="cerif:Sponsorships/cerif:Sponsor" />
+					</xsl:call-template>
+
+					<xsl:call-template name="section-title">
+						<xsl:with-param name="label" select="'Datos de la tesis'" />
+					</xsl:call-template>
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'Asesor(es)'" />
+						<xsl:with-param name="values" select="cerif:Thesis/cerif:Advisors/cerif:Advisor/cerif:Person/cerif:Name" />
+					</xsl:call-template>
+					<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'Tipo Renati'" />
+						<xsl:with-param name="value" select="cerif:Thesis/cerif:Type" />
+					</xsl:call-template>
+					<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'Nivel Renati'" />
+						<xsl:with-param name="value" select="cerif:Thesis/cerif:Level" />
+					</xsl:call-template>
+					<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'Grado académico o título profesional'" />
+						<xsl:with-param name="value" select="cerif:Thesis/cerif:Name" />
+					</xsl:call-template>
+					<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'Nombre del programa'" />
+						<xsl:with-param name="value" select="cerif:Thesis/cerif:DegreeDiscipline" />
+					</xsl:call-template>
+					<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'Código del programa'" />
+						<xsl:with-param name="value" select="cerif:Thesis/cerif:Discipline" />
+					</xsl:call-template>
+					<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'Institución otorgante'" />
+						<xsl:with-param name="value" select="cerif:Thesis/cerif:Grantor" />
+					</xsl:call-template>
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'Jurado(s)'" />
+						<xsl:with-param name="values" select="cerif:Thesis/cerif:Jurors/cerif:Juror/cerif:Name" />
+					</xsl:call-template>
+
+
+
 					<xsl:call-template name="section-title">
 				    	<xsl:with-param name="label" select="'Proyectos'" />
 			    	</xsl:call-template>

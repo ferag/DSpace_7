@@ -6,13 +6,20 @@
 	"description": "@dc.description@",
 	"ownerOrgUnit": "@crisequipment.ownerou@",
 	"ownerPerson": "@crisequipment.ownerrp@",
-	"usage": "@perucris.type.usage@",
-	"subjects": [
-	   "@virtual.mapConverter.ocdeSubjects.perucris-subject-ocde@",
+	"usage": [
+	    "@perucris.type.usage@",
+	 ],
+	"ocdeSubjects": [
+	   "@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@",
 	],
 	"researchLine": "@perucris.researchLine@",
 	"fundings": [
-       "@dc.relation.funding@",
+	   @group.dc-relation-funding.start@
+       {
+         "funder": "@dc.relation.funding@",
+         "name": "@dc.relation.grantno@",
+       },
+       @group.dc-relation-funding.end@
     ],
     "manufacturingCountry": "@perucris.manufacturingCountry@",
     "manufacturingDate": "@perucris.date.manufacturing@",

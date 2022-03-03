@@ -40,5 +40,6 @@
 	"OAMandate": {
 		"mandated": "@oairecerif.oamandate@",
 		"URL": "@oairecerif.oamandate.url@"
-	}
+	},
+	"project": "@dc.relation.project@"
 }

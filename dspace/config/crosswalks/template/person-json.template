@@ -25,13 +25,15 @@
 	"interests": [
 		"@dc.subject@",
 	],
+	"ocde-subjects": [
+		"@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@",
+	],
 	"identifiers": {
 		"orcid": "@person.identifier.orcid@",
 		"dina": "@perucris.identifier.dina@",
         "dni": "@perucris.identifier.dni@",
         "passport": "@perucris.identifier.passport@",
         "immigration-card": "@perucris.identifier.immigrationCard@",
-        "renacyt": "@perucris.identifier.renacyt@",
 		"scopus-author-ids": [
 			"@person.identifier.scopus-author-id@",
 		],
@@ -56,7 +58,9 @@
 			"name": "@crisrp.education@",
 			"start-date": "@crisrp.education.start@",
 			"end-date": "@crisrp.education.end@",
-			"role": "@crisrp.education.role@"
+			"role": "@crisrp.education.role@",
+			"grantor": "@perucris.education.grantor@",
+			"country": "@perucris.education.country@"
 		},
 		@group.crisrp-education.end@
 	],
@@ -67,13 +71,15 @@
 			"name": "@crisrp.qualification@",
 			"start-date": "@crisrp.qualification.start@",
 			"end-date": "@crisrp.qualification.end@"
+			"org-unit": "@crisrp.qualification.orgunit@"
+			"renacyt": "@perucris.identifier.renacyt@"
 		},
 		@group.crisrp-qualification.end@
 	],
 	"knows-languages": [
 		"@person.knowsLanguage@",
 	],
-	"ubigeo-reniec": "@perucris.domicilio.ubigeoReniec@",
+	"ubigeo-reniec": "@virtual.mapConverter.ubigeoUris.perucris-domicilio-ubigeoReniec@",
     "address": {
         "street": "@perucris.address.streetAddress@",
         "postal-code": "@perucris.address.postalCode@",

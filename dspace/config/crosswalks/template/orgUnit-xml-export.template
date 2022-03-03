@@ -1,0 +1,41 @@
+<OrgUnit id="@virtual.id@">
+	<Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">@virtual.mapConverter.orgUnitTypes.dc-type@</Type>
+    <Acronym>@oairecerif.acronym@</Acronym>
+    <Name>@dc.title@</Name>
+    <Name>@organization.legalName@</Name>
+    <Identifier>@organization.identifier@</Identifier>
+    <Url>@oairecerif.identifier.url@</Url>
+    <Identifier type="RUC">@organization.identifier.ruc@</Identifier>
+    <Identifier type="Ringgold">@organization.identifier.rin@</Identifier>
+    <Identifier type="Research Organization Registry">@organization.identifier.ror@</Identifier>
+    <Identifier type="International Standard Name">@organization.identifier.isni@</Identifier>
+    <Identifier type="Scopus Affiliation">@organization.identifier.scopusaffid@</Identifier>
+    <Identifier type="CrossRef Funder">@organization.identifier.crossrefid@</Identifier>
+    <ParentOrganization>@organization.parentOrganization@</ParentOrganization>
+    <Subject scheme="http://purl.org/pe-repo/ocde/ford">@virtual.mapConverter.ocdeSubjects.perucris-subject-ocde@</Subject>
+    <Keyword>@dc.subject@</Keyword>
+    <PostAddress>
+        <AddressLocality>@organization.address.addressLocality@</AddressLocality>
+        <AddressCountry>@virtual.mapConverter.countries.organization-address-addressCountry@</AddressCountry>
+    </PostAddress>
+    <Email>@orgunit.email@</Email>
+    <UbiGeo scheme="https://purl.org/pe-repo/inei/ubigeo">@perucris.ubigeo@</UbiGeo>
+    <Description>@dc.description.abstract@</Description>
+    <InstitutionalSector>@virtual.mapConverter.ocdeInstitutionalSector.perucris-type-sectorInstitucional@</InstitutionalSector>
+    <DependencyType>@virtual.mapConverter.orgunitType.perucris-type-orgunit@</DependencyType>
+    <SuneduClassification>@virtual.mapConverter.institutionType.perucris-type-educacionSuperior@</SuneduClassification>
+    <JuridicalNature>@virtual.mapConverter.organizationNature.perucris-type-naturaleza@</JuridicalNature>
+    <CiiuClassification>@perucris.type.ciiu@</CiiuClassification>
+    <ConcytecRecords>
+        <Renacyt>
+            <Registration>@perucris.renacyt.registration@</Registration>
+            <RegistrationNumber>@perucris.renacyt.registrationNumber@</RegistrationNumber>
+            <Classification>@perucris.renacyt.classification@</Classification>
+            <Ocde>@virtual.mapConverter.ocdeSubjects.perucris-renacyt-ocde@</Ocde>
+            <Strength>@perucris.renacyt.strength@</Strength>
+            <DateOfQualification>@perucris.renacyt.dateOfQualification@</DateOfQualification>
+            <Validity>@perucris.renacyt.validityOfRegistration@</Validity>
+            <Contact>@perucris.renacyt.contact@</Contact>
+        </Renacyt>
+    </ConcytecRecords>
+</OrgUnit>

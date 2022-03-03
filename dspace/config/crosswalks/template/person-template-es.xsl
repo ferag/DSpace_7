@@ -101,11 +101,7 @@
                                     <xsl:with-param name="label" select="'Tarjeta de inmigración'" />
                                     <xsl:with-param name="value" select="identifiers/immigration-card" />
                                 </xsl:call-template>
-                                <xsl:call-template name="print-value">
-                                    <xsl:with-param name="label" select="'Renacyt'" />
-                                    <xsl:with-param name="value" select="identifiers/renacyt" />
-                                </xsl:call-template>
-								<xsl:call-template name="print-values">
+                                <xsl:call-template name="print-values">
 							    	<xsl:with-param name="label" select="'ID Scopus del autor'" />
 							    	<xsl:with-param name="values" select="identifiers/scopus-author-ids/scopus-author-id" />
 						    	</xsl:call-template>
@@ -148,6 +144,13 @@
 								<xsl:if test="end-date/text()">
 								 hasta <xsl:value-of select="end-date" />
 								</xsl:if>
+								<xsl:if test="grantor/text()">
+								 Centro de estudios: <xsl:value-of select="grantor" />
+								</xsl:if>
+								<xsl:if test="country/text()">
+									- <xsl:value-of select="country" />
+								</xsl:if>
+
 							</fo:block>
 						</xsl:for-each>
 					
@@ -163,6 +166,12 @@
 								<xsl:value-of select="name" /> desde <xsl:value-of select="start-date" />
 								<xsl:if test="end-date/text()">
 								 hasta <xsl:value-of select="end-date" />
+								</xsl:if>
+								<xsl:if test="renacyt/text()">
+								 Código: <xsl:value-of select="renacyt" />
+								</xsl:if>
+								<xsl:if test="renacyt/text()">
+								 Nivel: <xsl:value-of select="renacyt" />
 								</xsl:if>
 							</fo:block>
 						</xsl:for-each>
@@ -200,6 +209,7 @@
                     ( count(address/country) &gt; 0 ) or 
                     ( count(working-groups/working-group) &gt; 0 ) or 
                     ( count(interests/interest) &gt; 0 ) or 
+                    ( count(ocde-subjects/ocde-subject) &gt; 0 ) or
                     ( count(knows-languages/language) &gt; 0 )">
                     
 	                    <xsl:call-template name="section-title">
@@ -222,6 +232,10 @@
 	                        <xsl:with-param name="label" select="'Intereses'" />
 	                        <xsl:with-param name="values" select="interests/interest" />
 	                    </xsl:call-template>
+						<xsl:call-template name="print-values">
+							<xsl:with-param name="label" select="'Campo de conocimiento OCDE'" />
+							<xsl:with-param name="values" select="ocde-subjects/ocde-subject" />
+						</xsl:call-template>
 	                    <xsl:call-template name="print-values">
 	                        <xsl:with-param name="label" select="'Idiomas'" />
 	                        <xsl:with-param name="values" select="knows-languages/language" />
@@ -232,7 +246,7 @@
 	  				<xsl:if test="personal-sites/personal-site">
 				    	<fo:block font-size="10pt" margin-top="2mm">
 				    		<fo:inline font-weight="bold" text-align="right" >
-								Personal sites:
+								Web personal:
 							</fo:inline>
 							<fo:inline>
 								<xsl:for-each select="personal-sites/personal-site">

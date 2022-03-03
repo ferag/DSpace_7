@@ -1,12 +1,15 @@
-<Publication xmlns="https://www.openaire.eu/cerif-profile/1.1/" id="@virtual.id@">
-	<Type xmlns="https://www.openaire.eu/cerif-profile/vocab/COAR_Publication_Types">@virtual.mapConverter.coarTypes.dc-type@</Type>
-	<Language>@dc.language.iso@</Language>
+<Publication xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="@virtual.id@">
+	<Type xmlns="https://www.openaire.eu/cerif-profile/vocab/COAR_Publication_Types">@dc.type@</Type>
+	<Language>@virtual.mapConverter.languages.dc-language-iso@</Language>
    	<Title>@dc.title@</Title>
    	<Subtitle>@dc.title.alternative@</Subtitle>
+   	<ProductVersion>@datacite.version@</ProductVersion>
+   	<PublicationVersion>@virtual.mapConverter.coarVersions.oaire-version@</PublicationVersion>
    	<PublishedIn>
     	<Publication>
         	<Title>@dc.relation.publication@</Title>
         	<Title>@dc.relation.ispartof@</Title>
+        	<Serie>@dc.relation.ispartofseries@</Serie>
          	<ISSN>@dc.relation.issn@</ISSN>
          	<ISBN>@dc.relation.isbn@</ISBN>
          	<DOI>@dc.relation.doi@</DOI>
@@ -17,12 +20,16 @@
 	<Issue>@oaire.citation.issue@</Issue>
    	<StartPage>@oaire.citation.startPage@</StartPage>
    	<EndPage>@oaire.citation.endPage@</EndPage>
+   	<Edition>@oaire.citation.edition@</Edition>
+   	<CitationNumber>@oaire.citation.number@</CitationNumber>
    	<DOI>@dc.identifier.doi@</DOI>
     <PMCID>@dc.identifier.pmid@</PMCID>
     <ISI-Number>@dc.identifier.isi@</ISI-Number>
     <SCP-Number>@dc.identifier.scopus@</SCP-Number>
     <ISSN>@dc.identifier.issn@</ISSN>
    	<ISBN>@dc.identifier.isbn@</ISBN>
+   	<ARK>@dc.identifier.ark@</ARK>
+   	<Url>@dc.identifier.url@</Url>
    	<Authors>
    		@group.dc-contributor-author.start@
       	<Author>
@@ -112,6 +119,31 @@
 	<Access xmlns="http://purl.org/coar/access_right"
         endDate="@oairecerif.access.embargoEnd@"
     >
-        @virtual.mapConverter.accessRight.oairecerif-access@
+        @virtual.mapConverter.accessRightUri.oairecerif-access@
     </Access>
+    <Version>@virtual.mapConverter.publicationOaireVersions.oaire-version@</Version>
+    <Advisors>
+        <Advisor> <Person> <Name>@dc.contributor.advisor@</Name> </Person> </Advisor>
+    </Advisors>
+    <Discipline>@renati.discipline@</Discipline>
+    <Dataset>@dc.relation.dataset@</Dataset>
+    <Sponsorships>
+        <Sponsor>@dc.relation.sponsorship@</Sponsor>
+    </Sponsorships>
+    <Thesis>
+        <Type>@virtual.mapConverter.publicationRenatiTypes.renati-type@</Type>
+        <Level>@virtual.mapConverter.publicationRenatiLevels.renati-level@</Level>
+        <Advisors>
+                <Advisor> <Person> <Name>@dc.contributor.advisor@</Name> </Person> </Advisor>
+        </Advisors>
+        <Name>@thesis.degree.name@</Name>
+        <DegreeDiscipline>@thesis.degree.discipline@</DegreeDiscipline>
+        <Discipline>@renati.discipline@</Discipline>
+        <Grantor>@thesis.degree.grantor@</Grantor>
+        <Jurors>
+            <Juror>
+                <Name>@renati.juror@</Name>
+            </Juror>
+        </Jurors>
+    </Thesis>
 </Publication>

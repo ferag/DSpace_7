@@ -1,0 +1,99 @@
+{
+  "language": [
+    "@dc.language.iso@",
+    ],
+  "author": [
+    {
+      "family": "@dc.contributor.author@"
+    },
+  ],
+  "editor": [
+    {
+      "family": "@dc.contributor.editor@"
+    },
+  ],
+  "issued": "@dc.date.issued@",
+  "abstract": "@dc.description.abstract@",
+  "DOI": "@dc.identifier.doi@",
+  "presented-at": [
+    "@dc.relation.conference@",
+  ],
+  "ISBN": [
+    "@dc.identifier.isbn@",
+  ],
+  "issue": "@oaire.citation.issue@",
+  "keyword": [
+    "@dc.subject@",
+  ],
+  "subject": [
+    "@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@",
+  ],
+  "PMID": "@dc.identifier.pmid@",
+  "publisher": [
+    "@dc.publisher@",
+  ],
+  "title": "@dc.title@",
+  "subtitle" : [
+    "@dc.title.alternative@"
+  ],
+  "volume": "@oaire.citation.volume@",
+  "access": {
+    "type": "@oairecerif.access@",
+    "embargo-end": "@oairecerif.access.embargoEnd@",
+  },
+  "license": "@dc.rights.uri@",
+  "type" : "@dc.type@",
+  "version": "@datacite.version@",
+  "publication-version": "@oaire.version@",
+  "citation": {
+    "start-page": "@oaire.citation.startPage@",
+    "end-page": "@oaire.citation.endPage@",
+    "edition": "@oaire.citation.edition@",
+    "volume": "@oaire.citation.volume@",
+    "issue": "@oaire.citation.issue@",
+    "number": "@oaire.citation.number@",
+  },
+  "url": [
+    "@dc.identifier.url@",
+  ],
+  "scopus-identifier": "@dc.identifier.scopus@",
+  "ark-identifier": "@dc.identifier.ark@",
+  "published-in": {
+    "serie": "@dc.relation.ispartofseries@",
+    "title": "@dc.relation.ispartof@",
+    "issn": "@dc.relation.issn@",
+    "isbn": "@dc.relation.isbn@",
+    "doi": "@dc.relation.doi@",
+    "publication": "@dc.relation.publication@",
+
+  },
+  "dataset": [
+    "@dc.relation.dataset@",
+  ],
+  "funding": [
+    "@dc.relation.funding@",
+  ],
+  "project": [
+    "@dc.relation.project@",
+  ],
+  "sponsor": [
+    "@dc.description.sponsorship@",
+  ],
+  "thesis": [
+    {
+    "advisor": [
+        "@dc.contributor.advisor@",
+    ],
+    "type": "@renati.type@",
+    "level": "@renati.level@",
+    "name": "@thesis.degree.name@",
+    "degree-discipline": "@thesis.degree.discipline@",
+    "renati-discipline": "@renati.discipline@",
+    "grantor": "@thesis.degree.grantor@",
+    "juror": [
+        "@renati.juror@",
+    ],
+  },
+]
+
+}

@@ -46,6 +46,7 @@ import org.dspace.layout.LayoutSecurity;
 import org.dspace.utils.DSpace;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -118,6 +119,7 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testDisseminateManyPersons() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -170,6 +172,7 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testDisseminateSinglePerson() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -217,6 +220,7 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testDisseminatePublications() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -266,6 +270,7 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testDisseminatePublicationsWithSpanishCoarTypes() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -315,6 +320,7 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testDisseminateProjects() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -379,6 +385,7 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testDisseminateOrgUnits() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -446,6 +453,7 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testDisseminateEquipments() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -511,6 +519,7 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testDisseminateFundings() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -580,6 +589,7 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testDisseminatePatents() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -653,6 +663,7 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testPersonDisseminateWithNotPublicMetadataFields() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -726,6 +737,7 @@ public class CsvCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testCvPersonDisseminateWithNotPublicMetadataFields() throws Exception {
 
         context.turnOffAuthorisationSystem();

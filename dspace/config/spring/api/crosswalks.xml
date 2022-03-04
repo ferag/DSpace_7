@@ -802,7 +802,7 @@
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.ReferCrosswalk" id="referCrosswalkFundingCerifXmlExport">
-		<property name="templateFileName" value="crosswalks/template/funding-perucris-cerif-xml-export.template"/>
+		<property name="templateFileName" value="crosswalks/template/funding-xml-export.template"/>
 		<property name="mimeType" value="application/xml; charset=UTF-8"/>
 		<property name="fileName" value="funding.xml"/>
 		<property name="entityType" value="Funding"/>
@@ -2006,6 +2006,7 @@
 				<entry key="languages" value-ref="mapConverterLanguages" />
 				<entry key="coarVersions" value-ref="mapConverterCoarVersions" />
 				<entry key="currencies" value-ref="mapConverterCurrencies" />
+				<entry key="personProfiles" value-ref="mapConverterPersonProfiles" />
 			</map>
 		</constructor-arg>
 	</bean>
@@ -2282,6 +2283,13 @@
 
 	<bean name="mapConverterCurrencies" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
 		<property name="converterNameFile" value="mapConverter-currencies.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+		<property name="defaultValue" value=""/>
+		<property name="charset" value="UTF-8"/>
+	</bean>
+
+	<bean name="mapConverterPersonProfiles" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
+		<property name="converterNameFile" value="mapConverter-personProfiles.properties" />
 		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
 		<property name="defaultValue" value=""/>
 		<property name="charset" value="UTF-8"/>

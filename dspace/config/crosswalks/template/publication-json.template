@@ -97,7 +97,7 @@
     @group.dc-relation-funding.start@
     {
         "funding": "@dc.relation.funding@",
-        "grantno": @dc.relation.grantno@",
+        "grantno": "@dc.relation.grantno@",
      },
     @group.dc-relation-funding.end@
   ],

@@ -761,7 +761,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(content, containsString("Otra información"));
         assertThat(content, containsString("Intereses: Science"));
         assertThat(content, containsString("Idiomas: English, Italian"));
-        assertThat(content, containsString("Personal sites: www.test.com ( Test ) , www.john-smith.com , "
+        assertThat(content, containsString("Web personal: www.test.com ( Test ) , www.john-smith.com , "
             + "www.site.com ( Site )"));
     }
 
@@ -775,14 +775,16 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(content, containsString("ISBN: 978-3-16-148410-0"));
         assertThat(content, containsString("Número ISI: 111-222-333"));
         assertThat(content, containsString("Número SCP: 99999999"));
-        assertThat(content, containsString("Authors: John Smith and Walter White ( Company )"));
-        assertThat(content, containsString("Editors: Editor ( Editor Affiliation )"));
+        assertThat(content, containsString("Autor(es): John Smith and Walter White ( Company )"));
+        assertThat(content, containsString("Editor(es): Editor ( Editor Affiliation )"));
+        assertThat(content, containsString("Editorial(es): Publication publisher"));
         assertThat(content, containsString("Palabras clave: test, export"));
         assertThat(content, containsString("Tipo: Controlled Vocabulary for Resource Type Genres::text::review"));
         assertThat(content, containsString("Materia(s) OCDE: OCDE"));
+        assertThat(content, containsString("Idioma: Inglés"));
 
         assertThat(content, containsString("Detalles bibliográficos de la publicación"));
-        assertThat(content, containsString("Publicado en: Published in publication"));
+        assertThat(content, containsString("Published in publication - DOI: doi:10.3972/test"));
         assertThat(content, containsString("ISSN: 2049-3630"));
         assertThat(content, containsString("Volumen: V.01"));
         assertThat(content, containsString("Fascículo: Issue"));
@@ -807,17 +809,17 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(content, containsString("Estado: OPEN"));
 
         assertThat(content, containsString("Consorcio"));
-        assertThat(content, containsString("Coordinadores del consorcio: Coordinator OrgUnit"));
-        assertThat(content, containsString("Organizaciones socias: Partner OrgUnit, Another Partner OrgUnit"));
+        assertThat(content, containsString("Organizaciones asociadas: Partner OrgUnit, Another Partner OrgUnit"));
         assertThat(content, containsString("Organizacions participantes: First Member OrgUnit, "
             + "Second Member OrgUnit, Third Member OrgUnit"));
 
         assertThat(content, containsString("Equipo"));
-        assertThat(content, containsString("Coordinador del proyecto: Investigator"));
+        assertThat(content, containsString("Coordinador general: Coordinator OrgUnit"));
+        assertThat(content, containsString("Investigador principal: Investigator"));
         assertThat(content, containsString("Co-investigador(es): First coinvestigator, Second coinvestigator"));
 
         assertThat(content, containsString("Otra información"));
-        assertThat(content, containsString("Campo del conocimiento OCDE: First OCDE Subject, Second OCDE Subject"));
+        assertThat(content, containsString("Campo del conoscimiento OCDE: First OCDE Subject, Second OCDE Subject"));
         assertThat(content, containsString("Usa equipmiento(s): Test equipment"));
         assertThat(content, containsString("Palabra(s) clave: project, test"));
         assertThat(content, containsString("Mandato OA: true"));
@@ -845,18 +847,19 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
         assertThat(content, containsString("This is an equipment to test the export functionality"));
 
         assertThat(content, containsString("Información básica"));
-        assertThat(content, containsString("Acrónimo del equipamiento: T-EQ"));
-        assertThat(content, containsString("Tipo: Type"));
-        assertThat(content, containsString("Identificador único de la institución: ID-01"));
-        assertThat(content, containsString("Propietario (Organización): Test OrgUnit"));
-        assertThat(content, containsString("Financiador(es): Funding, Another Funding"));
-        assertThat(content, containsString("Materia(s): First subject, Second subject"));
-        assertThat(content, containsString("Linea de investigación: ResearchLine"));
-        assertThat(content, containsString("País de manufactura: IT"));
-        assertThat(content, containsString("Fecha de manufactura: 2020-01-01"));
+        assertThat(content, containsString("Acrónimo: T-EQ"));
+        assertThat(content, containsString("Tipo de equipamiento: Type"));
+        assertThat(content, containsString("Código del equipamiento: ID-01"));
+        assertThat(content, containsString("Organización propietaria: Test OrgUnit"));
+        assertThat(content, containsString("Funding, Another Funding"));
+        assertThat(content, containsString("Campo de conocimiento OCDE: First subject, Second subject"));
+        assertThat(content, containsString("Uso del equipamiento: Investigacion cientifica y desarrollo experimental"));
+        assertThat(content, containsString("Línea de investigación institucional: ResearchLine"));
+        assertThat(content, containsString("País de fabricación o ensamblaje: Italia"));
+        assertThat(content, containsString("Fecha de fabricación: 2020-01-01"));
         assertThat(content, containsString("Fecha de adquisición: 2021-01-01"));
-        assertThat(content, containsString("Cantidad: 4000"));
-        assertThat(content, containsString("Moneda: €"));
+        assertThat(content, containsString("Monto de adquisición: 4000"));
+        assertThat(content, containsString("Moneda de adquisición: €"));
 
     }
 
@@ -866,28 +869,25 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
 
         assertThat(content, containsString("Información básica"));
         assertThat(content, containsString("Acrónimo: T-FU"));
-        assertThat(content, containsString("Tipo: https://www.openaire.eu/cerif-profile/vocab/"
-            + "OpenAIRE_Funding_Types#Gift"));
+        assertThat(content, containsString("Tipo: Gift"));
         assertThat(content, containsString("Código de financiamiento: ID-01"));
-        assertThat(content, containsString("Cantidad: 30.000,00 (EUR)"));
+        assertThat(content, containsString("Monto programado: 30.000,00 (EUR)"));
         assertThat(content, containsString("Monto ejecutado: 15.000,00 (EUR)"));
-        assertThat(content, containsString("Financiador: OrgUnit Funder, OrgUnit Funder 2"));
+        assertThat(content, containsString("Entidad subvencionadora: OrgUnit Funder, OrgUnit Funder 2"));
         assertThat(content, containsString("Duración: desde 2015-01-01 hasta 2020-01-01"));
-        assertThat(content, containsString("Mandato OA: true"));
-        assertThat(content, containsString("URL de políticas OA: www.mandate.url"));
     }
 
     private void assertThatPatentDocumentHasContent(String text) {
         assertThat(text, containsString("Test patent"));
         assertThat(text, containsString("This is a patent"));
-        assertThat(text, containsString("Basic informations"));
-        assertThat(text, containsString("Registration date: 2021-01-01"));
-        assertThat(text, containsString("Approval date: 2020-01-01"));
-        assertThat(text, containsString("Patent number: 12345-666"));
-        assertThat(text, containsString("Inventor(s): Walter White (4Science), Jesse Pinkman, John Smith (4Science)"));
-        assertThat(text, containsString("Holder(s): Test Organization"));
-        assertThat(text, containsString("Keyword(s): patent, test"));
-        assertThat(text, containsString("Predecessor(s): Another patent"));
+        assertThat(text, containsString("Información básica de la patente"));
+        assertThat(text, containsString("Número de la patente: 12345-666"));
+        assertThat(text, containsString("Inventor(es): Walter White (4Science), Jesse Pinkman, John Smith (4Science)"));
+        assertThat(text, containsString("Titular(es) de la patente (Organizaciones): Test Organization"));
+        assertThat(text, containsString("Fecha de presentación de solicitud original: 2020-01-01"));
+        assertThat(text, containsString("Fecha de concesión: 2021-01-01"));
+        assertThat(text, containsString("Palabra(s) clave: patent, test"));
+        assertThat(text, containsString("Predecesor(es): Another patent"));
     }
 
     private FileInputStream getFileInputStream(String name) throws FileNotFoundException {

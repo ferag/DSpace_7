@@ -83,7 +83,7 @@
 		@group.crisrp-qualification.end@
 	</qualifications>
 	<knows-languages>
-		<language>@person.knowsLanguage@</language>
+		<language>@virtual.mapConverter.languages.person-knowsLanguage@</language>
 	</knows-languages>
 	<personal-picture>@virtual.bitstream.original.picture@</personal-picture>
 	<ubigeo-reniec>@perucris.domicilio.ubigeoReniec@</ubigeo-reniec>

@@ -53,7 +53,7 @@
 		URL="@oairecerif.oamandate.url@" 
 	/>
 	@relation.dc-relation-project.start@
-	    <Project id="@virtual.id">
+	    <Project id="@virtual.id@">
 	        <Name>@dc.title@</Name>
 	    </Project>
 	@relation.dc-relation-project.end@

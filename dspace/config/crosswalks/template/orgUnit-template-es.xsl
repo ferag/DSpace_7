@@ -22,6 +22,10 @@
 							<xsl:value-of select="Name" />
 						</fo:block>
 					</fo:block>
+
+					<fo:block font-size="10pt" space-after="5mm" text-align="justify" margin-top="5mm" >
+						<xsl:value-of select="Description" />
+					</fo:block>
 					
 					<xsl:call-template name="section-title">
 				    	<xsl:with-param name="label" select="'Información basica'" />
@@ -147,18 +151,19 @@
 						<xsl:with-param name="values" select="CiiuClassification" />
 					</xsl:call-template>
 
-					<xsl:if test="ConcytecRecords/Renacyt">
+					<xsl:if test="ConcytecRecords/Renacyt/Registration">
 
 						<xsl:call-template name="section-title">
 							<xsl:with-param name="label" select="'Registros Concytec'" />
 						</xsl:call-template>
 						<xsl:for-each select="ConcytecRecords/Renacyt">
 							<fo:block font-size="10pt">
-								<xsl:call-template name="print-value">
-									<xsl:with-param name="label" select="'Registration'" />
-									<xsl:with-param name="value" select="Registration" />
-								</xsl:call-template>
-								<xsl:value-of select="Registration" />,  Resolución: <xsl:value-of select="RegistrationNumber" />
+								<xsl:if test="Registration">
+									<fo:inline font-weight="bold" text-align="right"  >
+										<xsl:text>Registro: </xsl:text>
+									</fo:inline >
+									<xsl:value-of select="Registration" />,  Resolución: <xsl:value-of select="RegistrationNumber" />
+								</xsl:if>
 								<xsl:if test="Classification">
 									<xsl:call-template name="print-value">
 										<xsl:with-param name="label" select="'Categoría'" />

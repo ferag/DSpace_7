@@ -223,9 +223,11 @@
 					</xsl:call-template>
 
 					<fo:block font-size="10pt" margin-top="2mm">
-						<fo:inline font-weight="bold" text-align="right"  >
-							<xsl:text>Publicado en </xsl:text>
-						</fo:inline >
+						<xsl:if test="cerif:PublishedIn/cerif:Publication/cerif:Title">
+							<fo:inline font-weight="bold" text-align="right"  >
+								<xsl:text>Publicado en: </xsl:text>
+							</fo:inline >
+						</xsl:if>
 						<fo:inline>
 							<xsl:value-of select="cerif:PublishedIn/cerif:Publication/cerif:Title" />
 							<xsl:if test="cerif:PublishedIn/cerif:Publication/cerif:Serie">

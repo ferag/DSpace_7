@@ -1,7 +1,7 @@
 Título = dc.title
 Otros títulos = dc.title.alternative
-Tipo = virtual.mapConverter.coarTypes.dc-type
-Idioma = dc.language.iso
+Tipo = dc.type
+Idioma = virtual.mapConverter.languages.dc-language-iso
 Fecha de publicación = dc.date.issued
 Parte de = dc.relation.publication
 Recurso del cual forma parte = dc.relation.ispartof

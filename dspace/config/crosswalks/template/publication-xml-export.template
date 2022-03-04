@@ -125,7 +125,7 @@
 					<Name>@oairecerif.funder@</Name>
 				</OrgUnit>
 			</Funder>
-		    <Code>@dc.relation.grantno</Code>
+		    <Code>@dc.relation.grantno@</Code>
 		</Funding>
    	</OriginatesFrom>
    	@relation.dc-relation-funding.end@

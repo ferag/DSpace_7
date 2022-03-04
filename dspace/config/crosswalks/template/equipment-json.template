@@ -2,7 +2,7 @@
 	"name": "@dc.title@",
 	"alternativeName": [
 	    "@dc.title.alternative@",
-    ]
+    ],
 	"acronym": "@oairecerif.acronym@",
 	"type": "@dc.type@",
 	"identifier": "@oairecerif.internalid@",

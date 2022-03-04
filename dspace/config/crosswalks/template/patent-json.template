@@ -40,7 +40,7 @@
 		"@dc.relation.funding@",
 	],
 	"grantors" : [
-	    "@oairecerif.patent.issuer@"
+	    "@oairecerif.patent.issuer@",
 	],
 	"projects": [
 		"@dc.relation.project@",

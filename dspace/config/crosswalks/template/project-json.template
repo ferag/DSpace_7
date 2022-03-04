@@ -5,7 +5,7 @@
 	"internal-id":"@oairecerif.internalid@",
 	"internal-note":"@perucris.description.internalNote@",
 	"title":"@dc.title@",
-	"title": [
+	"alternative-title": [
 	    "@dc.title.alternative@",
     ],
 	"openaireid": [
@@ -51,7 +51,7 @@
 			{	"name": "@crispj.organization@" },
 			@if.not.authority.crispj-organization.end@
 		],
-		"members": [
+		"inKindContributors": [
             @relation.crispj-inKindContributorou.start@
             {
                 "name":"@dc.title@",
@@ -81,23 +81,23 @@
 		    {
                 "name": "@crispj.coinvestigators@",
                 "role": "@crispj.coinvestigators.role@",
-		    }
+		    },
 		    @group.crispj-coinvestigators.end@
 		    @group.crispj-organizationper.start@
             {
                 "name": "@crispj.organizationper@",
-            }
+            },
             @group.crispj-organizationper.end@
 		],
 		@if.metadata.crispj-contractorper.start@
         "mainExecutors": [
             "@crispj.contractorper@",
-        ]
+        ],
         @if.metadata.crispj-contractorper.end@
         @if.metadata.crispj-partnerper.start@
         "partners": [
             "@crispj.partnerper@",
-        ]
+        ],
         @if.metadata.crispj-partnerper.end@
         @if.metadata.crispj-inKindContributorper.start@
         "inKindContributors": [
@@ -159,7 +159,9 @@
 		"URL": "@oairecerif.oamandate.url@" 
 	},
 	"industrialClassification": "@perucris.type.ciiu@",
-	"researchLine": "@perucris.researchLine@",
+	"researchLines": [
+	    "@perucris.researchLine@",
+	 ],
     "geoLocations": [
         @group.datacite-geoLocationPlace.start@
         {

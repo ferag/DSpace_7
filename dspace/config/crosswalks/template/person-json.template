@@ -19,9 +19,15 @@
 		},
 		@group.oairecerif-identifier-url.end@
 	],
-	"email": "@person.email@",
-	"phone": "@perucris.phone@",
-    "mobile-phone": "@perucris.mobilePhone@",
+	"email": [
+	   "@person.email@",
+	   ],
+	"phone": [
+	    "@perucris.phone@",
+	    ],
+    "mobile-phone": [
+        "@perucris.mobilePhone@",
+      ],
 	"interests": [
 		"@dc.subject@",
 	],
@@ -76,9 +82,9 @@
 		{
 			"name": "@crisrp.qualification@",
 			"start-date": "@crisrp.qualification.start@",
-			"end-date": "@crisrp.qualification.end@"
-			"org-unit": "@crisrp.qualification.orgunit@"
-			"renacyt": "@perucris.identifier.renacyt@"
+			"end-date": "@crisrp.qualification.end@",
+			"org-unit": "@crisrp.qualification.orgunit@",
+			"renacyt": "@perucris.identifier.renacyt@",
 		},
 		@group.crisrp-qualification.end@
 	],

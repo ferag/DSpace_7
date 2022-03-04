@@ -127,8 +127,8 @@
     "juror": [
         "@renati.juror@",
     ],
-    "source-id": "@cris.sourceId@",
   },
+  "source-id": "@cris.sourceId@",
 ]
 
 }

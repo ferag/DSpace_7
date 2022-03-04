@@ -59,9 +59,11 @@
 
 
 					<fo:block font-size="10pt" margin-top="2mm">
+						<xsl:if test="cerif:Funder/cerif:As/cerif:Funding/cerif:Name">
 						<fo:inline font-weight="bold" text-align="right"  >
 							<xsl:text>Financiador(es): </xsl:text>
 						</fo:inline >
+						</xsl:if>
 						<fo:inline>
 							<xsl:for-each select="cerif:Funder/cerif:As/cerif:Funding">
 								<xsl:value-of select="cerif:Funder" />

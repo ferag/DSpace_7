@@ -1,0 +1,48 @@
+<Patent xmlns="https://www.openaire.eu/cerif-profile/1.1/" id="@virtual.id@">
+   <Type>@virtual.mapConverter.patentTypesLeaf.dc-type@</Type>
+   <Title>@dc.title@</Title>
+   <Subtitle>@dc.title.alternative@</Subtitle>
+   <RegistrationDate>@dcterms.dateSubmitted@</RegistrationDate>
+   <ApprovalDate>@dc.date.issued@</ApprovalDate>
+   <CountryCode>@virtual.mapConverter.countries.oairecerif-patent-country@</CountryCode>
+   <PatentNumber>@dc.identifier.patentno@</PatentNumber>
+   <URL>@dc.identifier.url@</URL>
+   <Language>@virtual.mapConverter.languages.dc-language-iso@</Language>
+   <Inventors>
+      @group.dc-contributor-author.start@
+	  <Inventor>
+         <DisplayName>@dc.contributor.author@</DisplayName>
+		 <Person id="@virtual.authority.dc-contributor-author@" />
+         <Affiliation>
+            <OrgUnit>
+         	   <Name>@oairecerif.author.affiliation@</Name>
+         	</OrgUnit>
+         </Affiliation>
+         <ORCID>@perucris.author.orcid@</ORCID>
+         <DNI>@perucris.author.dni@</DNI>
+      </Inventor>
+   	  @group.dc-contributor-author.end@
+   </Inventors>
+   <Holders>
+      <Holder> <OrgUnit> <Name>@dcterms.rightsHolder@</Name> </OrgUnit> </Holder>
+   </Holders>
+   <PersonHolders>
+        <Holder> <Person> <Name>@dcterms.rightsHolderper@</Name> </Person> </Holder>
+   </PersonHolders>
+   <Grantors>
+        <Grantor>@oairecerif.patent.issuer@</Grantor>
+   </Grantors>
+   <Abstract>@dc.description.abstract@</Abstract>
+   <Keyword>@dc.subject@</Keyword>
+   <OcdeSubject>@virtual.mapConverter.ocdeSubjects.perucris-subject-ocde@</OcdeSubject>
+   <CipSubject>@dc.subject.cip@</CipSubject>
+   <Predecessor> <Patent> <Title>@dc.relation.patent@</Title> </Patent> </Predecessor>
+   <Fundings>
+        <Funding> <Name> @dc.relation.funding@ </Name></Funding>
+   </Fundings>
+   <Projects>
+           <Project> <Name> @dc.relation.project@ </Name> </Project>
+   </Projects>
+   <SourceId>@cris.sourceId@</SourceId>
+  <InternalNote>@perucris.description.internalNote@</InternalNote>
+</Patent>

@@ -1,8 +1,11 @@
 <Project xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="@virtual.id@">
     <Type xmlns="https://purl.org/pe-repo/ocde/tipoProyecto">@virtual.mapConverter.ocdeProjectTypesLeaf.perucris-project-typeOcde@</Type>
-    <Type>@virtual.mapConverter.ocdeProjectTypesOther.perucris-project-typeOther@</Type>
+    <TypeOther>@virtual.mapConverter.ocdeProjectTypesOther.perucris-project-typeOther@</TypeOther>
 	<Acronym>@oairecerif.acronym@</Acronym>
+	<InternalId>@oairecerif.internalid@</InternalId>
+	<InternalNote>@perucris.description.internalNote@</InternalNote>
 	<Title>@dc.title@</Title>
+	<OtherTitle>@dc.title.alternative@</OtherTitle>
 	<Identifier type="http://namespace.openaire.eu/oaf">@crispj.openaireid@</Identifier>
 	<StartDate>@oairecerif.project.startDate@</StartDate>
 	<EndDate>@oairecerif.project.endDate@</EndDate>
@@ -18,6 +21,17 @@
 			<OrgUnit> <Name>@crispj.coordinator@</Name> </OrgUnit>
 			@if.not.authority.crispj-coordinator.end@
 		</Coordinator>
+		<MainExecutor>
+            @relation.crispj-contractorou.start@
+            <OrgUnit id="@virtual.id@">
+                <Acronym>@oairecerif.acronym@</Acronym>
+                <Name>@dc.title@</Name>
+            </OrgUnit>
+            @relation.crispj-contractorou.end@
+            @if.not.authority.crispj-contractorou.start@
+            <OrgUnit> <Name>@crispj.contractorou@</Name> </OrgUnit>
+            @if.not.authority.crispj-contractorou.end@
+        </MainExecutor>
 		<Partner>
 			@relation.crispj-partnerou.start@
 			<OrgUnit id="@virtual.id@">
@@ -40,14 +54,50 @@
 			<OrgUnit> <Name>@crispj.organization@</Name> </OrgUnit>
 			@if.not.authority.crispj-organization.end@
 		</Member>
+		<InKindContributor>
+            @relation.crispj-inKindContributorou.start@
+            <OrgUnit id="@virtual.id@">
+                <Acronym>@oairecerif.acronym@</Acronym>
+                <Name>@dc.title@</Name>
+            </OrgUnit>
+            @relation.crispj-inKindContributorou.end@
+            @if.not.authority.crispj-inKindContributorou.start@
+            <OrgUnit> <Name>@crispj.inKindContributorou@</Name> </OrgUnit>
+            @if.not.authority.crispj-inKindContributorou.end@
+        </InKindContributor>
 	</Consortium>
 	<Team>
 		<PrincipalInvestigator>
 			<Person displayName="@crispj.investigator@" />
 		</PrincipalInvestigator>
 		<Member>
-			<Person displayName="@crispj.coinvestigators@" />
+		    @group.crispj-coinvestigators.start@
+			<Person displayName="@crispj.coinvestigators@">
+			    <Role>@crispj.coinvestigators.role@</Role>
+			</Person>
+			@group.crispj-coinvestigators.end@
 		</Member>
+		<ConsortiumMember>
+            @group.crispj-organizationper.start@
+            <Person displayName="@crispj.organizationper@" />
+            @group.crispj-organizationper.end@
+        </ConsortiumMember>
+		@if.metadata.crispj-contractorper.start@
+		<MainExecutor>
+            <Person displayName="@crispj.contractorper@" />
+        </MainExecutor>
+        @if.metadata.crispj-contractorper.end@
+         <Partner>
+            @group.crispj-partnerper.start@
+            <Person displayName="@crispj.partnerper@" />
+            @group.crispj-partnerper.end@
+        </Partner>
+        <InKindContributor>
+            @group.crispj-inKindContributorper.start@
+            <Person displayName="@crispj.inKindContributorper@" />
+            @group.crispj-inKindContributorper.end@
+        </InKindContributor>
+
 	</Team>
 	@relation.grants.start@
 	<Funded>
@@ -72,12 +122,21 @@
 		</As>
 	</Funded>
 	@relation.grants.end@
+	<Fundings>
+	    @group.oairecerif-funder.start@
+	    <Funding>
+	        <OrgUnit>@oairecerif.funder@</OrgUnit>
+	        <Program>@oairecerif.fundingProgram@</Program>
+	    </Funding>
+	    @group.oairecerif-funder.end@
+	</Fundings>
+
     <Subject scheme="http://purl.org/pe-repo/ocde/ford">@virtual.mapConverter.ocdeSubjects.perucris-subject-ocde@</Subject>
 	<Activity>@virtual.mapConverter.ocdeProjectTypesLeaf.perucris-project-typeOcde@</Activity>
 	<Ciiu>@perucris.type.ciiu@</Ciiu>
 	<Keyword>@dc.subject@</Keyword>
 	<Abstract>@dc.description.abstract@</Abstract>
-    <Status>@oairecerif.project.status@</Status>
+    <Status>@virtual.mapConverter.projectStatus.oairecerif-project-status@</Status>
     <Uses>
         <Equipment>
             <Name>@dc.relation.equipment@</Name>
@@ -90,6 +149,25 @@
 	<ResearchLine>@perucris.researchLine@</ResearchLine>
     <URL>@oairecerif.identifier.url@</URL>
 	<geoLocations>
-	   <geoLocation>@datacite.geoLocationPlace@</geoLocation>
+	   @group.datacite-geoLocationPlace.start@
+	   <geoLocationData>
+           <geoLocation>@datacite.geoLocationPlace@</geoLocation>
+           <latitude>@datacite.geoLocationPoint.pointLatitude@</latitude>
+           <longitude>@datacite.geoLocationPoint.pointLongitude@</longitude>
+           <westBoundLongitude>@datacite.geoLocationBox.westBoundLongitude@</westBoundLongitude>
+           <eastBoundLongitude>@datacite.geoLocationBox.eastBoundLongitude@</eastBoundLongitude>
+           <southBoundLatitude>@datacite.geoLocationBox.southBoundLatitude@</southBoundLatitude>
+           <northBoundLatitude>@datacite.geoLocationBox.northBoundLatitude@</northBoundLatitude>
+	   </geoLocationData>
+	   @group.datacite-geoLocationPlace.end@
 	</geoLocations>
+	@group.crispj-contact.start@
+	<Contact>
+	    <Name>@crispj.contact@</Name>
+	    <Phone>@perucris.phone@</Phone>
+	    <Email>@crispj.contact.email@</Email>
+	    <Address>@crispj.contact.address@</Address>
+	</Contact>
+	 @group.crispj-contact.end@
+	 <SourceId>@cris.sourceId@</SourceId>
 </Project>

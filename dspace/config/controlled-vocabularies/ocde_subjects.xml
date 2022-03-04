@@ -115,11 +115,11 @@
             </node>
             <node id="1.06.13" label="Ecología">
             </node>
-            <node id="1.06.14" label="Biofísica">
+            <node id="1.06.14" label="Conservación de la Biodiversidad">
             </node>
             <node id="1.06.15" label="Biología (teórica, matemática, térmica, criobiología, ritmo biológico), Biología evolutiva">
             </node>
-            <node id="1.06.16" label="Otras temas de Biología">
+            <node id="1.06.16" label="Otros temas de Biología">
             </node>
           </isComposedBy>
         </node>

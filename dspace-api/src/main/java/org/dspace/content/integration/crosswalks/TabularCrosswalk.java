@@ -96,6 +96,10 @@ public abstract class TabularCrosswalk implements ItemExportCrosswalk {
 
     private boolean securityCheckEnabled;
 
+    private boolean onlyPublicMetadata;
+
+    private Map<String, String> groupVirtualFields = new HashMap<>();
+
     protected List<TabularTemplateLine> templateLines;
 
 
@@ -262,7 +266,10 @@ public abstract class TabularCrosswalk implements ItemExportCrosswalk {
                 if (metadataValues.containsKey(metadataGroupEntry)) {
                     metadata = metadataValues.get(metadataGroupEntry);
                 } else {
-                    metadata = getMetadataValues(context, item, metadataGroupEntry);
+                    String virtualMetadata = this.groupVirtualFields.get(metadataGroupEntry);
+                    metadata = Optional.ofNullable(virtualMetadata)
+                        .map(vm -> groupVirtualFieldValues(context, item, vm))
+                        .orElseGet(() -> getMetadataValues(context, item, metadataGroupEntry));
                     metadataValues.put(metadataGroupEntry, metadata);
                 }
 
@@ -284,6 +291,13 @@ public abstract class TabularCrosswalk implements ItemExportCrosswalk {
         }
 
         return metadataGroupValues;
+    }
+
+    private List<String> groupVirtualFieldValues(Context context, Item item, String field) {
+        String[] split = field.split("\\.");
+        VirtualField virtualField = virtualFieldMapper.getVirtualField(split[1]);
+        String[] values = virtualField.getMetadata(context, item, field);
+        return values != null ? Arrays.asList(values) : Collections.emptyList();
     }
 
     private String removeLastSeparators(String value, String separator) {
@@ -320,6 +334,8 @@ public abstract class TabularCrosswalk implements ItemExportCrosswalk {
         List<MetadataValue> metadataValues;
         if (securityCheckEnabled) {
             metadataValues = metadataSecurityService.getPermissionFilteredMetadataValues(context, item, metadata);
+        } else if (onlyPublicMetadata) {
+            metadataValues = metadataSecurityService.getPublicMetadataValues(context, item, metadata);
         } else {
             metadataValues = itemService.getMetadataByMetadataString(item, metadata);
         }
@@ -371,5 +387,13 @@ public abstract class TabularCrosswalk implements ItemExportCrosswalk {
      */
     public void setSecurityCheckEnabled(boolean securityCheckEnabled) {
         this.securityCheckEnabled = securityCheckEnabled;
+    }
+
+    public void setOnlyPublicMetadata(boolean onlyPublicMetadata) {
+        this.onlyPublicMetadata = onlyPublicMetadata;
+    }
+
+    public void setGroupVirtualFields(Map<String, String> groupVirtualFields) {
+        this.groupVirtualFields = groupVirtualFields;
     }
 }

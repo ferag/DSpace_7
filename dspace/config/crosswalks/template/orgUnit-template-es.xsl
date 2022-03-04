@@ -22,6 +22,10 @@
 							<xsl:value-of select="Name" />
 						</fo:block>
 					</fo:block>
+
+					<fo:block font-size="10pt" space-after="5mm" text-align="justify" margin-top="5mm" >
+						<xsl:value-of select="Description" />
+					</fo:block>
 					
 					<xsl:call-template name="section-title">
 				    	<xsl:with-param name="label" select="'Información basica'" />
@@ -116,7 +120,91 @@
                         <xsl:with-param name="label" select="'Ubigeo'" />
                         <xsl:with-param name="value" select="UbiGeo" />
                     </xsl:call-template>
-			    	
+
+					<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'Correo electronico'" />
+						<xsl:with-param name="value" select="Email" />
+					</xsl:call-template>
+
+					<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'Sector Institucional'" />
+						<xsl:with-param name="value" select="InstitutionalSector" />
+					</xsl:call-template>
+
+					<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'Tipo de dependencia'" />
+						<xsl:with-param name="value" select="DependencyType" />
+					</xsl:call-template>
+
+			    	<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'Clasificación Sunedu'" />
+						<xsl:with-param name="value" select="SuneduClassification" />
+					</xsl:call-template>
+
+					<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'Naturaleza'" />
+						<xsl:with-param name="value" select="-JuridicalNature" />
+					</xsl:call-template>
+
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'CIIU - Clasificación Industrial Uniforme'" />
+						<xsl:with-param name="values" select="CiiuClassification" />
+					</xsl:call-template>
+
+					<xsl:if test="ConcytecRecords/Renacyt/Registration">
+
+						<xsl:call-template name="section-title">
+							<xsl:with-param name="label" select="'Registros Concytec'" />
+						</xsl:call-template>
+						<xsl:for-each select="ConcytecRecords/Renacyt">
+							<fo:block font-size="10pt">
+								<xsl:if test="Registration">
+									<fo:inline font-weight="bold" text-align="right"  >
+										<xsl:text>Registro: </xsl:text>
+									</fo:inline >
+									<xsl:value-of select="Registration" />,  Resolución: <xsl:value-of select="RegistrationNumber" />
+								</xsl:if>
+								<xsl:if test="Classification">
+									<xsl:call-template name="print-value">
+										<xsl:with-param name="label" select="'Categoría'" />
+										<xsl:with-param name="value" select="Classification" />
+									</xsl:call-template>
+								</xsl:if>
+								<xsl:if test="Ocde">
+									<xsl:call-template name="print-values">
+										<xsl:with-param name="label" select="'Disciplina autorizada'" />
+										<xsl:with-param name="values" select="Ocde" />
+									</xsl:call-template>
+								</xsl:if>
+								<xsl:if test="Strength">
+									<xsl:call-template name="print-values">
+										<xsl:with-param name="label" select="'Fortalezas autorizada'" />
+										<xsl:with-param name="values" select="Strength" />
+									</xsl:call-template>
+								</xsl:if>
+								<xsl:if test="DateOfQualification">
+									<xsl:call-template name="print-value">
+										<xsl:with-param name="label" select="'Vigencia'" />
+										<xsl:with-param name="value" select="DateOfQualification" />
+									</xsl:call-template>
+								</xsl:if>
+								<xsl:if test="Validity">
+									<xsl:call-template name="print-value">
+										<xsl:with-param name="label" select="'Fin de la Vigencia'" />
+										<xsl:with-param name="value" select="Validity" />
+									</xsl:call-template>
+								</xsl:if>
+								<xsl:if test="Contact">
+									<xsl:call-template name="print-value">
+										<xsl:with-param name="label" select="'Datos de contacto'" />
+										<xsl:with-param name="value" select="Contact" />
+									</xsl:call-template>
+								</xsl:if>
+							</fo:block>
+						</xsl:for-each>
+
+					</xsl:if>
+
 				</fo:flow>
 			</fo:page-sequence>
 		</fo:root>

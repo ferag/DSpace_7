@@ -121,6 +121,11 @@ public class MetadataSecurityServiceImpl implements MetadataSecurityService {
         return isMetadataFieldVisible(context, boxes, item, metadataField, false);
     }
 
+    public List<MetadataValue> getPublicMetadataValues(Context context, Item item, String metadataField) {
+        List<MetadataValue> metadataValues = itemService.getMetadataByMetadataString(item, metadataField);
+        return getPublicAccessMetadata(context, item, metadataValues);
+    }
+
     private List<MetadataValue> getPermissionFilteredMetadata(Context context, Item item,
         List<MetadataValue> metadataValues, boolean preventBoxSecurityCheck) {
 
@@ -137,6 +142,27 @@ public class MetadataSecurityServiceImpl implements MetadataSecurityService {
 
         return metadataValues.stream()
             .filter(value -> isMetadataValueVisible(context, boxes, item, value, preventBoxSecurityCheck))
+            .filter(value -> isMetadataValueReturnAllowed(context, item, value))
+            .collect(Collectors.toList());
+
+    }
+
+    private List<MetadataValue> getPublicAccessMetadata(Context context, Item item,
+                                                        List<MetadataValue> metadataValues) {
+
+        if (item.isWithdrawn() && isNotAdmin(context) && isNotAnInstitutionalRole(context)) {
+            return new ArrayList<MetadataValue>();
+        }
+
+        List<CrisLayoutBox> boxes = findBoxes(context, item, false);
+
+        Optional<List<DCInputSet>> inputs = submissionDefinitionInputs();
+        if (inputs.isPresent()) {
+            return getFromSubmission(context, boxes, item, inputs.get(), metadataValues, false);
+        }
+
+        return metadataValues.stream()
+            .filter(value -> isInPublicBox(context, boxes, item, value))
             .filter(value -> isMetadataValueReturnAllowed(context, item, value))
             .collect(Collectors.toList());
 
@@ -176,6 +202,23 @@ public class MetadataSecurityServiceImpl implements MetadataSecurityService {
     private boolean isMetadataValueVisible(Context context, List<CrisLayoutBox> boxes, Item item, MetadataValue value,
         boolean preventBoxSecurityCheck) {
         return isMetadataFieldVisible(context, boxes, item, value.getMetadataField(), preventBoxSecurityCheck);
+    }
+
+    private boolean isInPublicBox(Context context, List<CrisLayoutBox> boxes, Item item,
+                                  MetadataValue value) {
+        MetadataField metadataField = value.getMetadataField();
+        if (CollectionUtils.isNotEmpty(boxes) &&
+            isPublicMetadataField(metadataField, boxes, false)) {
+            return true;
+        }
+        List<CrisLayoutBox> notPublicBoxes = getNotPublicBoxes(metadataField, boxes);
+
+
+        // the metadata is not included in any box so use the default dspace security
+        if (notPublicBoxes.isEmpty() && isNotHidden(context, metadataField)) {
+            return true;
+        }
+        return isNotAdmin(context) ? isNotHidden(context, metadataField) : true;
     }
 
     private boolean isMetadataFieldVisible(Context context, List<CrisLayoutBox> boxes, Item item,

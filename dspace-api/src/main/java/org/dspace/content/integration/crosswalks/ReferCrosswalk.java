@@ -116,6 +116,8 @@ public class ReferCrosswalk implements ItemExportCrosswalk {
 
     private CrosswalkMode crosswalkMode;
 
+    private boolean onlyPublicMetadata;
+
     @PostConstruct
     private void postConstruct() throws IOException {
         String parent = configurationService.getProperty("dspace.dir") + File.separator + "config" + File.separator;
@@ -324,6 +326,8 @@ public class ReferCrosswalk implements ItemExportCrosswalk {
 
         if (securityCheckEnabled) {
             metadataValues = metadataSecurityService.getPermissionFilteredMetadataValues(context, item, metadataField);
+        } else if (onlyPublicMetadata) {
+            metadataValues = metadataSecurityService.getPublicMetadataValues(context, item, metadataField);
         } else {
             metadataValues = itemService.getMetadataByMetadataString(item, metadataField);
         }
@@ -529,4 +533,7 @@ public class ReferCrosswalk implements ItemExportCrosswalk {
         this.securityCheckEnabled = securityCheckEnabled;
     }
 
+    public void setOnlyPublicMetadata(boolean onlyPublicMetadata) {
+        this.onlyPublicMetadata = onlyPublicMetadata;
+    }
 }

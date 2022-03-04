@@ -25,13 +25,21 @@
 	<interests>
 		<interest>@dc.subject@</interest>
 	</interests>
+	<ocde-subjects>
+    		<ocde-subject>@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@</ocde-subject>
+    </ocde-subjects>
+    <minam-subjects>
+    		<minam-subject>@virtual.mapConverter.minamTypes.perucris-subject-minam@</minam-subject>
+    </minam-subjects>
+	<ins-subjects>
+    		<ins-subject>@virtual.mapConverter.insTypes.perucris-subject-ins@</ins-subject>
+    </ins-subjects>
 	<identifiers>
 		<orcid>@person.identifier.orcid@</orcid>
 		<dina>@person.identifier.dina@</dina>
         <dni>@perucris.identifier.dni@</dni>
         <passport>@perucris.identifier.passport@</passport>
         <immigration-card>@perucris.identifier.immigrationCard@</immigration-card>
-        <renacyt>@perucris.identifier.renacyt@</renacyt>
 		<scopus-author-ids>
 			<scopus-author-id>@person.identifier.scopus-author-id@</scopus-author-id>
 		</scopus-author-ids>
@@ -57,6 +65,8 @@
 			<start-date>@crisrp.education.start@</start-date>
 			<end-date>@crisrp.education.end@</end-date>
 			<role>@crisrp.education.role@</role>
+			<grantor>@perucris.education.grantor@</grantor>
+			<country>@perucris.education.country@</country>
 		</education>
 		@group.crisrp-education.end@
 	</educations>
@@ -67,6 +77,8 @@
 			<name>@crisrp.qualification@</name>
 			<start-date>@crisrp.qualification.start@</start-date>
 			<end-date>@crisrp.qualification.end@</end-date>
+			<org-unit>@crisrp.qualification.orgunit@</org-unit>
+			<renacyt>@perucris.identifier.renacyt@</renacyt>
 		</qualification>
 		@group.crisrp-qualification.end@
 	</qualifications>
@@ -74,12 +86,13 @@
 		<language>@person.knowsLanguage@</language>
 	</knows-languages>
 	<personal-picture>@virtual.bitstream.original.picture@</personal-picture>
-	<ubigeo-reniec>@perucris.domicilio.ubigeoReniec@</ubigeo-reniec>
+	<ubigeo-reniec>@virtual.mapConverter.ubigeoUris.perucris-domicilio-ubigeoReniec@</ubigeo-reniec>
     <address>
         <street>@perucris.address.streetAddress@</street>
         <postal-code>@perucris.address.postalCode@</postal-code>
         <country>@perucris.address.addressCountry@</country>
     </address>
+    <profile-type>@perucris.personProfile.type@</profile-type>
 	<publications>
 		@relation.researchoutputs.start@
 		<publication>
@@ -91,4 +104,6 @@
 		</publication>
 		@relation.researchoutputs.end@
 	</publications>
+	<source-id>@cris.sourceId</source-id>
+	<internal-note>@perucris.description.internalNote@</internal-note>
 </person>

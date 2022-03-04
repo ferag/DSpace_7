@@ -1,27 +1,46 @@
 {
 	"title": "@dc.title@",
-	"approval-date": "@dcterms.dateSubmitted@",
-	"registration-date": "@dc.date.issued@",
+	"alternative-titles": [
+	    "@dc.title.alternative@",
+	],
+	"approval-date": "@dc.date.issued@",
+	"registration-date": "@dcterms.dateSubmitted@",
 	"patent-number": "@dc.identifier.patentno@",
 	"country": "@oairecerif.patent.country@",
-	"type": "@dc.type@",
-	"language": "@dc.language.iso@",
+	"type": "@virtual.mapConverter.patentTypes.dc-type@",
+	"languages": [
+	    "@dc.language.iso@",
+	],
 	"inventors": [
 		@group.dc-contributor-author.start@
 		{
 			"name": "@dc.contributor.author@",
 			"affiliation": "@oairecerif.author.affiliation@"
+			"ORCID": "@perucris.author.orcid@",
+			"DNI": "@perucris.author.dni@"
 		},
 		@group.dc-contributor-author.end@
 	],
 	"holders": [
 		"@dcterms.rightsHolder@",
 	],
+	"person-holders": [
+        "@dcterms.rightsHolderper@",
+    ],
 	"keywords": [
 		"@dc.subject@",
 	],
+	"ocde-subjects": [
+	    "@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@",
+	],
+	"cip-subjects": [
+        "@dc.subject.cip@",
+    ],
 	"fundings": [
 		"@dc.relation.funding@",
+	],
+	"grantors" : [
+	    "@oairecerif.patent.issuer@",
 	],
 	"projects": [
 		"@dc.relation.project@",
@@ -29,5 +48,8 @@
 	"predecessors": [
 		"@dc.relation.patent@",
 	],
-	"abstract": "@dc.description.abstract@"
+	"abstract": "@dc.description.abstract@",
+	"url": "dc.identifier.url@",
+	"internalNote": "@perucris.description.internalNote@",
+    "sourceId": "@cris.sourceId@",
 }

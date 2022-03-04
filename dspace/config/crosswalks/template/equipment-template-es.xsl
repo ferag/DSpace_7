@@ -33,47 +33,70 @@
 			    	</xsl:call-template>
 			    	
 					<xsl:call-template name="print-value">
-				    	<xsl:with-param name="label" select="'Acrónimo del equipamiento'" />
+				    	<xsl:with-param name="label" select="'Acrónimo'" />
 				    	<xsl:with-param name="value" select="cerif:Acronym" />
+			    	</xsl:call-template>
+
+					<xsl:call-template name="print-values">
+				    	<xsl:with-param name="label" select="'Otro(s) nombre(s) del equipamiento'" />
+				    	<xsl:with-param name="values" select="cerif:AlternativeName" />
 			    	</xsl:call-template>
                     
                     <xsl:call-template name="print-value">
-                        <xsl:with-param name="label" select="'Tipo'" />
+                        <xsl:with-param name="label" select="'Tipo de equipamiento'" />
                         <xsl:with-param name="value" select="cerif:Type" />
                     </xsl:call-template>
 			    	
 					<xsl:call-template name="print-value">
-				    	<xsl:with-param name="label" select="'Identificador único de la institución'" />
+				    	<xsl:with-param name="label" select="'Código del equipamiento'" />
 				    	<xsl:with-param name="value" select="cerif:Identifier[@type = 'Institution assigned unique equipment identifier']" />
 			    	</xsl:call-template>
 			    	
 					<xsl:call-template name="print-value">
-				    	<xsl:with-param name="label" select="'Propietario (Organización)'" />
+				    	<xsl:with-param name="label" select="'Organización propietaria'" />
 				    	<xsl:with-param name="value" select="cerif:Owner/cerif:OrgUnit/cerif:Name" />
 			    	</xsl:call-template>
-                    
+
+
+					<fo:block font-size="10pt" margin-top="2mm">
+						<xsl:if test="cerif:Funder/cerif:As/cerif:Funding/cerif:Name">
+						<fo:inline font-weight="bold" text-align="right"  >
+							<xsl:text>Financiador(es): </xsl:text>
+						</fo:inline >
+						</xsl:if>
+						<fo:inline>
+							<xsl:for-each select="cerif:Funder/cerif:As/cerif:Funding">
+								<xsl:value-of select="cerif:Funder" />
+								<xsl:if test="cerif:Name">
+									(<xsl:value-of select="cerif:Name"/>)
+								</xsl:if>
+								<xsl:if test="position() != last()">, </xsl:if>
+							</xsl:for-each>
+						</fo:inline >
+					</fo:block>
+
                     <xsl:call-template name="print-values">
-                        <xsl:with-param name="label" select="'Financiador(es)'" />
-                        <xsl:with-param name="values" select="cerif:Funder/cerif:As/cerif:Funding/cerif:Name" />
-                    </xsl:call-template>
-                    
-                    <xsl:call-template name="print-values">
-                        <xsl:with-param name="label" select="'Materia(s)'" />
+                        <xsl:with-param name="label" select="'Campo de conocimiento OCDE'" />
                         <xsl:with-param name="values" select="cerif:Subject" />
+                    </xsl:call-template>
+
+					<xsl:call-template name="print-values">
+                        <xsl:with-param name="label" select="'Uso del equipamiento'" />
+                        <xsl:with-param name="values" select="cerif:Usage" />
                     </xsl:call-template>
                     
                     <xsl:call-template name="print-value">
-                        <xsl:with-param name="label" select="'Linea de investigación'" />
+                        <xsl:with-param name="label" select="'Línea de investigación institucional'" />
                         <xsl:with-param name="value" select="cerif:ResearchLine" />
                     </xsl:call-template>
                     
                     <xsl:call-template name="print-value">
-                        <xsl:with-param name="label" select="'País de manufactura'" />
+                        <xsl:with-param name="label" select="'País de fabricación o ensamblaje'" />
                         <xsl:with-param name="value" select="cerif:ManufacturingCountry" />
                     </xsl:call-template>
                     
                     <xsl:call-template name="print-value">
-                        <xsl:with-param name="label" select="'Fecha de manufactura'" />
+                        <xsl:with-param name="label" select="'Fecha de fabricación'" />
                         <xsl:with-param name="value" select="cerif:ManufacturingDate" />
                     </xsl:call-template>
                     
@@ -83,12 +106,12 @@
                     </xsl:call-template>
                     
                     <xsl:call-template name="print-value">
-                        <xsl:with-param name="label" select="'Cantidad'" />
+                        <xsl:with-param name="label" select="'Monto de adquisición'" />
                         <xsl:with-param name="value" select="cerif:AcquisitionAmount" />
                     </xsl:call-template>
                     
                     <xsl:call-template name="print-value">
-                        <xsl:with-param name="label" select="'Moneda'" />
+                        <xsl:with-param name="label" select="'Moneda de adquisición'" />
                         <xsl:with-param name="value" select="cerif:AcquisitionAmount/@currency" />
                     </xsl:call-template>
 			    	

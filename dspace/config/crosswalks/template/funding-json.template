@@ -15,15 +15,9 @@
 	"keywords": [
 	   "@dc.subject@",
 	],
-	"funder": {
-		@relation.oairecerif-funder.start@
-		"name": "@dc.title@",
-		"acronym": "@oairecerif.acronym@"
-		@relation.oairecerif-funder.end@
-		@if.not.authority.oairecerif-funder.start@
-		"name": "@oairecerif.funder@"
-		@if.not.authority.oairecerif-funder.end@
-	},
+	"funders": [
+	    "@oairecerif.funder@",
+	],
     "partOf": {
         @relation.oairecerif-fundingParent.start@
         "name": "@dc.title@",
@@ -40,5 +34,8 @@
 	"OAMandate": {
 		"mandated": "@oairecerif.oamandate@",
 		"URL": "@oairecerif.oamandate.url@"
-	}
+	},
+	"project": "@dc.relation.project@",
+	"internalNote": "@perucris.description.internalNote@",
+    "sourceId": "@cris.sourceId@",
 }

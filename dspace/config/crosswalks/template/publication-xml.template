@@ -1,0 +1,169 @@
+<Publication xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="@virtual.id@">
+	<Type xmlns="https://www.openaire.eu/cerif-profile/vocab/COAR_Publication_Types">@virtual.mapConverter.coarTypes.dc-type@</Type>
+	<Language>@dc.language.iso@</Language>
+   	<Title>@dc.title@</Title>
+   	<Subtitle>@dc.title.alternative@</Subtitle>
+   	<Version>@datacite.version@</Version>
+   	<PublicationVersion>@oaire.version@</PublicationVersion>
+   	<PublishedIn>
+    	<Publication>
+        	<Title>@dc.relation.publication@</Title>
+        	<Title>@dc.relation.ispartof@</Title>
+        	<Serie>@dc.relation.ispartofseries@</Serie>
+         	<ISSN>@dc.relation.issn@</ISSN>
+         	<ISBN>@dc.relation.isbn@</ISBN>
+         	<DOI>@dc.relation.doi@</DOI>
+      	</Publication>
+   	</PublishedIn>
+   	<PublicationDate>@dc.date.issued@</PublicationDate>
+	<Volume>@oaire.citation.volume@</Volume>
+	<Issue>@oaire.citation.issue@</Issue>
+   	<StartPage>@oaire.citation.startPage@</StartPage>
+   	<EndPage>@oaire.citation.endPage@</EndPage>
+   	<Edition>@oaire.citation.edition@</Edition>
+   	<CitationNumber>@oaire.citation.number@</CitationNumber>
+   	<DOI>@dc.identifier.doi@</DOI>
+    <PMCID>@dc.identifier.pmid@</PMCID>
+    <ISI-Number>@dc.identifier.isi@</ISI-Number>
+    <SCP-Number>@dc.identifier.scopus@</SCP-Number>
+    <ISSN>@dc.identifier.issn@</ISSN>
+   	<ISBN>@dc.identifier.isbn@</ISBN>
+   	<ARK>@dc.identifier.ark@</ARK>
+   	<Url>@dc.identifier.url@</Url>
+   	<Authors>
+   		@group.dc-contributor-author.start@
+      	<Author>
+        	<DisplayName>@dc.contributor.author@</DisplayName>
+			<Person id="@virtual.authority.dc-contributor-author@" />
+         	<Affiliation>
+         		<OrgUnit>
+         			<Name>@oairecerif.author.affiliation@</Name>
+         		</OrgUnit>
+         	</Affiliation>
+         	<ORCID>@perucris.author.orcid@</ORCID>
+         	<DNI>@perucris.author.dni@</DNI>
+      	</Author>
+   	  	@group.dc-contributor-author.end@
+	</Authors>
+   	<Editors>
+   		@group.dc-contributor-editor.start@
+   	  	<Editor>
+        	<DisplayName>@dc.contributor.editor@</DisplayName>
+			<Person id="@virtual.authority.dc-contributor-editor@" />
+	   	  	<Affiliation>
+	      		<OrgUnit>
+	     			<Name>@oairecerif.editor.affiliation@</Name>
+	     		</OrgUnit>
+	      	</Affiliation>
+	      	<ORCID>@perucris.editor.orcid@</ORCID>
+            <DNI>@perucris.editor.dni@</DNI>
+   	  	</Editor>
+   	    @group.dc-contributor-editor.end@
+	</Editors>
+	<EditorOrgUnits>
+	    @group.dc-contributor-editorou.start@
+	        <OrgUnit>
+	            <Name>@dc.contributor.editorou@</Name>
+	        </OrgUnit>
+	    @group.dc-contributor-editorou.end@
+	</EditorOrgUnits>
+    <Publishers>
+        <Publisher>
+            <DisplayName>@dc.publisher@</DisplayName>
+            <OrgUnit />
+        </Publisher>
+    </Publishers>
+    <CorporateName>@dc.contributor.corporatename@</CorporateName>
+    <License>@dc.rights.uri@</License>
+    <Subject scheme="http://purl.org/pe-repo/ocde/ford">@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@</Subject>
+    <Keyword>@dc.subject@</Keyword>
+    <DDCSubject>@dc.subject.ddc@</DDCSubject>
+    <LOCSubject>@dc.subject.loc@</LOCSubject>
+    <MESHSubject>@dc.subject.mesh@</MESHSubject>
+   	<Abstract>@dc.description.abstract@</Abstract>
+   	@relation.dc-relation-project.start@
+   	<OriginatesFrom>
+      	<Project id="@virtual.id@">
+			<Acronym>@oairecerif.acronym@</Acronym>
+         	<Title>@dc.title@</Title>
+         	<StartDate>@oairecerif.project.startDate@</StartDate>
+         	<EndDate>@oairecerif.project.endDate@</EndDate>
+         	@relation.grants.start@
+         	<Funded>
+				<By>
+					@relation.oairecerif-funder.start@
+					<OrgUnit id="@virtual.id@">
+                        <Acronym>@oairecerif.acronym@</Acronym>
+						<Name>@dc.title@</Name>
+					</OrgUnit>
+					@relation.oairecerif-funder.end@
+					@if.not.authority.oairecerif-funder.start@
+					<OrgUnit>
+						<Name>@oairecerif.funder@</Name>
+					</OrgUnit>
+					@if.not.authority.oairecerif-funder.end@
+				</By>
+				<As>
+					<Funding id="@virtual.id@">
+						<Type xmlns="https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types">@virtual.mapConverter.fundingTypes.dc-type@</Type>
+						<Name>@dc.title@</Name>
+					</Funding>
+				</As>
+			</Funded>
+         	@relation.grants.end@
+      	</Project>
+	</OriginatesFrom>
+   	@relation.dc-relation-project.end@
+   	@relation.dc-relation-funding.start@
+   	<OriginatesFrom>
+   		<Funding id="@virtual.id@">
+			<Type xmlns="https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types">@dc.type@</Type>
+			<Acronym>@oairecerif.acronym@</Acronym>
+			<Name>@dc.title@</Name>
+			<Funder>
+				<OrgUnit>
+					<Name>@oairecerif.funder@</Name>
+				</OrgUnit>
+			<Code>@dc.relation.grantno</Code>
+			</Funder>
+		</Funding>
+   	</OriginatesFrom>
+   	@relation.dc-relation-funding.end@
+	<PresentedAt> <Event> <Name>@dc.relation.conference@</Name> </Event> </PresentedAt>
+    <Coverage> <Event> <Name>@dc.coverage.publication@</Name> </Event> </Coverage>
+	<References> <Product> <Name>@dc.relation.product@</Name> </Product> </References>
+	<Access xmlns="http://purl.org/coar/access_right" 
+        endDate="@oairecerif.access.embargoEnd@"
+    >
+        @oairecerif.access@
+    </Access>
+    <Version>@oaire.version@</Version>
+    <Discipline>@renati.discipline@</Discipline>
+    <Dataset>@dc.relation.dataset@</Dataset>
+    <Sponsorships>
+        <Sponsor>@dc.relation.sponsorship@</Sponsor>
+    </Sponsorships>
+    <Thesis>
+        <Type>@renati.type@</Type>
+        <Level>@renati.level@</Level>
+        <Advisors>
+            @group.dc-contributor-advisor.start@
+            <Advisor>
+                <Person> <Name>@dc.contributor.advisor@</Name> </Person>
+                <ORCID>@perucris.advisor.orcid@</ORCID>
+                <DNI>@perucris.advisor.dni@</DNI>
+            </Advisor>
+            @group.dc-contributor-advisor.end@
+        </Advisors>
+        <Name>@thesis.degree.name@</Name>
+        <DegreeDiscipline>@thesis.degree.discipline@</DegreeDiscipline>
+        <Discipline>@renati.discipline@</Discipline>
+        <Grantor>@thesis.degree.grantor@</Grantor>
+        <Jurors>
+            <Juror>
+                <Name>@renati.juror@</Name>
+            </Juror>
+        </Jurors>
+    </Thesis>
+    <SourceId>@cris.sourceId@</SourceId>
+</Publication>

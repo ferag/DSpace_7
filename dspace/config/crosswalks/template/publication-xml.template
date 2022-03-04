@@ -40,6 +40,8 @@
          			<Name>@oairecerif.author.affiliation@</Name>
          		</OrgUnit>
          	</Affiliation>
+         	<ORCID>@perucris.author.orcid@</ORCID>
+         	<DNI>@perucris.author.dni@</DNI>
       	</Author>
    	  	@group.dc-contributor-author.end@
 	</Authors>
@@ -53,18 +55,31 @@
 	     			<Name>@oairecerif.editor.affiliation@</Name>
 	     		</OrgUnit>
 	      	</Affiliation>
+	      	<ORCID>@perucris.editor.orcid@</ORCID>
+            <DNI>@perucris.editor.dni@</DNI>
    	  	</Editor>
    	    @group.dc-contributor-editor.end@
 	</Editors>
+	<EditorOrgUnits>
+	    @group.dc-contributor-editorou.start@
+	        <OrgUnit>
+	            <Name>@dc.contributor.editorou@</Name>
+	        </OrgUnit>
+	    @group.dc-contributor-editorou.end@
+	</EditorOrgUnits>
     <Publishers>
         <Publisher>
             <DisplayName>@dc.publisher@</DisplayName>
             <OrgUnit />
         </Publisher>
     </Publishers>
+    <CorporateName>@dc.contributor.corporatename@</CorporateName>
     <License>@dc.rights.uri@</License>
     <Subject scheme="http://purl.org/pe-repo/ocde/ford">@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@</Subject>
     <Keyword>@dc.subject@</Keyword>
+    <DDCSubject>@dc.subject.ddc@</DDCSubject>
+    <LOCSubject>@dc.subject.loc@</LOCSubject>
+    <MESHSubject>@dc.subject.mesh@</MESHSubject>
    	<Abstract>@dc.description.abstract@</Abstract>
    	@relation.dc-relation-project.start@
    	<OriginatesFrom>
@@ -109,6 +124,7 @@
 				<OrgUnit>
 					<Name>@oairecerif.funder@</Name>
 				</OrgUnit>
+			<Code>@dc.relation.grantno</Code>
 			</Funder>
 		</Funding>
    	</OriginatesFrom>
@@ -122,9 +138,6 @@
         @oairecerif.access@
     </Access>
     <Version>@oaire.version@</Version>
-    <Advisors>
-        <Advisor> <Person> <Name>@dc.contributor.advisor@</Name> </Person> </Advisor>
-    </Advisors>
     <Discipline>@renati.discipline@</Discipline>
     <Dataset>@dc.relation.dataset@</Dataset>
     <Sponsorships>
@@ -134,7 +147,13 @@
         <Type>@renati.type@</Type>
         <Level>@renati.level@</Level>
         <Advisors>
-                <Advisor> <Person> <Name>@dc.contributor.advisor@</Name> </Person> </Advisor>
+            @group.dc-contributor-advisor.start@
+            <Advisor>
+                <Person> <Name>@dc.contributor.advisor@</Name> </Person>
+                <ORCID>@perucris.advisor.orcid@</ORCID>
+                <DNI>@perucris.advisor.dni@</DNI>
+            </Advisor>
+            @group.dc-contributor-advisor.end@
         </Advisors>
         <Name>@thesis.degree.name@</Name>
         <DegreeDiscipline>@thesis.degree.discipline@</DegreeDiscipline>
@@ -146,4 +165,5 @@
             </Juror>
         </Jurors>
     </Thesis>
+    <SourceId>@cris.sourceId@</SourceId>
 </Publication>

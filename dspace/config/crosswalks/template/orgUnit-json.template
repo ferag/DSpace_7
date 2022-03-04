@@ -1,8 +1,12 @@
 {
 	"name": "@dc.title@",
+	"alternativeName": [
+	    "@dc.title.alternative@",
+	],
 	"legalName": "@organization.legalName@",
 	"acronym": "@oairecerif.acronym@",
 	"type": "@virtual.mapConverter.orgUnitTypes.dc-type@",
+	"internalNote": "@perucris.description.internalNote@",
 	"parentOrganization": {
 		@relation.organization-parentOrganization.start@
 		"name": "@dc.title@",
@@ -12,6 +16,8 @@
 		"name": "@organization.parentOrganization@"
 		@if.not.authority.organization-parentOrganization.end@
 	},
+	"ipi": "@perucris.orgunit.ipi@",
+	"funder": "@perucris.orgunit.funder@",
 	@if.metadata.organization-identifier.start@
 	"identifiers": [
 		"@organization.identifier@",
@@ -85,5 +91,9 @@
         "date-of-qualification": "@perucris.renacyt.dateOfQualification@",
         "validity": "@perucris.renacyt.validityOfRegistration@",
         "contact": "@perucris.renacyt.contact@",
-    }
+    },
+    "sourceId": "@cris.sourceId@",
+    "technologicalSurveillanceActions": "@perucris.sti.actions@",
+    "formalTechnologicalSurveillanceUnit": "@perucris.sti.formalUnit@",
+    "qualityCertified": "@perucris.sti.qualityCertified@",
 }

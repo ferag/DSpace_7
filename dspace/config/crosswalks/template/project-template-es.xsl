@@ -42,6 +42,11 @@
 						<xsl:with-param name="values" select="cerif:TypeOther" />
 					</xsl:call-template>
 
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'Otro título del proyecto'" />
+						<xsl:with-param name="values" select="cerif:OtherTitle" />
+					</xsl:call-template>
+
 
 
 					<xsl:call-template name="print-value">
@@ -101,6 +106,10 @@
 						<xsl:with-param name="label" select="'Organizacions participantes'" />
 						<xsl:with-param name="values" select="cerif:Consortium/cerif:Member/cerif:OrgUnit/cerif:Name" />
 					</xsl:call-template>
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'Organización socia con aporte no monetario (InkindContributor)'" />
+						<xsl:with-param name="values" select="cerif:Consortium/cerif:InKindContributor/cerif:OrgUnit/cerif:Name" />
+					</xsl:call-template>
 
 					<xsl:call-template name="section-title">
 						<xsl:with-param name="label" select="'Equipo'" />
@@ -121,6 +130,18 @@
 					<xsl:call-template name="print-values">
 						<xsl:with-param name="label" select="'Co-investigador(es)'" />
 						<xsl:with-param name="values" select="cerif:Team/cerif:Member/cerif:Person/@displayName" />
+					</xsl:call-template>
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'Persona miembro de consorcio (Member)'" />
+						<xsl:with-param name="values" select="cerif:Team/cerif:ConsortiumMember/cerif:Person/@displayName" />
+					</xsl:call-template>
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'Persona socia con aporte monetario (Partner)'" />
+						<xsl:with-param name="values" select="cerif:Team/cerif:Partner/cerif:Person/@displayName" />
+					</xsl:call-template>
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'Persona socia con aporte no monetario (InkindContributor)'" />
+						<xsl:with-param name="values" select="cerif:Team/cerif:InKindContributor/cerif:Person/@displayName" />
 					</xsl:call-template>
 
 

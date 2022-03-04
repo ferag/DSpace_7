@@ -1,5 +1,6 @@
 Nombre preferido = dc.title
 Nombre de pila = person.givenName
+Tipo de Perfil = virtual.mapConverter.personProfiles.perucris-personProfile-type
 Apellido = person.familyName
 Apellido paterno = perucris.apellidoPaterno
 Apellido materno = perucris.apellidoMaterno
@@ -14,6 +15,8 @@ Teléfono = perucris.phone
 Teléfono móvil = perucris.mobilePhone
 Intereses = dc.subject
 Campo de conocimiento OCDE = virtual.mapConverter.ocdeSubjects.perucris-subject-ocde
+Áreas Temáticas Ambientales asociadas a las líneas de investigación del MINAM = perucris.subject.minam
+Áreas Temáticas Médicas y de la Salud asociadas a las líneas de investigación del INS = perucris.subject.ins
 ORCID = person.identifier.orcid
 Dina = perucris.identifier.dina
 Dni = perucris.identifier.dni

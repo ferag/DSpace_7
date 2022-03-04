@@ -65,8 +65,12 @@
 					</xsl:if>
 
 					<xsl:call-template name="print-values">
-				    	<xsl:with-param name="label" select="'Titular(es)'" />
+				    	<xsl:with-param name="label" select="'Titular(es) de la patente (Organizaciones)'" />
 				    	<xsl:with-param name="values" select="cerif:Holders/cerif:Holder/cerif:OrgUnit/cerif:Name" />
+			    	</xsl:call-template>
+					<xsl:call-template name="print-values">
+				    	<xsl:with-param name="label" select="'Titular(es) de la patente (Personas)'" />
+				    	<xsl:with-param name="values" select="cerif:PersonHolders/cerif:Holder/cerif:Person/cerif:Name" />
 			    	</xsl:call-template>
 
 					<xsl:call-template name="print-values">

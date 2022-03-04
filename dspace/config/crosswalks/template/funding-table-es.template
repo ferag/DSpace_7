@@ -13,3 +13,4 @@ Tipo = virtual.mapConverter.fundingTypeUrls.dc-type
 Palabra(s) clave = dc.subject
 Descripción = dc.description
 Nombre del proyecto = dc.relation.project
+Id del financiamiento en el sistema de origen = cris.sourceId

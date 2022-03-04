@@ -28,6 +28,12 @@
 	<ocde-subjects>
     		<ocde-subject>@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@</ocde-subject>
     </ocde-subjects>
+    <minam-subjects>
+    		<minam-subject>@virtual.mapConverter.minamTypes.perucris-subject-minam@</minam-subject>
+    </minam-subjects>
+	<ins-subjects>
+    		<ins-subject>@virtual.mapConverter.insTypes.perucris-subject-ins@</ins-subject>
+    </ins-subjects>
 	<identifiers>
 		<orcid>@person.identifier.orcid@</orcid>
 		<dina>@person.identifier.dina@</dina>
@@ -86,6 +92,7 @@
         <postal-code>@perucris.address.postalCode@</postal-code>
         <country>@perucris.address.addressCountry@</country>
     </address>
+    <profile-type>@perucris.personProfile.type@</profile-type>
 	<publications>
 		@relation.researchoutputs.start@
 		<publication>
@@ -97,4 +104,6 @@
 		</publication>
 		@relation.researchoutputs.end@
 	</publications>
+	<source-id>@cris.sourceId</source-id>
+	<internal-note>@perucris.description.internalNote@</internal-note>
 </person>

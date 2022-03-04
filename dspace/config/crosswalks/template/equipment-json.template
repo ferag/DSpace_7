@@ -1,5 +1,8 @@
 {
 	"name": "@dc.title@",
+	"alternativeName": [
+	    "@dc.title.alternative@",
+    ]
 	"acronym": "@oairecerif.acronym@",
 	"type": "@dc.type@",
 	"identifier": "@oairecerif.internalid@",
@@ -29,4 +32,5 @@
         "currency": "@oairecerif.amount.currency@"
     },
     "internalNote": "@perucris.description.internalNote@",
+    "sourceId": "@cris.sourceId@",
 }

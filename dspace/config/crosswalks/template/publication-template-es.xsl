@@ -84,6 +84,12 @@
 						</xsl:for-each>
 						</fo:inline >
 					</fo:block>
+
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'Autor(es) institucional(es)'" />
+						<xsl:with-param name="values" select="cerif:CorporateName" />
+					</xsl:call-template>
+
 					<fo:block font-size="10pt" margin-top="2mm">
 						<fo:inline font-weight="bold" text-align="right"  >
 							<xsl:text>Editor(es): </xsl:text>
@@ -98,6 +104,10 @@
 						</xsl:for-each>
 						</fo:inline >
 					</fo:block>
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'Editor(es) institucional(es)'" />
+						<xsl:with-param name="values" select="cerif:EditorOrgUnits/cerif:OrgUnit/cerif:Name" />
+					</xsl:call-template>
 					<fo:block font-size="10pt" margin-top="2mm">
 						<fo:inline font-weight="bold" text-align="right"  >
 							<xsl:text>Editorial(es): </xsl:text>
@@ -116,6 +126,18 @@
 				    	<xsl:with-param name="label" select="'Palabras clave'" />
 				    	<xsl:with-param name="values" select="cerif:Keyword" />
 			    	</xsl:call-template>
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'Materia Dewey Decimal Classification – DCC'" />
+						<xsl:with-param name="values" select="cerif:DDCSubject" />
+					</xsl:call-template>
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'Materia del Library of Congress Subject Headings – LOC'" />
+						<xsl:with-param name="values" select="cerif:LOCSubject" />
+					</xsl:call-template>
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'Materia del Medical Subject Heading – MESH'" />
+						<xsl:with-param name="values" select="cerif:MESHSubject" />
+					</xsl:call-template>
 					<xsl:call-template name="print-value">
 				    	<xsl:with-param name="label" select="'Tipo'" />
 				    	<xsl:with-param name="value" select="pt:Type" />
@@ -307,6 +329,10 @@
 						    	<xsl:text> - Funder: </xsl:text>
 						    	<xsl:value-of select="cerif:Funder/cerif:OrgUnit/cerif:Name"/>
 						    </xsl:if>
+							<xsl:if test="cerif:Funder/cerif:OrgUnit/cerif:Name">
+								<xsl:text> - Código: </xsl:text>
+								<xsl:value-of select="cerif:Code"/>
+							</xsl:if>
 						</fo:block>
 					</xsl:for-each>
 

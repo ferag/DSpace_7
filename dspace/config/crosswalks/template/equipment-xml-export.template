@@ -1,6 +1,8 @@
 <Equipment xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="@virtual.id@">
     <Type>@virtual.mapConverter.equipmentType.dc-type@</Type>
+    <AlternativeName>@dc.title.alternative@</AlternativeName>
     <Acronym>@oairecerif.acronym@</Acronym>
+    <InternalNote>@perucris.description.internalNote@</InternalNote>
 	<Name>@dc.title@</Name>
 	<Identifier type="Institution assigned unique equipment identifier">@oairecerif.internalid@</Identifier>
 	<Description>@dc.description@</Description>
@@ -28,4 +30,5 @@
         @if.metadata.oairecerif-amount-currency.end@
     >@oairecerif.amount@</AcquisitionAmount>
     @if.metadata.oairecerif-amount.end@
+    <SourceId>@cris.sourceId@</SourceId>
 </Equipment>

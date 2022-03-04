@@ -2,8 +2,10 @@
 	<Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">@virtual.mapConverter.orgUnitTypes.dc-type@</Type>
     <Acronym>@oairecerif.acronym@</Acronym>
     <Name>@dc.title@</Name>
+    <AlternativeName>@dc.title.alternative@</AlternativeName>
     <LegalName>@organization.legalName@</LegalName>
     <Identifier>@organization.identifier@</Identifier>
+    <InternalNote>@perucris.description.internalNote@</InternalNote>
     <Url>@oairecerif.identifier.url@</Url>
     <Identifier type="RUC">@organization.identifier.ruc@</Identifier>
     <Identifier type="Ringgold">@organization.identifier.rin@</Identifier>
@@ -19,6 +21,8 @@
         <AddressCountry>@organization.address.addressCountry@</AddressCountry>
     </PostAddress>
     <Email>@orgunit.email@</Email>
+    <Ipi>@perucris.orgunit.ipi@</Ipi>
+    <Funder>@perucris.orgunit.funder@</Funder>
     <UbiGeo scheme="https://purl.org/pe-repo/inei/ubigeo">@virtual.mapConverter.ubigeoUris.perucris-ubigeo@</UbiGeo>
     <Description>@dc.description.abstract@</Description>
     <InstitutionalSector>@perucris.type.sectorInstitucional@</InstitutionalSector>
@@ -38,4 +42,8 @@
         <Contact>@perucris.renacyt.contact@</Contact>
     </Renacyt>
     </ConcytecRecords>
+    <SourceId>@cris.sourceId@</SourceId>
+    <TechnologicalSurveillanceActions>@perucris.sti.actions@</TechnologicalSurveillanceActions>
+    <FormalTechnologicalSurveillanceUnit>@perucris.sti.formalUnit@</FormalTechnologicalSurveillanceUnit>
+    <QualityCertified>@perucris.sti.qualityCertified@</QualityCertified>
 </OrgUnit>

@@ -80,6 +80,10 @@
                                     <xsl:with-param name="label" select="'Teléfono móvil'" />
                                     <xsl:with-param name="value" select="mobile-phone" />
                                 </xsl:call-template>
+								 <xsl:call-template name="print-value">
+                                    <xsl:with-param name="label" select="'Tipo de Perfil'" />
+                                    <xsl:with-param name="value" select="profile-type" />
+                                </xsl:call-template>
                                 
 								<xsl:call-template name="print-value">
 							    	<xsl:with-param name="label" select="'ORCID'" />
@@ -210,6 +214,8 @@
                     ( count(working-groups/working-group) &gt; 0 ) or 
                     ( count(interests/interest) &gt; 0 ) or 
                     ( count(ocde-subjects/ocde-subject) &gt; 0 ) or
+                    ( count(minam-subjects/minam-subject) &gt; 0 ) or
+                    ( count(ins-subjects/ins-subject) &gt; 0 ) or
                     ( count(knows-languages/language) &gt; 0 )">
                     
 	                    <xsl:call-template name="section-title">
@@ -235,6 +241,14 @@
 						<xsl:call-template name="print-values">
 							<xsl:with-param name="label" select="'Campo de conocimiento OCDE'" />
 							<xsl:with-param name="values" select="ocde-subjects/ocde-subject" />
+						</xsl:call-template>
+						<xsl:call-template name="print-values">
+							<xsl:with-param name="label" select="'Áreas Temáticas Ambientales asociadas a las líneas de investigación del MINAM'" />
+							<xsl:with-param name="values" select="minam-subjects/minam-subject" />
+						</xsl:call-template>
+	                    <xsl:call-template name="print-values">
+							<xsl:with-param name="label" select="'Áreas Temáticas Médicas y de la Salud asociadas a las líneas de investigación del INS'" />
+							<xsl:with-param name="values" select="ins-subjects/ins-subject" />
 						</xsl:call-template>
 	                    <xsl:call-template name="print-values">
 	                        <xsl:with-param name="label" select="'Idiomas'" />

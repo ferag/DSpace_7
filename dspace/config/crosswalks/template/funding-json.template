@@ -41,5 +41,7 @@
 		"mandated": "@oairecerif.oamandate@",
 		"URL": "@oairecerif.oamandate.url@"
 	},
-	"project": "@dc.relation.project@"
+	"project": "@dc.relation.project@",
+	"internalNote": "@perucris.description.internalNote@",
+    "sourceId": "@cris.sourceId@",
 }

@@ -16,12 +16,17 @@
 		{
 			"name": "@dc.contributor.author@",
 			"affiliation": "@oairecerif.author.affiliation@"
+			"ORCID": "@perucris.author.orcid@",
+			"DNI": "@perucris.author.dni@"
 		},
 		@group.dc-contributor-author.end@
 	],
 	"holders": [
 		"@dcterms.rightsHolder@",
 	],
+	"person-holders": [
+        "@dcterms.rightsHolderper@",
+    ],
 	"keywords": [
 		"@dc.subject@",
 	],
@@ -44,5 +49,7 @@
 		"@dc.relation.patent@",
 	],
 	"abstract": "@dc.description.abstract@",
-	"url": "dc.identifier.url@"
+	"url": "dc.identifier.url@",
+	"internalNote": "@perucris.description.internalNote@",
+    "sourceId": "@cris.sourceId@",
 }

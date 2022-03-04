@@ -36,6 +36,11 @@
 				    	<xsl:with-param name="label" select="'Acrónimo'" />
 				    	<xsl:with-param name="value" select="cerif:Acronym" />
 			    	</xsl:call-template>
+
+					<xsl:call-template name="print-values">
+				    	<xsl:with-param name="label" select="'Otro(s) nombre(s) del equipamiento'" />
+				    	<xsl:with-param name="values" select="cerif:AlternativeName" />
+			    	</xsl:call-template>
                     
                     <xsl:call-template name="print-value">
                         <xsl:with-param name="label" select="'Tipo de equipamiento'" />

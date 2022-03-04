@@ -28,6 +28,12 @@
 	<ocde-subjects>
     		<ocde-subject>@virtual.mapConverter.ocdeSubjects.perucris-subject-ocde@</ocde-subject>
     </ocde-subjects>
+    <minam-subjects>
+        <minam-subject>@perucris.subject.minam@</minam-subject>
+    </minam-subjects>
+    <ins-subjects>
+        <ins-subject>@perucris.subject.ins@</ins-subject>
+    </ins-subjects>
 	<identifiers>
 		<orcid>@person.identifier.orcid@</orcid>
 		<dina>@person.identifier.dina@</dina>
@@ -97,4 +103,7 @@
 		</publication>
 		@relation.researchoutputs.end@
 	</publications>
+	<profile-type>@virtual.mapConverter.personProfiles.perucris-personProfile-type@</profile-type>
+	<source-id>@cris.sourceId</source-id>
+    <internal-note>@perucris.description.internalNote@</internal-note>
 </person>

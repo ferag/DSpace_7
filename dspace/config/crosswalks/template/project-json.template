@@ -5,6 +5,9 @@
 	"internal-id":"@oairecerif.internalid@",
 	"internal-note":"@perucris.description.internalNote@",
 	"title":"@dc.title@",
+	"title": [
+	    "@dc.title.alternative@",
+    ],
 	"openaireid": [
 		"@crispj.openaireid@",
 	],
@@ -48,6 +51,17 @@
 			{	"name": "@crispj.organization@" },
 			@if.not.authority.crispj-organization.end@
 		],
+		"members": [
+            @relation.crispj-inKindContributorou.start@
+            {
+                "name":"@dc.title@",
+                "acronym":"@oairecerif.acronym@"
+            },
+            @relation.crispj-inKindContributorou.end@
+            @if.not.authority.crispj-inKindContributorou.start@
+            {	"name": "@crispj.inKindContributorou@" },
+            @if.not.authority.crispj-inKindContributorou.end@
+        ],
 		"mainExecutors": [
         	@relation.crispj-contractorou.start@
         	{
@@ -69,12 +83,27 @@
                 "role": "@crispj.coinvestigators.role@",
 		    }
 		    @group.crispj-coinvestigators.end@
+		    @group.crispj-organizationper.start@
+            {
+                "name": "@crispj.organizationper@",
+            }
+            @group.crispj-organizationper.end@
 		],
 		@if.metadata.crispj-contractorper.start@
         "mainExecutors": [
             "@crispj.contractorper@",
         ]
         @if.metadata.crispj-contractorper.end@
+        @if.metadata.crispj-partnerper.start@
+        "partners": [
+            "@crispj.partnerper@",
+        ]
+        @if.metadata.crispj-partnerper.end@
+        @if.metadata.crispj-inKindContributorper.start@
+        "inKindContributors": [
+            "@crispj.inKindContributorper@",
+        ]
+        @if.metadata.crispj-inKindContributorper.end@
 
 	},
 	"uses": {
@@ -137,6 +166,10 @@
             "place":"@datacite.geoLocationPlace@",
             "latitude":"@datacite.geoLocationPoint.pointLatitude@",
             "longitude":"@datacite.geoLocationPoint.pointLongitude@",
+            "westBoundLongitude":"@datacite.geoLocationBox.westBoundLongitude@",
+            "eastBoundLongitude":"@datacite.geoLocationBox.eastBoundLongitude@",
+            "southBoundLatitude":"@datacite.geoLocationBox.southBoundLatitude@",
+            "northBoundLatitude":"@datacite.geoLocationBox.northBoundLatitude@",
         }
         @group.datacite-geoLocationPlace.end@
     ],
@@ -155,5 +188,6 @@
     ],
     "supportingStaff": [
         "@crispj.supportingStaff@",
-    ]
+    ],
+    "source-id" : "@cris.sourceId@",
 }

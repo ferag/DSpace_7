@@ -207,8 +207,16 @@ public class MetadataSecurityServiceImpl implements MetadataSecurityService {
     private boolean isInPublicBox(Context context, List<CrisLayoutBox> boxes, Item item,
                                   MetadataValue value) {
         MetadataField metadataField = value.getMetadataField();
-        if (CollectionUtils.isNotEmpty(boxes)) {
-            return isPublicMetadataField(metadataField, boxes, false);
+        if (CollectionUtils.isNotEmpty(boxes) &&
+            isPublicMetadataField(metadataField, boxes, false)) {
+            return true;
+        }
+        List<CrisLayoutBox> notPublicBoxes = getNotPublicBoxes(metadataField, boxes);
+
+
+        // the metadata is not included in any box so use the default dspace security
+        if (notPublicBoxes.isEmpty() && isNotHidden(context, metadataField)) {
+            return true;
         }
         return isNotAdmin(context) ? isNotHidden(context, metadataField) : true;
     }

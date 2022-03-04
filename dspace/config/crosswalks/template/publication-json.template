@@ -3,14 +3,27 @@
     "@dc.language.iso@",
     ],
   "author": [
+    @group.dc-contributor-author.start@
     {
-      "family": "@dc.contributor.author@"
+      "family": "@dc.contributor.author@",
+      "affiliation": "@oairecerif.author.affiliation@",
+      "ORCID": "@perucris.author.orcid@",
+      "DNI": "@perucris.author.dni@",
     },
+    @group.dc-contributor-author.end@
   ],
   "editor": [
-    {
-      "family": "@dc.contributor.editor@"
-    },
+     @group.dc-contributor-editor.start@
+        {
+          "family": "@dc.contributor.editor@",
+          "affiliation": "@oairecerif.editor.affiliation@",
+          "ORCID": "@perucris.editor.orcid@",
+          "DNI": "@perucris.editor.dni@",
+        },
+    @group.dc-contributor-editor.end@
+  ],
+  "editor-org-unit": [
+        "@dc.contributor.editorou@",
   ],
   "issued": "@dc.date.issued@",
   "abstract": "@dc.description.abstract@",
@@ -25,6 +38,15 @@
   "keyword": [
     "@dc.subject@",
   ],
+  "ddc-subject": [
+    "@dc.subject.ddc@",
+  ],
+  "loc-subject": [
+    "@dc.subject.loc@",
+  ],
+  "mesh-subject": [
+    "@dc.subject.mesh@",
+  ],
   "subject": [
     "@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@",
   ],
@@ -32,6 +54,7 @@
   "publisher": [
     "@dc.publisher@",
   ],
+  "corporate-name": "@dc.contributor.corporatename@",
   "title": "@dc.title@",
   "subtitle" : [
     "@dc.title.alternative@"
@@ -42,7 +65,7 @@
     "embargo-end": "@oairecerif.access.embargoEnd@",
   },
   "license": "@dc.rights.uri@",
-  "type" : "@dc.type@",
+  "type" : "@virtual.mapConverter.coarTypes.dc-type@",
   "version": "@datacite.version@",
   "publication-version": "@oaire.version@",
   "citation": {
@@ -71,7 +94,12 @@
     "@dc.relation.dataset@",
   ],
   "funding": [
-    "@dc.relation.funding@",
+    @group.dc-relation-funding.start@
+    {
+        "funding": "@dc.relation.funding@",
+        "grantno": @dc.relation.grantno@",
+     },
+    @group.dc-relation-funding.end@
   ],
   "project": [
     "@dc.relation.project@",
@@ -82,7 +110,13 @@
   "thesis": [
     {
     "advisor": [
-        "@dc.contributor.advisor@",
+        @group.dc-contributor-advisor.start@
+        {
+            "name": "@dc.contributor.advisor@",
+            "ORCID": "@perucris.advisor.orcid@",
+            "DNI": "@perucris.advisor.dni@",
+        },
+        @group.dc-contributor-advisor.end@
     ],
     "type": "@renati.type@",
     "level": "@renati.level@",
@@ -93,6 +127,7 @@
     "juror": [
         "@renati.juror@",
     ],
+    "source-id": "@cris.sourceId@",
   },
 ]
 

@@ -5,6 +5,7 @@
 	<InternalId>@oairecerif.internalid@</InternalId>
 	<InternalNote>@perucris.description.internalNote@</InternalNote>
 	<Title>@dc.title@</Title>
+	<OtherTitle>@dc.title.alternative@</OtherTitle>
 	<Identifier type="http://namespace.openaire.eu/oaf">@crispj.openaireid@</Identifier>
 	<StartDate>@oairecerif.project.startDate@</StartDate>
 	<EndDate>@oairecerif.project.endDate@</EndDate>
@@ -53,6 +54,17 @@
 			<OrgUnit> <Name>@crispj.organization@</Name> </OrgUnit>
 			@if.not.authority.crispj-organization.end@
 		</Member>
+		<InKindContributor>
+            @relation.crispj-inKindContributorou.start@
+            <OrgUnit id="@virtual.id@">
+                <Acronym>@oairecerif.acronym@</Acronym>
+                <Name>@dc.title@</Name>
+            </OrgUnit>
+            @relation.crispj-inKindContributorou.end@
+            @if.not.authority.crispj-inKindContributorou.start@
+            <OrgUnit> <Name>@crispj.inKindContributorou@</Name> </OrgUnit>
+            @if.not.authority.crispj-inKindContributorou.end@
+        </InKindContributor>
 	</Consortium>
 	<Team>
 		<PrincipalInvestigator>
@@ -65,11 +77,26 @@
 			</Person>
 			@group.crispj-coinvestigators.end@
 		</Member>
+		<ConsortiumMember>
+            @group.crispj-organizationper.start@
+            <Person displayName="@crispj.organizationper@" />
+            @group.crispj-organizationper.end@
+        </ConsortiumMember>
 		@if.metadata.crispj-contractorper.start@
 		<MainExecutor>
             <Person displayName="@crispj.contractorper@" />
         </MainExecutor>
         @if.metadata.crispj-contractorper.end@
+         <Partner>
+            @group.crispj-partnerper.start@
+            <Person displayName="@crispj.partnerper@" />
+            @group.crispj-partnerper.end@
+        </Partner>
+        <InKindContributor>
+            @group.crispj-inKindContributorper.start@
+            <Person displayName="@crispj.inKindContributorper@" />
+            @group.crispj-inKindContributorper.end@
+        </InKindContributor>
 
 	</Team>
 	@relation.grants.start@
@@ -127,6 +154,10 @@
            <geoLocation>@datacite.geoLocationPlace@</geoLocation>
            <latitude>@datacite.geoLocationPoint.pointLatitude@</latitude>
            <longitude>@datacite.geoLocationPoint.pointLongitude@</longitude>
+           <westBoundLongitude>@datacite.geoLocationBox.westBoundLongitude@</westBoundLongitude>
+           <eastBoundLongitude>@datacite.geoLocationBox.eastBoundLongitude@</eastBoundLongitude>
+           <southBoundLatitude>@datacite.geoLocationBox.southBoundLatitude@</southBoundLatitude>
+           <northBoundLatitude>@datacite.geoLocationBox.northBoundLatitude@</northBoundLatitude>
 	   </geoLocationData>
 	   @group.datacite-geoLocationPlace.end@
 	</geoLocations>
@@ -137,5 +168,6 @@
 	    <Email>@crispj.contact.email@</Email>
 	    <Address>@crispj.contact.address@</Address>
 	</Contact>
-	 @group.crispj-contact.start@
+	 @group.crispj-contact.end@
+	 <SourceId>@cris.sourceId@</SourceId>
 </Project>

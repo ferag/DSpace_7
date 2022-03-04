@@ -18,12 +18,17 @@
          	   <Name>@oairecerif.author.affiliation@</Name>
          	</OrgUnit>
          </Affiliation>
+         <ORCID>@perucris.author.orcid@</ORCID>
+         <DNI>@perucris.author.dni@</DNI>
       </Inventor>
    	  @group.dc-contributor-author.end@
    </Inventors>
    <Holders>
       <Holder> <OrgUnit> <Name>@dcterms.rightsHolder@</Name> </OrgUnit> </Holder>
    </Holders>
+   <PersonHolders>
+        <Holder> <Person> <Name>@dcterms.rightsHolderper@</Name> </Person> </Holder>
+   </PersonHolders>
    <Grantors>
         <Grantor>@oairecerif.patent.issuer@</Grantor>
    </Grantors>
@@ -38,4 +43,6 @@
    <Projects>
            <Project> <Name> @dc.relation.project@ </Name> </Project>
    </Projects>
+   <SourceId>@cris.sourceId@</SourceId>
+  <InternalNote>@perucris.description.internalNote@</InternalNote>
 </Patent>

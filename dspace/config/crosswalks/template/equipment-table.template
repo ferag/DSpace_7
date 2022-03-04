@@ -1,11 +1,11 @@
 Name = dc.title
 Acronym = oairecerif.acronym
-Type = dc.type
+Type = virtual.mapConverter.equipmentType.dc-type
 Institution assigned identifier = oairecerif.internalid
 Description = dc.description
 Owner organization = crisequipment.ownerou
 Owner person = crisequipment.ownerrp
-Usage = perucris.type.usage
+Usage = virtual.mapConverter.equipmentUsage.perucris-type-usage
 Subject(s) = virtual.mapConverter.ocdeSubjects.perucris-subject-ocde
 Research line = perucris.researchLine
 Funding(s) = dc.relation.funding

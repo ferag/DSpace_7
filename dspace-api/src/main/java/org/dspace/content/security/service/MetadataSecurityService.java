@@ -83,4 +83,13 @@ public interface MetadataSecurityService {
      *                                 otherwise
      */
     boolean checkMetadataFieldVisibility(Context context, Item item, MetadataField metadataField);
+
+    /**
+     * return a list of metadata values of a given field, whose access is not restricted
+     * @param context application context
+     * @param item the Item
+     * @param metadataField field for which value must be returned, if public
+     * @return
+     */
+    List<MetadataValue> getPublicMetadataValues(Context context, Item item, String metadataField);
 }

@@ -12295,23 +12295,23 @@
         <row>
           <field>
             <dc-schema>dc</dc-schema>
-            <dc-element>relation</dc-element>
-            <dc-qualifier>project</dc-qualifier>
-            <label>Titulo del Proyecto</label>
+            <dc-element>title</dc-element>
+            <label>Nombre del proyecto</label>
             <input-type>onebox</input-type>
             <repeatable>false</repeatable>
-            <required>Ingresar Titulo del Proyecto</required>
+            <required>Ingresar un nombre</required>
             <hint />
           </field>
         </row>
         <row>
           <field>
             <dc-schema>dc</dc-schema>
-            <dc-element>title</dc-element>
-            <label>Nombre</label>
+            <dc-element>relation</dc-element>
+            <dc-qualifier>project</dc-qualifier>
+            <label>Título del proyecto en el Directorio de Proyectos</label>
             <input-type>onebox</input-type>
             <repeatable>false</repeatable>
-            <required>Ingresar un nombre</required>
+            <required>Ingresar Titulo del Proyecto</required>
             <hint />
           </field>
         </row>
@@ -13236,7 +13236,7 @@
           <stored-value>http://purl.org/pe-repo/concytec/terminos#serviciosDeExtension</stored-value>
         </pair>
         <pair>
-          <displayed-value>Creación de capacidades</displayed-value>
+          <displayed-value>Fortalecimiento de capacidades</displayed-value>
           <stored-value>http://purl.org/pe-repo/concytec/terminos#fortalecimientoDeCapacidades</stored-value>
         </pair>
         <pair>

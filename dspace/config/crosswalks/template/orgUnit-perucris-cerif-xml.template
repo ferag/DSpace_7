@@ -20,12 +20,12 @@
 		<OrgUnit> <Name>@organization.parentOrganization@</Name> </OrgUnit>
 		@if.not.authority.organization-parentOrganization.end@
 	</PartOf>
-	<Subject scheme="http://purl.org/pe-repo/ocde/ford">@virtual.mapConverter.ocdeSubjects.perucris-subject-ocde@</Subject>
+	<Subject scheme="http://purl.org/pe-repo/ocde/ford">@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@</Subject>
     <Keyword>@dc.subject@</Keyword>
     <PostAddress>
         <AddressLocality>@organization.address.addressLocality@</AddressLocality>
         <AddressCountry>@organization.address.addressCountry@</AddressCountry>
     </PostAddress>
-    <UbiGeo scheme="https://purl.org/pe-repo/inei/ubigeo">@perucris.ubigeo@</UbiGeo>
+    <UbiGeo scheme="https://purl.org/pe-repo/inei/ubigeo">@virtual.mapConverter.ubigeoUris.perucris-ubigeo@</UbiGeo>
     <Description>@dc.description.abstract@</Description>
 </OrgUnit>

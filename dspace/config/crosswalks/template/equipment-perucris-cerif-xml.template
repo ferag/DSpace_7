@@ -18,7 +18,7 @@
     @if.not.authority.dc-relation-funding.start@
     <Funder> <As> <Funding> <Name>@dc.relation.funding@</Name> </Funding> </As> </Funder> 
     @if.not.authority.dc-relation-funding.end@
-    <Subject scheme="http://purl.org/pe-repo/ocde/ford">@virtual.mapConverter.ocdeSubjects.perucris-subject-ocde@</Subject>
+    <Subject scheme="http://purl.org/pe-repo/ocde/ford">@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@</Subject>
     <ResearchLine>@perucris.researchLine@</ResearchLine>
     <ManufacturingCountry>@perucris.manufacturingCountry@</ManufacturingCountry>
     <ManufacturingDate>@perucris.date.manufacturing@</ManufacturingDate>

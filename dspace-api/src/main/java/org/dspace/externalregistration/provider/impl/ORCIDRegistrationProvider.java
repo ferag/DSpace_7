@@ -17,6 +17,7 @@ import org.dspace.authenticate.model.CasProfileElementsResponse;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
+import org.dspace.eperson.service.EPersonService;
 import org.dspace.external.provider.impl.OrcidV3AuthorDataProvider;
 import org.dspace.externalregistration.provider.AbstractExternalRegistrationProvider;
 import org.orcid.jaxb.model.v3.release.record.Email;
@@ -31,6 +32,9 @@ public class ORCIDRegistrationProvider extends AbstractExternalRegistrationProvi
     @Autowired(required = true)
     private OrcidV3AuthorDataProvider orcidV3AuthorDataProvider;
 
+    @Autowired
+    private EPersonService ePersonService;
+
     @Override
     public boolean support(CasProfileElementsResponse userData) {
         return StringUtils.isNotBlank(userData.getOrcid());
@@ -39,7 +43,6 @@ public class ORCIDRegistrationProvider extends AbstractExternalRegistrationProvi
     @Override
     public EPerson createEPerson(Context context, CasProfileElementsResponse userData)
             throws SQLException, AuthorizeException {
-        EPerson eperson = getePersonService().create(context);
         List<String> vals = new ArrayList<String>();
 
         Person orcidPerson = getOrcidV3AuthorDataProvider().getBio(userData.getOrcid());
@@ -47,6 +50,14 @@ public class ORCIDRegistrationProvider extends AbstractExternalRegistrationProvi
         if (!email.isPresent()) {
             throw new IllegalStateException("Orcid email is required to proceed");
         }
+
+        EPerson eperson = ePersonService.findByEmail(context, email.get().getEmail());
+
+        if (eperson != null) {
+            return eperson;
+        }
+
+        eperson = getePersonService().create(context);
 
         vals.add(userData.getOrcid());
         getePersonService().addMetadata(context, eperson, "perucris", "eperson", "orcid", null, vals);

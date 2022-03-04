@@ -31,6 +31,16 @@
 				    	<xsl:with-param name="label" select="'Acronym'" />
 				    	<xsl:with-param name="value" select="Acronym" />
 			    	</xsl:call-template>
+
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'Nombre(s) de la organización alternativo(s)'" />
+						<xsl:with-param name="values" select="AlternativeName" />
+					</xsl:call-template>
+
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'Nombre legal'" />
+						<xsl:with-param name="values" select="LegalName" />
+					</xsl:call-template>
 			    	
 					<xsl:call-template name="print-value">
 				    	<xsl:with-param name="label" select="'Type'" />

@@ -1,0 +1,66 @@
+<Funding xmlns="https://www.openaire.eu/cerif-profile/1.1/" id="@virtual.id@">
+	<Type xmlns="https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types">@dc.type@</Type>
+    <Acronym>@oairecerif.acronym@</Acronym>
+    <InternalNote>@perucris.description.internalNote@</InternalNote>
+	<Name>@dc.title@</Name>
+    @if.metadata.oairecerif-amount-currency.start@
+    <Amount currency="@oairecerif.amount.currency@">
+    @if.metadata.oairecerif-amount-currency.end@
+    @if.not.metadata.oairecerif-amount-currency.start@
+    <Amount>
+    @if.not.metadata.oairecerif-amount-currency.end@
+        @oairecerif.amount@
+    </Amount>
+    @if.metadata.perucris-executedAmount-currency.start@
+    <ExecutedAmount currency="@perucris.executedAmount.currency@">
+    @if.metadata.perucris-executedAmount-currency.end@
+    @if.not.metadata.perucris-executedAmount-currency.start@
+    <ExecutedAmount>
+    @if.not.metadata.perucris-executedAmount-currency.end@
+        @perucris.executedAmount@
+    </ExecutedAmount>
+	<Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#FinanceID">@oairecerif.internalid@</Identifier>
+	<Description>@dc.description@</Description>
+    <Keyword>@dc.subject@</Keyword>
+    <Funders>
+    @group.oairecerif-funder.start@
+	<Funder>
+	    <OrgUnit>
+			<Name>@oairecerif.funder@</Name>
+		</OrgUnit>
+	</Funder>
+	@group.oairecerif-funder.end@
+	</Funders>
+    <PartOf>
+        @relation.oairecerif-fundingParent.start@
+        <Funding id="@virtual.id@">
+            <Acronym>@oairecerif.acronym@</Acronym>
+            <Name>@dc.title@</Name>
+        </Funding>
+        @relation.oairecerif-fundingParent.end@
+        @if.not.authority.oairecerif-fundingParent.start@
+        <Funding>
+            <Name>@oairecerif.fundingParent@</Name>
+        </Funding>
+        @if.not.authority.oairecerif-fundingParent.end@
+    </PartOf>
+	<Duration 
+		startDate="@oairecerif.funding.startDate@" 
+		endDate="@oairecerif.funding.endDate@" 
+	/>
+	<OAMandate 
+		mandated="@oairecerif.oamandate@" 
+		URL="@oairecerif.oamandate.url@" 
+	/>
+	@relation.dc-relation-project.start@
+	    <Project id="@virtual.id@">
+	        <Name>@dc.title@</Name>
+	    </Project>
+	@relation.dc-relation-project.end@
+	@if.not.authority.dc-relation-project.start@
+	<Project>
+        <Name>@dc.relation.project@</Name>
+    </Project>
+	@if.not.authority.dc-relation-project.end@
+	<SourceId>@cris.sourceId@</SourceId>
+</Funding>

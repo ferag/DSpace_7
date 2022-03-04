@@ -19,19 +19,33 @@
 		},
 		@group.oairecerif-identifier-url.end@
 	],
-	"email": "@person.email@",
-	"phone": "@perucris.phone@",
-    "mobile-phone": "@perucris.mobilePhone@",
+	"email": [
+	   "@person.email@",
+	   ],
+	"phone": [
+	    "@perucris.phone@",
+	    ],
+    "mobile-phone": [
+        "@perucris.mobilePhone@",
+      ],
 	"interests": [
 		"@dc.subject@",
 	],
+	"ocde-subjects": [
+		"@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@",
+	],
+	"minam-subjects": [
+    		"@virtual.mapConverter.minamTypes.perucris-subject-minam@",
+    	],
+    "ins-subjects": [
+        "@virtual.mapConverter.insTypes.perucris-subject-ins@",
+    ],
 	"identifiers": {
 		"orcid": "@person.identifier.orcid@",
 		"dina": "@perucris.identifier.dina@",
         "dni": "@perucris.identifier.dni@",
         "passport": "@perucris.identifier.passport@",
         "immigration-card": "@perucris.identifier.immigrationCard@",
-        "renacyt": "@perucris.identifier.renacyt@",
 		"scopus-author-ids": [
 			"@person.identifier.scopus-author-id@",
 		],
@@ -56,7 +70,9 @@
 			"name": "@crisrp.education@",
 			"start-date": "@crisrp.education.start@",
 			"end-date": "@crisrp.education.end@",
-			"role": "@crisrp.education.role@"
+			"role": "@crisrp.education.role@",
+			"grantor": "@perucris.education.grantor@",
+			"country": "@perucris.education.country@"
 		},
 		@group.crisrp-education.end@
 	],
@@ -66,19 +82,22 @@
 		{
 			"name": "@crisrp.qualification@",
 			"start-date": "@crisrp.qualification.start@",
-			"end-date": "@crisrp.qualification.end@"
+			"end-date": "@crisrp.qualification.end@",
+			"org-unit": "@crisrp.qualification.orgunit@",
+			"renacyt": "@perucris.identifier.renacyt@",
 		},
 		@group.crisrp-qualification.end@
 	],
 	"knows-languages": [
 		"@person.knowsLanguage@",
 	],
-	"ubigeo-reniec": "@perucris.domicilio.ubigeoReniec@",
+	"ubigeo-reniec": "@virtual.mapConverter.ubigeoUris.perucris-domicilio-ubigeoReniec@",
     "address": {
         "street": "@perucris.address.streetAddress@",
         "postal-code": "@perucris.address.postalCode@",
         "country": "@perucris.address.addressCountry@"
     },
+    "profile-type": "@perucris.personProfile.type@",
 	"publications": [
 		@relation.researchoutputs.start@
 		{
@@ -89,5 +108,7 @@
 			]
 		},
 		@relation.researchoutputs.end@
-	]
+	],
+	"source-id": "@cris.sourceId@",
+    "internal-note": "@perucris.description.internalNote@",
 }

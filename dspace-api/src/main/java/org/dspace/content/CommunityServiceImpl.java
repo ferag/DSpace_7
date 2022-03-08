@@ -979,6 +979,8 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
             String roleName = institutionalRole.getNameWithoutTypePrefix() + ": " + institutionName;
             groupService.setName(scopedRole, SCOPED + ":" + roleName);
             groupService.addMetadata(context, scopedRole, "perucris", "group", "type", null, SCOPED.name());
+            groupService.addMetadata(context, scopedRole, "perucris", "group", "status", null, "ENABLED");
+            groupService.addMetadata(context, scopedRole, "dc", "description", null, null, "");
             groupService.addMember(context, institutionalRole, scopedRole);
 
             addMetadata(context, institution, "perucris", "community", "institutional-scoped-role", null,

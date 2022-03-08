@@ -154,7 +154,7 @@
 				<entry key="ctivitae-publication-apa" value-ref="cslItemDataCrosswalkCtivitaePublicationApa"></entry>
 				<entry key="ctivitae-publication-chicago" value-ref="cslItemDataCrosswalkCtivitaePublicationChicago"></entry>
 
-				<entry key="ctivitae-nproject-xml" value-ref="referCrosswalkCtiVitaeProjectXml"></entry>
+				<entry key="ctivitae-project-xml" value-ref="referCrosswalkCtiVitaeProjectXml"></entry>
 				<entry key="ctivitae-project-cerif-xml" value-ref="referCrosswalkCtivitaeProjectCerifXml"></entry>
 				<entry key="ctivitae-project-perucris-cerif-xml" value-ref="referCrosswalkCtivitaeProjectPerucrisCerifXml"></entry>
 				<entry key="ctivitae-project-json" value-ref="referCrosswalkCtivitaeProjectJson"></entry>

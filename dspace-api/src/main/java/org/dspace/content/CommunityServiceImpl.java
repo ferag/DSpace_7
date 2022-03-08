@@ -326,6 +326,12 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
 
     @Override
     public Group createAdministrators(Context context, Community community) throws SQLException, AuthorizeException {
+        return createAdministrators(context, community, true);
+    }
+
+    @Override
+    public Group createAdministrators(Context context, Community community, boolean rethinkCache)
+        throws SQLException, AuthorizeException {
         // Check authorisation - Must be an Admin to create more Admins
         AuthorizeUtil.authorizeManageAdminGroup(context, community);
 
@@ -337,7 +343,7 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
             context.restoreAuthSystemState();
 
             groupService.setName(admins, "COMMUNITY_" + community.getID() + "_ADMIN");
-            groupService.update(context, admins);
+            groupService.update(context, admins, rethinkCache);
         }
 
         authorizeService.addPolicy(context, community, Constants.ADMIN, admins);
@@ -774,6 +780,8 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
         newCommunity = cloneCommunity(context, template, newCommunity, scopedRoles);
         setCommunityName(context, newCommunity, name);
 
+        groupService.rethinkGroupCache(context, true);
+
         return newCommunity;
     }
 
@@ -850,7 +858,7 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
 
         Group administrators = communityToClone.getAdministrators();
         if (administrators != null) {
-            Group newAdministrators = createAdministrators(context, clone);
+            Group newAdministrators = createAdministrators(context, clone, false);
             addInstitutionalScopedRoleMembers(context, administrators, newAdministrators, scopedRoles);
         }
 
@@ -863,16 +871,16 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
 
         Group administrators = collection.getAdministrators();
         if (administrators != null) {
-            Group newAdministrators = collectionService.createAdministrators(context, newCollection);
+            Group newAdministrators = collectionService.createAdministrators(context, newCollection, false);
             addInstitutionalScopedRoleMembers(context, administrators, newAdministrators, scopedRoles);
-            groupService.update(context, newAdministrators);
+            groupService.update(context, newAdministrators, false);
         }
 
         Group submitter = collection.getSubmitters();
         if (submitter != null) {
-            Group newSubmitter = collectionService.createSubmitters(context, newCollection);
+            Group newSubmitter = collectionService.createSubmitters(context, newCollection, false);
             addInstitutionalScopedRoleMembers(context, submitter, newSubmitter, scopedRoles);
-            groupService.update(context, newSubmitter);
+            groupService.update(context, newSubmitter, false);
         }
 
         try {
@@ -955,9 +963,9 @@ public class CommunityServiceImpl extends DSpaceObjectServiceImpl<Community> imp
         Map<UUID, Group> scopedRoles) throws SQLException, AuthorizeException {
 
         String roleId = collectionRole.getRoleId();
-        Group newWorkflowGroup = collectionService.createWorkflowGroup(context, newCollection, roleId);
+        Group newWorkflowGroup = collectionService.createWorkflowGroup(context, newCollection, roleId, false);
         addInstitutionalScopedRoleMembers(context, collectionRole.getGroup(), newWorkflowGroup, scopedRoles);
-        groupService.update(context, newWorkflowGroup);
+        groupService.update(context, newWorkflowGroup, false);
 
     }
 

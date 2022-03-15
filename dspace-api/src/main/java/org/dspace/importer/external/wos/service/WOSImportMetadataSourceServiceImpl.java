@@ -167,7 +167,7 @@ public class WOSImportMetadataSourceServiceImpl extends AbstractImportMetadataSo
                     HttpResponse httpResponse = client.execute(method);
                     int statusCode = httpResponse.getStatusLine().getStatusCode();
                     if (statusCode != HttpStatus.SC_OK) {
-                        log.warn("call to ws to get number of result failed: " + statusCode);
+                        log.warn("call to ws to get number of results failed: " + statusCode);
                         return 0;
                     }
                     InputStream is = httpResponse.getEntity().getContent();

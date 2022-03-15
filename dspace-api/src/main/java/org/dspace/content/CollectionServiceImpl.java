@@ -417,6 +417,12 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
     @Override
     public Group createWorkflowGroup(Context context, Collection collection, String roleId)
         throws SQLException, AuthorizeException {
+        return createWorkflowGroup(context, collection, roleId, true);
+    }
+
+    @Override
+    public Group createWorkflowGroup(Context context, Collection collection, String roleId, boolean rethinkCache)
+        throws SQLException, AuthorizeException {
         // Check authorisation - Must be an Admin to create Workflow Group
         AuthorizeUtil.authorizeManageWorkflowsGroup(context, collection);
 
@@ -426,7 +432,7 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
             context.turnOffAuthorisationSystem();
             Group g = groupService.create(context);
             groupService.setName(g, "COLLECTION_" + collection.getID() + "_WORKFLOW_ROLE_" + roleId);
-            groupService.update(context, g);
+            groupService.update(context, g, rethinkCache);
             context.restoreAuthSystemState();
             setWorkflowGroup(context, collection, roleId, g);
         }
@@ -525,6 +531,12 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
 
     @Override
     public Group createSubmitters(Context context, Collection collection) throws SQLException, AuthorizeException {
+        return createSubmitters(context, collection, true);
+    }
+
+    @Override
+    public Group createSubmitters(Context context, Collection collection, boolean rethinkCache)
+        throws SQLException, AuthorizeException {
         // Check authorisation - Must be an Admin to create Submitters Group
         AuthorizeUtil.authorizeManageSubmittersGroup(context, collection);
 
@@ -537,7 +549,7 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
 
             groupService.setName(submitters,
                                  "COLLECTION_" + collection.getID() + "_SUBMIT");
-            groupService.update(context, submitters);
+            groupService.update(context, submitters, rethinkCache);
         }
 
         // register this as the submitter group
@@ -564,6 +576,12 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
 
     @Override
     public Group createAdministrators(Context context, Collection collection) throws SQLException, AuthorizeException {
+        return createAdministrators(context, collection, true);
+    }
+
+    @Override
+    public Group createAdministrators(Context context, Collection collection, boolean rethinkCache)
+        throws SQLException, AuthorizeException {
         // Check authorisation - Must be an Admin to create more Admins
         AuthorizeUtil.authorizeManageAdminGroup(context, collection);
 
@@ -575,7 +593,7 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
             context.restoreAuthSystemState();
 
             groupService.setName(admins, "COLLECTION_" + collection.getID() + "_ADMIN");
-            groupService.update(context, admins);
+            groupService.update(context, admins, rethinkCache);
         }
 
         authorizeService.addPolicy(context, collection,

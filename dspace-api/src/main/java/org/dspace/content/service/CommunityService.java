@@ -136,10 +136,24 @@ public interface CommunityService extends DSpaceObjectService<Community>, DSpace
     public Group createAdministrators(Context context, Community community) throws SQLException, AuthorizeException;
 
     /**
-     * Remove the administrators group, if no group has already been created
-     * then return without error. This will merely dereference the current
-     * administrators group from the community so that it may be deleted
-     * without violating database constraints.
+     * Create a default administrators group if one does not already exist. Returns
+     * either the newly created group or the previously existing one. Note that
+     * other groups may also be administrators.
+     *
+     * @param context   context
+     * @param community community
+     * @return the default group of editors associated with this community
+     * @throws SQLException       if database error
+     * @throws AuthorizeException if authorization error
+     */
+    public Group createAdministrators(Context context, Community community, boolean rethinkCache)
+        throws SQLException, AuthorizeException;
+
+    /**
+     * Remove the administrators group, if no group has already been created then
+     * return without error. This will merely dereference the current administrators
+     * group from the community so that it may be deleted without violating database
+     * constraints.
      *
      * @param context   context
      * @param community community

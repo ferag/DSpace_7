@@ -162,6 +162,23 @@ public interface CollectionService
         AuthorizeException;
 
     /**
+     * Create a workflow group for the given role if one does not already exist.
+     * Returns either the newly created group or the previously existing one. Note
+     * that while the new group is created in the database, the association between
+     * the group and the collection is not written until <code>update</code> is
+     * called.
+     *
+     * @param context    DSpace Context
+     * @param collection Collection
+     * @param roleId     the role id to create or get the group for
+     * @return the workflow group associated with this collection
+     * @throws SQLException       if database error
+     * @throws AuthorizeException if authorization error
+     */
+    public Group createWorkflowGroup(Context context, Collection collection, String roleId, boolean rethinkCache)
+        throws SQLException, AuthorizeException;
+
+    /**
      * Set the workflow group corresponding to a particular workflow step.
      * <code>null</code> can be passed in if there should be no associated
      * group for that workflow step; any existing group is NOT deleted.
@@ -227,10 +244,25 @@ public interface CollectionService
     public Group createSubmitters(Context context, Collection collection) throws SQLException, AuthorizeException;
 
     /**
-     * Remove the submitters group, if no group has already been created
-     * then return without error. This will merely dereference the current
-     * submitters group from the collection so that it may be deleted
-     * without violating database constraints.
+     * Create a default submitters group if one does not already exist. Returns
+     * either the newly created group or the previously existing one. Note that
+     * other groups may also be allowed to submit to this collection by the
+     * authorization system.
+     *
+     * @param context    DSpace Context
+     * @param collection Collection
+     * @return the default group of submitters associated with this collection
+     * @throws SQLException       if database error
+     * @throws AuthorizeException if authorization error
+     */
+    public Group createSubmitters(Context context, Collection collection, boolean rethinkCache)
+        throws SQLException, AuthorizeException;
+
+    /**
+     * Remove the submitters group, if no group has already been created then return
+     * without error. This will merely dereference the current submitters group from
+     * the collection so that it may be deleted without violating database
+     * constraints.
      *
      * @param context    DSpace Context
      * @param collection Collection
@@ -254,10 +286,24 @@ public interface CollectionService
     public Group createAdministrators(Context context, Collection collection) throws SQLException, AuthorizeException;
 
     /**
-     * Remove the administrators group, if no group has already been created
-     * then return without error. This will merely dereference the current
-     * administrators group from the collection so that it may be deleted
-     * without violating database constraints.
+     * Create a default administrators group if one does not already exist. Returns
+     * either the newly created group or the previously existing one. Note that
+     * other groups may also be administrators.
+     *
+     * @param context    DSpace Context
+     * @param collection Collection
+     * @return the default group of editors associated with this collection
+     * @throws SQLException       if database error
+     * @throws AuthorizeException if authorization error
+     */
+    Group createAdministrators(Context context, Collection collection, boolean rethinkCache)
+        throws SQLException, AuthorizeException;
+
+    /**
+     * Remove the administrators group, if no group has already been created then
+     * return without error. This will merely dereference the current administrators
+     * group from the collection so that it may be deleted without violating
+     * database constraints.
      *
      * @param context    DSpace Context
      * @param collection Collection

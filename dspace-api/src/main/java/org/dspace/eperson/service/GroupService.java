@@ -43,6 +43,18 @@ public interface GroupService extends DSpaceObjectService<Group>, DSpaceObjectLe
     public Group create(Context context) throws SQLException, AuthorizeException;
 
     /**
+     * Update the group - writing out group object and EPerson list if necessary
+     *
+     * @param context The relevant DSpace Context.
+     * @param group   Group to update
+     * @param rethinkGroupCache true if the group cache must be updated
+     * @throws SQLException       An exception that provides information on a database access error or other errors.
+     * @throws AuthorizeException Exception indicating the current user of the context does not have permission
+     *                            to perform a particular action.
+     */
+    public void update(Context context, Group group, boolean rethinkGroupCache) throws SQLException, AuthorizeException;
+
+    /**
      * set name of group
      *
      * @param group DSpace group
@@ -348,4 +360,14 @@ public interface GroupService extends DSpaceObjectService<Group>, DSpaceObjectLe
      * @throws SQLException database exception
      */
     List<Group> findByGroupType(Context context, GroupType type) throws SQLException;
+
+    /**
+     * Regenerate the group cache AKA the group2groupcache table in the database -
+     * meant to be called when a group is added or removed from another group
+     *
+     * @param context      The relevant DSpace Context.
+     * @param flushQueries flushQueries Flush all pending queries
+     * @throws SQLException An exception that provides information on a database access error or other errors.
+     */
+    void rethinkGroupCache(Context context, boolean flushQueries) throws SQLException;
 }

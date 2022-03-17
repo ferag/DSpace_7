@@ -6,7 +6,6 @@
  * http://www.dspace.org/license/
  */
 package org.dspace.script2externalservices;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,7 +23,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.content.CollectionServiceImpl;
 import org.dspace.content.Item;
@@ -51,7 +49,6 @@ import org.dspace.scripts.DSpaceRunnable;
 import org.dspace.services.ConfigurationService;
 import org.dspace.services.factory.DSpaceServicesFactory;
 import org.dspace.utils.DSpace;
-import org.dspace.workflow.WorkflowException;
 import org.dspace.workflow.WorkflowService;
 import org.dspace.workflow.factory.WorkflowServiceFactory;
 import org.hibernate.LazyInitializationException;
@@ -135,8 +132,8 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
             context.complete();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            handler.handleException(e);
             context.abort();
+            handler.handleException(e);
         } finally {
             context.restoreAuthSystemState();
         }
@@ -185,36 +182,45 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
                 Item item = itemIterator.next();
                 String id = buildID(item);
                 if (StringUtils.isNotBlank(id)) {
-                    int currentRecord = 0;
-                    int recordsFound = dataProvider.getNumberOfResults(id);
-                    int userPublicationsProcessed = 0;
-                    int iterations = recordsFound <= 0 ? 0 : (recordsFound / LIMIT) + 1;
-                    for (int i = 1; i <= iterations; i++) {
-                        userPublicationsProcessed += fillWorkspaceItems(context, currentRecord, dataProvider, item, id);
-                        currentRecord += LIMIT;
-                    }
+                    int userPublicationsProcessed = lookupPublications(context, dataProvider, item, id);
                     totalRecordWorked += userPublicationsProcessed;
-                    if (userPublicationsProcessed >= 20) {
-                        context.commit();
-                        // to ensure that collection's template item is fully initialized
-                        reloadCollectionIfNeeded();
-                    }
                 }
                 countItemsProcessed++;
-                if (countItemsProcessed == 20) {
-                    context.commit();
-                    countItemsProcessed = 0;
-                    // to ensure that collection's template item is fully initialized
-                    reloadCollectionIfNeeded();
+                if (countItemsProcessed % 100 == 0) {
+                    log.info(countItemsProcessed +  " authors processed.");
                 }
             }
             context.commit();
+            handler.logInfo("Processed " + countItemsProcessed + " authors");
             handler.logInfo("Processed " + totalRecordWorked + " records");
             handler.logInfo("Update end");
         } catch (SQLException | SearchServiceException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);
         }
+    }
+
+    private int lookupPublications(Context context, LiveImportDataProvider dataProvider, Item item, String id)
+        throws SQLException {
+        int userPublicationsProcessed = 0;
+        try {
+            log.info("Looking up publications for id: " + id);
+            int currentRecord = 0;
+            int recordsFound = dataProvider.getNumberOfResults(id);
+            handler.logInfo(recordsFound + " records found for id: " + id);
+            int iterations = recordsFound <= 0 ? 0 : (recordsFound / LIMIT) + 1;
+            for (int i = 1; i <= iterations; i++) {
+                userPublicationsProcessed += fillWorkspaceItems(context, currentRecord, dataProvider, item, id);
+                currentRecord += LIMIT;
+            }
+            handler.logInfo("Processed " + userPublicationsProcessed + " publications for id: " + id);
+        } catch (Exception e) {
+            handler.logWarning("Error during publications lookup with id " + id +
+                " moving to next id. Error : " + e.getMessage());
+            log.warn("Error during publications lookup with id " + id +
+                " moving to next id. Error : " + e.getMessage(), e);
+        }
+        return userPublicationsProcessed;
     }
 
     /**
@@ -267,21 +273,24 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
     private int fillWorkspaceItems(Context context, int record, LiveImportDataProvider dataProvider,
             Item item, String id) throws SQLException {
         int countDataObjects = 0;
-        try {
             for (ExternalDataObject dataObject : dataProvider.searchExternalDataObjects(id, record, LIMIT)) {
                 if (!exist(dataObject.getMetadata())) {
-                    WorkspaceItem wsItem = externalDataService.createWorkspaceItemFromExternalDataObject(context,
-                                                               dataObject, this.collection);
-                    for (List<MetadataValueDTO> metadataList : metadataValueToAdd(wsItem.getItem())) {
-                        addMetadata(wsItem.getItem(), metadataList);
+                    try {
+                        WorkspaceItem wsItem = externalDataService.createWorkspaceItemFromExternalDataObject(context,
+                            dataObject, this.collection);
+                        for (List<MetadataValueDTO> metadataList : metadataValueToAdd(wsItem.getItem())) {
+                            addMetadata(wsItem.getItem(), metadataList);
+                        }
+                        workflowService.start(context, wsItem);
+                        context.commit();
+                        reloadCollectionIfNeeded();
+                    } catch (Exception e) {
+                        handler.logWarning("Error during workspaceitem creation for id " + id + ": " + e.getMessage());
+                        log.warn("Error during workspaceitem creation for id " + id + ": " + e.getMessage(), e);
                     }
-                    workflowService.start(context, wsItem);
                 }
                 countDataObjects++;
             }
-        } catch (AuthorizeException | IOException | WorkflowException e) {
-            log.error(e.getMessage(), e);
-        }
         return countDataObjects;
     }
 
@@ -369,6 +378,7 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
         discoverQuery.setMaxResults(20);
         setFilter(discoverQuery, this.service);
         discoverQuery.addFilterQueries("search.entitytype:Person");
+        discoverQuery.addFilterQueries("search.resourcetype:Item");
         return new DiscoverResultIterator<Item, UUID>(context, discoverQuery);
     }
 

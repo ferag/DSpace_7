@@ -209,7 +209,7 @@
 					</xsl:call-template>
 
 					<xsl:call-template name="print-values">
-						<xsl:with-param name="label" select="'Campo del conoscimiento OCDE'" />
+						<xsl:with-param name="label" select="'Campo del conocimiento OCDE'" />
 						<xsl:with-param name="values" select="cerif:Subject" />
 					</xsl:call-template>
 

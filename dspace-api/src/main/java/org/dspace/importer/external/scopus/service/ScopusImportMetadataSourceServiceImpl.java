@@ -97,7 +97,11 @@ public class ScopusImportMetadataSourceServiceImpl extends AbstractImportMetadat
         if (DoiCheck.isDoi(query)) {
             query = DoiCheck.purgeDoiValue(query);
         }
-        return retry(new SearchNBByQueryCallable(query));
+        try {
+            return retry(new SearchNBByQueryCallable(query));
+        } catch (Exception e) {
+            throw new MetadataSourceException(e);
+        }
     }
 
     @Override

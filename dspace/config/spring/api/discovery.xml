@@ -1679,7 +1679,8 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
 <!--                <value>crispj.organization_authority:{0} AND entityType_keyword:Project</value>-->
-                <value>projectOrgUnits_authority:{0} AND entityType_keyword:Project</value>
+                <value>crispj.coordinator_authority:{0} OR crispj.partnerou_authority: {0} OR crispj.organization_authority:{0} OR oairecerif.funder_authority: {0} OR crispj.contractorou_authority: {0} OR crispj.inKindContributorou_authority: {0} OR crispj.organizationper_authority: {0}</value>
+                <value>entityType_keyword:Project</value>
                 <value>search.resourcetype:Item</value>
             </list>
         </property>
@@ -1723,7 +1724,8 @@
             <list>
                 <!--Only find related items. The placeholder {0} will be replaced with scope (UUID of item)-->
 <!--                <value>crispj.organization_authority:{0} AND entityType_keyword:InstitutionProject</value>-->
-                <value>(crispj.organization_authority:{0} OR crispj.contractorou_authority:{0} ) AND entityType_keyword:InstitutionProject</value>
+                <value>crispj.coordinator_authority:{0} OR crispj.partnerou_authority: {0} OR crispj.organization_authority:{0} OR oairecerif.funder_authority: {0} OR crispj.contractorou_authority: {0} OR crispj.inKindContributorou_authority: {0} OR crispj.organizationper_authority: {0}</value>
+                <value>entityType_keyword:Project</value>
                 <value>search.resourcetype:Item</value>
             </list>
         </property>

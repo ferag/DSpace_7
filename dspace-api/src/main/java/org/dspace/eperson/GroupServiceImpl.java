@@ -600,6 +600,12 @@ public class GroupServiceImpl extends DSpaceObjectServiceImpl<Group> implements 
      */
     @Override
     public void update(Context context, Group group) throws SQLException, AuthorizeException {
+        update(context, group, true);
+    }
+
+    @Override
+    public void update(Context context, Group group, boolean rethinkGroupCache)
+        throws SQLException, AuthorizeException {
 
         super.update(context, group);
         // FIXME: Check authorisation
@@ -611,13 +617,14 @@ public class GroupServiceImpl extends DSpaceObjectServiceImpl<Group> implements 
             group.clearDetails();
         }
 
-        if (group.isGroupsChanged()) {
+        if (group.isGroupsChanged() && rethinkGroupCache) {
             rethinkGroupCache(context, true);
             group.clearGroupsChanged();
         }
 
         log.info(LogHelper.getHeader(context, "update_group", "group_id="
             + group.getID()));
+
     }
 
 
@@ -626,16 +633,8 @@ public class GroupServiceImpl extends DSpaceObjectServiceImpl<Group> implements 
         return groupDAO.findByIdAndMembership(context, group.getID(), ePerson) != null;
     }
 
-
-    /**
-     * Regenerate the group cache AKA the group2groupcache table in the database -
-     * meant to be called when a group is added or removed from another group
-     *
-     * @param context      The relevant DSpace Context.
-     * @param flushQueries flushQueries Flush all pending queries
-     * @throws SQLException An exception that provides information on a database access error or other errors.
-     */
-    protected void rethinkGroupCache(Context context, boolean flushQueries) throws SQLException {
+    @Override
+    public void rethinkGroupCache(Context context, boolean flushQueries) throws SQLException {
 
         Map<UUID, Set<UUID>> parents = new HashMap<>();
 

@@ -23,7 +23,7 @@
         <entry key-ref="crossref.isbn" value-ref="crossrefISBNContrib"/>
         <entry key-ref="crossref.year" value-ref="crossrefYearContrib"/>
         <entry key-ref="crossref.editors" value-ref="crossrefEditorsContrib"/>
-        <entry key-ref="crossref.type" value-ref="crossrefDoiTypeContrib"/>
+        <entry key-ref="crossref.type" value-ref="corsserfTypeWithAuthorityContrib"/>
         <entry key-ref="crossref.journal" value-ref="crossrefJournalContrib"/>
         <entry key-ref="crossref.id" value-ref="crossrefIDContrib"/>
         <entry key-ref="crossref.issn" value-ref="crossrefIdentifierISSN" />
@@ -52,6 +52,25 @@
         <property name="field" ref="crossref.type"/>
         <property name="query" value="$.type"/>
     </bean>
+
+    <bean id="crossrefDoiTypeMappedContrib" class="org.dspace.importer.external.metadatamapping.contributor.MappedMetadataContributor">
+        <constructor-arg name="innerContributor" ref="crossrefDoiTypeContrib"/>
+        <constructor-arg name="mapConverter" ref="crossrefTypeMapConverter"/>
+    </bean>
+
+    <bean name="crossrefTypeMapConverter" class="org.dspace.util.SimpleMapConverter" init-method="init">
+        <property name="converterNameFile" value="mapConverter-crossrefTypes.properties" />
+        <property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+        <property name="defaultValue" value=""/>
+    </bean>
+
+    <bean id="corsserfTypeWithAuthorityContrib" class="org.dspace.importer.external.metadatamapping.contributor.AuthorityMetadataContributor">
+        <constructor-arg name="innerContributor" ref="crossrefDoiTypeMappedContrib"/>
+        <constructor-arg name="authorityName" value="peru_publication_types"/>
+    </bean>
+
+
+
     <bean id="crossref.type" class="org.dspace.importer.external.metadatamapping.MetadataFieldConfig">
         <constructor-arg value="dc.type"/>
     </bean>

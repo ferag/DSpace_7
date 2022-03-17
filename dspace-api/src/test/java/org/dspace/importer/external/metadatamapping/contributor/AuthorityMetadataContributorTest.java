@@ -172,9 +172,7 @@ import org.junit.Test;
     }
 
     private Choices choices(String mdAuthority, String metadataValue) {
-        Choice cc = new Choice(mdAuthority, metadataValue, metadataValue);
-        Choice[] ch = new Choice[] {cc};
-        Choices c = new Choices(ch, 0, 1, 600, false);
-        return c;
+        Choice[] choices = new Choice[] {new Choice(mdAuthority, metadataValue, metadataValue)};
+        return new Choices(choices, 0, 1, 600, false);
     }
 }

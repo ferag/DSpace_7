@@ -3113,9 +3113,9 @@
           <dc-qualifier>uri</dc-qualifier>
           <label>License Conditions</label>
           <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
+          <repeatable>true</repeatable>
           <required />
-          <hint>Example: licencia de acceso abierto Creative Commons.</hint>
+          <hint>Enter the URL or licence name, as appropriate. Example: http://creativecommons.org/licenses/by/4.0/</hint>
         </field>
       </row>
       <row>
@@ -3287,9 +3287,9 @@
           <dc-qualifier>uri</dc-qualifier>
           <label>License Conditions</label>
           <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
+          <repeatable>true</repeatable>
           <required />
-          <hint>Example: licencia de acceso abierto Creative Commons.</hint>
+          <hint>Enter the URL or licence name, as appropriate. Example: http://creativecommons.org/licenses/by/4.0/</hint>
         </field>
       </row>
       <row>
@@ -3459,9 +3459,9 @@
           <dc-qualifier>uri</dc-qualifier>
           <label>License Conditions</label>
           <input-type>onebox</input-type>
-          <repeatable>false</repeatable>
+          <repeatable>true</repeatable>
           <required />
-          <hint>Example: licencia de acceso abierto Creative Commons.</hint>
+          <hint>Enter the URL or licence name, as appropriate. Example: http://creativecommons.org/licenses/by/4.0/</hint>
         </field>
       </row>
       <row>

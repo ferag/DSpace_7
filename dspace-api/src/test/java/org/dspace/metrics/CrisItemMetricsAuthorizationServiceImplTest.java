@@ -64,17 +64,6 @@ public class CrisItemMetricsAuthorizationServiceImplTest {
         itemUUID = UUID.randomUUID();
     }
 
-    @Test
-    public void isAuthorizedForItemUUID_WhenAnonymousUser_ShouldReturnFalse() {
-
-        when(context.getCurrentUser()).thenReturn(null);
-
-        boolean result = crisItemMetricsAuthorizationService.isAuthorized(context, itemUUID);
-
-        assertFalse(result);
-
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void isAuthorizedForItemUUID_WhenTheItemCantBeRetrieved_ShouldThrowIllegalArgument() throws SQLException {
 

@@ -1,5 +1,5 @@
 <Project xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="@virtual.id@">
-    <Type xmlns="https://purl.org/pe-repo/ocde/tipoProyecto">@virtual.mapConverter.ocdeProjectTypesLeaf.perucris-project-typeOcde@</Type>
+    <Type xmlns="https://purl.org/pe-repo/ocde/tipoProyecto">@virtual.vocabulary.perucris-project-typeOcde.leaf@</Type>
     <TypeOther>@virtual.mapConverter.ocdeProjectTypesOther.perucris-project-typeOther@</TypeOther>
 	<Acronym>@oairecerif.acronym@</Acronym>
 	<InternalId>@oairecerif.internalid@</InternalId>
@@ -133,7 +133,7 @@
 
     <Subject scheme="http://purl.org/pe-repo/ocde/ford">@virtual.mapConverter.ocdeSubjects.perucris-subject-ocde@</Subject>
 	<Activity>@virtual.mapConverter.ocdeProjectTypesLeaf.perucris-project-typeOcde@</Activity>
-	<Ciiu>@perucris.type.ciiu@</Ciiu>
+	<Ciiu>@virtual.vocabulary.perucris-type-ciiu.leaf@</Ciiu>
 	<Keyword>@dc.subject@</Keyword>
 	<Abstract>@dc.description.abstract@</Abstract>
     <Status>@virtual.mapConverter.projectStatus.oairecerif-project-status@</Status>

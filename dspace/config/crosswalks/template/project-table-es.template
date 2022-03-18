@@ -1,4 +1,4 @@
-Tipo OCDE = perucris.project.typeOcde
+Tipo OCDE = virtual.vocabulary.perucris-project-typeOcde.leaf
 Otro tipo = virtual.mapConverter.ocdeProjectTypesOther.perucris-project-typeOther
 Título = dc.title
 Otro título del proyecto = dc.title.alternative
@@ -27,10 +27,9 @@ Mandato OA = oairecerif.oamandate
 URL Políticas OA = oairecerif.oamandate.url
 Linea de investigación = perucris.researchLine
 Geo localizaciones = datacite.geoLocationPlace
-Clasificación industrial = perucris.type.ciiu
+Clasificación industrial = virtual.vocabulary.perucris-type-ciiu.leaf
 Técnicos = crispj.techniciansAndEquivalentStaff
 Staff de apoyo = crispj.supportingStaff
-Nota interna = perucris.description.internalNote
 Financiaciones = group.oairecerif-funder
 Ámbito geográfico = group.datacite-geoLocationPlace
 Contacto = group.crispj-contact

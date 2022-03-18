@@ -131,7 +131,7 @@
 	    @group.oairecerif-funder.end@
 	</Fundings>
 
-    <Subject scheme="http://purl.org/pe-repo/ocde/ford">@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@</Subject>
+    <OcdeSubject scheme="http://purl.org/pe-repo/ocde/ford">@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@</OcdeSubject>
 	<Activity>@virtual.mapConverter.ocdeProjectTypeUris.perucris-project-typeOcde@</Activity>
 	<Ciiu>@perucris.type.ciiu@</Ciiu>
 	<Keyword>@dc.subject@</Keyword>

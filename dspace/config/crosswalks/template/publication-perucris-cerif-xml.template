@@ -115,8 +115,13 @@
         @virtual.mapConverter.accessRight.oairecerif-access@
     </Access>
     <Version>@oaire.version@</Version>
-    <Advisors>
-        <Advisor> <Person> <Name>@dc.contributor.advisor@</Name> </Person> </Advisor>
-    </Advisors>
+    <Type scheme="https://purl.org/pe-repo/renati/type">@renati.type@</Type>
+    @group.dc-contributor-advisor.start@
+        <Advisor>
+            <Person><PersonName> <Name>@dc.contributor.advisor@</Name></PersonName> </Person>
+            <Identifier type="http://purl.org/pe-repo/concytec/terminos#dni">@perucris.advisor.dni@</Identifier>
+            <ORCID>@perucris.advisor.orcid@</ORCID>
+        </Advisor>
+    @group.dc-contributor-advisor.end@
     <Discipline>@renati.discipline@</Discipline>
 </Publication>

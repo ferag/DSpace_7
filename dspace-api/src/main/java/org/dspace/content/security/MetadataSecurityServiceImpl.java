@@ -162,7 +162,7 @@ public class MetadataSecurityServiceImpl implements MetadataSecurityService {
         }
 
         return metadataValues.stream()
-            .filter(value -> isInPublicBox(context, boxes, item, value))
+            .filter(value -> notInRestrictedBox(context, boxes, item, value))
             .filter(value -> isMetadataValueReturnAllowed(context, item, value))
             .collect(Collectors.toList());
 
@@ -204,14 +204,23 @@ public class MetadataSecurityServiceImpl implements MetadataSecurityService {
         return isMetadataFieldVisible(context, boxes, item, value.getMetadataField(), preventBoxSecurityCheck);
     }
 
-    private boolean isInPublicBox(Context context, List<CrisLayoutBox> boxes, Item item,
-                                  MetadataValue value) {
+    private boolean notInRestrictedBox(Context context, List<CrisLayoutBox> boxes, Item item,
+                                       MetadataValue value) {
         MetadataField metadataField = value.getMetadataField();
         if (CollectionUtils.isNotEmpty(boxes) &&
             isPublicMetadataField(metadataField, boxes, false)) {
             return true;
         }
         List<CrisLayoutBox> notPublicBoxes = getNotPublicBoxes(metadataField, boxes);
+
+        boolean fieldInRestrictedBox = notPublicBoxes.stream()
+            .flatMap(box -> getAllMetadataFields(box).stream())
+            .map(mf -> mf.toString('.'))
+            .anyMatch(md -> md.equals(value.getMetadataField().toString('.')));
+
+        if (fieldInRestrictedBox) {
+            return false;
+        }
 
 
         // the metadata is not included in any box so use the default dspace security

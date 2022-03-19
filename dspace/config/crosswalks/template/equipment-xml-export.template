@@ -26,7 +26,7 @@
     @if.metadata.oairecerif-amount.start@
     <AcquisitionAmount 
         @if.metadata.oairecerif-amount-currency.start@
-        currency="@virtual.mapConverter.currencies.oairecerif-amount-currency@"
+        currency="@virtual.mapConverter.currencyCodes.oairecerif-amount-currency@"
         @if.metadata.oairecerif-amount-currency.end@
     >@oairecerif.amount@</AcquisitionAmount>
     @if.metadata.oairecerif-amount.end@

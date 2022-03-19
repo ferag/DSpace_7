@@ -1264,7 +1264,7 @@
 	</bean>
 
 	<bean class="org.dspace.content.integration.crosswalks.CsvCrosswalk" id="csvCrosswalkEquipment">
-		<property name="templateFileName" value="crosswalks/template/equipment-table-es.template"/>
+		<property name="templateFileName" value="crosswalks/template/equipment-table-csv-es.template"/>
 		<property name="fileName" value="equipments.csv"/>
 		<property name="entityType" value="Equipment"/>
 		<property name="crosswalkMode" value="#{T(org.dspace.content.crosswalk.CrosswalkMode).MULTIPLE}"/>
@@ -1929,6 +1929,7 @@
 				<entry key="vocabulary" value-ref="virtualFieldVocabulary" />
 				<entry key="vocabulary2mapConverter" value-ref="virtualFieldVocabulary2mapConverter" />
 				<entry key="metric" value-ref="virtualFieldMetric" />
+				<entry key="missingAuthorityMetadata" value-ref="virtualFieldMissingAuthorityMetadata" />
 			</map>
 		</constructor-arg>
 	</bean>
@@ -1946,6 +1947,8 @@
 			</map>
 		</constructor-arg>
 	</bean>
+	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldMissingAuthorityMetadata"
+		  id="virtualFieldMissingAuthorityMetadata"/>
 
 	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldVocabularyToMapConverter" id="virtualFieldVocabulary2mapConverter">
 		<constructor-arg name="itemService" ref="org.dspace.content.ItemServiceImpl"/>
@@ -2007,6 +2010,7 @@
 				<entry key="coarVersions" value-ref="mapConverterCoarVersions" />
 				<entry key="currencies" value-ref="mapConverterCurrencies" />
 				<entry key="personProfiles" value-ref="mapConverterPersonProfiles" />
+				<entry key="currencyCodes" value-ref="mapConverterCurrencyCodes" />
 			</map>
 		</constructor-arg>
 	</bean>
@@ -2290,6 +2294,13 @@
 
 	<bean name="mapConverterPersonProfiles" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
 		<property name="converterNameFile" value="mapConverter-personProfiles.properties" />
+		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
+		<property name="defaultValue" value=""/>
+		<property name="charset" value="UTF-8"/>
+	</bean>
+
+	<bean name="mapConverterCurrencyCodes" class="org.dspace.util.CustomCharsetMapConverter" init-method="init">
+		<property name="converterNameFile" value="mapConverter-currencyCodes.properties" />
 		<property name="configurationService" ref="org.dspace.services.ConfigurationService" />
 		<property name="defaultValue" value=""/>
 		<property name="charset" value="UTF-8"/>

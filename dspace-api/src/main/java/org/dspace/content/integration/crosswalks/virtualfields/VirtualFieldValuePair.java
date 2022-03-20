@@ -49,7 +49,8 @@ public class VirtualFieldValuePair implements VirtualField {
         ChoiceAuthority choiceAuthority =
             choiceAuthorityService.getChoiceAuthorityByAuthorityName(listName);
 
-        String language = Optional.ofNullable(this.defaultLanguage).orElseGet(() -> context.getCurrentLocale().getLanguage());
+        String language = Optional.ofNullable(this.defaultLanguage)
+            .orElseGet(() -> context.getCurrentLocale().getLanguage());
         return itemService.getMetadataByMetadataString(item,
             metadataString)
             .stream()

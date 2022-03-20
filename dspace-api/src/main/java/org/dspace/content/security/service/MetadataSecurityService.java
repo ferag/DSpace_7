@@ -92,4 +92,13 @@ public interface MetadataSecurityService {
      * @return
      */
     List<MetadataValue> getPublicMetadataValues(Context context, Item item, String metadataField);
+
+    /**
+     * Checks if metadata field is public for the given item
+     * @param context
+     * @param item
+     * @param metadataField
+     * @return
+     */
+    boolean isMetadataFieldPublic(Context context, Item item, MetadataField metadataField);
 }

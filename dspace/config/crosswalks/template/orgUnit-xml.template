@@ -1,11 +1,10 @@
 <OrgUnit id="@virtual.id@">
-	<Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">@virtual.mapConverter.orgUnitTypes.dc-type@</Type>
+	<Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">@dc.type@</Type>
     <Acronym>@oairecerif.acronym@</Acronym>
     <Name>@dc.title@</Name>
     <AlternativeName>@dc.title.alternative@</AlternativeName>
     <LegalName>@organization.legalName@</LegalName>
     <Identifier>@organization.identifier@</Identifier>
-    <InternalNote>@perucris.description.internalNote@</InternalNote>
     <Url>@oairecerif.identifier.url@</Url>
     <Identifier type="RUC">@organization.identifier.ruc@</Identifier>
     <Identifier type="Ringgold">@organization.identifier.rin@</Identifier>
@@ -31,6 +30,7 @@
     <JuridicalNature>@perucris.type.naturaleza@</JuridicalNature>
     <CiiuClassification>@perucris.type.ciiu@</CiiuClassification>
     <ConcytecRecords>
+    @group.perucris-renacyt-registration.start@
     <Renacyt>
         <Registration>@perucris.renacyt.registration@</Registration>
         <RegistrationNumber>@perucris.renacyt.registrationNumber@</RegistrationNumber>
@@ -41,6 +41,7 @@
         <Validity>@perucris.renacyt.validityOfRegistration@</Validity>
         <Contact>@perucris.renacyt.contact@</Contact>
     </Renacyt>
+    @group.perucris-renacyt-registration.end@
     </ConcytecRecords>
     <SourceId>@cris.sourceId@</SourceId>
     <TechnologicalSurveillanceActions>@perucris.sti.actions@</TechnologicalSurveillanceActions>

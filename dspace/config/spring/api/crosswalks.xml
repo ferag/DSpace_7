@@ -1919,6 +1919,7 @@
 			<map>
 				<entry key="id" value-ref="virtualFieldId" />
 				<entry key="authority" value-ref="virtualFieldAuthority" />
+				<entry key="controlledVocabularyAuthority" value-ref="virtualFieldControlledVocabularyAuthority" />
 				<entry key="reftype" value-ref="virtualFieldRefererType" />
 				<entry key="authors" value-ref="virtualFieldAuthors" />
 				<entry key="fullpage" value-ref="virtualFieldPageNumber" />
@@ -1930,6 +1931,8 @@
 				<entry key="vocabulary2mapConverter" value-ref="virtualFieldVocabulary2mapConverter" />
 				<entry key="metric" value-ref="virtualFieldMetric" />
 				<entry key="missingAuthorityMetadata" value-ref="virtualFieldMissingAuthorityMetadata" />
+				<entry key="valuepair" value-ref="virtualFieldValuePair" />
+				<entry key="valuesSublist" value-ref="virtualFieldMetadataSublist" />
 			</map>
 		</constructor-arg>
 	</bean>
@@ -1938,7 +1941,7 @@
 	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldAuthority" id="virtualFieldAuthority"/>
 	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldRefererType" id="virtualFieldRefererType"/>
 	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldAuthors" id="virtualFieldAuthors"/>
-	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldPageNumber" id="virtualFieldPageNumber"/>	
+	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldPageNumber" id="virtualFieldPageNumber"/>
 	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldPersonName" id="virtualFieldPersonName"/>
 	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldBitstream" id="virtualFieldBitstream">
 		<constructor-arg name="bitstreamTypeMap">
@@ -1949,6 +1952,15 @@
 	</bean>
 	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldMissingAuthorityMetadata"
 		  id="virtualFieldMissingAuthorityMetadata"/>
+	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldValuePair"
+		  id="virtualFieldValuePair">
+		<property name="defaultLanguage" value="es"/>
+	</bean>
+	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldControlledVocabularyAuthority"
+		  id="virtualFieldControlledVocabularyAuthority"/>
+
+	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldMetadataValueSublist"
+		  id="virtualFieldMetadataSublist"/>
 
 	<bean class="org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldVocabularyToMapConverter" id="virtualFieldVocabulary2mapConverter">
 		<constructor-arg name="itemService" ref="org.dspace.content.ItemServiceImpl"/>

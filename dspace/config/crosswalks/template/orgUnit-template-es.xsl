@@ -35,16 +35,21 @@
 				    	<xsl:with-param name="label" select="'Acrónimo'" />
 				    	<xsl:with-param name="value" select="Acronym" />
 			    	</xsl:call-template>
+
+					<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'Nombre legal (Razón social)'" />
+						<xsl:with-param name="value" select="LegalName" />
+					</xsl:call-template>
+
+					<xsl:call-template name="print-values">
+						<xsl:with-param name="label" select="'Nombre(s) de la organización alternativo(s)'" />
+						<xsl:with-param name="values" select="AlternativeName" />
+					</xsl:call-template>
 			    	
 					<xsl:call-template name="print-value">
 				    	<xsl:with-param name="label" select="'Tipo'" />
 				    	<xsl:with-param name="value" select="Type" />
 			    	</xsl:call-template>
-                    
-                    <xsl:call-template name="print-value">
-                        <xsl:with-param name="label" select="'Descripción'" />
-                        <xsl:with-param name="value" select="Description" />
-                    </xsl:call-template>
 			    	
 					<xsl:call-template name="print-value">
 				    	<xsl:with-param name="label" select="'Organización padre'" />
@@ -121,9 +126,9 @@
                         <xsl:with-param name="value" select="UbiGeo" />
                     </xsl:call-template>
 
-					<xsl:call-template name="print-value">
+					<xsl:call-template name="print-values">
 						<xsl:with-param name="label" select="'Correo electronico'" />
-						<xsl:with-param name="value" select="Email" />
+						<xsl:with-param name="values" select="Email" />
 					</xsl:call-template>
 
 					<xsl:call-template name="print-value">
@@ -149,6 +154,21 @@
 					<xsl:call-template name="print-values">
 						<xsl:with-param name="label" select="'CIIU - Clasificación Industrial Uniforme'" />
 						<xsl:with-param name="values" select="CiiuClassification" />
+					</xsl:call-template>
+
+					<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'Acciones de vigilancia tecnológica'" />
+						<xsl:with-param name="value" select="TechnologicalSurveillanceActions" />
+					</xsl:call-template>
+
+					<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'Unidad formal de vigilancia tecnológica'" />
+						<xsl:with-param name="value" select="FormalTechnologicalSurveillanceUnit" />
+					</xsl:call-template>
+
+					<xsl:call-template name="print-value">
+						<xsl:with-param name="label" select="'166006 o equivalente certificada'" />
+						<xsl:with-param name="value" select="QualityCertified" />
 					</xsl:call-template>
 
 					<xsl:if test="ConcytecRecords/Renacyt/Registration">
@@ -204,6 +224,7 @@
 						</xsl:for-each>
 
 					</xsl:if>
+
 
 				</fo:flow>
 			</fo:page-sequence>

@@ -5,8 +5,7 @@
 	],
 	"legalName": "@organization.legalName@",
 	"acronym": "@oairecerif.acronym@",
-	"type": "@virtual.mapConverter.orgUnitTypes.dc-type@",
-	"internalNote": "@perucris.description.internalNote@",
+	"type": "@dc.type@",
 	"parentOrganization": {
 		@relation.organization-parentOrganization.start@
 		"name": "@dc.title@",
@@ -82,7 +81,9 @@
     "sunedu-classification": "@perucris.type.educacionSuperior@",
     "juridical-nature": "@perucris.type.naturaleza@",
     "ciiu-classification": "@perucris.type.ciiu@",
-    "renacyt" : {
+    "renacyt" : [
+    @group.perucris-renacyt-registration.start@
+    {
         "registration": "@perucris.renacyt.registration@",
         "registration-number": "@perucris.renacyt.registrationNumber@",
         "classification": "@perucris.renacyt.classification@",
@@ -92,7 +93,8 @@
         "validity": "@perucris.renacyt.validityOfRegistration@",
         "contact": "@perucris.renacyt.contact@",
     },
-    "sourceId": "@cris.sourceId@",
+    @group.perucris-renacyt-registration.end@
+    ],
     "technologicalSurveillanceActions": "@perucris.sti.actions@",
     "formalTechnologicalSurveillanceUnit": "@perucris.sti.formalUnit@",
     "qualityCertified": "@perucris.sti.qualityCertified@",

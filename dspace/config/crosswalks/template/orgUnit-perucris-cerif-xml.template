@@ -1,25 +1,40 @@
 <OrgUnit xmlns="https://purl.org/pe-repo/cerif-profile/1.0/" id="@virtual.id@">
-    <Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">@virtual.mapConverter.orgUnitTypes.dc-type@</Type>
+    <Type scheme="https://purl.org/pe-repo/ocde/sectorInstitucional">@perucris.type.sectorInstitucional@</Type>
+    <Type scheme="https://purl.org/pe-repo/sunedu/tipoInstitucion">@perucris.type.educacionSuperior@</Type>
+    <Type scheme="https://purl.org/pe-repo/concytec/tipoSubunidad">@perucris.type.orgunit@</Type>
+    <Type scheme="https://purl.org/pe-repo/ocde/naturalezaInstitucion">@perucris.type.naturaleza@</Type>
+    <Type scheme="https://purl.org/pe-repo/inei/ciiu">@virtual.controlledVocabularyAuthority.perucris-type-ciiu@</Type>
     <Acronym>@oairecerif.acronym@</Acronym>
 	<Name>@dc.title@</Name>
 	<Name>@organization.legalName@</Name>
     <Identifier>@organization.identifier@</Identifier>
-    <Identifier type="URL">@oairecerif.identifier.url@</Identifier>
     <Identifier type="https://purl.org/pe-repo/concytec/terminos#ruc">@organization.identifier.ruc@</Identifier>
+    <Identifier type="https://purl.org/pe-repo/concytec/terminos#RORID">@organization.identifier.ror@</Identifier>
     <Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#ISNI">@organization.identifier.isni@</Identifier>
     <Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#ScopusAffiliationID">@organization.identifier.scopusaffid@</Identifier>
     <Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#FundRefID">@organization.identifier.crossrefid@</Identifier>
+    <ElectronicAddress>@oairecerif.identifier.url@</ElectronicAddress>
+    <ElectronicAddress>mailto:@orgunit.email@</ElectronicAddress>
+    @if.metadata.organization-parentOrganization.start@
 	<PartOf>
+	@if.metadata.organization-parentOrganization.end@
 		@relation.organization-parentOrganization.start@
 		<OrgUnit id="@virtual.id@">
-            <Acronym>@oairecerif.acronym@</Acronym>
+            <Type scheme="https://purl.org/pe-repo/ocde/sectorInstitucional">@perucris.type.sectorInstitucional@</Type>
+            <Type scheme="https://purl.org/pe-repo/sunedu/tipoInstitucion">@perucris.type.educacionSuperior@</Type>
+            <Type scheme="https://purl.org/pe-repo/ocde/naturalezaInstitucion">@perucris.type.naturaleza@</Type>
+            <Type scheme="https://purl.org/pe-repo/inei/ciiu">@virtual.controlledVocabularyAuthority.perucris-type-ciiu@</Type>
+            <Identifier type="https://purl.org/pe-repo/concytec/terminos#ruc">@organization.identifier.ruc@</Identifier>
+            <Subject scheme="http://purl.org/pe-repo/ocde/ford">@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@</Subject>
 			<Name>@dc.title@</Name>
 		</OrgUnit>
 		@relation.organization-parentOrganization.end@
 		@if.not.authority.organization-parentOrganization.start@
 		<OrgUnit> <Name>@organization.parentOrganization@</Name> </OrgUnit>
 		@if.not.authority.organization-parentOrganization.end@
+    @if.metadata.organization-parentOrganization.start@
 	</PartOf>
+	@if.metadata.organization-parentOrganization.end@
 	<Subject scheme="http://purl.org/pe-repo/ocde/ford">@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@</Subject>
     <Keyword>@dc.subject@</Keyword>
     <PostAddress>

@@ -34,12 +34,11 @@ public class VirtualFieldMissingAuthorityMetadata implements VirtualField {
 
         String metadataField = fieldName.split("\\.")[2].replaceAll("-", ".");
 
-        List<String> values = itemService.getMetadataByMetadataString(item, metadataField)
+        return itemService.getMetadataByMetadataString(item, metadataField)
             .stream()
             .filter(md -> StringUtils.isBlank(md.getAuthority()))
             .map(MetadataValue::getValue)
-            .collect(Collectors.toList());
+            .toArray(String[]::new);
 
-        return values.toArray(new String[]{});
     }
 }

@@ -38,6 +38,7 @@ public class VirtualFieldMissingAuthorityMetadataIT extends AbstractIntegrationT
     public void init() throws Exception {
 
         context.setCurrentUser(admin);
+
         virtualFieldMissingAuthorityMetadata = new DSpace().getServiceManager()
             .getServiceByName("virtualFieldMissingAuthorityMetadata", VirtualFieldMissingAuthorityMetadata.class);
 
@@ -67,7 +68,8 @@ public class VirtualFieldMissingAuthorityMetadataIT extends AbstractIntegrationT
             .build();
         context.restoreAuthSystemState();
 
-        String[] metadata = virtualFieldMissingAuthorityMetadata.getMetadata(context, item, "dc.contributor.author");
+        String[] metadata = virtualFieldMissingAuthorityMetadata.getMetadata(context, item,
+            "virtual.missingAuthorityMetadata.dc-contributor-author");
         assertThat(metadata, is(new String[] {"Verdi Antonio"}));
     }
 
@@ -81,7 +83,8 @@ public class VirtualFieldMissingAuthorityMetadataIT extends AbstractIntegrationT
             .withAuthor("Doe John")
             .build();
 
-        String[] metadata = virtualFieldMissingAuthorityMetadata.getMetadata(context, item, "dc.contributor.author");
+        String[] metadata = virtualFieldMissingAuthorityMetadata.getMetadata(context, item,
+            "virtual.missingAuthorityMetadata.dc-contributor-author");
         assertThat(metadata, is(new String[] {"Cooper Sheldon Lee", "Doe John"}));
     }
 

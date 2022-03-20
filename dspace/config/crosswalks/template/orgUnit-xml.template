@@ -47,7 +47,6 @@
     @if.metadata.perucris-renacyt-registration.start@
     </ConcytecRecords>
     @if.metadata.perucris-renacyt-registration.end@
-    <SourceId>@cris.sourceId@</SourceId>
     <TechnologicalSurveillanceActions>@perucris.sti.actions@</TechnologicalSurveillanceActions>
     <FormalTechnologicalSurveillanceUnit>@perucris.sti.formalUnit@</FormalTechnologicalSurveillanceUnit>
     <QualityCertified>@perucris.sti.qualityCertified@</QualityCertified>

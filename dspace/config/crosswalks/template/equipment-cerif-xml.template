@@ -2,14 +2,14 @@
     <Type scheme="https://purl.org/pe-repo/concytec/equipamiento">@dc.type@</Type>
     <Type scheme="https://purl.org/pe-repo/concytec/usoEquipamiento">@perucris.type.usage@</Type>
     <Acronym>@oairecerif.acronym@</Acronym>
-	<Name xml:lang="es">@dc.title@</Name>
+	<Name>@dc.title@</Name>
 	<Identifier type="Institution assigned unique equipment identifier">@oairecerif.internalid@</Identifier>
 	<Description>@dc.description@</Description>
 	@relation.crisequipment-ownerou.start@
         <Owner>
             <OrgUnit id="@virtual.id@">
                 <Acronym>@oairecerif.acronym@</Acronym>
-                <Name xml:lang="es">@dc.title@</Name>
+                <Name>@dc.title@</Name>
              </OrgUnit>
         </Owner>
     @relation.crisequipment-ownerou.end@
@@ -17,7 +17,7 @@
         <Owner>
             <OrgUnit>
                 <Acronym>@perucris.ownerou.acronym@</Acronym>
-                <Name xml:lang="es">@crisequipment.ownerou@</Name>
+                <Name>@crisequipment.ownerou@</Name>
             </OrgUnit>
         </Owner>
     @if.not.authority.crisequipment-ownerou.end@

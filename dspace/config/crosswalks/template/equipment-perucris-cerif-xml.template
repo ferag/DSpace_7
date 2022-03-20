@@ -2,15 +2,15 @@
     <Type scheme="https://purl.org/pe-repo/concytec/equipamiento">@dc.type@</Type>
     <Type scheme="https://purl.org/pe-repo/concytec/usoEquipamiento">@perucris.type.usage@</Type>
     <Acronym>@oairecerif.acronym@</Acronym>
-	<Name xml:lang="es">@dc.title@</Name>
-	<Name xml:lang="es">@dc.title.alternative@</Name>
+	<Name>@dc.title@</Name>
+	<Name>@dc.title.alternative@</Name>
 	<Identifier type="Institution assigned unique equipment identifier">@oairecerif.internalid@</Identifier>
 	<Description>@dc.description@</Description>
 	@relation.crisequipment-ownerou.start@
 	    <Owner>
 	        <OrgUnit id="@virtual.id@">
 	        <Acronym>@oairecerif.acronym@</Acronym>
-	        <Name xml:lang="es">@dc.title@</Name>
+	        <Name>@dc.title@</Name>
 	        <Identifier type="https://purl.org/pe-repo/concytec/terminos#ruc">@organization.identifier.ruc@</Identifier>
 	        </OrgUnit>
         </Owner>
@@ -19,7 +19,7 @@
 	<Owner>
 	    <OrgUnit>
 	        <Acronym>@perucris.ownerou.acronym@</Acronym>
-	        <Name xml:lang="es">@crisequipment.ownerou@</Name>
+	        <Name>@crisequipment.ownerou@</Name>
 	    </OrgUnit>
 	</Owner>
     @if.not.authority.crisequipment-ownerou.end@
@@ -40,13 +40,13 @@
         <As>
             <Funding id="@virtual.id@">
                 <Type xmlns="https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types">@dc.type@</Type>
-                <Name xml:lang="es">@dc.title@</Name>
+                <Name>@dc.title@</Name>
                 <Identifier type="https://w3id.org/cerif/vocab/IdentifierTypes#AwardNumber">@oairecerif.internalid@</Identifier>
             </Funding>
         </As> 
     @relation.dc-relation-grantno.end@
     @if.not.authority.dc-relation-grantno.start@
-        <As> <Funding> <Name xml:lang="es">@virtual.missingAuthorityMetadata.dc-relation-grantno@</Name> </Funding> </As>
+        <As> <Funding> <Name>@virtual.missingAuthorityMetadata.dc-relation-grantno@</Name> </Funding> </As>
     @if.not.authority.dc-relation-grantno.end@
     </Funded>
     <Subject scheme="http://purl.org/pe-repo/ocde/ford">@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@</Subject>

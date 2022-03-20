@@ -1,10 +1,9 @@
 <Funding xmlns="https://www.openaire.eu/cerif-profile/1.1/" id="@virtual.id@">
 	<Type xmlns="https://www.openaire.eu/cerif-profile/vocab/OpenAIRE_Funding_Types">@dc.type@</Type>
     <Acronym>@oairecerif.acronym@</Acronym>
-    <InternalNote>@perucris.description.internalNote@</InternalNote>
 	<Name>@dc.title@</Name>
     @if.metadata.oairecerif-amount-currency.start@
-    <Amount currency="@oairecerif.amount.currency@">
+    <Amount currency="@virtual.mapConverter.currencyCodes.oairecerif-amount-currency@">
     @if.metadata.oairecerif-amount-currency.end@
     @if.not.metadata.oairecerif-amount-currency.start@
     <Amount>
@@ -12,7 +11,7 @@
         @oairecerif.amount@
     </Amount>
     @if.metadata.perucris-executedAmount-currency.start@
-    <ExecutedAmount currency="@perucris.executedAmount.currency@">
+    <ExecutedAmount currency="@virtual.mapConverter.currencyCodes.perucris-executedAmount-currency@">
     @if.metadata.perucris-executedAmount-currency.end@
     @if.not.metadata.perucris-executedAmount-currency.start@
     <ExecutedAmount>
@@ -62,5 +61,4 @@
         <Name>@dc.relation.project@</Name>
     </Project>
 	@if.not.authority.dc-relation-project.end@
-	<SourceId>@cris.sourceId@</SourceId>
 </Funding>

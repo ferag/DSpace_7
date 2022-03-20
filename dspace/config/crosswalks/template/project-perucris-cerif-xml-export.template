@@ -3,7 +3,6 @@
     <TypeOther>@virtual.mapConverter.ocdeProjectTypesOther.perucris-project-typeOther@</TypeOther>
 	<Acronym>@oairecerif.acronym@</Acronym>
 	<InternalId>@oairecerif.internalid@</InternalId>
-	<InternalNote>@perucris.description.internalNote@</InternalNote>
 	<Title>@dc.title@</Title>
 	<OtherTitle>@dc.title.alternative@</OtherTitle>
 	<Identifier type="http://namespace.openaire.eu/oaf">@crispj.openaireid@</Identifier>
@@ -169,5 +168,4 @@
 	    <Address>@crispj.contact.address@</Address>
 	</Contact>
 	 @group.crispj-contact.end@
-	 <SourceId>@cris.sourceId@</SourceId>
 </Project>

@@ -15,4 +15,3 @@ Fecha de fabricación = perucris.date.manufacturing
 Fecha de adquisición = perucris.date.acquisition
 Monto de adquisición= oairecerif.amount
 Moneda de adquisición= virtual.mapConverter.currencyCodes.oairecerif-amount-currency
-Id del equipamiento en el sistema de origen = cris.sourceId

@@ -33,4 +33,3 @@ Staff de apoyo = crispj.supportingStaff
 Financiaciones = group.oairecerif-funder
 Ámbito geográfico = group.datacite-geoLocationPlace
 Contacto = group.crispj-contact
-Id del proyecto en el sistema de origen = group.cris.sourceId

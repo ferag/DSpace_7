@@ -68,25 +68,8 @@ public class VirtualFieldValuePairIT extends AbstractIntegrationTestWithDatabase
     }
 
     @Test
-    public void languageInContext() {
-        context.setCurrentLocale(Locale.ITALIAN);
-
-        Item publication = ItemBuilder.createItem(context, collection)
-            .withLanguage("en")
-            .withLanguage("es")
-            .build();
-
-        String[] metadata = virtualFieldValuePair.getMetadata(context, publication,
-            "virtual.valuepair.common_iso_languages.dc-language-iso");
-
-        assertThat(metadata, is(new String[]{"Inglese", "Spagnolo"}));
-
-    }
-
-    @Test
     public void defaultLanguageSet() {
 
-        context.setCurrentLocale(null);
         virtualFieldValuePair.setDefaultLanguage("it");
 
         Item publication = ItemBuilder.createItem(context, collection)
@@ -104,6 +87,8 @@ public class VirtualFieldValuePairIT extends AbstractIntegrationTestWithDatabase
     @Test
     public void defaultLanguageNotSet() {
 
+        context.setCurrentLocale(Locale.ENGLISH);
+        virtualFieldValuePair.setDefaultLanguage(null);
         Item publication = ItemBuilder.createItem(context, collection)
             .withLanguage("fr")
             .withLanguage("it")

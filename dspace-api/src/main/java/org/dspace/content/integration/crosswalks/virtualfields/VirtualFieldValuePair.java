@@ -49,14 +49,13 @@ public class VirtualFieldValuePair implements VirtualField {
         ChoiceAuthority choiceAuthority =
             choiceAuthorityService.getChoiceAuthorityByAuthorityName(listName);
 
-        String language = Optional.ofNullable(context.getCurrentLocale())
-            .map(Locale::getLanguage)
-            .orElse(defaultLanguage);
-
+        String language = Optional.ofNullable(this.defaultLanguage).orElseGet(() -> context.getCurrentLocale().getLanguage());
         return itemService.getMetadataByMetadataString(item,
             metadataString)
             .stream()
-            .map(md -> bestMatch(choiceAuthority, language, md))
+            .map(md -> {
+                return bestMatch(choiceAuthority, language, md);
+            })
             .toArray(String[]::new);
     }
 

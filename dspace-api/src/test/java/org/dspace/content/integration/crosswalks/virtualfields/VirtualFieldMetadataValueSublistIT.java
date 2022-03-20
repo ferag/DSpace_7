@@ -19,6 +19,7 @@ import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.Item;
+import org.dspace.services.factory.DSpaceServicesFactory;
 import org.dspace.utils.DSpace;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class VirtualFieldMetadataValueSublistIT extends AbstractIntegrationTestW
     @Before
     public void init() {
         context.setCurrentUser(admin);
-        virtualFieldMetadataValueSublist = new DSpace().getServiceManager()
+        virtualFieldMetadataValueSublist = DSpaceServicesFactory.getInstance().getServiceManager()
             .getServiceByName("virtualFieldMetadataSublist",
                 VirtualFieldMetadataValueSublist.class);
         Community community = CommunityBuilder.createCommunity(context).build();

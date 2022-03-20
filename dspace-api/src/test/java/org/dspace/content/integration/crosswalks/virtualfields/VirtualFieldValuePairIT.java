@@ -20,9 +20,17 @@ import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.Item;
+import org.dspace.content.authority.DCInputAuthority;
+import org.dspace.content.authority.service.ChoiceAuthorityService;
+import org.dspace.core.factory.CoreServiceFactory;
+import org.dspace.core.service.PluginService;
+import org.dspace.servicemanager.config.DSpaceConfigurationService;
+import org.dspace.services.ConfigurationService;
+import org.dspace.services.factory.DSpaceServicesFactory;
 import org.dspace.utils.DSpace;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 
@@ -44,9 +52,22 @@ public class VirtualFieldValuePairIT extends AbstractIntegrationTestWithDatabase
             .withEntityType("Publication")
             .build();
 
-        virtualFieldValuePair = new DSpace().getServiceManager()
+        virtualFieldValuePair = DSpaceServicesFactory.getInstance().getServiceManager()
             .getServiceByName("virtualFieldValuePair", VirtualFieldValuePair.class);
-        new DSpace().getConfigurationService().setProperty("webui.supported.locales", "en, it");
+
+        String[] supportedLanguage = { "it", "en" };
+
+        ConfigurationService configurationService = DSpaceServicesFactory.getInstance().getConfigurationService();
+        configurationService.setProperty("webui.supported.locales", supportedLanguage);
+
+        PluginService pluginService = CoreServiceFactory.getInstance().getPluginService();
+        ChoiceAuthorityService choiceAuthorityService = DSpaceServicesFactory.getInstance().getServiceManager()
+            .getServiceByName("org.dspace.content.authority.ChoiceAuthorityServiceImpl",
+                ChoiceAuthorityService.class);
+
+        DCInputAuthority.reset();
+        pluginService.clearNamedPluginClasses();
+        choiceAuthorityService.clearCache();
     }
 
     @Test
@@ -94,7 +115,7 @@ public class VirtualFieldValuePairIT extends AbstractIntegrationTestWithDatabase
         String[] metadata = virtualFieldValuePair.getMetadata(context, publication,
             "virtual.valuepair.common_iso_languages.dc-language-iso");
 
-        assertThat(metadata, is(new String[]{"French", "Italian"}));
+        assertThat(metadata, is(new String[]{ "French", "Italian" }));
 
     }
 

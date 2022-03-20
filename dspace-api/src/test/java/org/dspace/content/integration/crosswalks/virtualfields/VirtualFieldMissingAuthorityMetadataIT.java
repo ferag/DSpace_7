@@ -19,6 +19,8 @@ import org.dspace.builder.ItemBuilder;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.Item;
+import org.dspace.servicemanager.DSpaceServiceManager;
+import org.dspace.services.factory.DSpaceServicesFactory;
 import org.dspace.utils.DSpace;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +41,7 @@ public class VirtualFieldMissingAuthorityMetadataIT extends AbstractIntegrationT
 
         context.setCurrentUser(admin);
 
-        virtualFieldMissingAuthorityMetadata = new DSpace().getServiceManager()
+        virtualFieldMissingAuthorityMetadata = DSpaceServicesFactory.getInstance().getServiceManager()
             .getServiceByName("virtualFieldMissingAuthorityMetadata", VirtualFieldMissingAuthorityMetadata.class);
 
         Community community = CommunityBuilder.createCommunity(context)

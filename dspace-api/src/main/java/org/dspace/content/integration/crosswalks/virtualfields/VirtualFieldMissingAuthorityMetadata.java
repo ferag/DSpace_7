@@ -7,9 +7,6 @@
  */
 package org.dspace.content.integration.crosswalks.virtualfields;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.apache.commons.lang.StringUtils;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataValue;

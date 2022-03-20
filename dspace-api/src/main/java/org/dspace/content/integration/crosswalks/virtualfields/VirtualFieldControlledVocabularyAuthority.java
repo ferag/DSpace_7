@@ -29,7 +29,7 @@ public class VirtualFieldControlledVocabularyAuthority extends VirtualFieldAutho
     }
 
     private String removePrefix(String value) {
-        if(Objects.isNull(value)) {
+        if (Objects.isNull(value)) {
             return "";
         }
         return value.contains(":") ? value.substring(value.indexOf(":") + 1) : value;

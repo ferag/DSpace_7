@@ -18,4 +18,3 @@ Resumen = dc.description.abstract
 Financiamiento(s) de origen = dc.relation.funding
 Proyecto(s) de origen = dc.relation.project
 Predecesor(es) = dc.relation.patent
-Id de la patente en el sistema de origen = cris.sourceId

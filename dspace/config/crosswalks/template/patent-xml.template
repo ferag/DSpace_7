@@ -37,12 +37,18 @@
    <OcdeSubject>@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@</OcdeSubject>
    <CipSubject>@dc.subject.cip@</CipSubject>
    <Predecessor> <Patent> <Title>@dc.relation.patent@</Title> </Patent> </Predecessor>
+   @if.metadata.dc-relation-funding.start@
    <Fundings>
+   @if.metadata.dc-relation-funding.end@
         <Funding> <Name> @dc.relation.funding@ </Name></Funding>
+   @if.metadata.dc-relation-funding.start@
    </Fundings>
+   @if.metadata.dc-relation-funding.end@
+   @if.metadata.dc-relation-project.start@
    <Projects>
+   @if.metadata.dc-relation-project.end@
            <Project> <Name> @dc.relation.project@ </Name> </Project>
+   @if.metadata.dc-relation-project.start@
    </Projects>
-   <SourceId>@cris.sourceId@</SourceId>
-   <InternalNote>@perucris.description.internalNote@</InternalNote>
+   @if.metadata.dc-relation-project.end@
 </Patent>

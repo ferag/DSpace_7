@@ -177,7 +177,7 @@
 							<xsl:with-param name="label" select="'Registros Concytec'" />
 						</xsl:call-template>
 						<xsl:for-each select="ConcytecRecords/Renacyt">
-							<fo:block font-size="10pt">
+							<fo:block font-size="10pt" margin-bottom="4mm">
 								<xsl:if test="Registration">
 									<fo:inline font-weight="bold" text-align="right"  >
 										<xsl:text>Registro: </xsl:text>

@@ -5,7 +5,8 @@
     <AlternativeName>@dc.title.alternative@</AlternativeName>
     <LegalName>@organization.legalName@</LegalName>
     <Identifier>@organization.identifier@</Identifier>
-    <Url>@oairecerif.identifier.url@</Url>
+    <ElectronicAddress>@oairecerif.identifier.url@</ElectronicAddress>
+    <ElectronicAddress>mailto:@orgunit.email@</ElectronicAddress>
     <Identifier type="RUC">@organization.identifier.ruc@</Identifier>
     <Identifier type="Ringgold">@organization.identifier.rin@</Identifier>
     <Identifier type="Research Organization Registry">@organization.identifier.ror@</Identifier>
@@ -19,7 +20,6 @@
         <AddressLocality>@organization.address.addressLocality@</AddressLocality>
         <AddressCountry>@organization.address.addressCountry@</AddressCountry>
     </PostAddress>
-    <Email>@orgunit.email@</Email>
     <Ipi>@perucris.orgunit.ipi@</Ipi>
     <Funder>@perucris.orgunit.funder@</Funder>
     <UbiGeo scheme="https://purl.org/pe-repo/inei/ubigeo">@virtual.mapConverter.ubigeoUris.perucris-ubigeo@</UbiGeo>
@@ -29,7 +29,9 @@
     <SuneduClassification>@perucris.type.educacionSuperior@</SuneduClassification>
     <JuridicalNature>@perucris.type.naturaleza@</JuridicalNature>
     <CiiuClassification>@perucris.type.ciiu@</CiiuClassification>
+    @if.metadata.perucris-renacyt-registration.start@
     <ConcytecRecords>
+    @if.metadata.perucris-renacyt-registration.end@
     @group.perucris-renacyt-registration.start@
     <Renacyt>
         <Registration>@perucris.renacyt.registration@</Registration>
@@ -42,9 +44,31 @@
         <Contact>@perucris.renacyt.contact@</Contact>
     </Renacyt>
     @group.perucris-renacyt-registration.end@
+    @if.metadata.perucris-renacyt-registration.start@
     </ConcytecRecords>
+    @if.metadata.perucris-renacyt-registration.end@
     <SourceId>@cris.sourceId@</SourceId>
     <TechnologicalSurveillanceActions>@perucris.sti.actions@</TechnologicalSurveillanceActions>
     <FormalTechnologicalSurveillanceUnit>@perucris.sti.formalUnit@</FormalTechnologicalSurveillanceUnit>
     <QualityCertified>@perucris.sti.qualityCertified@</QualityCertified>
+    @if.metadata.organization-parentOrganization.start@
+    <PartOf>
+    @if.metadata.organization-parentOrganization.end@
+    @relation.organization-parentOrganization.start@
+        <OrgUnit id="@virtual.id@">
+            <Type scheme="https://purl.org/pe-repo/ocde/sectorInstitucional">@perucris.type.sectorInstitucional@</Type>
+            <Type scheme="https://purl.org/pe-repo/sunedu/tipoInstitucion">@perucris.type.educacionSuperior@</Type>
+            <Type scheme="https://purl.org/pe-repo/ocde/naturalezaInstitucion">@perucris.type.naturaleza@</Type>
+            <Type scheme="https://purl.org/pe-repo/inei/ciiu">@virtual.controlledVocabularyAuthority.perucris-type-ciiu@</Type>
+            <Identifier type="https://purl.org/pe-repo/concytec/terminos#ruc">@organization.identifier.ruc@</Identifier>
+            <Subject scheme="http://purl.org/pe-repo/ocde/ford">@virtual.mapConverter.ocdeSubjectUris.perucris-subject-ocde@</Subject>
+            <Name>@dc.title@</Name>
+        </OrgUnit>
+    @relation.organization-parentOrganization.end@
+    @if.not.authority.organization-parentOrganization.start@
+        <OrgUnit> <Name>@organization.parentOrganization@</Name> </OrgUnit>
+    @if.not.authority.organization-parentOrganization.end@
+    @if.metadata.organization-parentOrganization.start@
+    </PartOf>
+    @if.metadata.organization-parentOrganization.end@
 </OrgUnit>

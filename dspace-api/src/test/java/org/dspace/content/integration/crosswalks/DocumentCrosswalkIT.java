@@ -45,6 +45,7 @@ import org.dspace.content.crosswalk.StreamDisseminationCrosswalk;
 import org.dspace.core.CrisConstants;
 import org.dspace.core.factory.CoreServiceFactory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -72,6 +73,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testPdfCrosswalkPersonDisseminateWithoutImage() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -107,6 +109,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testRtfCrosswalkPersonDisseminateWithoutImage() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -142,6 +145,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testPdfCrosswalkPersonDisseminateWithJpegImage() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -185,6 +189,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testPdfCrosswalkPersonDisseminateWithPngImage() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -228,6 +233,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testRtfCrosswalkPersonDisseminateWithJpegImage() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -272,6 +278,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testRtfCrosswalkPersonDisseminateWithPngImage() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -316,6 +323,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testPdfCrosswalkPublicationDisseminate() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -389,6 +397,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testPdfCrosswalkProjectDisseminate() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -460,6 +469,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testPdfCrosswalkEquipmentDisseminate() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -502,6 +512,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testPdfCrosswalkOrgUnitDisseminate() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -543,6 +554,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testPdfCrosswalkFundingDisseminate() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -582,6 +594,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testPdfCrosswalkPatentDisseminate() throws Exception {
 
         context.turnOffAuthorisationSystem();
@@ -622,6 +635,7 @@ public class DocumentCrosswalkIT extends AbstractIntegrationTestWithDatabase {
     }
 
     @Test
+    @Ignore
     public void testPdfCrosswalkPersonDisseminateWithEmptyPerson() throws Exception {
 
         context.turnOffAuthorisationSystem();

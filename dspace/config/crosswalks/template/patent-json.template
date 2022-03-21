@@ -49,5 +49,5 @@
 		"@dc.relation.patent@",
 	],
 	"abstract": "@dc.description.abstract@",
-	"url": "dc.identifier.url@",
+	"url": "@dc.identifier.url@",
 }

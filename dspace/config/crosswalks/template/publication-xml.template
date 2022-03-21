@@ -156,7 +156,7 @@
             @group.dc-contributor-advisor.end@
         </Advisors>
         <Name>@thesis.degree.name@</Name>
-        <DegreeDiscipline>@thesis.degree.discipline@</DegreeDiscipline>
+        <ProgramCode>@thesis.degree.discipline@</ProgramCode>
         <Discipline>@renati.discipline@</Discipline>
         <Grantor>@thesis.degree.grantor@</Grantor>
         <Jurors>

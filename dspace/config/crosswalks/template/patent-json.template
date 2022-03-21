@@ -15,7 +15,7 @@
 		@group.dc-contributor-author.start@
 		{
 			"name": "@dc.contributor.author@",
-			"affiliation": "@oairecerif.author.affiliation@"
+			"affiliation": "@oairecerif.author.affiliation@",
 			"ORCID": "@perucris.author.orcid@",
 			"DNI": "@perucris.author.dni@"
 		},
@@ -50,6 +50,4 @@
 	],
 	"abstract": "@dc.description.abstract@",
 	"url": "dc.identifier.url@",
-	"internalNote": "@perucris.description.internalNote@",
-    "sourceId": "@cris.sourceId@",
 }

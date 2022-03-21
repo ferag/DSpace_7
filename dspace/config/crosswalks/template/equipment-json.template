@@ -7,7 +7,18 @@
 	"type": "@dc.type@",
 	"identifier": "@oairecerif.internalid@",
 	"description": "@dc.description@",
-	"ownerOrgUnit": "@crisequipment.ownerou@",
+	@relation.crisequipment-ownerou.start@
+	"ownerOrgUnit": {
+	    "name": "@dc.title@",
+	    "acronym": "@oairecerif.acronym@",
+	    },
+	@relation.crisequipment-ownerou.end@
+	@if.not.authority.crisequipment-ownerou.start@
+	"ownerOrgUnit": {
+    	    "name": "@crisequipment.ownerou@",
+    	    "acronym": "@perucris.ownerou.acronym@",
+    	},
+	@if.not.authority.crisequipment-ownerou.end@
 	"ownerPerson": "@crisequipment.ownerrp@",
 	"usage": [
 	    "@perucris.type.usage@",
@@ -29,8 +40,6 @@
     "acquisitionDate": "@perucris.date.acquisition@",
     "amount": {
         "value": "@oairecerif.amount@",
-        "currency": "@oairecerif.amount.currency@"
-    },
-    "internalNote": "@perucris.description.internalNote@",
-    "sourceId": "@cris.sourceId@",
+        "currency": "@virtual.mapConverter.currencyCodes.oairecerif-amount-currency@"
+    }
 }

@@ -54,7 +54,7 @@ public class DecoratingConsumer implements Consumer {
             return;
         }
         int eventType = event.getEventType();
-        if (eventType == Event.MODIFY || eventType == Event.INSTALL) {
+        if (eventType == Event.MODIFY || eventType == Event.INSTALL || eventType == Event.MODIFY_METADATA) {
             Item item = (Item) event.getSubject(context);
             if (itemsAlreadyProcessed.contains(item)) {
                 return;
@@ -65,6 +65,7 @@ public class DecoratingConsumer implements Consumer {
                 for (String metadata : METADATA_2_CHECK) {
                     List<MetadataValue> metadataValues = itemService.getMetadataByMetadataString(item, metadata);
                     for (MetadataValue mv : metadataValues) {
+                        removeExistingMetadata(context, item, mv);
                         String authority = mv.getAuthority();
                         String value = mv.getValue();
                         if (StringUtils.isNotBlank(authority) && StringUtils.isNotBlank(value)) {
@@ -75,6 +76,17 @@ public class DecoratingConsumer implements Consumer {
                 }
             }
         }
+    }
+
+    private void removeExistingMetadata(Context context, Item item, MetadataValue mv) throws SQLException {
+        removeMetadata(context, item, mv.getElement(), "titleAlternative");
+        removeMetadata(context, item, mv.getElement(), "legalName");
+        removeMetadata(context, item, mv.getElement(), "acronym");
+    }
+
+    private void removeMetadata(Context context, Item item, String element, String qualifier) throws SQLException {
+        itemService.removeMetadataValues(context, item, "perucris", element, qualifier,
+            null);
     }
 
     private void updateItem(Context context, Item originItem, Item orgUnit, MetadataValue originMetadataValue)
@@ -89,6 +101,7 @@ public class DecoratingConsumer implements Consumer {
 
     private void addMetadata(Context context, Item item, String element, String qualifier,
                              List<MetadataValue> values) throws SQLException {
+
         if (CollectionUtils.isNotEmpty(values)) {
             for (MetadataValue value : values) {
                 itemService.addMetadata(context, item, "perucris", element, qualifier, null, value.getValue());

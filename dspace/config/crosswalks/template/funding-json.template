@@ -4,11 +4,11 @@
 	"acronym": "@oairecerif.acronym@",
 	"fundingCode": "@oairecerif.internalid@",
 	"amount": {
-		"currency": "@oairecerif.amount.currency@",
+		"currency": "@virtual.mapConverter.currencyCodes.oairecerif-amount-currency@",
 		"value": "@oairecerif.amount@"
 	},
     "executedAmount": {
-        "currency": "@perucris.executedAmount.currency@",
+        "currency": "@virtual.mapConverter.currencyCodes.perucris-executedAmount-currency@",
         "value": "@perucris.executedAmount@"
     },
 	"description": "@dc.description@",
@@ -36,6 +36,4 @@
 		"URL": "@oairecerif.oamandate.url@"
 	},
 	"project": "@dc.relation.project@",
-	"internalNote": "@perucris.description.internalNote@",
-    "sourceId": "@cris.sourceId@",
 }

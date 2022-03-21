@@ -3,7 +3,6 @@
     "type-other": "@perucris.project.typeOther@",
 	"acronym":"@oairecerif.acronym@",
 	"internal-id":"@oairecerif.internalid@",
-	"internal-note":"@perucris.description.internalNote@",
 	"title":"@dc.title@",
 	"alternative-title": [
 	    "@dc.title.alternative@",
@@ -191,5 +190,4 @@
     "supportingStaff": [
         "@crispj.supportingStaff@",
     ],
-    "source-id" : "@cris.sourceId@",
 }

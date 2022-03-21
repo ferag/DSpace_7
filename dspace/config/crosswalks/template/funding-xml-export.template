@@ -3,7 +3,7 @@
 	<Acronym>@oairecerif.acronym@</Acronym>
     <Name>@dc.title@</Name>
     @if.metadata.oairecerif-amount-currency.start@
-    <Amount currency="@virtual.mapConverter.currencies.oairecerif-amount-currency@">
+    <Amount currency="@virtual.mapConverter.currencyCodes.oairecerif-amount-currency@">
     @if.metadata.oairecerif-amount-currency.end@
     @if.not.metadata.oairecerif-amount-currency.start@
     <Amount>
@@ -11,7 +11,7 @@
         @oairecerif.amount@
     </Amount>
     @if.metadata.perucris-executedAmount-currency.start@
-    <ExecutedAmount currency="@virtual.mapConverter.currencies.perucris-executedAmount-currency@">
+    <ExecutedAmount currency="@virtual.mapConverter.currencyCodes.perucris-executedAmount-currency@">
     @if.metadata.perucris-executedAmount-currency.end@
     @if.not.metadata.perucris-executedAmount-currency.start@
     <ExecutedAmount>

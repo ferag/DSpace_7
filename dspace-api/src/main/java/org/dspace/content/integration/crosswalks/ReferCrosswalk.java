@@ -43,6 +43,7 @@ import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
+import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.crosswalk.CrosswalkException;
 import org.dspace.content.crosswalk.CrosswalkMode;
@@ -54,6 +55,7 @@ import org.dspace.content.integration.crosswalks.virtualfields.VirtualField;
 import org.dspace.content.integration.crosswalks.virtualfields.VirtualFieldMapper;
 import org.dspace.content.security.service.MetadataSecurityService;
 import org.dspace.content.service.ItemService;
+import org.dspace.content.service.MetadataFieldService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.discovery.configuration.DiscoveryConfigurationUtilsService;
@@ -117,6 +119,9 @@ public class ReferCrosswalk implements ItemExportCrosswalk {
     private CrosswalkMode crosswalkMode;
 
     private boolean onlyPublicMetadata;
+
+    @Autowired
+    private MetadataFieldService metadataFieldService;
 
     @PostConstruct
     private void postConstruct() throws IOException {
@@ -317,6 +322,9 @@ public class ReferCrosswalk implements ItemExportCrosswalk {
 
         if (line.isVirtualField()) {
             VirtualField virtualField = virtualFieldMapper.getVirtualField(line.getVirtualFieldName());
+            if (notVisibleField(context, item, line.getField())) {
+                return Collections.emptyList();
+            }
             String[] values = virtualField.getMetadata(context, item, line.getField());
             return values != null ? Arrays.asList(values) : Collections.emptyList();
         }
@@ -333,6 +341,32 @@ public class ReferCrosswalk implements ItemExportCrosswalk {
         }
 
         return metadataValues.stream().map(MetadataValue::getValue).collect(Collectors.toList());
+
+    }
+
+    private boolean notVisibleField(Context context, Item item, String field)  {
+        if ((!onlyPublicMetadata) && (!securityCheckEnabled)) {
+            return false;
+        }
+
+        String[] split = field.split("\\.");
+        String metadata = split[split.length - 1];
+        MetadataField metadataField;
+        try {
+            metadataField = metadataFieldService.findByString(context, metadata, '-');
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        if (Objects.isNull(metadataField)) {
+            return false;
+        }
+        if (securityCheckEnabled) {
+            return !metadataSecurityService.checkMetadataFieldVisibility(context, item, metadataField);
+        }
+        if (onlyPublicMetadata) {
+            return !metadataSecurityService.isMetadataFieldPublic(context, item, metadataField);
+        }
+        return false;
 
     }
 

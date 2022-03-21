@@ -27,7 +27,6 @@ Event = dc.relation.conference
 Product = dc.relation.product
 Product = dc.relation.dataset
 Version = virtual.mapConverter.publicationOaireVersions.oaire-version
-Internal Note = perucris.description.internalNote
 License = dc.rights.uri License
 Access condition = virtual.mapConverter.ocdeSubjects.oairecerif-access
 Embargo End Date = oairecerif.access.embargoEnd

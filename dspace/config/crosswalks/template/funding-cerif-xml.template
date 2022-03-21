@@ -3,7 +3,7 @@
     <Acronym>@oairecerif.acronym@</Acronym>
 	<Name>@dc.title@</Name>
     @if.metadata.oairecerif-amount-currency.start@
-    <Amount currency="@oairecerif.amount.currency@">
+    <Amount currency="@virtual.mapConverter.currencyCodes.oairecerif-amount-currency@">
     @if.metadata.oairecerif-amount-currency.end@
     @if.not.metadata.oairecerif-amount-currency.start@
     <Amount>

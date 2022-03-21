@@ -20,13 +20,13 @@
     <Usage>@virtual.mapConverter.equipmentUsage.perucris-type-usage@</Usage>
     <Subject scheme="http://purl.org/pe-repo/ocde/ford">@virtual.mapConverter.ocdeSubjects.perucris-subject-ocde@</Subject>
     <ResearchLine>@perucris.researchLine@</ResearchLine>
-    <ManufacturingCountry>@virtual.mapConverter.countries.perucris-manufacturingCountry@</ManufacturingCountry>
+    <ManufacturingCountry>@virtual.valuepair.common_iso_countries.perucris-manufacturingCountry@</ManufacturingCountry>
     <ManufacturingDate>@perucris.date.manufacturing@</ManufacturingDate>
     <AcquisitionDate>@perucris.date.acquisition@</AcquisitionDate>
     @if.metadata.oairecerif-amount.start@
     <AcquisitionAmount 
         @if.metadata.oairecerif-amount-currency.start@
-        currency="@virtual.mapConverter.currencyCodes.oairecerif-amount-currency@"
+        currency="@virtual.valuepair.currency.oairecerif-amount-currency@"
         @if.metadata.oairecerif-amount-currency.end@
     >@oairecerif.amount@</AcquisitionAmount>
     @if.metadata.oairecerif-amount.end@

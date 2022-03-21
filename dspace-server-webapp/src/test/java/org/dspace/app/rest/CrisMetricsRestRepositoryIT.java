@@ -172,7 +172,11 @@ public class CrisMetricsRestRepositoryIT extends AbstractControllerIntegrationTe
         context.restoreAuthSystemState();
 
         getClient().perform(get("/api/cris/metrics/" + CrisMetricsBuilder.getRestStoredMetricId(metric.getID())))
-                .andExpect(status().isUnauthorized());
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.metricType", is("view")))
+            .andExpect(jsonPath("$.type", is("metric")))
+            .andExpect(jsonPath("$.metricCount", is(2312.0)));
     }
 
     @Test
@@ -387,8 +391,8 @@ public class CrisMetricsRestRepositoryIT extends AbstractControllerIntegrationTe
         getClient().perform(get("/api/core/items/" + itemA.getID() + "/metrics"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
-                .andExpect(jsonPath("$._embedded.metrics").value(Matchers.hasSize(0)))
-                .andExpect(jsonPath("$.page.totalElements", is(0)));
+                .andExpect(jsonPath("$._embedded.metrics").value(Matchers.hasSize(2)))
+                .andExpect(jsonPath("$.page.totalElements", is(2)));
     }
 
     @Test
@@ -421,8 +425,8 @@ public class CrisMetricsRestRepositoryIT extends AbstractControllerIntegrationTe
         getClient().perform(get("/api/core/items/" + itemA.getID() + "/metrics"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
-                .andExpect(jsonPath("$._embedded.metrics").value(Matchers.hasSize(0)))
-                .andExpect(jsonPath("$.page.totalElements", is(0)));
+                .andExpect(jsonPath("$._embedded.metrics").value(Matchers.hasSize(2)))
+                .andExpect(jsonPath("$.page.totalElements", is(2)));
     }
 
     @Test

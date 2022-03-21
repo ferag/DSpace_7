@@ -3,6 +3,7 @@
     <Type scheme="https://purl.org/pe-repo/concytec/usoEquipamiento">@perucris.type.usage@</Type>
     <Acronym>@oairecerif.acronym@</Acronym>
 	<Name>@dc.title@</Name>
+	<Name>@dc.title.alternative@</Name>
 	<Identifier type="Institution assigned unique equipment identifier">@oairecerif.internalid@</Identifier>
 	<Description>@dc.description@</Description>
 	@relation.crisequipment-ownerou.start@

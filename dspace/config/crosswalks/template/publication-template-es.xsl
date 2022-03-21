@@ -150,9 +150,9 @@
 						<xsl:with-param name="label" select="'Idioma'" />
 						<xsl:with-param name="values" select="cerif:Language" />
 					</xsl:call-template>
-                    <xsl:call-template name="print-value">
+                    <xsl:call-template name="print-values">
                         <xsl:with-param name="label" select="'Licencia'" />
-                        <xsl:with-param name="value" select="cerif:License" />
+                        <xsl:with-param name="values" select="cerif:License" />
                     </xsl:call-template>
                     <xsl:call-template name="print-value">
                         <xsl:with-param name="label" select="'Versión'" />

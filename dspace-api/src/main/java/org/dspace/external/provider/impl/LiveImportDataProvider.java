@@ -144,9 +144,24 @@ public class LiveImportDataProvider extends AbstractExternalDataProvider {
             mvDTO.setElement(dto.getElement());
             mvDTO.setQualifier(dto.getQualifier());
             mvDTO.setValue(dto.getValue());
+            if (hasAuthorityInfo(mvDTO.getValue())) {
+                addAuthorityInfo(mvDTO);
+            }
             externalDataObject.addMetadata(mvDTO);
         }
         return externalDataObject;
+    }
+
+    private void addAuthorityInfo(MetadataValueDTO dto) {
+        String[] split = dto.getValue().split("\\$\\$");
+        dto.setValue(split[0]);
+        dto.setAuthority(split[1]);
+        dto.setConfidence(Integer.parseInt(split[2]));
+
+    }
+
+    private boolean hasAuthorityInfo(String value) {
+        return value.contains("$$");
     }
 
     private String getFirstValue(ImportRecord record, String metadata) {

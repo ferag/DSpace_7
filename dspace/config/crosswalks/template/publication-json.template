@@ -64,7 +64,9 @@
     "type": "@oairecerif.access@",
     "embargo-end": "@oairecerif.access.embargoEnd@",
   },
-  "license": "@dc.rights.uri@",
+  "license": [
+    "@dc.rights.uri@",
+  ],
   "type" : "@virtual.mapConverter.coarTypes.dc-type@",
   "version": "@datacite.version@",
   "publication-version": "@oaire.version@",

@@ -23,7 +23,6 @@
 	    </OrgUnit>
 	</Owner>
 	@if.not.authority.crisequipment-ownerou.end@
-
     <Funded>
         @relation.dc-relation-funding.start@
             <By>

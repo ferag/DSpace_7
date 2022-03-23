@@ -110,9 +110,16 @@ public class ExtractMetadataStep implements ListenerProcessingStep, UploadableSt
                             joiner.add(metadataValue.getQualifier());
                         }
                         if (!alreadyFilledMetadata.contains(joiner.toString())) {
-                            itemService.addMetadata(context, wsi.getItem(), metadataValue.getSchema(),
-                                metadataValue.getElement(), metadataValue.getQualifier(), null,
-                                metadataValue.getValue());
+                            if (StringUtils.isNotBlank(metadataValue.getAuthority())) {
+                                itemService.addMetadata(context, wsi.getItem(), metadataValue.getSchema(),
+                                    metadataValue.getElement(), metadataValue.getQualifier(), null,
+                                    metadataValue.getValue(), metadataValue.getAuthority(),
+                                    metadataValue.getConfidence());
+                            } else {
+                                itemService.addMetadata(context, wsi.getItem(), metadataValue.getSchema(),
+                                    metadataValue.getElement(), metadataValue.getQualifier(), null,
+                                    metadataValue.getValue());
+                            }
                         }
                     }
                 }

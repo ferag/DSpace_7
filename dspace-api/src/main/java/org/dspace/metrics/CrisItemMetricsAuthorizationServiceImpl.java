@@ -61,11 +61,6 @@ public class CrisItemMetricsAuthorizationServiceImpl implements CrisItemMetricsA
 
     private boolean isAuthorized(Context context, Supplier<Item> itemSupplier) {
 
-        // anonymous user
-        if (context.getCurrentUser() == null) {
-            return false;
-        }
-
         try {
 
             return authorizeService.authorizeActionBoolean(context, itemSupplier.get(), Constants.READ);

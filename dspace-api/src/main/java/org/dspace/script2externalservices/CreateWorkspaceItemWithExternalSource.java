@@ -271,26 +271,26 @@ public class CreateWorkspaceItemWithExternalSource extends DSpaceRunnable<
     }
 
     private int fillWorkspaceItems(Context context, int record, LiveImportDataProvider dataProvider,
-            Item item, String id) throws SQLException {
+                                   Item item, String id) throws SQLException {
         int countDataObjects = 0;
-            for (ExternalDataObject dataObject : dataProvider.searchExternalDataObjects(id, record, LIMIT)) {
-                if (!exist(dataObject.getMetadata())) {
-                    try {
-                        WorkspaceItem wsItem = externalDataService.createWorkspaceItemFromExternalDataObject(context,
-                            dataObject, this.collection);
-                        for (List<MetadataValueDTO> metadataList : metadataValueToAdd(wsItem.getItem())) {
-                            addMetadata(wsItem.getItem(), metadataList);
-                        }
-                        workflowService.start(context, wsItem);
-                        context.commit();
-                        reloadCollectionIfNeeded();
-                    } catch (Exception e) {
-                        handler.logWarning("Error during workspaceitem creation for id " + id + ": " + e.getMessage());
-                        log.warn("Error during workspaceitem creation for id " + id + ": " + e.getMessage(), e);
+        for (ExternalDataObject dataObject : dataProvider.searchExternalDataObjects(id, record, LIMIT)) {
+            if (!exist(dataObject.getMetadata())) {
+                try {
+                    WorkspaceItem wsItem = externalDataService.createWorkspaceItemFromExternalDataObject(context,
+                        dataObject, this.collection);
+                    for (List<MetadataValueDTO> metadataList : metadataValueToAdd(wsItem.getItem())) {
+                        addMetadata(wsItem.getItem(), metadataList);
                     }
+                    workflowService.start(context, wsItem);
+                    context.commit();
+                    reloadCollectionIfNeeded();
+                } catch (Exception e) {
+                    handler.logWarning("Error during workspaceitem creation for id " + id + ": " + e.getMessage());
+                    log.warn("Error during workspaceitem creation for id " + id + ": " + e.getMessage(), e);
                 }
-                countDataObjects++;
             }
+            countDataObjects++;
+        }
         return countDataObjects;
     }
 

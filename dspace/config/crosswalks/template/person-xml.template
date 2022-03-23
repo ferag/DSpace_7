@@ -104,6 +104,4 @@
 		</publication>
 		@relation.researchoutputs.end@
 	</publications>
-	<source-id>@cris.sourceId</source-id>
-	<internal-note>@perucris.description.internalNote@</internal-note>
 </person>

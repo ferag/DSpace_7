@@ -3119,9 +3119,9 @@
             <dc-qualifier>uri</dc-qualifier>
             <label>Condición de la licencia</label>
             <input-type>onebox</input-type>
-            <repeatable>false</repeatable>
+            <repeatable>true</repeatable>
             <required />
-            <hint>Ejemplo: licencia de acceso abierto Creative Commons.</hint>
+            <hint>Ingresar la URL o el nombre de la licencia, según corresponda. Ejemplo: http://creativecommons.org/licenses/by/4.0/</hint>
           </field>
         </row>
         <row>
@@ -3294,9 +3294,9 @@
             <dc-qualifier>uri</dc-qualifier>
             <label>Condición de la licencia</label>
             <input-type>onebox</input-type>
-            <repeatable>false</repeatable>
+            <repeatable>true</repeatable>
             <required />
-            <hint>Ejemplo: licencia de acceso abierto Creative Commons.</hint>
+            <hint>Ingresar la URL o el nombre de la licencia, según corresponda. Ejemplo: http://creativecommons.org/licenses/by/4.0/</hint>
           </field>
         </row>
         <row>
@@ -3467,9 +3467,9 @@
             <dc-qualifier>uri</dc-qualifier>
             <label>Condición de la licencia</label>
             <input-type>onebox</input-type>
-            <repeatable>false</repeatable>
+            <repeatable>true</repeatable>
             <required />
-            <hint>Ejemplo: licencia de acceso abierto Creative Commons.</hint>
+            <hint>Ingresar la URL o el nombre de la licencia, según corresponda. Ejemplo: http://creativecommons.org/licenses/by/4.0/</hint>
           </field>
         </row>
         <row>
@@ -4245,8 +4245,8 @@
             <label>Entidad otorgante</label>
             <input-type>onebox</input-type>
             <repeatable>true</repeatable>
-            <required>La entidad que otorga esta patente: la oficina de patentes.</required>
-            <hint />
+            <required />
+            <hint>La entidad que otorga esta patente: la oficina de patentes.</hint>
           </field>
         </row>
         <row>
@@ -4505,8 +4505,8 @@
             <label>Entidad otorgante</label>
             <input-type>onebox</input-type>
             <repeatable>true</repeatable>
-            <required>La entidad que otorga esta patente: la oficina de patentes.</required>
-            <hint />
+            <required />
+            <hint>La entidad que otorga esta patente: la oficina de patentes.</hint>
           </field>
         </row>
         <row>
@@ -4765,8 +4765,8 @@
             <label>Entidad otorgante</label>
             <input-type>onebox</input-type>
             <repeatable>true</repeatable>
-            <required>La entidad que otorga esta patente: la oficina de patentes.</required>
-            <hint />
+            <required />
+            <hint>La entidad que otorga esta patente: la oficina de patentes.</hint>
           </field>
         </row>
         <row>

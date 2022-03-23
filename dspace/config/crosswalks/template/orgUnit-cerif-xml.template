@@ -1,11 +1,20 @@
 <OrgUnit xmlns="https://www.openaire.eu/cerif-profile/1.1/" id="@virtual.id@">
-    <Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">@virtual.mapConverter.orgUnitTypes.dc-type@</Type>
+    <Type scheme="https://w3id.org/cerif/vocab/OrganisationTypes">@dc.type@</Type>
     <Acronym>@oairecerif.acronym@</Acronym>
 	<Name>@dc.title@</Name>
 	<Name>@organization.legalName@</Name>
+	<RORID>@virtual.valuesSublist.0-1.organization-identifier-ror@</RORID>
+	<AlternativeRORID>@virtual.valuesSublist.1-.organization-identifier-ror@</AlternativeRORID>
+	<ISNI>@virtual.valuesSublist.0-1.organization-identifier-isni@</ISNI>
+	<AlternativeISNI>@virtual.valuesSublist.1-.organization-identifier-isni@</AlternativeISNI>
+    <FundRefID>@virtual.valuesSublist.0-1.organization-identifier-crossrefid@</FundRefID>
+	<AlternativeFundRefID>@virtual.valuesSublist.1-.organization-identifier-crossrefid@</AlternativeFundRefID>
     <Identifier>@organization.identifier@</Identifier>
-    <Identifier type="URL">@oairecerif.identifier.url@</Identifier>
+    <ElectronicAddress>@oairecerif.identifier.url@</ElectronicAddress>
+    <ElectronicAddress>mailto:@orgunit.email@</ElectronicAddress>
+    @if.metadata.organization-parentOrganization.start@
 	<PartOf>
+	@if.metadata.organization-parentOrganization.end@
 		@relation.organization-parentOrganization.start@
 		<OrgUnit id="@virtual.id@">
             <Acronym>@oairecerif.acronym@</Acronym>
@@ -15,5 +24,7 @@
 		@if.not.authority.organization-parentOrganization.start@
 		<OrgUnit> <Name>@organization.parentOrganization@</Name> </OrgUnit>
 		@if.not.authority.organization-parentOrganization.end@
+	@if.metadata.organization-parentOrganization.start@
 	</PartOf>
+	@if.metadata.organization-parentOrganization.end@
 </OrgUnit>

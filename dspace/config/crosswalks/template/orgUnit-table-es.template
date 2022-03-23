@@ -27,7 +27,6 @@ Clasificación Sunedu= virtual.mapConverter.institutionType.perucris-type-educac
 Naturaleza = virtual.mapConverter.organizationNature.perucris-type-naturaleza
 Clasificación CIIU = perucris.type.ciiu
 Registros Concytec = group.perucris-renacyt-registration
-Id de la organización en el sistema de origen = cris.sourceId
 Acciones de vigilancia tecnológica = perucris.sti.actions
 Unidad formal de vigilancia tecnológica = perucris.sti.formalUnit
 166006 o equivalente certificada = perucris.sti.qualityCertified

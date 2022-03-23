@@ -64,7 +64,9 @@
     "type": "@oairecerif.access@",
     "embargo-end": "@oairecerif.access.embargoEnd@",
   },
-  "license": "@dc.rights.uri@",
+  "license": [
+    "@dc.rights.uri@",
+  ],
   "type" : "@virtual.mapConverter.coarTypes.dc-type@",
   "version": "@datacite.version@",
   "publication-version": "@oaire.version@",
@@ -81,6 +83,7 @@
   ],
   "scopus-identifier": "@dc.identifier.scopus@",
   "ark-identifier": "@dc.identifier.ark@",
+  "isi-identifier": "@dc.identifier.isi@",
   "published-in": {
     "serie": "@dc.relation.ispartofseries@",
     "title": "@dc.relation.ispartof@",
@@ -128,7 +131,6 @@
         "@renati.juror@",
     ],
   },
-  "source-id": "@cris.sourceId@",
 ]
 
 }

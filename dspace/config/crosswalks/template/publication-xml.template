@@ -144,19 +144,19 @@
         <Sponsor>@dc.relation.sponsorship@</Sponsor>
     </Sponsorships>
     <Thesis>
-        <Type>@renati.type@</Type>
-        <Level>@renati.level@</Level>
+        <Type scheme="https://purl.org/pe-repo/renati/type">@renati.type@</Type>
+        <Level scheme="https://purl.org/pe-repo/renati/level">@renati.level@</Level>
         <Advisors>
             @group.dc-contributor-advisor.start@
             <Advisor>
-                <Person> <Name>@dc.contributor.advisor@</Name> </Person>
+                <Person><PersonName> <Name>@dc.contributor.advisor@</Name></PersonName> </Person>
                 <ORCID>@perucris.advisor.orcid@</ORCID>
                 <DNI>@perucris.advisor.dni@</DNI>
             </Advisor>
             @group.dc-contributor-advisor.end@
         </Advisors>
         <Name>@thesis.degree.name@</Name>
-        <DegreeDiscipline>@thesis.degree.discipline@</DegreeDiscipline>
+        <ProgramCode>@thesis.degree.discipline@</ProgramCode>
         <Discipline>@renati.discipline@</Discipline>
         <Grantor>@thesis.degree.grantor@</Grantor>
         <Jurors>
@@ -165,5 +165,4 @@
             </Juror>
         </Jurors>
     </Thesis>
-    <SourceId>@cris.sourceId@</SourceId>
 </Publication>

@@ -1,8 +1,25 @@
 <Equipment xmlns="https://www.openaire.eu/cerif-profile/1.1/" id="@virtual.id@">
-    <Type>@dc.type@</Type>
+    <Type scheme="https://purl.org/pe-repo/concytec/equipamiento">@dc.type@</Type>
+    <Type scheme="https://purl.org/pe-repo/concytec/usoEquipamiento">@perucris.type.usage@</Type>
     <Acronym>@oairecerif.acronym@</Acronym>
 	<Name>@dc.title@</Name>
+	<Name>@dc.title.alternative@</Name>
 	<Identifier type="Institution assigned unique equipment identifier">@oairecerif.internalid@</Identifier>
 	<Description>@dc.description@</Description>
-	<Owner> <OrgUnit> <Name>@crisequipment.ownerou@</Name> </OrgUnit> </Owner>
+	@relation.crisequipment-ownerou.start@
+        <Owner>
+            <OrgUnit id="@virtual.id@">
+                <Acronym>@oairecerif.acronym@</Acronym>
+                <Name>@dc.title@</Name>
+             </OrgUnit>
+        </Owner>
+    @relation.crisequipment-ownerou.end@
+    @if.not.authority.crisequipment-ownerou.start@
+        <Owner>
+            <OrgUnit>
+                <Acronym>@perucris.ownerou.acronym@</Acronym>
+                <Name>@crisequipment.ownerou@</Name>
+            </OrgUnit>
+        </Owner>
+    @if.not.authority.crisequipment-ownerou.end@
 </Equipment>

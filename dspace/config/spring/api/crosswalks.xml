@@ -57,7 +57,7 @@
 
                 <entry key="equipment-perucris-cerif-xml" value-ref="referCrosswalkEquipmentPerucrisCerifXml"></entry>
 				<entry key="equipment-cerif-xml" value-ref="referCrosswalkEquipmentCerifXml"></entry>
-<!--				<entry key="equipment-xml" value-ref="referCrosswalkEquipmentXml"></entry>-->
+				<entry key="equipment-xml" value-ref="referCrosswalkEquipmentXml"></entry>
 				<entry key="equipment-json" value-ref="referCrosswalkEquipmentJson"></entry>
 				<entry key="equipment-pdf" value-ref="pdfCrosswalkEquipment"></entry>
 				<entry key="equipment-csv" value-ref="csvCrosswalkEquipment"></entry>
@@ -118,7 +118,7 @@
 
 				<entry key="institutionequipment-cerif-xml" value-ref="referCrosswalkInstitutionEquipmentCerifXml"></entry>
                 <entry key="institutionequipment-perucris-cerif-xml" value-ref="referCrosswalkInstitutionEquipmentPerucrisCerifXml"></entry>
-<!--				<entry key="institutionequipment-xml" value-ref="referCrosswalkInstitutionEquipmentXml"></entry>-->
+				<entry key="institutionequipment-xml" value-ref="referCrosswalkInstitutionEquipmentXml"></entry>
 				<entry key="institutionequipment-json" value-ref="referCrosswalkInstitutionEquipmentJson"></entry>
 				<entry key="institutionequipment-pdf" value-ref="pdfCrosswalkInstitutionEquipment"></entry>
 				<entry key="institutionequipment-csv" value-ref="csvCrosswalkInstitutionEquipment"></entry>
